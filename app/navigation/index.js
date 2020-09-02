@@ -19,6 +19,7 @@ import SearchHistory from '@screens/SearchHistory';
 import PreviewImage from '@screens/PreviewImage';
 import SelectDarkOption from '@screens/SelectDarkOption';
 import SelectFontOption from '@screens/SelectFontOption';
+import HelpLine from '@screens/HelpLine';
 
 const RootStack = createStackNavigator();
 
@@ -57,6 +58,7 @@ export default function Navigator() {
             options={{gestureEnabled: false}}
           />
           <RootStack.Screen name="Main" component={Main} />
+          <RootStack.Screen name="HelpLine" component={HelpLine} />
           <RootStack.Screen name="Filter" component={Filter} />
           <RootStack.Screen name="ChooseLocation" component={ChooseLocation} />
           <RootStack.Screen name="SearchHistory" component={SearchHistory} />
