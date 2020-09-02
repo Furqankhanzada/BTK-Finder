@@ -22,7 +22,7 @@ import CategoryIcon from './CategoryIcon';
 import CategoryFull from './CategoryFull';
 import PlaceItem from './PlaceItem';
 import ProfileDescription from './ProfileDescription';
-
+import HelpLineItem from './HelpLineItem';
 export {
   TextInput,
   PlaceItem,
@@ -48,4 +48,5 @@ export {
   Card,
   FilterSort,
   ProfileDescription,
+  HelpLineItem
 };

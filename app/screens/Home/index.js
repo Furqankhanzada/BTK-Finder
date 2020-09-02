@@ -137,7 +137,7 @@ export default function Home({ navigation }) {
                 }
                 full
                 round
-                onPress={() => alert('ddd')}>
+                onPress={() => navigation.navigate('HelpLine')}>
                 Help Line
               </Button>
             );
