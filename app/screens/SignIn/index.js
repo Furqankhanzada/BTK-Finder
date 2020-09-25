@@ -80,7 +80,7 @@ export default function SignIn({navigation}) {
                 id: true,
               });
             }}
-            placeholder={t('input_id')}
+            placeholder='Username'
             success={success.id}
             value={id}
           />
@@ -93,7 +93,7 @@ export default function SignIn({navigation}) {
                 password: true,
               });
             }}
-            placeholder={t('input_password')}
+            placeholder='Password'
             secureTextEntry={true}
             success={success.password}
             value={password}

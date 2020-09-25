@@ -11,12 +11,14 @@ export default function SignUp({navigation}) {
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [address, setAddress] = useState('');
+  const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState({
     name: true,
     email: true,
-    address: true,
+    phone: true,
+    password: true,
   });
 
   /**
@@ -24,12 +26,13 @@ export default function SignUp({navigation}) {
    *
    */
   const onSignUp = () => {
-    if (name == '' || email == '' || address == '') {
+    if (name == '' || email == '' || phone == '' || password == '') {
       setSuccess({
         ...success,
         name: name != '' ? true : false,
         email: email != '' ? true : false,
-        address: address != '' ? true : false,
+        phone: phone != '' ? true : false,
+        password: password != '' ? true : false,
       });
     } else {
       setLoading(true);
@@ -38,6 +41,10 @@ export default function SignUp({navigation}) {
         navigation.navigate('SignIn');
       }, 500);
     }
+    console.log('Username: ', name);
+    console.log('Email: ', email);
+    console.log('Phone: ', phone);
+    console.log('Password: ', password);
   };
 
   const offsetKeyboard = Platform.select({
@@ -69,24 +76,32 @@ export default function SignUp({navigation}) {
         <View style={styles.contain}>
           <TextInput
             onChangeText={text => setName(text)}
-            placeholder={t('input_id')}
+            placeholder= 'Username'
             success={success.name}
             value={name}
           />
           <TextInput
             style={{marginTop: 10}}
             onChangeText={text => setEmail(text)}
-            placeholder={t('input_email')}
+            placeholder= 'Email Address'
             keyboardType="email-address"
             success={success.email}
             value={email}
           />
           <TextInput
             style={{marginTop: 10}}
-            onChangeText={text => setAddress(text)}
-            placeholder={t('input_address')}
-            success={success.address}
-            value={address}
+            onChangeText={text => setPhone(text)}
+            placeholder= 'Phone Number'
+            success={success.phone}
+            value={phone}
+          />
+          <TextInput
+            style={{marginTop: 10}}
+            onChangeText={text => setPassword(text)}
+            placeholder='Password'
+            secureTextEntry={true}
+            success={success.password}
+            value={password}
           />
           <Button
             full
