@@ -76,32 +76,36 @@ export default function SignUp({navigation}) {
         <View style={styles.contain}>
           <TextInput
             onChangeText={text => setName(text)}
-            placeholder= 'Username'
+            placeholder= "Username"
             success={success.name}
             value={name}
           />
           <TextInput
             style={{marginTop: 10}}
             onChangeText={text => setEmail(text)}
-            placeholder= 'Email'
+            placeholder= "Email"
             keyboardType="email-address"
             success={success.email}
             value={email}
+            autoCapitalize="none"
           />
           <TextInput
             style={{marginTop: 10}}
             onChangeText={text => setPhone(text)}
-            placeholder= 'Phone Number'
+            placeholder="Phone"
+            keyboardType="numeric"
             success={success.phone}
             value={phone}
+            autoCapitalize="none"
           />
           <TextInput
             style={{marginTop: 10}}
             onChangeText={text => setPassword(text)}
-            placeholder='Password'
+            placeholder="Password"
             secureTextEntry={true}
             success={success.password}
             value={password}
+            autoCapitalize="none"
           />
           <Button
             full
