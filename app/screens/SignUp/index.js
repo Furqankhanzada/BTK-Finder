@@ -83,7 +83,7 @@ export default function SignUp({navigation}) {
           <TextInput
             style={{marginTop: 10}}
             onChangeText={text => setEmail(text)}
-            placeholder= 'Email Address'
+            placeholder= 'Email'
             keyboardType="email-address"
             success={success.email}
             value={email}
@@ -91,7 +91,7 @@ export default function SignUp({navigation}) {
           <TextInput
             style={{marginTop: 10}}
             onChangeText={text => setPhone(text)}
-            placeholder= 'Phone Number'
+            placeholder= 'Phone'
             success={success.phone}
             value={phone}
           />
