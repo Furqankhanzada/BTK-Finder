@@ -91,7 +91,7 @@ export default function SignUp({navigation}) {
           <TextInput
             style={{marginTop: 10}}
             onChangeText={text => setPhone(text)}
-            placeholder= 'Phone'
+            placeholder= 'Phone Number'
             success={success.phone}
             value={phone}
           />
