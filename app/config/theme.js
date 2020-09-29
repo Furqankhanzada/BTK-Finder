@@ -9,7 +9,6 @@ export const BaseColor = {
   dividerColor: '#BDBDBD',
   whiteColor: '#FFFFFF',
   fieldColor: '#F5F5F5',
-  yellowColor: '#FDC60A',
   navyBlue: '#3C5A99',
   kashmir: '#5D6D7E',
   orangeColor: '#E5634D',
@@ -240,6 +239,6 @@ export const useTheme = () => {
  * @returns font
  */
 export const useFont = () => {
-  const font = useSelector(state => state.application.font);
+  const font = useSelector((state) => state.application.font);
   return font ?? DefaultFont;
 };

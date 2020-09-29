@@ -1,8 +1,8 @@
-import * as actionTypes from "@actions/actionTypes";
+import * as actionTypes from '@actions/actionTypes';
 const initialState = {
   login: {
-    success: false
-  }
+    success: false,
+  },
 };
 
 export default (state = initialState, action = {}) => {

@@ -1,18 +1,27 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   View,
   ScrollView,
   Animated,
   TouchableOpacity,
-  FlatList
-} from "react-native";
-import { Header, Button, Image, Text, Icon, Card, SafeAreaView, CardList } from "@components";
-import { BaseStyle, BaseColor, useTheme } from "@config";
-import * as Utils from "@utils";
-import styles from "./styles";
-import Swiper from "react-native-swiper";
-import { HomePopularData, HomeListData, HomeBannerData } from "@data";
-import { useTranslation } from "react-i18next";
+  FlatList,
+} from 'react-native';
+import {
+  Header,
+  Button,
+  Image,
+  Text,
+  Icon,
+  Card,
+  SafeAreaView,
+  CardList,
+} from '@components';
+import { BaseStyle, BaseColor, useTheme } from '@config';
+import * as Utils from '@utils';
+import styles from './styles';
+import Swiper from 'react-native-swiper';
+import { HomePopularData, HomeListData, HomeBannerData } from '@data';
+import { useTranslation } from 'react-i18next';
 
 export default function Home({ navigation }) {
   const deltaY = new Animated.Value(0);
@@ -22,61 +31,61 @@ export default function Home({ navigation }) {
   const [banner] = useState(HomeBannerData);
   const [services] = useState([
     {
-      id: "1",
+      id: '1',
       color: colors.primaryLight,
-      icon: "shopping-bag",
-      name: "shopping",
-      route: "Place"
+      icon: 'shopping-bag',
+      name: 'shopping',
+      route: 'Place',
     },
     {
-      id: "2",
+      id: '2',
       color: BaseColor.kashmir,
-      icon: "coffee",
-      name: "coffee_bag",
-      route: "Place"
+      icon: 'coffee',
+      name: 'coffee_bag',
+      route: 'Place',
     },
     {
-      id: "3",
+      id: '3',
       color: BaseColor.pinkColor,
-      icon: "star",
-      name: "event",
-      route: "Place"
+      icon: 'star',
+      name: 'event',
+      route: 'Place',
     },
     {
-      id: "4",
+      id: '4',
       color: BaseColor.blueColor,
-      icon: "handshake",
-      name: "real_estate",
-      route: "Place"
+      icon: 'handshake',
+      name: 'real_estate',
+      route: 'Place',
     },
     {
-      id: "5",
+      id: '5',
       color: colors.accent,
-      icon: "briefcase",
-      name: "jobseeker",
-      route: "Place"
+      icon: 'briefcase',
+      name: 'jobseeker',
+      route: 'Place',
     },
     {
-      id: "3",
+      id: '3',
       color: BaseColor.greenColor,
-      icon: "utensils",
-      name: "restaurant",
-      route: "Place"
+      icon: 'utensils',
+      name: 'restaurant',
+      route: 'Place',
     },
     {
-      id: "4",
+      id: '4',
       color: BaseColor.yellowColor,
-      icon: "car",
-      name: "automotive",
-      route: "Place"
+      icon: 'car',
+      name: 'automotive',
+      route: 'Place',
     },
     {
-      id: "5",
+      id: '5',
       color: BaseColor.kashmir,
-      icon: "ellipsis-h",
-      name: "more",
-      route: "Category"
-    }
+      icon: 'ellipsis-h',
+      name: 'more',
+      route: 'Category',
+    },
   ]);
   const [popular] = useState(HomePopularData);
   const [list] = useState(HomeListData);
@@ -102,39 +111,31 @@ export default function Home({ navigation }) {
         ]}>
         <Swiper
           dotStyle={{
-            backgroundColor: colors.text
+            backgroundColor: colors.text,
           }}
           activeDotColor={colors.primary}
           paginationStyle={styles.contentPage}
           removeClippedSubviews={false}
           autoplay={true}
           autoplayTimeout={2}
-          showsPagination={false}
-        >
+          showsPagination={false}>
           {banner.map((item, index) => {
             return (
-              <Image key={item.id} source={item.image} style={{flex: 1}} />
+              <Image key={item.id} source={item.image} style={{ flex: 1 }} />
             );
           })}
         </Swiper>
       </Animated.View>
-      <SafeAreaView style={{ flex: 1 }} forceInset={{ top: "always" }}>
+      <SafeAreaView style={{ flex: 1 }} forceInset={{ top: 'always' }}>
         <Header
           title={''}
           renderRight={() => {
             // return <Icon name={'call'} size={20} color={colors.primary} />;
             return (
               <Button
-                styleText={{marginLeft: 8}}
-                style={{width: 130, paddingHorizontal: 10, height: 30}}
-                icon={
-                  <Icon
-                    name={'phone'}
-                    size={15}
-                    color={'white'}
-                    solid
-                  />
-                }
+                styleText={{ marginLeft: 8 }}
+                style={{ width: 130, paddingHorizontal: 10, height: 30 }}
+                icon={<Icon name={'phone'} size={15} color={'white'} solid />}
                 full
                 round
                 onPress={() => navigation.navigate('HelpLine')}>
@@ -150,40 +151,36 @@ export default function Home({ navigation }) {
           onScroll={Animated.event([
             {
               nativeEvent: {
-                contentOffset: { y: deltaY }
-              }
-            }
+                contentOffset: { y: deltaY },
+              },
+            },
           ])}
           onContentSizeChange={() => {
             setHeightHeader(Utils.heightHeader());
           }}
-          scrollEventThrottle={8}
-        >
+          scrollEventThrottle={8}>
           <View
             style={[
               styles.searchForm,
               {
                 backgroundColor: colors.background,
                 borderColor: colors.border,
-                shadowColor: colors.border
+                shadowColor: colors.border,
               },
-              { marginTop: marginTopBanner }
-            ]}
-          >
+              { marginTop: marginTopBanner },
+            ]}>
             <TouchableOpacity
-              onPress={() => navigation.navigate("SearchHistory")}
-            >
+              onPress={() => navigation.navigate('SearchHistory')}>
               <View
-                style={[BaseStyle.textInput, { backgroundColor: colors.card }]}
-              >
+                style={[BaseStyle.textInput, { backgroundColor: colors.card }]}>
                 <Text body1 grayColor style={{ flex: 1 }}>
-                  {t("search_location")}
+                  {t('search_location')}
                 </Text>
                 <View style={{ paddingVertical: 8 }}>
                   <View
                     style={[
                       styles.lineForm,
-                      { backgroundColor: colors.border }
+                      { backgroundColor: colors.border },
                     ]}
                   />
                 </View>
@@ -206,14 +203,12 @@ export default function Home({ navigation }) {
               return (
                 <TouchableOpacity
                   style={styles.serviceItem}
-                  onPress={() => navigation.navigate(item.route)}
-                >
+                  onPress={() => navigation.navigate(item.route)}>
                   <View
                     style={[
                       styles.serviceCircleIcon,
-                      { backgroundColor: item.color }
-                    ]}
-                  >
+                      { backgroundColor: item.color },
+                    ]}>
                     <Icon
                       name={item.icon}
                       size={20}
@@ -231,10 +226,10 @@ export default function Home({ navigation }) {
           {/* Hiking */}
           <View style={styles.contentPopular}>
             <Text title3 semibold>
-              {t("popular_location")}
+              {t('popular_location')}
             </Text>
             <Text body2 grayColor>
-              {t("popular_lologan")}
+              {t('popular_lologan')}
             </Text>
           </View>
           <FlatList
@@ -247,8 +242,7 @@ export default function Home({ navigation }) {
               <Card
                 style={[styles.popularItem, { marginLeft: 15 }]}
                 image={item.image}
-                onPress={() => navigation.navigate("PlaceDetail")}
-              >
+                onPress={() => navigation.navigate('PlaceDetail')}>
                 <Text headline whiteColor semibold>
                   {item.name}
                 </Text>
@@ -259,14 +253,13 @@ export default function Home({ navigation }) {
           <View
             style={{
               paddingHorizontal: 20,
-              paddingTop: 15
-            }}
-          >
+              paddingTop: 15,
+            }}>
             <Text title3 semibold>
-              {t("recent_location")}
+              {t('recent_location')}
             </Text>
             <Text body2 grayColor>
-              {t("recent_sologan")}
+              {t('recent_sologan')}
             </Text>
             <FlatList
               style={{ marginTop: 15 }}
@@ -279,7 +272,7 @@ export default function Home({ navigation }) {
                   subtitle={item.subtitle}
                   rate={item.rate}
                   style={{ marginBottom: 15 }}
-                  onPress={() => navigation.navigate("PlaceDetail")}
+                  onPress={() => navigation.navigate('PlaceDetail')}
                 />
               )}
             />

@@ -1,13 +1,13 @@
-import React, {useState} from 'react';
-import {View, KeyboardAvoidingView, Platform} from 'react-native';
-import {BaseStyle, useTheme} from '@config';
-import {Header, SafeAreaView, Icon, Button, TextInput} from '@components';
+import React, { useState } from 'react';
+import { View, KeyboardAvoidingView, Platform } from 'react-native';
+import { BaseStyle, useTheme } from '@config';
+import { Header, SafeAreaView, Icon, Button, TextInput } from '@components';
 import styles from './styles';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
-export default function SignUp({navigation}) {
-  const {colors} = useTheme();
-  const {t} = useTranslation();
+export default function SignUp({ navigation }) {
+  const { colors } = useTheme();
+  const { t } = useTranslation();
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -72,26 +72,26 @@ export default function SignUp({navigation}) {
       <KeyboardAvoidingView
         behavior={Platform.OS === 'android' ? 'height' : 'padding'}
         keyboardVerticalOffset={offsetKeyboard}
-        style={{flex: 1}}>
+        style={{ flex: 1 }}>
         <View style={styles.contain}>
           <TextInput
-            onChangeText={text => setName(text)}
+            onChangeText={(text) => setName(text)}
             placeholder= "Username"
             success={success.name}
             value={name}
           />
           <TextInput
-            style={{marginTop: 10}}
-            onChangeText={text => setEmail(text)}
-            placeholder= "Email"
+            style={{ marginTop: 10 }}
+            onChangeText={(text) => setEmail(text)}
+            placeholder="Email"
             keyboardType="email-address"
             success={success.email}
             value={email}
             autoCapitalize="none"
           />
           <TextInput
-            style={{marginTop: 10}}
-            onChangeText={text => setPhone(text)}
+            style={{ marginTop: 10 }}
+            onChangeText={(text) => setPhone(text)}
             placeholder="Phone"
             keyboardType="numeric"
             success={success.phone}
@@ -99,8 +99,8 @@ export default function SignUp({navigation}) {
             autoCapitalize="none"
           />
           <TextInput
-            style={{marginTop: 10}}
-            onChangeText={text => setPassword(text)}
+            style={{ marginTop: 10 }}
+            onChangeText={(text) => setPassword(text)}
             placeholder="Password"
             secureTextEntry={true}
             success={success.password}
@@ -109,7 +109,7 @@ export default function SignUp({navigation}) {
           />
           <Button
             full
-            style={{marginTop: 20}}
+            style={{ marginTop: 20 }}
             loading={loading}
             onPress={() => onSignUp()}>
             {t('sign_up')}
