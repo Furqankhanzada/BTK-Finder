@@ -40,13 +40,16 @@ export default function SignUp({ navigation }) {
       });
     } else {
       setLoading(true);
-      setTimeout(() => {
-        setLoading(false);
-        navigation.navigate('SignIn');
-      }, 500);
     }
 
-    dispatch(register({ name, email, phone, password }));
+    dispatch(
+      register({ name, email, phone, password }, (error) => {
+        setLoading(false);
+        if (!error) {
+          navigation.navigate('SignIn');
+        }
+      }),
+    );
   };
 
   const offsetKeyboard = Platform.select({

@@ -1,6 +1,5 @@
 import * as actionTypes from '@actions/actionTypes';
 import {
-  REGISTER_API,
   REGISTER_API_ERROR,
   REGISTER_API_SUCCESS,
 } from '../constants/auth';
@@ -11,7 +10,6 @@ const initialState = {
     success: false,
   },
   user: {},
-  loading: false,
 };
 
 export default function userReducer(state = initialState, action = {}) {
@@ -20,12 +18,10 @@ export default function userReducer(state = initialState, action = {}) {
       return {
         login: action.data,
       };
-    case REGISTER_API:
-      return Object.assign({}, state, { loading: true });
     case REGISTER_API_SUCCESS:
-      return Object.assign({}, state, { loading: false }, action.user);
+      return Object.assign({}, state, action.user);
     case REGISTER_API_ERROR:
-      return Object.assign({}, state, { loading: false });
+      return Object.assign({}, state, action.error);
     default:
       return state;
   }

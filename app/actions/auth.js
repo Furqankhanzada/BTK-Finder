@@ -1,11 +1,8 @@
 import axios from 'axios';
+import Toast from 'react-native-toast-message';
 import * as actionTypes from './actionTypes';
 import { SIGNUP } from '../constants';
-import {
-  REGISTER_API,
-  REGISTER_API_ERROR,
-  REGISTER_API_SUCCESS,
-} from '../constants/auth';
+import { REGISTER_API_ERROR, REGISTER_API_SUCCESS } from '../constants/auth';
 
 const onLogin = (data) => {
   return {
@@ -27,9 +24,8 @@ export const authentication = (login, callback) => (dispatch) => {
   }, 500);
 };
 
-export const register = (user) => {
+export const register = (user, cb) => {
   return (dispatch) => {
-    dispatch({ type: REGISTER_API });
     axios({
       method: 'post',
       url: SIGNUP,
@@ -37,9 +33,22 @@ export const register = (user) => {
     })
       .then((response) => {
         dispatch({ type: REGISTER_API_SUCCESS, user: response.data });
+        cb && cb();
       })
-      .catch(function (error) {
+      .catch((error) => {
         dispatch({ type: REGISTER_API_ERROR, error });
+        cb && cb(error);
+
+        if (error.response && error.response.data) {
+          console.log('error###', error.response.data);
+
+          Toast.show({
+            type: 'error',
+            topOffset: 55,
+            text1: error.response.data.error,
+            text2: error.response.data.message.join('\n'),
+          });
+        }
       });
   };
 };
