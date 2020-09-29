@@ -2,14 +2,16 @@ import React, { useState } from 'react';
 import { View, KeyboardAvoidingView, Platform } from 'react-native';
 import { BaseStyle, useTheme } from '@config';
 import { Header, SafeAreaView, Icon, Button, TextInput } from '@components';
+import { useDispatch, useSelector } from 'react-redux';
 import styles from './styles';
 import { useTranslation } from 'react-i18next';
-import axios from 'axios';
 import { SIGNUP } from '../../constants';
+import { register } from '../../actions/auth';
 
 export default function SignUp({ navigation }) {
   const { colors } = useTheme();
   const { t } = useTranslation();
+  const dispatch = useDispatch();
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -44,26 +46,7 @@ export default function SignUp({ navigation }) {
       }, 500);
     }
 
-    console.log('SIGNUP: ', SIGNUP);
-
-    axios
-      .post(SIGNUP, {
-        name,
-        email,
-        phone,
-        password,
-      })
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.log(error.response);
-      });
-
-    console.log('Username: ', name);
-    console.log('Email: ', email);
-    console.log('Phone: ', phone);
-    console.log('Password: ', password);
+    dispatch(register({ name, email, phone, password }));
   };
 
   const offsetKeyboard = Platform.select({
