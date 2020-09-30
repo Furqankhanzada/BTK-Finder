@@ -1,8 +1,8 @@
 import axios from 'axios';
-import Toast from 'react-native-toast-message';
 import * as actionTypes from './actionTypes';
 import { SIGNUP } from '../constants';
 import { REGISTER_API_ERROR, REGISTER_API_SUCCESS } from '../constants/auth';
+import { handleError } from '../utils';
 
 const onLogin = (data) => {
   return {
@@ -38,17 +38,7 @@ export const register = (user, cb) => {
       .catch((error) => {
         dispatch({ type: REGISTER_API_ERROR, error });
         cb && cb(error);
-
-        if (error.response && error.response.data) {
-          console.log('error###', error.response.data);
-
-          Toast.show({
-            type: 'error',
-            topOffset: 55,
-            text1: error.response.data.error,
-            text2: error.response.data.message.join('\n'),
-          });
-        }
+        handleError(error);
       });
   };
 };
