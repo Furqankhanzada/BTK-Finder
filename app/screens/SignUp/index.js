@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { View, KeyboardAvoidingView, Platform } from 'react-native';
 import { BaseStyle, useTheme } from '@config';
 import { Header, SafeAreaView, Icon, Button, TextInput } from '@components';
-import { useDispatch, useSelector } from 'react-redux';
+import TextInputMask from 'react-native-text-input-mask';
+import { useDispatch } from 'react-redux';
 import styles from './styles';
 import { useTranslation } from 'react-i18next';
-import { SIGNUP } from '../../constants';
 import { register } from '../../actions/auth';
 
 export default function SignUp({ navigation }) {
@@ -30,7 +30,7 @@ export default function SignUp({ navigation }) {
    *
    */
   const onSignUp = () => {
-    if (name === '' || email === '' || phone === '' || password == '') {
+    if (name === '' || email === '' || phone === '' || password === '') {
       setSuccess({
         ...success,
         name: name != '' ? true : false,
@@ -94,14 +94,17 @@ export default function SignUp({ navigation }) {
             value={email}
             autoCapitalize="none"
           />
-          <TextInput
-            style={{ marginTop: 10 }}
+          <TextInputMask style={ styles.textInput}
+            refInput={(ref) => {
+              this.input = ref;
+            }}
             onChangeText={(text) => setPhone(text)}
-            placeholder="Phone"
+            placeholder="+92 321 432 56 78"
             keyboardType="numeric"
             success={success.phone}
             value={phone}
             autoCapitalize="none"
+            mask={'+92 [000] [000] [00] [00]'}
           />
           <TextInput
             style={{ marginTop: 10 }}
