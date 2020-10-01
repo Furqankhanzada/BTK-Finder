@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux';
 import styles from './styles';
 import { useTranslation } from 'react-i18next';
 import { register } from '../../actions/auth';
+import Toast from 'react-native-toast-message';
 
 export default function SignUp({ navigation }) {
   const { colors } = useTheme();
@@ -47,6 +48,12 @@ export default function SignUp({ navigation }) {
         setLoading(false);
         if (!error) {
           navigation.navigate('SignIn');
+          Toast.show({
+            type: 'success',
+            topOffset: 55,
+            text1: 'Account Registered',
+            text2: 'You have successfully registered an account, Login Now!',
+          });
         }
       }),
     );
@@ -94,17 +101,18 @@ export default function SignUp({ navigation }) {
             value={email}
             autoCapitalize="none"
           />
-          <TextInputMask style={ styles.textInput}
+          <TextInputMask
+            style={styles.textInput}
             refInput={(ref) => {
               this.input = ref;
             }}
             onChangeText={(text) => setPhone(text)}
-            placeholder="+92 321 432 56 78"
+            placeholder="+92 300 1234 567"
             keyboardType="numeric"
             success={success.phone}
             value={phone}
             autoCapitalize="none"
-            mask={'+92 [000] [000] [00] [00]'}
+            mask={'+92 [000] [0000] [000]'}
           />
           <TextInput
             style={{ marginTop: 10 }}

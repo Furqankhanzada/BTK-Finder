@@ -1,26 +1,26 @@
-import React, {useState} from 'react';
-import {useDispatch} from 'react-redux';
-import {AuthActions} from '@actions';
-import {View, TouchableOpacity, ScrollView} from 'react-native';
-import {SafeAreaView, Text, Button, Image} from '@components';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { AuthActions } from '@actions';
+import { View, TouchableOpacity, ScrollView } from 'react-native';
+import { SafeAreaView, Text, Button, Image } from '@components';
 import styles from './styles';
 import Swiper from 'react-native-swiper';
-import {BaseColor, BaseStyle, Images, useTheme} from '@config';
+import { BaseColor, BaseStyle, Images, useTheme } from '@config';
 import * as Utils from '@utils';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
-export default function Walkthrough({navigation}) {
+export default function Walkthrough({ navigation }) {
   const [loading, setLoading] = useState(false);
   const [scrollEnabled, setScrollEnabled] = useState(true);
   const [slide] = useState([
-    {key: 1, image: Images.trip2},
-    {key: 2, image: Images.trip1},
-    {key: 3, image: Images.trip3},
-    {key: 4, image: Images.trip4},
+    { key: 1, image: Images.trip2 },
+    { key: 2, image: Images.trip1 },
+    { key: 3, image: Images.trip3 },
+    { key: 4, image: Images.trip4 },
   ]);
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const dispatch = useDispatch();
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   /**
    * @description Simple authentication without call any APIs
    * @author Passion UI <passionui.com>
@@ -28,11 +28,11 @@ export default function Walkthrough({navigation}) {
    */
   const authentication = () => {
     setLoading(true);
-    dispatch(AuthActions.authentication(true, response => {}));
+    dispatch(AuthActions.authentication(true, (response) => {}));
   };
 
   return (
-    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{top: 'always'}}>
+    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
       <ScrollView
         contentContainerStyle={styles.contain}
         scrollEnabled={scrollEnabled}
@@ -60,28 +60,17 @@ export default function Walkthrough({navigation}) {
             })}
           </Swiper>
         </View>
-        <View style={{width: '100%'}}>
+        <View style={{ width: '100%' }}>
           <Button
             full
-            style={{
-              backgroundColor: BaseColor.navyBlue,
-              marginTop: 20,
-            }}
-            onPress={() => {
-              authentication();
-            }}>
-            {t('login_facebook')}
-          </Button>
-          <Button
-            full
-            style={{marginTop: 20}}
+            style={{ marginTop: 20 }}
             loading={loading}
             onPress={() => navigation.navigate('SignIn')}>
             {t('sign_in')}
           </Button>
           <View style={styles.contentActionBottom}>
-            <Text style={{marginBottom: 20}} body1 grayColor>
-                OR
+            <Text style={{ marginBottom: 20 }} body1 grayColor>
+              OR
             </Text>
             <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
               <Text body1 primaryColor>
