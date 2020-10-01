@@ -1,5 +1,3 @@
-import React from 'react';
-
 //API URL
 export const API_URL = 'https://btk.financebakerz.com/api/v1';
 

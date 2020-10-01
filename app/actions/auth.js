@@ -27,7 +27,7 @@ export const authentication = (login, callback) => (dispatch) => {
 export const register = (user, cb) => {
   return (dispatch) => {
     axios({
-      method: 'post',
+      method: 'POST',
       url: SIGNUP,
       data: user,
     })

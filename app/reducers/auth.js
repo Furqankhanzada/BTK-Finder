@@ -1,8 +1,5 @@
 import * as actionTypes from '@actions/actionTypes';
-import {
-  REGISTER_API_ERROR,
-  REGISTER_API_SUCCESS,
-} from '../constants/auth';
+import { REGISTER_API_ERROR, REGISTER_API_SUCCESS } from '../constants/auth';
 
 //initial state.
 const initialState = {
