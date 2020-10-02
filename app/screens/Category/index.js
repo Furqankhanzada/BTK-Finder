@@ -159,7 +159,6 @@ export default function Category({ navigation }) {
         <FlatList
           contentContainerStyle={{
             paddingHorizontal: 20,
-            flex: 1,
           }}
           refreshControl={
             <RefreshControl
