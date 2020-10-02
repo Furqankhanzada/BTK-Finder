@@ -88,7 +88,7 @@ export default function SignUp({ navigation }) {
         <View style={styles.contain}>
           <TextInput
             onChangeText={(text) => setName(text)}
-            placeholder="Username"
+            placeholder="Name"
             success={success.name}
             value={name}
           />

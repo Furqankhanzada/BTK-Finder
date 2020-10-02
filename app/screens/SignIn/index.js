@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { AuthActions } from '@actions';
 import {
   View,
   TouchableOpacity,
@@ -18,34 +17,37 @@ import {
 } from '@components';
 import styles from './styles';
 import { useTranslation } from 'react-i18next';
+import { login } from '../../actions/auth';
 
 export default function SignIn({ navigation }) {
   const { colors } = useTheme();
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
-  const [id, setId] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState({ id: true, password: true });
+  const [success, setSuccess] = useState({ username: true, password: true });
 
   /**
    * call when action login
    *
    */
   const onLogin = () => {
-    if (id == '' || password == '') {
+    if (username === '' || password === '') {
       setSuccess({
         ...success,
-        id: false,
+        username: false,
         password: false,
       });
     } else {
       setLoading(true);
       dispatch(
-        AuthActions.authentication(true, (response) => {
+        login({ username, password }, (error) => {
           setLoading(false);
-          navigation.goBack();
+          if (!error) {
+            navigation.navigate('Home');
+          }
         }),
       );
     }
@@ -80,16 +82,16 @@ export default function SignIn({ navigation }) {
         style={{ flex: 1 }}>
         <View style={styles.contain}>
           <TextInput
-            onChangeText={(text) => setId(text)}
+            onChangeText={(text) => setUsername(text)}
             onFocus={() => {
               setSuccess({
                 ...success,
-                id: true,
+                username: true,
               });
             }}
-            placeholder="Username"
-            success={success.id}
-            value={id}
+            placeholder="Email"
+            success={success.username}
+            value={username}
           />
           <TextInput
             style={{ marginTop: 10 }}
