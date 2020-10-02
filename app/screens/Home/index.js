@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   ScrollView,
@@ -22,77 +22,39 @@ import styles from './styles';
 import Swiper from 'react-native-swiper';
 import { HomePopularData, HomeListData, HomeBannerData } from '@data';
 import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { getCategories } from '../../actions/category';
 
 export default function Home({ navigation }) {
   const deltaY = new Animated.Value(0);
   const { colors } = useTheme();
   const { t } = useTranslation();
-
+  const dispatch = useDispatch();
+  let categories = useSelector((state) => state.categories.all);
+  categories = [
+    ...categories.slice(0, 7),
+    ...[
+      {
+        id: '5',
+        color: BaseColor.kashmir,
+        icon: 'ellipsis-h',
+        name: 'more',
+        route: 'Category',
+      },
+    ],
+  ];
   const [banner] = useState(HomeBannerData);
-  const [services] = useState([
-    {
-      id: '1',
-      color: colors.primaryLight,
-      icon: 'shopping-bag',
-      name: 'shopping',
-      route: 'Place',
-    },
-    {
-      id: '2',
-      color: BaseColor.kashmir,
-      icon: 'coffee',
-      name: 'coffee_bag',
-      route: 'Place',
-    },
-    {
-      id: '3',
-      color: BaseColor.pinkColor,
-      icon: 'star',
-      name: 'event',
-      route: 'Place',
-    },
-    {
-      id: '4',
-      color: BaseColor.blueColor,
-      icon: 'handshake',
-      name: 'real_estate',
-      route: 'Place',
-    },
-    {
-      id: '5',
-      color: colors.accent,
-      icon: 'briefcase',
-      name: 'jobseeker',
-      route: 'Place',
-    },
-    {
-      id: '3',
-      color: BaseColor.greenColor,
-      icon: 'utensils',
-      name: 'restaurant',
-      route: 'Place',
-    },
-    {
-      id: '4',
-      color: BaseColor.yellowColor,
-      icon: 'car',
-      name: 'automotive',
-      route: 'Place',
-    },
-    {
-      id: '5',
-      color: BaseColor.kashmir,
-      icon: 'ellipsis-h',
-      name: 'more',
-      route: 'Category',
-    },
-  ]);
   const [popular] = useState(HomePopularData);
   const [list] = useState(HomeListData);
   const [heightHeader, setHeightHeader] = useState(Utils.heightHeader());
 
   const heightImageBanner = Utils.scaleWithPixel(225);
   const marginTopBanner = heightImageBanner - heightHeader + 10;
+
+  useEffect(() => {
+    dispatch(getCategories({ limit: 7 }));
+  }, [dispatch]);
+
   return (
     <View style={{ flex: 1 }}>
       <Animated.View
@@ -159,45 +121,45 @@ export default function Home({ navigation }) {
             setHeightHeader(Utils.heightHeader());
           }}
           scrollEventThrottle={8}>
-          <View
-            style={[
-              styles.searchForm,
-              {
-                backgroundColor: colors.background,
-                borderColor: colors.border,
-                shadowColor: colors.border,
-              },
-              { marginTop: marginTopBanner },
-            ]}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('SearchHistory')}>
-              <View
-                style={[BaseStyle.textInput, { backgroundColor: colors.card }]}>
-                <Text body1 grayColor style={{ flex: 1 }}>
-                  {t('search_location')}
-                </Text>
-                <View style={{ paddingVertical: 8 }}>
-                  <View
-                    style={[
-                      styles.lineForm,
-                      { backgroundColor: colors.border },
-                    ]}
-                  />
-                </View>
-                <Icon
-                  name="location-arrow"
-                  size={18}
-                  color={colors.primaryLight}
-                  solid
-                />
-              </View>
-            </TouchableOpacity>
-          </View>
+          {/*<View*/}
+          {/*  style={[*/}
+          {/*    styles.searchForm,*/}
+          {/*    {*/}
+          {/*      backgroundColor: colors.background,*/}
+          {/*      borderColor: colors.border,*/}
+          {/*      shadowColor: colors.border,*/}
+          {/*    },*/}
+          {/*    { marginTop: marginTopBanner },*/}
+          {/*  ]}>*/}
+          {/*  <TouchableOpacity*/}
+          {/*    onPress={() => navigation.navigate('SearchHistory')}>*/}
+          {/*    <View*/}
+          {/*      style={[BaseStyle.textInput, { backgroundColor: colors.card }]}>*/}
+          {/*      <Text body1 grayColor style={{ flex: 1 }}>*/}
+          {/*        {t('search_location')}*/}
+          {/*      </Text>*/}
+          {/*      <View style={{ paddingVertical: 8 }}>*/}
+          {/*        <View*/}
+          {/*          style={[*/}
+          {/*            styles.lineForm,*/}
+          {/*            { backgroundColor: colors.border },*/}
+          {/*          ]}*/}
+          {/*        />*/}
+          {/*      </View>*/}
+          {/*      <Icon*/}
+          {/*        name="location-arrow"*/}
+          {/*        size={18}*/}
+          {/*        color={colors.primaryLight}*/}
+          {/*        solid*/}
+          {/*      />*/}
+          {/*    </View>*/}
+          {/*  </TouchableOpacity>*/}
+          {/*</View>*/}
           {/* services */}
           <FlatList
-            contentContainerStyle={{ padding: 20 }}
-            data={services}
-            numColumns={4}
+            contentContainerStyle={{ padding: 20, marginTop: marginTopBanner }}
+            data={categories}
+            numColumns={`4`}
             keyExtractor={(item, index) => item.id}
             renderItem={({ item }) => {
               return (
