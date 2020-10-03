@@ -26,7 +26,7 @@ export default function CategoryFull(props) {
             {title}
           </Text>
           <Text body2 bold whiteColor>
-            {subtitle} {t('location')}
+            {subtitle} {t('listings')}
           </Text>
         </View>
       </View>

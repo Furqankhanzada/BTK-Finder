@@ -1,19 +1,19 @@
-import React from "react";
-import { StyleSheet } from "react-native";
-import PropTypes from "prop-types";
-import FastImage from "react-native-fast-image";
+import React from 'react';
+import { StyleSheet } from 'react-native';
+import PropTypes from 'prop-types';
+import FastImage from 'react-native-fast-image';
 
 export default function Image(props) {
   const { style, resizeMode, ...rest } = props;
   let resize = FastImage.resizeMode.cover;
   switch (resizeMode) {
-    case "contain":
+    case 'contain':
       resize = FastImage.resizeMode.contain;
       break;
-    case "stretch":
+    case 'stretch':
       resize = FastImage.resizeMode.stretch;
       break;
-    case "center":
+    case 'center':
       resize = FastImage.resizeMode.center;
       break;
     default:
@@ -34,5 +34,5 @@ Image.propTypes = {
 
 Image.defaultProps = {
   style: {},
-  resizeMode: "cover"
+  resizeMode: 'cover',
 };

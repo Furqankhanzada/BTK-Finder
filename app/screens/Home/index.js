@@ -30,9 +30,9 @@ export default function Home({ navigation }) {
   const { colors } = useTheme();
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  let categories = useSelector((state) => state.categories.all);
-  categories = [
-    ...categories.slice(0, 7),
+  let featuredCategories = useSelector((state) => state.categories.featured);
+  featuredCategories = [
+    ...featuredCategories,
     ...[
       {
         id: '5',
@@ -52,7 +52,7 @@ export default function Home({ navigation }) {
   const marginTopBanner = heightImageBanner - heightHeader + 10;
 
   useEffect(() => {
-    dispatch(getCategories({ limit: 7 }));
+    dispatch(getCategories({ limit: 7 }, null, true));
   }, [dispatch]);
 
   return (
@@ -158,7 +158,7 @@ export default function Home({ navigation }) {
           {/* services */}
           <FlatList
             contentContainerStyle={{ padding: 20, marginTop: marginTopBanner }}
-            data={categories}
+            data={featuredCategories}
             numColumns={`4`}
             keyExtractor={(item, index) => item.id}
             renderItem={({ item }) => {

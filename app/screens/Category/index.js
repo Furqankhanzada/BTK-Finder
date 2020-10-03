@@ -91,7 +91,7 @@ export default function Category({ navigation }) {
           <CategoryIcon
             icon={item.icon}
             title={item.name}
-            subtitle={item.subtitle}
+            subtitle={200}
             onPress={() => navigation.navigate('Place')}
             style={[styles.itemIcon, { borderColor: colors.border }]}
           />
@@ -99,10 +99,10 @@ export default function Category({ navigation }) {
       case 'full':
         return (
           <CategoryFull
-            image={Images.category1}
+            image={{ uri: item.image || categories[0].image }}
             icon={item.icon}
             title={item.name}
-            subtitle={item.subtitle}
+            subtitle={300}
             onPress={() => navigation.navigate('Place')}
             style={{
               marginBottom: 15,
@@ -117,7 +117,7 @@ export default function Category({ navigation }) {
   return (
     <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
       <Header
-        title={t('category')}
+        title={t('categories')}
         renderLeft={() => {
           return <Icon name="arrow-left" size={20} color={colors.primary} />;
         }}
