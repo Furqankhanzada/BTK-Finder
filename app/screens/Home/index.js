@@ -101,7 +101,7 @@ export default function Home({ navigation }) {
                 full
                 round
                 onPress={() => navigation.navigate('HelpLine')}>
-                Help Line
+                {t('help_line')}
               </Button>
             );
           }}
