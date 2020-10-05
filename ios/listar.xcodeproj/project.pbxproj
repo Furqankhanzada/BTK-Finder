@@ -488,13 +488,13 @@
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = listar/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.0.7;
+				MARKETING_VERSION = 1.0.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.btk.listar;
+				PRODUCT_BUNDLE_IDENTIFIER = com.explore.btk;
 				PRODUCT_NAME = "Listar RN";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -513,13 +513,13 @@
 				DEVELOPMENT_TEAM = HRCM4U2Z4A;
 				INFOPLIST_FILE = listar/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.0.7;
+				MARKETING_VERSION = 1.0.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.btk.listar;
+				PRODUCT_BUNDLE_IDENTIFIER = com.explore.btk;
 				PRODUCT_NAME = "Listar RN";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
