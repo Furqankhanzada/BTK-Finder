@@ -12,6 +12,7 @@
   "setting": "Setting",
   "sign_out": "Sign Out",
   "category": "Category",
+  "categories": "Categories",
   "search": "Search",
   "data_not_found": "Data not found",
   "location": "Location",
@@ -127,5 +128,8 @@
   "home": "Home",
   "wishlist": "Wishlist",
   "reminders": "Reminders",
-  "default": "Default"
+  "default": "Default",
+  "listings": "Listings",
+  "help_line": "Help Line",
+  "call_now": "Call Now"
 }
