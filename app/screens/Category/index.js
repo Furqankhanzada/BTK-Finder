@@ -154,7 +154,7 @@ export default function Category({ navigation }) {
         />
       </View>
       {loading ? (
-        <ActivityIndicator />
+        <ActivityIndicator size="large" color={colors.primary} />
       ) : (
         <FlatList
           contentContainerStyle={{
