@@ -1,6 +1,13 @@
-import React, {useState} from 'react';
-import {FlatList, RefreshControl, View, TouchableOpacity} from 'react-native';
-import {BaseStyle, BaseColor, useTheme} from '@config';
+import React, { useEffect, useState } from 'react';
+import {
+  FlatList,
+  RefreshControl,
+  View,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
+import { BaseStyle, BaseColor, useTheme, Images } from '@config';
+
 import {
   Header,
   SafeAreaView,
@@ -11,18 +18,30 @@ import {
   Text,
 } from '@components';
 import * as Utils from '@utils';
-import {CategoryData} from '@data';
 import styles from './styles';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { getCategories } from '../../actions/category';
 
-export default function Category({navigation}) {
-  const {t} = useTranslation();
-  const {colors} = useTheme();
+export default function Category({ navigation }) {
+  const { t } = useTranslation();
+  const { colors } = useTheme();
 
-  const [refreshing] = useState(false);
+  const dispatch = useDispatch();
+  const categories = useSelector((state) => state.categories.all);
+
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [search, setSearch] = useState('');
-  const [modeView, setModeView] = useState('full');
-  const [category, setCategory] = useState(CategoryData);
+  const [modeView, setModeView] = useState('icon');
+
+  useEffect(() => {
+    dispatch(
+      getCategories({}, () => {
+        setLoading(false);
+      }),
+    );
+  }, [dispatch]);
 
   /**
    * call when change mode view
@@ -42,13 +61,18 @@ export default function Category({navigation}) {
   /**
    * call when search category
    */
-  const onSearch = () => {
-    if (search == '') {
-      setCategory(CategoryData);
+  const onSearch = (close) => {
+    setLoading(true);
+    if (search === '' || close === 'close') {
+      dispatch(
+        getCategories({}, () => {
+          setLoading(false);
+        }),
+      );
     } else {
-      setCategory(
-        category.filter(item => {
-          return item.title.toUpperCase().includes(search.toUpperCase());
+      dispatch(
+        getCategories({ search }, () => {
+          setLoading(false);
         }),
       );
     }
@@ -66,20 +90,20 @@ export default function Category({navigation}) {
         return (
           <CategoryIcon
             icon={item.icon}
-            title={item.title}
-            subtitle={item.subtitle}
-            onPress={() => navigation.navigate(item.screen)}
-            style={[styles.itemIcon, {borderColor: colors.border}]}
+            title={item.name}
+            subtitle={200}
+            onPress={() => navigation.navigate('Place')}
+            style={[styles.itemIcon, { borderColor: colors.border }]}
           />
         );
       case 'full':
         return (
           <CategoryFull
-            image={item.image}
+            image={{ uri: item.image || categories[0].image }}
             icon={item.icon}
-            title={item.title}
-            subtitle={item.subtitle}
-            onPress={() => navigation.navigate(item.screen)}
+            title={item.name}
+            subtitle={300}
+            onPress={() => navigation.navigate('Place')}
             style={{
               marginBottom: 15,
             }}
@@ -91,9 +115,9 @@ export default function Category({navigation}) {
   };
 
   return (
-    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{top: 'always'}}>
+    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
       <Header
-        title={t('category')}
+        title={t('categories')}
         renderLeft={() => {
           return <Icon name="arrow-left" size={20} color={colors.primary} />;
         }}
@@ -103,7 +127,7 @@ export default function Category({navigation}) {
         renderRight={() => {
           return (
             <Icon
-              name={modeView == 'full' ? 'th-large' : 'th-list'}
+              name={modeView === 'full' ? 'th-large' : 'th-list'}
               size={20}
               color={BaseColor.grayColor}
             />
@@ -111,47 +135,63 @@ export default function Category({navigation}) {
         }}
         onPressRight={onChangeView}
       />
-      <View style={{paddingHorizontal: 20, paddingVertical: 15}}>
+      <View style={{ paddingHorizontal: 20, paddingVertical: 15 }}>
         <TextInput
-          onChangeText={text => setSearch(text)}
+          onChangeText={(text) => setSearch(text)}
           placeholder={t('search')}
           value={search}
           onSubmitEditing={onSearch}
+          autoCapitalize="characters"
           icon={
             <TouchableOpacity
               onPress={() => {
                 setSearch('');
-                onSearch();
+                onSearch('close');
               }}>
               <Icon name="times" size={16} color={BaseColor.grayColor} />
             </TouchableOpacity>
           }
         />
       </View>
-      <FlatList
-        contentContainerStyle={{
-          paddingHorizontal: 20,
-          flex: 1,
-        }}
-        refreshControl={
-          <RefreshControl
-            colors={[colors.primary]}
-            tintColor={colors.primary}
-            refreshing={refreshing}
-          />
-        }
-        data={category}
-        keyExtractor={(item, index) => item.id}
-        renderItem={({item, index}) => renderItem(item, index)}
-        ListEmptyComponent={
-          <View
-            style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-            <Text body2 style={{textAlign: 'center'}}>
-              {t('data_not_found')}
-            </Text>
-          </View>
-        }
-      />
+      {loading ? (
+        <ActivityIndicator size="large" color={colors.primary} />
+      ) : (
+        <FlatList
+          contentContainerStyle={{
+            paddingHorizontal: 20,
+          }}
+          refreshControl={
+            <RefreshControl
+              colors={[colors.primary]}
+              tintColor={colors.primary}
+              refreshing={refreshing}
+              onRefresh={() => {
+                setRefreshing(true);
+                dispatch(
+                  getCategories({}, () => {
+                    setRefreshing(false);
+                  }),
+                );
+              }}
+            />
+          }
+          data={categories}
+          keyExtractor={(item, index) => item.id}
+          renderItem={({ item, index }) => renderItem(item, index)}
+          ListEmptyComponent={
+            <View
+              style={{
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Text body2 style={{ textAlign: 'center' }}>
+                {t('data_not_found')}
+              </Text>
+            </View>
+          }
+        />
+      )}
     </SafeAreaView>
   );
 }

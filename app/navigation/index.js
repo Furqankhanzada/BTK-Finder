@@ -1,13 +1,13 @@
-import React, {useEffect} from 'react';
-import {StatusBar} from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
-import {DarkModeProvider, useDarkMode} from 'react-native-dark-mode';
-import {useTheme, BaseSetting} from '@config';
+import React, { useEffect } from 'react';
+import { StatusBar } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { DarkModeProvider, useDarkMode } from 'react-native-dark-mode';
+import { useTheme, BaseSetting } from '@config';
 import SplashScreen from 'react-native-splash-screen';
 import i18n from 'i18next';
-import {initReactI18next} from 'react-i18next';
-import {useSelector} from 'react-redux';
+import { initReactI18next } from 'react-i18next';
+import { useSelector } from 'react-redux';
 
 /* Main Stack Navigator */
 import Main from 'app/navigation/main';
@@ -20,15 +20,16 @@ import PreviewImage from '@screens/PreviewImage';
 import SelectDarkOption from '@screens/SelectDarkOption';
 import SelectFontOption from '@screens/SelectFontOption';
 import HelpLine from '@screens/HelpLine';
+import Toast from 'react-native-toast-message';
 
 const RootStack = createStackNavigator();
 
 export default function Navigator() {
-  const storeLanguage = useSelector(state => state.application.language);
-  const {theme, colors} = useTheme();
+  const storeLanguage = useSelector((state) => state.application.language);
+  const { theme, colors } = useTheme();
   const isDarkMode = useDarkMode();
 
-  const forFade = ({current, closing}) => ({
+  const forFade = ({ current, closing }) => ({
     cardStyle: {
       opacity: current.progress,
     },
@@ -43,7 +44,7 @@ export default function Navigator() {
     SplashScreen.hide();
     StatusBar.setBackgroundColor(colors.primary, true);
     StatusBar.setBarStyle(isDarkMode ? 'light-content' : 'dark-content', true);
-  }, []);
+  }, [colors.primary, isDarkMode, storeLanguage]);
 
   return (
     <DarkModeProvider>
@@ -55,7 +56,7 @@ export default function Navigator() {
           <RootStack.Screen
             name="Loading"
             component={Loading}
-            options={{gestureEnabled: false}}
+            options={{ gestureEnabled: false }}
           />
           <RootStack.Screen name="Main" component={Main} />
           <RootStack.Screen name="HelpLine" component={HelpLine} />
@@ -69,7 +70,7 @@ export default function Navigator() {
             gestureEnabled={false}
             options={{
               cardStyleInterpolator: forFade,
-              cardStyle: {backgroundColor: 'rgba(0, 0, 0, 0.5)'},
+              cardStyle: { backgroundColor: 'rgba(0, 0, 0, 0.5)' },
             }}
           />
           <RootStack.Screen
@@ -78,11 +79,12 @@ export default function Navigator() {
             gestureEnabled={false}
             options={{
               cardStyleInterpolator: forFade,
-              cardStyle: {backgroundColor: 'rgba(0, 0, 0, 0.5)'},
+              cardStyle: { backgroundColor: 'rgba(0, 0, 0, 0.5)' },
             }}
           />
         </RootStack.Navigator>
       </NavigationContainer>
+      <Toast ref={(ref) => Toast.setRef(ref)} />
     </DarkModeProvider>
   );
 }

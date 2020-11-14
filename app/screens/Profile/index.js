@@ -1,8 +1,8 @@
-import React, {useState} from 'react';
-import {View, ScrollView, TouchableOpacity} from 'react-native';
-import {useDispatch} from 'react-redux';
-import {AuthActions} from '@actions';
-import {BaseStyle, useTheme} from '@config';
+import React, { useState } from 'react';
+import { View, ScrollView, TouchableOpacity } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { AuthActions } from '@actions';
+import { BaseStyle, useTheme } from '@config';
 import {
   Header,
   SafeAreaView,
@@ -13,12 +13,12 @@ import {
   ProfilePerformance,
 } from '@components';
 import styles from './styles';
-import {UserData} from '@data';
-import {useTranslation} from 'react-i18next';
+import { UserData } from '@data';
+import { useTranslation } from 'react-i18next';
 
-export default function Profile({navigation}) {
-  const {colors} = useTheme();
-  const {t} = useTranslation();
+export default function Profile({ navigation }) {
+  const { colors } = useTheme();
+  const { t } = useTranslation();
 
   const [loading, setLoading] = useState(false);
   const [userData] = useState(UserData[0]);
@@ -31,11 +31,11 @@ export default function Profile({navigation}) {
    */
   const onLogOut = () => {
     setLoading(true);
-    dispatch(AuthActions.authentication(false, response => {}));
+    dispatch(AuthActions.authentication(false, (response) => {}));
   };
 
   return (
-    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{top: 'always'}}>
+    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
       <Header title={t('profile')} />
       <ScrollView>
         <View style={styles.contain}>
@@ -49,12 +49,12 @@ export default function Profile({navigation}) {
           />
           <ProfilePerformance
             data={userData.performance}
-            style={{marginTop: 20, marginBottom: 20}}
+            style={{ marginTop: 20, marginBottom: 20 }}
           />
           <TouchableOpacity
             style={[
               styles.profileItem,
-              {borderBottomColor: colors.border, borderBottomWidth: 1},
+              { borderBottomColor: colors.border, borderBottomWidth: 1 },
             ]}
             onPress={() => {
               navigation.navigate('ProfileEdit');
@@ -64,14 +64,14 @@ export default function Profile({navigation}) {
               name="angle-right"
               size={18}
               color={colors.primary}
-              style={{marginLeft: 5}}
+              style={{ marginLeft: 5 }}
               enableRTL={true}
             />
           </TouchableOpacity>
           <TouchableOpacity
             style={[
               styles.profileItem,
-              {borderBottomColor: colors.border, borderBottomWidth: 1},
+              { borderBottomColor: colors.border, borderBottomWidth: 1 },
             ]}
             onPress={() => {
               navigation.navigate('ChangePassword');
@@ -81,14 +81,14 @@ export default function Profile({navigation}) {
               name="angle-right"
               size={18}
               color={colors.primary}
-              style={{marginLeft: 5}}
+              style={{ marginLeft: 5 }}
               enableRTL={true}
             />
           </TouchableOpacity>
           <TouchableOpacity
             style={[
               styles.profileItem,
-              {borderBottomColor: colors.border, borderBottomWidth: 1},
+              { borderBottomColor: colors.border, borderBottomWidth: 1 },
             ]}
             onPress={() => navigation.navigate('ContactUs')}>
             <Text body1>{t('contact_us')}</Text>
@@ -96,14 +96,14 @@ export default function Profile({navigation}) {
               name="angle-right"
               size={18}
               color={colors.primary}
-              style={{marginLeft: 5}}
+              style={{ marginLeft: 5 }}
               enableRTL={true}
             />
           </TouchableOpacity>
           <TouchableOpacity
             style={[
               styles.profileItem,
-              {borderBottomColor: colors.border, borderBottomWidth: 1},
+              { borderBottomColor: colors.border, borderBottomWidth: 1 },
             ]}
             onPress={() => {
               navigation.navigate('AboutUs');
@@ -118,7 +118,7 @@ export default function Profile({navigation}) {
                 name="angle-right"
                 size={18}
                 color={colors.primary}
-                style={{marginLeft: 5}}
+                style={{ marginLeft: 5 }}
                 enableRTL={true}
               />
             </View>
@@ -133,13 +133,13 @@ export default function Profile({navigation}) {
               name="angle-right"
               size={18}
               color={colors.primary}
-              style={{marginLeft: 5}}
+              style={{ marginLeft: 5 }}
               enableRTL={true}
             />
           </TouchableOpacity>
         </View>
       </ScrollView>
-      <View style={{paddingHorizontal: 20, paddingVertical: 15}}>
+      <View style={{ paddingHorizontal: 20, paddingVertical: 15 }}>
         <Button full loading={loading} onPress={() => onLogOut()}>
           {t('sign_out')}
         </Button>

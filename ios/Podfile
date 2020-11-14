@@ -12,6 +12,7 @@ target 'listar' do
     flipper_post_install(installer)
   end
   rn_maps_path = '../node_modules/react-native-maps'
+  pod 'RNInputMask', :path => '../node_modules/react-native-text-input-mask/ios/InputMask'
   pod 'react-native-google-maps', :path => rn_maps_path
   pod 'GoogleMaps'
   pod 'Google-Maps-iOS-Utils'
