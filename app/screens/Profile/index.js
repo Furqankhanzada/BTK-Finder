@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, ScrollView, TouchableOpacity } from 'react-native';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { AuthActions } from '@actions';
 import { BaseStyle, useTheme } from '@config';
 import {
@@ -13,16 +13,24 @@ import {
   ProfilePerformance,
 } from '@components';
 import styles from './styles';
-import { UserData } from '@data';
+import { getProfile } from '../../actions/profile';
 import { useTranslation } from 'react-i18next';
 
 export default function Profile({ navigation }) {
   const { colors } = useTheme();
   const { t } = useTranslation();
 
-  const [loading, setLoading] = useState(false);
-  const [userData] = useState(UserData[0]);
+  const [loading, setLoading] = useState(true);
+  const profileData = useSelector((state) => state.profile);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(
+      getProfile(() => {
+        setLoading(false);
+      }),
+    );
+  }, [dispatch]);
 
   /**
    * @description Simple logout with Redux
@@ -40,17 +48,17 @@ export default function Profile({ navigation }) {
       <ScrollView>
         <View style={styles.contain}>
           <ProfileDetail
-            image={userData.image}
-            textFirst={userData.name}
-            point={userData.point}
-            textSecond={userData.address}
-            textThird={userData.id}
+            image={require('@assets/images/default-avatar.png')}
+            textFirst={profileData.name}
+            // point={profileData.}
+            textSecond={profileData.email}
+            textThird={profileData.phone}
             onPress={() => navigation.navigate('ProfileExanple')}
           />
-          <ProfilePerformance
+          {/* <ProfilePerformance
             data={userData.performance}
             style={{ marginTop: 20, marginBottom: 20 }}
-          />
+          /> */}
           <TouchableOpacity
             style={[
               styles.profileItem,

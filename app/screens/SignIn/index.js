@@ -46,7 +46,7 @@ export default function SignIn({ navigation }) {
         login({ username, password }, (error) => {
           setLoading(false);
           if (!error) {
-            navigation.navigate('Home');
+            navigation.navigate('Profile');
           }
         }),
       );
