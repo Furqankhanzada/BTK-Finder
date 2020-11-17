@@ -1,6 +1,7 @@
-import React, {useState} from 'react';
-import {View, ScrollView, KeyboardAvoidingView, Platform} from 'react-native';
-import {BaseStyle, useTheme} from '@config';
+import React, { useState } from 'react';
+import { View, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import { useSelector } from 'react-redux';
+import { BaseStyle, useTheme } from '@config';
 import {
   Image,
   Header,
@@ -11,18 +12,19 @@ import {
   TextInput,
 } from '@components';
 import styles from './styles';
-import {UserData} from '@data';
 import {useTranslation} from 'react-i18next';
 
 export default function ProfileEdit({navigation}) {
   const {colors} = useTheme();
   const {t} = useTranslation();
 
-  const [id, setId] = useState(UserData[0].id);
-  const [name, setName] = useState(UserData[0].name);
-  const [email, setEmail] = useState(UserData[0].email);
-  const [address, setAddress] = useState(UserData[0].address);
-  const [image] = useState(UserData[0].image);
+  const profileData = useSelector((state) => state.profile);
+
+  const [name, setName] = useState(profileData.name);
+  const [email, setEmail] = useState(profileData.email);
+  const [phone, setPhone] = useState(profileData.phone);
+  // const [address, setAddress] = useState(UserData[0].address);
+  // const [image] = useState(UserData[0].image);
   const [loading, setLoading] = useState(false);
 
   const offsetKeyboard = Platform.select({
@@ -55,18 +57,8 @@ export default function ProfileEdit({navigation}) {
         style={{flex: 1}}>
         <ScrollView contentContainerStyle={styles.contain}>
           <View>
-            <Image source={image} style={styles.thumb} />
+            <Image source={require('@assets/images/default-avatar.png')} style={styles.thumb} />
           </View>
-          <View style={styles.contentTitle}>
-            <Text headline semibold>
-              {t('account')}
-            </Text>
-          </View>
-          <TextInput
-            onChangeText={text => setId(text)}
-            placeholder={t('input_id')}
-            value={id}
-          />
           <View style={styles.contentTitle}>
             <Text headline semibold>
               {t('name')}
@@ -89,6 +81,16 @@ export default function ProfileEdit({navigation}) {
           />
           <View style={styles.contentTitle}>
             <Text headline semibold>
+              {'Phone'}
+            </Text>
+          </View>
+          <TextInput
+            onChangeText={text => setPhone(text)}
+            placeholder={'Input Phone'}
+            value={phone}
+          />
+          {/* <View style={styles.contentTitle}>
+            <Text headline semibold>
               {t('address')}
             </Text>
           </View>
@@ -96,7 +98,7 @@ export default function ProfileEdit({navigation}) {
             onChangeText={text => setAddress(text)}
             placeholder={t('input_address')}
             value={address}
-          />
+          /> */}
         </ScrollView>
         <View style={{paddingVertical: 15, paddingHorizontal: 20}}>
           <Button
