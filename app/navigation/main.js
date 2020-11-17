@@ -1,7 +1,6 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { useSelector } from 'react-redux';
 import { BaseColor, useTheme, useFont } from '@config';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '@components';
@@ -31,6 +30,8 @@ import ChangeLanguage from '@screens/ChangeLanguage';
 import PlaceDetail from '@screens/PlaceDetail';
 import ContactUs from '@screens/ContactUs';
 import AboutUs from '@screens/AboutUs';
+
+import useIsLogin from '../hooks/useIsLogin';
 
 const MainStack = createStackNavigator();
 const BottomTab = createBottomTabNavigator();
@@ -71,9 +72,7 @@ function BottomTabNavigator() {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const font = useFont();
-  const auth = useSelector((state) => state.auth);
-  // const login = auth?.login?.success;
-  const login = true;
+  const isLogin = useIsLogin();
   return (
     <BottomTab.Navigator
       initialRouteName="Home"
@@ -132,7 +131,7 @@ function BottomTabNavigator() {
       />
       <BottomTab.Screen
         name="Profile"
-        component={login ? Profile : Walkthrough}
+        component={isLogin ? Profile : Walkthrough}
         options={{
           title: t('account'),
           tabBarIcon: ({ color }) => {
