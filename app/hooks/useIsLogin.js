@@ -13,7 +13,5 @@ export default function useIsLogin() {
         getToken()
     })
 
-    console.log('GET TOKEN ######################', token);
-
   return !!token;
 }
