@@ -12,6 +12,7 @@ const initialState = {
     success: false,
   },
   user: {},
+  isLogin: false,
 };
 
 export default function userReducer(state = initialState, action = {}) {
@@ -25,7 +26,7 @@ export default function userReducer(state = initialState, action = {}) {
     case REGISTER_API_ERROR:
       return Object.assign({}, state, action.error);
     case LOGIN_API_SUCCESS:
-      return Object.assign({}, state, action.user);
+      return Object.assign({}, state, action.user, {isLogin: true});
     case LOGIN_API_ERROR:
       return Object.assign({}, state, action.error);
     default:

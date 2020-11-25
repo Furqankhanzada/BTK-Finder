@@ -4,6 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { BaseColor, useTheme, useFont } from '@config';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '@components';
+import { useSelector } from 'react-redux';
 
 /* Bottom Screen */
 import Home from '@screens/Home';
@@ -30,8 +31,6 @@ import ChangeLanguage from '@screens/ChangeLanguage';
 import PlaceDetail from '@screens/PlaceDetail';
 import ContactUs from '@screens/ContactUs';
 import AboutUs from '@screens/AboutUs';
-
-import useIsLogin from '../hooks/useIsLogin';
 
 const MainStack = createStackNavigator();
 const BottomTab = createBottomTabNavigator();
@@ -72,7 +71,7 @@ function BottomTabNavigator() {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const font = useFont();
-  const isLogin = useIsLogin();
+  const isLogin = useSelector((state) => state.auth.isLogin);
   return (
     <BottomTab.Navigator
       initialRouteName="Home"
