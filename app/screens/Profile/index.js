@@ -13,7 +13,7 @@ import {
   ProfilePerformance,
 } from '@components';
 import styles from './styles';
-import { getProfile } from '../../actions/profile';
+import { getProfile } from '../../actions/auth';
 import { useTranslation } from 'react-i18next';
 
 export default function Profile({ navigation }) {
@@ -22,6 +22,7 @@ export default function Profile({ navigation }) {
 
   const [loading, setLoading] = useState(true);
   const profileData = useSelector((state) => state.profile);
+  // console.log('########################', profileData);
   const dispatch = useDispatch();
 
   useEffect(() => {

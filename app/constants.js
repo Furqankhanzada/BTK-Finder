@@ -7,3 +7,5 @@ export const LOGIN = `${API_URL}/auth/login`;
 
 export const GET_CATEGORIES = `${API_URL}/categories`;
 export const GET_PROFILE = `${API_URL}/auth/profile`;
+
+export const EDIT_PROFILE = `${API_URL}/users/`;

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { BaseStyle, useTheme } from '@config';
 import {
   Image,
@@ -12,13 +12,16 @@ import {
   TextInput,
 } from '@components';
 import styles from './styles';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
+import { editProfile } from '../../actions/auth';
 
 export default function ProfileEdit({navigation}) {
   const {colors} = useTheme();
   const {t} = useTranslation();
 
   const profileData = useSelector((state) => state.profile);
+  // console.log('++++++++++++++++++++++++', profileData);
+  const dispatch = useDispatch();
 
   const [name, setName] = useState(profileData.name);
   const [email, setEmail] = useState(profileData.email);
@@ -31,6 +34,10 @@ export default function ProfileEdit({navigation}) {
     ios: 0,
     android: 20,
   });
+
+  const onSubmit = () => {
+    dispatch(editProfile({ name, email, phone, _id: profileData._id }));
+  };
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{top: 'always'}}>
@@ -105,6 +112,7 @@ export default function ProfileEdit({navigation}) {
             loading={loading}
             full
             onPress={() => {
+              onSubmit();
               setLoading(true);
               setTimeout(() => {
                 navigation.goBack();
