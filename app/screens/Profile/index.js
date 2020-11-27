@@ -15,6 +15,7 @@ import {
 import styles from './styles';
 import { getProfile } from '../../actions/auth';
 import { useTranslation } from 'react-i18next';
+import { showBetaModal } from '../../popup/betaPopup';
 
 export default function Profile({ navigation }) {
   const { colors } = useTheme();
@@ -54,7 +55,7 @@ export default function Profile({ navigation }) {
             // point={profileData.}
             textSecond={profileData.email}
             textThird={profileData.phone}
-            onPress={() => navigation.navigate('ProfileExanple')}
+            // onPress={() => navigation.navigate('ProfileExanple')}
           />
           {/* <ProfilePerformance
             data={userData.performance}
@@ -82,9 +83,10 @@ export default function Profile({ navigation }) {
               styles.profileItem,
               { borderBottomColor: colors.border, borderBottomWidth: 1 },
             ]}
-            onPress={() => {
-              navigation.navigate('ChangePassword');
-            }}>
+            // onPress={() => {
+            //   navigation.navigate('ChangePassword');
+            // }}
+            onPress={showBetaModal}>
             <Text body1>{t('change_password')}</Text>
             <Icon
               name="angle-right"
@@ -99,7 +101,8 @@ export default function Profile({ navigation }) {
               styles.profileItem,
               { borderBottomColor: colors.border, borderBottomWidth: 1 },
             ]}
-            onPress={() => navigation.navigate('ContactUs')}>
+            // onPress={() => navigation.navigate('ContactUs')}
+            onPress={showBetaModal}>
             <Text body1>{t('contact_us')}</Text>
             <Icon
               name="angle-right"
@@ -114,9 +117,10 @@ export default function Profile({ navigation }) {
               styles.profileItem,
               { borderBottomColor: colors.border, borderBottomWidth: 1 },
             ]}
-            onPress={() => {
-              navigation.navigate('AboutUs');
-            }}>
+            // onPress={() => {
+            //   navigation.navigate('AboutUs');
+            // }}
+            onPress={showBetaModal}>
             <Text body1>{t('about_us')}</Text>
             <View
               style={{
