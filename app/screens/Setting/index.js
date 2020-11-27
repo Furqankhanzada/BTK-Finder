@@ -47,7 +47,7 @@ export default function Setting({navigation}) {
         }}
       />
       <ScrollView contentContainerStyle={styles.contain}>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={[
             styles.profileItem,
             {borderBottomColor: colors.border, borderBottomWidth: 1},
@@ -72,7 +72,7 @@ export default function Setting({navigation}) {
               enableRTL={true}
             />
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TouchableOpacity
           style={[
             styles.profileItem,
@@ -134,7 +134,7 @@ export default function Setting({navigation}) {
             />
           </View>
         </TouchableOpacity>
-        <View
+        {/* <View
           style={[
             styles.profileItem,
             {borderBottomColor: colors.border, borderBottomWidth: 1},
@@ -142,7 +142,7 @@ export default function Setting({navigation}) {
           ]}>
           <Text body1>{t('reminders')}</Text>
           <Switch size={18} onValueChange={toggleSwitch} value={reminders} />
-        </View>
+        </View> */}
         <View style={styles.profileItem}>
           <Text body1>{t('app_version')}</Text>
           <Text body1 grayColor>
