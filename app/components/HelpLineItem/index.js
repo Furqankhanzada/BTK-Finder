@@ -7,25 +7,22 @@ import { useTheme } from '@config';
 
 export default function HelpLineItem(props) {
   const { colors } = useTheme();
-  const {
-    style,
-    imageStyle,
-    image,
-    txtLeftTitle,
-    txtContent,
-    txtRight,
-    onPress,
-  } = props;
+  const { style, imageStyle, image, txtLeftTitle, txtContent, onPress } = props;
   return (
     <TouchableOpacity
       style={[
         styles.contain,
-        { borderBottomWidth: 1, borderBottomColor: colors.border },
+        {
+          borderBottomWidth: 1,
+          borderBottomColor: colors.border,
+          paddingLeft: 20,
+          paddingRight: 20,
+        },
         style,
       ]}
       onPress={onPress}
       activeOpacity={0.9}>
-      <Image source={{ uri: image }} style={[styles.thumb, imageStyle]} />
+      <Image source={image} style={[styles.thumb, imageStyle]} />
       <View style={styles.content}>
         <View style={styles.left}>
           <Text headline semibold>
@@ -43,12 +40,7 @@ export default function HelpLineItem(props) {
           </Text>
         </View>
         <View style={styles.right}>
-          <Icon
-            name={'phone'}
-            size={15}
-            color={colors.primary}
-            solid
-          />
+          <Icon name={'phone'} size={15} color={colors.primary} solid />
         </View>
       </View>
     </TouchableOpacity>

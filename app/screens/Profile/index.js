@@ -1,8 +1,8 @@
-import React, {useState} from 'react';
-import {View, ScrollView, TouchableOpacity} from 'react-native';
-import {useDispatch} from 'react-redux';
-import {AuthActions} from '@actions';
-import {BaseStyle, useTheme} from '@config';
+import React, { useState, useEffect } from 'react';
+import { View, ScrollView, TouchableOpacity } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { AuthActions } from '@actions';
+import { BaseStyle, useTheme } from '@config';
 import {
   Header,
   SafeAreaView,
@@ -13,16 +13,26 @@ import {
   ProfilePerformance,
 } from '@components';
 import styles from './styles';
-import {UserData} from '@data';
-import {useTranslation} from 'react-i18next';
+import { getProfile } from '../../actions/auth';
+import { useTranslation } from 'react-i18next';
+import { showBetaModal } from '../../popup/betaPopup';
 
-export default function Profile({navigation}) {
-  const {colors} = useTheme();
-  const {t} = useTranslation();
+export default function Profile({ navigation }) {
+  const { colors } = useTheme();
+  const { t } = useTranslation();
 
-  const [loading, setLoading] = useState(false);
-  const [userData] = useState(UserData[0]);
+  const [loading, setLoading] = useState(true);
+  const profileData = useSelector((state) => state.profile);
+  // console.log('########################', profileData);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(
+      getProfile(() => {
+        setLoading(false);
+      }),
+    );
+  }, [dispatch]);
 
   /**
    * @description Simple logout with Redux
@@ -31,30 +41,30 @@ export default function Profile({navigation}) {
    */
   const onLogOut = () => {
     setLoading(true);
-    dispatch(AuthActions.authentication(false, response => {}));
+    dispatch(AuthActions.authentication(false, (response) => {}));
   };
 
   return (
-    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{top: 'always'}}>
+    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
       <Header title={t('profile')} />
       <ScrollView>
         <View style={styles.contain}>
           <ProfileDetail
-            image={userData.image}
-            textFirst={userData.name}
-            point={userData.point}
-            textSecond={userData.address}
-            textThird={userData.id}
-            onPress={() => navigation.navigate('ProfileExanple')}
+            image={require('@assets/images/default-avatar.png')}
+            textFirst={profileData.name}
+            // point={profileData.}
+            textSecond={profileData.email}
+            textThird={profileData.phone}
+            // onPress={() => navigation.navigate('ProfileExanple')}
           />
-          <ProfilePerformance
+          {/* <ProfilePerformance
             data={userData.performance}
-            style={{marginTop: 20, marginBottom: 20}}
-          />
+            style={{ marginTop: 20, marginBottom: 20 }}
+          /> */}
           <TouchableOpacity
             style={[
               styles.profileItem,
-              {borderBottomColor: colors.border, borderBottomWidth: 1},
+              { borderBottomColor: colors.border, borderBottomWidth: 1 },
             ]}
             onPress={() => {
               navigation.navigate('ProfileEdit');
@@ -64,50 +74,53 @@ export default function Profile({navigation}) {
               name="angle-right"
               size={18}
               color={colors.primary}
-              style={{marginLeft: 5}}
+              style={{ marginLeft: 5 }}
               enableRTL={true}
             />
           </TouchableOpacity>
           <TouchableOpacity
             style={[
               styles.profileItem,
-              {borderBottomColor: colors.border, borderBottomWidth: 1},
+              { borderBottomColor: colors.border, borderBottomWidth: 1 },
             ]}
-            onPress={() => {
-              navigation.navigate('ChangePassword');
-            }}>
+            // onPress={() => {
+            //   navigation.navigate('ChangePassword');
+            // }}
+            onPress={showBetaModal}>
             <Text body1>{t('change_password')}</Text>
             <Icon
               name="angle-right"
               size={18}
               color={colors.primary}
-              style={{marginLeft: 5}}
+              style={{ marginLeft: 5 }}
               enableRTL={true}
             />
           </TouchableOpacity>
           <TouchableOpacity
             style={[
               styles.profileItem,
-              {borderBottomColor: colors.border, borderBottomWidth: 1},
+              { borderBottomColor: colors.border, borderBottomWidth: 1 },
             ]}
-            onPress={() => navigation.navigate('ContactUs')}>
+            // onPress={() => navigation.navigate('ContactUs')}
+            onPress={showBetaModal}>
             <Text body1>{t('contact_us')}</Text>
             <Icon
               name="angle-right"
               size={18}
               color={colors.primary}
-              style={{marginLeft: 5}}
+              style={{ marginLeft: 5 }}
               enableRTL={true}
             />
           </TouchableOpacity>
           <TouchableOpacity
             style={[
               styles.profileItem,
-              {borderBottomColor: colors.border, borderBottomWidth: 1},
+              { borderBottomColor: colors.border, borderBottomWidth: 1 },
             ]}
-            onPress={() => {
-              navigation.navigate('AboutUs');
-            }}>
+            // onPress={() => {
+            //   navigation.navigate('AboutUs');
+            // }}
+            onPress={showBetaModal}>
             <Text body1>{t('about_us')}</Text>
             <View
               style={{
@@ -118,7 +131,7 @@ export default function Profile({navigation}) {
                 name="angle-right"
                 size={18}
                 color={colors.primary}
-                style={{marginLeft: 5}}
+                style={{ marginLeft: 5 }}
                 enableRTL={true}
               />
             </View>
@@ -133,13 +146,13 @@ export default function Profile({navigation}) {
               name="angle-right"
               size={18}
               color={colors.primary}
-              style={{marginLeft: 5}}
+              style={{ marginLeft: 5 }}
               enableRTL={true}
             />
           </TouchableOpacity>
         </View>
       </ScrollView>
-      <View style={{paddingHorizontal: 20, paddingVertical: 15}}>
+      <View style={{ paddingHorizontal: 20, paddingVertical: 15 }}>
         <Button full loading={loading} onPress={() => onLogOut()}>
           {t('sign_out')}
         </Button>

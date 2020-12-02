@@ -1,5 +1,6 @@
 import React from 'react';
-import {View, TouchableOpacity} from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
+import ImageLoad from 'react-native-image-placeholder';
 import {BaseColor, useTheme} from '@config';
 import {Text, Icon, Image} from '@components';
 import styles from './styles';
@@ -15,7 +16,14 @@ export default function CategoryFull(props) {
       style={[styles.contain, style]}
       onPress={onPress}
       activeOpacity={0.9}>
-      <Image source={image} style={{flex: 1, borderRadius: 8}} />
+      <ImageLoad
+        source={image}
+        style={{ flex: 1, borderRadius: 8 }}
+        isShowActivity={false}
+        placeholderStyle={{ height: 50, width: 50}}
+        loadingStyle={{ size: 'large', color: '#68c9ef' }}
+        borderRadius= {10}
+      />
       <View style={styles.contentIcon}>
         <View
           style={[styles.iconCircle, {backgroundColor: colors.primaryLight}]}>
@@ -26,7 +34,7 @@ export default function CategoryFull(props) {
             {title}
           </Text>
           <Text body2 bold whiteColor>
-            {subtitle} {t('location')}
+            {subtitle} {t('listings')}
           </Text>
         </View>
       </View>

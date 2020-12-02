@@ -14,8 +14,9 @@ export default StyleSheet.create({
     bottom: 0
   },
   contentActionBottom: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: 25
   },
   img: {

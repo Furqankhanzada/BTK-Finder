@@ -1,10 +1,10 @@
 import React from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {useSelector} from 'react-redux';
-import {BaseColor, useTheme, useFont} from '@config';
-import {useTranslation} from 'react-i18next';
-import {Icon} from '@components';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { BaseColor, useTheme, useFont } from '@config';
+import { useTranslation } from 'react-i18next';
+import { Icon } from '@components';
+import { useSelector } from 'react-redux';
 
 /* Bottom Screen */
 import Home from '@screens/Home';
@@ -68,11 +68,10 @@ export default function Main() {
 }
 
 function BottomTabNavigator() {
-  const {t} = useTranslation();
-  const {colors} = useTheme();
+  const { t } = useTranslation();
+  const { colors } = useTheme();
   const font = useFont();
-  const auth = useSelector(state => state.auth);
-  const login = auth.login.success;
+  const isLogin = useSelector((state) => state.auth.isLogin);
   return (
     <BottomTab.Navigator
       initialRouteName="Home"
@@ -82,7 +81,7 @@ function BottomTabNavigator() {
         showLabel: true,
         activeTintColor: colors.primary,
         inactiveTintColor: BaseColor.grayColor,
-        style: {borderTopWidth: 1},
+        style: { borderTopWidth: 1 },
         labelStyle: {
           fontSize: 12,
           fontFamily: font,
@@ -93,7 +92,7 @@ function BottomTabNavigator() {
         component={Home}
         options={{
           title: t('home'),
-          tabBarIcon: ({color}) => {
+          tabBarIcon: ({ color }) => {
             return <Icon color={color} name="home" size={20} solid />;
           },
         }}
@@ -104,7 +103,7 @@ function BottomTabNavigator() {
         component={Wishlist}
         options={{
           title: t('wishlist'),
-          tabBarIcon: ({color}) => {
+          tabBarIcon: ({ color }) => {
             return <Icon color={color} name="bookmark" size={20} solid />;
           },
         }}
@@ -114,7 +113,7 @@ function BottomTabNavigator() {
         component={Messenger}
         options={{
           title: t('messenger'),
-          tabBarIcon: ({color}) => {
+          tabBarIcon: ({ color }) => {
             return <Icon color={color} name="envelope" size={20} solid />;
           },
         }}
@@ -124,17 +123,17 @@ function BottomTabNavigator() {
         component={Notification}
         options={{
           title: t('notification'),
-          tabBarIcon: ({color}) => {
+          tabBarIcon: ({ color }) => {
             return <Icon color={color} name="bell" size={20} solid />;
           },
         }}
       />
       <BottomTab.Screen
         name="Profile"
-        component={login ? Profile : Walkthrough}
+        component={isLogin ? Profile : Walkthrough}
         options={{
           title: t('account'),
-          tabBarIcon: ({color}) => {
+          tabBarIcon: ({ color }) => {
             return <Icon solid color={color} name="user-circle" size={20} />;
           },
         }}

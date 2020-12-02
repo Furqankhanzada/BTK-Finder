@@ -12,6 +12,7 @@
   "setting": "Setting",
   "sign_out": "Sign Out",
   "category": "Category",
+  "categories": "Categories",
   "search": "Search",
   "data_not_found": "Data not found",
   "location": "Location",
@@ -122,10 +123,13 @@
   "sign_up": "Sign Up",
   "pick_your_destication": "Picking your travel destinations",
   "login_facebook": "Login with Facebook",
-  "not_have_account": "Haven’t registered yet?",
+  "register": "Create an account",
   "join_now": "Join Now",
   "home": "Home",
   "wishlist": "Wishlist",
   "reminders": "Reminders",
-  "default": "Default"
+  "default": "Default",
+  "listings": "Listings",
+  "help_line": "Help Line",
+  "call_now": "Call Now"
 }

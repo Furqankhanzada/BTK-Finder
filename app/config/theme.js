@@ -1,5 +1,5 @@
-import {useSelector} from 'react-redux';
-import {useDarkMode} from 'react-native-dark-mode';
+import { useSelector } from 'react-redux';
+import { useDarkMode } from 'react-native-dark-mode';
 
 /**
  * Define Const color use for whole application
@@ -9,7 +9,6 @@ export const BaseColor = {
   dividerColor: '#BDBDBD',
   whiteColor: '#FFFFFF',
   fieldColor: '#F5F5F5',
-  yellowColor: '#FDC60A',
   navyBlue: '#3C5A99',
   kashmir: '#5D6D7E',
   orangeColor: '#E5634D',
@@ -219,20 +218,20 @@ export const DefaultFont = 'Raleway';
  */
 export const useTheme = () => {
   const isDarkMode = useDarkMode();
-  const forceDark = useSelector(state => state.application.force_dark);
-  const themeStorage = useSelector(state => state.application.theme);
-  const listTheme = ThemeSupport.filter(item => item.theme == themeStorage);
+  const forceDark = useSelector((state) => state.application.force_dark);
+  const themeStorage = useSelector((state) => state.application.theme);
+  const listTheme = ThemeSupport.filter((item) => item.theme == themeStorage);
   const theme = ThemeSupport[2];
 
   if (forceDark) {
-    return {theme: theme.dark, colors: theme.dark.colors};
+    return { theme: theme.dark, colors: theme.dark.colors };
   }
   if (forceDark == false) {
-    return {theme: theme.light, colors: theme.light.colors};
+    return { theme: theme.light, colors: theme.light.colors };
   }
   return isDarkMode
-    ? {theme: theme.dark, colors: theme.dark.colors}
-    : {theme: theme.light, colors: theme.light.colors};
+    ? { theme: theme.dark, colors: theme.dark.colors }
+    : { theme: theme.light, colors: theme.light.colors };
 };
 
 /**
@@ -240,6 +239,6 @@ export const useTheme = () => {
  * @returns font
  */
 export const useFont = () => {
-  const font = useSelector(state => state.application.font);
+  const font = useSelector((state) => state.application.font);
   return font ?? DefaultFont;
 };

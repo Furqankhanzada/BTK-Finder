@@ -1,8 +1,12 @@
-import { combineReducers } from "redux";
-import AuthReducer from "./auth";
-import ApplicationReducer from "./application";
+import { combineReducers } from 'redux';
+import AuthReducer from './auth';
+import CategoryReducer from './category';
+import ProfileReducer from './auth';
+import ApplicationReducer from './application';
 
 export default combineReducers({
   auth: AuthReducer,
-  application: ApplicationReducer
+  categories: CategoryReducer,
+  profile: ProfileReducer,
+  application: ApplicationReducer,
 });

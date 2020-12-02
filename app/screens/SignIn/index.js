@@ -1,44 +1,54 @@
-import React, {useState} from 'react';
-import {useDispatch} from 'react-redux';
-import {AuthActions} from '@actions';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import {
   View,
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import {BaseStyle, useTheme} from '@config';
-import {Header, SafeAreaView, Icon, Text, Button, TextInput} from '@components';
+import { BaseStyle, useTheme } from '@config';
+import {
+  Header,
+  SafeAreaView,
+  Icon,
+  Text,
+  Button,
+  TextInput,
+} from '@components';
 import styles from './styles';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
+import { login } from '../../actions/auth';
+import { showBetaModal } from '../../popup/betaPopup';
 
-export default function SignIn({navigation}) {
-  const {colors} = useTheme();
-  const {t} = useTranslation();
+export default function SignIn({ navigation }) {
+  const { colors } = useTheme();
+  const { t } = useTranslation();
   const dispatch = useDispatch();
 
-  const [id, setId] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState({id: true, password: true});
+  const [success, setSuccess] = useState({ username: true, password: true });
 
   /**
    * call when action login
    *
    */
   const onLogin = () => {
-    if (id == '' || password == '') {
+    if (username === '' || password === '') {
       setSuccess({
         ...success,
-        id: false,
+        username: false,
         password: false,
       });
     } else {
       setLoading(true);
       dispatch(
-        AuthActions.authentication(true, response => {
+        login({ username, password }, (error) => {
           setLoading(false);
-          navigation.goBack();
+          if (!error) {
+            navigation.navigate('Profile');
+          }
         }),
       );
     }
@@ -50,7 +60,7 @@ export default function SignIn({navigation}) {
   });
 
   return (
-    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{top: 'always'}}>
+    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
       <Header
         title={t('sign_in')}
         renderLeft={() => {
@@ -70,36 +80,36 @@ export default function SignIn({navigation}) {
       <KeyboardAvoidingView
         behavior={Platform.OS === 'android' ? 'height' : 'padding'}
         keyboardVerticalOffset={offsetKeyboard}
-        style={{flex: 1}}>
+        style={{ flex: 1 }}>
         <View style={styles.contain}>
           <TextInput
-            onChangeText={text => setId(text)}
+            onChangeText={(text) => setUsername(text)}
             onFocus={() => {
               setSuccess({
                 ...success,
-                id: true,
+                username: true,
               });
             }}
-            placeholder={t('input_id')}
-            success={success.id}
-            value={id}
+            placeholder="Email"
+            success={success.username}
+            value={username}
           />
           <TextInput
-            style={{marginTop: 10}}
-            onChangeText={text => setPassword(text)}
+            style={{ marginTop: 10 }}
+            onChangeText={(text) => setPassword(text)}
             onFocus={() => {
               setSuccess({
                 ...success,
                 password: true,
               });
             }}
-            placeholder={t('input_password')}
+            placeholder="Password"
             secureTextEntry={true}
             success={success.password}
             value={password}
           />
           <Button
-            style={{marginTop: 20}}
+            style={{ marginTop: 20 }}
             full
             loading={loading}
             onPress={() => {
@@ -108,8 +118,9 @@ export default function SignIn({navigation}) {
             {t('sign_in')}
           </Button>
           <TouchableOpacity
-            onPress={() => navigation.navigate('ResetPassword')}>
-            <Text body1 grayColor style={{marginTop: 25}}>
+            // onPress={() => navigation.navigate('ResetPassword')}
+            onPress={showBetaModal}>
+            <Text body1 grayColor style={{ marginTop: 25 }}>
               {t('forgot_your_password')}
             </Text>
           </TouchableOpacity>
