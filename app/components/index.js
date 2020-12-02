@@ -7,7 +7,7 @@ import CommentItem from './CommentItem';
 import ProfilePerformance from './ProfilePerformance';
 import ListThumbSquare from './ListThumbSquare';
 import Header from './Header';
-import {SafeAreaView} from 'react-native';
+import { SafeAreaView } from 'react-native';
 import StarRating from './StarRating';
 import ProfileAuthor from './ProfileAuthor';
 import ProfileDetail from './ProfileDetail';
@@ -23,6 +23,7 @@ import CategoryFull from './CategoryFull';
 import PlaceItem from './PlaceItem';
 import ProfileDescription from './ProfileDescription';
 import HelpLineItem from './HelpLineItem';
+import FeaturedCategoryPlaceholderComponent from './Placeholders/featuredCategories';
 export {
   TextInput,
   PlaceItem,
@@ -48,5 +49,6 @@ export {
   Card,
   FilterSort,
   ProfileDescription,
-  HelpLineItem
+  HelpLineItem,
+  FeaturedCategoryPlaceholderComponent,
 };

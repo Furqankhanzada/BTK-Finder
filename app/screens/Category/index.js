@@ -99,14 +99,12 @@ export default function Category({ navigation }) {
       case 'full':
         return (
           <CategoryFull
-            image={{ uri: item.image || categories[0].image }}
+            image={{ uri: item.image || 'https://i.ibb.co/VpvP0X5/empty-image.jpg' }}
             icon={item.icon}
             title={item.name}
             subtitle={300}
             onPress={() => navigation.navigate('Place')}
-            style={{
-              marginBottom: 15,
-            }}
+            style={styles.itemFull}
           />
         );
       default:

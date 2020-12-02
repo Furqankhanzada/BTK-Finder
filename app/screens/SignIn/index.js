@@ -18,6 +18,7 @@ import {
 import styles from './styles';
 import { useTranslation } from 'react-i18next';
 import { login } from '../../actions/auth';
+import { showBetaModal } from '../../popup/betaPopup';
 
 export default function SignIn({ navigation }) {
   const { colors } = useTheme();
@@ -46,7 +47,7 @@ export default function SignIn({ navigation }) {
         login({ username, password }, (error) => {
           setLoading(false);
           if (!error) {
-            navigation.navigate('Home');
+            navigation.navigate('Profile');
           }
         }),
       );
@@ -117,7 +118,8 @@ export default function SignIn({ navigation }) {
             {t('sign_in')}
           </Button>
           <TouchableOpacity
-            onPress={() => navigation.navigate('ResetPassword')}>
+            // onPress={() => navigation.navigate('ResetPassword')}
+            onPress={showBetaModal}>
             <Text body1 grayColor style={{ marginTop: 25 }}>
               {t('forgot_your_password')}
             </Text>

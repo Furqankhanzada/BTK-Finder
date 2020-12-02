@@ -24,12 +24,15 @@ import { HomePopularData, HomeListData, HomeBannerData } from '@data';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCategories } from '../../actions/category';
+import FeaturedCategoryPlaceholderComponent from '../../components/Placeholders/featuredCategories';
 
 export default function Home({ navigation }) {
+  const [loading, setLoading] = useState(true);
   const deltaY = new Animated.Value(0);
   const { colors } = useTheme();
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  let placeholderItems = [1, 2, 3, 4, 5, 6, 7, 8];
   let featuredCategories = useSelector((state) => state.categories.featured);
   featuredCategories = [
     ...featuredCategories,
@@ -53,6 +56,14 @@ export default function Home({ navigation }) {
 
   useEffect(() => {
     dispatch(getCategories({ limit: 7 }, null, true));
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(
+      getCategories({}, () => {
+        setLoading(false);
+      }),
+    );
   }, [dispatch]);
 
   return (
@@ -156,10 +167,27 @@ export default function Home({ navigation }) {
           {/*  </TouchableOpacity>*/}
           {/*</View>*/}
           {/* services */}
-          <FlatList
-            contentContainerStyle={{ padding: 20, marginTop: marginTopBanner }}
+
+          {loading ? (
+            <FlatList
+              contentContainerStyle={{
+                padding: 20,
+                marginTop: marginTopBanner,
+              }}
+              data={placeholderItems}
+              numColumns={'4'}
+              renderItem={() => {
+                return <FeaturedCategoryPlaceholderComponent />;
+              }}
+            />
+          ) : (
+            <FlatList
+            contentContainerStyle={{
+              padding: 20,
+              marginTop: marginTopBanner,
+            }}
             data={featuredCategories}
-            numColumns={`4`}
+            numColumns={'4'}
             keyExtractor={(item, index) => item.id}
             renderItem={({ item }) => {
               return (
@@ -185,6 +213,7 @@ export default function Home({ navigation }) {
               );
             }}
           />
+          )}
           {/* Hiking */}
           <View style={styles.contentPopular}>
             <Text title3 semibold>

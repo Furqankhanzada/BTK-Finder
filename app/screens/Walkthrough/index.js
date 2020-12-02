@@ -12,12 +12,12 @@ import { useTranslation } from 'react-i18next';
 export default function Walkthrough({ navigation }) {
   const [loading, setLoading] = useState(false);
   const [scrollEnabled, setScrollEnabled] = useState(true);
-  const [slide] = useState([
-    { key: 1, image: Images.trip2 },
-    { key: 2, image: Images.trip1 },
-    { key: 3, image: Images.trip3 },
-    { key: 4, image: Images.trip4 },
-  ]);
+  const slideshow = [
+    { key: 1, image: require('@assets/images/banners/long-view.jpg') },
+    { key: 2, image: require('@assets/images/banners/danzoo-topview.jpg') },
+    { key: 3, image: require('@assets/images/banners/adventure-land-night.jpg') },
+    { key: 4, image: require('@assets/images/banners/main-towers.jpg') },
+  ];
   const { colors } = useTheme();
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -48,7 +48,7 @@ export default function Walkthrough({ navigation }) {
             activeDotColor={colors.primary}
             paginationStyle={styles.contentPage}
             removeClippedSubviews={false}>
-            {slide.map((item, index) => {
+            {slideshow.map((item, index) => {
               return (
                 <View style={styles.slide} key={item.key}>
                   <Image source={item.image} style={styles.img} />

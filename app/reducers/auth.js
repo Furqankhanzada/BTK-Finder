@@ -4,6 +4,10 @@ import {
   REGISTER_API_SUCCESS,
   LOGIN_API_ERROR,
   LOGIN_API_SUCCESS,
+  GET_PROFILE_API_SUCCESS,
+  GET_PROFILE_API_ERROR,
+  EDIT_PROFILE_API_SUCCESS,
+  EDIT_PROFILE_API_ERROR,
 } from '../constants/auth';
 
 //initial state.
@@ -12,6 +16,7 @@ const initialState = {
     success: false,
   },
   user: {},
+  isLogin: false,
 };
 
 export default function userReducer(state = initialState, action = {}) {
@@ -25,8 +30,16 @@ export default function userReducer(state = initialState, action = {}) {
     case REGISTER_API_ERROR:
       return Object.assign({}, state, action.error);
     case LOGIN_API_SUCCESS:
-      return Object.assign({}, state, action.user);
+      return Object.assign({}, state, action.user, {isLogin: true});
     case LOGIN_API_ERROR:
+      return Object.assign({}, state, action.error);
+    case GET_PROFILE_API_SUCCESS:
+      return Object.assign({}, state, { ...action.profile });
+    case GET_PROFILE_API_ERROR:
+      return Object.assign({}, state, action.error);
+    case EDIT_PROFILE_API_SUCCESS:
+      return Object.assign({}, state, action.user );
+    case EDIT_PROFILE_API_ERROR:
       return Object.assign({}, state, action.error);
     default:
       return state;

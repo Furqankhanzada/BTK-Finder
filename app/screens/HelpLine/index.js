@@ -44,14 +44,37 @@ const HelpLine = React.memo(({ navigation }) => {
     {
       title: 'Emergency Numbers',
       data: [
-        { title: 'Security Department', numbers: btkNumbers, extension: '624' },
         {
-          title: 'Fire Station Bahria Town',
-          numbers: 821,
+          title: 'Bahria Hospital',
+          numbers: ['021111111284'],
         },
         {
-          title: 'Bahria International Hospital',
-          numbers: ['021111111284'],
+          title: 'Bahria Helpline',
+          numbers: ['02134110447', '02138771555'],
+          extension: '700'
+        },
+        {
+          title: 'Bahria Medical Center',
+          numbers: ['02136435400', '02138771555'],
+          extension: '660'
+        },
+        {
+          title: 'Bahria Security',
+          numbers: ['03212810185', '02138771555'],
+          extension: '624'
+        },
+        {
+          title: 'Fire Brigade',
+          numbers: ['02138771555'],
+          extension: '959'
+        },
+        {
+          title: 'Ambulance',
+          numbers: ['02136435406'],
+        },
+        {
+          title: 'Police Station',
+          numbers: ['02134644407', '02134642971'],
         },
       ],
     },
