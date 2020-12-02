@@ -1,4 +1,5 @@
 import axios from 'axios';
+import AsyncStorage from '@react-native-community/async-storage';
 import * as actionTypes from './actionTypes';
 import { SIGNUP, LOGIN } from '../constants';
 import {
@@ -55,9 +56,20 @@ export const login = (user, cb) => {
       url: LOGIN,
       data: user,
     })
-      .then((response) => {
+      .then(async (response) => {
         dispatch({ type: LOGIN_API_SUCCESS, user: response.data });
         cb && cb();
+        console.log('Token:', response.data);
+        try {
+          await AsyncStorage.setItem(
+            'access_token',
+            response.data.access_token,
+          );
+          const token = await AsyncStorage.getItem('access_token');
+          console.log('token#######', token);
+        } catch (e) {
+          // saving error
+        }
       })
       .catch((error) => {
         dispatch({ type: LOGIN_API_ERROR, error });
