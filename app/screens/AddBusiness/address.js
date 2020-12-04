@@ -68,7 +68,7 @@ export default function Address({ navigation }) {
               placeholder="Address"
               value={street}
             />
-            <TextInput
+            {/* <TextInput
               style={{ marginTop: 10 }}
               onChangeText={(text) => setRegion.latitude(text)}
               placeholder="Google Map Latitude"
@@ -98,7 +98,7 @@ export default function Address({ navigation }) {
                   }}
                 />
               </MapView>
-            </View>
+            </View> */}
           </View>
         </View>
       </ScrollView>
