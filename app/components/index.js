@@ -24,6 +24,9 @@ import PlaceItem from './PlaceItem';
 import ProfileDescription from './ProfileDescription';
 import HelpLineItem from './HelpLineItem';
 import FeaturedCategoryPlaceholderComponent from './Placeholders/featuredCategories';
+import CustomStepIndicator from './StepIndicator';
+import HoursCheckbox from './HoursCheckbox';
+
 export {
   TextInput,
   PlaceItem,
@@ -51,4 +54,6 @@ export {
   ProfileDescription,
   HelpLineItem,
   FeaturedCategoryPlaceholderComponent,
+  CustomStepIndicator,
+  HoursCheckbox,
 };

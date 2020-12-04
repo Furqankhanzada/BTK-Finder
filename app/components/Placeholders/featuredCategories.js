@@ -7,7 +7,6 @@ import {
 } from 'rn-placeholder';
 import {
   responsiveHeight,
-  responsiveWidth,
 } from 'react-native-responsive-dimensions';
 
 const FeaturedCategoryPlaceholderComponent = () => (
@@ -15,22 +14,24 @@ const FeaturedCategoryPlaceholderComponent = () => (
     Animation={ShineOverlay}
     style={{
       height: 70,
-      marginTop: 1,
-      marginHorizontal: 14,
+      marginTop: 2,
+      marginBottom: 0,
+      marginHorizontal: 16,
+      flexDirection: "column",
     }}
     Left={(props) => (
       <PlaceholderMedia
         style={[
           props.style,
           {
-            width: responsiveWidth(12),
-            height: responsiveHeight(7),
+            width: 38,
+            height: 38,
             borderRadius: 20,
           },
         ]}
       />
   )}>
-  <PlaceholderLine style={{ marginTop: responsiveHeight(1) }} width={53} />
+  <PlaceholderLine style={{ marginTop: responsiveHeight(1) }} width={50} />
   </Placeholder>
 );
 
