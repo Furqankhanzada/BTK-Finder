@@ -10,7 +10,6 @@ import {
   CustomStepIndicator,
 } from '@components';
 import styles from './styles';
-import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import { ScrollView } from 'react-native-gesture-handler';
 import ActionButton from 'react-native-action-button';
 
@@ -20,12 +19,6 @@ export default function Address({ navigation }) {
     navigation.navigate('Hours');
   };
 
-  const [region, setRegion] = useState({
-    latitude: 24.993723,
-    longitude: 67.317047,
-    latitudeDelta: 0.010,
-    longitudeDelta: 0.005,
-  });
   const [street, setStreet] = useState('');
 
   const offsetKeyboard = Platform.select({
@@ -63,42 +56,14 @@ export default function Address({ navigation }) {
           </View>
           <View>
             <TextInput
-              style={{ marginTop: 10 }}
+              style={{ marginTop: 10, height: 100 }}
               onChangeText={(text) => setStreet(text)}
               placeholder="Address"
               value={street}
+              multiline={true}
+              numberOfLines={10}
+              textAlignVertical= 'top'
             />
-            {/* <TextInput
-              style={{ marginTop: 10 }}
-              onChangeText={(text) => setRegion.latitude(text)}
-              placeholder="Google Map Latitude"
-              value={region.latitude}
-            />
-            <TextInput
-              style={{ marginTop: 10 }}
-              onChangeText={(text) => setRegion.longitude(text)}
-              placeholder="Google Map Longitude"
-              value={region.longitude}
-            />
-            <View
-              style={{
-                height: 180,
-                paddingVertical: 20,
-                marginTop: 20,
-              }}>
-              <MapView
-                provider={PROVIDER_GOOGLE}
-                style={styles.map}
-                region={region}
-                onRegionChange={() => {}}>
-                <Marker
-                  coordinate={{
-                    latitude: region.latitude,
-                    longitude: region.longitude,
-                  }}
-                />
-              </MapView>
-            </View> */}
           </View>
         </View>
       </ScrollView>
