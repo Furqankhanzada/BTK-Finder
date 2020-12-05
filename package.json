@@ -29,6 +29,7 @@
     "react-native-basic-form": "^1.1.11",
     "react-native-calendars": "^1.308.0",
     "react-native-dark-mode": "^0.2.2",
+    "react-native-dropdown-picker": "^3.7.1",
     "react-native-elements": "^2.3.2",
     "react-native-fast-image": "^8.3.2",
     "react-native-gesture-handler": "^1.7.0",

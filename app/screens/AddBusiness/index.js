@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Platform } from 'react-native';
+import { View, Platform, I18nManager } from 'react-native';
 import { BaseStyle, BaseColor, useTheme } from '@config';
 import {
   Header,
@@ -10,9 +10,11 @@ import {
   CustomStepIndicator,
 } from '@components';
 import styles from './styles';
+import { useSelector } from 'react-redux';
 import TextInputMask from 'react-native-text-input-mask';
 import { ScrollView } from 'react-native-gesture-handler';
 import ActionButton from 'react-native-action-button';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 export default function Business({ navigation }) {
 
@@ -20,17 +22,21 @@ export default function Business({ navigation }) {
     navigation.navigate('Address');
   };
 
+  const categories = useSelector((state) => state.categories.all);
+  const getCategories = categories.map(({ name }) => {
+    return { label: name, value: name }
+  });
   const {colors} = useTheme();
   const cardColor = colors.card;
 
-  const [contactName, setContactName] = useState('');
-  const [contactDescription, setContactDescription] = useState('');
-  const [contactCategory, setContactCategory] = useState('');
-  const [contactTags, setContactTags] = useState('');
-  const [contactTelephone, setContactTelephone] = useState('');
-  const [contactEmail, setContactEmail] = useState('');
-  const [contactWebsite, setContactWebsite] = useState('');
-  const [contactEstablished, setContactEstablished] = useState('');
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [category, setCategory] = useState(null);
+  const [tags, setTags] = useState('');
+  const [telephone, setTelephone] = useState('');
+  const [email, setEmail] = useState('');
+  const [website, setWebsite] = useState('');
+  const [established, setEstablished] = useState('');
 
   const offsetKeyboard = Platform.select({
     ios: 0,
@@ -51,63 +57,84 @@ export default function Business({ navigation }) {
             </Text>
           </View>
           <TextInput
-            onChangeText={(text) => setContactName(text)}
+            onChangeText={(text) => setName(text)}
             placeholder="Name"
-            value={contactName}
+            value={name}
           />
           <TextInput
             style={{ marginTop: 10 }}
-            onChangeText={(text) => setContactDescription(text)}
+            onChangeText={(text) => setDescription(text)}
             placeholder="Description"
-            value={contactDescription}
+            value={description}
+          />
+          <DropDownPicker
+              items={getCategories}
+              defaultValue={category}
+              containerStyle={{marginTop: 10, height: 48, width: '100%'}}
+              style={{
+                backgroundColor: cardColor,
+                fontFamily: 'Raleway',
+                flex: 1,
+                height: '100%',
+                textAlign: I18nManager.isRTL ? 'right' : 'left',
+                color: colors.text,
+                paddingTop: 5,
+                paddingBottom: 5,
+                borderColor: cardColor,
+              }}
+              arrowColor={colors.primary}
+              itemStyle={{ justifyContent: 'flex-start' }}
+              placeholder="Select a Category"
+              // placeholderStyle={{color: BaseColor.grayColor}}
+              searchable={true}
+              searchableStyle={{borderColor: colors.primary}}
+              searchablePlaceholder="Search for a Category"
+              searchablePlaceholderTextColor={BaseColor.grayColor}
+              dropDownStyle={{backgroundColor: cardColor}}
+              dropDownMaxHeight={250}
+              onChangeItem={item =>setCategory(item.value)}
           />
           <TextInput
             style={{ marginTop: 10 }}
-            onChangeText={(text) => setContactCategory(text)}
-            placeholder="Category"
-            value={contactCategory}
-          />
-          <TextInput
-            style={{ marginTop: 10 }}
-            onChangeText={(text) => setContactTags(text)}
+            onChangeText={(text) => setTags(text)}
             placeholder="Tags"
-            value={contactTags}
+            value={tags}
           />
           <TextInput
             style={{ marginTop: 10 }}
-            onChangeText={(text) => setContactTelephone(text)}
+            onChangeText={(text) => setTelephone(text)}
             placeholder="Telephone"
             keyboardType="numeric"
             autoCapitalize="none"
-            value={contactTelephone}
+            value={telephone}
           />
           <TextInput
             style={{ marginTop: 10 }}
-            onChangeText={(text) => setContactEmail(text)}
+            onChangeText={(text) => setEmail(text)}
             placeholder="Email"
             textContentType="emailAddress"
             keyboardType="email-address"
             autoCorrect={false}
             autoCapitalize="none"
             autoCompleteType="email"
-            value={contactEmail}
+            value={email}
           />
           <TextInput
             style={{ marginTop: 10 }}
-            onChangeText={(text) => setContactWebsite(text)}
+            onChangeText={(text) => setWebsite(text)}
             placeholder="https://yoursite.com"
-            value={contactWebsite}
+            value={website}
           />
           <TextInputMask
             style={[BaseStyle.textInput, { backgroundColor: cardColor, color: colors.text, marginTop:10 }]}
             refInput={(ref) => {
               this.input = ref;
             }}
-            onChangeText={(text) => setContactEstablished(text)}
+            onChangeText={(text) => setEstablished(text)}
             placeholder="Established Date [YYYY/MM/DD]"
             placeholderTextColor={BaseColor.grayColor}
             keyboardType="numeric"
-            value={contactEstablished}
+            value={established}
             mask={'[0000]{-}[00]{-}[00]'}
           />
         </View>
