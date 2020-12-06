@@ -23,7 +23,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.listar"
+        applicationId "com.explore.btk"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 10
