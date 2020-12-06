@@ -1,4 +1,4 @@
-package com.listar;
+package com.explore.btk;
 import org.devio.rn.splashscreen.SplashScreen;
 import com.facebook.react.ReactActivity;
 import android.os.Bundle;
