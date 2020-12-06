@@ -3,7 +3,7 @@
  */
 export const BaseSetting = {
   name: 'listar',
-  displayName: 'Listar',
+  displayName: 'Explore BTK',
   appVersion: '6',
   defaultLanguage: 'en',
   languageSupport: [

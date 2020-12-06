@@ -21,10 +21,10 @@ export default function Loading({navigation}) {
       <View style={{alignItems: 'center'}}>
         <Image source={Images.logo} style={styles.logo} resizeMode="contain" />
         <Text title1 style={{marginTop: 10}}>
-          Listar
+          Explore BTK
         </Text>
         <Text headline primaryColor style={{marginTop: 10}}>
-          LIST DIRECTORY
+          All in one place
         </Text>
       </View>
       <ActivityIndicator
