@@ -19,7 +19,7 @@ export default function Address({ navigation }) {
     navigation.navigate('Hours');
   };
 
-  const [street, setStreet] = useState('');
+  const [address, setAddress] = useState('');
 
   const offsetKeyboard = Platform.select({
     ios: 0,
@@ -57,9 +57,9 @@ export default function Address({ navigation }) {
           <View>
             <TextInput
               style={{ marginTop: 10, height: 100 }}
-              onChangeText={(text) => setStreet(text)}
+              onChangeText={(text) => setAddress(text)}
               placeholder="Address"
-              value={street}
+              value={address}
               multiline={true}
               numberOfLines={10}
               textAlignVertical= 'top'
