@@ -14,10 +14,20 @@ import { ScrollView } from 'react-native-gesture-handler';
 import ActionButton from 'react-native-action-button';
 
 export default function Hours({ navigation }) {
-
+  
   const onNext = () => {
     navigation.navigate('PriceRange');
   };
+
+  const days = [
+    { day: 'Monday' },
+    { day: 'Tuesday' },
+    { day: 'Wednesday' },
+    { day: 'Thursday' },
+    { day: 'Friday' },
+    { day: 'Saturday' },
+    { day: 'Sunday' },
+  ];
 
   const offsetKeyboard = Platform.select({
     ios: 0,
@@ -52,13 +62,9 @@ export default function Hours({ navigation }) {
               Hours
             </Text>
           </View>
-          <HoursCheckbox title={'Monday'} />
-          <HoursCheckbox title={'Tuesday'} />
-          <HoursCheckbox title={'Wednesday'} />
-          <HoursCheckbox title={'Thursday'} />
-          <HoursCheckbox title={'Friday'} />
-          <HoursCheckbox title={'Saturday'} />
-          <HoursCheckbox title={'Sunday'} />
+          {days.map((item) => {
+            return <HoursCheckbox hours={item} />;
+          })}
         </View>
       </ScrollView>
       <ActionButton
@@ -67,11 +73,7 @@ export default function Hours({ navigation }) {
         offsetX={20}
         offsetY={10}
         icon={
-          <Icon
-          name="arrow-right"
-          size={20}
-          color="white"
-          enableRTL={true} />
+          <Icon name="arrow-right" size={20} color="white" enableRTL={true} />
         }
       />
     </SafeAreaView>
