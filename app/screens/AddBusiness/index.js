@@ -220,7 +220,7 @@ export default function Business({ navigation }) {
               </ScrollView>
               <ActionButton
                 buttonColor="rgba(93, 173, 226, 1)"
-                onPress={() => handleSubmit()}
+                onPress={() => onNext()}
                 offsetX={20}
                 offsetY={10}
                 icon={

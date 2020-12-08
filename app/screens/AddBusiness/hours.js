@@ -14,7 +14,6 @@ import { ScrollView } from 'react-native-gesture-handler';
 import ActionButton from 'react-native-action-button';
 
 export default function Hours({ navigation }) {
-  
   const onNext = () => {
     navigation.navigate('PriceRange');
   };
