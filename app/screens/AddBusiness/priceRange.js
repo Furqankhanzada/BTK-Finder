@@ -17,6 +17,7 @@ export default function PriceRange({ navigation }) {
 
   const onNext = () => {
     navigation.navigate('FinalReview');
+    // console.log('@@@@@@@@@@@@@@@@@@@@@', priceRange)
   };
 
   const {colors} = useTheme();
@@ -24,6 +25,11 @@ export default function PriceRange({ navigation }) {
 
   const [priceFrom, setPriceFrom] = useState('');
   const [priceTo, setPriceTo] = useState('');
+
+  const priceRange = {
+    from: priceFrom,
+    to: priceTo,
+  }
 
   const offsetKeyboard = Platform.select({
     ios: 0,
@@ -67,7 +73,7 @@ export default function PriceRange({ navigation }) {
             placeholder="From"
             placeholderTextColor={BaseColor.grayColor}
             keyboardType="numeric"
-            value={priceFrom}
+            value={priceRange.from}
             autoCapitalize="none"
             mask={'PKR [0000000000]'}
           />
@@ -80,7 +86,7 @@ export default function PriceRange({ navigation }) {
             placeholder="To"
             placeholderTextColor={BaseColor.grayColor}
             keyboardType="numeric"
-            value={priceTo}
+            value={priceRange.to}
             autoCapitalize="none"
             mask={'PKR [0000000000]'}
           />
