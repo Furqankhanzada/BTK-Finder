@@ -9,7 +9,10 @@ import { useTranslation } from 'react-i18next';
 import { register } from '../../actions/auth';
 import Toast from 'react-native-toast-message';
 
-export default function SignUp({ navigation }) {
+export default function SignUp(props) {
+  const { navigation, route } = props;
+  const { params } = route;
+
   const { colors } = useTheme();
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -31,6 +34,8 @@ export default function SignUp({ navigation }) {
    *
    */
   const onSignUp = () => {
+    let lastRoute = params && params.lastRoute ? params.lastRoute : '';
+
     if (name === '' || email === '' || phone === '' || password === '') {
       setSuccess({
         ...success,
@@ -47,7 +52,7 @@ export default function SignUp({ navigation }) {
       register({ name, email, phone, password }, (error) => {
         setLoading(false);
         if (!error) {
-          navigation.navigate('SignIn');
+          navigation.navigate('SignIn', { lastRoute });
           Toast.show({
             type: 'success',
             topOffset: 55,
@@ -103,9 +108,9 @@ export default function SignUp({ navigation }) {
           />
           <TextInputMask
             style={styles.textInput}
-            refInput={(ref) => {
-              this.input = ref;
-            }}
+            // refInput={(ref) => {
+            //   this.input = ref;
+            // }}
             onChangeText={(text) => setPhone(text)}
             placeholder="+92 300 1234 567"
             keyboardType="numeric"

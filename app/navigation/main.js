@@ -68,7 +68,7 @@ export default function Main() {
       <MainStack.Screen name="PlaceDetail" component={PlaceDetail} />
       <MainStack.Screen name="ContactUs" component={ContactUs} />
       <MainStack.Screen name="AboutUs" component={AboutUs} />
-      <MainStack.Screen name="Business" component={Business} />
+      {/*<MainStack.Screen name="Business" component={Business} />*/}
       <MainStack.Screen name="Address" component={Address} />
       <MainStack.Screen name="Hours" component={Hours} />
       <MainStack.Screen name="PriceRange" component={PriceRange} />
@@ -120,7 +120,13 @@ function BottomTabNavigator() {
       />
       <BottomTab.Screen
         name="Business"
-        component={Business}
+        component={(props) =>
+          isLogin ? (
+            <Business {...props} />
+          ) : (
+            <Walkthrough lastRoute={'Business'} {...props} />
+          )
+        }
         options={{
           title: 'Add Business',
           tabBarIcon: ({ color }) => {
