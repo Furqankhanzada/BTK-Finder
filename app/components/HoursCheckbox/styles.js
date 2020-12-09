@@ -4,6 +4,7 @@ export default StyleSheet.create({
   checkBoxSection: {
     display: 'flex',
     flexDirection: 'row',
+    alignItems: 'center',
   },
   checkBox: {
     display: 'flex',
@@ -27,7 +28,22 @@ export default StyleSheet.create({
     marginRight: 10,
   },
   closeText: {
-    marginTop: 15,
     color: 'red',
+  },
+  sectionContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  sectionInnerContainer: {
+    height: 35,
+    justifyContent: 'center',
+    alignItems: 'center',
+    minWidth: 100,
+    borderRadius: 5,
+    padding: 10,
+    marginHorizontal: 5,
+  },
+  sectionInnerContainerText: {
+    fontSize: 14,
   },
 });

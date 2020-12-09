@@ -4,17 +4,15 @@ import {BaseStyle, useTheme} from '@config';
 import {Header, SafeAreaView, CardList} from '@components';
 import {WishlistData} from '@data';
 import styles from './styles';
-import {useTranslation} from 'react-i18next';
 
-export default function Wishlist({navigation}) {
-  const {t} = useTranslation();
+export default function Favourite({navigation}) {
   const {colors} = useTheme();
   const [refreshing] = useState(false);
   const [wishlist] = useState(WishlistData);
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{top: 'always'}}>
-      <Header title={t('wishlist')} />
+      <Header title='Favourite' />
       <FlatList
         contentContainerStyle={{
           paddingHorizontal: 20,

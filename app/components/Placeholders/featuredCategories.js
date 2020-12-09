@@ -13,11 +13,9 @@ const FeaturedCategoryPlaceholderComponent = () => (
   <Placeholder
     Animation={ShineOverlay}
     style={{
-      height: 70,
-      marginTop: 2,
-      marginBottom: 0,
-      marginHorizontal: 16,
+      height: 55,
       flexDirection: "column",
+      display: "flex",
     }}
     Left={(props) => (
       <PlaceholderMedia
@@ -27,11 +25,12 @@ const FeaturedCategoryPlaceholderComponent = () => (
             width: 38,
             height: 38,
             borderRadius: 20,
+            marginLeft: 5,
           },
         ]}
       />
   )}>
-  <PlaceholderLine style={{ marginTop: responsiveHeight(1) }} width={50} />
+  <PlaceholderLine style={{ marginTop: responsiveHeight(1) }} width={90} />
   </Placeholder>
 );
 
