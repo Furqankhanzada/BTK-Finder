@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
 import Home from '@screens/Home';
 // import Notification from '@screens/Notification';
 import Business from '@screens/AddBusiness';
-import Wishlist from '@screens/Wishlist';
+import Favourite from '@screens/Favourite';
 import Messenger from '@screens/Messenger';
 import Profile from '@screens/Profile';
 
@@ -109,12 +109,12 @@ function BottomTabNavigator() {
       />
 
       <BottomTab.Screen
-        name="Wishlist"
-        component={Wishlist}
+        name="Favourite"
+        component={Favourite}
         options={{
-          title: t('wishlist'),
+          title: 'Favourite',
           tabBarIcon: ({ color }) => {
-            return <Icon color={color} name="bookmark" size={20} solid />;
+            return <Icon color={color} name="heart" size={20} solid />;
           },
         }}
       />
