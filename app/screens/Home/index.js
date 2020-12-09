@@ -177,7 +177,11 @@ export default function Home({ navigation }) {
               data={placeholderItems}
               numColumns={'4'}
               renderItem={() => {
-                return <FeaturedCategoryPlaceholderComponent />;
+                return (
+                  <View style={styles.serviceItem}>
+                  <FeaturedCategoryPlaceholderComponent />
+                  </View>
+                )
               }}
             />
           ) : (
