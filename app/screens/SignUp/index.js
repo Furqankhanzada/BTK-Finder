@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, KeyboardAvoidingView, Platform } from 'react-native';
-import { BaseStyle, useTheme } from '@config';
+import { BaseStyle, BaseColor, useTheme } from '@config';
 import { Header, SafeAreaView, Icon, Button, TextInput } from '@components';
 import TextInputMask from 'react-native-text-input-mask';
 import { useDispatch } from 'react-redux';
@@ -107,12 +107,13 @@ export default function SignUp(props) {
             autoCapitalize="none"
           />
           <TextInputMask
-            style={styles.textInput}
+            style={[styles.textInput, {backgroundColor: colors.card, color: colors.text}]}
             // refInput={(ref) => {
             //   this.input = ref;
             // }}
             onChangeText={(text) => setPhone(text)}
             placeholder="+92 300 1234 567"
+            placeholderTextColor={BaseColor.grayColor}
             keyboardType="numeric"
             success={success.phone}
             value={phone}
