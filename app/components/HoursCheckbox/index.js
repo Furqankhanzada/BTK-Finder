@@ -3,7 +3,7 @@ import { View, TouchableOpacity } from 'react-native';
 import { useTheme } from '@config';
 import PropTypes from 'prop-types';
 import CheckBox from 'react-native-check-box';
-import { TextInput, Text } from '@components';
+import { Text } from '@components';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import styles from './styles';
 import moment from 'moment';
@@ -52,16 +52,16 @@ export default function HoursCheckbox(props) {
         {isSelected ? (
           <View style={styles.sectionContainer}>
             <TouchableOpacity
-              style={styles.sectionInnerContainer}
+              style={[styles.sectionInnerContainer, {backgroundColor: colors.card}]}
               onPress={() => toggleFromPicker()}>
-              <Text style={styles.sectionInnerContainerText}>
+              <Text style={[styles.sectionInnerContainerText, {color: colors.text}]}>
                 {from ? moment(from).format('hh:mm A') : 'From'}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.sectionInnerContainer}
+              style={[styles.sectionInnerContainer, {backgroundColor: colors.card}]}
               onPress={() => toggleToPicker()}>
-              <Text style={styles.sectionInnerContainerText}>
+              <Text style={[styles.sectionInnerContainerText, {color: colors.text}]}>
                 {to ? moment(to).format('hh:mm A') : 'To'}
               </Text>
             </TouchableOpacity>

@@ -1,5 +1,4 @@
 import { StyleSheet } from 'react-native';
-import { BaseColor } from '@config';
 
 export default StyleSheet.create({
   checkBoxSection: {
@@ -36,7 +35,6 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
   sectionInnerContainer: {
-    backgroundColor: BaseColor.fieldColor,
     height: 35,
     justifyContent: 'center',
     alignItems: 'center',

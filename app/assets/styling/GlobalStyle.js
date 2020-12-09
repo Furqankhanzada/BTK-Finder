@@ -1,5 +1,4 @@
 import { StyleSheet } from 'react-native';
-import { BaseColor } from '@config';
 
 export default StyleSheet.create({
   errorText: {
@@ -13,7 +12,6 @@ export default StyleSheet.create({
   },
   datePickerContainer: {
     height: 46,
-    backgroundColor: BaseColor.fieldColor,
     borderRadius: 5,
     marginTop: 10,
     padding: 15,
@@ -22,7 +20,7 @@ export default StyleSheet.create({
     // flex: 1
   },
   datePickerContainerText: {
-    color: 'black',
-    fontSize: 14
+    fontSize: 14,
+    fontFamily: 'Tahoma'
   }
 });
