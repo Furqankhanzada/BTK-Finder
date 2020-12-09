@@ -107,7 +107,10 @@ export default function SignUp(props) {
             autoCapitalize="none"
           />
           <TextInputMask
-            style={[styles.textInput, {backgroundColor: colors.card, color: colors.text}]}
+            style={[
+              styles.textInput,
+              { backgroundColor: colors.card, color: colors.text },
+            ]}
             // refInput={(ref) => {
             //   this.input = ref;
             // }}

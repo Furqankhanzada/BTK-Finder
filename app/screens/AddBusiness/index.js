@@ -129,7 +129,10 @@ export default function Business({ navigation }) {
                       searchableStyle={{ borderColor: colors.primary }}
                       searchablePlaceholder="Search for a Category"
                       searchablePlaceholderTextColor={BaseColor.grayColor}
-                      dropDownStyle={{ backgroundColor: cardColor, color: colors.text }}
+                      dropDownStyle={{
+                        backgroundColor: cardColor,
+                        color: colors.text,
+                      }}
                       dropDownMaxHeight={250}
                       onChangeItem={(item) =>
                         setFieldValue('category', item.value)
@@ -204,7 +207,10 @@ export default function Business({ navigation }) {
                   <View style={GlobalStyle.inputContainer}>
                     <TouchableOpacity
                       onPress={() => toggleDatePicker()}
-                      style={[GlobalStyle.datePickerContainer, {backgroundColor: cardColor, color: colors.text}]}>
+                      style={[
+                        GlobalStyle.datePickerContainer,
+                        { backgroundColor: cardColor, color: colors.text },
+                      ]}>
                       <Text style={GlobalStyle.datePickerContainerText}>
                         {values.established
                           ? moment(values.established).format('DD/MM/YYYY')
