@@ -10,7 +10,7 @@ import {
   CustomStepIndicator,
 } from '@components';
 import styles from './styles';
-import { useSelector } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import { ScrollView } from 'react-native-gesture-handler';
 import ActionButton from 'react-native-action-button';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -19,9 +19,18 @@ import { Formik } from 'formik';
 import GlobalStyle from '../../assets/styling/GlobalStyle';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
+import {setBusinessFormData} from "../../actions/business";
 
 export default function Business({ navigation }) {
   const formRef = useRef();
+  const dispatch = useDispatch();
+  const stateProps = useSelector(({categories, businesses}) => {
+    return {
+      categories: categories.all,
+      businesses
+    }
+  });
+  const { businessFormData } = stateProps.businesses;
 
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
@@ -38,10 +47,18 @@ export default function Business({ navigation }) {
     toggleDatePicker();
   };
 
-  const categories = useSelector((state) => state.categories.all);
-  const getCategories = categories.map(({ name }) => {
+  const getCategories = stateProps.categories.map(({ name }) => {
     return { label: name, value: name };
   });
+
+  const getSelectedCategory = (selected) => {
+      let foundCategory = null;
+      if(stateProps.categories && stateProps.categories.length){
+          foundCategory = stateProps.categories.find(obj => obj.name === selected)
+      }
+      return foundCategory ? foundCategory.name : null
+  };
+
   const { colors } = useTheme();
   const cardColor = colors.card;
 
@@ -51,8 +68,14 @@ export default function Business({ navigation }) {
   });
 
   const submit = (values) => {
-    console.log('values', values);
+    dispatch(setBusinessFormData(values));
+    onNext()
   };
+
+  console.log('yah', businessFormData.category ? getSelectedCategory(businessFormData.category) : {
+      label: '',
+      value: ''
+  })
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
@@ -61,7 +84,18 @@ export default function Business({ navigation }) {
       <Formik
         ref={formRef}
         onSubmit={(values) => submit(values)}
-        initialValues={{}}
+        initialValues={{
+          name: businessFormData.name ? businessFormData.name : '',
+          description: businessFormData.description ? businessFormData.description : '',
+          telephone: businessFormData.telephone ? businessFormData.telephone : '',
+          website: businessFormData.website ? businessFormData.website : '',
+          email: businessFormData.email ? businessFormData.email : '',
+          established: businessFormData.established ? businessFormData.established : '',
+          category: businessFormData.category ? getSelectedCategory(businessFormData.category) : {
+              label: '',
+              value: ''
+          },
+        }}
         validationSchema={generalFormValidation}>
         {({ handleChange, values, handleSubmit, errors, setFieldValue }) => {
           return (
@@ -122,21 +156,16 @@ export default function Business({ navigation }) {
                         borderColor: cardColor,
                       }}
                       arrowColor={colors.primary}
+                      defaultValue={values.category}
                       itemStyle={{ justifyContent: 'flex-start' }}
                       placeholder="Select a Category"
-                      // placeholderStyle={{color: BaseColor.grayColor}}
                       searchable={true}
                       searchableStyle={{ borderColor: colors.primary }}
                       searchablePlaceholder="Search for a Category"
                       searchablePlaceholderTextColor={BaseColor.grayColor}
-                      dropDownStyle={{
-                        backgroundColor: cardColor,
-                        color: colors.text,
-                      }}
+                      dropDownStyle={{backgroundColor: cardColor, color: colors.text}}
                       dropDownMaxHeight={250}
-                      onChangeItem={(item) =>
-                        setFieldValue('category', item.value)
-                      }
+                      onChangeItem={(item) => setFieldValue('category', item.value)}
                     />
                     {errors.category ? (
                       <Text style={GlobalStyle.errorText}>
@@ -145,17 +174,17 @@ export default function Business({ navigation }) {
                     ) : null}
                   </View>
 
-                  <View style={GlobalStyle.inputContainer}>
-                    <TextInput
-                      style={{ marginTop: 10 }}
-                      onChangeText={handleChange('tags')}
-                      placeholder="Tags"
-                      value={values.tags}
-                    />
-                    {errors.tags ? (
-                      <Text style={GlobalStyle.errorText}>{errors.tags}</Text>
-                    ) : null}
-                  </View>
+                  {/*<View style={GlobalStyle.inputContainer}>*/}
+                  {/*  <TextInput*/}
+                  {/*    style={{ marginTop: 10 }}*/}
+                  {/*    onChangeText={handleChange('tags')}*/}
+                  {/*    placeholder="Tags"*/}
+                  {/*    value={values.tags}*/}
+                  {/*  />*/}
+                  {/*  {errors.tags ? (*/}
+                  {/*    <Text style={GlobalStyle.errorText}>{errors.tags}</Text>*/}
+                  {/*  ) : null}*/}
+                  {/*</View>*/}
 
                   <View style={GlobalStyle.inputContainer}>
                     <TextInput
@@ -227,7 +256,7 @@ export default function Business({ navigation }) {
               </ScrollView>
               <ActionButton
                 buttonColor="rgba(93, 173, 226, 1)"
-                onPress={() => onNext()}
+                onPress={() => handleSubmit()}
                 offsetX={20}
                 offsetY={10}
                 icon={

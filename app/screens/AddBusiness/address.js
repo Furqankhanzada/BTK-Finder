@@ -21,6 +21,8 @@ import Geolocation from 'react-native-geolocation-service';
 import { Formik } from 'formik';
 import { addressSFormValidation  } from './Validations';
 import GlobalStyle from "../../assets/styling/GlobalStyle";
+import {useDispatch, useSelector} from "react-redux";
+import {setBusinessFormData} from "../../actions/business";
 
 let defaultDelta = {
     latitudeDelta: 0.005,
@@ -34,13 +36,28 @@ const defaultLocation = {
 export default function Address({ navigation }) {
     const mapRef = useRef();
     const formRef = useRef();
+    const dispatch = useDispatch();
+    const businesses = useSelector(({businesses}) => businesses);
+    const { businessFormData } = businesses;
 
     const onNext = () => {
         navigation.navigate('Hours');
     };
 
     useEffect(() => {
-        getUserLocation();
+        let loc =  businessFormData.location && businessFormData.location.coordinates ? businessFormData.location.coordinates : null
+        if(loc){
+            const payload = {
+                latitude: loc[0],
+                longitude: loc[1],
+                ...defaultDelta,
+            };
+            setLocation(payload);
+            setRegion(payload);
+            reCenterMap(payload);
+        } else {
+            getUserLocation();
+        }
     }, []);
 
     const [mapType, setMapType] = useState('standard');
@@ -61,6 +78,7 @@ export default function Address({ navigation }) {
             longitudeDelta: defaultDelta.longitudeDelta,
         });
     };
+
     const getCurrentLocation = () => {
         Geolocation.getCurrentPosition(
             (position) => {
@@ -164,7 +182,8 @@ export default function Address({ navigation }) {
                 ]
             }
         }
-        console.log('payload', payload)
+        dispatch(setBusinessFormData(payload))
+        onNext()
     }
 
     return (
@@ -185,12 +204,13 @@ export default function Address({ navigation }) {
                     navigation.goBack();
                 }}
             />
-
             <CustomStepIndicator position={1} />
             <Formik
                 ref={formRef}
                 onSubmit={(values) => submit(values)}
-                initialValues={{}}
+                initialValues={{
+                    address: businessFormData.address ? businessFormData.address : ''
+                }}
                 validationSchema={addressSFormValidation}>
                 {({ handleChange, values, handleSubmit, errors, setFieldValue }) => {
                     return (
