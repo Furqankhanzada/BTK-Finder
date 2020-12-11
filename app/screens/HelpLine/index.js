@@ -126,7 +126,7 @@ const HelpLine = React.memo(({ navigation }) => {
             title3
             semibold
             style={{
-              backgroundColor: '#f3f3f3',
+              backgroundColor: cardColor,
               paddingLeft: 20,
               paddingRight: 20,
               paddingTop: 8,
