@@ -20,19 +20,21 @@ export default function Hours({ navigation }) {
     const businesses = useSelector(({businesses}) => businesses);
     const { businessFormData } = businesses;
 
-    const [selectedDays, setSelectedDays] = useState([
-        { day: 'Monday' },
-        { day: 'Tuesday' },
-        { day: 'Wednesday' },
-        { day: 'Thursday' },
-        { day: 'Friday' },
-        { day: 'Saturday' },
-        { day: 'Sunday' },
-    ]);
+    const [selectedDays, setSelectedDays] = useState([]);
 
     useEffect(() => {
-        if(businessFormData.openHours){
+        if(businessFormData.openHours && businessFormData.openHours.length){
             setSelectedDays(businessFormData.openHours)
+        } else {
+            setSelectedDays([
+                { day: 'Monday' },
+                { day: 'Tuesday' },
+                { day: 'Wednesday' },
+                { day: 'Thursday' },
+                { day: 'Friday' },
+                { day: 'Saturday' },
+                { day: 'Sunday' },
+            ])
         }
     }, []);
 

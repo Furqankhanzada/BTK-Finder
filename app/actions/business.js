@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { CREATE_BUSINESS, GET_BUSINESSES } from '../constants';
 import {
     CREATE_BUSINESS_API,
@@ -9,26 +8,30 @@ import {
     SET_BUSINESS_FORM_DATA_IN_REDUX,
 } from '../constants/business';
 import { handleError } from '../utils';
+import axiosApiInstance from "../interceptor/axios-interceptor";
+import Toast from "react-native-toast-message";
 
-export const createBusiness = (payload, cb) => {
-    return (dispatch) => {
-        dispatch({type:CREATE_BUSINESS_API})
-      axios({
+export const createBusiness = (payload, cb) => (dispatch) => {
+    dispatch({type:CREATE_BUSINESS_API})
+    axiosApiInstance({
         method: 'POST',
         url: CREATE_BUSINESS,
         data: payload,
-      })
+    })
         .then((response) => {
-            console.log('response', response)
-          dispatch({ type: CREATE_BUSINESS_API_SUCCESS });
-          cb && cb();
+            dispatch({ type: CREATE_BUSINESS_API_SUCCESS });
+            Toast.show({
+                type: 'success',
+                topOffset: 55,
+                text1: 'Successfully',
+                text2: 'Successfully added business!',
+            });
+            cb && cb();
         })
-        .catch((error) => {
-          dispatch({ type: CREATE_BUSINESS_API_ERROR });
-          cb && cb(error);
-          handleError(error);
+        .catch(({response}) => {
+            dispatch({ type: CREATE_BUSINESS_API_ERROR });
+            handleError({message: response.data.message[0]});
         });
-    };
 };
 
 export const getBusinesses = (cb) => {

@@ -10,5 +10,5 @@ export const GET_PROFILE = `${API_URL}/auth/profile`;
 
 export const EDIT_PROFILE = `${API_URL}/users/`;
 
-export const CREATE_BUSINESS = `${API_URL}/api/v1/businesses`;
-export const GET_BUSINESSES = `${API_URL}/api/v1/businesses?limit=30&skip=0&search=`;
+export const CREATE_BUSINESS = `${API_URL}/businesses`;
+export const GET_BUSINESSES = `${API_URL}/businesses?limit=30&skip=0&search=`;

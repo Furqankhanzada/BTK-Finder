@@ -56,7 +56,7 @@ export default function Business({ navigation }) {
       if(stateProps.categories && stateProps.categories.length){
           foundCategory = stateProps.categories.find(obj => obj.name === selected)
       }
-      return foundCategory ? foundCategory.name : null
+      return foundCategory ? foundCategory.name : ''
   };
 
   const { colors } = useTheme();
@@ -68,14 +68,11 @@ export default function Business({ navigation }) {
   });
 
   const submit = (values) => {
-    dispatch(setBusinessFormData(values));
+    dispatch(setBusinessFormData({...values, tags: []}));
     onNext()
   };
 
-  console.log('yah', businessFormData.category ? getSelectedCategory(businessFormData.category) : {
-      label: '',
-      value: ''
-  })
+  console.log('yah', businessFormData.category ? getSelectedCategory(businessFormData.category) : null)
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
@@ -91,10 +88,7 @@ export default function Business({ navigation }) {
           website: businessFormData.website ? businessFormData.website : '',
           email: businessFormData.email ? businessFormData.email : '',
           established: businessFormData.established ? businessFormData.established : '',
-          category: businessFormData.category ? getSelectedCategory(businessFormData.category) : {
-              label: '',
-              value: ''
-          },
+          category: businessFormData.category ? getSelectedCategory(businessFormData.category) : '',
         }}
         validationSchema={generalFormValidation}>
         {({ handleChange, values, handleSubmit, errors, setFieldValue }) => {

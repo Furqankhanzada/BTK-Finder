@@ -27,6 +27,7 @@ import FeaturedCategoryPlaceholderComponent from './Placeholders/featuredCategor
 import CustomStepIndicator from './StepIndicator';
 import HoursCheckbox from './HoursCheckbox';
 import PlaceDetailComponent from './PlaceDetail';
+import Loading from './Loading';
 
 export {
   TextInput,
@@ -58,4 +59,5 @@ export {
   CustomStepIndicator,
   HoursCheckbox,
   PlaceDetailComponent,
+  Loading
 };

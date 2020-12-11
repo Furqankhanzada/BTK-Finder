@@ -24,14 +24,6 @@ export default function userReducer(state = initialState, action = {}) {
             return {...state, businessFormData: {}, createBusinessLoading: false};
         case CREATE_BUSINESS_API_ERROR:
             return {...state, createBusinessLoading: false};
-        // return Object.assign({}, state, action.businesses);
-        //   return {...state, };
-        // case CREATE_BUSINESS_API_ERROR:
-        //   return Object.assign({}, state, action.error);
-        // case GET_BUSINESSES_API_SUCCESS:
-        //   return Object.assign({}, state, action.businesses);
-        // case GET_BUSINESSES_API_ERROR:
-        //   return Object.assign({}, state, action.error);
         default:
             return state;
     }
