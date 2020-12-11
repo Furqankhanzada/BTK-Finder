@@ -28,6 +28,7 @@ import CustomStepIndicator from './StepIndicator';
 import HoursCheckbox from './HoursCheckbox';
 import PlaceDetailComponent from './PlaceDetail';
 import Loading from './Loading';
+import DropDown from './DropdownPicker';
 
 export {
   TextInput,
@@ -59,5 +60,6 @@ export {
   CustomStepIndicator,
   HoursCheckbox,
   PlaceDetailComponent,
-  Loading
+  Loading,
+  DropDown,
 };
