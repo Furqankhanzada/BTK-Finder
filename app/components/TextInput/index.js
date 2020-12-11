@@ -19,6 +19,7 @@ export default function Index(props) {
     textAlignVertical,
     icon,
     onSubmitEditing,
+    autoCapitalize
   } = props;
   return (
     <View style={[BaseStyle.textInput, {backgroundColor: cardColor}, style]}>
@@ -39,6 +40,7 @@ export default function Index(props) {
         placeholderTextColor={success ? BaseColor.grayColor : colors.primary}
         secureTextEntry={secureTextEntry}
         value={value}
+        autoCapitalize={autoCapitalize}
         selectionColor={colors.primary}
         keyboardType={keyboardType}
         multiline={multiline}
@@ -61,6 +63,7 @@ Index.propTypes = {
   keyboardType: PropTypes.string,
   multiline: PropTypes.bool,
   textAlignVertical: PropTypes.string,
+  autoCapitalize: PropTypes.string,
   icon: PropTypes.node,
   onSubmitEditing: PropTypes.func,
 };
@@ -70,6 +73,7 @@ Index.defaultProps = {
   onChangeText: text => {},
   onFocus: () => {},
   placeholder: 'Placeholder',
+  autoCapitalize: 'none',
   value: '',
   success: true,
   secureTextEntry: false,

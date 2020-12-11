@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, KeyboardAvoidingView, Platform } from 'react-native';
-import { BaseStyle, useTheme } from '@config';
+import { BaseStyle, BaseColor, useTheme } from '@config';
 import { Header, SafeAreaView, Icon, Button, TextInput } from '@components';
 import TextInputMask from 'react-native-text-input-mask';
 import { useDispatch } from 'react-redux';
@@ -9,7 +9,10 @@ import { useTranslation } from 'react-i18next';
 import { register } from '../../actions/auth';
 import Toast from 'react-native-toast-message';
 
-export default function SignUp({ navigation }) {
+export default function SignUp(props) {
+  const { navigation, route } = props;
+  const { params } = route;
+
   const { colors } = useTheme();
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -31,6 +34,8 @@ export default function SignUp({ navigation }) {
    *
    */
   const onSignUp = () => {
+    let lastRoute = params && params.lastRoute ? params.lastRoute : '';
+
     if (name === '' || email === '' || phone === '' || password === '') {
       setSuccess({
         ...success,
@@ -47,7 +52,7 @@ export default function SignUp({ navigation }) {
       register({ name, email, phone, password }, (error) => {
         setLoading(false);
         if (!error) {
-          navigation.navigate('SignIn');
+          navigation.navigate('SignIn', { lastRoute });
           Toast.show({
             type: 'success',
             topOffset: 55,
@@ -102,12 +107,16 @@ export default function SignUp({ navigation }) {
             autoCapitalize="none"
           />
           <TextInputMask
-            style={styles.textInput}
-            refInput={(ref) => {
-              this.input = ref;
-            }}
+            style={[
+              styles.textInput,
+              { backgroundColor: colors.card, color: colors.text },
+            ]}
+            // refInput={(ref) => {
+            //   this.input = ref;
+            // }}
             onChangeText={(text) => setPhone(text)}
             placeholder="+92 300 1234 567"
+            placeholderTextColor={BaseColor.grayColor}
             keyboardType="numeric"
             success={success.phone}
             value={phone}

@@ -10,6 +10,7 @@ import rootReducer from 'app/reducers';
  */
 const persistConfig = {
   key: 'root',
+  blacklist:['businesses'],
   storage: AsyncStorage,
   timeout: 100000,
 };

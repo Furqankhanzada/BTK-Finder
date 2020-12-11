@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import { BaseStyle, useTheme } from '@config';
+import { BaseStyle, BaseColor, useTheme } from '@config';
 import {
   Image,
   Header,
@@ -12,6 +12,7 @@ import {
   TextInput,
 } from '@components';
 import styles from './styles';
+import TextInputMask from 'react-native-text-input-mask';
 import { useTranslation } from 'react-i18next';
 import { editProfile } from '../../actions/auth';
 
@@ -91,21 +92,16 @@ export default function ProfileEdit({navigation}) {
               {'Phone'}
             </Text>
           </View>
-          <TextInput
-            onChangeText={text => setPhone(text)}
+          <TextInputMask
+            style={[styles.textInput, {backgroundColor: colors.card, color: colors.text}]}
+            onChangeText={(text) => setPhone(text)}
             placeholder={'Input Phone'}
+            placeholderTextColor={BaseColor.grayColor}
+            keyboardType="numeric"
             value={phone}
+            autoCapitalize="none"
+            mask={'+92 [000] [0000] [000]'}
           />
-          {/* <View style={styles.contentTitle}>
-            <Text headline semibold>
-              {t('address')}
-            </Text>
-          </View>
-          <TextInput
-            onChangeText={text => setAddress(text)}
-            placeholder={t('input_address')}
-            value={address}
-          /> */}
         </ScrollView>
         <View style={{paddingVertical: 15, paddingHorizontal: 20}}>
           <Button

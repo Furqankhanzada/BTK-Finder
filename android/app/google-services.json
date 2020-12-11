@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1066196283057",
+    "project_id": "explore-btk",
+    "storage_bucket": "explore-btk.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1066196283057:android:d73e79e6185c9ea679bc90",
+        "android_client_info": {
+          "package_name": "com.explore.btk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1066196283057-lu7hg26orct8nr6psfvgsvpv6s8t4mll.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCB60hjwDtwbBZX15l-A5fCu9F5b8HdXWk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1066196283057-lu7hg26orct8nr6psfvgsvpv6s8t4mll.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

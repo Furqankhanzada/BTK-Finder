@@ -76,10 +76,10 @@ export const login = (user, cb) => {
           // saving error
         }
       })
-      .catch((error) => {
-        dispatch({ type: LOGIN_API_ERROR, error });
-        cb && cb(error);
-        handleError(error);
+      .catch(({ response }) => {
+        dispatch({ type: LOGIN_API_ERROR, response });
+        cb && cb(response);
+        handleError(response.data);
       });
   };
 };
