@@ -31,7 +31,7 @@ Card.propTypes = {
 };
 
 Card.defaultProps = {
-  image: Images.profile2,
+  image: Images.imagePlaceholder,
   style: {},
   styleContent: {},
   onPress: () => {},

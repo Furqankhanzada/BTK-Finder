@@ -2,16 +2,17 @@ import {
     CREATE_BUSINESS_API,
     CREATE_BUSINESS_API_SUCCESS,
     CREATE_BUSINESS_API_ERROR,
-    GET_BUSINESSES_API_SUCCESS,
-    GET_BUSINESSES_API_ERROR,
-    SET_BUSINESS_FORM_DATA_IN_REDUX
+    SET_BUSINESS_FORM_DATA_IN_REDUX,
+    GET_BUSINESSES_API,
 } from '../constants/business';
 
 //initial state.
 const initialState = {
     all: [],
     businessFormData: {},
-    createBusinessLoading: false
+    createBusinessLoading: false,
+    getBusinessesLoading: false,
+    businesses: []
 };
 
 export default function userReducer(state = initialState, action = {}) {
@@ -24,6 +25,8 @@ export default function userReducer(state = initialState, action = {}) {
             return {...state, businessFormData: {}, createBusinessLoading: false};
         case CREATE_BUSINESS_API_ERROR:
             return {...state, createBusinessLoading: false};
+        case GET_BUSINESSES_API:
+            return {...state, businesses: action.data || [], getBusinessesLoading: action.loading};
         default:
             return state;
     }
