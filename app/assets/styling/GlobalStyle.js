@@ -20,7 +20,6 @@ export default StyleSheet.create({
     // flex: 1
   },
   datePickerContainerText: {
-    fontSize: 14,
-    fontFamily: 'Tahoma'
+    fontSize: 14
   }
 });
