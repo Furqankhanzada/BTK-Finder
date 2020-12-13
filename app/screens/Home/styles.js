@@ -53,7 +53,9 @@ export default StyleSheet.create({
     height: Utils.scaleWithPixel(160),
   },
 
-  section: {},
+  section: {
+    marginBottom: 25
+  },
   sectionHeader: {
     marginHorizontal: 20,
     marginBottom: 15,

@@ -4,6 +4,7 @@ import {BaseColor} from '@config';
 import {Image, Text, StarRating, Tag} from '@components';
 import styles from './styles';
 import PropTypes from 'prop-types';
+import {Images} from "../../config/images";
 
 export default function CardList(props) {
   const {style, image, title, subtitle, rate, onPress, onPressTag} = props;
@@ -50,7 +51,7 @@ CardList.propTypes = {
 
 CardList.defaultProps = {
   style: {},
-  image: '',
+  image: Images.imagePlaceholder,
   title: '',
   subtitle: '',
   rate: 4.5,
