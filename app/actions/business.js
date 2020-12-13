@@ -4,7 +4,8 @@ import {
     CREATE_BUSINESS_API_SUCCESS,
     CREATE_BUSINESS_API_ERROR,
     SET_BUSINESS_FORM_DATA_IN_REDUX,
-    GET_BUSINESSES_API,
+    GET_POPULAR_BUSINESSES_API,
+    GET_RECENTLY_ADDED_BUSINESSES_API,
 } from '../constants/business';
 import { handleError } from '../utils';
 import axiosApiInstance from "../interceptor/axios-interceptor";
@@ -33,18 +34,33 @@ export const createBusiness = (payload, cb) => (dispatch) => {
         });
 };
 
+const encodeQueryData = (data) => {
+    const ret = [];
+    for (const d in data) {
+        ret.push(encodeURIComponent(d) + '=' + encodeURIComponent(data[d]));
+    }
+    return ret.join('&');
+}
+
 export const getBusinesses = (payload) => (dispatch)  => {
-    let limit = payload?.limit || 5;
-    let skip = payload?.skip || 0;
-    let search = payload?.search || '';
-    let url = `${GET_BUSINESSES}?limit=${limit}&skip=${skip}&search=${search}`;
-    dispatch({type: GET_BUSINESSES_API, loading: true});
-    axiosApiInstance({method: 'GET', url})
+    let dispatchType;
+    if(payload.popular){
+        dispatchType = GET_POPULAR_BUSINESSES_API
+    }
+    // else if(false){
+    //     dispatchType = GET_RECENTLY_ADDED_BUSINESSES_API
+    // }
+    let queryParams = encodeQueryData(payload) ? `?${encodeQueryData(payload)}` : ''
+
+    dispatch({type: dispatchType, loading: true});
+    console.log(payload, 'payload=====>')
+    console.log(queryParams, 'queryParams=====>')
+    axiosApiInstance({method: 'GET', url: `${GET_BUSINESSES}${queryParams}`})
         .then((response) => {
-            dispatch({type: GET_BUSINESSES_API, loading: false, data: response.data});
+            dispatch({type: dispatchType, loading: false, data: response.data});
         })
         .catch((error) => {
-            dispatch({ type: GET_BUSINESSES_API, loading: false });
+            dispatch({ type: dispatchType, loading: false });
             handleError(error);
         });
 };

@@ -9,7 +9,7 @@ function SectionList(props) {
         return (
             <View style={styles.sectionEmpty}>
                 <Text semibold style={styles.sectionEmptyText}>
-                    No popular businesses available
+                    No {title} Available
                 </Text>
             </View>
         )
@@ -21,7 +21,7 @@ function SectionList(props) {
                     {title ? <Text title3 semibold>{title}</Text> : null}
                     {subTitle ? <Text body2 grayColor>{subTitle}</Text> : null}
                 </View>
-                {seeMoreFunc ? <TouchableOpacity style={styles.sectionHeaderButton} onPress={seeMoreFunc}>
+                {data && data.length && seeMoreFunc ? <TouchableOpacity style={styles.sectionHeaderButton} onPress={seeMoreFunc}>
                     <Text semibold style={styles.sectionHeaderButtonText}>See More</Text>
                     <Icon name="angle-double-right" style={styles.sectionHeaderButtonIcon}/>
                 </TouchableOpacity> : null}
@@ -29,7 +29,13 @@ function SectionList(props) {
             {loading ? <View style={styles.sectionLoading}>
                 <Loading loading={true}/>
             </View> : <FlatList
-                contentContainerStyle={[styles.sectionListContainer, {width: data && data.length ? null : '100%'}]}
+                contentContainerStyle={[
+                    styles.sectionListContainer,
+                    {
+                        width: data && data.length ? null : '100%',
+                        marginHorizontal: horizontal ? 0 : 15
+                    }
+                ]}
                 horizontal={horizontal}
                 showsHorizontalScrollIndicator={false}
                 data={data}
