@@ -76,8 +76,13 @@ export default function Home({ navigation }) {
         );
     }, [dispatch]);
     useEffect(() => {
-        dispatch(getBusinesses({limit: 5, skip: 0, popular: true}));
+        dispatch(getBusinesses({limit: 5, skip: 0, popular: true, fields:'name,image'}));
+        dispatch(getBusinesses({limit: 5, skip: 0, fields:'name,image,category'}));
     }, []);
+
+    const navigateBusinessDetail = (id) => {
+        navigation.navigate('PlaceDetail', {id})
+    }
 
     return (
         <View style={{ flex: 1 }}>
@@ -245,7 +250,7 @@ export default function Home({ navigation }) {
                                     key={index}
                                     style={[styles.popularItem, { marginLeft: 15 }]}
                                     image={item.image}
-                                    onPress={() => navigation.navigate('PlaceDetail')}>
+                                    onPress={() => navigateBusinessDetail(item._id)}>
                                     <Text headline whiteColor={item.image} grayColor={!item.image} semibold>
                                         {item.name}
                                     </Text>
@@ -263,12 +268,13 @@ export default function Home({ navigation }) {
                         renderItem={({item, index}) => {
                             return (
                                 <CardList
-                                    image={item.image}
-                                    title={item.title}
-                                    subtitle={item.subtitle}
+                                    key={index}
+                                    image={item?.image}
+                                    title={item.name}
+                                    subtitle={item.category}
                                     rate={item.rate}
                                     style={{ marginBottom: 15 }}
-                                    onPress={() => navigation.navigate('PlaceDetail')}
+                                    onPress={() => navigateBusinessDetail(item._id)}
                                 />
                             )
                         }}

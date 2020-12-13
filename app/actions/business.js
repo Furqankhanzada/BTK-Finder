@@ -46,15 +46,13 @@ export const getBusinesses = (payload) => (dispatch)  => {
     let dispatchType;
     if(payload.popular){
         dispatchType = GET_POPULAR_BUSINESSES_API
+    } else {
+        dispatchType = GET_RECENTLY_ADDED_BUSINESSES_API
     }
-    // else if(false){
-    //     dispatchType = GET_RECENTLY_ADDED_BUSINESSES_API
-    // }
-    let queryParams = encodeQueryData(payload) ? `?${encodeQueryData(payload)}` : ''
+    let queryParams = encodeQueryData(payload) ? `?${encodeQueryData(payload)}` : '';
 
     dispatch({type: dispatchType, loading: true});
-    console.log(payload, 'payload=====>')
-    console.log(queryParams, 'queryParams=====>')
+
     axiosApiInstance({method: 'GET', url: `${GET_BUSINESSES}${queryParams}`})
         .then((response) => {
             dispatch({type: dispatchType, loading: false, data: response.data});
