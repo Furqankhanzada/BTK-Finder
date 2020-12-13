@@ -62,5 +62,6 @@ export const Images = {
   service4: require('@assets/images/service-event.jpg'),
   service5: require('@assets/images/service-housing.jpg'),
   service6: require('@assets/images/service-job.jpg'),
-  service7: require('@assets/images/service-restaurant.jpg')
+  service7: require('@assets/images/service-restaurant.jpg'),
+  imagePlaceholder: require('@assets/images/image-placeholder.png')
 };

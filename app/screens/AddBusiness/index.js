@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useRef } from 'react';
-import { View, Platform, I18nManager, TouchableOpacity } from 'react-native';
-import { BaseStyle, BaseColor, useTheme } from '@config';
+import { View, Platform, TouchableOpacity } from 'react-native';
+import { BaseStyle, useTheme } from '@config';
 import {
   Header,
   SafeAreaView,
@@ -8,12 +8,12 @@ import {
   TextInput,
   Text,
   CustomStepIndicator,
+  DropDown,
 } from '@components';
 import styles from './styles';
 import {useDispatch, useSelector} from 'react-redux';
 import { ScrollView } from 'react-native-gesture-handler';
 import ActionButton from 'react-native-action-button';
-import DropDownPicker from 'react-native-dropdown-picker';
 import { generalFormValidation } from './Validations';
 import { Formik } from 'formik';
 import GlobalStyle from '../../assets/styling/GlobalStyle';
@@ -131,34 +131,11 @@ export default function Business({ navigation }) {
                   </View>
 
                   <View style={GlobalStyle.inputContainer}>
-                    <DropDownPicker
+                    <DropDown
                       items={getCategories}
-                      containerStyle={{
-                        marginTop: 10,
-                        height: 48,
-                        width: '100%',
-                      }}
-                      style={{
-                        backgroundColor: cardColor,
-                        fontFamily: 'Raleway',
-                        flex: 1,
-                        height: '100%',
-                        textAlign: I18nManager.isRTL ? 'right' : 'left',
-                        color: colors.text,
-                        paddingTop: 5,
-                        paddingBottom: 5,
-                        borderColor: cardColor,
-                      }}
-                      arrowColor={colors.primary}
                       defaultValue={values.category}
-                      itemStyle={{ justifyContent: 'flex-start' }}
-                      placeholder="Select a Category"
-                      searchable={true}
-                      searchableStyle={{ borderColor: colors.primary }}
-                      searchablePlaceholder="Search for a Category"
-                      searchablePlaceholderTextColor={BaseColor.grayColor}
-                      dropDownStyle={{backgroundColor: cardColor, color: colors.text}}
-                      dropDownMaxHeight={250}
+                      placeholder={'Select a Category'}
+                      searchablePlaceholder={'Search for a Category'}
                       onChangeItem={(item) => setFieldValue('category', item.value)}
                     />
                     {errors.category ? (
