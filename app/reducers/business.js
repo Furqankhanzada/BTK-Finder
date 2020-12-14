@@ -1,11 +1,12 @@
 import {
-    CREATE_BUSINESS_API,
-    CREATE_BUSINESS_API_SUCCESS,
-    CREATE_BUSINESS_API_ERROR,
-    SET_BUSINESS_FORM_DATA_IN_REDUX,
-    GET_POPULAR_BUSINESSES_API,
-    GET_RECENTLY_ADDED_BUSINESSES_API,
-    GET_ALL_BUSINESSES_API
+  CREATE_BUSINESS_API,
+  CREATE_BUSINESS_API_SUCCESS,
+  CREATE_BUSINESS_API_ERROR,
+  SET_BUSINESS_FORM_DATA_IN_REDUX,
+  GET_POPULAR_BUSINESSES_API,
+  GET_RECENTLY_ADDED_BUSINESSES_API,
+  GET_SINGLE_BUSINESS_API,
+GET_ALL_BUSINESSES_API
 } from '../constants/business';
 
 //initial state.
@@ -19,7 +20,9 @@ const initialState = {
     getPopularBusinessesLoading: false,
     popularBusinesses: [],
     getRecentlyAddedBusinessesLoading: false,
-    recentlyAddedBusinesses: []
+    recentlyAddedBusinesses: [],
+    getSingleBusinessLoading: true,
+    singleBusiness: {},
 };
 
 export default function userReducer(state = initialState, action = {}) {
@@ -49,6 +52,12 @@ export default function userReducer(state = initialState, action = {}) {
                 ...state,
                 allBusinesses: action.data || [],
                 getAllBusinessesLoading: action.loading
+            };
+        case GET_SINGLE_BUSINESS_API:
+            return {
+                ...state,
+                singleBusiness: action.data || {},
+                getSingleBusinessLoading: action.loading,
             };
         default:
             return state;
