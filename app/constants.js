@@ -12,3 +12,4 @@ export const EDIT_PROFILE = `${API_URL}/users/`;
 
 export const CREATE_BUSINESS = `${API_URL}/businesses`;
 export const GET_BUSINESSES = `${API_URL}/businesses`;
+export const GET_SINGLE_BUSINESS = `${API_URL}/businesses/5fd76ef59a813f5630ec5f22`;
