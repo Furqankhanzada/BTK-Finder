@@ -6,6 +6,7 @@ import {
     SET_BUSINESS_FORM_DATA_IN_REDUX,
     GET_POPULAR_BUSINESSES_API,
     GET_RECENTLY_ADDED_BUSINESSES_API,
+    GET_ALL_BUSINESSES_API,
 } from '../constants/business';
 import { handleError } from '../utils';
 import axiosApiInstance from "../interceptor/axios-interceptor";
@@ -59,6 +60,22 @@ export const getBusinesses = (payload) => (dispatch)  => {
         })
         .catch((error) => {
             dispatch({ type: dispatchType, loading: false });
+            handleError(error);
+        });
+};
+
+export const getAllBusinesses = (payload) => (dispatch)  => {
+
+    let queryParams = encodeQueryData(payload) ? `?${encodeQueryData(payload)}` : '';
+
+    dispatch({type: GET_ALL_BUSINESSES_API, loading: true});
+
+    axiosApiInstance({method: 'GET', url: `${GET_BUSINESSES}${queryParams}`})
+        .then((response) => {
+            dispatch({type: GET_ALL_BUSINESSES_API, loading: false, data: response.data});
+        })
+        .catch((error) => {
+            dispatch({ type: GET_ALL_BUSINESSES_API, loading: false });
             handleError(error);
         });
 };

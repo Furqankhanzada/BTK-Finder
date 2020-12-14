@@ -5,6 +5,7 @@ import {BaseColor, useTheme} from '@config';
 import PropTypes from 'prop-types';
 import styles from './styles';
 import {useTranslation} from 'react-i18next';
+import {Images} from "../../config";
 
 export default function PlaceItem(props) {
   const {t} = useTranslation();
@@ -222,7 +223,7 @@ PlaceItem.propTypes = {
 
 PlaceItem.defaultProps = {
   style: {},
-  image: '',
+  image: Images.imagePlaceholder,
   list: true,
   block: false,
   grid: false,
