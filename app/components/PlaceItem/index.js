@@ -35,9 +35,9 @@ export default function PlaceItem(props) {
       <View style={style}>
         <TouchableOpacity onPress={onPress} activeOpacity={0.9}>
           <Image source={image} style={styles.blockImage} />
-          <Tag status style={styles.tagStatus}>
+          {status ? <Tag status style={styles.tagStatus}>
             {t(status)}
-          </Tag>
+          </Tag> : null}
           <Icon
             name="heart"
             color={BaseColor.whiteColor}
@@ -50,13 +50,13 @@ export default function PlaceItem(props) {
                 flexDirection: 'row',
                 alignItems: 'center',
               }}>
-              <Tag rate onPress={onPressTag}>
+              {rate ? <Tag rate onPress={onPressTag}>
                 {rate}
-              </Tag>
+              </Tag> : null}
               <View style={{marginLeft: 10}}>
-                <Text caption1 whiteColor semibold style={{marginBottom: 5}}>
+                {rateStatus ? <Text caption1 whiteColor semibold style={{marginBottom: 5}}>
                   {t(rateStatus)}
-                </Text>
+                </Text> : null}
                 <StarRating
                   disabled={true}
                   starSize={10}
@@ -67,9 +67,9 @@ export default function PlaceItem(props) {
                 />
               </View>
             </View>
-            <Text caption1 semibold whiteColor style={{marginTop: 5}}>
+            {numReviews ? <Text caption1 semibold whiteColor style={{marginTop: 5}}>
               {numReviews} {t('reviews')}
-            </Text>
+            </Text> : null}
           </View>
         </TouchableOpacity>
         <View
@@ -231,10 +231,10 @@ PlaceItem.defaultProps = {
   subtitle: '',
   location: '',
   phone: '',
-  rate: 4.5,
+  rate: 0,
   status: '',
   rateStatus: '',
-  numReviews: 99,
+  numReviews: 0,
   onPress: () => {},
   onPressTag: () => {},
 };

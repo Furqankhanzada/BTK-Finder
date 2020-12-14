@@ -18,6 +18,7 @@ import {PlaceListData} from '@data';
 import {useTranslation} from 'react-i18next';
 import {useDispatch, useSelector} from "react-redux";
 import {getAllBusinesses} from "../../actions/business";
+import { showBetaModal } from '../../popup/betaPopup';
 
 export default function Place(props) {
     const { navigation, route } = props;
@@ -95,7 +96,8 @@ export default function Place(props) {
      * @date 2019-09-01
      */
     const onFilter = () => {
-        navigation.navigate('Filter');
+        showBetaModal()
+        // navigation.navigate('Filter');
     };
 
     /**
@@ -138,6 +140,10 @@ export default function Place(props) {
             }
         }
     };
+
+    const navigateBusinessDetail = (id) => {
+        navigation.navigate('PlaceDetail', {id})
+    }
 
     /**
      * @description Render container view
@@ -197,15 +203,15 @@ export default function Place(props) {
                                     subtitle={item.category}
                                     location={item.address}
                                     phone={item.telephone}
-                                    rate={item?.rate}
+                                    rate={item?.averageRatings}
                                     status={item?.status}
                                     rateStatus={item?.rateStatus}
-                                    numReviews={item?.numReviews}
+                                    numReviews={item?.reviews.length}
                                     style={{
                                         marginLeft: 15,
                                         marginBottom: 15,
                                     }}
-                                    onPress={() => navigation.navigate('PlaceDetail')}
+                                    onPress={() => navigateBusinessDetail(item._id)}
                                     onPressTag={() => navigation.navigate('Review')}
                                 />
                             )}
@@ -266,14 +272,14 @@ export default function Place(props) {
                                     subtitle={item.category}
                                     location={item.address}
                                     phone={item.telephone}
-                                    rate={item?.rate}
+                                    rate={item?.averageRatings}
                                     status={item?.status}
                                     rateStatus={item?.rateStatus}
-                                    numReviews={item?.numReviews}
+                                    numReviews={item?.reviews.length}
                                     style={{
                                         marginBottom: 15,
                                     }}
-                                    onPress={() => navigation.navigate('PlaceDetail')}
+                                    onPress={() => navigateBusinessDetail(item._id)}
                                     onPressTag={() => navigation.navigate('Review')}
                                 />
                             )}
@@ -333,11 +339,11 @@ export default function Place(props) {
                                     subtitle={item.category}
                                     location={item.address}
                                     phone={item.telephone}
-                                    rate={item?.rate}
+                                    rate={item?.averageRatings}
                                     status={item?.status}
-                                    rateStatus={item?.rateStatus}
-                                    numReviews={item?.numReviews}
-                                    onPress={() => navigation.navigate('PlaceDetail')}
+                                    // rateStatus={item?.rateStatus}
+                                    numReviews={item?.reviews.length}
+                                    onPress={() => navigateBusinessDetail(item._id)}
                                     onPressTag={() => navigation.navigate('Review')}
                                 />
                             )}
@@ -473,10 +479,8 @@ export default function Place(props) {
                     return <Icon name="search" size={20} color={colors.primary} />;
                 }}
                 onPressRightSecond={() => {
-                    navigation.navigate('SearchHistory');
-                }}
-                onPressLeft={() => {
-                    navigation.goBack();
+                    showBetaModal()
+                    // navigation.navigate('SearchHistory');
                 }}
                 onPressRight={() => {
                     onChangeMapView();
