@@ -87,7 +87,7 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     height: Utils.scaleWithPixel(160),
-    flex: 1
+    flex: 1,
   },
   sectionEmptyText: {
     textAlign: 'center'

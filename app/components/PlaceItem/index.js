@@ -50,13 +50,13 @@ export default function PlaceItem(props) {
                 flexDirection: 'row',
                 alignItems: 'center',
               }}>
-              {rate ? <Tag rate onPress={onPressTag}>
-                {rate}
-              </Tag> : null}
+               <Tag rate onPress={onPressTag}>
+                 {rate ? rate : '0.0'}
+              </Tag>
               <View style={{marginLeft: 10}}>
-                {rateStatus ? <Text caption1 whiteColor semibold style={{marginBottom: 5}}>
-                  {t(rateStatus)}
-                </Text> : null}
+                <Text caption1 whiteColor semibold style={{marginBottom: 5}}>
+                  {rateStatus ? t(rateStatus) : ''}
+                </Text>
                 <StarRating
                   disabled={true}
                   starSize={10}
@@ -68,7 +68,7 @@ export default function PlaceItem(props) {
               </View>
             </View>
             {numReviews ? <Text caption1 semibold whiteColor style={{marginTop: 5}}>
-              {numReviews} {t('reviews')}
+              {numReviews ? `${numReviews} ${t('reviews')}`: null}
             </Text> : null}
           </View>
         </TouchableOpacity>
@@ -108,9 +108,9 @@ export default function PlaceItem(props) {
       <View style={[styles.listContent, style]}>
         <TouchableOpacity onPress={onPress} activeOpacity={0.9}>
           <Image source={image} style={styles.listImage} />
-          <Tag status style={styles.listTagStatus}>
-            {t(status)}
-          </Tag>
+          {/*<Tag status style={styles.listTagStatus}>*/}
+          {/*  {t(status)}*/}
+          {/*</Tag>*/}
         </TouchableOpacity>
         <View style={styles.listContentRight}>
           <Text headline semibold grayColor>
@@ -121,7 +121,7 @@ export default function PlaceItem(props) {
           </Text>
           <View style={styles.lineRate}>
             <Tag onPress={onPressTag} rateSmall style={{marginRight: 5}}>
-              {rate}
+              {rate ? rate : '0.0'}
             </Tag>
             <StarRating
               disabled={true}
@@ -157,9 +157,9 @@ export default function PlaceItem(props) {
       <View style={[styles.girdContent, style]}>
         <TouchableOpacity onPress={onPress} activeOpacity={0.9}>
           <Image source={image} style={styles.girdImage} />
-          <Tag status style={styles.tagGirdStatus}>
-            {t(status)}
-          </Tag>
+          {/*<Tag status style={styles.tagGirdStatus}>*/}
+          {/*  {t(status)}*/}
+          {/*</Tag>*/}
           <Icon
             name="heart"
             color={BaseColor.whiteColor}
@@ -180,7 +180,7 @@ export default function PlaceItem(props) {
             marginTop: 5,
           }}>
           <Tag onPress={onPressTag} rateSmall style={{marginRight: 5}}>
-            {rate}
+            {rate ? rate : '0.0'}
           </Tag>
           <StarRating
             disabled={true}
@@ -231,7 +231,7 @@ PlaceItem.defaultProps = {
   subtitle: '',
   location: '',
   phone: '',
-  rate: 0,
+  rate: '0.0',
   status: '',
   rateStatus: '',
   numReviews: 0,

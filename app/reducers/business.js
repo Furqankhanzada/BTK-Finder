@@ -1,18 +1,21 @@
 import {
-  CREATE_BUSINESS_API,
-  CREATE_BUSINESS_API_SUCCESS,
-  CREATE_BUSINESS_API_ERROR,
-  SET_BUSINESS_FORM_DATA_IN_REDUX,
-  GET_POPULAR_BUSINESSES_API,
-  GET_RECENTLY_ADDED_BUSINESSES_API,
-  GET_SINGLE_BUSINESS_API,
-GET_ALL_BUSINESSES_API
+    CREATE_BUSINESS_API,
+    CREATE_BUSINESS_API_SUCCESS,
+    CREATE_BUSINESS_API_ERROR,
+    SET_BUSINESS_FORM_DATA_IN_REDUX,
+    GET_POPULAR_BUSINESSES_API,
+    GET_RECENTLY_ADDED_BUSINESSES_API,
+    GET_SINGLE_BUSINESS_API,
+    GET_ALL_BUSINESSES_API, LOAD_MORE_ALL_BUSINESSES_API
 } from '../constants/business';
 
 //initial state.
 const initialState = {
     getAllBusinessesLoading: false,
     allBusinesses: [],
+    getAllBusinessesLoadMoreLoading: false,
+    getAllBusinessesIsLoadMore: true,
+    getAllBusinessesIsLoad: true,
     businessFormData: {},
     createBusinessLoading: false,
     getAllPopularBusinessesLoading: false,
@@ -50,8 +53,18 @@ export default function userReducer(state = initialState, action = {}) {
         case GET_ALL_BUSINESSES_API:
             return {
                 ...state,
-                allBusinesses: action.data || [],
-                getAllBusinessesLoading: action.loading
+                allBusinesses: action.data,
+                getAllBusinessesLoading: action.loading,
+                getAllBusinessesLoadMoreLoading: true,
+                getAllBusinessesLoadMore: true
+            };
+        case LOAD_MORE_ALL_BUSINESSES_API:
+            return {
+                ...state,
+                allBusinesses: [...state.allBusinesses, ...action.data],
+                getAllBusinessesLoading: false,
+                getAllBusinessesLoadMoreLoading: action.loadMoreLoading,
+                getAllBusinessesLoadMore: action.isLoadMore
             };
         case GET_SINGLE_BUSINESS_API:
             return {

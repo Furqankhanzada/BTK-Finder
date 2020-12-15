@@ -92,7 +92,11 @@ export default function Category({ navigation }) {
             icon={item.icon}
             title={item.name}
             subtitle={200}
-            onPress={() => navigation.navigate('Place')}
+            onPress={() => navigation.navigate('Place', {
+              title: item.name,
+              category: item.name,
+              route: item.route
+            })}
             style={[styles.itemIcon, { borderColor: colors.border }]}
           />
         );
@@ -103,7 +107,11 @@ export default function Category({ navigation }) {
             icon={item.icon}
             title={item.name}
             subtitle={300}
-            onPress={() => navigation.navigate('Place')}
+            onPress={() => navigation.navigate('Place', {
+              title: item.name,
+              category: item.name,
+              route: item.route
+            })}
             style={styles.itemFull}
           />
         );
