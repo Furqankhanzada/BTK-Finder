@@ -17,7 +17,7 @@ export const createBusiness = (payload, cb) => (dispatch) => {
   dispatch({ type: CREATE_BUSINESS_API });
   axiosApiInstance({
     method: 'POST',
-    url: CREATE_BUSINESS,
+    url: BUSINESSES_API,
     data: payload,
   })
     .then((response) => {
