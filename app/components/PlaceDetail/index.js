@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Linking,
   Alert,
+  FlatList, ActivityIndicator,
 } from 'react-native';
 import { BaseColor, Images, useTheme } from '@config';
 import {
@@ -23,6 +24,11 @@ import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import * as Utils from '@utils';
 import styles from './styles';
 import moment from 'moment';
+import PlaceItem from "../PlaceItem";
+import CardList from "../CardList";
+import {PlaceListData} from "../../data";
+import {useSelector, useDispatch} from "react-redux";
+import {getBusinesses} from "../../actions/business";
 
 let defaultDelta = {
   latitudeDelta: 0.003,
@@ -34,9 +40,28 @@ export default function PlaceDetailComponent(props) {
   const { t } = useTranslation();
   const deltaY = new Animated.Value(0);
   const { colors } = useTheme();
+  const dispatch = useDispatch();
+  const { navigation, business } = props;
 
-  const { business } = props;
+  const stateProps = useSelector(({businesses}) => {
+    return {
+      recentlyAddedBusinesses: businesses.recentlyAddedBusinesses,
+      getRecentlyAddedBusinessesLoading: businesses.getRecentlyAddedBusinessesLoading,
+    }
+  });
+
+  useEffect(() => {
+    dispatch(getBusinesses({limit: 5, skip: 0, fields:'name,image,category,address,averageRatings'}));
+  }, []);
+
+  const navigateBusinessDetail = (id) => {
+    navigation.navigate('PlaceDetail', {id})
+  }
+
   const [isPreview] = useState(!business.preview);
+
+  const [list] = useState(PlaceListData);
+  const [relate] = useState(PlaceListData);
 
   const [collapseHour, setCollapseHour] = useState(true);
   const [heightHeader, setHeightHeader] = useState(Utils.heightHeader());
@@ -195,7 +220,7 @@ export default function PlaceDetailComponent(props) {
         <SafeAreaView style={{ flex: 1 }} forceInset={{ top: 'always' }}>
           {/* Header */}
           <Header
-              title=""
+              title="Place Detail"
               renderLeft={() => {
                 return isPreview ? null : (
                     <Icon name="arrow-left" size={20} color={BaseColor.whiteColor} />
@@ -436,6 +461,69 @@ export default function PlaceDetailComponent(props) {
                 );
               })}
             </View>
+            {isPreview ? null : (
+                <View>
+                  <Text
+                      title3
+                      semibold
+                      style={{
+                        paddingHorizontal: 20,
+                        paddingVertical: 15,
+                      }}>
+                    Recently Added
+                  </Text>
+                  {stateProps.getRecentlyAddedBusinessesLoading ? (
+                      <ActivityIndicator size="large" color={colors.primary}/>
+                  ) : (
+                      <FlatList
+                          contentContainerStyle={{paddingLeft: 5, paddingRight: 20}}
+                          horizontal={true}
+                          showsHorizontalScrollIndicator={false}
+                          data={stateProps.recentlyAddedBusinesses}
+                          keyExtractor={(item, index) => item._id}
+                          renderItem={({item, index}) => (
+                              <PlaceItem
+                                  grid
+                                  image={item.image}
+                                  title={item.name}
+                                  subtitle={item.category}
+                                  location={item.address}
+                                  rate={item.averageRatings}
+                                  status='Open Now'
+                                  onPress={() => navigateBusinessDetail(item._id)}
+                                  style={{marginLeft: 15, width: 175}}
+                              />
+                          )}
+                      />
+                  )}
+                  <Text
+                      title3
+                      semibold
+                      style={{
+                        paddingHorizontal: 20,
+                        paddingVertical: 15,
+                      }}>
+                    {t('related')}
+                  </Text>
+                  <FlatList
+                      contentContainerStyle={{
+                        paddingHorizontal: 20,
+                      }}
+                      data={relate}
+                      keyExtractor={(item, index) => item.id}
+                      renderItem={({item, index}) => (
+                          <CardList
+                              image={item.image}
+                              title={item.title}
+                              subtitle={item.subtitle}
+                              rate={item.rate}
+                              style={{marginBottom: 15}}
+                              onPress={() => navigateBusinessDetail(item._id)}
+                          />
+                      )}
+                  />
+                </View>
+            )}
           </ScrollView>
         </SafeAreaView>
       </View>
