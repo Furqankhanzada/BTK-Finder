@@ -7,7 +7,8 @@ import {
     GET_POPULAR_BUSINESSES_API,
     GET_RECENTLY_ADDED_BUSINESSES_API,
     GET_ALL_BUSINESSES_API,
-    GET_SINGLE_BUSINESS_API
+    GET_SINGLE_BUSINESS_API,
+    LOAD_MORE_ALL_BUSINESSES_API
 } from '../constants/business';
 import { handleError } from '../utils';
 import axiosApiInstance from '../interceptor/axios-interceptor';
@@ -17,7 +18,7 @@ export const createBusiness = (payload, cb) => (dispatch) => {
   dispatch({ type: CREATE_BUSINESS_API });
   axiosApiInstance({
     method: 'POST',
-    url: CREATE_BUSINESS,
+    url: BUSINESSES_API,
     data: payload,
   })
     .then((response) => {
@@ -61,25 +62,38 @@ export const getBusinesses = (payload) => (dispatch) => {
     .then((response) => {
       dispatch({ type: dispatchType, loading: false, data: response.data });
     })
-    .catch((error) => {
+    .catch(({response}) => {
       dispatch({ type: dispatchType, loading: false });
-      handleError(error);
+      handleError(response.data);
     });
 };
 
 export const getAllBusinesses = (payload) => (dispatch)  => {
-
+    let dispatchType = GET_ALL_BUSINESSES_API;
     let queryParams = encodeQueryData(payload) ? `?${encodeQueryData(payload)}` : '';
 
-    dispatch({type: GET_ALL_BUSINESSES_API, loading: true});
+    if(payload.skip > 0) dispatchType = LOAD_MORE_ALL_BUSINESSES_API;
+
+    dispatch({
+        type: dispatchType,
+        loading: true,
+        loadMoreLoading: true,
+        data: []
+    });
 
     axiosApiInstance({method: 'GET', url: `${BUSINESSES_API}${queryParams}`})
         .then((response) => {
-            dispatch({type: GET_ALL_BUSINESSES_API, loading: false, data: response.data});
+            dispatch({
+                type: dispatchType,
+                loading: false,
+                loadMoreLoading: false,
+                data: response.data || [],
+                isLoadMore: !(response.data && response.data.length < 10)
+            });
         })
-        .catch((error) => {
-            dispatch({ type: GET_ALL_BUSINESSES_API, loading: false });
-            handleError(error);
+        .catch(({response}) => {
+            dispatch({ type: dispatchType, loading: false, loadMoreLoading: false,  data: [] });
+            handleError(response.data);
         });
 };
 
@@ -97,8 +111,8 @@ export const getSingleBusiness = (id) => (dispatch) => {
                 data: response.data,
             });
         })
-        .catch((error) => {
+        .catch(({response}) => {
             dispatch({ type: GET_SINGLE_BUSINESS_API, loading: false });
-            handleError(error);
+            handleError(response.data);
         });
 };

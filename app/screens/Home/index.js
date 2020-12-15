@@ -85,7 +85,11 @@ export default function Home({ navigation }) {
     }
 
     const seeMore = (payload = {}) => {
-        navigation.navigate('Place', payload)
+        if(payload.route === 'Category'){
+            navigation.navigate('Category')
+        } else {
+            navigation.navigate('Place', payload)
+        }
     }
 
     return (
@@ -219,7 +223,11 @@ export default function Home({ navigation }) {
                                 return (
                                     <TouchableOpacity
                                         style={styles.serviceItem}
-                                        onPress={() => navigation.navigate(item.route)}>
+                                        onPress={() => seeMore({
+                                            title: item.name,
+                                            category: item.name,
+                                            route: item.route
+                                        })}>
                                         <View
                                             style={[
                                                 styles.serviceCircleIcon,
@@ -244,7 +252,10 @@ export default function Home({ navigation }) {
                     <SectionList
                         title="Popular Businesses"
                         subTitle={t('popular_lologan')}
-                        seeMoreFunc={() => seeMore({popular: true})}
+                        seeMoreFunc={() => seeMore({
+                            popular: true,
+                            title: "Popular Businesses",
+                        })}
                         data={stateProps.popularBusinesses}
                         horizontal={true}
                         loading={stateProps.getPopularBusinessesLoading}
@@ -266,7 +277,9 @@ export default function Home({ navigation }) {
                     <SectionList
                         title="Recently Added Businesses"
                         subTitle={t('recent_sologan')}
-                        seeMoreFunc={() => seeMore()}
+                        seeMoreFunc={() => seeMore({
+                                title: "Recently Added Businesses",
+                            })}
                         data={stateProps.recentlyAddedBusinesses}
                         loading={stateProps.getRecentlyAddedBusinessesLoading}
                         renderItem={({item, index}) => {
@@ -276,7 +289,7 @@ export default function Home({ navigation }) {
                                     image={item?.image}
                                     title={item.name}
                                     subtitle={item.category}
-                                    rate={item.rate}
+                                    rate={item?.averageRatings || '0.0'}
                                     style={{ marginBottom: 15 }}
                                     onPress={() => navigateBusinessDetail(item._id)}
                                 />

@@ -27,27 +27,11 @@ export default function PlaceDetail(props) {
   return (
     <View style={{ flex: 1, position: 'relative' }}>
         <SafeAreaView style={{ flex: 1 }} forceInset={{ top: 'always' }}>
-          <Header
-            title={'Place Detail'}
-            renderLeft={() => {
-              return (
-                <Icon
-                  name="arrow-left"
-                  size={20}
-                  color="#5dade2"
-                  enableRTL={true}
-                />
-              );
-            }}
-            onPressLeft={() => {
-              navigation.goBack();
-            }}
-          />
           <View style={{flex: 1}}>
             {stateProps.getSingleBusinessLoading ?
                 <Loading loading={true} />
                   :
-                <PlaceDetailComponent business={stateProps.singleBusiness} />}
+                <PlaceDetailComponent business={{ ...stateProps.singleBusiness, preview: true }} navigation={navigation} />}
           </View>
         </SafeAreaView>
     </View>

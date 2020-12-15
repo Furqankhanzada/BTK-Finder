@@ -1,5 +1,5 @@
 import React, {useState, useRef, useEffect} from 'react';
-import {FlatList, RefreshControl, View, Animated} from 'react-native';
+import {FlatList, RefreshControl, View, Animated, ActivityIndicator} from 'react-native';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import {BaseStyle, BaseColor, useTheme} from '@config';
 import Carousel from 'react-native-snap-carousel';
@@ -10,7 +10,8 @@ import {
     PlaceItem,
     FilterSort,
     CardList,
-    Loading
+    Loading,
+    Text
 } from '@components';
 import styles from './styles';
 import * as Utils from '@utils';
@@ -23,24 +24,26 @@ import { showBetaModal } from '../../popup/betaPopup';
 export default function Place(props) {
     const { navigation, route } = props;
     const dispatch = useDispatch();
-    const [limit, setLimit] = useState(10);
+    const [limit] = useState(10);
     const [skip, setSkip] = useState(0);
 
     useEffect(() => {
-        let payload = {
-            limit,
-            skip
-        };
+        let payload = { limit, skip };
         if(route?.params?.popular){
             payload.popular = true
         }
+        if(route?.params?.category){
+            payload.category = route.params.category
+        }
         dispatch(getAllBusinesses(payload))
-    }, []);
+    }, [skip]);
 
     const stateProps = useSelector(({businesses}) => {
         return {
             loading: businesses.getAllBusinessesLoading,
             data: businesses.allBusinesses,
+            loadMoreLoading: businesses.getAllBusinessesLoadMoreLoading,
+            isLoadMore: businesses.getAllBusinessesLoadMore,
         }
     });
     const {t} = useTranslation();
@@ -143,7 +146,39 @@ export default function Place(props) {
 
     const navigateBusinessDetail = (id) => {
         navigation.navigate('PlaceDetail', {id})
+    };
+
+    const onScrollHandler = () => {
+        if(stateProps.isLoadMore){
+            setSkip(skip + 10)
+        }
+
+    };
+    const onRefreshHandler = () => {
+        // setLimit(10);
+        setSkip(0)
+    };
+
+    const renderFooter = () => {
+        if(!stateProps.loadMoreLoading && stateProps.isLoadMore){
+            return (
+                <View style={styles.listFooter}>
+                    <ActivityIndicator size="large" color={BaseColor.blueColor}/>
+                </View>
+            )
+        }
+        return null
     }
+
+    const listEmptyComponent = () => {
+        return (
+            <View style={styles.sectionEmpty}>
+                <Text semibold style={styles.sectionEmptyText}>
+                    No {route?.params?.title || t('place')} Available
+                </Text>
+            </View>
+        )
+    };
 
     /**
      * @description Render container view
@@ -151,7 +186,7 @@ export default function Place(props) {
      * @date 2019-09-01
      * @returns
      */
-    const renderList = () => {
+    const renderList = () =>    {
         const navbarTranslate = clampedScroll.interpolate({
             inputRange: [0, 40],
             outputRange: [0, -40],
@@ -164,6 +199,7 @@ export default function Place(props) {
                         <Animated.FlatList
                             contentContainerStyle={{
                                 paddingTop: 50,
+                                flex: stateProps.data.length ? 0 : 1,
                             }}
                             columnWrapperStyle={{
                                 paddingLeft: 5,
@@ -174,9 +210,11 @@ export default function Place(props) {
                                     colors={[colors.primary]}
                                     tintColor={colors.primary}
                                     refreshing={refreshing}
-                                    onRefresh={() => {}}
+                                    onRefresh={() => onRefreshHandler()}
                                 />
                             }
+                            onEndReached={onScrollHandler}
+                            onEndThreshold={0}
                             scrollEventThrottle={1}
                             onScroll={Animated.event(
                                 [
@@ -195,6 +233,8 @@ export default function Place(props) {
                             data={stateProps.data}
                             key={'gird'}
                             keyExtractor={(item, index) => item.id}
+                            ListFooterComponent={renderFooter}
+                            ListEmptyComponent={listEmptyComponent}
                             renderItem={({item, index}) => (
                                 <PlaceItem
                                     grid
@@ -239,15 +279,18 @@ export default function Place(props) {
                             contentContainerStyle={{
                                 paddingTop: 50,
                                 paddingHorizontal: 20,
+                                flex: stateProps.data.length ? 0 : 1,
                             }}
                             refreshControl={
                                 <RefreshControl
                                     colors={[colors.primary]}
                                     tintColor={colors.primary}
                                     refreshing={refreshing}
-                                    onRefresh={() => {}}
+                                    onRefresh={() => onRefreshHandler()}
                                 />
                             }
+                            onEndReached={onScrollHandler}
+                            onEndThreshold={0}
                             scrollEventThrottle={1}
                             onScroll={Animated.event(
                                 [
@@ -264,6 +307,8 @@ export default function Place(props) {
                             data={stateProps.data}
                             key={'list'}
                             keyExtractor={(item, index) => item.id}
+                            ListFooterComponent={renderFooter}
+                            ListEmptyComponent={listEmptyComponent}
                             renderItem={({item, index}) => (
                                 <PlaceItem
                                     list
@@ -306,15 +351,18 @@ export default function Place(props) {
                         <Animated.FlatList
                             contentContainerStyle={{
                                 paddingTop: 50,
+                                flex: stateProps.data.length ? 0 : 1,
                             }}
                             refreshControl={
                                 <RefreshControl
                                     colors={[colors.primary]}
                                     tintColor={colors.primary}
                                     refreshing={refreshing}
-                                    onRefresh={() => {}}
+                                    onRefresh={() => onRefreshHandler()}
                                 />
                             }
+                            onEndReached={onScrollHandler}
+                            onEndThreshold={0}
                             scrollEventThrottle={1}
                             onScroll={Animated.event(
                                 [
@@ -331,6 +379,7 @@ export default function Place(props) {
                             data={stateProps.data}
                             key={'block'}
                             keyExtractor={(item, index) => item.id}
+                            ListEmptyComponent={listEmptyComponent}
                             renderItem={({item, index}) => (
                                 <PlaceItem
                                     block
@@ -347,6 +396,7 @@ export default function Place(props) {
                                     onPressTag={() => navigation.navigate('Review')}
                                 />
                             )}
+                            ListFooterComponent={renderFooter}
                         />
                         <Animated.View
                             style={[
@@ -452,7 +502,7 @@ export default function Place(props) {
     return (
         <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{top: 'always'}}>
             <Header
-                title={t('place')}
+                title={route?.params?.title || t('place')}
                 renderLeft={() => {
                     return (
                         <Icon
