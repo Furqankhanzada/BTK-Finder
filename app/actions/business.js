@@ -1,21 +1,17 @@
+import { BUSINESSES_API } from '../constants';
 import {
-  CREATE_BUSINESS,
-  GET_BUSINESSES,
-  GET_SINGLE_BUSINESS,
-} from '../constants';
-import {
-  CREATE_BUSINESS_API,
-  CREATE_BUSINESS_API_SUCCESS,
-  CREATE_BUSINESS_API_ERROR,
-  SET_BUSINESS_FORM_DATA_IN_REDUX,
-  GET_POPULAR_BUSINESSES_API,
-  GET_RECENTLY_ADDED_BUSINESSES_API,
-  GET_SINGLE_BUSINESS_API,
+    CREATE_BUSINESS_API,
+    CREATE_BUSINESS_API_SUCCESS,
+    CREATE_BUSINESS_API_ERROR,
+    SET_BUSINESS_FORM_DATA_IN_REDUX,
+    GET_POPULAR_BUSINESSES_API,
+    GET_RECENTLY_ADDED_BUSINESSES_API,
+    GET_ALL_BUSINESSES_API,
+    GET_SINGLE_BUSINESS_API
 } from '../constants/business';
 import { handleError } from '../utils';
 import axiosApiInstance from '../interceptor/axios-interceptor';
 import Toast from 'react-native-toast-message';
-import axios from 'axios';
 
 export const createBusiness = (payload, cb) => (dispatch) => {
   dispatch({ type: CREATE_BUSINESS_API });
@@ -61,7 +57,7 @@ export const getBusinesses = (payload) => (dispatch) => {
 
   dispatch({ type: dispatchType, loading: true });
 
-  axiosApiInstance({ method: 'GET', url: `${GET_BUSINESSES}${queryParams}` })
+  axiosApiInstance({ method: 'GET', url: `${BUSINESSES_API}${queryParams}` })
     .then((response) => {
       dispatch({ type: dispatchType, loading: false, data: response.data });
     })
@@ -71,25 +67,38 @@ export const getBusinesses = (payload) => (dispatch) => {
     });
 };
 
-export const setBusinessFormData = (businessFormData) => {
-  return async (dispatch) => {
-    dispatch({ type: SET_BUSINESS_FORM_DATA_IN_REDUX, businessFormData });
-  };
+export const getAllBusinesses = (payload) => (dispatch)  => {
+
+    let queryParams = encodeQueryData(payload) ? `?${encodeQueryData(payload)}` : '';
+
+    dispatch({type: GET_ALL_BUSINESSES_API, loading: true});
+
+    axiosApiInstance({method: 'GET', url: `${BUSINESSES_API}${queryParams}`})
+        .then((response) => {
+            dispatch({type: GET_ALL_BUSINESSES_API, loading: false, data: response.data});
+        })
+        .catch((error) => {
+            dispatch({ type: GET_ALL_BUSINESSES_API, loading: false });
+            handleError(error);
+        });
 };
 
-export const getSingleBusiness = () => {
-  return (dispatch) => {
-    axios({ method: 'GET', url: GET_SINGLE_BUSINESS })
-      .then((response) => {
-        dispatch({
-          type: GET_SINGLE_BUSINESS_API,
-          loading: false,
-          data: response.data,
+export const setBusinessFormData = (businessFormData) => (dispatch) => {
+    dispatch({ type: SET_BUSINESS_FORM_DATA_IN_REDUX, businessFormData });
+};
+
+export const getSingleBusiness = (id) => (dispatch) => {
+    dispatch({ type: GET_SINGLE_BUSINESS_API, loading: true });
+    axiosApiInstance({ method: 'GET', url: `${BUSINESSES_API}/${id}` })
+        .then((response) => {
+            dispatch({
+                type: GET_SINGLE_BUSINESS_API,
+                loading: false,
+                data: response.data,
+            });
+        })
+        .catch((error) => {
+            dispatch({ type: GET_SINGLE_BUSINESS_API, loading: false });
+            handleError(error);
         });
-      })
-      .catch((error) => {
-        dispatch({ type: GET_SINGLE_BUSINESS_API, loading: false });
-        handleError(error);
-      });
-  };
 };

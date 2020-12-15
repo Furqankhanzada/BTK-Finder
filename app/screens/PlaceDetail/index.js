@@ -10,7 +10,8 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { getSingleBusiness } from '../../actions/business';
 
-export default function FinalReview({ navigation }) {
+export default function PlaceDetail(props) {
+  const {navigation, route} = props;
   const dispatch = useDispatch();
   const stateProps = useSelector(({ businesses }) => {
     return {
@@ -20,14 +21,11 @@ export default function FinalReview({ navigation }) {
   });
 
   useEffect(() => {
-    dispatch(getSingleBusiness());
-  }, [dispatch]);
+    dispatch(getSingleBusiness(route?.params?.id));
+  }, []);
 
   return (
     <View style={{ flex: 1, position: 'relative' }}>
-      {stateProps.getSingleBusinessLoading ? (
-        <Loading loading={true} />
-      ) : (
         <SafeAreaView style={{ flex: 1 }} forceInset={{ top: 'always' }}>
           <Header
             title={'Place Detail'}
@@ -45,9 +43,13 @@ export default function FinalReview({ navigation }) {
               navigation.goBack();
             }}
           />
-          <PlaceDetailComponent business={stateProps.singleBusiness} />
+          <View style={{flex: 1}}>
+            {stateProps.getSingleBusinessLoading ?
+                <Loading loading={true} />
+                  :
+                <PlaceDetailComponent business={stateProps.singleBusiness} />}
+          </View>
         </SafeAreaView>
-      )}
     </View>
   );
 }

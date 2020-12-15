@@ -84,6 +84,10 @@ export default function Home({ navigation }) {
         navigation.navigate('PlaceDetail', {id})
     }
 
+    const seeMore = (payload = {}) => {
+        navigation.navigate('Place', payload)
+    }
+
     return (
         <View style={{ flex: 1 }}>
             <Animated.View
@@ -240,7 +244,7 @@ export default function Home({ navigation }) {
                     <SectionList
                         title="Popular Businesses"
                         subTitle={t('popular_lologan')}
-                        seeMoreFunc={() => alert('RUN')}
+                        seeMoreFunc={() => seeMore({popular: true})}
                         data={stateProps.popularBusinesses}
                         horizontal={true}
                         loading={stateProps.getPopularBusinessesLoading}
@@ -262,7 +266,7 @@ export default function Home({ navigation }) {
                     <SectionList
                         title="Recently Added Businesses"
                         subTitle={t('recent_sologan')}
-                        seeMoreFunc={() => alert('RUN')}
+                        seeMoreFunc={() => seeMore()}
                         data={stateProps.recentlyAddedBusinesses}
                         loading={stateProps.getRecentlyAddedBusinessesLoading}
                         renderItem={({item, index}) => {
