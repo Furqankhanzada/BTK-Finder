@@ -26,14 +26,14 @@ export default function PlaceDetail(props) {
 
   return (
     <View style={{ flex: 1, position: 'relative' }}>
-        <SafeAreaView style={{ flex: 1 }} forceInset={{ top: 'always' }}>
+        {/* <SafeAreaView style={{ flex: 1 }} forceInset={{ top: 'always' }}> */}
           <View style={{flex: 1}}>
             {stateProps.getSingleBusinessLoading ?
                 <Loading loading={true} />
                   :
                 <PlaceDetailComponent business={{ ...stateProps.singleBusiness, preview: true }} navigation={navigation} />}
           </View>
-        </SafeAreaView>
+        {/* </SafeAreaView> */}
     </View>
   );
 }
