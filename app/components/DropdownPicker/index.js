@@ -1,5 +1,5 @@
 import React from 'react';
-import { I18nManager, Platform, View } from 'react-native';
+import { I18nManager } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import PropTypes from 'prop-types';
 import { BaseColor, useTheme } from '@config';
@@ -9,16 +9,8 @@ export default function DropDown(props) {
   const cardColor = colors.card;
   const { items, defaultValue, onChangeItem, placeholder, searchablePlaceholder } = props;
   return (
-      <View
-          style={{
-              ...(Platform.OS !== 'android' && {
-                  zIndex: 10
-              })
-          }}
-      >
     <DropDownPicker
         items={items}
-        zIndex={5000}
         containerStyle={{
           marginTop: 10,
           height: 48,
@@ -54,7 +46,6 @@ export default function DropDown(props) {
         activeLabelStyle={{color: colors.primary}}
         labelStyle={{color: colors.text}}
       />
-      </View>
   );
 }
 

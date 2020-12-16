@@ -255,10 +255,10 @@ export default function PlaceDetailComponent(props) {
                 },
               ])}
               onContentSizeChange={() => {
-                setHeightHeader(Utils.heightHeader());
+                setHeightHeader(Utils.heightHeader()+26);
               }}
               scrollEventThrottle={8}>
-            <View style={{ height: 255 - heightHeader }} />
+            <View style={{ height: 280 - heightHeader }} />
             <View style={{paddingHorizontal: 20, marginBottom: 20}}>
               <View style={styles.lineSpace}>
                 <Text title1 semibold>
