@@ -320,7 +320,7 @@ export default function Place(props) {
                                     rate={item?.averageRatings}
                                     status={item?.status}
                                     rateStatus={item?.rateStatus}
-                                    numReviews={item?.reviews.length}
+                                    numReviews={item?.reviews?.length}
                                     style={{
                                         marginBottom: 15,
                                     }}
@@ -391,7 +391,7 @@ export default function Place(props) {
                                     rate={item?.averageRatings}
                                     status={item?.status}
                                     // rateStatus={item?.rateStatus}
-                                    numReviews={item?.reviews.length}
+                                    numReviews={item?.reviews?.length}
                                     onPress={() => navigateBusinessDetail(item._id)}
                                     onPressTag={() => navigation.navigate('Review')}
                                 />

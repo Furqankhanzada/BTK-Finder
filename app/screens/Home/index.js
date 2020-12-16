@@ -77,7 +77,7 @@ export default function Home({ navigation }) {
     }, [dispatch]);
     useEffect(() => {
         dispatch(getBusinesses({limit: 5, skip: 0, popular: true, fields:'name,image'}));
-        dispatch(getBusinesses({limit: 5, skip: 0, fields:'name,image,category'}));
+        dispatch(getBusinesses({limit: 5, skip: 0, fields:'name,image,category,averageRatings'}));
     }, []);
 
     const navigateBusinessDetail = (id) => {

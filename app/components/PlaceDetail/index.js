@@ -26,9 +26,8 @@ import styles from './styles';
 import moment from 'moment';
 import PlaceItem from "../PlaceItem";
 import CardList from "../CardList";
-import {PlaceListData} from "../../data";
 import {useSelector, useDispatch} from "react-redux";
-import {getBusinesses} from "../../actions/business";
+import {getAllBusinesses, getBusinesses} from "../../actions/business";
 
 let defaultDelta = {
   latitudeDelta: 0.003,
@@ -47,10 +46,13 @@ export default function PlaceDetailComponent(props) {
     return {
       recentlyAddedBusinesses: businesses.recentlyAddedBusinesses,
       getRecentlyAddedBusinessesLoading: businesses.getRecentlyAddedBusinessesLoading,
+      relatedBusiness: businesses.allBusinesses,
+      getRelatedBusinessesLoading: businesses.getAllBusinessesLoading,
     }
   });
 
   useEffect(() => {
+    dispatch(getAllBusinesses({limit: 5, skip: 0, fields:'name,category,averageRatings', category: business.category}));
     dispatch(getBusinesses({limit: 5, skip: 0, fields:'name,image,category,address,averageRatings'}));
   }, []);
 
@@ -59,9 +61,6 @@ export default function PlaceDetailComponent(props) {
   }
 
   const [isPreview] = useState(!business.preview);
-
-  const [list] = useState(PlaceListData);
-  const [relate] = useState(PlaceListData);
 
   const [collapseHour, setCollapseHour] = useState(true);
   const [heightHeader, setHeightHeader] = useState(Utils.heightHeader());
@@ -200,22 +199,31 @@ export default function PlaceDetailComponent(props) {
               },
             ]}>
           <Image source={Images.location7} style={{ flex: 1 }} />
-          <Animated.View
-              style={{
-                position: 'absolute',
-                bottom: 15,
-                left: 20,
-                flexDirection: 'row',
-                opacity: deltaY.interpolate({
-                  inputRange: [
-                    0,
-                    Utils.scaleWithPixel(140),
-                    Utils.scaleWithPixel(140),
-                  ],
-                  outputRange: [1, 0, 0],
-                }),
-              }}
-          />
+          {/*<Animated.View*/}
+          {/*    style={{*/}
+          {/*      position: 'absolute',*/}
+          {/*      bottom: 15,*/}
+          {/*      left: 20,*/}
+          {/*      flexDirection: 'row',*/}
+          {/*      opacity: deltaY.interpolate({*/}
+          {/*        inputRange: [*/}
+          {/*          0,*/}
+          {/*          Utils.scaleWithPixel(140),*/}
+          {/*          Utils.scaleWithPixel(140),*/}
+          {/*        ],*/}
+          {/*        outputRange: [1, 0, 0],*/}
+          {/*      }),*/}
+          {/*    }}>*/}
+          {/*  <Image source={Images.profile2} style={styles.userIcon} />*/}
+          {/*  <View>*/}
+          {/*    <Text headline semibold whiteColor>*/}
+          {/*      Publisher Name*/}
+          {/*    </Text>*/}
+          {/*    <Text footnote whiteColor>*/}
+          {/*      {moment(business.createdAt).format('DD/MM/YYYY')} | {business.views} {t('views')}*/}
+          {/*    </Text>*/}
+          {/*  </View>*/}
+          {/*</Animated.View>*/}
         </Animated.View>
         <SafeAreaView style={{ flex: 1 }} forceInset={{ top: 'always' }}>
           {/* Header */}
@@ -276,9 +284,6 @@ export default function PlaceDetailComponent(props) {
                             fullStarColor={BaseColor.yellowColor}
                             on
                         />
-                        <Text footnote grayColor style={{ marginLeft: 5 }}>
-                          (0)
-                        </Text>
                       </TouchableOpacity>
                   ) : (
                       <TouchableOpacity
@@ -287,20 +292,18 @@ export default function PlaceDetailComponent(props) {
                         <Tag
                             rateSmall
                             style={{ marginRight: 5 }}
-                            onPress={() => navigation.navigate('Review')}>
-                          4.5
+                            // onPress={() => navigation.navigate('Review')}
+                        >
+                          {business.averageRatings ? business.averageRatings : '0.0'}
                         </Tag>
                         <StarRating
                             disabled={true}
                             starSize={10}
                             maxStars={5}
-                            rating={4.5}
+                            rating={business.averageRatings}
                             fullStarColor={BaseColor.yellowColor}
                             on
                         />
-                        <Text footnote grayColor style={{ marginLeft: 5 }}>
-                          (609)
-                        </Text>
                       </TouchableOpacity>
                   )}
                 </View>
@@ -402,8 +405,8 @@ export default function PlaceDetailComponent(props) {
                     <View style={{ flex: 1, alignItems: 'flex-end' }}>
                       <Text caption1 grayColor>{t('price_range')}</Text>
                       <Text headline style={{ marginTop: 5 }}>
-                        {business.priceRange.to ? `${business.priceRange.to}` : ''}
-                        {business.priceRange.from ? ` - ${business.priceRange.from}` : ''}
+                        {business.priceRange.from ? `${business.priceRange.from}` : ''}
+                        {business.priceRange.to ? ` - ${business.priceRange.to}` : ''}
                       </Text>
                     </View> : null}
               </View>
@@ -473,7 +476,7 @@ export default function PlaceDetailComponent(props) {
                     Recently Added
                   </Text>
                   {stateProps.getRecentlyAddedBusinessesLoading ? (
-                      <ActivityIndicator size="large" color={colors.primary}/>
+                      <ActivityIndicator size="small" color={colors.primary}/>
                   ) : (
                       <FlatList
                           contentContainerStyle={{paddingLeft: 5, paddingRight: 20}}
@@ -505,23 +508,27 @@ export default function PlaceDetailComponent(props) {
                       }}>
                     {t('related')}
                   </Text>
-                  <FlatList
-                      contentContainerStyle={{
-                        paddingHorizontal: 20,
-                      }}
-                      data={relate}
-                      keyExtractor={(item, index) => item.id}
-                      renderItem={({item, index}) => (
-                          <CardList
-                              image={item.image}
-                              title={item.title}
-                              subtitle={item.subtitle}
-                              rate={item.rate}
-                              style={{marginBottom: 15}}
-                              onPress={() => navigateBusinessDetail(item._id)}
-                          />
-                      )}
-                  />
+                  {stateProps.getRelatedBusinessesLoading ? (
+                      <ActivityIndicator size="small" color={colors.primary}/>
+                  ) : (
+                      <FlatList
+                          contentContainerStyle={{
+                            paddingHorizontal: 20,
+                          }}
+                          data={stateProps.relatedBusiness}
+                          keyExtractor={(item, index) => item._id}
+                          renderItem={({item, index}) => (
+                              <CardList
+                                  image={item.image}
+                                  title={item.name}
+                                  subtitle={item.category}
+                                  rate={item.averageRatings ? item.averageRatings : '0.0'}
+                                  style={{marginBottom: 15}}
+                                  onPress={() => navigateBusinessDetail(item._id)}
+                              />
+                          )}
+                      />
+                  )}
                 </View>
             )}
           </ScrollView>
