@@ -405,8 +405,8 @@ export default function PlaceDetailComponent(props) {
                     <View style={{ flex: 1, alignItems: 'flex-end' }}>
                       <Text caption1 grayColor>{t('price_range')}</Text>
                       <Text headline style={{ marginTop: 5 }}>
-                        {business.priceRange.to ? `${business.priceRange.to}` : ''}
-                        {business.priceRange.from ? ` - ${business.priceRange.from}` : ''}
+                        {business.priceRange.from ? `${business.priceRange.from}` : ''}
+                        {business.priceRange.to ? ` - ${business.priceRange.to}` : ''}
                       </Text>
                     </View> : null}
               </View>

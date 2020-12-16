@@ -97,7 +97,7 @@ export default function PriceRange({ navigation }) {
                         keyboardType="numeric"
                         value={priceFrom}
                         autoCapitalize="none"
-                        mask={'PKR [0000000000]'}
+                        mask={'RS [0000000000]'}
                     />
                     <TextInputMask
                         style={[BaseStyle.textInput, { backgroundColor: cardColor, color: colors.text, marginTop:10 }]}
@@ -110,7 +110,7 @@ export default function PriceRange({ navigation }) {
                         keyboardType="numeric"
                         value={priceTo}
                         autoCapitalize="none"
-                        mask={'PKR [0000000000]'}
+                        mask={'RS [0000000000]'}
                     />
                 </View>
             </ScrollView>
