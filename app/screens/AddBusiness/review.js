@@ -37,6 +37,8 @@ export default function FinalReview({ navigation }) {
         }
       })
     }
+    if(!payload.email) delete payload.email ;
+    if(!payload.website) delete payload.website ;
     payload.openHours = openHours;
     dispatch(createBusiness(payload, addCallback))
   };

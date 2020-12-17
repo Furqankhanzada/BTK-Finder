@@ -88,10 +88,11 @@ export default StyleSheet.create({
     flex: 1,
     paddingTop: 15,
     paddingVertical: 15,
-    paddingHorizontal: 15
+    paddingHorizontal: 15,
+    // height: 500
   },
   container: {
-    // height: 400,
+    height: 400,
     width: null,
     flex: 1,
     justifyContent: 'flex-end',

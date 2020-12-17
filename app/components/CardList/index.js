@@ -23,7 +23,7 @@ export default function CardList(props) {
         </Text>
         <View style={styles.contentRate}>
           <Tag onPress={onPressTag} rateSmall style={{marginRight: 4}}>
-            {rate}
+            {rate ? rate : '0.0'}
           </Tag>
           <StarRating
             disabled={true}
@@ -54,7 +54,7 @@ CardList.defaultProps = {
   image: Images.imagePlaceholder,
   title: '',
   subtitle: '',
-  rate: 4.5,
+  rate: 0,
   onPress: () => {},
   onPressTag: () => {},
 };

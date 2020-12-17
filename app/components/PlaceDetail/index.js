@@ -28,6 +28,7 @@ import PlaceItem from "../PlaceItem";
 import CardList from "../CardList";
 import {useSelector, useDispatch} from "react-redux";
 import {getAllBusinesses, getBusinesses} from "../../actions/business";
+import SectionList from "../../screens/Home/sectionList";
 
 let defaultDelta = {
   latitudeDelta: 0.003,
@@ -57,7 +58,7 @@ export default function PlaceDetailComponent(props) {
   }, []);
 
   const navigateBusinessDetail = (id) => {
-    navigation.navigate('PlaceDetail', {id})
+    navigation.push('PlaceDetail', {id})
   }
 
   const [isPreview] = useState(!business.preview);
@@ -255,7 +256,7 @@ export default function PlaceDetailComponent(props) {
                 },
               ])}
               onContentSizeChange={() => {
-                setHeightHeader(Utils.heightHeader()+26);
+                setHeightHeader(Utils.heightHeader());
               }}
               scrollEventThrottle={8}>
             <View style={{ height: 280 - heightHeader }} />
@@ -465,70 +466,46 @@ export default function PlaceDetailComponent(props) {
               })}
             </View>
             {isPreview ? null : (
-                <View>
-                  <Text
-                      title3
-                      semibold
-                      style={{
-                        paddingHorizontal: 20,
-                        paddingVertical: 15,
-                      }}>
-                    Recently Added
-                  </Text>
-                  {stateProps.getRecentlyAddedBusinessesLoading ? (
-                      <ActivityIndicator size="small" color={colors.primary}/>
-                  ) : (
-                      <FlatList
-                          contentContainerStyle={{paddingLeft: 5, paddingRight: 20}}
-                          horizontal={true}
-                          showsHorizontalScrollIndicator={false}
-                          data={stateProps.recentlyAddedBusinesses}
-                          keyExtractor={(item, index) => item._id}
-                          renderItem={({item, index}) => (
-                              <PlaceItem
-                                  grid
-                                  image={item.image}
-                                  title={item.name}
-                                  subtitle={item.category}
-                                  location={item.address}
-                                  rate={item.averageRatings}
-                                  status='Open Now'
-                                  onPress={() => navigateBusinessDetail(item._id)}
-                                  style={{marginLeft: 15, width: 175}}
-                              />
-                          )}
-                      />
-                  )}
-                  <Text
-                      title3
-                      semibold
-                      style={{
-                        paddingHorizontal: 20,
-                        paddingVertical: 15,
-                      }}>
-                    {t('related')}
-                  </Text>
-                  {stateProps.getRelatedBusinessesLoading ? (
-                      <ActivityIndicator size="small" color={colors.primary}/>
-                  ) : (
-                      <FlatList
-                          contentContainerStyle={{
-                            paddingHorizontal: 20,
-                          }}
-                          data={stateProps.relatedBusiness}
-                          keyExtractor={(item, index) => item._id}
-                          renderItem={({item, index}) => (
-                              <CardList
-                                  image={item.image}
-                                  title={item.name}
-                                  subtitle={item.category}
-                                  rate={item.averageRatings ? item.averageRatings : '0.0'}
-                                  style={{marginBottom: 15}}
-                                  onPress={() => navigateBusinessDetail(item._id)}
-                              />
-                          )}
-                      />
-                  )}
+                <View style={{marginTop: 20}}>
+                  <SectionList
+                      title="Recently Added"
+                      data={stateProps.recentlyAddedBusinesses}
+                      horizontal={true}
+                      loading={stateProps.getRecentlyAddedBusinessesLoading}
+                      renderItem={({item, index}) => {
+                        return (
+                            <PlaceItem
+                                grid
+                                image={item?.image}
+                                title={item.name}
+                                subtitle={item.category}
+                                location={item?.address}
+                                rate={item?.averageRatings || '0.0'}
+                                // status='Open Now'
+                                onPress={() => navigateBusinessDetail(item._id)}
+                                style={{marginLeft: 15, width: 175}}
+                            />
+                        )
+                      }}
+                  />
+                  <SectionList
+                      title={t('related')}
+                      data={stateProps.relatedBusiness}
+                      loading={stateProps.getRelatedBusinessesLoading}
+                      renderItem={({item, index}) => {
+                        return (
+                            <CardList
+                                key={index}
+                                image={item?.image}
+                                title={item.name}
+                                subtitle={item.category}
+                                rate={item?.averageRatings || '0.0'}
+                                style={{ marginBottom: 15 }}
+                                onPress={() => navigateBusinessDetail(item._id)}
+                            />
+                        )
+                      }}
+                  />
                 </View>
             )}
           </ScrollView>

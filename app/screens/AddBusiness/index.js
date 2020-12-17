@@ -130,7 +130,10 @@ export default function Business({ navigation }) {
                     ) : null}
                   </View>
 
-                  <View style={[GlobalStyle.inputContainer, {zIndex: 1}]}>
+                  <View style={[GlobalStyle.inputContainer, Platform.OS === 'ios' && {
+                      position: 'relative',
+                      zIndex: 1
+                  }]}>
                     <DropDown
                       items={getCategories}
                       defaultValue={values.category}

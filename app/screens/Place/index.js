@@ -420,12 +420,15 @@ export default function Place(props) {
         return (
             <View style={{flex: 1}}>
                 <MapView provider={PROVIDER_GOOGLE} style={styles.map} region={region}>
-                    {list.map((item, index) => {
+                    {stateProps.data.map((item, index) => {
                         return (
                             <Marker
                                 onPress={e => onSelectLocation(e.nativeEvent.coordinate)}
-                                key={item.id}
-                                coordinate={item.region}>
+                                key={item._id}
+                                coordinate={{
+                                    latitude: item?.location?.coordinates[0],
+                                    longitude: item?.location?.coordinates[1],
+                                }}>
                                 <View
                                     style={[
                                         styles.iconLocation,
@@ -450,13 +453,13 @@ export default function Place(props) {
                 <View style={{position: 'absolute', bottom: 0}}>
                     <Carousel
                         ref={sliderRef}
-                        data={list}
+                        data={stateProps.data}
                         renderItem={({item, index}) => (
                             <CardList
-                                image={item.image}
-                                title={item.title}
-                                subtitle={item.subtitle}
-                                rate={item.rate}
+                                image={item?.image}
+                                title={item.name}
+                                subtitle={item.category}
+                                rate={item?.averageRatings}
                                 style={{
                                     margin: 3,
                                     padding: 10,
@@ -471,7 +474,7 @@ export default function Place(props) {
                                     shadowRadius: 3.84,
                                     elevation: 5,
                                 }}
-                                onPress={() => navigation.navigate('PlaceDetail')}
+                                onPress={() => navigateBusinessDetail(item._id)}
                                 onPressTag={() => navigation.navigate('Review')}
                             />
                         )}
@@ -489,8 +492,8 @@ export default function Place(props) {
                             setRegion({
                                 latitudeDelta: 0.009,
                                 longitudeDelta: 0.004,
-                                latitude: list[index] && list[index].region.latitude,
-                                longitude: list[index] && list[index].region.longitude,
+                                latitude: stateProps.data[index] && stateProps.data[index]?.location?.coordinates[0],
+                                longitude: stateProps.data[index] && stateProps.data[index]?.location?.coordinates[1],
                             });
                         }}
                     />
