@@ -63,5 +63,6 @@ export const Images = {
   service5: require('@assets/images/service-housing.jpg'),
   service6: require('@assets/images/service-job.jpg'),
   service7: require('@assets/images/service-restaurant.jpg'),
-  imagePlaceholder: require('@assets/images/image-placeholder.png')
+  imagePlaceholder: require('@assets/images/image-placeholder.png'),
+  defaultAvatar: require('@assets/images/default-avatar.png'),
 };
