@@ -23,6 +23,7 @@ import { addressSFormValidation  } from './Validations';
 import GlobalStyle from "../../assets/styling/GlobalStyle";
 import {useDispatch, useSelector} from "react-redux";
 import {setBusinessFormData} from "../../actions/business";
+import {ScrollView} from "react-native-gesture-handler";
 
 let defaultDelta = {
     latitudeDelta: 0.005,
@@ -186,6 +187,12 @@ export default function Address({ navigation }) {
         onNext()
     }
 
+
+    const offsetKeyboard = Platform.select({
+        ios: 0,
+        android: 20,
+    });
+
     return (
         <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
             <Header
@@ -215,6 +222,11 @@ export default function Address({ navigation }) {
                 {({ handleChange, values, handleSubmit, errors, setFieldValue }) => {
                     return (
                         <Fragment>
+                            <ScrollView
+                                behavior={Platform.OS === 'android' ? 'height' : 'padding'}
+                                keyboardVerticalOffset={offsetKeyboard}
+                                contentContainerStyle={{flexGrow: 1}}
+                                style={{ flex: 1 }}>
                             <View style={[styles.mapContainer]}>
                                 <View style={styles.title}>
                                     <Text title3 semibold style={styles.titleCenter}>
@@ -253,7 +265,7 @@ export default function Address({ navigation }) {
                                     <View style={styles.bottomSection}>{bottomButtons()}</View>
                                 </View>
                             </View>
-
+                            </ScrollView>
                             <ActionButton
                                 buttonColor="rgba(93, 173, 226, 1)"
                                 onPress={() => handleSubmit()}
