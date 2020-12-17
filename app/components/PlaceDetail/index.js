@@ -292,7 +292,7 @@ export default function PlaceDetailComponent(props) {
                         <Tag
                             rateSmall
                             style={{ marginRight: 5 }}
-                            // onPress={() => navigation.navigate('Review')}
+                            onPress={() => navigation.navigate('Review')}
                         >
                           {business.averageRatings ? business.averageRatings : '0.0'}
                         </Tag>
