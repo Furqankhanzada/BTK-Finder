@@ -23,7 +23,6 @@ export default function Profile({ navigation }) {
 
   const [loading, setLoading] = useState(true);
   const profileData = useSelector((state) => state.profile);
-  // console.log('########################', profileData);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -55,6 +54,7 @@ export default function Profile({ navigation }) {
             // point={profileData.}
             textSecond={profileData.email}
             textThird={profileData.phone}
+            isAdmin={profileData && profileData.roles ? profileData.roles[0]==='ADMIN' : false}
             // onPress={() => navigation.navigate('ProfileExanple')}
           />
           {/* <ProfilePerformance

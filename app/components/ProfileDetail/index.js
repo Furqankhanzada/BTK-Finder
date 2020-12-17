@@ -19,6 +19,7 @@ export default function ProfileDetail(props) {
     textSecond,
     textThird,
     icon,
+    isAdmin,
   } = props;
   return (
     <TouchableOpacity
@@ -35,9 +36,15 @@ export default function ProfileDetail(props) {
           </View>
         </View>
         <View style={{alignItems: 'flex-start'}}>
-          <Text headline semibold numberOfLines={1}>
-            {textFirst}
-          </Text>
+          <View style={{display: 'flex', flexDirection: 'row'}}>
+            <Text headline semibold numberOfLines={1}>
+              {textFirst}
+            </Text>
+            {isAdmin ?
+                <Text style={styles.badge}>
+                  ADMIN
+                </Text> : null}
+          </View>
           <Text
             body2
             style={{
@@ -78,6 +85,7 @@ ProfileDetail.propTypes = {
   styleRight: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
   icon: PropTypes.bool,
   onPress: PropTypes.func,
+  isAdmin: PropTypes.bool,
 };
 
 ProfileDetail.defaultProps = {
@@ -91,4 +99,5 @@ ProfileDetail.defaultProps = {
   styleThumb: {},
   styleRight: {},
   onPress: () => {},
+  isAdmin: false,
 };
