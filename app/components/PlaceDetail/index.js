@@ -255,7 +255,7 @@ export default function PlaceDetailComponent(props) {
                 },
               ])}
               onContentSizeChange={() => {
-                setHeightHeader(Utils.heightHeader()+26);
+                setHeightHeader(Utils.heightHeader());
               }}
               scrollEventThrottle={8}>
             <View style={{ height: 280 - heightHeader }} />
