@@ -15,42 +15,38 @@ import {
   Text,
   StarRating,
   TextInput,
+  Loading,
+  Button,
 } from '@components';
 import {useTranslation} from 'react-i18next';
 import styles from './styles';
+import { addReview } from "../../actions/business";
+import {useDispatch, useSelector} from "react-redux";
 
-export default function Feedback({navigation}) {
+export default function Feedback(props) {
+  const {navigation, route} = props;
   const {colors} = useTheme();
   const {t} = useTranslation();
+  const dispatch = useDispatch();
+  const stateProps = useSelector(({businesses}) => businesses);
+  const { createReviewLoading } = stateProps;
 
-  const [loading, setLoading] = useState(false);
   const [rate, setRate] = useState(4.5);
   const [title, setTitle] = useState('');
   const [review, setReview] = useState('');
-  const [success, setSuccess] = useState({
-    title: true,
-    review: true,
-  });
 
-  /**
-   * @description Called when user sumitted form
-   * @author Passion UI <passionui.com>
-   * @date 2019-08-03
-   */
+  let payload = {
+    title: title,
+    description: review,
+    rating: rate,
+  };
+
+  const addCallback = () => {
+    navigation.goBack();
+  };
+
   const onSubmit = () => {
-    if (title == '' || review == '') {
-      setSuccess({
-        ...success,
-        title: title != '' ? true : false,
-        review: review != '' ? true : false,
-      });
-    } else {
-      setLoading(true);
-      setTimeout(() => {
-        setLoading(true);
-        navigation.goBack();
-      }, 500);
-    }
+    dispatch(addReview(payload, addCallback, route?.params?.id));
   };
 
   const offsetKeyboard = Platform.select({
@@ -60,6 +56,7 @@ export default function Feedback({navigation}) {
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{top: 'always'}}>
+      <Loading loading={createReviewLoading}/>
       <Header
         title={t('feedback')}
         renderLeft={() => {
@@ -72,21 +69,8 @@ export default function Feedback({navigation}) {
             />
           );
         }}
-        renderRight={() => {
-          if (loading) {
-            return <ActivityIndicator size="small" color={colors.primary} />;
-          }
-          return (
-            <Text headline primaryColor numberOfLines={1}>
-              {t('save')}
-            </Text>
-          );
-        }}
         onPressLeft={() => {
           navigation.goBack();
-        }}
-        onPressRight={() => {
-          onSubmit();
         }}
       />
       <KeyboardAvoidingView
@@ -95,7 +79,7 @@ export default function Feedback({navigation}) {
         style={{flex: 1}}>
         <ScrollView contentContainerStyle={{alignItems: 'center', padding: 20}}>
           <Image
-            source={Images.profile2}
+            source={Images.defaultAvatar}
             style={{
               width: 62,
               height: 62,
@@ -120,8 +104,7 @@ export default function Feedback({navigation}) {
           <TextInput
             style={{marginTop: 10}}
             onChangeText={text => setTitle(text)}
-            placeholder={t('input_title')}
-            success={success.title}
+            placeholder='Title'
             value={title}
           />
           <TextInput
@@ -129,10 +112,17 @@ export default function Feedback({navigation}) {
             onChangeText={text => setReview(text)}
             textAlignVertical="top"
             multiline={true}
-            success={success.review}
-            placeholder={t('input')}
+            placeholder='Review'
             value={review}
           />
+          <Button
+              full
+              style={{ marginTop: 20 }}
+              onPress={() => {
+                onSubmit();
+              }}>
+            Confirm
+          </Button>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
