@@ -8,7 +8,10 @@ import {
     GET_RECENTLY_ADDED_BUSINESSES_API,
     GET_ALL_BUSINESSES_API,
     GET_SINGLE_BUSINESS_API,
-    LOAD_MORE_ALL_BUSINESSES_API
+    LOAD_MORE_ALL_BUSINESSES_API,
+    ADD_REVIEW_API,
+    ADD_REVIEW_API_SUCCESS,
+    ADD_REVIEW_API_ERROR,
 } from '../constants/business';
 import { handleError } from '../utils';
 import axiosApiInstance from '../interceptor/axios-interceptor';
@@ -114,5 +117,28 @@ export const getSingleBusiness = (id) => (dispatch) => {
         .catch(({response}) => {
             dispatch({ type: GET_SINGLE_BUSINESS_API, loading: false });
             handleError(response.data);
+        });
+};
+
+export const addReview = (payload, cb, id) => (dispatch) => {
+    dispatch({ type: ADD_REVIEW_API });
+    axiosApiInstance({
+        method: 'POST',
+        url: `${BUSINESSES_API}/${id}/review`,
+        data: payload,
+    })
+        .then((response) => {
+            dispatch({ type: ADD_REVIEW_API_SUCCESS });
+            Toast.show({
+                type: 'success',
+                topOffset: 55,
+                text1: 'Review Added',
+                text2: 'Your Review has been added successfully.',
+            });
+            cb && cb();
+        })
+        .catch(({ response }) => {
+            dispatch({ type: ADD_REVIEW_API_ERROR });
+            handleError({ message: response.data.message[0] });
         });
 };

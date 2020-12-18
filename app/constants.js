@@ -11,5 +11,3 @@ export const GET_PROFILE = `${API_URL}/auth/profile`;
 export const EDIT_PROFILE = `${API_URL}/users/`;
 
 export const BUSINESSES_API = `${API_URL}/businesses`;
-export const GET_BUSINESSES = `${API_URL}/businesses`;
-export const GET_SINGLE_BUSINESS = `${API_URL}/businesses`;

@@ -6,7 +6,8 @@ import {
     GET_POPULAR_BUSINESSES_API,
     GET_RECENTLY_ADDED_BUSINESSES_API,
     GET_SINGLE_BUSINESS_API,
-    GET_ALL_BUSINESSES_API, LOAD_MORE_ALL_BUSINESSES_API
+    GET_ALL_BUSINESSES_API, LOAD_MORE_ALL_BUSINESSES_API,
+    ADD_REVIEW_API, ADD_REVIEW_API_SUCCESS, ADD_REVIEW_API_ERROR,
 } from '../constants/business';
 
 //initial state.
@@ -26,6 +27,8 @@ const initialState = {
     recentlyAddedBusinesses: [],
     getSingleBusinessLoading: true,
     singleBusiness: {},
+    createReviewLoading: false,
+    review: {},
 };
 
 export default function userReducer(state = initialState, action = {}) {
@@ -72,6 +75,12 @@ export default function userReducer(state = initialState, action = {}) {
                 singleBusiness: action.data || {},
                 getSingleBusinessLoading: action.loading,
             };
+        case ADD_REVIEW_API:
+            return {...state, createReviewLoading: true};
+        case ADD_REVIEW_API_SUCCESS:
+            return {...state, review: {}, createReviewLoading: false};
+        case ADD_REVIEW_API_ERROR:
+            return {...state, createReviewLoading: false};
         default:
             return state;
     }
