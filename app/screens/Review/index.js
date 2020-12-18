@@ -123,7 +123,7 @@ export default function Review({navigation}) {
                                 image={item.image}
                                 name={item.owner.name}
                                 rate={item.rating}
-                                date={moment(item.createdAt).format("MMM Do YYYY")}
+                                date={moment((item.createdAt), "YYYYMMDD").fromNow()}
                                 title={item.title}
                                 comment={item.description}
                             />
