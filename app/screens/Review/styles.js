@@ -7,5 +7,17 @@ export default StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    addButton: {
+        padding: 5,
+        borderRadius: 5,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    addButtonText: {
+        fontSize: 15,
+        marginLeft: 5
     }
 });
