@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useRef } from 'react';
 import { View, Platform, TouchableOpacity } from 'react-native';
-import { BaseStyle, useTheme } from '@config';
+import { BaseStyle, useTheme, BaseColor } from '@config';
 import {
   Header,
   SafeAreaView,
@@ -214,7 +214,7 @@ export default function Business({ navigation }) {
                         GlobalStyle.datePickerContainer,
                         { backgroundColor: cardColor, color: colors.text },
                       ]}>
-                      <Text style={GlobalStyle.datePickerContainerText}>
+                      <Text style={[GlobalStyle.datePickerContainerText, {color: values.established ? colors.text : BaseColor.grayColor}]}>
                         {values.established
                           ? moment(values.established).format('DD/MM/YYYY')
                           : 'Established Date [YYYY/MM/DD]'}
