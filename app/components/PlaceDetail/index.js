@@ -29,6 +29,7 @@ import CardList from "../CardList";
 import {useSelector, useDispatch} from "react-redux";
 import {getAllBusinesses, getBusinesses} from "../../actions/business";
 import SectionList from "../../screens/Home/sectionList";
+import NumberFormat from 'react-number-format';
 
 let defaultDelta = {
   latitudeDelta: 0.003,
@@ -298,7 +299,13 @@ export default function PlaceDetailComponent(props) {
                             style={{ marginRight: 5 }}
                             onPress={() => navigateToReview(business._id)}
                         >
-                          {business?.reviewStats?.averageRatings ? business.reviewStats?.averageRatings : '0.0'}
+                          <NumberFormat
+                              value={business?.reviewStats?.averageRatings ? business?.reviewStats?.averageRatings : '0.0'}
+                              displayType={'text'}
+                              decimalScale={1}
+                              fixedDecimalScale={true}
+                              renderText={value => <Text style={{fontSize: 10, color: 'white'}}>{value}</Text>}
+                          />
                         </Tag>
                         <StarRating
                             disabled={true}
@@ -308,6 +315,9 @@ export default function PlaceDetailComponent(props) {
                             fullStarColor={BaseColor.yellowColor}
                             on
                         />
+                        <Text footnote grayColor style={{marginLeft: 5}}>
+                          ({business?.reviews?.length})
+                        </Text>
                       </TouchableOpacity>
                   )}
                 </View>
@@ -486,6 +496,7 @@ export default function PlaceDetailComponent(props) {
                                 rate={item?.averageRatings || '0.0'}
                                 // status='Open Now'
                                 onPress={() => navigateBusinessDetail(item._id)}
+                                onPressTag={() => navigateToReview(item._id)}
                                 style={{marginLeft: 15, width: 175}}
                             />
                         )
@@ -505,6 +516,7 @@ export default function PlaceDetailComponent(props) {
                                 rate={item?.averageRatings || '0.0'}
                                 style={{ marginBottom: 15 }}
                                 onPress={() => navigateBusinessDetail(item._id)}
+                                onPressTag={() => navigateToReview(item._id)}
                             />
                         )
                       }}
