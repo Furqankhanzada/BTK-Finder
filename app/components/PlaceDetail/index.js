@@ -59,7 +59,10 @@ export default function PlaceDetailComponent(props) {
 
   const navigateBusinessDetail = (id) => {
     navigation.push('PlaceDetail', {id})
-  }
+  };
+  const navigateToReview = (id) => {
+    navigation.navigate('Review', {id})
+  };
 
   const [isPreview] = useState(!business.preview);
 
@@ -289,19 +292,19 @@ export default function PlaceDetailComponent(props) {
                   ) : (
                       <TouchableOpacity
                           style={styles.rateLine}
-                          onPress={() => navigation.navigate('Review')}>
+                          onPress={() => navigateToReview(business._id)}>
                         <Tag
                             rateSmall
                             style={{ marginRight: 5 }}
-                            onPress={() => navigation.navigate('Review')}
+                            onPress={() => navigateToReview(business._id)}
                         >
-                          {business.reviewStats.averageRatings ? business.reviewStats.averageRatings : '0.0'}
+                          {business?.reviewStats?.averageRatings ? business.reviewStats?.averageRatings : '0.0'}
                         </Tag>
                         <StarRating
                             disabled={true}
                             starSize={10}
                             maxStars={5}
-                            rating={business.reviewStats.averageRatings}
+                            rating={business?.reviewStats?.averageRatings}
                             fullStarColor={BaseColor.yellowColor}
                             on
                         />
