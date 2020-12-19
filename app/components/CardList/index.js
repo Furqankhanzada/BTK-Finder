@@ -5,6 +5,7 @@ import {Image, Text, StarRating, Tag} from '@components';
 import styles from './styles';
 import PropTypes from 'prop-types';
 import {Images} from "../../config/images";
+import NumberFormat from 'react-number-format';
 
 export default function CardList(props) {
   const {style, image, title, subtitle, rate, onPress, onPressTag} = props;
@@ -23,7 +24,12 @@ export default function CardList(props) {
         </Text>
         <View style={styles.contentRate}>
           <Tag onPress={onPressTag} rateSmall style={{marginRight: 4}}>
-            {rate ? rate : '0.0'}
+            <NumberFormat
+                value={rate? (rate =='5' ? rate+'.0' : rate) : 0.0}
+                displayType={'text'}
+                decimalScale={1}
+                renderText={value => <Text style={{fontSize: 10, color: 'white'}}>{value}</Text>}
+            />
           </Tag>
           <StarRating
             disabled={true}

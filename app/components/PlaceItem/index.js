@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import styles from './styles';
 import {useTranslation} from 'react-i18next';
 import {Images} from "../../config";
+import NumberFormat from 'react-number-format';
 
 export default function PlaceItem(props) {
   const {t} = useTranslation();
@@ -51,7 +52,12 @@ export default function PlaceItem(props) {
                 alignItems: 'center',
               }}>
                <Tag rate onPress={onPressTag}>
-                 {rate ? rate : '0.0'}
+                 <NumberFormat
+                     value={rate? (rate =='5' ? rate+'.0' : rate) : '0.0'}
+                     displayType={'text'}
+                     decimalScale={1}
+                     renderText={value => <Text style={{fontSize: 10, color: 'white'}}>{value}</Text>}
+                 />
               </Tag>
               <View style={{marginLeft: 10}}>
                 <Text caption1 whiteColor semibold style={{marginBottom: 5}}>
@@ -121,7 +127,12 @@ export default function PlaceItem(props) {
           </Text>
           <View style={styles.lineRate}>
             <Tag onPress={onPressTag} rateSmall style={{marginRight: 5}}>
-              {rate ? rate : '0.0'}
+              <NumberFormat
+                  value={rate? (rate =='5' ? rate+'.0' : rate) : '0.0'}
+                  displayType={'text'}
+                  decimalScale={1}
+                  renderText={value => <Text style={{fontSize: 10, color: 'white'}}>{value}</Text>}
+              />
             </Tag>
             <StarRating
               disabled={true}
@@ -180,7 +191,12 @@ export default function PlaceItem(props) {
             marginTop: 5,
           }}>
           <Tag onPress={onPressTag} rateSmall style={{marginRight: 5}}>
-            {rate ? rate : '0.0'}
+            <NumberFormat
+                value={rate? (rate =='5' ? rate+'.0' : rate) : '0.0'}
+                displayType={'text'}
+                decimalScale={1}
+                renderText={value => <Text style={{fontSize: 10, color: 'white'}}>{value}</Text>}
+            />
           </Tag>
           <StarRating
             disabled={true}
