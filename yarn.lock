@@ -5181,6 +5181,11 @@ react-native-check-box@^2.1.7:
   dependencies:
     prop-types "^15.5.7"
 
+react-native-config@^1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/react-native-config/-/react-native-config-1.4.1.tgz#3549d0d1f4545e45659b2c2105c0866bdce9967f"
+  integrity sha512-isK9z1ibzG0Z8HPRhCk0krmvtLknONCpEHLGSpBtf+oQ02PllAXljGMFN/XJCnq3G3MdmP1CffZh3vm4e/A50w==
+
 react-native-dark-mode@^0.2.2:
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/react-native-dark-mode/-/react-native-dark-mode-0.2.2.tgz#4faa335e36330bfca832ba8b3d2bd84c7b880381"
