@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {FlatList, RefreshControl, View} from 'react-native';
 import {BaseStyle, useTheme} from '@config';
 import {
@@ -16,7 +16,8 @@ import {useDispatch, useSelector} from "react-redux";
 import moment from "moment";
 import {getSingleBusiness} from "../../actions/business";
 
-export default function Review({navigation}) {
+export default function Review(props) {
+  const {navigation, route} = props;
   const {colors} = useTheme();
   const {t} = useTranslation();
   const dispatch = useDispatch();
@@ -27,22 +28,26 @@ export default function Review({navigation}) {
     };
   });
 
-  const totalRating =
-      stateProps.singleBusiness?.reviewStats?.fiveStarCount +
-      stateProps.singleBusiness?.reviewStats?.fourStarCount +
-      stateProps.singleBusiness?.reviewStats?.threeStarCount +
-      stateProps.singleBusiness?.reviewStats?.twoStarCount +
-      stateProps.singleBusiness?.reviewStats?.oneStarCount;
+  useEffect( () => {
+    dispatch(getSingleBusiness(route?.params?.id));
+  }, [dispatch]);
 
-  const fiveStarPercent = (stateProps.singleBusiness?.reviewStats?.fiveStarCount * 100) / totalRating;
-  const fourStarPercent = (stateProps.singleBusiness?.reviewStats?.fourStarCount * 100) / totalRating;
-  const threeStarPercent = (stateProps.singleBusiness?.reviewStats?.threeStarCount * 100) / totalRating;
-  const twoStarPercent = (stateProps.singleBusiness?.reviewStats?.twoStarCount * 100) / totalRating;
-  const oneStarPercent = (stateProps.singleBusiness?.reviewStats?.oneStarCount * 100) / totalRating;
+  const totalRating =
+      stateProps?.singleBusiness?.reviewStats?.fiveStarCount +
+      stateProps?.singleBusiness?.reviewStats?.fourStarCount +
+      stateProps?.singleBusiness?.reviewStats?.threeStarCount +
+      stateProps?.singleBusiness?.reviewStats?.twoStarCount +
+      stateProps?.singleBusiness?.reviewStats?.oneStarCount;
+
+  const fiveStarPercent = (stateProps?.singleBusiness?.reviewStats?.fiveStarCount * 100) / totalRating;
+  const fourStarPercent = (stateProps?.singleBusiness?.reviewStats?.fourStarCount * 100) / totalRating;
+  const threeStarPercent = (stateProps?.singleBusiness?.reviewStats?.threeStarCount * 100) / totalRating;
+  const twoStarPercent = (stateProps?.singleBusiness?.reviewStats?.twoStarCount * 100) / totalRating;
+  const oneStarPercent = (stateProps?.singleBusiness?.reviewStats?.oneStarCount * 100) / totalRating;
 
   const [refreshing] = useState(false);
-  const [rateDetail] = useState({
-    point: stateProps.singleBusiness?.reviewStats?.averageRatings,
+  const rateDetail = {
+    point: stateProps?.singleBusiness?.reviewStats?.averageRatings,
     maxPoint: 5,
     totalRating: totalRating,
     data: [
@@ -52,7 +57,7 @@ export default function Review({navigation}) {
       twoStarPercent.toString() + '%',
       oneStarPercent.toString() + '%',
     ],
-  });
+  };
 
   const isLogin = useSelector((state) => state.auth.isLogin);
   const navigateToFeedback = (id) => {
@@ -104,7 +109,7 @@ export default function Review({navigation}) {
                               colors={[colors.primary]}
                               tintColor={colors.primary}
                               refreshing={refreshing}
-                              onRefresh={() => {dispatch(getSingleBusiness(stateProps?.singleBusiness?._id));}}
+                              onRefresh={() => {dispatch(getSingleBusiness(route?.params?.id));}}
                           />
                         }
                         data={stateProps.singleBusiness.reviews}
