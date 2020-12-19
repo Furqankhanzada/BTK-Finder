@@ -315,6 +315,9 @@ export default function PlaceDetailComponent(props) {
                             fullStarColor={BaseColor.yellowColor}
                             on
                         />
+                        <Text footnote grayColor style={{marginLeft: 5}}>
+                          ({business?.reviews?.length})
+                        </Text>
                       </TouchableOpacity>
                   )}
                 </View>
@@ -493,6 +496,7 @@ export default function PlaceDetailComponent(props) {
                                 rate={item?.averageRatings || '0.0'}
                                 // status='Open Now'
                                 onPress={() => navigateBusinessDetail(item._id)}
+                                onPressTag={() => navigateToReview(item._id)}
                                 style={{marginLeft: 15, width: 175}}
                             />
                         )
@@ -512,6 +516,7 @@ export default function PlaceDetailComponent(props) {
                                 rate={item?.averageRatings || '0.0'}
                                 style={{ marginBottom: 15 }}
                                 onPress={() => navigateBusinessDetail(item._id)}
+                                onPressTag={() => navigateToReview(item._id)}
                             />
                         )
                       }}
