@@ -148,6 +148,10 @@ export default function Place(props) {
         navigation.navigate('PlaceDetail', {id})
     };
 
+    const navigateToReview = (id) => {
+        navigation.navigate('Review', {id})
+    };
+
     const onScrollHandler = () => {
         if(stateProps.isLoadMore){
             setSkip(skip + 10)
@@ -246,13 +250,13 @@ export default function Place(props) {
                                     rate={item?.averageRatings}
                                     status={item?.status}
                                     rateStatus={item?.rateStatus}
-                                    numReviews={item?.reviews.length}
+                                    numReviews={item?.reviews?.length}
                                     style={{
                                         marginLeft: 15,
                                         marginBottom: 15,
                                     }}
                                     onPress={() => navigateBusinessDetail(item._id)}
-                                    onPressTag={() => navigation.navigate('Review')}
+                                    onPressTag={() => navigateToReview(item._id)}
                                 />
                             )}
                         />
@@ -325,7 +329,7 @@ export default function Place(props) {
                                         marginBottom: 15,
                                     }}
                                     onPress={() => navigateBusinessDetail(item._id)}
-                                    onPressTag={() => navigation.navigate('Review')}
+                                    onPressTag={() => navigateToReview(item._id)}
                                 />
                             )}
                         />
@@ -393,7 +397,7 @@ export default function Place(props) {
                                     // rateStatus={item?.rateStatus}
                                     numReviews={item?.reviews?.length}
                                     onPress={() => navigateBusinessDetail(item._id)}
-                                    onPressTag={() => navigation.navigate('Review')}
+                                    onPressTag={() => navigateToReview(item._id)}
                                 />
                             )}
                             ListFooterComponent={renderFooter}
@@ -475,7 +479,7 @@ export default function Place(props) {
                                     elevation: 5,
                                 }}
                                 onPress={() => navigateBusinessDetail(item._id)}
-                                onPressTag={() => navigation.navigate('Review')}
+                                onPressTag={() => navigateToReview(item._id)}
                             />
                         )}
                         sliderWidth={viewportWidth}

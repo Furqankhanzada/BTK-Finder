@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import styles from './styles';
 import {useTranslation} from 'react-i18next';
 import {Images} from "../../config";
+import NumberFormat from 'react-number-format';
 
 export default function PlaceItem(props) {
   const {t} = useTranslation();
@@ -33,7 +34,7 @@ export default function PlaceItem(props) {
   const renderBlock = () => {
     return (
       <View style={style}>
-        <TouchableOpacity onPress={onPress} activeOpacity={0.9}>
+        <TouchableOpacity onPress={onPress} activeOpacity={0.6}>
           <Image source={image} style={styles.blockImage} />
           {status ? <Tag status style={styles.tagStatus}>
             {t(status)}
@@ -51,7 +52,13 @@ export default function PlaceItem(props) {
                 alignItems: 'center',
               }}>
                <Tag rate onPress={onPressTag}>
-                 {rate ? rate : '0.0'}
+                 <NumberFormat
+                     value={rate? rate : '0.0'}
+                     displayType={'text'}
+                     decimalScale={1}
+                     fixedDecimalScale={true}
+                     renderText={value => <Text style={{fontSize: 10, color: 'white'}}>{value}</Text>}
+                 />
               </Tag>
               <View style={{marginLeft: 10}}>
                 <Text caption1 whiteColor semibold style={{marginBottom: 5}}>
@@ -72,30 +79,32 @@ export default function PlaceItem(props) {
             </Text> : null}
           </View>
         </TouchableOpacity>
-        <View
-          style={{
-            paddingHorizontal: 20,
-            paddingVertical: 15,
-          }}>
-          <Text headline semibold grayColor>
-            {subtitle}
-          </Text>
-          <Text title2 semibold style={{marginTop: 4}}>
-            {title}
-          </Text>
-          <View style={styles.blockLineMap}>
-            <Icon name="map-marker-alt" color={colors.primaryLight} size={12} />
-            <Text caption1 grayColor style={{paddingHorizontal: 4}}>
-              {location}
+        <TouchableOpacity onPress={onPress} activeOpacity={0.6}>
+          <View
+              style={{
+                paddingHorizontal: 20,
+                paddingVertical: 15,
+              }}>
+            <Text headline semibold grayColor>
+              {subtitle}
             </Text>
-          </View>
-          <View style={styles.blockLinePhone}>
-            <Icon name="phone" color={colors.primaryLight} size={12} />
-            <Text caption1 grayColor style={{paddingHorizontal: 4}}>
-              {phone}
+            <Text title2 semibold style={{marginTop: 4}}>
+              {title}
             </Text>
+            <View style={styles.blockLineMap}>
+              <Icon name="map-marker-alt" color={colors.primaryLight} size={12} />
+              <Text caption1 grayColor style={{paddingHorizontal: 4}}>
+                {location}
+              </Text>
+            </View>
+            <View style={styles.blockLinePhone}>
+              <Icon name="phone" color={colors.primaryLight} size={12} />
+              <Text caption1 grayColor style={{paddingHorizontal: 4}}>
+                {phone}
+              </Text>
+            </View>
           </View>
-        </View>
+        </TouchableOpacity>
       </View>
     );
   };
@@ -106,45 +115,53 @@ export default function PlaceItem(props) {
   const renderList = () => {
     return (
       <View style={[styles.listContent, style]}>
-        <TouchableOpacity onPress={onPress} activeOpacity={0.9}>
+        <TouchableOpacity onPress={onPress} activeOpacity={0.6}>
           <Image source={image} style={styles.listImage} />
           {/*<Tag status style={styles.listTagStatus}>*/}
           {/*  {t(status)}*/}
           {/*</Tag>*/}
         </TouchableOpacity>
-        <View style={styles.listContentRight}>
-          <Text headline semibold grayColor>
-            {subtitle}
-          </Text>
-          <Text title2 semibold style={{marginTop: 5}}>
-            {title}
-          </Text>
-          <View style={styles.lineRate}>
-            <Tag onPress={onPressTag} rateSmall style={{marginRight: 5}}>
-              {rate ? rate : '0.0'}
-            </Tag>
-            <StarRating
-              disabled={true}
-              starSize={10}
-              maxStars={5}
-              rating={rate}
-              selectedStar={rating => {}}
-              fullStarColor={BaseColor.yellowColor}
+        <TouchableOpacity onPress={onPress} activeOpacity={0.6}>
+          <View style={styles.listContentRight}>
+            <Text headline semibold grayColor>
+              {subtitle}
+            </Text>
+            <Text title2 semibold style={{marginTop: 5}}>
+              {title}
+            </Text>
+            <View style={styles.lineRate}>
+              <Tag onPress={onPressTag} rateSmall style={{marginRight: 5}}>
+                <NumberFormat
+                    value={rate? rate : '0.0'}
+                    displayType={'text'}
+                    decimalScale={1}
+                    fixedDecimalScale={true}
+                    renderText={value => <Text style={{fontSize: 10, color: 'white'}}>{value}</Text>}
+                />
+              </Tag>
+              <StarRating
+                  disabled={true}
+                  starSize={10}
+                  maxStars={5}
+                  rating={rate}
+                  selectedStar={rating => {}}
+                  fullStarColor={BaseColor.yellowColor}
+              />
+            </View>
+            <Text caption1 grayColor style={{marginTop: 10}}>
+              {location}
+            </Text>
+            <Text caption1 grayColor style={{marginTop: 5}}>
+              {phone}
+            </Text>
+            <Icon
+                name="heart"
+                color={colors.primaryLight}
+                size={18}
+                style={styles.iconListLike}
             />
           </View>
-          <Text caption1 grayColor style={{marginTop: 10}}>
-            {location}
-          </Text>
-          <Text caption1 grayColor style={{marginTop: 5}}>
-            {phone}
-          </Text>
-          <Icon
-            name="heart"
-            color={colors.primaryLight}
-            size={18}
-            style={styles.iconListLike}
-          />
-        </View>
+        </TouchableOpacity>
       </View>
     );
   };
@@ -155,7 +172,7 @@ export default function PlaceItem(props) {
   const renderGrid = () => {
     return (
       <View style={[styles.girdContent, style]}>
-        <TouchableOpacity onPress={onPress} activeOpacity={0.9}>
+        <TouchableOpacity onPress={onPress} activeOpacity={0.6}>
           <Image source={image} style={styles.girdImage} />
           {/*<Tag status style={styles.tagGirdStatus}>*/}
           {/*  {t(status)}*/}
@@ -167,33 +184,41 @@ export default function PlaceItem(props) {
             style={styles.iconGirdLike}
           />
         </TouchableOpacity>
-        <Text footnote semibold grayColor style={{marginTop: 5}}>
-          {subtitle}
-        </Text>
-        <Text subhead semibold style={{marginTop: 5}}>
-          {title}
-        </Text>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginTop: 5,
-          }}>
-          <Tag onPress={onPressTag} rateSmall style={{marginRight: 5}}>
-            {rate ? rate : '0.0'}
-          </Tag>
-          <StarRating
-            disabled={true}
-            starSize={10}
-            maxStars={5}
-            rating={rate}
-            selectedStar={rating => {}}
-            fullStarColor={BaseColor.yellowColor}
-          />
-        </View>
-        <Text caption2 grayColor style={{marginTop: 10}} numberOfLines={1}>
-          {location}
-        </Text>
+        <TouchableOpacity onPress={onPress} activeOpacity={0.6}>
+          <Text footnote semibold grayColor style={{marginTop: 5}}>
+            {subtitle}
+          </Text>
+          <Text subhead semibold style={{marginTop: 5}}>
+            {title}
+          </Text>
+          <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginTop: 5,
+              }}>
+            <Tag onPress={onPressTag} rateSmall style={{marginRight: 5}}>
+              <NumberFormat
+                  value={rate? rate : '0.0'}
+                  displayType={'text'}
+                  decimalScale={1}
+                  fixedDecimalScale={true}
+                  renderText={value => <Text style={{fontSize: 10, color: 'white'}}>{value}</Text>}
+              />
+            </Tag>
+            <StarRating
+                disabled={true}
+                starSize={10}
+                maxStars={5}
+                rating={rate}
+                selectedStar={rating => {}}
+                fullStarColor={BaseColor.yellowColor}
+            />
+          </View>
+          <Text caption2 grayColor style={{marginTop: 10}} numberOfLines={1}>
+            {location}
+          </Text>
+        </TouchableOpacity>
       </View>
     );
   };

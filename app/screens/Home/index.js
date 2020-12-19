@@ -39,6 +39,10 @@ export default function Home({ navigation }) {
         }
     });
 
+    const navigateToReview = (id) => {
+        navigation.navigate('Review', {id})
+    };
+
     const [loading, setLoading] = useState(true);
     const deltaY = new Animated.Value(0);
     const { colors } = useTheme();
@@ -292,6 +296,7 @@ export default function Home({ navigation }) {
                                     rate={item?.averageRatings || '0.0'}
                                     style={{ marginBottom: 15 }}
                                     onPress={() => navigateBusinessDetail(item._id)}
+                                    onPressTag={() => navigateToReview(item._id)}
                                 />
                             )
                         }}
