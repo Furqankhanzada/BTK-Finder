@@ -11,7 +11,7 @@ const generalScheme = Yup.object().shape({
     .typeError('Please enter a registered email'),
   telephone: Yup.string()
     .matches(
-      /^((\+92)|(0092)|(021))-{0,1}\d{3}-{0,1}\d{7}$|^\d{11}$|^\d{4}-\d{7}$/,
+      /^((\+92)|(0092)|(021))-{0,1}\d{3}-{0,1}\d{7}$|^\d{11}$|^\d{12}$|^\d{4}-\d{7}$/,
       'Phone number is not valid',
     )
     .required('Please enter phone number'),
