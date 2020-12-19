@@ -53,9 +53,10 @@ export default function PlaceItem(props) {
               }}>
                <Tag rate onPress={onPressTag}>
                  <NumberFormat
-                     value={rate? (rate =='5' ? rate+'.0' : rate) : '0.0'}
+                     value={rate? rate : '0.0'}
                      displayType={'text'}
                      decimalScale={1}
+                     fixedDecimalScale={true}
                      renderText={value => <Text style={{fontSize: 10, color: 'white'}}>{value}</Text>}
                  />
               </Tag>
@@ -128,9 +129,10 @@ export default function PlaceItem(props) {
           <View style={styles.lineRate}>
             <Tag onPress={onPressTag} rateSmall style={{marginRight: 5}}>
               <NumberFormat
-                  value={rate? (rate =='5' ? rate+'.0' : rate) : '0.0'}
+                  value={rate? rate : '0.0'}
                   displayType={'text'}
                   decimalScale={1}
+                  fixedDecimalScale={true}
                   renderText={value => <Text style={{fontSize: 10, color: 'white'}}>{value}</Text>}
               />
             </Tag>
@@ -192,9 +194,10 @@ export default function PlaceItem(props) {
           }}>
           <Tag onPress={onPressTag} rateSmall style={{marginRight: 5}}>
             <NumberFormat
-                value={rate? (rate =='5' ? rate+'.0' : rate) : '0.0'}
+                value={rate? rate : '0.0'}
                 displayType={'text'}
                 decimalScale={1}
+                fixedDecimalScale={true}
                 renderText={value => <Text style={{fontSize: 10, color: 'white'}}>{value}</Text>}
             />
           </Tag>

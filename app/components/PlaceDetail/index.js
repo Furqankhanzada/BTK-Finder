@@ -300,13 +300,10 @@ export default function PlaceDetailComponent(props) {
                             onPress={() => navigateToReview(business._id)}
                         >
                           <NumberFormat
-                              value={business?.reviewStats?.averageRatings ? 
-                                (business?.reviewStats?.averageRatings == '5' ? 
-                                business?.reviewStats?.averageRatings + '.0'
-                                : business?.reviewStats?.averageRatings)
-                                 : '0.0'}
+                              value={business?.reviewStats?.averageRatings ? business?.reviewStats?.averageRatings : '0.0'}
                               displayType={'text'}
                               decimalScale={1}
+                              fixedDecimalScale={true}
                               renderText={value => <Text style={{fontSize: 10, color: 'white'}}>{value}</Text>}
                           />
                         </Tag>
