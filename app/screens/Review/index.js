@@ -27,12 +27,31 @@ export default function Review({navigation}) {
     };
   });
 
+  const totalRating =
+      stateProps.singleBusiness?.reviewStats?.fiveStarCount +
+      stateProps.singleBusiness?.reviewStats?.fourStarCount +
+      stateProps.singleBusiness?.reviewStats?.threeStarCount +
+      stateProps.singleBusiness?.reviewStats?.twoStarCount +
+      stateProps.singleBusiness?.reviewStats?.oneStarCount;
+
+  const fiveStarPercent = (stateProps.singleBusiness?.reviewStats?.fiveStarCount * 100) / totalRating;
+  const fourStarPercent = (stateProps.singleBusiness?.reviewStats?.fourStarCount * 100) / totalRating;
+  const threeStarPercent = (stateProps.singleBusiness?.reviewStats?.threeStarCount * 100) / totalRating;
+  const twoStarPercent = (stateProps.singleBusiness?.reviewStats?.twoStarCount * 100) / totalRating;
+  const oneStarPercent = (stateProps.singleBusiness?.reviewStats?.oneStarCount * 100) / totalRating;
+
   const [refreshing] = useState(false);
   const [rateDetail] = useState({
-    point: stateProps.singleBusiness.averageRatings,
+    point: stateProps.singleBusiness?.reviewStats?.averageRatings,
     maxPoint: 5,
-    totalRating: 25,
-    data: ['5%', '5%', '35%', '40%', '10%'],
+    totalRating: totalRating,
+    data: [
+      fiveStarPercent.toString() + '%',
+      fourStarPercent.toString() + '%',
+      threeStarPercent.toString() + '%',
+      twoStarPercent.toString() + '%',
+      oneStarPercent.toString() + '%',
+    ],
   });
 
   const isLogin = useSelector((state) => state.auth.isLogin);
@@ -56,20 +75,14 @@ export default function Review({navigation}) {
         }}
         renderRight={() => {
           return (
-              <View style={{
-                backgroundColor: colors.primary,
-                padding: 5,
-                borderRadius: 5,
-                display: 'flex',
-                flexDirection: 'row',
-              }}>
+              <View style={styles.addButton}>
                 <Icon
                     name="plus"
                     size={12}
-                    color='white'
+                    color={colors.primary}
                     enableRTL={true}
                 />
-                <Text numberOfLines={1} style={{color: 'white', fontSize: 12, marginLeft: 5}}>
+                <Text numberOfLines={1} style={[styles.addButtonText, {color: colors.primary}]}>
                   Add
                 </Text>
               </View>
@@ -110,7 +123,7 @@ export default function Review({navigation}) {
                                 image={item.image}
                                 name={item.owner.name}
                                 rate={item.rating}
-                                date={moment(item.createdAt).format("MMM Do YYYY")}
+                                date={moment((item.createdAt), "YYYYMMDD").fromNow()}
                                 title={item.title}
                                 comment={item.description}
                             />

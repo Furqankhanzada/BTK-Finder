@@ -295,13 +295,13 @@ export default function PlaceDetailComponent(props) {
                             style={{ marginRight: 5 }}
                             onPress={() => navigation.navigate('Review')}
                         >
-                          {business.averageRatings ? business.averageRatings : '0.0'}
+                          {business.reviewStats.averageRatings ? business.reviewStats.averageRatings : '0.0'}
                         </Tag>
                         <StarRating
                             disabled={true}
                             starSize={10}
                             maxStars={5}
-                            rating={business.averageRatings}
+                            rating={business.reviewStats.averageRatings}
                             fullStarColor={BaseColor.yellowColor}
                             on
                         />
