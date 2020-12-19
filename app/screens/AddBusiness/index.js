@@ -116,13 +116,16 @@ export default function Business({ navigation }) {
                     ) : null}
                   </View>
 
-                  <View style={GlobalStyle.inputContainer}>
-                    <TextInput
-                      style={{ marginTop: 10 }}
-                      onChangeText={handleChange('description')}
-                      placeholder="Description"
-                      value={values.description}
-                    />
+                  <View style={[GlobalStyle.inputContainer, {marginTop: 10}]}>
+                      <TextInput
+                          style={styles.textArea}
+                          placeholder="Description"
+                          onChangeText={handleChange('description')}
+                          value={values.description}
+                          multiline={true}
+                          numberOfLines={10}
+                          textAlignVertical="top"
+                      />
                     {errors.description ? (
                       <Text style={GlobalStyle.errorText}>
                         {errors.description}
