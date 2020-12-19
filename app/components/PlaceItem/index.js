@@ -1,12 +1,13 @@
 import React from 'react';
 import {View, TouchableOpacity} from 'react-native';
-import {Image, Text, Icon, StarRating, Tag} from '@components';
+import {Image, Text,   StarRating, Tag, Icon} from '@components';
 import {BaseColor, useTheme} from '@config';
 import PropTypes from 'prop-types';
 import styles from './styles';
 import {useTranslation} from 'react-i18next';
 import {Images} from "../../config";
 import NumberFormat from 'react-number-format';
+import Icon2 from 'react-native-vector-icons/FontAwesome';
 
 export default function PlaceItem(props) {
   const {t} = useTranslation();
@@ -26,6 +27,8 @@ export default function PlaceItem(props) {
     rateStatus,
     numReviews,
     onPress,
+    favoriteOnPress,
+    isFavorite,
     onPressTag,
   } = props;
   /**
@@ -39,12 +42,20 @@ export default function PlaceItem(props) {
           {status ? <Tag status style={styles.tagStatus}>
             {t(status)}
           </Tag> : null}
-          <Icon
-            name="heart"
-            color={BaseColor.whiteColor}
+          {isFavorite ? <Icon2
+              onPress={favoriteOnPress}
+            name={"heart"}
+            color={BaseColor.orangeColor}
             size={24}
             style={styles.iconLike}
-          />
+            /> :  <Icon
+              onPress={favoriteOnPress}
+              name={"heart"}
+              color={BaseColor.orangeColor}
+              size={24}
+              style={styles.iconLike}
+          />  }
+
           <View style={styles.blockContentRate}>
             <View
               style={{
@@ -91,18 +102,18 @@ export default function PlaceItem(props) {
             <Text title2 semibold style={{marginTop: 4}}>
               {title}
             </Text>
-            <View style={styles.blockLineMap}>
-              <Icon name="map-marker-alt" color={colors.primaryLight} size={12} />
-              <Text caption1 grayColor style={{paddingHorizontal: 4}}>
-                {location}
-              </Text>
-            </View>
-            <View style={styles.blockLinePhone}>
-              <Icon name="phone" color={colors.primaryLight} size={12} />
-              <Text caption1 grayColor style={{paddingHorizontal: 4}}>
-                {phone}
-              </Text>
-            </View>
+              {location ? <View style={styles.blockLineMap}>
+                  <Icon name="map-marker-alt" color={colors.primaryLight} size={12} />
+                  <Text caption1 grayColor style={{paddingHorizontal: 4}}>
+                      {location}
+                  </Text>
+              </View> : null}
+              {phone ? <View style={styles.blockLinePhone}>
+                  <Icon name="phone" color={colors.primaryLight} size={12} />
+                  <Text caption1 grayColor style={{paddingHorizontal: 4}}>
+                      {phone}
+                  </Text>
+              </View> : null}
           </View>
         </TouchableOpacity>
       </View>
@@ -154,12 +165,19 @@ export default function PlaceItem(props) {
             <Text caption1 grayColor style={{marginTop: 5}}>
               {phone}
             </Text>
-            <Icon
-                name="heart"
-                color={colors.primaryLight}
-                size={18}
-                style={styles.iconListLike}
-            />
+              {isFavorite ? <Icon2
+                  onPress={favoriteOnPress}
+                  name={"heart"}
+                  color={BaseColor.orangeColor}
+                  size={18}
+                  style={styles.iconListLike}
+              /> :  <Icon
+                  onPress={favoriteOnPress}
+                  name={"heart"}
+                  color={BaseColor.orangeColor}
+                  size={18}
+                  style={styles.iconListLike}
+              />  }
           </View>
         </TouchableOpacity>
       </View>
@@ -177,12 +195,19 @@ export default function PlaceItem(props) {
           {/*<Tag status style={styles.tagGirdStatus}>*/}
           {/*  {t(status)}*/}
           {/*</Tag>*/}
-          <Icon
-            name="heart"
-            color={BaseColor.whiteColor}
-            size={18}
-            style={styles.iconGirdLike}
-          />
+          {isFavorite ? <Icon2
+              onPress={favoriteOnPress}
+              name={"heart"}
+              color={BaseColor.orangeColor}
+              size={18}
+              style={styles.iconGirdLike}
+          /> :  <Icon
+              onPress={favoriteOnPress}
+              name={"heart"}
+              color={BaseColor.orangeColor}
+              size={18}
+              style={styles.iconGirdLike}
+          />  }
         </TouchableOpacity>
         <TouchableOpacity onPress={onPress} activeOpacity={0.6}>
           <Text footnote semibold grayColor style={{marginTop: 5}}>
@@ -244,6 +269,8 @@ PlaceItem.propTypes = {
   numReviews: PropTypes.number,
   onPress: PropTypes.func,
   onPressTag: PropTypes.func,
+  favoriteOnPress: PropTypes.func,
+  isFavorite: PropTypes.bool,
 };
 
 PlaceItem.defaultProps = {
@@ -260,6 +287,8 @@ PlaceItem.defaultProps = {
   status: '',
   rateStatus: '',
   numReviews: 0,
+  isFavorite: false,
+  favoriteOnPress: () => {},
   onPress: () => {},
   onPressTag: () => {},
 };

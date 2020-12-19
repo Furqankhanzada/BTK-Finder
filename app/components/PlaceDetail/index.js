@@ -27,8 +27,9 @@ import moment from 'moment';
 import PlaceItem from "../PlaceItem";
 import CardList from "../CardList";
 import {useSelector, useDispatch} from "react-redux";
-import {getAllBusinesses, getBusinesses} from "../../actions/business";
+import {getAllBusinesses, getBusinesses, toggleFavorite} from "../../actions/business";
 import SectionList from "../../screens/Home/sectionList";
+import Icon2 from "react-native-vector-icons/FontAwesome";
 import NumberFormat from 'react-number-format';
 
 let defaultDelta = {
@@ -50,6 +51,7 @@ export default function PlaceDetailComponent(props) {
       getRecentlyAddedBusinessesLoading: businesses.getRecentlyAddedBusinessesLoading,
       relatedBusiness: businesses.allBusinesses,
       getRelatedBusinessesLoading: businesses.getAllBusinessesLoading,
+      favoriteIds: businesses.favoriteIds,
     }
   });
 
@@ -186,6 +188,10 @@ export default function PlaceDetailComponent(props) {
     setCollapseHour(!collapseHour);
   };
 
+  const favorite = (id) => {
+    dispatch(toggleFavorite(id))
+  }
+
   const heightImageBanner = Utils.scaleWithPixel(250, 1);
   return (
       <View style={{ flex: 1 }}>
@@ -269,7 +275,20 @@ export default function PlaceDetailComponent(props) {
                 <Text title1 semibold>
                   {business.name}
                 </Text>
-                {isPreview ? null : <Icon name="heart" color={colors.primaryLight} size={24} />}
+                {/**/}
+                {isPreview ? null :
+                    stateProps.favoriteIds.includes(business._id) ? <Icon2
+                          onPress={()=> favorite(business._id)}
+                          name={"heart"}
+                          color={colors.primaryLight}
+                          size={24}
+                      /> :
+                        <Icon onPress={() => favorite(business._id)}
+                              name={"heart"}
+                              color={colors.primaryLight}
+                              size={24}
+                      />
+                }
               </View>
               <View style={styles.lineSpace}>
                 <View>
@@ -341,7 +360,7 @@ export default function PlaceDetailComponent(props) {
                               color={BaseColor.whiteColor}
                           />
                         </View>
-                        <View style={{ marginLeft: 10 }}>
+                        <View style={{ marginLeft: 10, flexDirection: 'column', flex: 1 }}>
                           <Text caption2 grayColor>
                             {item.title}
                           </Text>
@@ -494,6 +513,8 @@ export default function PlaceDetailComponent(props) {
                                 subtitle={item.category}
                                 location={item?.address}
                                 rate={item?.averageRatings || '0.0'}
+                                favoriteOnPress={() => favorite(item._id)}
+                                isFavorite={stateProps.favoriteIds.includes(item._id)}
                                 // status='Open Now'
                                 onPress={() => navigateBusinessDetail(item._id)}
                                 onPressTag={() => navigateToReview(item._id)}

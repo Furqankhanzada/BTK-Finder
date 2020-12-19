@@ -26,7 +26,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getCategories } from '../../actions/category';
 import FeaturedCategoryPlaceholderComponent from '../../components/Placeholders/featuredCategories';
 import SectionList from "./sectionList";
-import {getBusinesses} from "../../actions/business";
+import {getBusinesses, getFavoriteIdsIntoStorage} from "../../actions/business";
 
 export default function Home({ navigation }) {
 
@@ -80,6 +80,7 @@ export default function Home({ navigation }) {
         );
     }, [dispatch]);
     useEffect(() => {
+        dispatch(getFavoriteIdsIntoStorage());
         dispatch(getBusinesses({limit: 5, skip: 0, popular: true, fields:'name,image'}));
         dispatch(getBusinesses({limit: 5, skip: 0, fields:'name,image,category,averageRatings'}));
     }, []);

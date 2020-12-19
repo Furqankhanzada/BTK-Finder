@@ -12,10 +12,12 @@ import {
     ADD_REVIEW_API,
     ADD_REVIEW_API_SUCCESS,
     ADD_REVIEW_API_ERROR,
+    TOGGLE_FAVORITE,
 } from '../constants/business';
 import { handleError } from '../utils';
 import axiosApiInstance from '../interceptor/axios-interceptor';
 import Toast from 'react-native-toast-message';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export const createBusiness = (payload, cb) => (dispatch) => {
   dispatch({ type: CREATE_BUSINESS_API });
@@ -142,3 +144,36 @@ export const addReview = (payload, cb, id) => (dispatch) => {
             handleError({ message: response.data.message[0] });
         });
 };
+
+
+export const getFavoriteIdsIntoStorage = () => async (dispatch) => {
+    try {
+        const jsonValue = await AsyncStorage.getItem('FAVORITE_IDS');
+        dispatch({type: TOGGLE_FAVORITE, ids: jsonValue != null ? JSON.parse(jsonValue) : null})
+    } catch(e) {
+        // error reading value
+    }
+}
+
+export const toggleFavorite = (id) => async (dispatch, getState) => {
+    try {
+        const {businesses} = getState();
+        const {favoriteIds} = businesses;
+        const jsonValue = await AsyncStorage.getItem('FAVORITE_IDS');
+        let ids;
+        if(jsonValue) {
+            ids = favoriteIds && favoriteIds.length ? [...favoriteIds] : [];
+        } else {
+            ids = JSON.parse(jsonValue);
+        }
+        if (ids?.length && ids.includes(id)) {
+            ids = ids.filter(el => el !== id)
+        } else {
+            ids.push(id)
+        }
+        dispatch({type: TOGGLE_FAVORITE, ids});
+        AsyncStorage.setItem('FAVORITE_IDS', JSON.stringify(ids))
+    } catch(e) {
+        // error reading value
+    }
+}

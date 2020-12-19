@@ -8,6 +8,7 @@ import {
     GET_SINGLE_BUSINESS_API,
     GET_ALL_BUSINESSES_API, LOAD_MORE_ALL_BUSINESSES_API,
     ADD_REVIEW_API, ADD_REVIEW_API_SUCCESS, ADD_REVIEW_API_ERROR,
+    TOGGLE_FAVORITE
 } from '../constants/business';
 
 //initial state.
@@ -29,6 +30,7 @@ const initialState = {
     singleBusiness: {},
     createReviewLoading: false,
     review: {},
+    favoriteIds: []
 };
 
 export default function userReducer(state = initialState, action = {}) {
@@ -81,6 +83,8 @@ export default function userReducer(state = initialState, action = {}) {
             return {...state, review: {}, createReviewLoading: false};
         case ADD_REVIEW_API_ERROR:
             return {...state, createReviewLoading: false};
+        case TOGGLE_FAVORITE:
+            return {...state, favoriteIds: action.ids};
         default:
             return state;
     }
