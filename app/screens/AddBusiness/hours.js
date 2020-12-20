@@ -27,13 +27,13 @@ export default function Hours({ navigation }) {
             setSelectedDays(businessFormData.openHours)
         } else {
             setSelectedDays([
-                { day: 'Monday' },
-                { day: 'Tuesday' },
-                { day: 'Wednesday' },
-                { day: 'Thursday' },
-                { day: 'Friday' },
-                { day: 'Saturday' },
-                { day: 'Sunday' },
+                { day: 'Monday', from: '9:00 am', to: '5:00 pm', isOpen: false },
+                { day: 'Tuesday', from: '9:00 am', to: '5:00 pm', isOpen: false },
+                { day: 'Wednesday', from: '9:00 am', to: '5:00 pm', isOpen: false },
+                { day: 'Thursday', from: '9:00 am', to: '5:00 pm', isOpen: false },
+                { day: 'Friday', from: '9:00 am', to: '5:00 pm', isOpen: false },
+                { day: 'Saturday', from: '9:00 am', to: '5:00 pm', isOpen: false },
+                { day: 'Sunday', from: '9:00 am', to: '5:00 pm', isOpen: false },
             ])
         }
     }, []);
