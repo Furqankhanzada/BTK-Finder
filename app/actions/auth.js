@@ -1,7 +1,7 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 import * as actionTypes from './actionTypes';
-import { SIGNUP, LOGIN, EDIT_PROFILE, GET_PROFILE } from '../constants';
+import { SIGNUP, LOGIN, EDIT_PROFILE, GET_PROFILE, UPLOAD } from '../constants';
 import {
   REGISTER_API_ERROR,
   REGISTER_API_SUCCESS,
@@ -11,6 +11,8 @@ import {
   GET_PROFILE_API_ERROR,
   EDIT_PROFILE_API_SUCCESS,
   EDIT_PROFILE_API_ERROR,
+  PROFILE_UPLOAD_SUCCESS,
+  PROFILE_UPLOAD_ERROR,
 } from '../constants/auth';
 import { handleError } from '../utils';
 import axiosApiInstance from '../interceptor/axios-interceptor';
@@ -127,5 +129,28 @@ export const editProfile = (payload, cb) => {
         handleError(error);
         console.log('###### EDIT PROFILE API ERROR', error);
       });
+  };
+};
+
+export const uploadProfileImage = (userId, form, cb) => {
+  return (dispatch) => {
+    axiosApiInstance({
+      url: `${UPLOAD}/${userId}/profile`,
+      body: form,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      }
+    })
+        .then((response) => {
+          dispatch({ type: PROFILE_UPLOAD_SUCCESS, form: response.data });
+          cb && cb();
+        })
+        .catch((error) => {
+          dispatch({ type: PROFILE_UPLOAD_ERROR, error });
+          cb && cb(error);
+          handleError(error);
+          console.log('PROFILE_API_ERROR', error)
+        });
   };
 };

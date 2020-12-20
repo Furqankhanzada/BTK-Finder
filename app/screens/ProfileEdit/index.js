@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import {View, ScrollView, KeyboardAvoidingView, Platform, TouchableOpacity} from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { BaseStyle, BaseColor, useTheme } from '@config';
 import {
@@ -14,21 +14,20 @@ import {
 import styles from './styles';
 import TextInputMask from 'react-native-text-input-mask';
 import { useTranslation } from 'react-i18next';
-import { editProfile } from '../../actions/auth';
+import { editProfile, uploadProfileImage } from '../../actions/auth';
+import ImagePicker from 'react-native-image-crop-picker';
 
 export default function ProfileEdit({navigation}) {
   const {colors} = useTheme();
   const {t} = useTranslation();
 
   const profileData = useSelector((state) => state.profile);
-  // console.log('++++++++++++++++++++++++', profileData);
+  console.log(profileData);
   const dispatch = useDispatch();
 
   const [name, setName] = useState(profileData.name);
   const [email, setEmail] = useState(profileData.email);
   const [phone, setPhone] = useState(profileData.phone);
-  // const [address, setAddress] = useState(UserData[0].address);
-  // const [image] = useState(UserData[0].image);
   const [loading, setLoading] = useState(false);
 
   const offsetKeyboard = Platform.select({
@@ -38,6 +37,44 @@ export default function ProfileEdit({navigation}) {
 
   const onSubmit = () => {
     dispatch(editProfile({ name, email, phone, _id: profileData._id }));
+  };
+
+  const [imageUri, setImageUri] = useState('https://i.ibb.co/RD6rVBy/default-avatar.png');
+
+  const pickSingle = () => {
+    ImagePicker.openPicker({
+      width: 250,
+      height: 250,
+      cropping: true,
+      cropperCircleOverlay: true,
+      sortOrder: 'none',
+      compressImageMaxWidth: 1000,
+      compressImageMaxHeight: 1000,
+      compressImageQuality: 1,
+      compressVideoPreset: 'MediumQuality',
+      includeExif: true,
+      cropperStatusBarColor: 'white',
+      cropperToolbarColor: 'white',
+      cropperActiveWidgetColor: 'white',
+      cropperToolbarWidgetColor: '#3498DB',
+    })
+        .then((image) => {
+          console.log('IMAGE_PICKER_SUCCESS', image);
+          setImageUri(image.path);
+
+          const photo = {
+            uri: Platform.OS === 'android' ? image.path : image.path.replace('file://', ''),
+            type: image.mime,
+            name: 'MyPhoto',
+          };
+          const form = new FormData();
+          form.append('file', photo);
+
+          dispatch(uploadProfileImage(profileData._id, form))
+        })
+        .catch((e) => {
+          console.log('IMAGE_PICKER_ERROR',e);
+        });
   };
 
   return (
@@ -64,9 +101,9 @@ export default function ProfileEdit({navigation}) {
         keyboardVerticalOffset={offsetKeyboard}
         style={{flex: 1}}>
         <ScrollView contentContainerStyle={styles.contain}>
-          <View>
-            <Image source={require('@assets/images/default-avatar.png')} style={styles.thumb} />
-          </View>
+          <TouchableOpacity style={{display: 'flex', flexDirection: 'row'}} onPress={() => pickSingle()}>
+            <Image source={{ uri:imageUri }} style={[styles.thumb, {borderColor: colors.text}]} />
+          </TouchableOpacity>
           <View style={styles.contentTitle}>
             <Text headline semibold>
               {t('name')}
