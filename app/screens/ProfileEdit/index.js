@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import {View, ScrollView, KeyboardAvoidingView, Platform, TouchableOpacity} from 'react-native';
+import {
+  View,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableOpacity,
+} from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { BaseStyle, BaseColor, useTheme } from '@config';
 import {
@@ -17,9 +23,9 @@ import { useTranslation } from 'react-i18next';
 import { editProfile, uploadProfileImage } from '../../actions/auth';
 import ImagePicker from 'react-native-image-crop-picker';
 
-export default function ProfileEdit({navigation}) {
-  const {colors} = useTheme();
-  const {t} = useTranslation();
+export default function ProfileEdit({ navigation }) {
+  const { colors } = useTheme();
+  const { t } = useTranslation();
 
   const profileData = useSelector((state) => state.profile);
   console.log(profileData);
@@ -39,7 +45,9 @@ export default function ProfileEdit({navigation}) {
     dispatch(editProfile({ name, email, phone, _id: profileData._id }));
   };
 
-  const [imageUri, setImageUri] = useState('https://i.ibb.co/RD6rVBy/default-avatar.png');
+  const [imageUri, setImageUri] = useState(
+    'https://i.ibb.co/RD6rVBy/default-avatar.png',
+  );
 
   const pickSingle = () => {
     ImagePicker.openPicker({
@@ -58,27 +66,29 @@ export default function ProfileEdit({navigation}) {
       cropperActiveWidgetColor: 'white',
       cropperToolbarWidgetColor: '#3498DB',
     })
-        .then((image) => {
-          console.log('IMAGE_PICKER_SUCCESS', image);
-          setImageUri(image.path);
+      .then((image) => {
+        console.log('IMAGE_PICKER_SUCCESS', image);
+        setImageUri(image.path);
 
-          const photo = {
-            uri: Platform.OS === 'android' ? image.path : image.path.replace('file://', ''),
-            type: image.mime,
-            name: 'MyPhoto',
-          };
-          const form = new FormData();
-          form.append('file', photo);
+        const photo = {
+          uri:
+            Platform.OS === 'android'
+              ? image.path
+              : image.path.replace('file://', ''),
+          name: 'MyPhoto',
+        };
+        const form = new FormData();
+        form.append('file', photo);
 
-          dispatch(uploadProfileImage(profileData._id, form))
-        })
-        .catch((e) => {
-          console.log('IMAGE_PICKER_ERROR',e);
-        });
+        dispatch(uploadProfileImage(profileData._id, form));
+      })
+      .catch((e) => {
+        console.log('IMAGE_PICKER_ERROR', e);
+      });
   };
 
   return (
-    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{top: 'always'}}>
+    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
       <Header
         title={t('edit_profile')}
         renderLeft={() => {
@@ -99,10 +109,15 @@ export default function ProfileEdit({navigation}) {
       <KeyboardAvoidingView
         behavior={Platform.OS === 'android' ? 'height' : 'padding'}
         keyboardVerticalOffset={offsetKeyboard}
-        style={{flex: 1}}>
+        style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={styles.contain}>
-          <TouchableOpacity style={{display: 'flex', flexDirection: 'row'}} onPress={() => pickSingle()}>
-            <Image source={{ uri:imageUri }} style={[styles.thumb, {borderColor: colors.text}]} />
+          <TouchableOpacity
+            style={{ display: 'flex', flexDirection: 'row' }}
+            onPress={() => pickSingle()}>
+            <Image
+              source={{ uri: imageUri }}
+              style={[styles.thumb, { borderColor: colors.text }]}
+            />
           </TouchableOpacity>
           <View style={styles.contentTitle}>
             <Text headline semibold>
@@ -110,7 +125,7 @@ export default function ProfileEdit({navigation}) {
             </Text>
           </View>
           <TextInput
-            onChangeText={text => setName(text)}
+            onChangeText={(text) => setName(text)}
             placeholder={t('input_name')}
             value={name}
           />
@@ -120,7 +135,7 @@ export default function ProfileEdit({navigation}) {
             </Text>
           </View>
           <TextInput
-            onChangeText={text => setEmail(text)}
+            onChangeText={(text) => setEmail(text)}
             placeholder={t('input_email')}
             value={email}
           />
@@ -130,7 +145,10 @@ export default function ProfileEdit({navigation}) {
             </Text>
           </View>
           <TextInputMask
-            style={[styles.textInput, {backgroundColor: colors.card, color: colors.text}]}
+            style={[
+              styles.textInput,
+              { backgroundColor: colors.card, color: colors.text },
+            ]}
             onChangeText={(text) => setPhone(text)}
             placeholder={'Input Phone'}
             placeholderTextColor={BaseColor.grayColor}
@@ -140,7 +158,7 @@ export default function ProfileEdit({navigation}) {
             mask={'+92 [000] [0000] [000]'}
           />
         </ScrollView>
-        <View style={{paddingVertical: 15, paddingHorizontal: 20}}>
+        <View style={{ paddingVertical: 15, paddingHorizontal: 20 }}>
           <Button
             loading={loading}
             full

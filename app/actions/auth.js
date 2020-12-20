@@ -87,7 +87,7 @@ export const login = (user, cb) => {
 };
 
 export const getProfile = (cb) => {
-  return async (dispatch)  => {
+  return async (dispatch) => {
     axiosApiInstance({
       method: 'GET',
       url: GET_PROFILE,
@@ -95,7 +95,7 @@ export const getProfile = (cb) => {
       .then((response) => {
         dispatch({
           type: GET_PROFILE_API_SUCCESS,
-            profile: response.data,
+          profile: response.data,
         });
         cb && cb();
       })
@@ -119,7 +119,7 @@ export const editProfile = (payload, cb) => {
       .then((response) => {
         dispatch({
           type: EDIT_PROFILE_API_SUCCESS,
-            user: payload,
+          user: payload,
         });
         cb && cb();
       })
@@ -136,21 +136,22 @@ export const uploadProfileImage = (userId, form, cb) => {
   return (dispatch) => {
     axiosApiInstance({
       url: `${UPLOAD}/${userId}/profile`,
-      body: form,
+      data: form,
       method: 'POST',
       headers: {
         'Content-Type': 'multipart/form-data',
-      }
+      },
     })
-        .then((response) => {
-          dispatch({ type: PROFILE_UPLOAD_SUCCESS, form: response.data });
-          cb && cb();
-        })
-        .catch((error) => {
-          dispatch({ type: PROFILE_UPLOAD_ERROR, error });
-          cb && cb(error);
-          handleError(error);
-          console.log('PROFILE_API_ERROR', error)
-        });
+      .then((response) => {
+        console.log('PROFILE_API_ response', response);
+        dispatch({ type: PROFILE_UPLOAD_SUCCESS, form: response.data });
+        cb && cb();
+      })
+      .catch((error) => {
+        dispatch({ type: PROFILE_UPLOAD_ERROR, error });
+        cb && cb(error);
+        handleError(error);
+        console.log('PROFILE_API_ERROR', error);
+      });
   };
 };
