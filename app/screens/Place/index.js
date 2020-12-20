@@ -257,7 +257,7 @@ export default function Place(props) {
                                     rateStatus={item?.rateStatus}
                                     numReviews={item?.reviews.length}
                                     favoriteOnPress={() => favorite(item._id)}
-                                    isFavorite={stateProps.favoriteIds.includes(item._id)}
+                                    isFavorite={stateProps?.favoriteIds?.includes(item._id)}
                                     numReviews={item?.reviews?.length}
                                     style={{
                                         marginLeft: 15,
@@ -334,7 +334,7 @@ export default function Place(props) {
                                     rateStatus={item?.rateStatus}
                                     numReviews={item?.reviews?.length}
                                     favoriteOnPress={() => favorite(item._id)}
-                                    isFavorite={stateProps.favoriteIds.includes(item._id)}
+                                    isFavorite={stateProps?.favoriteIds?.includes(item._id)}
                                     style={{
                                         marginBottom: 15,
                                     }}
@@ -407,7 +407,7 @@ export default function Place(props) {
                                     // rateStatus={item?.rateStatus}
                                     numReviews={item?.reviews?.length}
                                     favoriteOnPress={() => favorite(item._id)}
-                                    isFavorite={stateProps.favoriteIds.includes(item._id)}
+                                    isFavorite={stateProps?.favoriteIds?.includes(item._id)}
                                     onPress={() => navigateBusinessDetail(item._id)}
                                     onPressTag={() => navigateToReview(item._id)}
                                 />
