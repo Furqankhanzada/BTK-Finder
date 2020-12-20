@@ -91,7 +91,7 @@ export default function Category({ navigation }) {
           <CategoryIcon
             icon={item.icon}
             title={item.name}
-            subtitle={200}
+            // subtitle={200}
             onPress={() => navigation.navigate('Place', {
               title: item.name,
               category: item.name,
@@ -106,7 +106,7 @@ export default function Category({ navigation }) {
             image={{ uri: item.image || 'https://i.ibb.co/VpvP0X5/empty-image.jpg' }}
             icon={item.icon}
             title={item.name}
-            subtitle={300}
+            // subtitle={300}
             onPress={() => navigation.navigate('Place', {
               title: item.name,
               category: item.name,
