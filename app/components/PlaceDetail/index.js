@@ -239,7 +239,7 @@ export default function PlaceDetailComponent(props) {
         <SafeAreaView style={{ flex: 1 }} forceInset={{ top: 'always' }}>
           {/* Header */}
           <Header
-              title="Place Detail"
+              title=""
               renderLeft={() => {
                 return isPreview ? null : (
                     <Icon name="arrow-left" size={20} color={BaseColor.whiteColor} />
@@ -340,7 +340,7 @@ export default function PlaceDetailComponent(props) {
                       </TouchableOpacity>
                   )}
                 </View>
-                {isPreview ? null : <Tag status>{t('featured')}</Tag>}
+                {/*{isPreview ? null : <Tag status>{t('featured')}</Tag>}*/}
               </View>
               {information.map((item) => {
                 if(item.information){
