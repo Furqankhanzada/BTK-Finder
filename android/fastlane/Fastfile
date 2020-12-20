@@ -36,7 +36,7 @@ platform :android do
     gradle_file = "./app/build.gradle"
 
     android_set_version_name(
-      version_name: "0.0.4",
+      version_name: "0.0.5",
       gradle_file: gradle_file
     )
 
