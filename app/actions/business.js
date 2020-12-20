@@ -160,11 +160,11 @@ export const toggleFavorite = (id) => async (dispatch, getState) => {
         const {businesses} = getState();
         const {favoriteIds} = businesses;
         const jsonValue = await AsyncStorage.getItem('FAVORITE_IDS');
-        let ids;
+        let ids = [];
         if(jsonValue) {
-            ids = favoriteIds && favoriteIds.length ? [...favoriteIds] : [];
-        } else {
             ids = JSON.parse(jsonValue);
+        } else {
+            ids = favoriteIds && favoriteIds.length ? [...favoriteIds] : [];
         }
         if (ids?.length && ids.includes(id)) {
             ids = ids.filter(el => el !== id)

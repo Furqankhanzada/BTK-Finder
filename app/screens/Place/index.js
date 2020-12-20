@@ -258,7 +258,6 @@ export default function Place(props) {
                                     numReviews={item?.reviews.length}
                                     favoriteOnPress={() => favorite(item._id)}
                                     isFavorite={stateProps?.favoriteIds?.includes(item._id)}
-                                    numReviews={item?.reviews?.length}
                                     style={{
                                         marginLeft: 15,
                                         marginBottom: 15,
