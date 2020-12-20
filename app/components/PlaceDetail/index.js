@@ -190,6 +190,22 @@ export default function PlaceDetailComponent(props) {
 
   const favorite = (id) => {
     dispatch(toggleFavorite(id))
+  };
+
+  const updateOpenHours = (data) => {
+    let array = [
+      { day: 'Monday'},
+      { day: 'Tuesday'},
+      { day: 'Wednesday'},
+      { day: 'Thursday'},
+      { day: 'Friday'},
+      { day: 'Saturday'},
+      { day: 'Sunday'},
+    ]
+    if(data?.length) {
+      array = data.concat(array.filter(({day}) => !data.find(f => f.day === day)));
+    }
+    return array
   }
 
   const heightImageBanner = Utils.scaleWithPixel(250, 1);
@@ -400,16 +416,16 @@ export default function PlaceDetailComponent(props) {
                       height: collapseHour ? 0 : null,
                       overflow: 'hidden',
                     }}>
-                  {business.openHours.map((item) => {
+                  {updateOpenHours(business.openHours).map((item) => {
                     return (
                         <View style={[styles.lineWorkHours, { borderColor: colors.border }]} key={item.day}>
                           <Text body2 grayColor>{item.day}</Text>
-                          <Text body2 accentColor semibold>
+                          {'isOpen' in item && !item.isOpen ? <Text body2 accentColor semibold> Close </Text>: <Text body2 accentColor semibold>
                             {item.from ? item.from : ''}
-                            {!(item.from || item.to) ? 'Close' : ''}
+                            {!(item.isOpen || item.from || item.to) ? 'Close' : ''}
                             {(item.from && item.to) ? ' - ' : ''}
                             {item.to ? item.to : ''}
-                          </Text>
+                          </Text>}
                         </View>
                     );
                   })}
