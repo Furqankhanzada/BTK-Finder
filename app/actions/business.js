@@ -1,18 +1,19 @@
 import { BUSINESSES_API } from '../constants';
 import {
-    CREATE_BUSINESS_API,
-    CREATE_BUSINESS_API_SUCCESS,
-    CREATE_BUSINESS_API_ERROR,
-    SET_BUSINESS_FORM_DATA_IN_REDUX,
-    GET_POPULAR_BUSINESSES_API,
-    GET_RECENTLY_ADDED_BUSINESSES_API,
-    GET_ALL_BUSINESSES_API,
-    GET_SINGLE_BUSINESS_API,
-    LOAD_MORE_ALL_BUSINESSES_API,
-    ADD_REVIEW_API,
-    ADD_REVIEW_API_SUCCESS,
-    ADD_REVIEW_API_ERROR,
-    TOGGLE_FAVORITE,
+  CREATE_BUSINESS_API,
+  CREATE_BUSINESS_API_SUCCESS,
+  CREATE_BUSINESS_API_ERROR,
+  SET_BUSINESS_FORM_DATA_IN_REDUX,
+  GET_POPULAR_BUSINESSES_API,
+  GET_RECENTLY_ADDED_BUSINESSES_API,
+  GET_ALL_BUSINESSES_API,
+  GET_SINGLE_BUSINESS_API,
+  GET_RELATED_BUSINESS_API,
+  LOAD_MORE_ALL_BUSINESSES_API,
+  ADD_REVIEW_API,
+  ADD_REVIEW_API_SUCCESS,
+  ADD_REVIEW_API_ERROR,
+  TOGGLE_FAVORITE,
 } from '../constants/business';
 import { handleError } from '../utils';
 import axiosApiInstance from '../interceptor/axios-interceptor';
@@ -67,113 +68,145 @@ export const getBusinesses = (payload) => (dispatch) => {
     .then((response) => {
       dispatch({ type: dispatchType, loading: false, data: response.data });
     })
-    .catch(({response}) => {
+    .catch(({ response }) => {
       dispatch({ type: dispatchType, loading: false });
       handleError(response.data);
     });
 };
 
-export const getAllBusinesses = (payload) => (dispatch)  => {
-    let dispatchType = GET_ALL_BUSINESSES_API;
-    let queryParams = encodeQueryData(payload) ? `?${encodeQueryData(payload)}` : '';
+export const getAllBusinesses = (payload) => (dispatch) => {
+  let dispatchType = GET_ALL_BUSINESSES_API;
+  let queryParams = encodeQueryData(payload)
+    ? `?${encodeQueryData(payload)}`
+    : '';
 
-    if(payload.skip > 0) dispatchType = LOAD_MORE_ALL_BUSINESSES_API;
+  if(payload.skip > 0) dispatchType = LOAD_MORE_ALL_BUSINESSES_API;
 
-    dispatch({
+  dispatch({
+    type: dispatchType,
+    loading: true,
+    loadMoreLoading: true,
+    data: [],
+  });
+
+  axiosApiInstance({ method: 'GET', url: `${BUSINESSES_API}${queryParams}` })
+    .then((response) => {
+      dispatch({
         type: dispatchType,
-        loading: true,
-        loadMoreLoading: true,
-        data: []
+        loading: false,
+        loadMoreLoading: false,
+        data: response.data || [],
+        isLoadMore: !(response.data && response.data.length < 10),
+      });
+    })
+    .catch(({ response }) => {
+      dispatch({
+        type: dispatchType,
+        loading: false,
+        loadMoreLoading: false,
+        data: [],
+      });
+      handleError(response.data);
     });
+};
 
-    axiosApiInstance({method: 'GET', url: `${BUSINESSES_API}${queryParams}`})
-        .then((response) => {
-            dispatch({
-                type: dispatchType,
-                loading: false,
-                loadMoreLoading: false,
-                data: response.data || [],
-                isLoadMore: !(response.data && response.data.length < 10)
-            });
-        })
-        .catch(({response}) => {
-            dispatch({ type: dispatchType, loading: false, loadMoreLoading: false,  data: [] });
-            handleError(response.data);
-        });
+export const getRalatedBusinesses = (payload) => (dispatch) => {
+  let queryParams = encodeQueryData(payload)
+    ? `?${encodeQueryData(payload)}`
+    : '';
+  dispatch({ type: GET_RELATED_BUSINESS_API, loading: true });
+  axiosApiInstance({ method: 'GET', url: `${BUSINESSES_API}${queryParams}` })
+    .then((response) => {
+      dispatch({
+        type: GET_RELATED_BUSINESS_API,
+        loading: false,
+        data: response.data || [],
+      });
+    })
+    .catch(({ response }) => {
+      dispatch({
+        type: GET_RELATED_BUSINESS_API,
+        loading: false,
+        data: [],
+      });
+      handleError(response.data);
+    });
 };
 
 export const setBusinessFormData = (businessFormData) => (dispatch) => {
-    dispatch({ type: SET_BUSINESS_FORM_DATA_IN_REDUX, businessFormData });
+  dispatch({ type: SET_BUSINESS_FORM_DATA_IN_REDUX, businessFormData });
 };
 
 export const getSingleBusiness = (id) => (dispatch) => {
-    dispatch({ type: GET_SINGLE_BUSINESS_API, loading: true });
-    axiosApiInstance({ method: 'GET', url: `${BUSINESSES_API}/${id}` })
-        .then((response) => {
-            dispatch({
-                type: GET_SINGLE_BUSINESS_API,
-                loading: false,
-                data: response.data,
-            });
-        })
-        .catch(({response}) => {
-            dispatch({ type: GET_SINGLE_BUSINESS_API, loading: false });
-            handleError(response.data);
-        });
+  dispatch({ type: GET_SINGLE_BUSINESS_API, loading: true });
+  axiosApiInstance({ method: 'GET', url: `${BUSINESSES_API}/${id}` })
+    .then((response) => {
+      dispatch({
+        type: GET_SINGLE_BUSINESS_API,
+        loading: false,
+        data: response.data,
+      });
+    })
+    .catch(({ response }) => {
+      dispatch({ type: GET_SINGLE_BUSINESS_API, loading: false });
+      handleError(response.data);
+    });
 };
 
 export const addReview = (payload, cb, id) => (dispatch) => {
-    dispatch({ type: ADD_REVIEW_API });
-    axiosApiInstance({
-        method: 'POST',
-        url: `${BUSINESSES_API}/${id}/review`,
-        data: payload,
+  dispatch({ type: ADD_REVIEW_API });
+  axiosApiInstance({
+    method: 'POST',
+    url: `${BUSINESSES_API}/${id}/review`,
+    data: payload,
+  })
+    .then((response) => {
+      dispatch({ type: ADD_REVIEW_API_SUCCESS });
+      Toast.show({
+        type: 'success',
+        topOffset: 55,
+        text1: 'Review Added',
+        text2: 'Your Review has been added successfully.',
+      });
+      cb && cb();
     })
-        .then((response) => {
-            dispatch({ type: ADD_REVIEW_API_SUCCESS });
-            Toast.show({
-                type: 'success',
-                topOffset: 55,
-                text1: 'Review Added',
-                text2: 'Your Review has been added successfully.',
-            });
-            cb && cb();
-        })
-        .catch(({ response }) => {
-            dispatch({ type: ADD_REVIEW_API_ERROR });
-            handleError({ message: response.data.message[0] });
-        });
+    .catch(({ response }) => {
+      dispatch({ type: ADD_REVIEW_API_ERROR });
+      handleError({ message: response.data.message[0] });
+    });
 };
 
-
 export const getFavoriteIdsIntoStorage = () => async (dispatch) => {
-    try {
-        const jsonValue = await AsyncStorage.getItem('FAVORITE_IDS');
-        dispatch({type: TOGGLE_FAVORITE, ids: jsonValue != null ? JSON.parse(jsonValue) : null})
-    } catch(e) {
-        // error reading value
-    }
-}
+  try {
+    const jsonValue = await AsyncStorage.getItem('FAVORITE_IDS');
+    dispatch({
+      type: TOGGLE_FAVORITE,
+      ids: jsonValue != null ? JSON.parse(jsonValue) : null,
+    });
+  } catch (e) {
+    // error reading value
+  }
+};
 
 export const toggleFavorite = (id) => async (dispatch, getState) => {
-    try {
-        const {businesses} = getState();
-        const {favoriteIds} = businesses;
-        const jsonValue = await AsyncStorage.getItem('FAVORITE_IDS');
-        let ids = [];
-        if(jsonValue) {
-            ids = JSON.parse(jsonValue);
-        } else {
-            ids = favoriteIds && favoriteIds.length ? [...favoriteIds] : [];
-        }
-        if (ids?.length && ids.includes(id)) {
-            ids = ids.filter(el => el !== id)
-        } else {
-            ids.push(id)
-        }
-        dispatch({type: TOGGLE_FAVORITE, ids});
-        AsyncStorage.setItem('FAVORITE_IDS', JSON.stringify(ids))
-    } catch(e) {
-        // error reading value
+  try {
+    const { businesses } = getState();
+    const { favoriteIds } = businesses;
+    const jsonValue = await AsyncStorage.getItem('FAVORITE_IDS');
+    let ids = [];
+    if (jsonValue) {
+      ids = JSON.parse(jsonValue);
+    } else {
+      ids = favoriteIds && favoriteIds.length ? [...favoriteIds] : [];
     }
-}
+    if (ids?.length && ids.includes(id)) {
+      ids = ids.filter(el => el !== id);
+    } else {
+      ids.push(id);
+    }
+    dispatch({ type: TOGGLE_FAVORITE, ids });
+    AsyncStorage.setItem('FAVORITE_IDS', JSON.stringify(ids));
+  } catch (e) {
+    // error reading value
+  }
+};

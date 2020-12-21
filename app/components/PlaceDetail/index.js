@@ -27,7 +27,7 @@ import moment from 'moment';
 import PlaceItem from "../PlaceItem";
 import CardList from "../CardList";
 import {useSelector, useDispatch} from "react-redux";
-import {getAllBusinesses, getBusinesses, toggleFavorite} from "../../actions/business";
+import {getRalatedBusinesses, getBusinesses, toggleFavorite} from "../../actions/business";
 import SectionList from "../../screens/Home/sectionList";
 import Icon2 from "react-native-vector-icons/FontAwesome";
 import NumberFormat from 'react-number-format';
@@ -49,14 +49,14 @@ export default function PlaceDetailComponent(props) {
     return {
       recentlyAddedBusinesses: businesses.recentlyAddedBusinesses,
       getRecentlyAddedBusinessesLoading: businesses.getRecentlyAddedBusinessesLoading,
-      relatedBusiness: businesses.allBusinesses,
-      getRelatedBusinessesLoading: businesses.getAllBusinessesLoading,
+      relatedBusiness: businesses.relatedBusinesses,
+      getRelatedBusinessesLoading: businesses.getRelatedBusinessesLoading,
       favoriteIds: businesses.favoriteIds,
     }
   });
 
   useEffect(() => {
-    dispatch(getAllBusinesses({limit: 5, skip: 0, fields:'name,category,averageRatings', category: business.category}));
+    dispatch(getRalatedBusinesses({limit: 5, skip: 0, fields:'name,image,category,averageRatings', category: business.category}));
     dispatch(getBusinesses({limit: 5, skip: 0, fields:'name,image,category,address,averageRatings'}));
   }, []);
 
@@ -388,7 +388,7 @@ export default function PlaceDetailComponent(props) {
                   );
                 }
               })}
-              {business.openHours && business.openHours.length ? <Fragment>
+              {business?.openHours && business?.openHours?.length ? <Fragment>
                 <TouchableOpacity style={styles.line} onPress={onCollapse}>
                   <View style={[styles.contentIcon, {backgroundColor: colors.border}]}>
                     <Icon name="clock" size={16} color={BaseColor.whiteColor} />
@@ -408,7 +408,7 @@ export default function PlaceDetailComponent(props) {
                     />
                   </View>
                 </TouchableOpacity>
-                {business.openHours.length > 1 ? <View
+                {business?.openHours?.length > 1 ? <View
                     style={{
                       paddingLeft: 40,
                       paddingRight: 20,
