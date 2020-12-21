@@ -65,20 +65,22 @@ export default function ProfileEdit({ navigation }) {
       cropperToolbarWidgetColor: '#3498DB',
     })
       .then((image) => {
-        console.log('IMAGE_PICKER_SUCCESS', image);
         setImageUri(image.path);
-
+        const filename = image.path.replace(/^.*[\\\/]/, '');
         const photo = {
           uri:
             Platform.OS === 'android'
               ? image.path
               : image.path.replace('file://', ''),
-          name: 'MyPhoto',
+          name: filename,
         };
         const form = new FormData();
         form.append('file', photo);
-
-        dispatch(uploadProfileImage(profileData._id, form));
+        dispatch(
+          uploadProfileImage(profileData, form, () => {
+            navigation.goBack();
+          }),
+        );
       })
       .catch((e) => {
         console.log('IMAGE_PICKER_ERROR', e);

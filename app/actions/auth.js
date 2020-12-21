@@ -110,7 +110,6 @@ export const getProfile = (cb) => {
 
 export const editProfile = (payload, cb) => {
   return async (dispatch) => {
-    // console.log('PROFILE DATA %%%%%%%', payload)
     axiosApiInstance({
       method: 'PUT',
       url: EDIT_PROFILE + payload._id,
@@ -132,10 +131,10 @@ export const editProfile = (payload, cb) => {
   };
 };
 
-export const uploadProfileImage = (userId, form, cb) => {
+export const uploadProfileImage = ({ _id, name, email, phone }, form, cb) => {
   return (dispatch) => {
     axiosApiInstance({
-      url: `${UPLOAD}/${userId}/profile`,
+      url: `${UPLOAD}/${_id._id}/profile`,
       data: form,
       method: 'POST',
       headers: {
@@ -143,9 +142,18 @@ export const uploadProfileImage = (userId, form, cb) => {
       },
     })
       .then((response) => {
-        console.log('PROFILE_API_ response', response);
-        dispatch({ type: PROFILE_UPLOAD_SUCCESS, form: response.data });
-        cb && cb();
+        dispatch(
+          editProfile(
+            {
+              _id,
+              name,
+              email,
+              phone,
+              avatar: response.data.Location,
+            },
+            () => cb(),
+          ),
+        );
       })
       .catch((error) => {
         dispatch({ type: PROFILE_UPLOAD_ERROR, error });
