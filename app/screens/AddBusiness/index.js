@@ -9,9 +9,10 @@ import {
   Text,
   CustomStepIndicator,
   DropDown,
+  DropDownMultiSelect,
 } from '@components';
 import styles from './styles';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ScrollView } from 'react-native-gesture-handler';
 import ActionButton from 'react-native-action-button';
 import { generalFormValidation } from './Validations';
@@ -19,16 +20,16 @@ import { Formik } from 'formik';
 import GlobalStyle from '../../assets/styling/GlobalStyle';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
-import {setBusinessFormData} from "../../actions/business";
+import { setBusinessFormData } from '../../actions/business';
 
 export default function Business({ navigation }) {
   const formRef = useRef();
   const dispatch = useDispatch();
-  const stateProps = useSelector(({categories, businesses}) => {
+  const stateProps = useSelector(({ categories, businesses }) => {
     return {
       categories: categories.all,
-      businesses
-    }
+      businesses,
+    };
   });
   const { businessFormData } = stateProps.businesses;
 
@@ -51,12 +52,38 @@ export default function Business({ navigation }) {
     return { label: name, value: name };
   });
 
+  const [value, setValue] = useState([]);
+  const [items, setItems] = useState([
+    {
+      label: 'Free Wifi',
+      value: 'Free Wifi',
+      icon: () => <Icon name="wifi" size={18} color={colors.primary} />,
+    },
+    {
+      label: 'Shower',
+      value: 'Shower',
+      icon: () => <Icon name="shower" size={18} color={colors.primary} />,
+    },
+    {
+      label: 'Pet Allowed',
+      value: 'Pet Allowed',
+      icon: () => <Icon name="paw" size={18} color={colors.primary} />,
+    },
+    {
+      label: 'Open 24/7',
+      value: 'Open-24/7',
+      icon: () => <Icon name="clock" size={18} color={colors.primary} />,
+    },
+  ]);
+
   const getSelectedCategory = (selected) => {
-      let foundCategory = null;
-      if(stateProps.categories && stateProps.categories.length){
-          foundCategory = stateProps.categories.find(obj => obj.name === selected)
-      }
-      return foundCategory ? foundCategory.name : ''
+    let foundCategory = null;
+    if (stateProps.categories && stateProps.categories.length) {
+      foundCategory = stateProps.categories.find(
+        (obj) => obj.name === selected,
+      );
+    }
+    return foundCategory ? foundCategory.name : '';
   };
 
   const { colors } = useTheme();
@@ -68,11 +95,17 @@ export default function Business({ navigation }) {
   });
 
   const submit = (values) => {
-    dispatch(setBusinessFormData({...values, tags: []}));
-    onNext()
+    dispatch(setBusinessFormData({ ...values, tags: [] }));
+    onNext();
+    console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@', values);
   };
 
-  console.log('yah', businessFormData.category ? getSelectedCategory(businessFormData.category) : null)
+  console.log(
+    'yah',
+    businessFormData.category
+      ? getSelectedCategory(businessFormData.category)
+      : null,
+  );
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
@@ -83,12 +116,23 @@ export default function Business({ navigation }) {
         onSubmit={(values) => submit(values)}
         initialValues={{
           name: businessFormData.name ? businessFormData.name : '',
-          description: businessFormData.description ? businessFormData.description : '',
-          telephone: businessFormData.telephone ? businessFormData.telephone : '',
+          description: businessFormData.description
+            ? businessFormData.description
+            : '',
+          telephone: businessFormData.telephone
+            ? businessFormData.telephone
+            : '',
           website: businessFormData.website ? businessFormData.website : '',
           email: businessFormData.email ? businessFormData.email : '',
-          established: businessFormData.established ? businessFormData.established : '',
-          category: businessFormData.category ? getSelectedCategory(businessFormData.category) : '',
+          established: businessFormData.established
+            ? businessFormData.established
+            : '',
+          category: businessFormData.category
+            ? getSelectedCategory(businessFormData.category)
+            : '',
+          facilities: businessFormData.facilities
+            ? businessFormData.facilities
+            : '',
         }}
         validationSchema={generalFormValidation}>
         {({ handleChange, values, handleSubmit, errors, setFieldValue }) => {
@@ -116,16 +160,16 @@ export default function Business({ navigation }) {
                     ) : null}
                   </View>
 
-                  <View style={[GlobalStyle.inputContainer, {marginTop: 10}]}>
-                      <TextInput
-                          style={styles.textArea}
-                          placeholder="Description"
-                          onChangeText={handleChange('description')}
-                          value={values.description}
-                          multiline={true}
-                          numberOfLines={10}
-                          textAlignVertical="top"
-                      />
+                  <View style={[GlobalStyle.inputContainer, { marginTop: 10 }]}>
+                    <TextInput
+                      style={styles.textArea}
+                      placeholder="Description"
+                      onChangeText={handleChange('description')}
+                      value={values.description}
+                      multiline={true}
+                      numberOfLines={10}
+                      textAlignVertical="top"
+                    />
                     {errors.description ? (
                       <Text style={GlobalStyle.errorText}>
                         {errors.description}
@@ -133,20 +177,49 @@ export default function Business({ navigation }) {
                     ) : null}
                   </View>
 
-                  <View style={[GlobalStyle.inputContainer, Platform.OS === 'ios' && {
-                      position: 'relative',
-                      zIndex: 1
-                  }]}>
+                  <View
+                    style={[
+                      GlobalStyle.inputContainer,
+                      Platform.OS === 'ios' && {
+                        position: 'relative',
+                        zIndex: 1,
+                      },
+                    ]}>
                     <DropDown
                       items={getCategories}
                       defaultValue={values.category}
                       placeholder={'Select a Category'}
                       searchablePlaceholder={'Search for a Category'}
-                      onChangeItem={(item) => setFieldValue('category', item.value)}
+                      onChangeItem={(item) =>
+                        setFieldValue('category', item.value)
+                      }
                     />
                     {errors.category ? (
                       <Text style={GlobalStyle.errorText}>
                         {errors.category}
+                      </Text>
+                    ) : null}
+                  </View>
+
+                  <View
+                    style={[
+                      GlobalStyle.inputContainer,
+                      Platform.OS === 'ios' && {
+                        position: 'relative',
+                        zIndex: 1,
+                      },
+                    ]}>
+                    <DropDownMultiSelect
+                      items={items}
+                      multipleText={value.toString()}
+                      defaultValue={value}
+                      onChangeItem={(item) => setValue(item) & setFieldValue('facilities', value.toString())}
+                      placeholder={'Select Facilities'}
+                      searchablePlaceholder={'Search for Facilities'}
+                    />
+                    {errors.facilities ? (
+                      <Text style={GlobalStyle.errorText}>
+                        {errors.facilities}
                       </Text>
                     ) : null}
                   </View>
@@ -217,7 +290,15 @@ export default function Business({ navigation }) {
                         GlobalStyle.datePickerContainer,
                         { backgroundColor: cardColor, color: colors.text },
                       ]}>
-                      <Text style={[GlobalStyle.datePickerContainerText, {color: values.established ? colors.text : BaseColor.grayColor}]}>
+                      <Text
+                        style={[
+                          GlobalStyle.datePickerContainerText,
+                          {
+                            color: values.established
+                              ? colors.text
+                              : BaseColor.grayColor,
+                          },
+                        ]}>
                         {values.established
                           ? moment(values.established).format('DD/MM/YYYY')
                           : 'Established Date [YYYY/MM/DD]'}

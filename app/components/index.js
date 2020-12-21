@@ -29,6 +29,7 @@ import HoursCheckbox from './HoursCheckbox';
 import PlaceDetailComponent from './PlaceDetail';
 import Loading from './Loading';
 import DropDown from './DropdownPicker';
+import DropDownMultiSelect from './DropDownMultiSelect';
 
 export {
   TextInput,
@@ -62,4 +63,5 @@ export {
   PlaceDetailComponent,
   Loading,
   DropDown,
+  DropDownMultiSelect,
 };
