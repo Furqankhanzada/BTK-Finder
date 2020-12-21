@@ -8,8 +8,7 @@ import {
   GET_PROFILE_API_ERROR,
   EDIT_PROFILE_API_SUCCESS,
   EDIT_PROFILE_API_ERROR,
-  PROFILE_UPLOAD_ERROR,
-  PROFILE_UPLOAD_SUCCESS,
+  PROFILE_UPLOAD_API
 } from '../constants/auth';
 
 //initial state.
@@ -20,6 +19,7 @@ const initialState = {
   user: {},
   isLogin: false,
   form: {},
+  profileImageLoading: false,
 };
 
 export default function userReducer(state = initialState, action = {}) {
@@ -44,10 +44,8 @@ export default function userReducer(state = initialState, action = {}) {
       return Object.assign({}, state, action.user );
     case EDIT_PROFILE_API_ERROR:
       return Object.assign({}, state, action.error);
-    case PROFILE_UPLOAD_SUCCESS:
-      return Object.assign({}, state, action.form );
-    case PROFILE_UPLOAD_ERROR:
-      return Object.assign({}, state, action.error);
+    case PROFILE_UPLOAD_API:
+      return Object.assign({}, state, {profileImageLoading: action.loading} );
     default:
       return state;
   }

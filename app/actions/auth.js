@@ -11,8 +11,7 @@ import {
   GET_PROFILE_API_ERROR,
   EDIT_PROFILE_API_SUCCESS,
   EDIT_PROFILE_API_ERROR,
-  PROFILE_UPLOAD_SUCCESS,
-  PROFILE_UPLOAD_ERROR,
+  PROFILE_UPLOAD_API,
 } from '../constants/auth';
 import { handleError } from '../utils';
 import axiosApiInstance from '../interceptor/axios-interceptor';
@@ -131,35 +130,18 @@ export const editProfile = (payload, cb) => {
   };
 };
 
-export const uploadProfileImage = ({ _id, name, email, phone }, form, cb) => {
-  return (dispatch) => {
-    axiosApiInstance({
-      url: `${UPLOAD}/${_id._id}/profile`,
-      data: form,
-      method: 'POST',
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
+export const uploadProfileImage = (payload, form, cb) => (dispatch) => {
+  dispatch({ type: PROFILE_UPLOAD_API, loading: true });
+  axiosApiInstance.post(`${UPLOAD}/${payload._id}/profile`, form, {
+    headers: { 'Content-Type': 'multipart/form-data' }
     })
       .then((response) => {
-        dispatch(
-          editProfile(
-            {
-              _id,
-              name,
-              email,
-              phone,
-              avatar: response.data.Location,
-            },
-            () => cb(),
-          ),
-        );
+        dispatch({ type: PROFILE_UPLOAD_API, loading: false });
+        dispatch(editProfile({...payload, avatar: response.data.Location}, () => cb()));
       })
       .catch((error) => {
-        dispatch({ type: PROFILE_UPLOAD_ERROR, error });
+        dispatch({ type: PROFILE_UPLOAD_API, loading: false });
         cb && cb(error);
         handleError(error);
-        console.log('PROFILE_API_ERROR', error);
       });
-  };
 };
