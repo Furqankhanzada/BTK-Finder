@@ -49,12 +49,20 @@ export default function Profile({ navigation }) {
       <ScrollView>
         <View style={styles.contain}>
           <ProfileDetail
-            image={require('@assets/images/default-avatar.png')}
+            image={
+              profileData.avatar
+                ? { uri: profileData.avatar }
+                : require('@assets/images/default-avatar.png')
+            }
             textFirst={profileData.name}
             // point={profileData.}
             textSecond={profileData.email}
             textThird={profileData.phone}
-            isAdmin={profileData && profileData.roles ? profileData.roles[0]==='ADMIN' : false}
+            isAdmin={
+              profileData && profileData.roles
+                ? profileData.roles[0] === 'ADMIN'
+                : false
+            }
             // onPress={() => navigation.navigate('ProfileExanple')}
           />
           {/* <ProfilePerformance

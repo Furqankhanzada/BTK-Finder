@@ -45,9 +45,7 @@ export default function ProfileEdit({ navigation }) {
     dispatch(editProfile({ name, email, phone, _id: profileData._id }));
   };
 
-  const [imageUri, setImageUri] = useState(
-    'https://i.ibb.co/RD6rVBy/default-avatar.png',
-  );
+  const [imageUri, setImageUri] = useState('');
 
   const pickSingle = () => {
     ImagePicker.openPicker({
@@ -115,7 +113,12 @@ export default function ProfileEdit({ navigation }) {
             style={{ display: 'flex', flexDirection: 'row' }}
             onPress={() => pickSingle()}>
             <Image
-              source={{ uri: imageUri }}
+              source={{
+                uri:
+                  imageUri ||
+                  profileData.avatar ||
+                  'https://i.ibb.co/RD6rVBy/default-avatar.png',
+              }}
               style={[styles.thumb, { borderColor: colors.text }]}
             />
           </TouchableOpacity>
