@@ -16,7 +16,7 @@ import {
   Text,
   Button,
   TextInput,
-  Loading
+  Loading,
 } from '@components';
 import styles from './styles';
 import TextInputMask from 'react-native-text-input-mask';
@@ -29,6 +29,9 @@ export default function ProfileEdit({ navigation }) {
   const { t } = useTranslation();
 
   const profileData = useSelector((state) => state.profile);
+  const editProfileLoading = useSelector(
+    (state) => state.auth.editProfileLoading,
+  );
   const dispatch = useDispatch();
 
   const [name, setName] = useState(profileData.name);
@@ -42,14 +45,16 @@ export default function ProfileEdit({ navigation }) {
   });
 
   const onSubmit = () => {
-    dispatch(editProfile({ name, email, phone, _id: profileData._id }));
+    dispatch(
+      editProfile({ name, email, phone, _id: profileData._id }, () => {
+        navigation.goBack();
+      }),
+    );
   };
 
   const [imageUri, setImageUri] = useState('');
 
-  const uploadProfileImageCallBack = () => {
-
-  }
+  const uploadProfileImageCallBack = () => {};
 
   const pickSingle = () => {
     ImagePicker.openPicker({
@@ -72,15 +77,18 @@ export default function ProfileEdit({ navigation }) {
         setImageUri(image.path);
         const filename = image.path.replace(/^.*[\\\/]/, '');
         let file = {
-          uri: Platform.OS === 'android'
+          uri:
+            Platform.OS === 'android'
               ? image.path
               : image.path.replace('file://', ''),
           type: 'multipart/form-data',
-          name: filename
+          name: filename,
         };
         const form = new FormData();
         form.append('file', file);
-        dispatch(uploadProfileImage(profileData, form, uploadProfileImageCallBack));
+        dispatch(
+          uploadProfileImage(profileData, form, uploadProfileImageCallBack),
+        );
       })
       .catch((e) => {
         console.log('IMAGE_PICKER_ERROR', e);
@@ -112,18 +120,18 @@ export default function ProfileEdit({ navigation }) {
         style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={styles.contain}>
           <TouchableOpacity
-              disabled={profileData.profileImageLoading}
-              style={styles.thumbContainer}
-              onPress={() => pickSingle()}>
-            <Loading loading={profileData.profileImageLoading}/>
+            disabled={profileData.profileImageLoading}
+            style={styles.thumbContainer}
+            onPress={() => pickSingle()}>
+            <Loading loading={profileData.profileImageLoading} />
             <Image
-                source={{
-                  uri:
-                      imageUri ||
-                      profileData.avatar ||
-                      'https://i.ibb.co/RD6rVBy/default-avatar.png',
-                }}
-                style={[styles.thumb, { borderColor: colors.text }]}
+              source={{
+                uri:
+                  imageUri ||
+                  profileData.avatar ||
+                  'https://i.ibb.co/RD6rVBy/default-avatar.png',
+              }}
+              style={[styles.thumb, { borderColor: colors.text }]}
             />
           </TouchableOpacity>
           <View style={styles.contentTitle}>
@@ -166,10 +174,7 @@ export default function ProfileEdit({ navigation }) {
           />
         </ScrollView>
         <View style={{ paddingVertical: 15, paddingHorizontal: 20 }}>
-          <Button
-            loading={loading}
-            full
-            onPress={() => onSubmit()}>
+          <Button loading={editProfileLoading} full onPress={() => onSubmit()}>
             {t('confirm')}
           </Button>
         </View>

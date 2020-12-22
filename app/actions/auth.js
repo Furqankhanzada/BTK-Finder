@@ -9,6 +9,7 @@ import {
   LOGIN_API_SUCCESS,
   GET_PROFILE_API_SUCCESS,
   GET_PROFILE_API_ERROR,
+  EDIT_PROFILE_API,
   EDIT_PROFILE_API_SUCCESS,
   EDIT_PROFILE_API_ERROR,
   PROFILE_UPLOAD_API,
@@ -109,6 +110,7 @@ export const getProfile = (cb) => {
 
 export const editProfile = (payload, cb) => {
   return async (dispatch) => {
+    dispatch({ type: EDIT_PROFILE_API, loading: true });
     axiosApiInstance({
       method: 'PUT',
       url: EDIT_PROFILE + payload._id,
@@ -118,11 +120,12 @@ export const editProfile = (payload, cb) => {
         dispatch({
           type: EDIT_PROFILE_API_SUCCESS,
           user: payload,
+          loading: false,
         });
         cb && cb();
       })
       .catch((error) => {
-        dispatch({ type: EDIT_PROFILE_API_ERROR, error });
+        dispatch({ type: EDIT_PROFILE_API_ERROR, error, loading: false });
         cb && cb(error);
         handleError(error);
         console.log('###### EDIT PROFILE API ERROR', error);

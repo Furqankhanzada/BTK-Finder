@@ -6,6 +6,7 @@ import {
   LOGIN_API_SUCCESS,
   GET_PROFILE_API_SUCCESS,
   GET_PROFILE_API_ERROR,
+  EDIT_PROFILE_API,
   EDIT_PROFILE_API_SUCCESS,
   EDIT_PROFILE_API_ERROR,
   PROFILE_UPLOAD_API
@@ -19,6 +20,7 @@ const initialState = {
   user: {},
   isLogin: false,
   form: {},
+  editProfileLoading: false,
   profileImageLoading: false,
 };
 
@@ -40,10 +42,12 @@ export default function userReducer(state = initialState, action = {}) {
       return Object.assign({}, state, { ...action.profile });
     case GET_PROFILE_API_ERROR:
       return Object.assign({}, state, action.error);
+    case EDIT_PROFILE_API:
+      return Object.assign({}, state, {editProfileLoading: action.loading} );
     case EDIT_PROFILE_API_SUCCESS:
-      return Object.assign({}, state, action.user );
+      return Object.assign({}, state, action.user, {editProfileLoading: action.loading} );
     case EDIT_PROFILE_API_ERROR:
-      return Object.assign({}, state, action.error);
+      return Object.assign({}, state, action.error, {editProfileLoading: action.loading});
     case PROFILE_UPLOAD_API:
       return Object.assign({}, state, {profileImageLoading: action.loading} );
     default:
