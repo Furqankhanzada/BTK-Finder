@@ -50,7 +50,8 @@ export default function PriceRange({ navigation }) {
 
         dispatch(setBusinessFormData(payload));
 
-        navigation.navigate('FinalReview');
+        // navigation.navigate('FinalReview');
+        navigation.navigate('Gallery');
     };
 
     const offsetKeyboard = Platform.select({

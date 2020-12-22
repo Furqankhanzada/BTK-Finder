@@ -13,6 +13,8 @@ import {
   ADD_REVIEW_API_SUCCESS,
   ADD_REVIEW_API_ERROR,
   TOGGLE_FAVORITE,
+  UPLOAD_THUMBNAIL_IMAGE_API,
+  UPLOAD_GALLERY_IMAGES_API, UPDATE_GALLERY_IMAGES
 } from '../constants/business';
 
 //initial state.
@@ -37,6 +39,10 @@ const initialState = {
   createReviewLoading: false,
   review: {},
   favoriteIds: [],
+  gallery: [],
+  galleryLoading: false,
+  thumbnail: {},
+  thumbnailLoading: true
 };
 
 export default function userReducer(state = initialState, action = {}) {
@@ -103,6 +109,18 @@ export default function userReducer(state = initialState, action = {}) {
       return { ...state, createReviewLoading: false };
     case TOGGLE_FAVORITE:
       return { ...state, favoriteIds: action.ids };
+    case UPLOAD_THUMBNAIL_IMAGE_API:
+      return {
+        ...state,
+        thumbnail: action.thumbnail,
+      };
+    case UPLOAD_GALLERY_IMAGES_API:
+      return {
+        ...state,
+        gallery: [...action.gallery, ...state.gallery],
+      };
+    case UPDATE_GALLERY_IMAGES:
+      return { ...state, gallery: action.gallery };
     default:
       return state;
   }

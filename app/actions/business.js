@@ -1,4 +1,4 @@
-import { BUSINESSES_API } from '../constants';
+import {BUSINESSES_API, UPLOAD} from '../constants';
 import {
   CREATE_BUSINESS_API,
   CREATE_BUSINESS_API_SUCCESS,
@@ -14,6 +14,9 @@ import {
   ADD_REVIEW_API_SUCCESS,
   ADD_REVIEW_API_ERROR,
   TOGGLE_FAVORITE,
+  UPLOAD_THUMBNAIL_IMAGE_API,
+  UPLOAD_GALLERY_IMAGES_API,
+  UPDATE_GALLERY_IMAGES
 } from '../constants/business';
 import { handleError } from '../utils';
 import axiosApiInstance from '../interceptor/axios-interceptor';
@@ -209,4 +212,39 @@ export const toggleFavorite = (id) => async (dispatch, getState) => {
   } catch (e) {
     // error reading value
   }
+};
+
+
+export const uploadImages = (businessId, form) => (dispatch, getState) => {
+  const {profile} = getState();
+  const {_id} = profile;
+  axiosApiInstance.post(`${UPLOAD}/${_id}/businesses/${businessId}`, form, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  })
+      .then((response) => {
+        console.log('response', response);
+        // dispatch({
+        //   type: dispatchType,
+        //   thumbnailLoading: true,
+        //   galleryLoading: true
+        // });
+      })
+      .catch((error) => {
+        // dispatch({ type: dispatchType, thumbnailLoading: true, galleryLoading: true });
+        // cb && cb(error);
+        handleError(error);
+      });
+};
+
+export const setImagesIntoRedux = (type, payload) => (dispatch) => {
+  console.log(type, payload);
+  let dispatchType = type === 'thumbnail' ? UPLOAD_THUMBNAIL_IMAGE_API : UPLOAD_GALLERY_IMAGES_API;
+  dispatch({
+    type: dispatchType,
+    thumbnail: payload,
+    gallery: payload,
+  });
+};
+export const updateGalleryImagesIntoRedux = (payload) => (dispatch) => {
+  dispatch({type: UPDATE_GALLERY_IMAGES, gallery: payload});
 };

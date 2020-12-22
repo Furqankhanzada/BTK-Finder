@@ -144,4 +144,82 @@ export default StyleSheet.create({
     height: 100,
     padding: 10
   },
+
+  thumbnailSection: {
+    marginTop: 20,
+    marginBottom: 30
+  },
+  thumbnailContainer: {
+    marginHorizontal: 25,
+    backgroundColor: BaseColor.grayColor,
+    height: 250,
+    position: 'relative',
+    borderRadius: 5,
+  },
+  thumbnailAddOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+  },
+  thumbnailAddOverlayText: {
+    fontSize: 20,
+    color: BaseColor.whiteColor
+  },
+  thumbnailContainerImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 5,
+  },
+
+  gallerySection: {
+    marginBottom: 25
+  },
+  galleryActionButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 32,
+    backgroundColor: 'red',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    zIndex: 1,
+    right: -10,
+    top: -10
+  },
+  galleryActionButtonIcon: {
+    color: BaseColor.whiteColor
+  },
+  gallerySectionImagesContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingHorizontal: 15
+  },
+  galleryImageContainer: {
+    width: '28%',
+    height: 120,
+    margin: 10,
+    borderRadius: 5,
+    backgroundColor: BaseColor.grayColor,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative'
+  },
+  galleryImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 5,
+  },
+  galleryImageAddIconContainer: {
+    width: 52,
+    height: 52,
+    borderRadius: 52/2,
+    backgroundColor: BaseColor.whiteColor,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  galleryImageAddIcon: {
+    color: BaseColor.blueColor,
+    fontSize: 22
+  }
 });
