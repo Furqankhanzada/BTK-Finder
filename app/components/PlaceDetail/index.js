@@ -397,12 +397,12 @@ export default function PlaceDetailComponent(props) {
                     <View>
                       <Text caption2 grayColor> {t('open_hour')} </Text>
                       <Text footnote semibold style={{ marginTop: 5 }}>
-                        {business.openHours[0].from ? business.openHours[0].from : ''} -
-                        {business.openHours[0].to ? business.openHours[0].to : ''}
+                        {business.openHours[0].from ? business.openHours[0].from.toLowerCase() : ''}{' - '}
+                        {business.openHours[0].to ? business.openHours[0].to.toLowerCase() : ''}
                       </Text>
                     </View>
                     <Icon
-                        name={collapseHour ? 'angle-up' : 'angle-down'}
+                        name={collapseHour ? 'angle-down' : 'angle-up'}
                         size={24}
                         color={BaseColor.grayColor}
                     />
@@ -421,10 +421,10 @@ export default function PlaceDetailComponent(props) {
                         <View style={[styles.lineWorkHours, { borderColor: colors.border }]} key={item.day}>
                           <Text body2 grayColor>{item.day}</Text>
                           {'isOpen' in item && !item.isOpen ? <Text body2 accentColor semibold> Close </Text>: <Text body2 accentColor semibold>
-                            {item.from ? item.from : ''}
+                            {item.from ? item.from.toLowerCase() : ''}
                             {!(item.isOpen || item.from || item.to) ? 'Close' : ''}
                             {(item.from && item.to) ? ' - ' : ''}
-                            {item.to ? item.to : ''}
+                            {item.to ? item.to.toLowerCase() : ''}
                           </Text>}
                         </View>
                     );
