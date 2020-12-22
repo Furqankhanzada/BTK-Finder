@@ -74,6 +74,16 @@ export default function Business({ navigation }) {
       value: 'Open-24/7',
       icon: () => <Icon name="clock" size={18} color={colors.primary} />,
     },
+    {
+      label: 'Super Market',
+      value: 'Super Market',
+      icon: () => <Icon name="shopping-cart" size={18} color={colors.primary} />,
+    },
+    {
+      label: 'Shuttle Bus',
+      value: 'Shuttle Bus',
+      icon: () => <Icon name="bus" size={18} color={colors.primary} />,
+    },
   ]);
 
   const getSelectedCategory = (selected) => {
@@ -213,7 +223,10 @@ export default function Business({ navigation }) {
                       items={items}
                       multipleText={value.toString()}
                       defaultValue={value}
-                      onChangeItem={(item) => setValue(item) & setFieldValue('facilities', value.toString())}
+                      onChangeItem={(item) =>
+                        setValue(item) &
+                        setFieldValue('facilities', value.toString())
+                      }
                       placeholder={'Select Facilities'}
                       searchablePlaceholder={'Search for Facilities'}
                     />

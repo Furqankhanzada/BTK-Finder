@@ -62,7 +62,7 @@ export default function DropDownMultiSelect(props) {
           color: colors.text,
           borderColor: BaseColor.grayColor,
         }}
-        dropDownMaxHeight={250}
+        dropDownMaxHeight={220}
         onChangeItem={onChangeItem}
         placeholderStyle={{ color: BaseColor.grayColor }}
         activeLabelStyle={{ color: colors.primary }}
