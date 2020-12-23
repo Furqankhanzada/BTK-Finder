@@ -269,7 +269,7 @@ export default function Home({ navigation }) {
                                 <Card
                                     key={index}
                                     style={[styles.popularItem, { marginLeft: 15 }]}
-                                    image={item.image}
+                                    image={item?.image}
                                     onPress={() => navigateBusinessDetail(item._id)}>
                                     <Text headline whiteColor={item.image} grayColor={!item.image} semibold>
                                         {item.name}

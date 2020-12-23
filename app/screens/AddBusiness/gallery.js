@@ -8,14 +8,15 @@ import {
     Text,
     CustomStepIndicator,
     Image,
+    Loading
 } from '@components';
 import styles from './styles';
 import { ScrollView } from 'react-native-gesture-handler';
 import ActionButton from 'react-native-action-button';
 import {useDispatch, useSelector} from "react-redux";
 import ImagePicker from "react-native-image-crop-picker";
-import {setImagesIntoRedux, updateGalleryImagesIntoRedux} from "../../actions/business";
-import {uuid} from "../../utils";
+import {updateImagesIntoRedux, uploadImages, uploadGalleryImages} from "../../actions/business";
+import {generateFileObject, uuid} from "../../utils";
 
 export default function Gallery({ navigation }) {
 
@@ -31,12 +32,13 @@ export default function Gallery({ navigation }) {
     });
 
     const onNext = () => {
-
+        navigation.navigate('FinalReview');
     };
+
 
     //for thumbnail function
     const removeThumbnail = () => {
-        dispatch(setImagesIntoRedux('thumbnail', {}));
+        dispatch(updateImagesIntoRedux('thumbnail', ''));
     };
     const pickSingle = () => {
         ImagePicker.openPicker({
@@ -54,18 +56,12 @@ export default function Gallery({ navigation }) {
             cropperToolbarColor: 'white',
             cropperActiveWidgetColor: 'white',
             cropperToolbarWidgetColor: '#3498DB',
+            multiple: false
         })
             .then((image) => {
-                const filename = image.path.replace(/^.*[\\\/]/, '');
-                let file = {
-                    uri:
-                        Platform.OS === 'android'
-                            ? image.path
-                            : image.path.replace('file://', ''),
-                    type: 'multipart/form-data',
-                    name: filename,
-                };
-                dispatch(setImagesIntoRedux('thumbnail', file));
+                if(image){
+                    dispatch(uploadImages(image));
+                }
             })
             .catch((e) => {
                 console.log('IMAGE_PICKER_ERROR', e);
@@ -74,35 +70,28 @@ export default function Gallery({ navigation }) {
 
     //for gallery function
     const removeSingleGalleryImage = (item) => {
-        let data = stateProps.gallery.filter(el => el.id !== item.id);
-        dispatch(updateGalleryImagesIntoRedux(data));
+        let data = stateProps.gallery.filter(el => el.image !== item.image);
+        dispatch(updateImagesIntoRedux('gallery', data));
+    };
+    const onChangeCover = (item) => {
+        let data = [...stateProps.gallery];
+        data.map(el => el.cover = el.image === item.image);
+        dispatch(updateImagesIntoRedux('gallery', data));
     };
     const renderGalleryImages = (data) => {
-        if(data?.length){
-           return data.map(el => <View style={styles.galleryImageContainer}>
-               <TouchableOpacity style={styles.galleryActionButton}
-                                 onPress={() => removeSingleGalleryImage(el)}>
-                   <Icon style={styles.galleryActionButtonIcon} name="minus" />
-               </TouchableOpacity>
-               <Image style={styles.galleryImage} source={{uri: el.uri}}/>
-           </View>)
+        if(data.length){
+            return data.map((el, i) => <View key={i} style={styles.galleryImageContainer}>
+                <TouchableOpacity style={styles.galleryActionButton}
+                                  onPress={() => removeSingleGalleryImage(el)}>
+                    <Icon style={styles.galleryActionButtonIcon} name="minus" />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.galleryImageButton} onPress={() => onChangeCover(el)}>
+                    {el?.cover ? <Text semibold style={styles.galleryImageBadge}>Cover</Text> : null}
+                    <Image style={styles.galleryImage} source={{uri: el.image}}/>
+                </TouchableOpacity>
+            </View>)
         }
         return null;
-    };
-    const updateImagesArray = (data) => {
-        let array = [];
-        if(data.length) {
-            data.forEach((el) => {
-                const filename = el.path.replace(/^.*[\\\/]/, '');
-                array.push({
-                    uri: Platform.OS === 'android' ? el.path : el.path.replace('file://', ''),
-                    type: 'multipart/form-data',
-                    name: filename,
-                    id: uuid()
-                })
-            })
-        }
-        return array
     };
     const pickMultiple = () => {
         ImagePicker.openPicker({
@@ -114,7 +103,9 @@ export default function Gallery({ navigation }) {
             multiple: true
         })
             .then((images) => {
-                dispatch(setImagesIntoRedux('gallery', updateImagesArray(images)));
+                if(images.length){
+                    dispatch(uploadGalleryImages(images));
+                }
             })
             .catch((e) => {
                 console.log('IMAGE_PICKER_ERROR', e);
@@ -149,13 +140,14 @@ export default function Gallery({ navigation }) {
                         </Text>
                     </View>
                     <View style={styles.thumbnailContainer}>
-                        {stateProps.thumbnail?.uri ?
+                        <Loading loading={stateProps.thumbnailLoading} style={{borderRadius: 5}}/>
+                        {stateProps.thumbnail ?
                             <Fragment>
                                 <TouchableOpacity style={styles.galleryActionButton}
                                                   onPress={() => removeThumbnail()}>
                                     <Icon style={styles.galleryActionButtonIcon} name="minus" />
                                 </TouchableOpacity>
-                                <Image style={styles.thumbnailContainerImage} source={{uri: stateProps.thumbnail?.uri}}/>
+                                <Image style={styles.thumbnailContainerImage} source={{uri: stateProps.thumbnail}}/>
                             </Fragment>
                             :  <TouchableOpacity style={styles.thumbnailAddOverlay} onPress={() => pickSingle()}>
                                 <Text semibold style={styles.thumbnailAddOverlayText}>
@@ -170,6 +162,7 @@ export default function Gallery({ navigation }) {
                         <Text title3 semibold style={{textAlign: 'center'}}>Gallery</Text>
                     </View>
                     <View style={styles.gallerySectionImagesContainer}>
+                        <Loading loading={stateProps.galleryLoading} style={{borderRadius: 5}}/>
                         {renderGalleryImages(stateProps.gallery)}
                         <TouchableOpacity style={[styles.galleryImageContainer, !stateProps.gallery?.length && {flex: 1}]}
                                           onPress={() => pickMultiple()}>

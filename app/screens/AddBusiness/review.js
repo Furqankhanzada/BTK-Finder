@@ -17,7 +17,7 @@ export default function FinalReview({ navigation }) {
 
   const stateProps = useSelector(({businesses}) => businesses);
 
-  const { businessFormData, createBusinessLoading } = stateProps;
+  const { businessFormData, createBusinessLoading, thumbnail, gallery } = stateProps;
 
   const addCallback = () => {
     navigation.navigate('Home');
@@ -40,6 +40,12 @@ export default function FinalReview({ navigation }) {
     if(!payload.email) delete payload.email ;
     if(!payload.website) delete payload.website ;
     payload.openHours = openHours;
+    if(thumbnail){
+      payload.thumbnail = thumbnail
+    }
+    if(gallery){
+      payload.gallery = gallery
+    }
     dispatch(createBusiness(payload, addCallback))
   };
 

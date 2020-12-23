@@ -14,7 +14,9 @@ import {
   ADD_REVIEW_API_ERROR,
   TOGGLE_FAVORITE,
   UPLOAD_THUMBNAIL_IMAGE_API,
-  UPLOAD_GALLERY_IMAGES_API, UPDATE_GALLERY_IMAGES
+  REMOVE_THUMBNAIL_IMAGES,
+  UPLOAD_GALLERY_IMAGES_API,
+  REMOVE_GALLERY_IMAGES,
 } from '../constants/business';
 
 //initial state.
@@ -41,8 +43,8 @@ const initialState = {
   favoriteIds: [],
   gallery: [],
   galleryLoading: false,
-  thumbnail: {},
-  thumbnailLoading: true
+  thumbnail: '',
+  thumbnailLoading: false
 };
 
 export default function userReducer(state = initialState, action = {}) {
@@ -58,7 +60,12 @@ export default function userReducer(state = initialState, action = {}) {
     case CREATE_BUSINESS_API:
       return { ...state, createBusinessLoading: true };
     case CREATE_BUSINESS_API_SUCCESS:
-      return { ...state, businessFormData: {}, createBusinessLoading: false };
+      return { ...state,
+        businessFormData: {},
+        createBusinessLoading: false,
+        thumbnail: '',
+        gallery: []
+      };
     case CREATE_BUSINESS_API_ERROR:
       return { ...state, createBusinessLoading: false };
     case GET_POPULAR_BUSINESSES_API:
@@ -113,13 +120,25 @@ export default function userReducer(state = initialState, action = {}) {
       return {
         ...state,
         thumbnail: action.thumbnail,
+        thumbnailLoading: action.thumbnailLoading,
       };
-    case UPLOAD_GALLERY_IMAGES_API:
+    case REMOVE_THUMBNAIL_IMAGES:
       return {
         ...state,
-        gallery: [...action.gallery, ...state.gallery],
+        thumbnail: action.thumbnail,
+        thumbnailLoading: action.thumbnailLoading,
       };
-    case UPDATE_GALLERY_IMAGES:
+    case UPLOAD_GALLERY_IMAGES_API:
+      let data = [...state.gallery, ...action.gallery || []];
+      if(data.length && data[0] && !state.gallery.length){
+        data[0].cover = true
+      }
+      return {
+        ...state,
+        gallery: data,
+        galleryLoading: action.galleryLoading,
+      };
+    case REMOVE_GALLERY_IMAGES:
       return { ...state, gallery: action.gallery };
     default:
       return state;

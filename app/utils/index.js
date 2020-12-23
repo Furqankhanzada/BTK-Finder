@@ -164,3 +164,15 @@ export const uuid = () => {
   // return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
   return s4() + s4() + "-" + s4();
 };
+
+export const generateFileObject = (file) => {
+  const filename = file.path.replace(/^.*[\\\/]/, '');
+  return {
+    uri:
+        Platform.OS === 'android'
+            ? file.path
+            : file.path.replace('file://', ''),
+    type: 'multipart/form-data',
+    name: filename,
+  };
+}
