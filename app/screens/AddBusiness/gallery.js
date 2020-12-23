@@ -1,6 +1,6 @@
 import React, {Fragment} from 'react';
 import {View, TouchableOpacity, Platform} from 'react-native';
-import { BaseStyle } from '@config';
+import { BaseStyle, useTheme } from '@config';
 import {
     Header,
     SafeAreaView,
@@ -18,7 +18,7 @@ import {setImagesIntoRedux, updateGalleryImagesIntoRedux} from "../../actions/bu
 import {uuid} from "../../utils";
 
 export default function Gallery({ navigation }) {
-
+    const {colors} = useTheme();
     const dispatch = useDispatch();
     const stateProps = useSelector(({businesses, profile}) => {
         return {
@@ -31,7 +31,7 @@ export default function Gallery({ navigation }) {
     });
 
     const onNext = () => {
-
+        navigation.navigate('FinalReview');
     };
 
     //for thumbnail function
@@ -181,7 +181,8 @@ export default function Gallery({ navigation }) {
                 </View>
             </ScrollView>
             <ActionButton
-                buttonColor="rgba(93, 173, 226, 1)"
+                buttonColor={colors.primary}
+                nativeFeedbackRippleColor='transparent'
                 onPress={() => onNext()}
                 offsetX={20}
                 offsetY={10}

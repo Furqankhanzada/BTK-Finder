@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { View } from 'react-native';
-import { BaseStyle } from '@config';
+import { BaseStyle, useTheme } from '@config';
 import {
     Header,
     SafeAreaView,
@@ -16,6 +16,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {setBusinessFormData} from "../../actions/business";
 
 export default function Hours({ navigation }) {
+    const { colors } = useTheme();
     const dispatch = useDispatch();
     const businesses = useSelector(({businesses}) => businesses);
     const { businessFormData } = businesses;
@@ -96,7 +97,8 @@ export default function Hours({ navigation }) {
                 </View>
             </ScrollView>
             <ActionButton
-                buttonColor="rgba(93, 173, 226, 1)"
+                buttonColor={colors.primary}
+                nativeFeedbackRippleColor='transparent'
                 onPress={() => onNext()}
                 offsetX={20}
                 offsetY={10}

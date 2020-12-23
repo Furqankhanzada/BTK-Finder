@@ -5,7 +5,7 @@ import {
     TouchableOpacity,
     PermissionsAndroid,
 } from 'react-native';
-import { BaseStyle } from '@config';
+import { BaseStyle, useTheme } from '@config';
 import {
     Header,
     SafeAreaView,
@@ -35,6 +35,7 @@ const defaultLocation = {
 };
 
 export default function Address({ navigation }) {
+    const { colors } = useTheme();
     const mapRef = useRef();
     const formRef = useRef();
     const dispatch = useDispatch();
@@ -267,7 +268,8 @@ export default function Address({ navigation }) {
                             </View>
                             </ScrollView>
                             <ActionButton
-                                buttonColor="rgba(93, 173, 226, 1)"
+                                buttonColor={colors.primary}
+                                nativeFeedbackRippleColor='transparent'
                                 onPress={() => handleSubmit()}
                                 offsetX={20}
                                 offsetY={10}

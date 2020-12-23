@@ -1,5 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
+import { useTheme } from '@config';
 import {
   Header,
   SafeAreaView,
@@ -13,6 +14,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {createBusiness} from "../../actions/business";
 
 export default function FinalReview({ navigation }) {
+  const {colors} = useTheme();
   const dispatch = useDispatch();
 
   const stateProps = useSelector(({businesses}) => businesses);
@@ -63,10 +65,11 @@ export default function FinalReview({ navigation }) {
             navigation.goBack();
           }}
         />
-        <CustomStepIndicator position={4} />
+        <CustomStepIndicator position={5} />
         <PlaceDetailComponent business={businessFormData} />
         <ActionButton
-          buttonColor="rgba(93, 173, 226, 1)"
+          buttonColor={colors.primary}
+          nativeFeedbackRippleColor='transparent'
           onPress={() => add()}
           offsetX={20}
           offsetY={10}

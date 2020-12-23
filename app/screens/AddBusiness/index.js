@@ -232,7 +232,8 @@ export default function Business({ navigation }) {
                 </View>
               </ScrollView>
               <ActionButton
-                buttonColor="rgba(93, 173, 226, 1)"
+                buttonColor={colors.primary}
+                nativeFeedbackRippleColor='transparent'
                 onPress={() => handleSubmit()}
                 offsetX={20}
                 offsetY={10}

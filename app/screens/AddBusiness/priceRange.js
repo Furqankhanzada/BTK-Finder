@@ -116,7 +116,8 @@ export default function PriceRange({ navigation }) {
                 </View>
             </ScrollView>
             <ActionButton
-                buttonColor="rgba(93, 173, 226, 1)"
+                buttonColor={colors.primary}
+                nativeFeedbackRippleColor='transparent'
                 onPress={() => onNext()}
                 offsetX={20}
                 offsetY={10}
