@@ -64,7 +64,7 @@ export default function PlaceDetailComponent(props) {
       getRalatedBusinesses({
         limit: 5,
         skip: 0,
-        fields: 'name,image,category,averageRatings',
+        fields: 'name, thumbnail, category, averageRatings',
         category: business.category,
       }),
     );
@@ -72,7 +72,7 @@ export default function PlaceDetailComponent(props) {
       getBusinesses({
         limit: 5,
         skip: 0,
-        fields: 'name,image,category,address,averageRatings',
+        fields: 'name, thumbnail, category, address, averageRatings',
       }),
     );
   }, []);
@@ -597,7 +597,7 @@ export default function PlaceDetailComponent(props) {
                   return (
                     <PlaceItem
                       grid
-                      image={item?.image}
+                      image={item?.thumbnail}
                       title={item.name}
                       subtitle={item.category}
                       location={item?.address}
@@ -620,7 +620,7 @@ export default function PlaceDetailComponent(props) {
                   return (
                     <CardList
                       key={index}
-                      image={item?.image}
+                      image={item?.thumbnail}
                       title={item.name}
                       subtitle={item.category}
                       rate={item?.averageRatings || '0.0'}
