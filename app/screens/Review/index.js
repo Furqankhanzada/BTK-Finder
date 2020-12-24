@@ -140,7 +140,7 @@ export default function Review(props) {
           renderItem={({ item }) => (
             <CommentItem
               style={{ marginTop: 10 }}
-              image={item.image}
+              image={item.owner.avatar}
               name={item.owner.name}
               rate={item.rating}
               date={moment(item.createdAt, 'YYYYMMDD').fromNow()}

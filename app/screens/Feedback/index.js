@@ -22,6 +22,7 @@ export default function Feedback(props) {
   const { colors } = useTheme();
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const profileData = useSelector((state) => state.profile);
   const stateProps = useSelector(({ businesses }) => businesses);
   const { createReviewLoading } = stateProps;
 
@@ -74,7 +75,11 @@ export default function Feedback(props) {
         <ScrollView
           contentContainerStyle={{ alignItems: 'center', padding: 20 }}>
           <Image
-            source={Images.defaultAvatar}
+            source={
+              profileData.avatar
+                ? { uri: profileData.avatar }
+                : require('@assets/images/default-avatar.png')
+            }
             style={{
               width: 62,
               height: 62,
