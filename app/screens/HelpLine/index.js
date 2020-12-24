@@ -49,24 +49,25 @@ const HelpLine = React.memo(({ navigation }) => {
           numbers: ['021111111284'],
         },
         {
-          title: 'Bahria Helpline',
-          numbers: ['02134110447', '02138771555'],
-          extension: '700'
-        },
-        {
           title: 'Bahria Medical Center',
           numbers: ['02136435400', '02138771555'],
-          extension: '660'
+          extension: '660',
+          description:
+            '24/7 Pharmacy, Clinical & Interventional Neurology, Dental Centre, Eye Department and More.',
         },
         {
           title: 'Bahria Security',
           numbers: ['03212810185', '02138771555'],
-          extension: '624'
+          extension: '624',
+          description:
+            'You can call on this number regarding to Bahria Town security issues.',
         },
         {
           title: 'Fire Brigade',
           numbers: ['02138771555'],
-          extension: '959'
+          extension: '959',
+          description:
+            'Call to Bahria Fire Depart if their are fires in buildings, vehicles or on outdoor structures.',
         },
         {
           title: 'Ambulance',
@@ -75,6 +76,8 @@ const HelpLine = React.memo(({ navigation }) => {
         {
           title: 'Police Station',
           numbers: ['02134644407', '02134642971'],
+          description:
+            'Call Bahria Town Police Station if you witness a crime like a robbery, an assault, or another type of criminal behavior.',
         },
       ],
     },
@@ -84,11 +87,16 @@ const HelpLine = React.memo(({ navigation }) => {
         {
           title: 'Complaint Department',
           description:
-            'You can complain about anything like: Power break down, Water tanker request, Gas cylinder request, Electrical fault',
-          numbers: btkNumbers,
+            'You can complain about anything like: Power break down, Water tanker request, Gas cylinder request, Electrical fault.',
+          numbers: ['02134110447', '02138771555'],
           extension: '700',
         },
-        { title: 'Billing Department', numbers: btkNumbers, extension: '1031' },
+        {
+          title: 'Billing Department',
+          numbers: btkNumbers,
+          extension: '1031',
+          description: 'Regarding Maintenance bill and electrical bill.',
+        },
         {
           title: 'Passation Department',
           numbers: btkNumbers,
