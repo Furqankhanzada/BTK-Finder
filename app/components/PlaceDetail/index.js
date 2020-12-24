@@ -609,40 +609,40 @@ export default function PlaceDetailComponent(props) {
               </MapView>
             </View>
           </View>
-          <Text
-            title3
-            semibold
-            style={{
-              paddingHorizontal: 20,
-              paddingBottom: 5,
-              paddingTop: 15,
-            }}>
-            {t('facilities')}
-          </Text>
-          <View style={[styles.wrapContent, { borderColor: colors.border }]}>
-            {facilities.map((item) => {
-              return (
-                <Tag
-                  icon={
-                    <Icon
-                      name={item.icon}
-                      size={12}
-                      color={colors.accent}
-                      solid
-                      style={{ marginRight: 5 }}
-                    />
-                  }
-                  chip
-                  key={item.id}
-                  style={{
-                    marginTop: 8,
-                    marginRight: 8,
-                  }}>
-                  {item.name}
-                </Tag>
-              );
-            })}
-          </View>
+          {/*<Text*/}
+          {/*  title3*/}
+          {/*  semibold*/}
+          {/*  style={{*/}
+          {/*    paddingHorizontal: 20,*/}
+          {/*    paddingBottom: 5,*/}
+          {/*    paddingTop: 15,*/}
+          {/*  }}>*/}
+          {/*  {t('facilities')}*/}
+          {/*</Text>*/}
+          {/*<View style={[styles.wrapContent, { borderColor: colors.border }]}>*/}
+          {/*  {facilities.map((item) => {*/}
+          {/*    return (*/}
+          {/*      <Tag*/}
+          {/*        icon={*/}
+          {/*          <Icon*/}
+          {/*            name={item.icon}*/}
+          {/*            size={12}*/}
+          {/*            color={colors.accent}*/}
+          {/*            solid*/}
+          {/*            style={{ marginRight: 5 }}*/}
+          {/*          />*/}
+          {/*        }*/}
+          {/*        chip*/}
+          {/*        key={item.id}*/}
+          {/*        style={{*/}
+          {/*          marginTop: 8,*/}
+          {/*          marginRight: 8,*/}
+          {/*        }}>*/}
+          {/*        {item.name}*/}
+          {/*      </Tag>*/}
+          {/*    );*/}
+          {/*  })}*/}
+          {/*</View>*/}
           {isPreview ? null : (
             <View style={{ marginTop: 20 }}>
               <SectionList
