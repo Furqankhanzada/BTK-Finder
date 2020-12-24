@@ -148,11 +148,11 @@ function BottomTabNavigator() {
       /> */}
       <BottomTab.Screen
         name="Profile"
-        component={isLogin ? Profile : Walkthrough}
+        component={Profile}
         options={{
-          title: t('account'),
+          title: 'More',
           tabBarIcon: ({ color }) => {
-            return <Icon solid color={color} name="user-circle" size={20} />;
+            return <Icon solid color={color} name="ellipsis-h" size={25} />;
           },
         }}
       />
