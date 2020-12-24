@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useRef, useState} from 'react';
 import {
   View,
   ScrollView,
@@ -55,6 +55,9 @@ export default function ProfileEdit({ navigation }) {
   const [imageUri, setImageUri] = useState('');
 
   const uploadProfileImageCallBack = () => {};
+
+  const nameRef = useRef(null);
+  const emailRef = useRef(null);
 
   const pickSingle = () => {
     ImagePicker.openPicker({
@@ -136,26 +139,6 @@ export default function ProfileEdit({ navigation }) {
           </TouchableOpacity>
           <View style={styles.contentTitle}>
             <Text headline semibold>
-              {t('name')}
-            </Text>
-          </View>
-          <TextInput
-            onChangeText={(text) => setName(text)}
-            placeholder={t('input_name')}
-            value={name}
-          />
-          <View style={styles.contentTitle}>
-            <Text headline semibold>
-              {t('email')}
-            </Text>
-          </View>
-          <TextInput
-            onChangeText={(text) => setEmail(text)}
-            placeholder={t('input_email')}
-            value={email}
-          />
-          <View style={styles.contentTitle}>
-            <Text headline semibold>
               {'Phone'}
             </Text>
           </View>
@@ -171,6 +154,38 @@ export default function ProfileEdit({ navigation }) {
             value={phone}
             autoCapitalize="none"
             mask={'+92 [000] [0000] [000]'}
+            returnKeyType="next"
+            onSubmitEditing={() => nameRef.current.focus()}
+            blurOnSubmit={false}
+          />
+          <View style={styles.contentTitle}>
+            <Text headline semibold>
+              {t('name')}
+            </Text>
+          </View>
+          <TextInput
+            ref={nameRef}
+            onChangeText={(text) => setName(text)}
+            placeholder={t('input_name')}
+            value={name}
+            onSubmitEditing={() => emailRef.current.focus()}
+          />
+          <View style={styles.contentTitle}>
+            <Text headline semibold>
+              {t('email')}
+            </Text>
+          </View>
+          <TextInput
+            ref={emailRef}
+            onChangeText={(text) => setEmail(text)}
+            placeholder={t('input_email')}
+            value={email}
+            keyboardType="email-address"
+            autoCorrect={false}
+            autoCapitalize="none"
+            returnKeyType="done"
+            onSubmitEditing={() => onSubmit()}
+            blurOnSubmit={true}
           />
         </ScrollView>
         <View style={{ paddingVertical: 15, paddingHorizontal: 20 }}>
