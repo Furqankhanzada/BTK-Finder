@@ -1,4 +1,10 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import React, {
+  Fragment,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import PropTypes from 'prop-types';
 import {
   View,
@@ -75,7 +81,7 @@ export default function PlaceDetailComponent(props) {
         fields: 'name, thumbnail, category, address, averageRatings',
       }),
     );
-  }, []);
+  }, [business.category, dispatch]);
 
   const navigateBusinessDetail = (id) => {
     navigation.push('PlaceDetail', { id });
@@ -191,7 +197,7 @@ export default function PlaceDetailComponent(props) {
       business.location && business.location.coordinates
         ? business.location.coordinates
         : null;
-    if (loc){
+    if (loc) {
       const payload = {
         latitude: loc[0],
         longitude: loc[1],
@@ -201,7 +207,7 @@ export default function PlaceDetailComponent(props) {
       setRegion(payload);
       reCenterMap(payload);
     }
-  }, []);
+  }, [business.location]);
 
   const onCollapse = () => {
     Utils.enableExperimental();
@@ -231,6 +237,15 @@ export default function PlaceDetailComponent(props) {
   };
 
   const heightImageBanner = Utils.scaleWithPixel(250, 1);
+
+  const getCoverImage = useCallback(() => {
+    if (business.gallery && business.gallery.length) {
+      return business.gallery.find((image) => image.cover).image;
+    } else {
+      return Images.imagePlaceholder;
+    }
+  }, [business]);
+
   return (
     <View style={{ flex: 1 }}>
       <Animated.View
@@ -247,7 +262,7 @@ export default function PlaceDetailComponent(props) {
             }),
           },
         ]}>
-        <Image source={Images.location7} style={{ flex: 1 }} />
+        <Image source={getCoverImage()} style={{ flex: 1 }} />
         {/*<Animated.View*/}
         {/*    style={{*/}
         {/*      position: 'absolute',*/}
@@ -283,16 +298,27 @@ export default function PlaceDetailComponent(props) {
               <Icon name="arrow-left" size={20} color={BaseColor.whiteColor} />
             );
           }}
-          renderRight={() => {
-            return (
-              <Icon name="images" size={20} color={BaseColor.whiteColor} />
-            );
-          }}
+          renderRight={
+            business.gallery && business.gallery.length
+              ? () => {
+                  return (
+                    <Icon
+                      name="images"
+                      size={20}
+                      color={BaseColor.whiteColor}
+                    />
+                  );
+                }
+              : null
+          }
           onPressLeft={() => {
             navigation.goBack();
           }}
           onPressRight={() => {
-            navigation.navigate('PreviewImage');
+            navigation.navigate('PreviewImage', {
+              title: business.name,
+              gallery: business.gallery,
+            });
           }}
         />
         <ScrollView
@@ -426,27 +452,41 @@ export default function PlaceDetailComponent(props) {
                 );
               }
             })}
-            {business?.openHours && business?.openHours?.length ? <Fragment>
+            {business?.openHours && business?.openHours?.length ? (
+              <Fragment>
                 <TouchableOpacity style={styles.line} onPress={onCollapse}>
-                  <View style={[styles.contentIcon, {backgroundColor: colors.border}]}>
+                  <View
+                    style={[
+                      styles.contentIcon,
+                      { backgroundColor: colors.border },
+                    ]}>
                     <Icon name="clock" size={16} color={BaseColor.whiteColor} />
                   </View>
                   <View style={styles.contentInforAction}>
                     <View>
-                      <Text caption2 grayColor> {t('open_hour')} </Text>
+                      <Text caption2 grayColor>
+                        {' '}
+                        {t('open_hour')}{' '}
+                      </Text>
                       <Text footnote semibold style={{ marginTop: 5 }}>
-                        {business.openHours[0].from ? business.openHours[0].from.toLowerCase() : ''}{' - '}
-                        {business.openHours[0].to ? business.openHours[0].to.toLowerCase() : ''}
+                        {business.openHours[0].from
+                          ? business.openHours[0].from.toLowerCase()
+                          : ''}
+                        {' - '}
+                        {business.openHours[0].to
+                          ? business.openHours[0].to.toLowerCase()
+                          : ''}
                       </Text>
                     </View>
                     <Icon
-                        name={collapseHour ? 'angle-down' : 'angle-up'}
-                        size={24}
-                        color={BaseColor.grayColor}
+                      name={collapseHour ? 'angle-down' : 'angle-up'}
+                      size={24}
+                      color={BaseColor.grayColor}
                     />
                   </View>
                 </TouchableOpacity>
-                {business?.openHours?.length > 1 ? <View
+                {business?.openHours?.length > 1 ? (
+                  <View
                     style={{
                       paddingLeft: 40,
                       paddingRight: 20,
@@ -454,22 +494,39 @@ export default function PlaceDetailComponent(props) {
                       height: collapseHour ? 0 : null,
                       overflow: 'hidden',
                     }}>
-                  {updateOpenHours(business.openHours).map((item) => {
-                    return (
-                        <View style={[styles.lineWorkHours, { borderColor: colors.border }]} key={item.day}>
-                          <Text body2 grayColor>{item.day}</Text>
-                          {'isOpen' in item && !item.isOpen ? <Text body2 accentColor semibold> Close </Text>: <Text body2 accentColor semibold>
-                            {item.from ? item.from.toLowerCase() : ''}
-                            {!(item.isOpen || item.from || item.to) ? 'Close' : ''}
-                            {(item.from && item.to) ? ' - ' : ''}
-                            {item.to ? item.to.toLowerCase() : ''}
-                          </Text>}
+                    {updateOpenHours(business.openHours).map((item) => {
+                      return (
+                        <View
+                          style={[
+                            styles.lineWorkHours,
+                            { borderColor: colors.border },
+                          ]}
+                          key={item.day}>
+                          <Text body2 grayColor>
+                            {item.day}
+                          </Text>
+                          {'isOpen' in item && !item.isOpen ? (
+                            <Text body2 accentColor semibold>
+                              {' '}
+                              Close{' '}
+                            </Text>
+                          ) : (
+                            <Text body2 accentColor semibold>
+                              {item.from ? item.from.toLowerCase() : ''}
+                              {!(item.isOpen || item.from || item.to)
+                                ? 'Close'
+                                : ''}
+                              {item.from && item.to ? ' - ' : ''}
+                              {item.to ? item.to.toLowerCase() : ''}
+                            </Text>
+                          )}
                         </View>
-                    );
-                  })}
-                </View> : null}
-              </Fragment>: null}
-
+                      );
+                    })}
+                  </View>
+                ) : null}
+              </Fragment>
+            ) : null}
           </View>
           <View
             style={[styles.contentDescription, { borderColor: colors.border }]}>
