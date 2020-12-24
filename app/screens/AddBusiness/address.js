@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import React, { Fragment, useEffect, useRef, useState, useCallback } from 'react';
 import {
   View,
   Platform,
@@ -63,7 +63,7 @@ export default function Address({ navigation }) {
     } else {
       getUserLocation();
     }
-  }, []);
+  }, [businessFormData.location, getUserLocation]);
 
   const [mapType, setMapType] = useState('standard');
   const [location, setLocation] = useState({
@@ -84,7 +84,7 @@ export default function Address({ navigation }) {
     });
   };
 
-  const getCurrentLocation = () => {
+  const getCurrentLocation = useCallback(() => {
     Geolocation.getCurrentPosition(
       (position) => {
         if (position && position.coords) {
@@ -107,8 +107,9 @@ export default function Address({ navigation }) {
       },
       { enableHighAccuracy: true, timeout: 5000, interval: 100 },
     );
-  };
-  const requestLocationPermissionForAndroid = async () => {
+  }, []);
+
+  const requestLocationPermissionForAndroid = useCallback(async () => {
     try {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
@@ -129,14 +130,16 @@ export default function Address({ navigation }) {
     } catch (err) {
       console.log('warn', 'An error accourd while enabling location');
     }
-  };
-  const getUserLocation = async () => {
+  }, [getCurrentLocation]);
+
+  const getUserLocation = useCallback(async () => {
     if (Platform.OS === 'android') {
       await requestLocationPermissionForAndroid();
     } else {
+      await Geolocation.requestAuthorization('whenInUse');
       getCurrentLocation();
     }
-  };
+  }, [getCurrentLocation, requestLocationPermissionForAndroid]);
 
   // satellite function and button start here
   const switchMapType = () => {

@@ -40,7 +40,7 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Do you want share your location?</string>
+	<string>We need your location for personalizing nearby results.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Raleway-Black.ttf</string>
