@@ -101,6 +101,8 @@ const HelpLine = React.memo(({ navigation }) => {
           title: 'Passation Department',
           numbers: btkNumbers,
           extension: '618',
+          description:
+            'Passation regarding to new homes, plots and properties.',
         },
       ],
     },
