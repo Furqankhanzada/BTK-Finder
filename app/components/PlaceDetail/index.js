@@ -184,7 +184,7 @@ export default function PlaceDetailComponent(props) {
   });
 
   const reCenterMap = (currentLocation) => {
-    mapRef.current.animateToRegion({
+    mapRef?.current?.animateToRegion({
       latitude: currentLocation.latitude,
       longitude: currentLocation.longitude,
       latitudeDelta: defaultDelta.latitudeDelta,

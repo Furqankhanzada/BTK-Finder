@@ -1,4 +1,10 @@
-import React, { Fragment, useEffect, useRef, useState, useCallback } from 'react';
+import React, {
+  Fragment,
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+} from 'react';
 import {
   View,
   Platform,
@@ -76,7 +82,7 @@ export default function Address({ navigation }) {
   });
 
   const reCenterMap = (currentLocation) => {
-    mapRef.current.animateToRegion({
+    mapRef?.current?.animateToRegion({
       latitude: currentLocation.latitude,
       longitude: currentLocation.longitude,
       latitudeDelta: defaultDelta.latitudeDelta,
