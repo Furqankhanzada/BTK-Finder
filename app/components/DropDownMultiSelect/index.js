@@ -14,6 +14,7 @@ export default function DropDownMultiSelect(props) {
     multipleText,
     defaultValue,
     onChangeItem,
+    max,
   } = props;
 
   return (
@@ -28,11 +29,11 @@ export default function DropDownMultiSelect(props) {
         multiple={true}
         multipleText={multipleText}
         min={0}
-        max={10}
+        max={max}
         zIndex={5000}
         containerStyle={{
           marginTop: 10,
-          height: 48,
+          minHeight: 48,
           width: '100%',
         }}
         style={{
@@ -78,6 +79,7 @@ DropDownMultiSelect.propTypes = {
   onChangeItem: PropTypes.func,
   placeholder: PropTypes.string,
   searchablePlaceholder: PropTypes.string,
+  max: PropTypes.number,
 };
 
 DropDownMultiSelect.defaultProps = {
@@ -86,4 +88,5 @@ DropDownMultiSelect.defaultProps = {
   onChangeItem: null,
   placeholder: '',
   searchablePlaceholder: '',
+  max: 10,
 };

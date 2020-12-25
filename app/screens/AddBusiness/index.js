@@ -52,6 +52,94 @@ export default function Business({ navigation }) {
     return { label: name, value: name };
   });
 
+  const [selectedTags, setSelectedTags] = useState([]);
+  const [tags] = useState([
+    {
+      label: 'Food',
+      value: 'Food',
+    },
+    {
+      label: 'Burger',
+      value: 'Burger',
+    },
+    {
+      label: 'Pizza',
+      value: 'Pizza',
+    },
+    {
+      label: 'Drink',
+      value: 'Drink',
+    },
+    {
+      label: 'Clothing',
+      value: 'Clothing',
+    },
+    {
+      label: 'Mens Cloth',
+      value: 'Mens Cloth',
+    },
+    {
+      label: 'Boys Cloth',
+      value: 'Boys Cloth',
+    },
+    {
+      label: 'Technician',
+      value: 'Technician',
+    },
+    {
+      label: 'School',
+      value: 'School',
+    },
+    {
+      label: 'College',
+      value: 'College',
+    },
+    {
+      label: 'University',
+      value: 'University',
+    },
+    {
+      label: 'Cinema',
+      value: 'Cinema',
+    },
+    {
+      label: 'Madarsa',
+      value: 'Madarsa',
+    },
+    {
+      label: 'Entertainment',
+      value: 'Entertainment',
+    },
+    {
+      label: 'Shopping',
+      value: 'Shopping',
+    },
+    {
+      label: 'Super Market',
+      value: 'Super Market',
+    },
+    {
+      label: 'Electrician',
+      value: 'Electrician',
+    },
+    {
+      label: 'Plumber',
+      value: 'Plumber',
+    },
+    {
+      label: 'Estate',
+      value: 'Estate',
+    },
+    {
+      label: 'Hospital',
+      value: 'Hospital',
+    },
+    {
+      label: 'Gym',
+      value: 'Gym',
+    },
+  ]);
+
   const [selectedFacilities, setSelectedFacilities] = useState([]);
   const [facilities] = useState([
     {
@@ -107,9 +195,8 @@ export default function Business({ navigation }) {
   });
 
   const submit = (values) => {
-    dispatch(setBusinessFormData({ ...values, tags: [] }));
+    dispatch(setBusinessFormData({ ...values, tags: selectedTags }));
     onNext();
-    console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@', values);
   };
 
   return (
@@ -201,6 +288,25 @@ export default function Business({ navigation }) {
                         {errors.category}
                       </Text>
                     ) : null}
+                  </View>
+
+                  <View
+                    style={[
+                      GlobalStyle.inputContainer,
+                      Platform.OS === 'ios' && {
+                        position: 'relative',
+                        zIndex: 1,
+                      },
+                    ]}>
+                    <DropDownMultiSelect
+                      items={tags}
+                      multipleText={selectedTags.toString()}
+                      defaultValue={selectedTags}
+                      onChangeItem={(item) => setSelectedTags(item)}
+                      placeholder={'Select Tags'}
+                      searchablePlaceholder={'Search for Tags'}
+                      max={15}
+                    />
                   </View>
 
                   <View
