@@ -52,8 +52,8 @@ export default function Business({ navigation }) {
     return { label: name, value: name };
   });
 
-  const [value, setValue] = useState([]);
-  const [items, setItems] = useState([
+  const [selectedFacilities, setSelectedFacilities] = useState([]);
+  const [facilities] = useState([
     {
       label: 'Free Wifi',
       value: 'Free Wifi',
@@ -77,7 +77,9 @@ export default function Business({ navigation }) {
     {
       label: 'Super Market',
       value: 'Super Market',
-      icon: () => <Icon name="shopping-cart" size={18} color={colors.primary} />,
+      icon: () => (
+        <Icon name="shopping-cart" size={18} color={colors.primary} />
+      ),
     },
     {
       label: 'Shuttle Bus',
@@ -110,13 +112,6 @@ export default function Business({ navigation }) {
     console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@', values);
   };
 
-  console.log(
-    'yah',
-    businessFormData.category
-      ? getSelectedCategory(businessFormData.category)
-      : null,
-  );
-
   return (
     <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
       <Header title="Add Your Business" />
@@ -139,9 +134,6 @@ export default function Business({ navigation }) {
             : '',
           category: businessFormData.category
             ? getSelectedCategory(businessFormData.category)
-            : '',
-          facilities: businessFormData.facilities
-            ? businessFormData.facilities
             : '',
         }}
         validationSchema={generalFormValidation}>
@@ -220,21 +212,13 @@ export default function Business({ navigation }) {
                       },
                     ]}>
                     <DropDownMultiSelect
-                      items={items}
-                      multipleText={value.toString()}
-                      defaultValue={value}
-                      onChangeItem={(item) =>
-                        setValue(item) &
-                        setFieldValue('facilities', value.toString())
-                      }
+                      items={facilities}
+                      multipleText={selectedFacilities.toString()}
+                      defaultValue={selectedFacilities}
+                      onChangeItem={(item) => setSelectedFacilities(item)}
                       placeholder={'Select Facilities'}
                       searchablePlaceholder={'Search for Facilities'}
                     />
-                    {errors.facilities ? (
-                      <Text style={GlobalStyle.errorText}>
-                        {errors.facilities}
-                      </Text>
-                    ) : null}
                   </View>
 
                   {/*<View style={GlobalStyle.inputContainer}>*/}

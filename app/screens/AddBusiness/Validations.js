@@ -22,12 +22,10 @@ const generalScheme = Yup.object().shape({
     )
     .typeError('Please enter website url'),
   category: Yup.string().label('Category').required('Please select a category'),
-  facilities: Yup.string().label('Facilities'),
   tags: Yup.string().label('Tags').typeError('Please enter tags'),
   established: Yup.date().typeError('Please select established date'),
 });
 export const generalFormValidation = generalScheme;
-
 
 const addressScheme = Yup.object().shape({
   address: Yup.string().label('Address').required('Please enter address'),
