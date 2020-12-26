@@ -27,8 +27,8 @@ export default function Profile(props) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getProfile());
-  }, [dispatch]);
+    isLogin ? dispatch(getProfile()) : null;
+  }, [dispatch, isLogin]);
 
   /**
    * @description Simple logout with Redux
