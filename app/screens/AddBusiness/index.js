@@ -9,12 +9,12 @@ import {
   Text,
   CustomStepIndicator,
   DropDown,
-  DropDownMultiSelect,
 } from '@components';
 import styles from './styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { ScrollView } from 'react-native-gesture-handler';
 import ActionButton from 'react-native-action-button';
+import { MultiselectDropdown } from 'sharingan-rn-modal-dropdown';
 import { generalFormValidation } from './Validations';
 import { Formik } from 'formik';
 import GlobalStyle from '../../assets/styling/GlobalStyle';
@@ -53,40 +53,60 @@ export default function Business({ navigation }) {
   });
 
   const [selectedFacilities, setSelectedFacilities] = useState([]);
-  const [facilities] = useState([
+  const onUpdateFacilities = (value: string[]) => {
+    setSelectedFacilities(value);
+  };
+  const facilities = [
     {
+      value: '1',
       label: 'Free Wifi',
-      value: 'Free Wifi',
-      icon: () => <Icon name="wifi" size={18} color={colors.primary} />,
+      avatarSource: {
+        uri:
+          'https://img.icons8.com/color/344/circled-user-male-skin-type-5.png',
+      },
     },
     {
+      value: '2',
       label: 'Shower',
-      value: 'Shower',
-      icon: () => <Icon name="shower" size={18} color={colors.primary} />,
+      avatarSource: {
+        uri:
+          'https://img.icons8.com/color/344/circled-user-male-skin-type-5.png',
+      },
     },
     {
+      value: '3',
       label: 'Pet Allowed',
-      value: 'Pet Allowed',
-      icon: () => <Icon name="paw" size={18} color={colors.primary} />,
+      avatarSource: {
+        uri:
+          'https://img.icons8.com/color/344/circled-user-male-skin-type-5.png',
+      },
     },
     {
+      value: '4',
       label: 'Open 24/7',
-      value: 'Open-24/7',
-      icon: () => <Icon name="clock" size={18} color={colors.primary} />,
+      avatarSource: {
+        uri:
+          'https://img.icons8.com/color/344/circled-user-male-skin-type-5.png',
+      },
     },
     {
+      value: '5',
       label: 'Super Market',
-      value: 'Super Market',
-      icon: () => (
-        <Icon name="shopping-cart" size={18} color={colors.primary} />
-      ),
+      avatarSource: {
+        uri:
+          'https://img.icons8.com/color/344/circled-user-male-skin-type-5.png',
+      },
     },
     {
+      value: '6',
       label: 'Shuttle Bus',
-      value: 'Shuttle Bus',
-      icon: () => <Icon name="bus" size={18} color={colors.primary} />,
+      avatarSource: {
+        uri:
+          'https://img.icons8.com/color/344/circled-user-male-skin-type-5.png',
+      },
     },
-  ]);
+  ];
+  console.log('######################', selectedFacilities);
 
   const getSelectedCategory = (selected) => {
     let foundCategory = null;
@@ -206,18 +226,38 @@ export default function Business({ navigation }) {
                   <View
                     style={[
                       GlobalStyle.inputContainer,
-                      Platform.OS === 'ios' && {
-                        position: 'relative',
-                        zIndex: 1,
-                      },
+                      { marginTop: 10, marginBottom: -15 },
                     ]}>
-                    <DropDownMultiSelect
-                      items={facilities}
-                      multipleText={selectedFacilities.toString()}
-                      defaultValue={selectedFacilities}
-                      onChangeItem={(item) => setSelectedFacilities(item)}
-                      placeholder={'Select Facilities'}
-                      searchablePlaceholder={'Search for Facilities'}
+                    <MultiselectDropdown
+                      label=""
+                      data={facilities}
+                      enableSearch
+                      enableAvatar
+                      floating
+                      elevation={0}
+                      borderRadius={7}
+                      searchPlaceholder="Search for a facility"
+                      emptyListText="No facility found"
+                      // itemTextStyle={{ color: colors.text }} //dropdown text not working
+                      textInputStyle={{
+                        backgroundColor: colors.card,
+                        height: 48,
+                      }}
+                      underlineColor={colors.card}
+                      parentDDContainerStyle={{
+                        marginTop: 100,
+                        // backgroundColor: colors.card,
+                      }} //Dropdown Container Style
+                      mainContainerStyle={{
+                        backgroundColor: colors.card,
+                        borderRadius: 5,
+                      }}
+                      chipType="outlined"
+                      // chipTextStyle={{  }}
+                      chipStyle={{ marginBottom: 10 }}
+                      emptySelectionText="Selected Facilities will appear here.."
+                      value={selectedFacilities}
+                      onChange={onUpdateFacilities}
                     />
                   </View>
 
