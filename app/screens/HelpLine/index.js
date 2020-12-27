@@ -47,6 +47,7 @@ const HelpLine = React.memo(({ navigation }) => {
         {
           title: 'Bahria Hospital',
           numbers: ['021111111284'],
+          image: Images.logo,
         },
         {
           title: 'Bahria Medical Center',
@@ -54,6 +55,7 @@ const HelpLine = React.memo(({ navigation }) => {
           extension: '660',
           description:
             '24/7 Pharmacy, Clinical & Interventional Neurology, Dental Centre, Eye Department and More.',
+          image: Images.logo,
         },
         {
           title: 'Bahria Security',
@@ -61,23 +63,30 @@ const HelpLine = React.memo(({ navigation }) => {
           extension: '624',
           description:
             'You can call on this number regarding to Bahria Town security issues.',
+          image: Images.logo,
         },
         {
-          title: 'Fire Brigade',
+          title: 'Bahria Fire Brigade',
           numbers: ['02138771555'],
           extension: '959',
           description:
             'Call to Bahria Fire Depart if their are fires in buildings, vehicles or on outdoor structures.',
+          image: Images.logo,
         },
         {
-          title: 'Ambulance',
+          title: 'Bahria Ambulance',
           numbers: ['02136435406'],
+          image: Images.logo,
         },
         {
-          title: 'Police Station',
-          numbers: ['02134644407', '02134642971'],
-          description:
-            'Call Bahria Town Police Station if you witness a crime like a robbery, an assault, or another type of criminal behavior.',
+          title: 'Madadgar (15)',
+          numbers: ['15'],
+          image: Images.madadgar15,
+        },
+        {
+          title: 'Edhi',
+          numbers: ['115'],
+          image: Images.edhi,
         },
       ],
     },
@@ -90,18 +99,28 @@ const HelpLine = React.memo(({ navigation }) => {
             'You can complain about anything like: Power break down, Water tanker request, Gas cylinder request, Electrical fault.',
           numbers: ['02134110447', '02138771555'],
           extension: '700',
+          image: Images.logo,
         },
         {
           title: 'Billing Department',
           numbers: btkNumbers,
           extension: '1031',
           description: 'Regarding Maintenance bill and electrical bill.',
+          image: Images.logo,
         },
         {
           title: 'Possession Department',
           numbers: btkNumbers,
           extension: '618',
           description: 'Regarding to new homes, plots and properties.',
+          image: Images.logo,
+        },
+        {
+          title: 'Police Station',
+          numbers: ['02134644407', '02134642971'],
+          description:
+            'Call Bahria Town Police Station if you witness a crime like a robbery, an assault, or another type of criminal behavior.',
+          image: Images.police,
         },
       ],
     },
@@ -110,7 +129,7 @@ const HelpLine = React.memo(({ navigation }) => {
   const Item = ({ record }) => (
     <HelpLineItem
       onPress={() => onItemClick(record)}
-      image={Images.logo}
+      image={record.image}
       txtLeftTitle={record.title}
       txtContent={record.extension ? `Dial Extension ${record.extension}` : ''}
       txtRight={'Date'}
