@@ -164,9 +164,6 @@ export default function Home({ navigation }) {
               </Button>
             );
           }}
-          onPressRight={() => {
-            // alert('there');
-          }}
         />
         <ScrollView
           onScroll={Animated.event([
@@ -275,7 +272,7 @@ export default function Home({ navigation }) {
           {/* Popular Businesses Section */}
           <SectionList
             title="Popular Businesses"
-            subTitle={t('popular_lologan')}
+            subTitle="Find the most interesting things"
             seeMoreFunc={() =>
               seeMore({
                 popular: true,
@@ -306,7 +303,7 @@ export default function Home({ navigation }) {
           {/* Recently Added Businesses Section */}
           <SectionList
             title="Recently Added Businesses"
-            subTitle={t('recent_sologan')}
+            subTitle="Lets find out what's new"
             seeMoreFunc={() =>
               seeMore({
                 title: 'Recently Added Businesses',

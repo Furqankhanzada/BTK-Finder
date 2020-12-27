@@ -98,11 +98,10 @@ const HelpLine = React.memo(({ navigation }) => {
           description: 'Regarding Maintenance bill and electrical bill.',
         },
         {
-          title: 'Passation Department',
+          title: 'Possession Department',
           numbers: btkNumbers,
           extension: '618',
-          description:
-            'Passation regarding to new homes, plots and properties.',
+          description: 'Regarding to new homes, plots and properties.',
         },
       ],
     },
