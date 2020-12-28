@@ -185,26 +185,28 @@ export default function PlaceItem(props) {
             <Text caption1 grayColor style={{ marginTop: 10 }}>
               {location}
             </Text>
-            <Text caption1 grayColor style={{ marginTop: 5 }}>
-              {phone}
-            </Text>
-            {isFavorite ? (
-              <Icon2
-                onPress={favoriteOnPress}
-                name={'heart'}
-                color={BaseColor.orangeColor}
-                size={18}
-                style={styles.iconListLike}
-              />
-            ) : (
-              <Icon
-                onPress={favoriteOnPress}
-                name={'heart'}
-                color={BaseColor.orangeColor}
-                size={18}
-                style={styles.iconListLike}
-              />
-            )}
+            <View style={{ display: 'flex', flexDirection: 'row' }}>
+              <Text caption1 grayColor style={{ marginTop: 5 }}>
+                {phone}
+              </Text>
+              {isFavorite ? (
+                <Icon2
+                  onPress={favoriteOnPress}
+                  name={'heart'}
+                  color={BaseColor.orangeColor}
+                  size={18}
+                  style={styles.iconListLike}
+                />
+              ) : (
+                <Icon
+                  onPress={favoriteOnPress}
+                  name={'heart'}
+                  color={BaseColor.orangeColor}
+                  size={18}
+                  style={styles.iconListLike}
+                />
+              )}
+            </View>
           </View>
         </TouchableOpacity>
       </View>
