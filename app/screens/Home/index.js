@@ -28,8 +28,9 @@ import FeaturedCategoryPlaceholderComponent from '../../components/Placeholders/
 import SectionList from './sectionList';
 import {
   getBusinesses,
-  getFavoriteIdsIntoStorage,
+  getFavoriteIdsIntoStorage, toggleFavorite,
 } from '../../actions/business';
+import PlaceItem from '../../components/PlaceItem';
 
 export default function Home({ navigation }) {
   const stateProps = useSelector(({ businesses }) => {
@@ -39,6 +40,7 @@ export default function Home({ navigation }) {
       recentlyAddedBusinesses: businesses.recentlyAddedBusinesses,
       getRecentlyAddedBusinessesLoading:
         businesses.getRecentlyAddedBusinessesLoading,
+      favoriteIds: businesses.favoriteIds,
     };
   });
 
@@ -90,7 +92,7 @@ export default function Home({ navigation }) {
         limit: 15,
         skip: 0,
         popular: true,
-        fields: 'name, thumbnail',
+        fields: 'name, thumbnail, category, address, averageRatings',
       }),
     );
     dispatch(
@@ -104,6 +106,10 @@ export default function Home({ navigation }) {
 
   const navigateBusinessDetail = (id) => {
     navigation.navigate('PlaceDetail', { id });
+  };
+
+  const favorite = (id) => {
+    dispatch(toggleFavorite(id));
   };
 
   const seeMore = (payload = {}) => {
@@ -284,19 +290,20 @@ export default function Home({ navigation }) {
             loading={stateProps.getPopularBusinessesLoading}
             renderItem={({ item, index }) => {
               return (
-                <Card
-                  key={index}
-                  style={[styles.popularItem, { marginLeft: 15 }]}
-                  image={item.thumbnail}
-                  onPress={() => navigateBusinessDetail(item._id)}>
-                  <Text
-                    headline
-                    whiteColor={item.thumbnail}
-                    grayColor={!item.thumbnail}
-                    semibold>
-                    {item.name}
-                  </Text>
-                </Card>
+                <PlaceItem
+                  grid
+                  image={item?.thumbnail}
+                  title={item.name}
+                  subtitle={item.category}
+                  location={item?.address}
+                  rate={item?.averageRatings || '0.0'}
+                  favoriteOnPress={() => favorite(item._id)}
+                  isFavorite={stateProps?.favoriteIds?.includes(item._id)}
+                  // status='Open Now'
+                  onPress={() => navigateBusinessDetail(item._id)}
+                  onPressTag={() => navigateToReview(item._id)}
+                  style={{ marginLeft: 15, width: 175 }}
+                />
               );
             }}
           />
