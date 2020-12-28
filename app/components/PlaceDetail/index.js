@@ -339,24 +339,6 @@ export default function PlaceDetailComponent(props) {
               <Text title1 semibold>
                 {business.name}
               </Text>
-              {/**/}
-              {isPreview ? null : stateProps?.favoriteIds?.includes(
-                  business._id,
-                ) ? (
-                <Icon2
-                  onPress={() => favorite(business._id)}
-                  name={'heart'}
-                  color={colors.primaryLight}
-                  size={24}
-                />
-              ) : (
-                <Icon
-                  onPress={() => favorite(business._id)}
-                  name={'heart'}
-                  color={colors.primaryLight}
-                  size={24}
-                />
-              )}
             </View>
             <View style={styles.lineSpace}>
               <View>
@@ -415,7 +397,23 @@ export default function PlaceDetailComponent(props) {
                   </TouchableOpacity>
                 )}
               </View>
-              {/*{isPreview ? null : <Tag status>{t('featured')}</Tag>}*/}
+              {isPreview ? null : stateProps?.favoriteIds?.includes(
+                  business._id,
+              ) ? (
+                <Icon2
+                  onPress={() => favorite(business._id)}
+                  name={'heart'}
+                  color={colors.primaryLight}
+                  size={24}
+                />
+              ) : (
+                <Icon
+                  onPress={() => favorite(business._id)}
+                  name={'heart'}
+                  color={colors.primaryLight}
+                  size={24}
+                />
+              )}
             </View>
             {information.map((item) => {
               if (item.information) {

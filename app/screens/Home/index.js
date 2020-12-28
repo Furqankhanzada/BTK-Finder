@@ -87,7 +87,7 @@ export default function Home({ navigation }) {
     dispatch(getFavoriteIdsIntoStorage());
     dispatch(
       getBusinesses({
-        limit: 5,
+        limit: 15,
         skip: 0,
         popular: true,
         fields: 'name, thumbnail',
@@ -95,7 +95,7 @@ export default function Home({ navigation }) {
     );
     dispatch(
       getBusinesses({
-        limit: 5,
+        limit: 15,
         skip: 0,
         fields: 'name, thumbnail, category, averageRatings',
       }),
