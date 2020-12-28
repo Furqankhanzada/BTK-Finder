@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import {
   View,
@@ -20,10 +20,13 @@ import { useTranslation } from 'react-i18next';
 import { login } from '../../actions/auth';
 import { showBetaModal } from '../../popup/betaPopup';
 
-export default function SignIn({ navigation }) {
+export default function SignIn(props) {
+  const { navigation, route } = props;
   const { colors } = useTheme();
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const { params } = route;
+  const passwordRef = useRef(null);
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -35,6 +38,7 @@ export default function SignIn({ navigation }) {
    *
    */
   const onLogin = () => {
+    let lastRoute = params && params.lastRoute ? params.lastRoute : '';
     if (username === '' || password === '') {
       setSuccess({
         ...success,
@@ -47,7 +51,7 @@ export default function SignIn({ navigation }) {
         login({ username, password }, (error) => {
           setLoading(false);
           if (!error) {
-            navigation.navigate('Profile');
+            navigation.navigate(lastRoute ? lastRoute : 'Profile');
           }
         }),
       );
@@ -93,8 +97,14 @@ export default function SignIn({ navigation }) {
             placeholder="Email"
             success={success.username}
             value={username}
+            textContentType="emailAddress"
+            keyboardType="email-address"
+            autoCorrect={false}
+            autoCapitalize="none"
+            onSubmitEditing={() => passwordRef.current.focus()}
           />
           <TextInput
+            ref={passwordRef}
             style={{ marginTop: 10 }}
             onChangeText={(text) => setPassword(text)}
             onFocus={() => {
@@ -107,6 +117,9 @@ export default function SignIn({ navigation }) {
             secureTextEntry={true}
             success={success.password}
             value={password}
+            onSubmitEditing={() => onLogin()}
+            returnKeyType="done"
+            blurOnSubmit={true}
           />
           <Button
             style={{ marginTop: 20 }}

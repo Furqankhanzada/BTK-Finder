@@ -1,7 +1,13 @@
-import React, {useState, useRef} from 'react';
-import {FlatList, RefreshControl, View, Animated} from 'react-native';
-import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
-import {BaseStyle, BaseColor, useTheme} from '@config';
+import React, { useState, useRef, useEffect } from 'react';
+import {
+  FlatList,
+  RefreshControl,
+  View,
+  Animated,
+  ActivityIndicator,
+} from 'react-native';
+import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
+import { BaseStyle, BaseColor, useTheme } from '@config';
 import Carousel from 'react-native-snap-carousel';
 import {
   Header,
@@ -10,15 +16,45 @@ import {
   PlaceItem,
   FilterSort,
   CardList,
+  Loading,
+  Text,
 } from '@components';
 import styles from './styles';
 import * as Utils from '@utils';
-import {PlaceListData} from '@data';
-import {useTranslation} from 'react-i18next';
+import { PlaceListData } from '@data';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllBusinesses, toggleFavorite } from '../../actions/business';
+import { showBetaModal } from '../../popup/betaPopup';
 
-export default function Place({navigation}) {
-  const {t} = useTranslation();
-  const {colors} = useTheme();
+export default function Place(props) {
+  const { navigation, route } = props;
+  const dispatch = useDispatch();
+  const [limit] = useState(10);
+  const [skip, setSkip] = useState(0);
+
+  useEffect(() => {
+    let payload = { limit, skip };
+    if (route?.params?.popular) {
+      payload.popular = true;
+    }
+    if (route?.params?.category) {
+      payload.category = route.params.category;
+    }
+    dispatch(getAllBusinesses(payload));
+  }, [skip]);
+
+  const stateProps = useSelector(({ businesses }) => {
+    return {
+      loading: businesses.getAllBusinessesLoading,
+      data: businesses.allBusinesses,
+      loadMoreLoading: businesses.getAllBusinessesLoadMoreLoading,
+      isLoadMore: businesses.getAllBusinessesLoadMore,
+      favoriteIds: businesses.favoriteIds,
+    };
+  });
+  const { t } = useTranslation();
+  const { colors } = useTheme();
   const scrollAnim = new Animated.Value(0);
   const offsetAnim = new Animated.Value(0);
   const clampedScroll = Animated.diffClamp(
@@ -54,7 +90,7 @@ export default function Place({navigation}) {
    * @param {*} percentage
    * @returns
    */
-  const getViewPort = percentage => {
+  const getViewPort = (percentage) => {
     const value = (percentage * viewportWidth) / 100;
     return Math.round(value);
   };
@@ -70,7 +106,8 @@ export default function Place({navigation}) {
    * @date 2019-09-01
    */
   const onFilter = () => {
-    navigation.navigate('Filter');
+    showBetaModal();
+    // navigation.navigate('Filter');
   };
 
   /**
@@ -101,7 +138,7 @@ export default function Place({navigation}) {
     setMapView(!mapView);
   };
 
-  const onSelectLocation = location => {
+  const onSelectLocation = (location) => {
     for (let index = 0; index < list.length; index++) {
       const element = list[index];
       if (
@@ -112,6 +149,49 @@ export default function Place({navigation}) {
         return;
       }
     }
+  };
+
+  const navigateBusinessDetail = (id) => {
+    navigation.navigate('PlaceDetail', { id });
+  };
+
+  const navigateToReview = (id) => {
+    navigation.navigate('Review', { id });
+  };
+
+  const onScrollHandler = () => {
+    if (stateProps.isLoadMore) {
+      setSkip(skip + 10);
+    }
+  };
+  const onRefreshHandler = () => {
+    // setLimit(10);
+    setSkip(0);
+  };
+
+  const renderFooter = () => {
+    if (!stateProps.loadMoreLoading && stateProps.isLoadMore) {
+      return (
+        <View style={styles.listFooter}>
+          <ActivityIndicator size="large" color={BaseColor.blueColor} />
+        </View>
+      );
+    }
+    return null;
+  };
+
+  const listEmptyComponent = () => {
+    return (
+      <View style={styles.sectionEmpty}>
+        <Text semibold style={styles.sectionEmptyText}>
+          No {route?.params?.title || t('place')} Available
+        </Text>
+      </View>
+    );
+  };
+
+  const favorite = (id) => {
+    dispatch(toggleFavorite(id));
   };
 
   /**
@@ -127,73 +207,13 @@ export default function Place({navigation}) {
       extrapolate: 'clamp',
     });
     switch (modeView) {
-      case 'block':
-        return (
-          <View style={{flex: 1}}>
-            <Animated.FlatList
-              contentContainerStyle={{
-                paddingTop: 50,
-              }}
-              refreshControl={
-                <RefreshControl
-                  colors={[colors.primary]}
-                  tintColor={colors.primary}
-                  refreshing={refreshing}
-                />
-              }
-              scrollEventThrottle={1}
-              onScroll={Animated.event(
-                [
-                  {
-                    nativeEvent: {
-                      contentOffset: {
-                        y: scrollAnim,
-                      },
-                    },
-                  },
-                ],
-                {useNativeDriver: true},
-              )}
-              data={list}
-              key={'block'}
-              keyExtractor={(item, index) => item.id}
-              renderItem={({item, index}) => (
-                <PlaceItem
-                  block
-                  image={item.image}
-                  title={item.title}
-                  subtitle={item.subtitle}
-                  location={item.location}
-                  phone={item.phone}
-                  rate={item.rate}
-                  status={item.status}
-                  rateStatus={item.rateStatus}
-                  numReviews={item.numReviews}
-                  onPress={() => navigation.navigate('PlaceDetail')}
-                  onPressTag={() => navigation.navigate('Review')}
-                />
-              )}
-            />
-            <Animated.View
-              style={[
-                styles.navbar,
-                {transform: [{translateY: navbarTranslate}]},
-              ]}>
-              <FilterSort
-                modeView={modeView}
-                onChangeSort={onChangeSort}
-                onChangeView={onChangeView}
-                onFilter={onFilter}
-              />
-            </Animated.View>
-          </View>
-        );
       case 'grid':
         return (
-          <View style={{flex: 1}}>
+          <View style={{ flex: 1 }}>
             <Animated.FlatList
               contentContainerStyle={{
                 paddingTop: 50,
+                flex: stateProps?.data?.length ? 0 : 1,
               }}
               columnWrapperStyle={{
                 paddingLeft: 5,
@@ -204,9 +224,11 @@ export default function Place({navigation}) {
                   colors={[colors.primary]}
                   tintColor={colors.primary}
                   refreshing={refreshing}
-                  onRefresh={() => {}}
+                  onRefresh={() => onRefreshHandler()}
                 />
               }
+              onEndReached={onScrollHandler}
+              onEndThreshold={0}
               scrollEventThrottle={1}
               onScroll={Animated.event(
                 [
@@ -218,31 +240,35 @@ export default function Place({navigation}) {
                     },
                   },
                 ],
-                {useNativeDriver: true},
+                { useNativeDriver: true },
               )}
               showsVerticalScrollIndicator={false}
               numColumns={2}
-              data={list}
+              data={stateProps.data}
               key={'gird'}
               keyExtractor={(item, index) => item.id}
-              renderItem={({item, index}) => (
+              ListFooterComponent={renderFooter}
+              ListEmptyComponent={listEmptyComponent}
+              renderItem={({ item, index }) => (
                 <PlaceItem
                   grid
-                  image={item.image}
-                  title={item.title}
-                  subtitle={item.subtitle}
-                  location={item.location}
-                  phone={item.phone}
-                  rate={item.rate}
-                  status={item.status}
-                  rateStatus={item.rateStatus}
-                  numReviews={item.numReviews}
+                  image={item?.thumbnail}
+                  title={item.name}
+                  subtitle={item.category}
+                  location={item.address}
+                  phone={item.telephone}
+                  rate={item?.averageRatings}
+                  status={item?.status}
+                  rateStatus={item?.rateStatus}
+                  numReviews={item?.reviews.length}
+                  favoriteOnPress={() => favorite(item._id)}
+                  isFavorite={stateProps?.favoriteIds?.includes(item._id)}
                   style={{
                     marginLeft: 15,
                     marginBottom: 15,
                   }}
-                  onPress={() => navigation.navigate('PlaceDetail')}
-                  onPressTag={() => navigation.navigate('Review')}
+                  onPress={() => navigateBusinessDetail(item._id)}
+                  onPressTag={() => navigateToReview(item._id)}
                 />
               )}
             />
@@ -250,7 +276,7 @@ export default function Place({navigation}) {
               style={[
                 styles.navbar,
                 {
-                  transform: [{translateY: navbarTranslate}],
+                  transform: [{ translateY: navbarTranslate }],
                 },
               ]}>
               <FilterSort
@@ -262,23 +288,25 @@ export default function Place({navigation}) {
             </Animated.View>
           </View>
         );
-
       case 'list':
         return (
-          <View style={{flex: 1}}>
+          <View style={{ flex: 1 }}>
             <Animated.FlatList
               contentContainerStyle={{
                 paddingTop: 50,
                 paddingHorizontal: 20,
+                flex: stateProps?.data?.length ? 0 : 1,
               }}
               refreshControl={
                 <RefreshControl
                   colors={[colors.primary]}
                   tintColor={colors.primary}
                   refreshing={refreshing}
-                  onRefresh={() => {}}
+                  onRefresh={() => onRefreshHandler()}
                 />
               }
+              onEndReached={onScrollHandler}
+              onEndThreshold={0}
               scrollEventThrottle={1}
               onScroll={Animated.event(
                 [
@@ -290,28 +318,32 @@ export default function Place({navigation}) {
                     },
                   },
                 ],
-                {useNativeDriver: true},
+                { useNativeDriver: true },
               )}
-              data={list}
+              data={stateProps.data}
               key={'list'}
               keyExtractor={(item, index) => item.id}
-              renderItem={({item, index}) => (
+              ListFooterComponent={renderFooter}
+              ListEmptyComponent={listEmptyComponent}
+              renderItem={({ item, index }) => (
                 <PlaceItem
                   list
-                  image={item.image}
-                  title={item.title}
-                  subtitle={item.subtitle}
-                  location={item.location}
-                  phone={item.phone}
-                  rate={item.rate}
-                  status={item.status}
-                  rateStatus={item.rateStatus}
-                  numReviews={item.numReviews}
+                  image={item?.thumbnail}
+                  title={item.name}
+                  subtitle={item.category}
+                  location={item.address}
+                  phone={item.telephone}
+                  rate={item?.averageRatings}
+                  status={item?.status}
+                  rateStatus={item?.rateStatus}
+                  numReviews={item?.reviews?.length}
+                  favoriteOnPress={() => favorite(item._id)}
+                  isFavorite={stateProps?.favoriteIds?.includes(item._id)}
                   style={{
                     marginBottom: 15,
                   }}
-                  onPress={() => navigation.navigate('PlaceDetail')}
-                  onPressTag={() => navigation.navigate('Review')}
+                  onPress={() => navigateBusinessDetail(item._id)}
+                  onPressTag={() => navigateToReview(item._id)}
                 />
               )}
             />
@@ -319,7 +351,7 @@ export default function Place({navigation}) {
               style={[
                 styles.navbar,
                 {
-                  transform: [{translateY: navbarTranslate}],
+                  transform: [{ translateY: navbarTranslate }],
                 },
               ]}>
               <FilterSort
@@ -333,19 +365,22 @@ export default function Place({navigation}) {
         );
       default:
         return (
-          <View style={{flex: 1}}>
+          <View style={{ flex: 1 }}>
             <Animated.FlatList
               contentContainerStyle={{
                 paddingTop: 50,
+                flex: stateProps?.data?.length ? 0 : 1,
               }}
               refreshControl={
                 <RefreshControl
                   colors={[colors.primary]}
                   tintColor={colors.primary}
                   refreshing={refreshing}
-                  onRefresh={() => {}}
+                  onRefresh={() => onRefreshHandler()}
                 />
               }
+              onEndReached={onScrollHandler}
+              onEndThreshold={0}
               scrollEventThrottle={1}
               onScroll={Animated.event(
                 [
@@ -357,32 +392,36 @@ export default function Place({navigation}) {
                     },
                   },
                 ],
-                {useNativeDriver: true},
+                { useNativeDriver: true },
               )}
-              data={list}
+              data={stateProps.data}
               key={'block'}
               keyExtractor={(item, index) => item.id}
-              renderItem={({item, index}) => (
+              ListEmptyComponent={listEmptyComponent}
+              renderItem={({ item, index }) => (
                 <PlaceItem
                   block
-                  image={item.image}
-                  title={item.title}
-                  subtitle={item.subtitle}
-                  location={item.location}
-                  phone={item.phone}
-                  rate={item.rate}
-                  status={item.status}
-                  rateStatus={item.rateStatus}
-                  numReviews={item.numReviews}
-                  onPress={() => navigation.navigate('PlaceDetail')}
-                  onPressTag={() => navigation.navigate('Review')}
+                  image={item?.thumbnail}
+                  title={item.name}
+                  subtitle={item.category}
+                  location={item.address}
+                  phone={item.telephone}
+                  rate={item?.averageRatings}
+                  status={item?.status}
+                  // rateStatus={item?.rateStatus}
+                  numReviews={item?.reviews?.length}
+                  favoriteOnPress={() => favorite(item._id)}
+                  isFavorite={stateProps?.favoriteIds?.includes(item._id)}
+                  onPress={() => navigateBusinessDetail(item._id)}
+                  onPressTag={() => navigateToReview(item._id)}
                 />
               )}
+              ListFooterComponent={renderFooter}
             />
             <Animated.View
               style={[
                 styles.navbar,
-                {transform: [{translateY: navbarTranslate}]},
+                { transform: [{ translateY: navbarTranslate }] },
               ]}>
               <FilterSort
                 modeView={modeView}
@@ -399,14 +438,17 @@ export default function Place({navigation}) {
 
   const renderMapView = () => {
     return (
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <MapView provider={PROVIDER_GOOGLE} style={styles.map} region={region}>
-          {list.map((item, index) => {
+          {stateProps.data.map((item, index) => {
             return (
               <Marker
-                onPress={e => onSelectLocation(e.nativeEvent.coordinate)}
-                key={item.id}
-                coordinate={item.region}>
+                onPress={(e) => onSelectLocation(e.nativeEvent.coordinate)}
+                key={item._id}
+                coordinate={{
+                  latitude: item?.location?.coordinates[0],
+                  longitude: item?.location?.coordinates[1],
+                }}>
                 <View
                   style={[
                     styles.iconLocation,
@@ -428,16 +470,16 @@ export default function Place({navigation}) {
             );
           })}
         </MapView>
-        <View style={{position: 'absolute', bottom: 0}}>
+        <View style={{ position: 'absolute', bottom: 0 }}>
           <Carousel
             ref={sliderRef}
-            data={list}
-            renderItem={({item, index}) => (
+            data={stateProps.data}
+            renderItem={({ item, index }) => (
               <CardList
-                image={item.image}
-                title={item.title}
-                subtitle={item.subtitle}
-                rate={item.rate}
+                image={item?.thumbnail}
+                title={item.name}
+                subtitle={item.category}
+                rate={item?.averageRatings}
                 style={{
                   margin: 3,
                   padding: 10,
@@ -452,8 +494,8 @@ export default function Place({navigation}) {
                   shadowRadius: 3.84,
                   elevation: 5,
                 }}
-                onPress={() => navigation.navigate('PlaceDetail')}
-                onPressTag={() => navigation.navigate('Review')}
+                onPress={() => navigateBusinessDetail(item._id)}
+                onPressTag={() => navigateToReview(item._id)}
               />
             )}
             sliderWidth={viewportWidth}
@@ -461,17 +503,21 @@ export default function Place({navigation}) {
             firstItem={1}
             inactiveSlideScale={0.95}
             inactiveSlideOpacity={0.85}
-            contentContainerCustomStyle={{paddingVertical: 10}}
+            contentContainerCustomStyle={{ paddingVertical: 10 }}
             loop={true}
             loopClonesPerSide={2}
             autoplay={false}
-            onSnapToItem={index => {
+            onSnapToItem={(index) => {
               setActive(index);
               setRegion({
                 latitudeDelta: 0.009,
                 longitudeDelta: 0.004,
-                latitude: list[index] && list[index].region.latitude,
-                longitude: list[index] && list[index].region.longitude,
+                latitude:
+                  stateProps.data[index] &&
+                  stateProps.data[index]?.location?.coordinates[0],
+                longitude:
+                  stateProps.data[index] &&
+                  stateProps.data[index]?.location?.coordinates[1],
               });
             }}
           />
@@ -481,9 +527,9 @@ export default function Place({navigation}) {
   };
 
   return (
-    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{top: 'always'}}>
+    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
       <Header
-        title={t('place')}
+        title={route?.params?.title || t('place')}
         renderLeft={() => {
           return (
             <Icon
@@ -510,16 +556,17 @@ export default function Place({navigation}) {
           return <Icon name="search" size={20} color={colors.primary} />;
         }}
         onPressRightSecond={() => {
-          navigation.navigate('SearchHistory');
-        }}
-        onPressLeft={() => {
-          navigation.goBack();
+          showBetaModal();
+          // navigation.navigate('SearchHistory');
         }}
         onPressRight={() => {
           onChangeMapView();
         }}
       />
-      {mapView ? renderMapView() : renderList()}
+      <View style={{ position: 'relative', flex: 1 }}>
+        <Loading loading={stateProps.loading} />
+        {mapView ? renderMapView() : renderList()}
+      </View>
     </SafeAreaView>
   );
 }

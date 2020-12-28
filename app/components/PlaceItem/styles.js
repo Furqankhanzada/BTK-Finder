@@ -1,6 +1,5 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 import * as Utils from '@utils';
-import {BaseColor} from '@config';
 
 export default StyleSheet.create({
   //block css
@@ -43,7 +42,7 @@ export default StyleSheet.create({
   listContent: {
     flexDirection: 'row',
   },
-  listContentRight: {paddingLeft: 10, paddingVertical: 5, flex: 1},
+  listContentRight: { paddingLeft: 10, paddingVertical: 5, flex: 1 },
   lineRate: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -56,8 +55,8 @@ export default StyleSheet.create({
   },
   iconListLike: {
     position: 'absolute',
-    bottom: 0,
-    right: 0,
+    bottom: 10,
+    right: 5,
   },
   //gird css
   girdImage: {

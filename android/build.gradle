@@ -5,7 +5,7 @@ buildscript {
         compileSdkVersion = 29
         targetSdkVersion = 29
         supportLibVersion = "28.0.3"
-        googlePlayServicesVersion = "16.1.0"
+        googlePlayServicesVersion = "17.0.0"
         androidMapsUtilsVersion = "0.5+"
     }
     repositories {
@@ -13,7 +13,8 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.0'
+        classpath 'com.google.gms:google-services:4.3.3'
+        classpath 'com.android.tools.build:gradle:4.1.1'
         classpath 'com.android.support:multidex:1.0.3'
     }
 }
@@ -21,11 +22,13 @@ buildscript {
 allprojects {
     repositories {
         mavenLocal()
+        jcenter()
         maven {
             url "$rootDir/../node_modules/react-native/android"
         }
         google()
         jcenter()
         maven { url 'https://www.jitpack.io' }
+        maven { url 'https://maven.google.com' }
     }
 }

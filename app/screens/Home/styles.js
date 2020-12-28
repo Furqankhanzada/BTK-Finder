@@ -1,5 +1,6 @@
 import {StyleSheet} from 'react-native';
 import * as Utils from '@utils';
+import {BaseColor} from "../../config";
 
 export default StyleSheet.create({
   imageBackground: {
@@ -51,4 +52,48 @@ export default StyleSheet.create({
     width: Utils.scaleWithPixel(135),
     height: Utils.scaleWithPixel(160),
   },
+
+  section: {
+    marginBottom: 25
+  },
+  sectionHeader: {
+    marginHorizontal: 20,
+    marginBottom: 15,
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  sectionHeaderContent: {
+    flex: 1,
+    alignItems: 'flex-start'
+  },
+  sectionHeaderButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  sectionHeaderButtonText: {
+    fontSize: 16,
+    color: BaseColor.blueColor
+  },
+  sectionHeaderButtonIcon: {
+    marginLeft: 5,
+    fontSize: 18,
+    color: BaseColor.blueColor
+  },
+  sectionLoading: {
+    height: Utils.scaleWithPixel(160),
+    position: 'relative'
+  },
+  sectionEmpty: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: Utils.scaleWithPixel(160),
+    flex: 1,
+  },
+  sectionEmptyText: {
+    textAlign: 'center'
+  },
+  sectionListContainer: {
+    paddingLeft: 5,
+    paddingRight: 15
+  }
 });

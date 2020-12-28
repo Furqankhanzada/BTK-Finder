@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { View, KeyboardAvoidingView, Platform } from 'react-native';
-import { BaseStyle, useTheme } from '@config';
+import { BaseStyle, BaseColor, useTheme } from '@config';
 import { Header, SafeAreaView, Icon, Button, TextInput } from '@components';
 import TextInputMask from 'react-native-text-input-mask';
 import { useDispatch } from 'react-redux';
@@ -9,7 +9,14 @@ import { useTranslation } from 'react-i18next';
 import { register } from '../../actions/auth';
 import Toast from 'react-native-toast-message';
 
-export default function SignUp({ navigation }) {
+export default function SignUp(props) {
+  const { navigation, route } = props;
+  const { params } = route;
+
+  const nameRef = useRef(null);
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
+
   const { colors } = useTheme();
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -31,6 +38,8 @@ export default function SignUp({ navigation }) {
    *
    */
   const onSignUp = () => {
+    let lastRoute = params && params.lastRoute ? params.lastRoute : '';
+
     if (name === '' || email === '' || phone === '' || password === '') {
       setSuccess({
         ...success,
@@ -47,7 +56,7 @@ export default function SignUp({ navigation }) {
       register({ name, email, phone, password }, (error) => {
         setLoading(false);
         if (!error) {
-          navigation.navigate('SignIn');
+          navigation.navigate('SignIn', { lastRoute });
           Toast.show({
             type: 'success',
             topOffset: 55,
@@ -86,13 +95,34 @@ export default function SignUp({ navigation }) {
         keyboardVerticalOffset={offsetKeyboard}
         style={{ flex: 1 }}>
         <View style={styles.contain}>
+          <TextInputMask
+            style={[
+              styles.textInput,
+              { backgroundColor: colors.card, color: colors.text },
+            ]}
+            onChangeText={(text) => setPhone(text)}
+            placeholder="+92 300 1234 567"
+            placeholderTextColor={BaseColor.grayColor}
+            keyboardType="numeric"
+            success={success.phone}
+            value={phone}
+            autoCapitalize="none"
+            mask={'+92 [000] [0000] [000]'}
+            returnKeyType="next"
+            onSubmitEditing={() => nameRef.current.focus()}
+            blurOnSubmit={false}
+          />
           <TextInput
+            ref={nameRef}
+            style={{ marginTop: 10 }}
             onChangeText={(text) => setName(text)}
             placeholder="Name"
             success={success.name}
             value={name}
+            onSubmitEditing={() => emailRef.current.focus()}
           />
           <TextInput
+            ref={emailRef}
             style={{ marginTop: 10 }}
             onChangeText={(text) => setEmail(text)}
             placeholder="Email"
@@ -100,21 +130,10 @@ export default function SignUp({ navigation }) {
             success={success.email}
             value={email}
             autoCapitalize="none"
-          />
-          <TextInputMask
-            style={styles.textInput}
-            refInput={(ref) => {
-              this.input = ref;
-            }}
-            onChangeText={(text) => setPhone(text)}
-            placeholder="+92 300 1234 567"
-            keyboardType="numeric"
-            success={success.phone}
-            value={phone}
-            autoCapitalize="none"
-            mask={'+92 [000] [0000] [000]'}
+            onSubmitEditing={() => passwordRef.current.focus()}
           />
           <TextInput
+            ref={passwordRef}
             style={{ marginTop: 10 }}
             onChangeText={(text) => setPassword(text)}
             placeholder="Password"
@@ -122,6 +141,9 @@ export default function SignUp({ navigation }) {
             success={success.password}
             value={password}
             autoCapitalize="none"
+            returnKeyType="done"
+            blurOnSubmit={true}
+            onSubmitEditing={() => onSignUp()}
           />
           <Button
             full

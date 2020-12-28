@@ -8,8 +8,9 @@ import { useSelector } from 'react-redux';
 
 /* Bottom Screen */
 import Home from '@screens/Home';
-import Notification from '@screens/Notification';
-import Wishlist from '@screens/Wishlist';
+// import Notification from '@screens/Notification';
+import Business from '@screens/AddBusiness';
+import Favourite from '@screens/Favourite';
 import Messenger from '@screens/Messenger';
 import Profile from '@screens/Profile';
 
@@ -31,6 +32,11 @@ import ChangeLanguage from '@screens/ChangeLanguage';
 import PlaceDetail from '@screens/PlaceDetail';
 import ContactUs from '@screens/ContactUs';
 import AboutUs from '@screens/AboutUs';
+import Address from '@screens/AddBusiness/address';
+import Hours from '@screens/AddBusiness/hours';
+import PriceRange from '@screens/AddBusiness/priceRange';
+import FinalReview from '@screens/AddBusiness/review';
+import Gallery from '@screens/AddBusiness/gallery';
 
 const MainStack = createStackNavigator();
 const BottomTab = createBottomTabNavigator();
@@ -55,7 +61,7 @@ export default function Main() {
       <MainStack.Screen name="Review" component={Review} />
       <MainStack.Screen name="Feedback" component={Feedback} />
       <MainStack.Screen name="Messages" component={Messages} />
-      <MainStack.Screen name="Notification" component={Notification} />
+      {/* <MainStack.Screen name="Notification" component={Notification} /> */}
       <MainStack.Screen name="ResetPassword" component={ResetPassword} />
       <MainStack.Screen name="ChangePassword" component={ChangePassword} />
       <MainStack.Screen name="ProfileEdit" component={ProfileEdit} />
@@ -63,6 +69,12 @@ export default function Main() {
       <MainStack.Screen name="PlaceDetail" component={PlaceDetail} />
       <MainStack.Screen name="ContactUs" component={ContactUs} />
       <MainStack.Screen name="AboutUs" component={AboutUs} />
+      {/*<MainStack.Screen name="Business" component={Business} />*/}
+      <MainStack.Screen name="Address" component={Address} />
+      <MainStack.Screen name="Hours" component={Hours} />
+      <MainStack.Screen name="PriceRange" component={PriceRange} />
+      <MainStack.Screen name="FinalReview" component={FinalReview} />
+      <MainStack.Screen name="Gallery" component={Gallery} />
     </MainStack.Navigator>
   );
 }
@@ -99,26 +111,32 @@ function BottomTabNavigator() {
       />
 
       <BottomTab.Screen
-        name="Wishlist"
-        component={Wishlist}
+        name="Favourite"
+        component={Favourite}
         options={{
-          title: t('wishlist'),
+          title: 'Favourite',
           tabBarIcon: ({ color }) => {
-            return <Icon color={color} name="bookmark" size={20} solid />;
+            return <Icon color={color} name="heart" size={20} solid />;
           },
         }}
       />
       <BottomTab.Screen
-        name="Messenger"
-        component={Messenger}
+        name="Business"
+        component={(props) =>
+          isLogin ? (
+            <Business {...props} />
+          ) : (
+            <Walkthrough lastRoute={'Business'} {...props} />
+          )
+        }
         options={{
-          title: t('messenger'),
+          title: 'Add Business',
           tabBarIcon: ({ color }) => {
-            return <Icon color={color} name="envelope" size={20} solid />;
+            return <Icon color={color} name="business-time" size={20} solid />;
           },
         }}
       />
-      <BottomTab.Screen
+      {/* <BottomTab.Screen
         name="Notification"
         component={Notification}
         options={{
@@ -127,14 +145,14 @@ function BottomTabNavigator() {
             return <Icon color={color} name="bell" size={20} solid />;
           },
         }}
-      />
+      /> */}
       <BottomTab.Screen
         name="Profile"
-        component={isLogin ? Profile : Walkthrough}
+        component={Profile}
         options={{
-          title: t('account'),
+          title: 'More',
           tabBarIcon: ({ color }) => {
-            return <Icon solid color={color} name="user-circle" size={20} />;
+            return <Icon solid color={color} name="ellipsis-h" size={25} />;
           },
         }}
       />

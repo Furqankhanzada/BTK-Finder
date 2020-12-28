@@ -22,9 +22,23 @@ export default StyleSheet.create({
     color: BaseColor.grayColor,
   },
   thumb: {
+    width: '100%',
+    height: '100%',
+  },
+  thumbContainer: {
+    flexDirection: 'row',
+    position: 'relative',
+    borderRadius: 50,
+    borderWidth: 1,
+    overflow: 'hidden',
     width: 100,
     height: 100,
-    borderRadius: 50,
-    marginBottom: 20,
+    marginBottom: 15
   },
+
+  imageLoading: {
+    ...StyleSheet.absoluteFill,
+    backgroundColor: 'red',
+    zIndex: 1
+  }
 });
