@@ -10,10 +10,10 @@ const generalScheme = Yup.object().shape({
     .email('please enter a valid email')
     .typeError('Please enter a registered email'),
   telephone: Yup.string()
-    .matches(
-      /^((\+92)|(0092)|(021))-{0,1}\d{3}-{0,1}\d{7}$|^\d{11}$|^\d{12}$|^\d{4}-\d{7}$/,
-      'Phone number is not valid',
-    )
+    // .matches(
+    //   /^((\+92)|(0092)|(021))-{0,1}\d{3}-{0,1}\d{7}$|^\d{11}$|^\d{12}$|^\d{4}-\d{7}$/,
+    //   'Phone number is not valid',
+    // )
     .required('Please enter phone number'),
   website: Yup.string()
     .matches(
@@ -26,7 +26,6 @@ const generalScheme = Yup.object().shape({
   established: Yup.date().typeError('Please select established date'),
 });
 export const generalFormValidation = generalScheme;
-
 
 const addressScheme = Yup.object().shape({
   address: Yup.string().label('Address').required('Please enter address'),
