@@ -8,7 +8,7 @@ export default function CustomStepIndicator(props) {
   const { colors } = useTheme();
 
   const { position } = props;
-  const labels = ['General', 'Address', 'Hours', 'Price Range', 'Review'];
+  const labels = ['General', 'Address', 'Hours', 'Price Range', 'Gallery', 'Review'];
   const customStyles = {
     stepIndicatorSize: 25,
     currentStepIndicatorSize: 30,
@@ -38,7 +38,7 @@ export default function CustomStepIndicator(props) {
       customStyles={customStyles}
       currentPosition={position}
       labels={labels}
-      stepCount={5}
+      stepCount={6}
     />
   )
 }
@@ -46,7 +46,7 @@ export default function CustomStepIndicator(props) {
 CustomStepIndicator.propTypes = {
     position: PropTypes.string,
   };
-  
+
 CustomStepIndicator.defaultProps = {
     position: '',
 };

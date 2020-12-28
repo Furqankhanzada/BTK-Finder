@@ -1,26 +1,29 @@
 import React from "react";
 import { View, ActivityIndicator } from "react-native";
-import { BaseColor } from "@config";
+import { BaseColor, useTheme } from "@config";
 import PropTypes from "prop-types";
 import styles from "./styles";
 
-export default function Loading({loading}) {
+export default function Loading({loading, style}) {
+    const {colors} = useTheme();
     if(!loading) return null;
-  return (
-    <View style={styles.container}>
-        <ActivityIndicator
-          size="large"
-          color={BaseColor.blueColor}
-          style={{}}
-        />
-    </View>
-  );
+    return (
+        <View style={[styles.container, {backgroundColor: colors.background}, style]}>
+            <ActivityIndicator
+                size="large"
+                color={BaseColor.blueColor}
+                style={{}}
+            />
+        </View>
+    );
 }
 
 Loading.propTypes = {
-  loading: PropTypes.bool
+    style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
+    loading: PropTypes.bool
 };
 
 Loading.defaultProps = {
-  loading: false
+    style: {},
+    loading: false
 };

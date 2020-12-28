@@ -1,49 +1,68 @@
 import React from 'react';
 import { View } from 'react-native';
+import { useTheme } from '@config';
 import {
   Header,
   SafeAreaView,
   Icon,
   CustomStepIndicator,
   PlaceDetailComponent,
-  Loading
+  Loading,
 } from '@components';
 import ActionButton from 'react-native-action-button';
-import {useDispatch, useSelector} from "react-redux";
-import {createBusiness} from "../../actions/business";
+import { useDispatch, useSelector } from 'react-redux';
+import { createBusiness } from '../../actions/business';
 
 export default function FinalReview({ navigation }) {
+  const { colors } = useTheme();
   const dispatch = useDispatch();
 
-  const stateProps = useSelector(({businesses}) => businesses);
+  const stateProps = useSelector(({ businesses }) => businesses);
 
-  const { businessFormData, createBusinessLoading } = stateProps;
+  const {
+    businessFormData,
+    createBusinessLoading,
+    thumbnail,
+    gallery,
+  } = stateProps;
 
   const addCallback = () => {
     navigation.navigate('Home');
   };
 
   const add = () => {
-    let payload = {...businessFormData};
+    let payload = { ...businessFormData };
     let openHours = [];
-    if(payload.openHours) {
+    if (payload.openHours) {
       payload.openHours.forEach((obj) => {
-        if(obj.isOpen && (obj.to || obj.from)){
+        if (obj.isOpen && (obj.to || obj.from)) {
           openHours.push({
             day: obj.day,
             to: obj.to,
-            from: obj.from
-          })
+            from: obj.from,
+          });
         }
-      })
+      });
+    }
+    if (!payload.email) {
+      delete payload.email;
+    }
+    if (!payload.website) {
+      delete payload.website;
     }
     payload.openHours = openHours;
-    dispatch(createBusiness(payload, addCallback))
+    if (thumbnail) {
+      payload.thumbnail = thumbnail;
+    }
+    if (gallery) {
+      payload.gallery = gallery;
+    }
+    dispatch(createBusiness(payload, addCallback));
   };
 
   return (
     <View style={{ flex: 1, position: 'relative' }}>
-      <Loading loading={createBusinessLoading}/>
+      <Loading loading={createBusinessLoading} />
       <SafeAreaView style={{ flex: 1 }} forceInset={{ top: 'always' }}>
         <Header
           title={'Add Your Business'}
@@ -61,10 +80,14 @@ export default function FinalReview({ navigation }) {
             navigation.goBack();
           }}
         />
-        <CustomStepIndicator position={4} />
-        <PlaceDetailComponent business={businessFormData} />
+        <CustomStepIndicator position={5} />
+        <PlaceDetailComponent
+          business={businessFormData}
+          navigation={navigation}
+        />
         <ActionButton
-          buttonColor="rgba(93, 173, 226, 1)"
+          buttonColor={colors.primary}
+          nativeFeedbackRippleColor="transparent"
           onPress={() => add()}
           offsetX={20}
           offsetY={10}

@@ -4,7 +4,11 @@ import PropTypes from 'prop-types';
 import FastImage from 'react-native-fast-image';
 
 export default function Image(props) {
-  const { style, resizeMode, ...rest } = props;
+  let { style, resizeMode, source, ...rest } = props;
+  source =
+    typeof source === 'string' && source.indexOf('http') !== -1
+      ? { uri: source }
+      : source;
   let resize = FastImage.resizeMode.cover;
   switch (resizeMode) {
     case 'contain':
@@ -21,6 +25,7 @@ export default function Image(props) {
   }
   return (
     <FastImage
+      source={source}
       style={StyleSheet.flatten([style && style])}
       {...rest}
       resizeMode={resize}

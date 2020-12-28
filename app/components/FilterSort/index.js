@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import {BaseColor, useTheme} from '@config';
 import Modal from 'react-native-modal';
 import {useTranslation} from 'react-i18next';
+import {showBetaModal} from "../../popup/betaPopup";
 
 export default function FilterSort(props) {
   const {colors} = useTheme();
@@ -40,16 +41,17 @@ export default function FilterSort(props) {
   };
 
   const onOpenSort = () => {
-    setModalVisible(true);
-
-    setSortOption(
-      sortOption.map(item => {
-        return {
-          ...item,
-          checked: item.value == sortSelected.value,
-        };
-      }),
-    );
+    showBetaModal()
+    // setModalVisible(true);
+    //
+    // setSortOption(
+    //   sortOption.map(item => {
+    //     return {
+    //       ...item,
+    //       checked: item.value == sortSelected.value,
+    //     };
+    //   }),
+    // );
   };
 
   const onApply = () => {

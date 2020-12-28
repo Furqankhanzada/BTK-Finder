@@ -8,7 +8,8 @@ export default StyleSheet.create({
   },
   inputContainer: {
     flexDirection: 'column',
-    width: '100%'
+    width: '100%',
+    position: 'relative',
   },
   datePickerContainer: {
     height: 46,
@@ -20,7 +21,6 @@ export default StyleSheet.create({
     // flex: 1
   },
   datePickerContainerText: {
-    fontSize: 14,
-    fontFamily: 'Tahoma'
+    fontSize: 14
   }
 });

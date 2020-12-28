@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useRef } from 'react';
-import { View, Platform, I18nManager, TouchableOpacity } from 'react-native';
-import { BaseStyle, BaseColor, useTheme } from '@config';
+import { View, Platform, TouchableOpacity } from 'react-native';
+import { BaseStyle, useTheme, BaseColor } from '@config';
 import {
   Header,
   SafeAreaView,
@@ -8,27 +8,32 @@ import {
   TextInput,
   Text,
   CustomStepIndicator,
+  DropDown,
 } from '@components';
 import styles from './styles';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ScrollView } from 'react-native-gesture-handler';
 import ActionButton from 'react-native-action-button';
-import DropDownPicker from 'react-native-dropdown-picker';
 import { generalFormValidation } from './Validations';
 import { Formik } from 'formik';
 import GlobalStyle from '../../assets/styling/GlobalStyle';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
-import {setBusinessFormData} from "../../actions/business";
+import { setBusinessFormData } from '../../actions/business';
 
 export default function Business({ navigation }) {
+  const description = useRef(null);
+  const telephone = useRef(null);
+  const email = useRef(null);
+  const website = useRef(null);
+
   const formRef = useRef();
   const dispatch = useDispatch();
-  const stateProps = useSelector(({categories, businesses}) => {
+  const stateProps = useSelector(({ categories, businesses }) => {
     return {
       categories: categories.all,
-      businesses
-    }
+      businesses,
+    };
   });
   const { businessFormData } = stateProps.businesses;
 
@@ -52,11 +57,13 @@ export default function Business({ navigation }) {
   });
 
   const getSelectedCategory = (selected) => {
-      let foundCategory = null;
-      if(stateProps.categories && stateProps.categories.length){
-          foundCategory = stateProps.categories.find(obj => obj.name === selected)
-      }
-      return foundCategory ? foundCategory.name : ''
+    let foundCategory = null;
+    if (stateProps.categories && stateProps.categories.length) {
+      foundCategory = stateProps.categories.find(
+        (obj) => obj.name === selected,
+      );
+    }
+    return foundCategory ? foundCategory.name : '';
   };
 
   const { colors } = useTheme();
@@ -68,11 +75,9 @@ export default function Business({ navigation }) {
   });
 
   const submit = (values) => {
-    dispatch(setBusinessFormData({...values, tags: []}));
-    onNext()
+    dispatch(setBusinessFormData({ ...values, tags: [] }));
+    onNext();
   };
-
-  console.log('yah', businessFormData.category ? getSelectedCategory(businessFormData.category) : null)
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
@@ -83,12 +88,20 @@ export default function Business({ navigation }) {
         onSubmit={(values) => submit(values)}
         initialValues={{
           name: businessFormData.name ? businessFormData.name : '',
-          description: businessFormData.description ? businessFormData.description : '',
-          telephone: businessFormData.telephone ? businessFormData.telephone : '',
+          description: businessFormData.description
+            ? businessFormData.description
+            : '',
+          telephone: businessFormData.telephone
+            ? businessFormData.telephone
+            : '',
           website: businessFormData.website ? businessFormData.website : '',
           email: businessFormData.email ? businessFormData.email : '',
-          established: businessFormData.established ? businessFormData.established : '',
-          category: businessFormData.category ? getSelectedCategory(businessFormData.category) : '',
+          established: businessFormData.established
+            ? businessFormData.established
+            : '',
+          category: businessFormData.category
+            ? getSelectedCategory(businessFormData.category)
+            : '',
         }}
         validationSchema={generalFormValidation}>
         {({ handleChange, values, handleSubmit, errors, setFieldValue }) => {
@@ -110,18 +123,23 @@ export default function Business({ navigation }) {
                       placeholder="Name"
                       onChangeText={handleChange('name')}
                       value={values.name}
+                      onSubmitEditing={() => description.current.focus()}
                     />
                     {errors.name ? (
                       <Text style={GlobalStyle.errorText}>{errors.name}</Text>
                     ) : null}
                   </View>
 
-                  <View style={GlobalStyle.inputContainer}>
+                  <View style={[GlobalStyle.inputContainer, { marginTop: 10 }]}>
                     <TextInput
-                      style={{ marginTop: 10 }}
-                      onChangeText={handleChange('description')}
+                      ref={description}
+                      style={styles.textArea}
                       placeholder="Description"
+                      onChangeText={handleChange('description')}
                       value={values.description}
+                      multiline={true}
+                      numberOfLines={10}
+                      textAlignVertical="top"
                     />
                     {errors.description ? (
                       <Text style={GlobalStyle.errorText}>
@@ -130,36 +148,22 @@ export default function Business({ navigation }) {
                     ) : null}
                   </View>
 
-                  <View style={GlobalStyle.inputContainer}>
-                    <DropDownPicker
+                  <View
+                    style={[
+                      GlobalStyle.inputContainer,
+                      Platform.OS === 'ios' && {
+                        position: 'relative',
+                        zIndex: 1,
+                      },
+                    ]}>
+                    <DropDown
                       items={getCategories}
-                      containerStyle={{
-                        marginTop: 10,
-                        height: 48,
-                        width: '100%',
-                      }}
-                      style={{
-                        backgroundColor: cardColor,
-                        fontFamily: 'Raleway',
-                        flex: 1,
-                        height: '100%',
-                        textAlign: I18nManager.isRTL ? 'right' : 'left',
-                        color: colors.text,
-                        paddingTop: 5,
-                        paddingBottom: 5,
-                        borderColor: cardColor,
-                      }}
-                      arrowColor={colors.primary}
                       defaultValue={values.category}
-                      itemStyle={{ justifyContent: 'flex-start' }}
-                      placeholder="Select a Category"
-                      searchable={true}
-                      searchableStyle={{ borderColor: colors.primary }}
-                      searchablePlaceholder="Search for a Category"
-                      searchablePlaceholderTextColor={BaseColor.grayColor}
-                      dropDownStyle={{backgroundColor: cardColor, color: colors.text}}
-                      dropDownMaxHeight={250}
-                      onChangeItem={(item) => setFieldValue('category', item.value)}
+                      placeholder={'Select a Category'}
+                      searchablePlaceholder={'Search for a Category'}
+                      onChangeItem={(item) =>
+                        setFieldValue('category', item.value)
+                      }
                     />
                     {errors.category ? (
                       <Text style={GlobalStyle.errorText}>
@@ -182,12 +186,14 @@ export default function Business({ navigation }) {
 
                   <View style={GlobalStyle.inputContainer}>
                     <TextInput
+                      ref={telephone}
                       style={{ marginTop: 10 }}
                       placeholder="Telephone"
                       onChangeText={handleChange('telephone')}
                       keyboardType="numeric"
                       autoCapitalize="none"
                       value={values.telephone}
+                      onSubmitEditing={() => email.current.focus()}
                     />
                     {errors.telephone ? (
                       <Text style={GlobalStyle.errorText}>
@@ -198,6 +204,7 @@ export default function Business({ navigation }) {
 
                   <View style={GlobalStyle.inputContainer}>
                     <TextInput
+                      ref={email}
                       style={{ marginTop: 10 }}
                       placeholder="Email"
                       textContentType="emailAddress"
@@ -207,6 +214,7 @@ export default function Business({ navigation }) {
                       autoCompleteType="email"
                       onChangeText={handleChange('email')}
                       value={values.email}
+                      onSubmitEditing={() => website.current.focus()}
                     />
                     {errors.email ? (
                       <Text style={GlobalStyle.errorText}>{errors.email}</Text>
@@ -215,10 +223,14 @@ export default function Business({ navigation }) {
 
                   <View style={GlobalStyle.inputContainer}>
                     <TextInput
+                      ref={website}
                       style={{ marginTop: 10 }}
                       onChangeText={handleChange('website')}
                       placeholder="https://yoursite.com"
                       value={values.website}
+                      onSubmitEditing={() => toggleDatePicker()}
+                      returnKeyType="done"
+                      blurOnSubmit={true}
                     />
                     {errors.website ? (
                       <Text style={GlobalStyle.errorText}>
@@ -234,7 +246,15 @@ export default function Business({ navigation }) {
                         GlobalStyle.datePickerContainer,
                         { backgroundColor: cardColor, color: colors.text },
                       ]}>
-                      <Text style={GlobalStyle.datePickerContainerText}>
+                      <Text
+                        style={[
+                          GlobalStyle.datePickerContainerText,
+                          {
+                            color: values.established
+                              ? colors.text
+                              : BaseColor.grayColor,
+                          },
+                        ]}>
                         {values.established
                           ? moment(values.established).format('DD/MM/YYYY')
                           : 'Established Date [YYYY/MM/DD]'}
@@ -249,7 +269,8 @@ export default function Business({ navigation }) {
                 </View>
               </ScrollView>
               <ActionButton
-                buttonColor="rgba(93, 173, 226, 1)"
+                buttonColor={colors.primary}
+                nativeFeedbackRippleColor="transparent"
                 onPress={() => handleSubmit()}
                 offsetX={20}
                 offsetY={10}

@@ -1,16 +1,19 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 import * as actionTypes from './actionTypes';
-import { SIGNUP, LOGIN, EDIT_PROFILE, GET_PROFILE } from '../constants';
+import { SIGNUP, LOGIN, EDIT_PROFILE, GET_PROFILE, UPLOAD } from '../constants';
 import {
   REGISTER_API_ERROR,
   REGISTER_API_SUCCESS,
   LOGIN_API_ERROR,
   LOGIN_API_SUCCESS,
+  SIGNOUT,
   GET_PROFILE_API_SUCCESS,
   GET_PROFILE_API_ERROR,
+  EDIT_PROFILE_API,
   EDIT_PROFILE_API_SUCCESS,
   EDIT_PROFILE_API_ERROR,
+  PROFILE_UPLOAD_API,
 } from '../constants/auth';
 import { handleError } from '../utils';
 import axiosApiInstance from '../interceptor/axios-interceptor';
@@ -23,12 +26,13 @@ const onLogin = (data) => {
 };
 
 export const authentication = (login, callback) => (dispatch) => {
-  //call api and dispatch action case
+  dispatch({ type: SIGNOUT, loading: true });
   setTimeout(() => {
     let data = {
       success: login,
     };
     dispatch(onLogin(data));
+    dispatch({ type: SIGNOUT, loading: false });
     if (typeof callback === 'function') {
       callback({ success: true });
     }
@@ -63,6 +67,7 @@ export const login = (user, cb) => {
     })
       .then(async (response) => {
         dispatch({ type: LOGIN_API_SUCCESS, user: response.data });
+        dispatch(getProfile());
         cb && cb();
         console.log('Token:', response.data);
         try {
@@ -85,7 +90,7 @@ export const login = (user, cb) => {
 };
 
 export const getProfile = (cb) => {
-  return async (dispatch)  => {
+  return async (dispatch) => {
     axiosApiInstance({
       method: 'GET',
       url: GET_PROFILE,
@@ -93,7 +98,7 @@ export const getProfile = (cb) => {
       .then((response) => {
         dispatch({
           type: GET_PROFILE_API_SUCCESS,
-            profile: response.data,
+          profile: response.data,
         });
         cb && cb();
       })
@@ -108,7 +113,7 @@ export const getProfile = (cb) => {
 
 export const editProfile = (payload, cb) => {
   return async (dispatch) => {
-    // console.log('PROFILE DATA %%%%%%%', payload)
+    dispatch({ type: EDIT_PROFILE_API, loading: true });
     axiosApiInstance({
       method: 'PUT',
       url: EDIT_PROFILE + payload._id,
@@ -117,15 +122,35 @@ export const editProfile = (payload, cb) => {
       .then((response) => {
         dispatch({
           type: EDIT_PROFILE_API_SUCCESS,
-            user: payload,
+          user: payload,
+          loading: false,
         });
         cb && cb();
       })
       .catch((error) => {
-        dispatch({ type: EDIT_PROFILE_API_ERROR, error });
+        dispatch({ type: EDIT_PROFILE_API_ERROR, error, loading: false });
         cb && cb(error);
         handleError(error);
         console.log('###### EDIT PROFILE API ERROR', error);
       });
   };
+};
+
+export const uploadProfileImage = (payload, form, cb) => (dispatch) => {
+  dispatch({ type: PROFILE_UPLOAD_API, loading: true });
+  axiosApiInstance
+    .post(`${UPLOAD}/${payload._id}/profile`, form, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
+    .then((response) => {
+      dispatch({ type: PROFILE_UPLOAD_API, loading: false });
+      dispatch(
+        editProfile({ ...payload, avatar: response.data.Location }, () => cb()),
+      );
+    })
+    .catch((error) => {
+      dispatch({ type: PROFILE_UPLOAD_API, loading: false });
+      cb && cb(error);
+      handleError(error);
+    });
 };

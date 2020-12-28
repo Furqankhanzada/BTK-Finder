@@ -12,21 +12,40 @@ import {
   Image,
   Text,
   Icon,
-  Card,
   SafeAreaView,
   CardList,
+  Card,
 } from '@components';
-import { BaseStyle, BaseColor, useTheme } from '@config';
+import { BaseColor, useTheme } from '@config';
 import * as Utils from '@utils';
 import styles from './styles';
 import Swiper from 'react-native-swiper';
-import { HomePopularData, HomeListData, HomeBannerData } from '@data';
+import { HomeBannerData } from '@data';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCategories } from '../../actions/category';
 import FeaturedCategoryPlaceholderComponent from '../../components/Placeholders/featuredCategories';
+import SectionList from './sectionList';
+import {
+  getBusinesses,
+  getFavoriteIdsIntoStorage,
+} from '../../actions/business';
 
 export default function Home({ navigation }) {
+  const stateProps = useSelector(({ businesses }) => {
+    return {
+      popularBusinesses: businesses.popularBusinesses,
+      getPopularBusinessesLoading: businesses.getPopularBusinessesLoading,
+      recentlyAddedBusinesses: businesses.recentlyAddedBusinesses,
+      getRecentlyAddedBusinessesLoading:
+        businesses.getRecentlyAddedBusinessesLoading,
+    };
+  });
+
+  const navigateToReview = (id) => {
+    navigation.navigate('Review', { id });
+  };
+
   const [loading, setLoading] = useState(true);
   const deltaY = new Animated.Value(0);
   const { colors } = useTheme();
@@ -47,8 +66,6 @@ export default function Home({ navigation }) {
     ],
   ];
   const [banner] = useState(HomeBannerData);
-  const [popular] = useState(HomePopularData);
-  const [list] = useState(HomeListData);
   const [heightHeader, setHeightHeader] = useState(Utils.heightHeader());
 
   const heightImageBanner = Utils.scaleWithPixel(225);
@@ -65,6 +82,37 @@ export default function Home({ navigation }) {
       }),
     );
   }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(getFavoriteIdsIntoStorage());
+    dispatch(
+      getBusinesses({
+        limit: 5,
+        skip: 0,
+        popular: true,
+        fields: 'name, thumbnail',
+      }),
+    );
+    dispatch(
+      getBusinesses({
+        limit: 5,
+        skip: 0,
+        fields: 'name, thumbnail, category, averageRatings',
+      }),
+    );
+  }, [dispatch]);
+
+  const navigateBusinessDetail = (id) => {
+    navigation.navigate('PlaceDetail', { id });
+  };
+
+  const seeMore = (payload = {}) => {
+    if (payload.route === 'Category') {
+      navigation.navigate('Category');
+    } else {
+      navigation.navigate('Place', payload);
+    }
+  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -115,9 +163,6 @@ export default function Home({ navigation }) {
                 {t('help_line')}
               </Button>
             );
-          }}
-          onPressRight={() => {
-            alert('there');
           }}
         />
         <ScrollView
@@ -179,99 +224,108 @@ export default function Home({ navigation }) {
               renderItem={() => {
                 return (
                   <View style={styles.serviceItem}>
-                  <FeaturedCategoryPlaceholderComponent />
+                    <FeaturedCategoryPlaceholderComponent />
                   </View>
-                )
+                );
               }}
             />
           ) : (
             <FlatList
-            contentContainerStyle={{
-              padding: 20,
-              marginTop: marginTopBanner,
-            }}
-            data={featuredCategories}
-            numColumns={'4'}
-            keyExtractor={(item, index) => item.id}
-            renderItem={({ item }) => {
+              contentContainerStyle={{
+                padding: 20,
+                marginTop: marginTopBanner,
+              }}
+              data={featuredCategories}
+              numColumns={'4'}
+              keyExtractor={(item, index) => item.id}
+              renderItem={({ item }) => {
+                return (
+                  <TouchableOpacity
+                    style={styles.serviceItem}
+                    onPress={() =>
+                      seeMore({
+                        title: item.name,
+                        category: item.name,
+                        route: item.route,
+                      })
+                    }>
+                    <View
+                      style={[
+                        styles.serviceCircleIcon,
+                        { backgroundColor: item.color },
+                      ]}>
+                      <Icon
+                        name={item.icon}
+                        size={20}
+                        color={BaseColor.whiteColor}
+                        solid
+                      />
+                    </View>
+                    <Text footnote numberOfLines={1}>
+                      {t(item.name)}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              }}
+            />
+          )}
+          {/* Popular Businesses Section */}
+          <SectionList
+            title="Popular Businesses"
+            subTitle="Find the most interesting things"
+            seeMoreFunc={() =>
+              seeMore({
+                popular: true,
+                title: 'Popular Businesses',
+              })
+            }
+            data={stateProps.popularBusinesses}
+            horizontal={true}
+            loading={stateProps.getPopularBusinessesLoading}
+            renderItem={({ item, index }) => {
               return (
-                <TouchableOpacity
-                  style={styles.serviceItem}
-                  onPress={() => navigation.navigate(item.route)}>
-                  <View
-                    style={[
-                      styles.serviceCircleIcon,
-                      { backgroundColor: item.color },
-                    ]}>
-                    <Icon
-                      name={item.icon}
-                      size={20}
-                      color={BaseColor.whiteColor}
-                      solid
-                    />
-                  </View>
-                  <Text footnote numberOfLines={1}>
-                    {t(item.name)}
+                <Card
+                  key={index}
+                  style={[styles.popularItem, { marginLeft: 15 }]}
+                  image={item.thumbnail}
+                  onPress={() => navigateBusinessDetail(item._id)}>
+                  <Text
+                    headline
+                    whiteColor={item.thumbnail}
+                    grayColor={!item.thumbnail}
+                    semibold>
+                    {item.name}
                   </Text>
-                </TouchableOpacity>
+                </Card>
               );
             }}
           />
-          )}
-          {/* Hiking */}
-          <View style={styles.contentPopular}>
-            <Text title3 semibold>
-              {t('popular_location')}
-            </Text>
-            <Text body2 grayColor>
-              {t('popular_lologan')}
-            </Text>
-          </View>
-          <FlatList
-            contentContainerStyle={{ paddingLeft: 5, paddingRight: 15 }}
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            data={popular}
-            keyExtractor={(item, index) => item.id}
-            renderItem={({ item, index }) => (
-              <Card
-                style={[styles.popularItem, { marginLeft: 15 }]}
-                image={item.image}
-                onPress={() => navigation.navigate('PlaceDetail')}>
-                <Text headline whiteColor semibold>
-                  {item.name}
-                </Text>
-              </Card>
-            )}
-          />
-          {/* Promotion */}
-          <View
-            style={{
-              paddingHorizontal: 20,
-              paddingTop: 15,
-            }}>
-            <Text title3 semibold>
-              {t('recent_location')}
-            </Text>
-            <Text body2 grayColor>
-              {t('recent_sologan')}
-            </Text>
-            <FlatList
-              style={{ marginTop: 15 }}
-              data={list}
-              keyExtractor={(item, index) => item.id}
-              renderItem={({ item, index }) => (
+          {/* Recently Added Businesses Section */}
+          <SectionList
+            title="Recently Added Businesses"
+            subTitle="Lets find out what's new"
+            seeMoreFunc={() =>
+              seeMore({
+                title: 'Recently Added Businesses',
+              })
+            }
+            data={stateProps.recentlyAddedBusinesses}
+            loading={stateProps.getRecentlyAddedBusinessesLoading}
+            renderItem={({ item, index }) => {
+              return (
                 <CardList
-                  image={item.image}
-                  title={item.title}
-                  subtitle={item.subtitle}
-                  rate={item.rate}
+                  key={index}
+                  image={item?.thumbnail}
+                  title={item.name}
+                  subtitle={item.category}
+                  rate={item?.averageRatings || '0.0'}
                   style={{ marginBottom: 15 }}
-                  onPress={() => navigation.navigate('PlaceDetail')}
+                  onPress={() => navigateBusinessDetail(item._id)}
+                  onPressTag={() => navigateToReview(item._id)}
                 />
-              )}
-            />
-          </View>
+              );
+            }}
+          />
         </ScrollView>
       </SafeAreaView>
     </View>

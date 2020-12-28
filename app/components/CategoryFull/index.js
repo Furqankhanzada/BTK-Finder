@@ -34,7 +34,7 @@ export default function CategoryFull(props) {
             {title}
           </Text>
           <Text body2 bold whiteColor>
-            {subtitle} {t('listings')}
+            Tap to view related items
           </Text>
         </View>
       </View>
