@@ -29,5 +29,13 @@ export default StyleSheet.create({
     position: "absolute",
     right: 9,
     bottom: 0
-  }
+  },
+  badge: {
+    color: 'white',
+    backgroundColor: 'red',
+    padding: 3,
+    borderRadius: 5,
+    marginLeft: 5,
+    fontSize: 11
+  },
 });

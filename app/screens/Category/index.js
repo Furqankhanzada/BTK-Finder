@@ -91,8 +91,12 @@ export default function Category({ navigation }) {
           <CategoryIcon
             icon={item.icon}
             title={item.name}
-            subtitle={200}
-            onPress={() => navigation.navigate('Place')}
+            // subtitle={200}
+            onPress={() => navigation.navigate('Place', {
+              title: item.name,
+              category: item.name,
+              route: item.route
+            })}
             style={[styles.itemIcon, { borderColor: colors.border }]}
           />
         );
@@ -102,8 +106,12 @@ export default function Category({ navigation }) {
             image={{ uri: item.image || 'https://i.ibb.co/VpvP0X5/empty-image.jpg' }}
             icon={item.icon}
             title={item.name}
-            subtitle={300}
-            onPress={() => navigation.navigate('Place')}
+            // subtitle={300}
+            onPress={() => navigation.navigate('Place', {
+              title: item.name,
+              category: item.name,
+              route: item.route
+            })}
             style={styles.itemFull}
           />
         );

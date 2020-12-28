@@ -5,6 +5,7 @@ import {Text, Icon} from '@components';
 import {BaseColor, useTheme} from '@config';
 import styles from './styles';
 import {useTranslation} from 'react-i18next';
+import NumberFormat from 'react-number-format';
 
 export default function RateDetail(props) {
   const {colors} = useTheme();
@@ -13,9 +14,12 @@ export default function RateDetail(props) {
   return (
     <View style={[styles.contain, style]}>
       <View style={styles.contentLeft}>
-        <Text primaryColor style={{fontSize: 48}}>
-          {point}
-        </Text>
+        <NumberFormat
+            value={point}
+            displayType={'text'}
+            decimalScale={1}
+            renderText={value => <Text primaryColor style={{fontSize: 48}}>{value}</Text>}
+        />
         <Text subhead grayColor semibold>
           {t('out_of')} {maxPoint}
         </Text>

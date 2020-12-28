@@ -1,37 +1,43 @@
 import React from 'react';
+import { useTheme } from '@config';
 import {
   Placeholder,
   PlaceholderLine,
   PlaceholderMedia,
-  ShineOverlay,
+  Fade,
 } from 'rn-placeholder';
 import {
   responsiveHeight,
-  responsiveWidth,
 } from 'react-native-responsive-dimensions';
 
-const FeaturedCategoryPlaceholderComponent = () => (
-  <Placeholder
-    Animation={ShineOverlay}
+export default function FeaturedCategoryPlaceholderComponent() {
+
+  const {colors} = useTheme();
+
+  return (
+    <Placeholder
+    Animation={Fade}
     style={{
-      height: 70,
-      marginTop: 1,
-      marginHorizontal: 14,
+      height: 57,
+      flexDirection: "column",
+      display: "flex",
     }}
     Left={(props) => (
       <PlaceholderMedia
         style={[
           props.style,
           {
-            width: responsiveWidth(12),
-            height: responsiveHeight(7),
+            width: 38,
+            height: 38,
             borderRadius: 20,
+            backgroundColor: colors.card,
+            marginLeft: 10,
+            alignSelf: "center"
           },
         ]}
       />
   )}>
-  <PlaceholderLine style={{ marginTop: responsiveHeight(1) }} width={53} />
+  <PlaceholderLine style={{ marginTop: responsiveHeight(1), backgroundColor: colors.card, alignSelf: "center" }} width={70} />
   </Placeholder>
-);
-
-export default FeaturedCategoryPlaceholderComponent;
+  )
+}

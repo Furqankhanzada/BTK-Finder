@@ -1,12 +1,6 @@
-import React, {useState} from 'react';
-import {
-  View,
-  ScrollView,
-  KeyboardAvoidingView,
-  Platform,
-  ActivityIndicator,
-} from 'react-native';
-import {BaseStyle, BaseColor, Images, useTheme} from '@config';
+import React, { useState } from 'react';
+import { View, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import { BaseStyle, BaseColor, Images, useTheme } from '@config';
 import {
   Image,
   Header,
@@ -15,42 +9,39 @@ import {
   Text,
   StarRating,
   TextInput,
+  Loading,
+  Button,
 } from '@components';
-import {useTranslation} from 'react-i18next';
-import styles from './styles';
+import { useTranslation } from 'react-i18next';
+// import styles from './styles';
+import { addReview } from '../../actions/business';
+import { useDispatch, useSelector } from 'react-redux';
 
-export default function Feedback({navigation}) {
-  const {colors} = useTheme();
-  const {t} = useTranslation();
+export default function Feedback(props) {
+  const { navigation, route } = props;
+  const { colors } = useTheme();
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const profileData = useSelector((state) => state.profile);
+  const stateProps = useSelector(({ businesses }) => businesses);
+  const { createReviewLoading } = stateProps;
 
-  const [loading, setLoading] = useState(false);
   const [rate, setRate] = useState(4.5);
   const [title, setTitle] = useState('');
   const [review, setReview] = useState('');
-  const [success, setSuccess] = useState({
-    title: true,
-    review: true,
-  });
 
-  /**
-   * @description Called when user sumitted form
-   * @author Passion UI <passionui.com>
-   * @date 2019-08-03
-   */
+  let payload = {
+    title: title,
+    description: review,
+    rating: rate,
+  };
+
+  const addCallback = () => {
+    navigation.goBack();
+  };
+
   const onSubmit = () => {
-    if (title == '' || review == '') {
-      setSuccess({
-        ...success,
-        title: title != '' ? true : false,
-        review: review != '' ? true : false,
-      });
-    } else {
-      setLoading(true);
-      setTimeout(() => {
-        setLoading(true);
-        navigation.goBack();
-      }, 500);
-    }
+    dispatch(addReview(payload, addCallback, route?.params?.id));
   };
 
   const offsetKeyboard = Platform.select({
@@ -59,7 +50,8 @@ export default function Feedback({navigation}) {
   });
 
   return (
-    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{top: 'always'}}>
+    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
+      <Loading loading={createReviewLoading} />
       <Header
         title={t('feedback')}
         renderLeft={() => {
@@ -72,67 +64,65 @@ export default function Feedback({navigation}) {
             />
           );
         }}
-        renderRight={() => {
-          if (loading) {
-            return <ActivityIndicator size="small" color={colors.primary} />;
-          }
-          return (
-            <Text headline primaryColor numberOfLines={1}>
-              {t('save')}
-            </Text>
-          );
-        }}
         onPressLeft={() => {
           navigation.goBack();
-        }}
-        onPressRight={() => {
-          onSubmit();
         }}
       />
       <KeyboardAvoidingView
         behavior={Platform.OS == 'android' ? 'height' : 'padding'}
         keyboardVerticalOffset={offsetKeyboard}
-        style={{flex: 1}}>
-        <ScrollView contentContainerStyle={{alignItems: 'center', padding: 20}}>
+        style={{ flex: 1 }}>
+        <ScrollView
+          contentContainerStyle={{ alignItems: 'center', padding: 20 }}>
           <Image
-            source={Images.profile2}
+            source={
+              profileData.avatar
+                ? { uri: profileData.avatar }
+                : require('@assets/images/default-avatar.png')
+            }
             style={{
               width: 62,
               height: 62,
               borderRadius: 31,
             }}
           />
-          <View style={{width: 160}}>
+          <View style={{ width: 160 }}>
             <StarRating
               starSize={26}
               maxStars={5}
               rating={rate}
-              selectedStar={rating => {
+              selectedStar={(rating) => {
                 setRate(rating);
               }}
               fullStarColor={BaseColor.yellowColor}
-              containerStyle={{padding: 5}}
+              containerStyle={{ padding: 5 }}
             />
-            <Text caption1 grayColor style={{textAlign: 'center'}}>
+            <Text caption1 grayColor style={{ textAlign: 'center' }}>
               {t('tap_to_rate')}
             </Text>
           </View>
           <TextInput
-            style={{marginTop: 10}}
-            onChangeText={text => setTitle(text)}
-            placeholder={t('input_title')}
-            success={success.title}
+            style={{ marginTop: 10 }}
+            onChangeText={(text) => setTitle(text)}
+            placeholder="Title"
             value={title}
           />
           <TextInput
-            style={{marginTop: 20, height: 150}}
-            onChangeText={text => setReview(text)}
+            style={{ marginTop: 20, height: 150 }}
+            onChangeText={(text) => setReview(text)}
             textAlignVertical="top"
             multiline={true}
-            success={success.review}
-            placeholder={t('input')}
+            placeholder="Review"
             value={review}
           />
+          <Button
+            full
+            style={{ marginTop: 20 }}
+            onPress={() => {
+              onSubmit();
+            }}>
+            Confirm
+          </Button>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>

@@ -66,7 +66,7 @@ CommentItem.propTypes = {
 
 CommentItem.defaultProps = {
   style: {},
-  image: Images.profile2,
+  image: Images.defaultAvatar,
   name: "",
   rate: 0,
   date: "",

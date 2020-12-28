@@ -24,7 +24,7 @@ export default function CategoryIcon(props) {
           {title}
         </Text>
         <Text footnote semibold grayColor style={{marginTop: 5}}>
-          {subtitle} {t('listings')}
+          Tap to view related items
         </Text>
       </View>
     </TouchableOpacity>

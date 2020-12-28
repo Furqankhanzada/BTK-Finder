@@ -1,10 +1,9 @@
 import React from 'react';
-import {TextInput, View, I18nManager} from 'react-native';
+import { TextInput, View, I18nManager } from 'react-native';
 import PropTypes from 'prop-types';
-import {BaseStyle, BaseColor, useTheme} from '@config';
-
-export default function Index(props) {
-  const {colors} = useTheme();
+import { BaseStyle, BaseColor, useTheme } from '@config';
+const Index = React.forwardRef((props, ref) => {
+  const { colors } = useTheme();
   const cardColor = colors.card;
   const {
     style,
@@ -19,10 +18,14 @@ export default function Index(props) {
     textAlignVertical,
     icon,
     onSubmitEditing,
+    autoCapitalize,
+    returnKeyType,
+    blurOnSubmit,
   } = props;
   return (
-    <View style={[BaseStyle.textInput, {backgroundColor: cardColor}, style]}>
+    <View style={[BaseStyle.textInput, { backgroundColor: cardColor }, style]}>
       <TextInput
+        ref={ref}
         style={{
           fontFamily: 'Raleway',
           flex: 1,
@@ -32,13 +35,16 @@ export default function Index(props) {
           paddingTop: 5,
           paddingBottom: 5,
         }}
-        onChangeText={text => onChangeText(text)}
+        returnKeyType={returnKeyType}
+        onChangeText={(text) => onChangeText(text)}
+        blurOnSubmit={blurOnSubmit}
         onFocus={() => onFocus()}
         autoCorrect={false}
         placeholder={placeholder}
         placeholderTextColor={success ? BaseColor.grayColor : colors.primary}
         secureTextEntry={secureTextEntry}
         value={value}
+        autoCapitalize={autoCapitalize}
         selectionColor={colors.primary}
         keyboardType={keyboardType}
         multiline={multiline}
@@ -48,8 +54,8 @@ export default function Index(props) {
       {icon}
     </View>
   );
-}
-
+});
+export default Index;
 Index.propTypes = {
   style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
   onChangeText: PropTypes.func,
@@ -61,15 +67,19 @@ Index.propTypes = {
   keyboardType: PropTypes.string,
   multiline: PropTypes.bool,
   textAlignVertical: PropTypes.string,
+  autoCapitalize: PropTypes.string,
   icon: PropTypes.node,
   onSubmitEditing: PropTypes.func,
+  returnKeyType: PropTypes.string,
+  blurOnSubmit: PropTypes.bool,
 };
 
 Index.defaultProps = {
   style: {},
-  onChangeText: text => {},
+  onChangeText: (text) => {},
   onFocus: () => {},
   placeholder: 'Placeholder',
+  autoCapitalize: 'none',
   value: '',
   success: true,
   secureTextEntry: false,
@@ -78,4 +88,6 @@ Index.defaultProps = {
   textAlignVertical: 'center',
   icon: null,
   onSubmitEditing: () => {},
+  returnKeyType: 'next',
+  blurOnSubmit: false,
 };
