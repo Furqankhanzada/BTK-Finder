@@ -54,8 +54,9 @@ export default StyleSheet.create({
     left: 10,
   },
   iconListLike: {
-    marginLeft: 10,
-    marginTop: 3,
+    position: 'absolute',
+    bottom: 10,
+    right: 5,
   },
   //gird css
   girdImage: {
