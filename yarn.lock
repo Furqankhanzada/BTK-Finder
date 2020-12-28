@@ -1175,23 +1175,25 @@
     opencollective-postinstall "^2.0.1"
     superstruct "^0.6.2"
 
-"@react-native-firebase/analytics@^10.3.1":
+"@react-native-firebase/dynamic-links@^10.3.1":
   version "10.3.1"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/analytics/-/analytics-10.3.1.tgz#3b7e5805175c50dec9b6dae934bbb0b99090b24e"
-  integrity sha512-SBDT93T+nWqBAwhRKySEGnPHoeMaXXX7NctSuEzHij9hSbrImYJjtX0lah2ZztKs7Zt7T+HsmzmktdkdiPreRg==
-
-"@react-native-firebase/app@^10.3.0":
-  version "10.3.0"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-10.3.0.tgz#53bb8125d486d3c7b841c3e6e45316668e4837f1"
-  integrity sha512-4/45zCJm3YLD5YlgTlF2ZDEd3CM6pjCZtx3OYI0hxsdq2//UdeZTgg6Byu3vxk7GTf3jY/E+IBoX8hPDcFU2/Q==
-  dependencies:
-    opencollective-postinstall "^2.0.1"
-    superstruct "^0.6.2"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/dynamic-links/-/dynamic-links-10.3.1.tgz#f86c9d983554458a71497510814b10b38d988851"
+  integrity sha512-l65Scu74RtpevVDBnHs+cL/7PJfB3twN5Qy85YGZTSyQmhAoAVUB4hi2d5mO+v78xvwU/bwM/q9L1A8jFllpsw==
 
 "@react-native-firebase/in-app-messaging@^10.3.1":
   version "10.3.1"
   resolved "https://registry.yarnpkg.com/@react-native-firebase/in-app-messaging/-/in-app-messaging-10.3.1.tgz#cf56da8e5faabb77897ad479c25ef32f9221ceac"
   integrity sha512-81Y3qqUYIO0o2Czg4AU5F6kuH+EyGfVxtStzHSkhsA9+zc4aSbPjPE9byVqfMrhvDcK82zlVUGHo+GIsg590tQ==
+
+"@react-native-firebase/messaging@^10.3.1":
+  version "10.3.1"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/messaging/-/messaging-10.3.1.tgz#f764295ccb6fe97747dda097810d6d9c94b6c6c2"
+  integrity sha512-Ls1nkmP5YvD3nV5Vq7gwxu77TgaVGwuDc8jZB2AgpPWc1mse8/xkqRMuZ/ZXd3oPfuUiu1dlxET9SB2YrAR/Mw==
+
+"@react-native-firebase/remote-config@^10.3.1":
+  version "10.3.1"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/remote-config/-/remote-config-10.3.1.tgz#5b8cf5db503107aaf1b317af8e04c9679332ae80"
+  integrity sha512-cCfBagdTu9ppM1EWR/GbUAy5vWBwbalZz0MnRMUemDILhopYnPkOb9wBK5iSSrWD4bCcCGipUM5ZahVj94cjBQ==
 
 "@react-navigation/bottom-tabs@^5.8.0":
   version "5.11.2"
@@ -6884,15 +6886,6 @@ shallow-clone@^1.0.0:
     kind-of "^5.0.0"
     mixin-object "^2.0.1"
 
-shallow-clone@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/shallow-clone/-/shallow-clone-1.0.0.tgz#4480cd06e882ef68b2ad88a3ea54832e2c48b571"
-  integrity sha512-oeXreoKR/SyNJtRJMAKPDSvd28OqEwG4eR/xc856cRGBII7gX9lvAqDxusPm0846z/w/hWYjI1NpKwJ00NHzRA==
-  dependencies:
-    is-extendable "^0.1.1"
-    kind-of "^5.0.0"
-    mixin-object "^2.0.1"
-
 shebang-command@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/shebang-command/-/shebang-command-1.2.0.tgz#44aac65b695b03398968c39f363fee5deafdf1ea"
@@ -7288,14 +7281,6 @@ sudo-prompt@^9.0.0:
   version "9.2.1"
   resolved "https://registry.yarnpkg.com/sudo-prompt/-/sudo-prompt-9.2.1.tgz#77efb84309c9ca489527a4e749f287e6bdd52afd"
   integrity sha512-Mu7R0g4ig9TUuGSxJavny5Rv0egCEtpZRNMrZaYS1vxkiIxGiGUwoezU3LazIQ+KE04hTrTfNPgxU5gzi7F5Pw==
-
-superstruct@^0.6.2:
-  version "0.6.2"
-  resolved "https://registry.yarnpkg.com/superstruct/-/superstruct-0.6.2.tgz#c5eb034806a17ff98d036674169ef85e4c7f6a1c"
-  integrity sha512-lvA97MFAJng3rfjcafT/zGTSWm6Tbpk++DP6It4Qg7oNaeM+2tdJMuVgGje21/bIpBEs6iQql1PJH6dKTjl4Ig==
-  dependencies:
-    clone-deep "^2.0.1"
-    kind-of "^6.0.1"
 
 superstruct@^0.6.2:
   version "0.6.2"
