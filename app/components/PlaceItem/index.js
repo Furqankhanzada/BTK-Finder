@@ -173,7 +173,7 @@ export default function PlaceItem(props) {
             <Text headline semibold grayColor>
               {subtitle}
             </Text>
-            <Text title2 semibold style={{ marginTop: 5 }}>
+            <Text title2 semibold numberOfLines={1} style={{ marginTop: 5 }}>
               {title}
             </Text>
             <View style={styles.lineRate}>

@@ -75,7 +75,7 @@ export default function Place(props) {
   const [active, setActive] = useState(0);
   const [viewportWidth, setViewportWidth] = useState(Utils.getWidthDevice());
   const [refreshing] = useState(false);
-  const [modeView, setModeView] = useState('block');
+  const [modeView, setModeView] = useState('grid');
   const [mapView, setMapView] = useState(false);
   const [region, setRegion] = useState({
     latitude: PlaceListData[0].region.latitude,
@@ -118,17 +118,17 @@ export default function Place(props) {
   const onChangeView = () => {
     Utils.enableExperimental();
     switch (modeView) {
-      case 'block':
-        setModeView('grid');
-        break;
       case 'grid':
         setModeView('list');
         break;
       case 'list':
         setModeView('block');
         break;
+      case 'block':
+        setModeView('grid');
+        break;
       default:
-        setModeView('block');
+        setModeView('grid');
         break;
     }
   };
@@ -207,17 +207,13 @@ export default function Place(props) {
       extrapolate: 'clamp',
     });
     switch (modeView) {
-      case 'grid':
+      case 'block':
         return (
           <View style={{ flex: 1 }}>
             <Animated.FlatList
               contentContainerStyle={{
                 paddingTop: 50,
                 flex: stateProps?.data?.length ? 0 : 1,
-              }}
-              columnWrapperStyle={{
-                paddingLeft: 5,
-                paddingRight: 20,
               }}
               refreshControl={
                 <RefreshControl
@@ -242,16 +238,13 @@ export default function Place(props) {
                 ],
                 { useNativeDriver: true },
               )}
-              showsVerticalScrollIndicator={false}
-              numColumns={2}
               data={stateProps.data}
-              key={'gird'}
+              key={'block'}
               keyExtractor={(item, index) => item.id}
-              ListFooterComponent={renderFooter}
               ListEmptyComponent={listEmptyComponent}
               renderItem={({ item, index }) => (
                 <PlaceItem
-                  grid
+                  block
                   image={item?.thumbnail}
                   title={item.name}
                   subtitle={item.category}
@@ -259,25 +252,20 @@ export default function Place(props) {
                   phone={item.telephone}
                   rate={item?.averageRatings}
                   status={item?.status}
-                  rateStatus={item?.rateStatus}
-                  numReviews={item?.reviews.length}
+                  // rateStatus={item?.rateStatus}
+                  numReviews={item?.reviews?.length}
                   favoriteOnPress={() => favorite(item._id)}
                   isFavorite={stateProps?.favoriteIds?.includes(item._id)}
-                  style={{
-                    marginLeft: 15,
-                    marginBottom: 15,
-                  }}
                   onPress={() => navigateBusinessDetail(item._id)}
                   onPressTag={() => navigateToReview(item._id)}
                 />
               )}
+              ListFooterComponent={renderFooter}
             />
             <Animated.View
               style={[
                 styles.navbar,
-                {
-                  transform: [{ translateY: navbarTranslate }],
-                },
+                { transform: [{ translateY: navbarTranslate }] },
               ]}>
               <FilterSort
                 modeView={modeView}
@@ -371,6 +359,10 @@ export default function Place(props) {
                 paddingTop: 50,
                 flex: stateProps?.data?.length ? 0 : 1,
               }}
+              columnWrapperStyle={{
+                paddingLeft: 5,
+                paddingRight: 20,
+              }}
               refreshControl={
                 <RefreshControl
                   colors={[colors.primary]}
@@ -394,13 +386,16 @@ export default function Place(props) {
                 ],
                 { useNativeDriver: true },
               )}
+              showsVerticalScrollIndicator={false}
+              numColumns={2}
               data={stateProps.data}
-              key={'block'}
+              key={'grid'}
               keyExtractor={(item, index) => item.id}
+              ListFooterComponent={renderFooter}
               ListEmptyComponent={listEmptyComponent}
               renderItem={({ item, index }) => (
                 <PlaceItem
-                  block
+                  grid
                   image={item?.thumbnail}
                   title={item.name}
                   subtitle={item.category}
@@ -408,20 +403,25 @@ export default function Place(props) {
                   phone={item.telephone}
                   rate={item?.averageRatings}
                   status={item?.status}
-                  // rateStatus={item?.rateStatus}
-                  numReviews={item?.reviews?.length}
+                  rateStatus={item?.rateStatus}
+                  numReviews={item?.reviews.length}
                   favoriteOnPress={() => favorite(item._id)}
                   isFavorite={stateProps?.favoriteIds?.includes(item._id)}
+                  style={{
+                    marginLeft: 15,
+                    marginBottom: 15,
+                  }}
                   onPress={() => navigateBusinessDetail(item._id)}
                   onPressTag={() => navigateToReview(item._id)}
                 />
               )}
-              ListFooterComponent={renderFooter}
             />
             <Animated.View
               style={[
                 styles.navbar,
-                { transform: [{ translateY: navbarTranslate }] },
+                {
+                  transform: [{ translateY: navbarTranslate }],
+                },
               ]}>
               <FilterSort
                 modeView={modeView}
