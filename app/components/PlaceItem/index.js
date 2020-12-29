@@ -241,10 +241,15 @@ export default function PlaceItem(props) {
           )}
         </TouchableOpacity>
         <TouchableOpacity onPress={onPress} activeOpacity={0.6}>
-          <Text footnote semibold grayColor style={{ marginTop: 5 }}>
+          <Text
+            footnote
+            semibold
+            grayColor
+            numberOfLines={1}
+            style={{ marginTop: 5 }}>
             {subtitle}
           </Text>
-          <Text subhead semibold style={{ marginTop: 5 }}>
+          <Text subhead semibold numberOfLines={1} style={{ marginTop: 5 }}>
             {title}
           </Text>
           <View
