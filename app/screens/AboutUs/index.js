@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, ScrollView, ImageBackground, FlatList } from 'react-native';
+import { View, ScrollView, ImageBackground, Linking } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { BaseStyle, Images, useTheme } from '@config';
 import {
@@ -23,14 +23,15 @@ export default function AboutUs({ navigation }) {
       subName: 'Founder',
       name: 'Muhammad Furqan/فرقان خانزادہ',
       description: 'Founder of the application Explore BTK',
+      link: 'https://www.upwork.com/o/profiles/users/~013a204a16ace5922f',
     },
     {
       id: '1',
       screen: 'Profile1',
       image: Images.ayazJalbani,
-      subName: 'Group Admin/Volunteer (P10A-RCG)',
+      subName: 'Volunteer (P10A-RCG)',
       name: 'Ayaz Jalbani',
-      description: 'Volunteer and Admin of the group (P10A-RCG)',
+      description: 'Volunteer/Admin of the whatsapp group (P10A-RCG)',
     },
   ]);
 
@@ -120,7 +121,7 @@ export default function AboutUs({ navigation }) {
         {/*  )}*/}
         {/*/>*/}
         <Text headline semibold style={styles.title}>
-          {t('our_service').toUpperCase()}
+          {t('meet_our_team').toUpperCase()}
         </Text>
         <View style={{ paddingHorizontal: 20 }}>
           {ourTeam.map((item, index) => {
@@ -132,7 +133,7 @@ export default function AboutUs({ navigation }) {
                 subName={item.subName}
                 description={item.description}
                 style={{ marginBottom: 10 }}
-                onPress={() => navigation.navigate(item.screen)}
+                onPress={() => item.link && Linking.openURL(item.link)}
               />
             );
           })}
