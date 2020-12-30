@@ -529,7 +529,7 @@ export default function PlaceDetailComponent(props) {
           <View
             style={[styles.contentDescription, { borderColor: colors.border }]}>
             {business.description ? (
-              <Text body2 style={{ lineHeight: 20 }}>
+              <Text body2 numberOfLines={30} style={{ lineHeight: 20 }}>
                 {business.description}
               </Text>
             ) : null}
