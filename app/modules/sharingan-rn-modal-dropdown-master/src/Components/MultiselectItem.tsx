@@ -7,6 +7,7 @@ import Lo from 'lodash';
 import { colors, ITEMLAYOUT } from '../constants';
 import type { IMultiselectDropdownItemProps } from '../types';
 import PressableTouch from './PressableTouch';
+import styles from "../styles";
 
 const defaultProps = {
   selectedColor: colors.primary,
@@ -89,10 +90,11 @@ const MultiselectItem: React.FC<IMultiselectDropdownItemProps> = ({
       >
         <View style={styles.textView}>
           {enableAvatar && (
-            <Avatar.Image
+            <Avatar.Icon
               size={avatarSize}
               style={styles.avatarView}
-              source={avatarSource || defaultAvatar}
+              icon={item.icon}
+              color="#5dade2"
             />
           )}
           <Text

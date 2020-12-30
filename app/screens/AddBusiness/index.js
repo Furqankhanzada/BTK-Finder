@@ -53,7 +53,7 @@ export default function Business({ navigation }) {
   });
 
   const [selectedFacilities, setSelectedFacilities] = useState([]);
-  const onUpdateFacilities = (value: string[]) => {
+  const onUpdateFacilities = (value) => {
     setSelectedFacilities(value);
   };
   const facilities = [
@@ -61,55 +61,31 @@ export default function Business({ navigation }) {
       value: '1',
       label: 'Free Wifi',
       icon: 'wifi',
-      avatarSource: {
-        uri:
-          'https://img.icons8.com/color/344/circled-user-male-skin-type-5.png',
-      },
     },
     {
       value: '2',
       label: 'Shower',
       icon: 'shower',
-      avatarSource: {
-        uri:
-          'https://img.icons8.com/color/344/circled-user-male-skin-type-5.png',
-      },
     },
     {
       value: '3',
       label: 'Pet Allowed',
       icon: 'paw',
-      avatarSource: {
-        uri:
-          'https://img.icons8.com/color/344/circled-user-male-skin-type-5.png',
-      },
     },
     {
       value: '4',
       label: 'Open 24/7',
       icon: 'clock',
-      avatarSource: {
-        uri:
-          'https://img.icons8.com/color/344/circled-user-male-skin-type-5.png',
-      },
     },
     {
       value: '5',
       label: 'Super Market',
       icon: 'basket',
-      avatarSource: {
-        uri:
-          'https://img.icons8.com/color/344/circled-user-male-skin-type-5.png',
-      },
     },
     {
       value: '6',
       label: 'Shuttle Bus',
       icon: 'bus',
-      avatarSource: {
-        uri:
-          'https://img.icons8.com/color/344/circled-user-male-skin-type-5.png',
-      },
     },
   ];
   console.log('######################', selectedFacilities);
