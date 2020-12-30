@@ -21,6 +21,9 @@ def enableHermes = project.ext.react.get("enableHermes", true);
 def enableProguardInReleaseBuilds = false
 
 android {
+    dexOptions {
+       javaMaxHeapSize "3g"
+    }
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion "27.0.3"
 
@@ -33,8 +36,8 @@ android {
         applicationId "com.explore.btk"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 15
-        versionName "0.0.6"
+        versionCode 25
+        versionName "0.1.0"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
     }

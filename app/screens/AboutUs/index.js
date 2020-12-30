@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, ScrollView, ImageBackground, FlatList } from 'react-native';
+import { View, ScrollView, ImageBackground, Linking } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { BaseStyle, Images, useTheme } from '@config';
 import {
@@ -21,16 +21,17 @@ export default function AboutUs({ navigation }) {
       screen: 'Profile2',
       image: Images.furqan,
       subName: 'Founder',
-      name: 'Furqan Khanzada',
+      name: 'Muhammad Furqan/فرقان خانزادہ',
       description: 'Founder of the application Explore BTK',
+      link: 'https://www.upwork.com/o/profiles/users/~013a204a16ace5922f',
     },
     {
       id: '1',
       screen: 'Profile1',
       image: Images.ayazJalbani,
-      subName: 'Group Admin/Volunteer (P10A-RCG)',
+      subName: 'Volunteer (P10A-RCG)',
       name: 'Ayaz Jalbani',
-      description: 'Volunteer and Admin of the group (P10A-RCG)',
+      description: 'Volunteer/Admin of the whatsapp group (P10A-RCG)',
     },
   ]);
 
@@ -53,20 +54,24 @@ export default function AboutUs({ navigation }) {
         }}
       />
       <ScrollView style={{ flex: 1 }}>
-        <ImageBackground source={Images.trip4} style={styles.banner}>
-          <Text title1 semibold whiteColor style={styles.textShadow}>
-            About Us
-          </Text>
+        <ImageBackground
+          source={{ uri: 'https://pbs.twimg.com/media/EpLNK_aW4AAlUjc.jpg' }}
+          style={styles.banner}>
         </ImageBackground>
         <View style={styles.content}>
           <Text headline semibold>
             {t('who_we_are').toUpperCase()}
           </Text>
-          <Text body2 style={{ marginTop: 5 }} numberOfLines={20}>
-            We are BAHRIANS and Residents of P10A who developed this app with
-            sheer hard work and zeal to Serve community. The man behind this app
-            is <Text bold>Furqan Khanzada</Text> who is resident of P10A and
-            very active member of P10A Residents Community Group (P10A-RCG).
+          <Text body2 style={{ marginTop: 10 }} numberOfLines={20}>
+            We are BAHRIANS and Residents of P10A who developed this mobile
+            application with sheer hard work and zeal to Serve community.
+            {'\n'}
+            {'\n'}
+            The man behind this mobile application is{' '}
+            <Text bold>Muhammad Furqan Khanzada</Text> who is resident of P10A
+            and very active member of P10A Residents Community Group (P10A-RCG).
+            {'\n'}
+            {'\n'}
             This is the oldest and founder whatsapp group of P10A which is being
             run by active Community members and this app is developed with
             inspiration from this group. You all are welcome to give your feed
@@ -88,40 +93,35 @@ export default function AboutUs({ navigation }) {
           {/*  - Latest Model Vehicles*/}
           {/*</Text>*/}
         </View>
+        {/*<Text headline semibold style={styles.title}>*/}
+        {/*  {t('meet_our_team').toUpperCase()}*/}
+        {/*</Text>*/}
+        {/*<FlatList*/}
+        {/*  contentContainerStyle={{ paddingLeft: 5, paddingRight: 20 }}*/}
+        {/*  numColumns={2}*/}
+        {/*  data={ourTeam}*/}
+        {/*  keyExtractor={(item, index) => 'ourTeam' + index}*/}
+        {/*  renderItem={({ item, index }) => (*/}
+        {/*    <Card*/}
+        {/*      image={item.image}*/}
+        {/*      onPress={() => navigation.navigate(item.screen)}*/}
+        {/*      style={{*/}
+        {/*        flex: 1,*/}
+        {/*        marginLeft: 15,*/}
+        {/*        height: 200,*/}
+        {/*        marginBottom: 20,*/}
+        {/*      }}>*/}
+        {/*      <Text footnote whiteColor style={styles.textShadow}>*/}
+        {/*        {item.subName}*/}
+        {/*      </Text>*/}
+        {/*      <Text headline whiteColor semibold numberOfLines={1} style={styles.textShadow}>*/}
+        {/*        {item.name}*/}
+        {/*      </Text>*/}
+        {/*    </Card>*/}
+        {/*  )}*/}
+        {/*/>*/}
         <Text headline semibold style={styles.title}>
           {t('meet_our_team').toUpperCase()}
-        </Text>
-        <FlatList
-          contentContainerStyle={{ paddingLeft: 5, paddingRight: 20 }}
-          numColumns={2}
-          data={ourTeam}
-          keyExtractor={(item, index) => 'ourTeam' + index}
-          renderItem={({ item, index }) => (
-            <Card
-              image={item.image}
-              onPress={() => navigation.navigate(item.screen)}
-              style={{
-                flex: 1,
-                marginLeft: 15,
-                height: 200,
-                marginBottom: 20,
-              }}>
-              <Text footnote whiteColor style={styles.textShadow}>
-                {item.subName}
-              </Text>
-              <Text
-                headline
-                whiteColor
-                semibold
-                numberOfLines={1}
-                style={styles.textShadow}>
-                {item.name}
-              </Text>
-            </Card>
-          )}
-        />
-        <Text headline semibold style={styles.title}>
-          {t('our_service').toUpperCase()}
         </Text>
         <View style={{ paddingHorizontal: 20 }}>
           {ourTeam.map((item, index) => {
@@ -133,7 +133,7 @@ export default function AboutUs({ navigation }) {
                 subName={item.subName}
                 description={item.description}
                 style={{ marginBottom: 10 }}
-                onPress={() => navigation.navigate(item.screen)}
+                onPress={() => item.link && Linking.openURL(item.link)}
               />
             );
           })}

@@ -7,7 +7,7 @@ export default StyleSheet.create({
     textShadowRadius: 5,
   },
   banner: {
-    height: 135,
+    height: 250,
     alignItems: 'center',
     justifyContent: 'center',
   },

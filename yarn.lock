@@ -1175,6 +1175,26 @@
     opencollective-postinstall "^2.0.1"
     superstruct "^0.6.2"
 
+"@react-native-firebase/dynamic-links@^10.3.1":
+  version "10.3.1"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/dynamic-links/-/dynamic-links-10.3.1.tgz#f86c9d983554458a71497510814b10b38d988851"
+  integrity sha512-l65Scu74RtpevVDBnHs+cL/7PJfB3twN5Qy85YGZTSyQmhAoAVUB4hi2d5mO+v78xvwU/bwM/q9L1A8jFllpsw==
+
+"@react-native-firebase/in-app-messaging@^10.3.1":
+  version "10.3.1"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/in-app-messaging/-/in-app-messaging-10.3.1.tgz#cf56da8e5faabb77897ad479c25ef32f9221ceac"
+  integrity sha512-81Y3qqUYIO0o2Czg4AU5F6kuH+EyGfVxtStzHSkhsA9+zc4aSbPjPE9byVqfMrhvDcK82zlVUGHo+GIsg590tQ==
+
+"@react-native-firebase/messaging@^10.3.1":
+  version "10.3.1"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/messaging/-/messaging-10.3.1.tgz#f764295ccb6fe97747dda097810d6d9c94b6c6c2"
+  integrity sha512-Ls1nkmP5YvD3nV5Vq7gwxu77TgaVGwuDc8jZB2AgpPWc1mse8/xkqRMuZ/ZXd3oPfuUiu1dlxET9SB2YrAR/Mw==
+
+"@react-native-firebase/remote-config@^10.3.1":
+  version "10.3.1"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/remote-config/-/remote-config-10.3.1.tgz#5b8cf5db503107aaf1b317af8e04c9679332ae80"
+  integrity sha512-cCfBagdTu9ppM1EWR/GbUAy5vWBwbalZz0MnRMUemDILhopYnPkOb9wBK5iSSrWD4bCcCGipUM5ZahVj94cjBQ==
+
 "@react-navigation/bottom-tabs@^5.8.0":
   version "5.11.2"
   resolved "https://registry.yarnpkg.com/@react-navigation/bottom-tabs/-/bottom-tabs-5.11.2.tgz#5b541612fcecdea2a5024a4028da35e4a727bde6"
