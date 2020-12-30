@@ -109,7 +109,12 @@ export default function AboutUs({ navigation }) {
               <Text footnote whiteColor style={styles.textShadow}>
                 {item.subName}
               </Text>
-              <Text headline whiteColor semibold numberOfLines={1} style={styles.textShadow}>
+              <Text
+                headline
+                whiteColor
+                semibold
+                numberOfLines={1}
+                style={styles.textShadow}>
                 {item.name}
               </Text>
             </Card>
@@ -132,6 +137,12 @@ export default function AboutUs({ navigation }) {
               />
             );
           })}
+        </View>
+        <View style={{ paddingHorizontal: 20, paddingVertical: 30 }}>
+          <Text>
+            Disclaimer: This mobile application is volunteer application and
+            does not have any association with Bahria Town officially.
+          </Text>
         </View>
       </ScrollView>
     </SafeAreaView>
