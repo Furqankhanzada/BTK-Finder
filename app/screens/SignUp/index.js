@@ -53,18 +53,21 @@ export default function SignUp(props) {
     }
 
     dispatch(
-      register({ name, email, phone, password }, (error) => {
-        setLoading(false);
-        if (!error) {
-          navigation.navigate('SignIn', { lastRoute });
-          Toast.show({
-            type: 'success',
-            topOffset: 55,
-            text1: 'Account Registered',
-            text2: 'You have successfully registered an account, Login Now!',
-          });
-        }
-      }),
+      register(
+        { name, email, phone: phone.replace(/\s+/g, ''), password },
+        (error) => {
+          setLoading(false);
+          if (!error) {
+            navigation.navigate('SignIn', { lastRoute });
+            Toast.show({
+              type: 'success',
+              topOffset: 55,
+              text1: 'Account Registered',
+              text2: 'You have successfully registered an account, Login Now!',
+            });
+          }
+        },
+      ),
     );
   };
 
