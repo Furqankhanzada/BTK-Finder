@@ -14,7 +14,7 @@ import styles from './styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { ScrollView } from 'react-native-gesture-handler';
 import ActionButton from 'react-native-action-button';
-import { MultiselectDropdown } from 'sharingan-rn-modal-dropdown';
+import { MultiselectDropdown } from '../../modules/sharingan-rn-modal-dropdown-master';
 import { generalFormValidation } from './Validations';
 import { Formik } from 'formik';
 import GlobalStyle from '../../assets/styling/GlobalStyle';
@@ -60,6 +60,7 @@ export default function Business({ navigation }) {
     {
       value: '1',
       label: 'Free Wifi',
+      icon: 'wifi',
       avatarSource: {
         uri:
           'https://img.icons8.com/color/344/circled-user-male-skin-type-5.png',
@@ -68,6 +69,7 @@ export default function Business({ navigation }) {
     {
       value: '2',
       label: 'Shower',
+      icon: 'shower',
       avatarSource: {
         uri:
           'https://img.icons8.com/color/344/circled-user-male-skin-type-5.png',
@@ -76,6 +78,7 @@ export default function Business({ navigation }) {
     {
       value: '3',
       label: 'Pet Allowed',
+      icon: 'paw',
       avatarSource: {
         uri:
           'https://img.icons8.com/color/344/circled-user-male-skin-type-5.png',
@@ -84,6 +87,7 @@ export default function Business({ navigation }) {
     {
       value: '4',
       label: 'Open 24/7',
+      icon: 'clock',
       avatarSource: {
         uri:
           'https://img.icons8.com/color/344/circled-user-male-skin-type-5.png',
@@ -92,6 +96,7 @@ export default function Business({ navigation }) {
     {
       value: '5',
       label: 'Super Market',
+      icon: 'basket',
       avatarSource: {
         uri:
           'https://img.icons8.com/color/344/circled-user-male-skin-type-5.png',
@@ -100,6 +105,7 @@ export default function Business({ navigation }) {
     {
       value: '6',
       label: 'Shuttle Bus',
+      icon: 'bus',
       avatarSource: {
         uri:
           'https://img.icons8.com/color/344/circled-user-male-skin-type-5.png',
