@@ -138,6 +138,12 @@ export default function AboutUs({ navigation }) {
             );
           })}
         </View>
+        <View style={{ paddingHorizontal: 20, paddingVertical: 30 }}>
+          <Text>
+            Disclaimer: This mobile application is volunteer application and
+            does not have any association with Bahria Town officially.
+          </Text>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );

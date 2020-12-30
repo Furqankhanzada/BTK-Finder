@@ -17,7 +17,7 @@ export default StyleSheet.create({
     width: '100%',
   },
   title: {
-    marginHorizontal: 20,
+    marginHorizontal: 25,
     marginBottom: 15,
   },
 

@@ -151,6 +151,9 @@ export default function Gallery({ navigation }) {
               Thumbnail
             </Text>
           </View>
+          <View style={{ marginHorizontal: 25, marginBottom: 5 }}>
+            <Text>Thumbnail size must be 300x300</Text>
+          </View>
           <View style={styles.thumbnailContainer}>
             <Loading
               loading={stateProps.thumbnailLoading}
@@ -184,6 +187,9 @@ export default function Gallery({ navigation }) {
             <Text title3 semibold style={{ textAlign: 'center' }}>
               Gallery
             </Text>
+          </View>
+          <View style={{ marginHorizontal: 25, marginBottom: -5 }}>
+            <Text>Gallery Images size must be 600x400</Text>
           </View>
           <View style={styles.gallerySectionImagesContainer}>
             <Loading
