@@ -130,10 +130,9 @@ export default function Profile(props) {
               styles.profileItem,
               { borderBottomColor: colors.border, borderBottomWidth: 1 },
             ]}
-            // onPress={() => {
-            //   navigation.navigate('AboutUs');
-            // }}
-            onPress={showBetaModal}>
+            onPress={() => {
+              navigation.navigate('AboutUs');
+            }}>
             <Text body1>{t('about_us')}</Text>
             <View
               style={{
