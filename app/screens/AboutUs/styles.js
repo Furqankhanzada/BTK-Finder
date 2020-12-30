@@ -1,8 +1,13 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
+  textShadow: {
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 5,
+  },
   banner: {
-    height: 135,
+    height: 250,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -16,5 +21,5 @@ export default StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'space-between',
   },
-  title: {paddingHorizontal: 20, paddingBottom: 15},
+  title: { paddingHorizontal: 20, paddingBottom: 15 },
 });
