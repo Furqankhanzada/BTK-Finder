@@ -1,6 +1,7 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 import * as actionTypes from './actionTypes';
+import crashlytics from '@react-native-firebase/crashlytics';
 import { SIGNUP, LOGIN, EDIT_PROFILE, GET_PROFILE, UPLOAD } from '../constants';
 import {
   REGISTER_API_ERROR,
@@ -96,6 +97,12 @@ export const getProfile = (cb) => {
       url: GET_PROFILE,
     })
       .then((response) => {
+        delete response?.data?.addresses;
+        delete response?.data?.roles;
+        delete response?.data?.resident;
+        delete response?.data?.__v;
+        crashlytics().setUserId(response?.data?._id);
+        crashlytics().setAttributes(response?.data);
         dispatch({
           type: GET_PROFILE_API_SUCCESS,
           profile: response.data,
