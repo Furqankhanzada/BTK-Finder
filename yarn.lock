@@ -1183,6 +1183,11 @@
     opencollective-postinstall "^2.0.1"
     superstruct "^0.6.2"
 
+"@react-native-firebase/remote-config@^10.4.0":
+  version "10.4.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/remote-config/-/remote-config-10.4.0.tgz#97c1e64528ee3cc9f3029cd85098515b89c9b09a"
+  integrity sha512-mBGiBolm4HsNNDhYT/0ys33FrCi4+XYsd395FFPJ20+OY4tIdVF0jc3HLIbTDDeq9S3b48jxQpHoDU5aH/4wIA==
+
 "@react-navigation/bottom-tabs@^5.8.0":
   version "5.11.2"
   resolved "https://registry.yarnpkg.com/@react-navigation/bottom-tabs/-/bottom-tabs-5.11.2.tgz#5b541612fcecdea2a5024a4028da35e4a727bde6"

@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useRef } from 'react';
+import React, { Fragment, useState, useRef, useEffect } from 'react';
 import { View, Platform, TouchableOpacity } from 'react-native';
 import { BaseStyle, useTheme, BaseColor } from '@config';
 import {
@@ -11,6 +11,7 @@ import {
   DropDown,
 } from '@components';
 import styles from './styles';
+import remoteConfig from '@react-native-firebase/remote-config';
 import { useDispatch, useSelector } from 'react-redux';
 import { ScrollView } from 'react-native-gesture-handler';
 import ActionButton from 'react-native-action-button';
@@ -56,39 +57,17 @@ export default function Business({ navigation }) {
   const onUpdateFacilities = (value) => {
     setSelectedFacilities(value);
   };
-  const facilities = [
-    {
-      value: '1',
-      label: 'Free Wifi',
-      icon: 'wifi',
-    },
-    {
-      value: '2',
-      label: 'Shower',
-      icon: 'shower',
-    },
-    {
-      value: '3',
-      label: 'Pet Allowed',
-      icon: 'paw',
-    },
-    {
-      value: '4',
-      label: 'Open 24/7',
-      icon: 'clock',
-    },
-    {
-      value: '5',
-      label: 'Super Market',
-      icon: 'basket',
-    },
-    {
-      value: '6',
-      label: 'Shuttle Bus',
-      icon: 'bus',
-    },
-  ];
-  console.log('######################', selectedFacilities);
+
+  const [facilities, setFacilities] = useState([]);
+  // console.log('@@@@@@@@@@@@@@@@@@@@@@@@', facilities);
+
+  useEffect(() => {
+    const getFacilities = remoteConfig().getValue('facilities');
+    // console.log('##############', getFacilities._value);
+    getFacilities._value
+      ? setFacilities(JSON.parse(getFacilities._value))
+      : null;
+  }, []);
 
   const getSelectedCategory = (selected) => {
     let foundCategory = null;
@@ -111,7 +90,7 @@ export default function Business({ navigation }) {
   const submit = (values) => {
     dispatch(setBusinessFormData({ ...values, tags: [] }));
     onNext();
-    console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@', values);
+    // console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@', values);
   };
 
   return (
