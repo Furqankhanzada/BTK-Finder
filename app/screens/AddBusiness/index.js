@@ -56,6 +56,7 @@ export default function Business({ navigation }) {
   const [selectedFacilities, setSelectedFacilities] = useState([]);
   const onUpdateFacilities = (value) => {
     setSelectedFacilities(value);
+    console.log('########################', value);
   };
 
   const [facilities, setFacilities] = useState([]);
@@ -202,7 +203,6 @@ export default function Business({ navigation }) {
                       // itemTextStyle={{ color: colors.text }} //dropdown text not working
                       textInputStyle={{
                         backgroundColor: colors.card,
-                        height: 48,
                       }}
                       underlineColor={colors.card}
                       parentDDContainerStyle={{

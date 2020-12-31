@@ -137,14 +137,14 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
 
   useEffect(() => {
     if (!Lo.isEmpty(data) && value) {
-      setLabelV(`${value.length} selected`);
+      setLabelV(value.length ? `${value.length} facilites selected` : 'Select Facilities');
       setSelectedItems(Lo.filter(data, d => value.includes(d.value)));
     }
   }, [value, data]);
 
   useEffect(() => {
     if (value) {
-      setLabelV(`${value.length} selected`);
+      setLabelV(value.length ? `${value.length} facilites selected` : 'Select Facilities');
       setSelectedItems(Lo.filter(data, d => value.includes(d.value)));
     }
   }, [value, data]);
@@ -181,7 +181,7 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
     if (hasError) {
       setIconColor('red');
     } else {
-      setIconColor(primaryColor);
+      setIconColor('#5dade2');
     }
     pViewRef.current.measureInWindow(
       (vx: number, vy: number, vWidth: number, vHeight: number) => {

@@ -14,6 +14,7 @@ export default StyleSheet.create({
     // flex: 1,
     width: '100%',
     backgroundColor: 'transparent',
+    borderRadius: 5,
   },
   modalStyle: {
     margin: 0,
@@ -22,6 +23,10 @@ export default StyleSheet.create({
   textInput: {
     backgroundColor: 'transparent',
     borderColor: 'black',
+    fontSize: 14,
+    height: 46,
+    borderRadius: 5,
+    paddingHorizontal: 15,
   },
   rippleStyle: {
     width: '100%',

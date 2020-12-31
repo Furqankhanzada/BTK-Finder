@@ -65,7 +65,7 @@ const MultiselectItem: React.FC<IMultiselectDropdownItemProps> = ({
   });
 
   const handleSelectValue = () => {
-    onSelect(value);
+    onSelect(item);
   };
 
   const getSelectedStyles = () => {
@@ -85,7 +85,7 @@ const MultiselectItem: React.FC<IMultiselectDropdownItemProps> = ({
         style={[
           styles.listView,
           itemContainerStyle,
-          selected.includes(value) ? selectedItemViewStyle : {},
+          selected.includes(item) ? selectedItemViewStyle : {},
         ]}
       >
         <View style={styles.textView}>
@@ -100,7 +100,7 @@ const MultiselectItem: React.FC<IMultiselectDropdownItemProps> = ({
           <Text
             style={[
               itemTextStyle,
-              selected.includes(value)
+              selected.includes(item)
                 ? getSelectedStyles()
                 : styles.unselected,
             ]}
@@ -109,7 +109,7 @@ const MultiselectItem: React.FC<IMultiselectDropdownItemProps> = ({
           </Text>
         </View>
         <View style={styles.iconView}>
-          {selected.includes(value) && !disableSelectionTick ? (
+          {selected.includes(item) && !disableSelectionTick ? (
             <MaterialCommunityIcons
               name="check"
               size={18}
