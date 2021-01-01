@@ -34,7 +34,7 @@ const MultiselectItem: React.FC<IMultiselectDropdownItemProps> = ({
   selectedItemTextStyle,
   selectedItemViewStyle,
 }) => {
-  const { label, value, avatarSource } = item;
+  const { name, value, avatarSource } = item;
   const styles = StyleSheet.create({
     unselected: {
       color: colors.unselected,
@@ -105,7 +105,7 @@ const MultiselectItem: React.FC<IMultiselectDropdownItemProps> = ({
                 : styles.unselected,
             ]}
           >
-            {label}
+            {name}
           </Text>
         </View>
         <View style={styles.iconView}>

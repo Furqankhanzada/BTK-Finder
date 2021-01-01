@@ -56,7 +56,7 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
   const {
     error,
     value,
-    label,
+    name,
     required,
     disabled,
     data,
@@ -161,7 +161,7 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
 
   useEffect(() => {
     if (!disableSort)
-      setOptions(Lo.orderBy(data, ['label'], [defaultSortOrder]));
+      setOptions(Lo.orderBy(data, ['name'], [defaultSortOrder]));
     else setOptions(data);
   }, [data, disableSort, defaultSortOrder]);
 
@@ -242,7 +242,7 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
     }
     setSearchQuery('');
     if (!disableSort)
-      setOptions(Lo.orderBy(data, ['label'], [defaultSortOrder]));
+      setOptions(Lo.orderBy(data, ['name'], [defaultSortOrder]));
     else setOptions(data);
   };
 
@@ -250,7 +250,7 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
     setSearchQuery(query);
     if (!Lo.isEmpty(data) && query) {
       const lFilter = data.filter(opt =>
-        opt.label
+        opt.name
           .toString()
           .toLowerCase()
           .trim()
@@ -262,7 +262,7 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
         setOptions(lFilter);
       }
     } else if (!Lo.isEmpty(data) && !query && !disableSort) {
-      setOptions(Lo.sortBy(data, 'label'));
+      setOptions(Lo.sortBy(data, 'name'));
     } else setOptions(data);
   };
 
@@ -284,7 +284,7 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
     if (removeLabel) {
       return '';
     } else {
-      return required ? `${label}*` : label;
+      return required ? `${name}*` : name;
     }
   };
 
@@ -329,7 +329,7 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
               theme={{ colors: { error: errorColor } }}
               visible={hasError}
             >
-              {helperText ? helperText : `${label} is required`}
+              {helperText ? helperText : `${name} is required`}
             </HelperText>
           ) : null}
         </PressableTouch>
@@ -366,7 +366,7 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
                   )
                 }
               >
-                <Text style={chipTextStyle}>{item.label}</Text>
+                <Text style={chipTextStyle}>{item.name}</Text>
               </Chip>
             </View>
           )}
@@ -445,7 +445,7 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
                         }
                         onClose={() => removeChip(item)}
                       >
-                        <Text style={chipTextStyle}>{item.label}</Text>
+                        <Text style={chipTextStyle}>{item.name}</Text>
                       </Chip>
                     </View>
                   )}

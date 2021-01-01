@@ -89,7 +89,13 @@ export default function Business({ navigation }) {
   });
 
   const submit = (values) => {
-    dispatch(setBusinessFormData({ ...values, tags: [] }));
+    dispatch(
+      setBusinessFormData({
+        ...values,
+        tags: [],
+        facilities: selectedFacilities,
+      }),
+    );
     onNext();
     // console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@', values);
   };
