@@ -35,6 +35,7 @@ export const authentication = (login, callback) => (dispatch) => {
     };
     dispatch(onLogin(data));
     dispatch({ type: SIGNOUT, loading: false });
+    AsyncStorage.removeItem('access_token');
     if (typeof callback === 'function') {
       callback({ success: true });
     }
@@ -160,6 +161,8 @@ export const uploadProfileImage = (payload, form, cb) => (dispatch) => {
 export const setIsLogin = () => (dispatch) => {
   AsyncStorage.getItem('access_token').then((token) => {
     console.log('token#######', token);
-    dispatch({ type: LOGGED_IN_SUCCESS });
+    if (token) {
+      dispatch({ type: LOGGED_IN_SUCCESS });
+    }
   });
 };
