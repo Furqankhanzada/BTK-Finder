@@ -1,6 +1,7 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 import * as actionTypes from './actionTypes';
+import crashlytics from '@react-native-firebase/crashlytics';
 import { SIGNUP, LOGIN, EDIT_PROFILE, GET_PROFILE, UPLOAD } from '../constants';
 import {
   REGISTER_API_ERROR,
@@ -14,6 +15,7 @@ import {
   EDIT_PROFILE_API_SUCCESS,
   EDIT_PROFILE_API_ERROR,
   PROFILE_UPLOAD_API,
+  LOGGED_IN_SUCCESS,
 } from '../constants/auth';
 import { handleError } from '../utils';
 import axiosApiInstance from '../interceptor/axios-interceptor';
@@ -75,8 +77,6 @@ export const login = (user, cb) => {
             'access_token',
             response.data.access_token,
           );
-          const token = await AsyncStorage.getItem('access_token');
-          console.log('token#######', token);
         } catch (e) {
           // saving error
         }
@@ -96,6 +96,8 @@ export const getProfile = (cb) => {
       url: GET_PROFILE,
     })
       .then((response) => {
+        crashlytics().setUserId(response?.data?._id);
+        // crashlytics().setAttributes(response?.data);
         dispatch({
           type: GET_PROFILE_API_SUCCESS,
           profile: response.data,
@@ -153,4 +155,11 @@ export const uploadProfileImage = (payload, form, cb) => (dispatch) => {
       cb && cb(error);
       handleError(error);
     });
+};
+
+export const setIsLogin = () => (dispatch) => {
+  AsyncStorage.getItem('access_token').then((token) => {
+    console.log('token#######', token);
+    dispatch({ type: LOGGED_IN_SUCCESS });
+  });
 };
