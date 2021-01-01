@@ -7,7 +7,7 @@ import { useTheme, BaseSetting } from '@config';
 import SplashScreen from 'react-native-splash-screen';
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 /* Main Stack Navigator */
 import Main from 'app/navigation/main';
@@ -21,10 +21,12 @@ import SelectDarkOption from '@screens/SelectDarkOption';
 import SelectFontOption from '@screens/SelectFontOption';
 import HelpLine from '@screens/HelpLine';
 import Toast from 'react-native-toast-message';
+import { setIsLogin } from '../actions/auth';
 
 const RootStack = createStackNavigator();
 
 export default function Navigator() {
+  const dispatch = useDispatch();
   const storeLanguage = useSelector((state) => state.application.language);
   const { theme, colors } = useTheme();
   const isDarkMode = useDarkMode();
@@ -45,6 +47,10 @@ export default function Navigator() {
     StatusBar.setBackgroundColor(colors.primary, true);
     StatusBar.setBarStyle(isDarkMode ? 'light-content' : 'dark-content', true);
   }, [colors.primary, isDarkMode, storeLanguage]);
+
+  useEffect(() => {
+    dispatch(setIsLogin());
+  }, [dispatch]);
 
   return (
     <DarkModeProvider>
