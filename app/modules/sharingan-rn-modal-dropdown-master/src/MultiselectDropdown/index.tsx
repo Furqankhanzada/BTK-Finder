@@ -52,8 +52,6 @@ const theme = {
   dark: true,
 };
 
-const defaultAvatar = require('../assets/ddicon.png');
-
 const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
   const {
     error,
@@ -138,14 +136,14 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
   useEffect(() => {
     if (!Lo.isEmpty(data) && value) {
       setLabelV(value.length ? `${value.length} facilites selected` : 'Select Facilities');
-      setSelectedItems(Lo.filter(data, d => value.includes(d.value)));
+      setSelectedItems(value);
     }
   }, [value, data]);
 
   useEffect(() => {
     if (value) {
       setLabelV(value.length ? `${value.length} facilites selected` : 'Select Facilities');
-      setSelectedItems(Lo.filter(data, d => value.includes(d.value)));
+      setSelectedItems(value);
     }
   }, [value, data]);
 
@@ -354,7 +352,7 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
                   chipStyle,
                 ]}
                 ellipsizeMode="tail"
-                onClose={() => removeChip(item.value)}
+                onClose={() => removeChip(item)}
                 avatar={
                   enableAvatar && (
                     <View style={styles.textView}>
@@ -445,7 +443,7 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
                             </View>
                           )
                         }
-                        onClose={() => removeChip(item.value)}
+                        onClose={() => removeChip(item)}
                       >
                         <Text style={chipTextStyle}>{item.label}</Text>
                       </Chip>

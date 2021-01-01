@@ -15,7 +15,7 @@ import remoteConfig from '@react-native-firebase/remote-config';
 import { useDispatch, useSelector } from 'react-redux';
 import { ScrollView } from 'react-native-gesture-handler';
 import ActionButton from 'react-native-action-button';
-import { MultiselectDropdown } from '../../modules/sharingan-rn-modal-dropdown-master';
+import { MultiselectDropdown } from '../../modules/sharingan-rn-modal-dropdown-master/src';
 import { generalFormValidation } from './Validations';
 import { Formik } from 'formik';
 import GlobalStyle from '../../assets/styling/GlobalStyle';
