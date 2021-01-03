@@ -1,8 +1,12 @@
+import { BaseStyle, useTheme, BaseColor } from '@config';
+
 export const colors = {
-  primary: '#2196F3',
+  primary: '#5dade2',
   unselected: '#2e3742',
   actIndicator: '#2e3742',
   error: 'red',
+  baseColor: useTheme.cardColor,
+  textColor: useTheme.text,
 };
 
 export const ITEMLAYOUT = 40;

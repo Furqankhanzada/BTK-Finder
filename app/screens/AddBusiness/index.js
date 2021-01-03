@@ -206,23 +206,27 @@ export default function Business({ navigation }) {
                       borderRadius={7}
                       searchPlaceholder="Search for a facility"
                       emptyListText="No facility found"
-                      // itemTextStyle={{ color: colors.text }} //dropdown text not working
+                      itemTextStyle={{ color: colors.text }} //dropdown text unselected
+                      selectedItemTextStyle={{ color: colors.primary}} //dropdown text selected
                       textInputStyle={{
                         backgroundColor: colors.card,
                       }}
                       underlineColor={colors.card}
                       parentDDContainerStyle={{
                         marginTop: 100,
-                        // backgroundColor: colors.card,
+                        backgroundColor: colors.card,
+                        borderColor: BaseColor.grayColor,
+                        borderWidth: 1,
                       }} //Dropdown Container Style
                       mainContainerStyle={{
                         backgroundColor: colors.card,
                         borderRadius: 5,
                       }}
                       chipType="outlined"
-                      // chipTextStyle={{  }}
-                      chipStyle={{ marginBottom: 10 }}
+                      chipTextStyle={{ color: colors.text }}
+                      chipStyle={{ marginBottom: 10, borderColor: colors.primary }}
                       emptySelectionText="Selected Facilities will appear here.."
+                      emptySelectionTextStyle={{ color: colors.text }}
                       value={selectedFacilities}
                       onChange={onUpdateFacilities}
                     />

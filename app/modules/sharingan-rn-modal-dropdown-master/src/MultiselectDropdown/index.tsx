@@ -22,7 +22,7 @@ import {
 } from 'react-native';
 import Modal from 'react-native-modal';
 import Lo from 'lodash';
-
+import { BaseStyle, useTheme, BaseColor } from '@config';
 import MultiselectItem from '../Components/MultiselectItem';
 import { colors, defaultDropdownProps, ITEMLAYOUT } from '../constants';
 import type { IDropdownData, IMultiselectDropdownProps } from '../types';
@@ -89,6 +89,7 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
     chipTextStyle = {},
     onBlur,
     emptySelectionText,
+    emptySelectionTextStyle,
     paperTheme,
     textInputStyle,
     chipStyle = {},
@@ -345,7 +346,6 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
                 style={[
                   styles.chip,
                   {
-                    borderColor: primaryColor,
                     backgroundColor:
                       chipType === 'flat' ? primaryColor : 'transparent',
                   },
@@ -449,7 +449,7 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
                       </Chip>
                     </View>
                   )}
-                  ListEmptyComponent={<Caption>{emptySelectionText}</Caption>}
+                  ListEmptyComponent={<Caption style={emptySelectionTextStyle}>{emptySelectionText}</Caption>}
                 />
               </View>
               <Divider style={styles.divider} />
@@ -467,14 +467,16 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
                         placeholder={searchPlaceholder}
                         onChangeText={onChangeSearch}
                         value={searchQuery}
+                        iconColor= 'gray'
                         theme={{ colors: { primary: primaryColor } }}
                         style={{
                           elevation: 0,
                           backgroundColor: showLoader
                             ? 'transparent'
-                            : '#FFFFFF',
+                            : colors.baseColor,
                           height: ITEMLAYOUT,
                         }}
+                        inputStyle={{ color: 'gray' }}
                       />
                       <Divider style={styles.divider} />
                     </View>
