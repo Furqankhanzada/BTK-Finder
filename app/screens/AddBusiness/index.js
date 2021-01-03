@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useRef } from 'react';
+import React, { Fragment, useState, useRef, useEffect } from 'react';
 import { View, Platform, TouchableOpacity } from 'react-native';
 import { BaseStyle, useTheme, BaseColor } from '@config';
 import {
@@ -9,12 +9,13 @@ import {
   Text,
   CustomStepIndicator,
   DropDown,
-  DropDownMultiSelect,
 } from '@components';
 import styles from './styles';
+import remoteConfig from '@react-native-firebase/remote-config';
 import { useDispatch, useSelector } from 'react-redux';
 import { ScrollView } from 'react-native-gesture-handler';
 import ActionButton from 'react-native-action-button';
+import { MultiselectDropdown } from '../../modules/sharingan-rn-modal-dropdown-master/src';
 import { generalFormValidation } from './Validations';
 import { Formik } from 'formik';
 import GlobalStyle from '../../assets/styling/GlobalStyle';
@@ -141,40 +142,21 @@ export default function Business({ navigation }) {
   ]);
 
   const [selectedFacilities, setSelectedFacilities] = useState([]);
-  const [facilities] = useState([
-    {
-      label: 'Free Wifi',
-      value: 'Free Wifi',
-      icon: () => <Icon name="wifi" size={18} color={colors.primary} />,
-    },
-    {
-      label: 'Shower',
-      value: 'Shower',
-      icon: () => <Icon name="shower" size={18} color={colors.primary} />,
-    },
-    {
-      label: 'Pet Allowed',
-      value: 'Pet Allowed',
-      icon: () => <Icon name="paw" size={18} color={colors.primary} />,
-    },
-    {
-      label: 'Open 24/7',
-      value: 'Open-24/7',
-      icon: () => <Icon name="clock" size={18} color={colors.primary} />,
-    },
-    {
-      label: 'Super Market',
-      value: 'Super Market',
-      icon: () => (
-        <Icon name="shopping-cart" size={18} color={colors.primary} />
-      ),
-    },
-    {
-      label: 'Shuttle Bus',
-      value: 'Shuttle Bus',
-      icon: () => <Icon name="bus" size={18} color={colors.primary} />,
-    },
-  ]);
+  const onUpdateFacilities = (value) => {
+    setSelectedFacilities(value);
+    console.log('########################', value);
+  };
+
+  const [facilities, setFacilities] = useState([]);
+  // console.log('@@@@@@@@@@@@@@@@@@@@@@@@', facilities);
+
+  useEffect(() => {
+    const getFacilities = remoteConfig().getValue('facilities');
+    // console.log('##############', getFacilities._value);
+    getFacilities._value
+      ? setFacilities(JSON.parse(getFacilities._value))
+      : null;
+  }, []);
 
   const getSelectedCategory = (selected) => {
     let foundCategory = null;
@@ -195,6 +177,15 @@ export default function Business({ navigation }) {
   });
 
   const submit = (values) => {
+    dispatch(
+      setBusinessFormData({
+        ...values,
+        tags: [],
+        facilities: selectedFacilities,
+      }),
+    );
+    onNext();
+    // console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@', values);
     dispatch(setBusinessFormData({ ...values, tags: selectedTags }));
     onNext();
   };
@@ -293,6 +284,47 @@ export default function Business({ navigation }) {
                   <View
                     style={[
                       GlobalStyle.inputContainer,
+                      { marginTop: 10, marginBottom: -15 },
+                    ]}>
+                    <MultiselectDropdown
+                      label=""
+                      data={facilities}
+                      enableSearch
+                      enableAvatar
+                      floating
+                      elevation={0}
+                      borderRadius={7}
+                      searchPlaceholder="Search for a facility"
+                      emptyListText="No facility found"
+                      itemTextStyle={{ color: colors.text }} //dropdown text unselected
+                      selectedItemTextStyle={{ color: colors.primary}} //dropdown text selected
+                      textInputStyle={{
+                        backgroundColor: colors.card,
+                      }}
+                      underlineColor={colors.card}
+                      parentDDContainerStyle={{
+                        marginTop: 100,
+                        backgroundColor: colors.card,
+                        borderColor: BaseColor.grayColor,
+                        borderWidth: 1,
+                      }} //Dropdown Container Style
+                      mainContainerStyle={{
+                        backgroundColor: colors.card,
+                        borderRadius: 5,
+                      }}
+                      chipType="outlined"
+                      chipTextStyle={{ color: colors.text }}
+                      chipStyle={{ marginBottom: 10, borderColor: colors.primary }}
+                      emptySelectionText="Selected Facilities will appear here.."
+                      emptySelectionTextStyle={{ color: colors.text }}
+                      value={selectedFacilities}
+                      onChange={onUpdateFacilities}
+                    />
+                  </View>
+
+                  <View
+                    style={[
+                      GlobalStyle.inputContainer,
                       Platform.OS === 'ios' && {
                         position: 'relative',
                         zIndex: 1,
@@ -306,24 +338,6 @@ export default function Business({ navigation }) {
                       placeholder={'Select Tags'}
                       searchablePlaceholder={'Search for Tags'}
                       max={15}
-                    />
-                  </View>
-
-                  <View
-                    style={[
-                      GlobalStyle.inputContainer,
-                      Platform.OS === 'ios' && {
-                        position: 'relative',
-                        zIndex: 1,
-                      },
-                    ]}>
-                    <DropDownMultiSelect
-                      items={facilities}
-                      multipleText={selectedFacilities.toString()}
-                      defaultValue={selectedFacilities}
-                      onChangeItem={(item) => setSelectedFacilities(item)}
-                      placeholder={'Select Facilities'}
-                      searchablePlaceholder={'Search for Facilities'}
                     />
                   </View>
 
