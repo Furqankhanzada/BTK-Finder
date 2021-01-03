@@ -100,6 +100,7 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
     selectedItemViewStyle,
     removeLabel,
     mode = 'flat',
+    title = '',
   } = props;
   // const [selected, setSelected] = useState<string[]>([]);
   const [selectedItems, setSelectedItems] = useState<IDropdownData[]>([]);
@@ -136,14 +137,14 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
 
   useEffect(() => {
     if (!Lo.isEmpty(data) && value) {
-      setLabelV(value.length ? `${value.length} facilites selected` : 'Select Facilities');
+      setLabelV(value.length ? `${value.length} ${title} selected` : `Select ${title}`);
       setSelectedItems(value);
     }
   }, [value, data]);
 
   useEffect(() => {
     if (value) {
-      setLabelV(value.length ? `${value.length} facilites selected` : 'Select Facilities');
+      setLabelV(value.length ? `${value.length} ${title} selected` : `Select ${title}`);
       setSelectedItems(value);
     }
   }, [value, data]);
