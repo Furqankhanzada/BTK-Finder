@@ -164,7 +164,7 @@ export default function Business({ navigation }) {
     dispatch(
       setBusinessFormData({
         ...values,
-        tags: selectedTags,
+        tags: selectedTags.map((el) => el.name),
         facilities: selectedFacilities,
       }),
     );
