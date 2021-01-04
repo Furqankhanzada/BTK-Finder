@@ -56,94 +56,78 @@ export default function Business({ navigation }) {
   const [selectedTags, setSelectedTags] = useState([]);
   const [tags] = useState([
     {
-      label: 'Food',
-      value: 'Food',
+      name: 'Food',
     },
     {
-      label: 'Burger',
-      value: 'Burger',
+      name: 'Burger',
     },
     {
-      label: 'Pizza',
-      value: 'Pizza',
+      name: 'Pizza',
     },
     {
-      label: 'Drink',
-      value: 'Drink',
+      name: 'Drink',
     },
     {
-      label: 'Clothing',
-      value: 'Clothing',
+      name: 'Clothing',
     },
     {
-      label: 'Mens Cloth',
-      value: 'Mens Cloth',
+      name: 'Mens Cloth',
     },
     {
-      label: 'Boys Cloth',
-      value: 'Boys Cloth',
+      name: 'Boys Cloth',
     },
     {
-      label: 'Technician',
-      value: 'Technician',
+      name: 'Technician',
     },
     {
-      label: 'School',
-      value: 'School',
+      name: 'School',
     },
     {
-      label: 'College',
-      value: 'College',
+      name: 'College',
     },
     {
-      label: 'University',
-      value: 'University',
+      name: 'University',
     },
     {
-      label: 'Cinema',
-      value: 'Cinema',
+      name: 'Cinema',
     },
     {
-      label: 'Madarsa',
-      value: 'Madarsa',
+      name: 'Madarsa',
     },
     {
-      label: 'Entertainment',
-      value: 'Entertainment',
+      name: 'Entertainment',
     },
     {
-      label: 'Shopping',
-      value: 'Shopping',
+      name: 'Shopping',
     },
     {
-      label: 'Super Market',
-      value: 'Super Market',
+      name: 'Super Market',
     },
     {
-      label: 'Electrician',
-      value: 'Electrician',
+      name: 'Electrician',
     },
     {
-      label: 'Plumber',
-      value: 'Plumber',
+      name: 'Plumber',
     },
     {
-      label: 'Estate',
-      value: 'Estate',
+      name: 'Estate',
     },
     {
-      label: 'Hospital',
-      value: 'Hospital',
+      name: 'Hospital',
     },
     {
-      label: 'Gym',
-      value: 'Gym',
+      name: 'Gym',
     },
   ]);
 
   const [selectedFacilities, setSelectedFacilities] = useState([]);
   const onUpdateFacilities = (value) => {
     setSelectedFacilities(value);
+    console.log('########################', value);
+  };
+
+  const onUpdateTags = (value) => {
+    setSelectedTags(value);
     console.log('########################', value);
   };
 
@@ -180,13 +164,10 @@ export default function Business({ navigation }) {
     dispatch(
       setBusinessFormData({
         ...values,
-        tags: [],
+        tags: selectedTags.map((el) => el.name),
         facilities: selectedFacilities,
       }),
     );
-    onNext();
-    // console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@', values);
-    dispatch(setBusinessFormData({ ...values, tags: selectedTags }));
     onNext();
   };
 
@@ -287,7 +268,7 @@ export default function Business({ navigation }) {
                       { marginTop: 10, marginBottom: -15 },
                     ]}>
                     <MultiselectDropdown
-                      label=""
+                      title="Facilities"
                       data={facilities}
                       enableSearch
                       enableAvatar
@@ -297,13 +278,13 @@ export default function Business({ navigation }) {
                       searchPlaceholder="Search for a facility"
                       emptyListText="No facility found"
                       itemTextStyle={{ color: colors.text }} //dropdown text unselected
-                      selectedItemTextStyle={{ color: colors.primary}} //dropdown text selected
+                      selectedItemTextStyle={{ color: colors.primary }} //dropdown text selected
                       textInputStyle={{
                         backgroundColor: colors.card,
                       }}
                       underlineColor={colors.card}
                       parentDDContainerStyle={{
-                        marginTop: 100,
+                        marginTop: 70,
                         backgroundColor: colors.card,
                         borderColor: BaseColor.grayColor,
                         borderWidth: 1,
@@ -314,7 +295,10 @@ export default function Business({ navigation }) {
                       }}
                       chipType="outlined"
                       chipTextStyle={{ color: colors.text }}
-                      chipStyle={{ marginBottom: 10, borderColor: colors.primary }}
+                      chipStyle={{
+                        marginBottom: 10,
+                        borderColor: colors.primary,
+                      }}
                       emptySelectionText="Selected Facilities will appear here.."
                       emptySelectionTextStyle={{ color: colors.text }}
                       value={selectedFacilities}
@@ -325,33 +309,45 @@ export default function Business({ navigation }) {
                   <View
                     style={[
                       GlobalStyle.inputContainer,
-                      Platform.OS === 'ios' && {
-                        position: 'relative',
-                        zIndex: 1,
-                      },
+                      { marginTop: 10, marginBottom: -15 },
                     ]}>
-                    <DropDownMultiSelect
-                      items={tags}
-                      multipleText={selectedTags.toString()}
-                      defaultValue={selectedTags}
-                      onChangeItem={(item) => setSelectedTags(item)}
-                      placeholder={'Select Tags'}
-                      searchablePlaceholder={'Search for Tags'}
-                      max={15}
+                    <MultiselectDropdown
+                      title="Tags"
+                      data={tags}
+                      enableSearch
+                      floating
+                      elevation={0}
+                      borderRadius={7}
+                      searchPlaceholder="Search for a tag"
+                      emptyListText="No Tag found"
+                      itemTextStyle={{ color: colors.text }} //dropdown text unselected
+                      selectedItemTextStyle={{ color: colors.primary }} //dropdown text selected
+                      textInputStyle={{
+                        backgroundColor: colors.card,
+                      }}
+                      underlineColor={colors.card}
+                      parentDDContainerStyle={{
+                        marginTop: 70,
+                        backgroundColor: colors.card,
+                        borderColor: BaseColor.grayColor,
+                        borderWidth: 1,
+                      }} //Dropdown Container Style
+                      mainContainerStyle={{
+                        backgroundColor: colors.card,
+                        borderRadius: 5,
+                      }}
+                      chipType="outlined"
+                      chipTextStyle={{ color: colors.text }}
+                      chipStyle={{
+                        marginBottom: 10,
+                        borderColor: colors.primary,
+                      }}
+                      emptySelectionText="Selected Tags will appear here.."
+                      emptySelectionTextStyle={{ color: colors.text }}
+                      value={selectedTags}
+                      onChange={onUpdateTags}
                     />
                   </View>
-
-                  {/*<View style={GlobalStyle.inputContainer}>*/}
-                  {/*  <TextInput*/}
-                  {/*    style={{ marginTop: 10 }}*/}
-                  {/*    onChangeText={handleChange('tags')}*/}
-                  {/*    placeholder="Tags"*/}
-                  {/*    value={values.tags}*/}
-                  {/*  />*/}
-                  {/*  {errors.tags ? (*/}
-                  {/*    <Text style={GlobalStyle.errorText}>{errors.tags}</Text>*/}
-                  {/*  ) : null}*/}
-                  {/*</View>*/}
 
                   <View style={GlobalStyle.inputContainer}>
                     <TextInput
