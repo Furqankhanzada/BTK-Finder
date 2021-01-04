@@ -21,10 +21,12 @@ export default function Review(props) {
   const { colors } = useTheme();
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const stateProps = useSelector(({ businesses }) => {
+  const stateProps = useSelector(({ businesses, profile, auth }) => {
     return {
       singleBusiness: businesses.singleBusiness,
       getSingleBusinessLoading: businesses.getSingleBusinessLoading,
+      currentUserId: profile._id,
+      isLogin: auth.isLogin
     };
   });
 
@@ -67,9 +69,32 @@ export default function Review(props) {
     ],
   };
 
-  const isLogin = useSelector((state) => state.auth.isLogin);
   const navigateToFeedback = (id) => {
     navigation.navigate('Feedback', { id });
+  };
+
+  const checkReviewAlreadyAdded = () => {
+   let check = false;
+    if(stateProps.singleBusiness?.reviews?.length) {
+      stateProps.singleBusiness.reviews.forEach(({owner}) => {
+        if(owner._id === stateProps.currentUserId){
+          check = true;
+          return false
+        }
+      })
+    }
+    return check;
+  };
+  const checkUserLogin = () => {
+    if(stateProps.isLogin) {
+      if(!checkReviewAlreadyAdded()){
+        navigateToFeedback(stateProps.singleBusiness._id)
+      } else {
+        alert('You already added a review.', 'OK');
+      }
+    } else {
+      alert('You must login in order to add a review.', ' OK');
+    }
   };
 
   return (
@@ -106,11 +131,7 @@ export default function Review(props) {
         onPressLeft={() => {
           navigation.goBack();
         }}
-        onPressRight={() => {
-          isLogin
-            ? navigateToFeedback(stateProps.singleBusiness._id)
-            : alert('You must login in order to add a review.', ' OK');
-        }}
+        onPressRight={() => checkUserLogin()}
       />
       {stateProps.getSingleBusinessLoading ? (
         <Loading loading={true} />
@@ -128,7 +149,7 @@ export default function Review(props) {
             />
           }
           data={stateProps.singleBusiness.reviews}
-          keyExtractor={(item, index) => item.id}
+          keyExtractor={(item) => item.id}
           ListHeaderComponent={() => (
             <RateDetail
               point={rateDetail.point}
@@ -143,7 +164,7 @@ export default function Review(props) {
               image={item.owner.avatar}
               name={item.owner.name}
               rate={item.rating}
-              date={moment(item.createdAt, 'YYYYMMDD').fromNow()}
+              date={moment(item.createdAt).fromNow()}
               title={item.title}
               comment={item.description}
             />
