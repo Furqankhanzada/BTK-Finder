@@ -214,6 +214,11 @@ export default function Business({ navigation }) {
                     ]}>
                     <MultiselectDropdown
                       title="Facilities"
+                      titleColor={
+                        selectedFacilities?.length
+                          ? colors.text
+                          : BaseColor.grayColor
+                      }
                       data={facilities}
                       enableSearch
                       enableAvatar
@@ -258,6 +263,9 @@ export default function Business({ navigation }) {
                     ]}>
                     <MultiselectDropdown
                       title="Tags"
+                      titleColor={
+                        selectedTags?.length ? colors.text : BaseColor.grayColor
+                      }
                       data={tags}
                       enableSearch
                       floating

@@ -101,6 +101,7 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
     removeLabel,
     mode = 'flat',
     title = '',
+    titleColor = 'black',
   } = props;
   // const [selected, setSelected] = useState<string[]>([]);
   const [selectedItems, setSelectedItems] = useState<IDropdownData[]>([]);
@@ -317,6 +318,7 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
                 colors: {
                   primary: primaryColor,
                   error: errorColor,
+                  text: titleColor,
                 },
               }}
               right={
