@@ -1,12 +1,12 @@
 import React from 'react';
-import {View, TouchableOpacity} from 'react-native';
-import {Image, Icon, Text} from '@components';
+import { View, TouchableOpacity } from 'react-native';
+import { Image, Icon, Text } from '@components';
 import styles from './styles';
 import PropTypes from 'prop-types';
-import {BaseColor, useTheme} from '@config';
+import { BaseColor, useTheme } from '@config';
 
 export default function ProfileDetail(props) {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const {
     style,
     image,
@@ -29,21 +29,19 @@ export default function ProfileDetail(props) {
       <View style={[styles.contentLeft, styleLeft]}>
         <View>
           <Image source={image} style={[styles.thumb, styleThumb]} />
-          <View style={[styles.point, {backgroundColor: colors.primaryLight}]}>
+          <View
+            style={[styles.point, { backgroundColor: colors.primaryLight }]}>
             <Text overline whiteColor semibold>
               {point}
             </Text>
           </View>
         </View>
-        <View style={{alignItems: 'flex-start'}}>
-          <View style={{display: 'flex', flexDirection: 'row'}}>
+        <View style={{ alignItems: 'flex-start' }}>
+          <View style={{ display: 'flex', flexDirection: 'row' }}>
             <Text headline semibold numberOfLines={1}>
               {textFirst}
             </Text>
-            {isAdmin ?
-                <Text style={styles.badge}>
-                  ADMIN
-                </Text> : null}
+            {isAdmin ? <Text style={styles.badge}>ADMIN</Text> : null}
           </View>
           <Text
             body2
@@ -59,16 +57,16 @@ export default function ProfileDetail(props) {
           </Text>
         </View>
       </View>
-      {icon && (
-        <View style={[styles.contentRight, styleRight]}>
-          <Icon
-            name="angle-right"
-            size={18}
-            color={BaseColor.grayColor}
-            enableRTL={true}
-          />
-        </View>
-      )}
+      {/*{icon && (*/}
+      {/*  <View style={[styles.contentRight, styleRight]}>*/}
+      {/*    <Icon*/}
+      {/*      name="angle-right"*/}
+      {/*      size={18}*/}
+      {/*      color={BaseColor.grayColor}*/}
+      {/*      enableRTL={true}*/}
+      {/*    />*/}
+      {/*  </View>*/}
+      {/*)}*/}
     </TouchableOpacity>
   );
 }

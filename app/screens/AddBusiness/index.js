@@ -24,6 +24,11 @@ import moment from 'moment';
 import { setBusinessFormData } from '../../actions/business';
 
 export default function Business({ navigation }) {
+  const description = useRef(null);
+  const telephone = useRef(null);
+  const email = useRef(null);
+  const website = useRef(null);
+
   const formRef = useRef();
   const dispatch = useDispatch();
   const stateProps = useSelector(({ categories, businesses }) => {
@@ -153,6 +158,7 @@ export default function Business({ navigation }) {
                       placeholder="Name"
                       onChangeText={handleChange('name')}
                       value={values.name}
+                      onSubmitEditing={() => description.current.focus()}
                     />
                     {errors.name ? (
                       <Text style={GlobalStyle.errorText}>{errors.name}</Text>
@@ -161,6 +167,7 @@ export default function Business({ navigation }) {
 
                   <View style={[GlobalStyle.inputContainer, { marginTop: 10 }]}>
                     <TextInput
+                      ref={description}
                       style={styles.textArea}
                       placeholder="Description"
                       onChangeText={handleChange('description')}
@@ -289,12 +296,14 @@ export default function Business({ navigation }) {
 
                   <View style={GlobalStyle.inputContainer}>
                     <TextInput
+                      ref={telephone}
                       style={{ marginTop: 10 }}
                       placeholder="Telephone"
                       onChangeText={handleChange('telephone')}
                       keyboardType="numeric"
                       autoCapitalize="none"
                       value={values.telephone}
+                      onSubmitEditing={() => email.current.focus()}
                     />
                     {errors.telephone ? (
                       <Text style={GlobalStyle.errorText}>
@@ -305,6 +314,7 @@ export default function Business({ navigation }) {
 
                   <View style={GlobalStyle.inputContainer}>
                     <TextInput
+                      ref={email}
                       style={{ marginTop: 10 }}
                       placeholder="Email"
                       textContentType="emailAddress"
@@ -314,6 +324,7 @@ export default function Business({ navigation }) {
                       autoCompleteType="email"
                       onChangeText={handleChange('email')}
                       value={values.email}
+                      onSubmitEditing={() => website.current.focus()}
                     />
                     {errors.email ? (
                       <Text style={GlobalStyle.errorText}>{errors.email}</Text>
@@ -322,10 +333,14 @@ export default function Business({ navigation }) {
 
                   <View style={GlobalStyle.inputContainer}>
                     <TextInput
+                      ref={website}
                       style={{ marginTop: 10 }}
                       onChangeText={handleChange('website')}
                       placeholder="https://yoursite.com"
                       value={values.website}
+                      onSubmitEditing={() => toggleDatePicker()}
+                      returnKeyType="done"
+                      blurOnSubmit={true}
                     />
                     {errors.website ? (
                       <Text style={GlobalStyle.errorText}>
@@ -364,7 +379,8 @@ export default function Business({ navigation }) {
                 </View>
               </ScrollView>
               <ActionButton
-                buttonColor="rgba(93, 173, 226, 1)"
+                buttonColor={colors.primary}
+                nativeFeedbackRippleColor="transparent"
                 onPress={() => handleSubmit()}
                 offsetX={20}
                 offsetY={10}

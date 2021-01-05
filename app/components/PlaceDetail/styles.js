@@ -65,4 +65,12 @@ export default StyleSheet.create({
     paddingBottom: 20,
     borderBottomWidth: 0.5,
   },
+  priceRangeSection: {
+    flex: 1,
+    alignItems: 'flex-end'
+  },
+  prices: {
+    display: 'flex',
+    flexDirection: 'row'
+  },
 });

@@ -24,12 +24,12 @@ export default function HoursCheckbox(props) {
     };
 
     const fromHandleConfirm = (value) => {
-        let from = moment(value).format('hh:mm A');
+        let from = moment(value).format('hh:mm a');
         getObject({day: day.day, isOpen: isSelected, from});
         toggleFromPicker();
     };
     const toHandleConfirm = (value) => {
-        let to = moment(value).format('hh:mm A');
+        let to = moment(value).format('hh:mm a');
         getObject({day: day.day, isOpen: isSelected, to});
         toggleToPicker();
     };

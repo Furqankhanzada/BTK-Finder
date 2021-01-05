@@ -65,4 +65,9 @@ export const Images = {
   service7: require('@assets/images/service-restaurant.jpg'),
   imagePlaceholder: require('@assets/images/image-placeholder.png'),
   defaultAvatar: require('@assets/images/default-avatar.png'),
+  police: require('@assets/images/helpline-icons/police.png'),
+  madadgar15: require('@assets/images/helpline-icons/madadgar15.png'),
+  edhi: require('@assets/images/helpline-icons/edhi.png'),
+  ayazJalbani: require('@assets/images/team/ayazjalbani.png'),
+  furqan: require('@assets/images/team/furqan.jpg'),
 };

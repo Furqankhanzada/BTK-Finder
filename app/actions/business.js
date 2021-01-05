@@ -1,4 +1,4 @@
-import { BUSINESSES_API } from '../constants';
+import { BUSINESSES_API, UPLOAD } from '../constants';
 import {
   CREATE_BUSINESS_API,
   CREATE_BUSINESS_API_SUCCESS,
@@ -14,8 +14,12 @@ import {
   ADD_REVIEW_API_SUCCESS,
   ADD_REVIEW_API_ERROR,
   TOGGLE_FAVORITE,
+  UPLOAD_THUMBNAIL_IMAGE_API,
+  REMOVE_THUMBNAIL_IMAGES,
+  UPLOAD_GALLERY_IMAGES_API,
+  REMOVE_GALLERY_IMAGES,
 } from '../constants/business';
-import { handleError } from '../utils';
+import { generateFileObject, handleError } from '../utils';
 import axiosApiInstance from '../interceptor/axios-interceptor';
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -28,6 +32,7 @@ export const createBusiness = (payload, cb) => (dispatch) => {
     data: payload,
   })
     .then((response) => {
+      console.log('response', response);
       dispatch({ type: CREATE_BUSINESS_API_SUCCESS });
       Toast.show({
         type: 'success',
@@ -80,7 +85,9 @@ export const getAllBusinesses = (payload) => (dispatch) => {
     ? `?${encodeQueryData(payload)}`
     : '';
 
-  if(payload.skip > 0) dispatchType = LOAD_MORE_ALL_BUSINESSES_API;
+  if (payload.skip > 0) {
+    dispatchType = LOAD_MORE_ALL_BUSINESSES_API;
+  }
 
   dispatch({
     type: dispatchType,
@@ -162,6 +169,7 @@ export const addReview = (payload, cb, id) => (dispatch) => {
   })
     .then((response) => {
       dispatch({ type: ADD_REVIEW_API_SUCCESS });
+      dispatch(getSingleBusiness(id));
       Toast.show({
         type: 'success',
         topOffset: 55,
@@ -200,7 +208,7 @@ export const toggleFavorite = (id) => async (dispatch, getState) => {
       ids = favoriteIds && favoriteIds.length ? [...favoriteIds] : [];
     }
     if (ids?.length && ids.includes(id)) {
-      ids = ids.filter(el => el !== id);
+      ids = ids.filter((el) => el !== id);
     } else {
       ids.push(id);
     }
@@ -209,4 +217,68 @@ export const toggleFavorite = (id) => async (dispatch, getState) => {
   } catch (e) {
     // error reading value
   }
+};
+
+export const uploadImages = (image) => (dispatch, getState) => {
+  const { profile } = getState();
+  const { _id } = profile;
+  const form = new FormData();
+  form.append('file', generateFileObject(image));
+  dispatch({ type: UPLOAD_THUMBNAIL_IMAGE_API, thumbnailLoading: true });
+  axiosApiInstance
+    .post(`${UPLOAD}/${_id}/businesses/`, form, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
+    .then((response) => {
+      dispatch({
+        type: UPLOAD_THUMBNAIL_IMAGE_API,
+        thumbnail: response?.data?.Location || '',
+        thumbnailLoading: false,
+      });
+    })
+    .catch((error) => {
+      dispatch({ type: UPLOAD_THUMBNAIL_IMAGE_API, thumbnailLoading: false });
+      handleError(error);
+    });
+};
+
+export const updateImagesIntoRedux = (type, payload) => (dispatch) => {
+  let dispatchType =
+    type === 'thumbnail' ? REMOVE_THUMBNAIL_IMAGES : REMOVE_GALLERY_IMAGES;
+  dispatch({ type: dispatchType, gallery: payload, thumbnail: payload });
+};
+
+export const uploadGalleryImages = (payload) => (dispatch, getState) => {
+  const { profile } = getState();
+  const { _id } = profile;
+  dispatch({ type: UPLOAD_GALLERY_IMAGES_API, galleryLoading: true });
+  const chunks = payload.map((file) => {
+    return new Promise((resolve, reject) => {
+      let form = new FormData();
+      form.append('file', generateFileObject(file));
+      axiosApiInstance
+        .post(`${UPLOAD}/${_id}/businesses/`, form, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        })
+        .then((response) =>
+          resolve({
+            image: response.data.Location,
+            cover: false,
+          }),
+        )
+        .catch((error) => reject(error));
+    });
+  });
+  Promise.all(chunks)
+    .then((res) => {
+      dispatch({
+        type: UPLOAD_GALLERY_IMAGES_API,
+        gallery: res,
+        galleryLoading: false,
+      });
+    })
+    .catch((error) => {
+      dispatch({ type: UPLOAD_GALLERY_IMAGES_API, galleryLoading: false });
+      handleError(error);
+    });
 };

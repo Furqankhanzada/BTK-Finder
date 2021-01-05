@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import {
   View,
@@ -26,6 +26,7 @@ export default function SignIn(props) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { params } = route;
+  const passwordRef = useRef(null);
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -96,8 +97,14 @@ export default function SignIn(props) {
             placeholder="Email"
             success={success.username}
             value={username}
+            textContentType="emailAddress"
+            keyboardType="email-address"
+            autoCorrect={false}
+            autoCapitalize="none"
+            onSubmitEditing={() => passwordRef.current.focus()}
           />
           <TextInput
+            ref={passwordRef}
             style={{ marginTop: 10 }}
             onChangeText={(text) => setPassword(text)}
             onFocus={() => {
@@ -110,6 +117,9 @@ export default function SignIn(props) {
             secureTextEntry={true}
             success={success.password}
             value={password}
+            onSubmitEditing={() => onLogin()}
+            returnKeyType="done"
+            blurOnSubmit={true}
           />
           <Button
             style={{ marginTop: 20 }}

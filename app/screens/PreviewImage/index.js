@@ -1,26 +1,19 @@
-import React, {useState} from 'react';
-import {View, FlatList, TouchableOpacity} from 'react-native';
-import {BaseStyle, BaseColor, Images, useTheme} from '@config';
+import React, { useState } from 'react';
+import { View, FlatList, TouchableOpacity } from 'react-native';
+import { BaseStyle, BaseColor, Images, useTheme } from '@config';
 import Swiper from 'react-native-swiper';
-import {Image, Header, SafeAreaView, Icon, Text} from '@components';
+import { Image, Header, SafeAreaView, Icon, Text } from '@components';
 import styles from './styles';
-import {useTranslation} from 'react-i18next';
 
-export default function PreviewImage({navigation}) {
-  const {colors} = useTheme();
+export default function PreviewImage({ route: { params }, navigation }) {
+  const { colors } = useTheme();
 
   let flatListRef = null;
   let swiperRef = null;
 
-  const [images, setImages] = useState([
-    {id: '1', image: Images.location1, selected: true},
-    {id: '2', image: Images.location2},
-    {id: '3', image: Images.location3},
-    {id: '4', image: Images.location4},
-    {id: '5', image: Images.location5},
-    {id: '6', image: Images.location6},
-    {id: '7', image: Images.location7},
-  ]);
+  const { gallery, title } = params;
+
+  const [images, setImages] = useState(gallery);
   const [indexSelected, setIndexSelected] = useState(0);
 
   /**
@@ -28,11 +21,11 @@ export default function PreviewImage({navigation}) {
    *
    * @param {*} indexSelected
    */
-  const onSelect = indexSelected => {
+  const onSelect = (indexSelected) => {
     setIndexSelected(indexSelected);
     setImages(
       images.map((item, index) => {
-        if (index == indexSelected) {
+        if (index === indexSelected) {
           return {
             ...item,
             selected: true,
@@ -58,17 +51,19 @@ export default function PreviewImage({navigation}) {
    * @param {*} touched
    * @returns
    */
-  const onTouchImage = touched => {
-    if (touched == indexSelected) return;
+  const onTouchImage = (touched) => {
+    if (touched === indexSelected) {
+      return;
+    }
     swiperRef.scrollBy(touched - indexSelected, false);
   };
 
   return (
     <SafeAreaView
-      style={[BaseStyle.safeAreaView, {backgroundColor: 'black'}]}
-      forceInset={{top: 'always'}}>
+      style={[BaseStyle.safeAreaView, { backgroundColor: 'black' }]}
+      forceInset={{ top: 'always' }}>
       <Header
-        style={{backgroundColor: 'black'}}
+        style={{ backgroundColor: 'black' }}
         title=""
         renderRight={() => {
           return <Icon name="times" size={20} color={BaseColor.whiteColor} />;
@@ -79,22 +74,22 @@ export default function PreviewImage({navigation}) {
         barStyle="light-content"
       />
       <Swiper
-        ref={ref => {
+        ref={(ref) => {
           swiperRef = ref;
         }}
         dotStyle={{
           backgroundColor: BaseColor.dividerColor,
         }}
-        paginationStyle={{bottom: 0}}
+        paginationStyle={{ bottom: 0 }}
         loop={false}
         activeDotColor={colors.primary}
         removeClippedSubviews={false}
-        onIndexChanged={index => onSelect(index)}>
+        onIndexChanged={(index) => onSelect(index)}>
         {images.map((item, key) => {
           return (
             <Image
               key={key}
-              style={{width: '100%', height: '100%'}}
+              style={{ width: '100%', height: '100%' }}
               resizeMode="contain"
               source={item.image}
             />
@@ -107,21 +102,21 @@ export default function PreviewImage({navigation}) {
         }}>
         <View style={styles.lineText}>
           <Text body2 whiteColor>
-            Standard Double Room
+            { title }
           </Text>
           <Text body2 whiteColor>
             {indexSelected + 1}/{images.length}
           </Text>
         </View>
         <FlatList
-          ref={ref => {
+          ref={(ref) => {
             flatListRef = ref;
           }}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
           data={images}
           keyExtractor={(item, index) => item.id}
-          renderItem={({item, index}) => (
+          renderItem={({ item, index }) => (
             <TouchableOpacity
               onPress={() => {
                 onTouchImage(index);
@@ -134,7 +129,7 @@ export default function PreviewImage({navigation}) {
                   marginLeft: 20,
                   borderRadius: 8,
                   borderColor:
-                    index == indexSelected
+                    index === indexSelected
                       ? colors.primaryLight
                       : BaseColor.grayColor,
                   borderWidth: 1,

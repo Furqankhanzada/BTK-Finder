@@ -1,18 +1,21 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 import * as actionTypes from './actionTypes';
+import crashlytics from '@react-native-firebase/crashlytics';
 import { SIGNUP, LOGIN, EDIT_PROFILE, GET_PROFILE, UPLOAD } from '../constants';
 import {
   REGISTER_API_ERROR,
   REGISTER_API_SUCCESS,
   LOGIN_API_ERROR,
   LOGIN_API_SUCCESS,
+  SIGNOUT,
   GET_PROFILE_API_SUCCESS,
   GET_PROFILE_API_ERROR,
+  EDIT_PROFILE_API,
   EDIT_PROFILE_API_SUCCESS,
   EDIT_PROFILE_API_ERROR,
-  PROFILE_UPLOAD_SUCCESS,
-  PROFILE_UPLOAD_ERROR,
+  PROFILE_UPLOAD_API,
+  LOGGED_IN_SUCCESS,
 } from '../constants/auth';
 import { handleError } from '../utils';
 import axiosApiInstance from '../interceptor/axios-interceptor';
@@ -25,12 +28,14 @@ const onLogin = (data) => {
 };
 
 export const authentication = (login, callback) => (dispatch) => {
-  //call api and dispatch action case
+  dispatch({ type: SIGNOUT, loading: true });
   setTimeout(() => {
     let data = {
       success: login,
     };
     dispatch(onLogin(data));
+    dispatch({ type: SIGNOUT, loading: false });
+    AsyncStorage.removeItem('access_token');
     if (typeof callback === 'function') {
       callback({ success: true });
     }
@@ -65,6 +70,7 @@ export const login = (user, cb) => {
     })
       .then(async (response) => {
         dispatch({ type: LOGIN_API_SUCCESS, user: response.data });
+        dispatch(getProfile());
         cb && cb();
         console.log('Token:', response.data);
         try {
@@ -72,8 +78,6 @@ export const login = (user, cb) => {
             'access_token',
             response.data.access_token,
           );
-          const token = await AsyncStorage.getItem('access_token');
-          console.log('token#######', token);
         } catch (e) {
           // saving error
         }
@@ -93,6 +97,8 @@ export const getProfile = (cb) => {
       url: GET_PROFILE,
     })
       .then((response) => {
+        crashlytics().setUserId(response?.data?._id);
+        // crashlytics().setAttributes(response?.data);
         dispatch({
           type: GET_PROFILE_API_SUCCESS,
           profile: response.data,
@@ -110,6 +116,7 @@ export const getProfile = (cb) => {
 
 export const editProfile = (payload, cb) => {
   return async (dispatch) => {
+    dispatch({ type: EDIT_PROFILE_API, loading: true });
     axiosApiInstance({
       method: 'PUT',
       url: EDIT_PROFILE + payload._id,
@@ -119,11 +126,12 @@ export const editProfile = (payload, cb) => {
         dispatch({
           type: EDIT_PROFILE_API_SUCCESS,
           user: payload,
+          loading: false,
         });
         cb && cb();
       })
       .catch((error) => {
-        dispatch({ type: EDIT_PROFILE_API_ERROR, error });
+        dispatch({ type: EDIT_PROFILE_API_ERROR, error, loading: false });
         cb && cb(error);
         handleError(error);
         console.log('###### EDIT PROFILE API ERROR', error);
@@ -131,35 +139,30 @@ export const editProfile = (payload, cb) => {
   };
 };
 
-export const uploadProfileImage = ({ _id, name, email, phone }, form, cb) => {
-  return (dispatch) => {
-    axiosApiInstance({
-      url: `${UPLOAD}/${_id._id}/profile`,
-      data: form,
-      method: 'POST',
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
+export const uploadProfileImage = (payload, form, cb) => (dispatch) => {
+  dispatch({ type: PROFILE_UPLOAD_API, loading: true });
+  axiosApiInstance
+    .post(`${UPLOAD}/${payload._id}/profile`, form, {
+      headers: { 'Content-Type': 'multipart/form-data' },
     })
-      .then((response) => {
-        dispatch(
-          editProfile(
-            {
-              _id,
-              name,
-              email,
-              phone,
-              avatar: response.data.Location,
-            },
-            () => cb(),
-          ),
-        );
-      })
-      .catch((error) => {
-        dispatch({ type: PROFILE_UPLOAD_ERROR, error });
-        cb && cb(error);
-        handleError(error);
-        console.log('PROFILE_API_ERROR', error);
-      });
-  };
+    .then((response) => {
+      dispatch({ type: PROFILE_UPLOAD_API, loading: false });
+      dispatch(
+        editProfile({ ...payload, avatar: response.data.Location }, () => cb()),
+      );
+    })
+    .catch((error) => {
+      dispatch({ type: PROFILE_UPLOAD_API, loading: false });
+      cb && cb(error);
+      handleError(error);
+    });
+};
+
+export const setIsLogin = () => (dispatch) => {
+  AsyncStorage.getItem('access_token').then((token) => {
+    console.log('token#######', token);
+    if (token) {
+      dispatch({ type: LOGGED_IN_SUCCESS });
+    }
+  });
 };
