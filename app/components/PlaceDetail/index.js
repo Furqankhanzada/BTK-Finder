@@ -161,15 +161,6 @@ export default function PlaceDetailComponent(props) {
     );
   };
 
-  const [facilities] = useState([
-    { id: '1', icon: 'wifi', name: 'Free Wifi', checked: true },
-    { id: '2', icon: 'bath', name: 'Shower' },
-    { id: '3', icon: 'paw', name: 'Pet Allowed' },
-    { id: '4', icon: 'bus', name: 'Shuttle Bus' },
-    { id: '5', icon: 'cart-plus', name: 'Supper Market' },
-    { id: '6', icon: 'clock', name: 'Open 24/7' },
-  ]);
-
   const [region, setRegion] = useState({
     latitude: 1.352083,
     longitude: 103.819839,
@@ -607,40 +598,44 @@ export default function PlaceDetailComponent(props) {
               </MapView>
             </View>
           </View>
-          {/*<Text*/}
-          {/*  title3*/}
-          {/*  semibold*/}
-          {/*  style={{*/}
-          {/*    paddingHorizontal: 20,*/}
-          {/*    paddingBottom: 5,*/}
-          {/*    paddingTop: 15,*/}
-          {/*  }}>*/}
-          {/*  {t('facilities')}*/}
-          {/*</Text>*/}
-          {/*<View style={[styles.wrapContent, { borderColor: colors.border }]}>*/}
-          {/*  {facilities.map((item) => {*/}
-          {/*    return (*/}
-          {/*      <Tag*/}
-          {/*        icon={*/}
-          {/*          <Icon*/}
-          {/*            name={item.icon}*/}
-          {/*            size={12}*/}
-          {/*            color={colors.accent}*/}
-          {/*            solid*/}
-          {/*            style={{ marginRight: 5 }}*/}
-          {/*          />*/}
-          {/*        }*/}
-          {/*        chip*/}
-          {/*        key={item.id}*/}
-          {/*        style={{*/}
-          {/*          marginTop: 8,*/}
-          {/*          marginRight: 8,*/}
-          {/*        }}>*/}
-          {/*        {item.name}*/}
-          {/*      </Tag>*/}
-          {/*    );*/}
-          {/*  })}*/}
-          {/*</View>*/}
+          {business?.facilities?.length ? (
+                <View>
+                  <Text
+                      title3
+                      semibold
+                      style={{
+                        paddingHorizontal: 20,
+                        paddingBottom: 5,
+                        paddingTop: 15,
+                      }}>
+                    {t('facilities')}
+                  </Text>
+                  <View style={[styles.wrapContent, { borderColor: colors.border }]}>
+                    {business?.facilities?.map((item) => {
+                      return (
+                          <Tag
+                              icon={
+                                <Icon
+                                    name={item.icon}
+                                    size={12}
+                                    color={colors.accent}
+                                    solid
+                                    style={{ marginRight: 5 }}
+                                />
+                              }
+                              chip
+                              key={item.id}
+                              style={{
+                                marginTop: 8,
+                                marginRight: 8,
+                              }}>
+                            {item?.name}
+                          </Tag>
+                      );
+                    })}
+                  </View>
+                </View>
+            ) : null}
           {isPreview ? null : (
             <View style={{ marginTop: 20 }}>
               <SectionList

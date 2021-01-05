@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useRef } from 'react';
+import React, { Fragment, useState, useRef, useEffect } from 'react';
 import { View, Platform, TouchableOpacity } from 'react-native';
 import { BaseStyle, useTheme, BaseColor } from '@config';
 import {
@@ -11,9 +11,11 @@ import {
   DropDown,
 } from '@components';
 import styles from './styles';
+import remoteConfig from '@react-native-firebase/remote-config';
 import { useDispatch, useSelector } from 'react-redux';
 import { ScrollView } from 'react-native-gesture-handler';
 import ActionButton from 'react-native-action-button';
+import { MultiselectDropdown } from '../../modules/sharingan-rn-modal-dropdown-master/src';
 import { generalFormValidation } from './Validations';
 import { Formik } from 'formik';
 import GlobalStyle from '../../assets/styling/GlobalStyle';
@@ -56,6 +58,33 @@ export default function Business({ navigation }) {
     return { label: name, value: name };
   });
 
+  const [selectedTags, setSelectedTags] = useState([]);
+  const onUpdateTags = (value) => {
+    setSelectedTags(value);
+    // console.log('########################', value);
+  };
+  const [tags, setTags] = useState([]);
+
+  const [selectedFacilities, setSelectedFacilities] = useState([]);
+  const onUpdateFacilities = (value) => {
+    setSelectedFacilities(value);
+    // console.log('########################', value);
+  };
+  const [facilities, setFacilities] = useState([]);
+
+  useEffect(() => {
+    const getFacilities = remoteConfig().getValue('facilities');
+    // console.log('GET FACILITIES', getFacilities._value);
+    getFacilities._value
+      ? setFacilities(JSON.parse(getFacilities._value))
+      : null;
+  }, []);
+  useEffect(() => {
+    const getTags = remoteConfig().getValue('tags');
+    // console.log('GET TAGS', getTags._value);
+    getTags ? setTags(JSON.parse(getTags._value)) : null;
+  }, []);
+
   const getSelectedCategory = (selected) => {
     let foundCategory = null;
     if (stateProps.categories && stateProps.categories.length) {
@@ -75,7 +104,13 @@ export default function Business({ navigation }) {
   });
 
   const submit = (values) => {
-    dispatch(setBusinessFormData({ ...values, tags: [] }));
+    dispatch(
+      setBusinessFormData({
+        ...values,
+        tags: selectedTags.map((el) => el.name),
+        facilities: selectedFacilities,
+      }),
+    );
     onNext();
   };
 
@@ -172,17 +207,92 @@ export default function Business({ navigation }) {
                     ) : null}
                   </View>
 
-                  {/*<View style={GlobalStyle.inputContainer}>*/}
-                  {/*  <TextInput*/}
-                  {/*    style={{ marginTop: 10 }}*/}
-                  {/*    onChangeText={handleChange('tags')}*/}
-                  {/*    placeholder="Tags"*/}
-                  {/*    value={values.tags}*/}
-                  {/*  />*/}
-                  {/*  {errors.tags ? (*/}
-                  {/*    <Text style={GlobalStyle.errorText}>{errors.tags}</Text>*/}
-                  {/*  ) : null}*/}
-                  {/*</View>*/}
+                  <View
+                    style={[
+                      GlobalStyle.inputContainer,
+                      { marginTop: 10, marginBottom: -15 },
+                    ]}>
+                    <MultiselectDropdown
+                      title="Facilities"
+                      data={facilities}
+                      enableSearch
+                      enableAvatar
+                      floating
+                      elevation={0}
+                      borderRadius={7}
+                      searchPlaceholder="Search for a facility"
+                      emptyListText="No facility found"
+                      itemTextStyle={{ color: colors.text }} //dropdown text unselected
+                      selectedItemTextStyle={{ color: colors.primary }} //dropdown text selected
+                      textInputStyle={{
+                        backgroundColor: colors.card,
+                      }}
+                      underlineColor={colors.card}
+                      parentDDContainerStyle={{
+                        marginTop: 70,
+                        backgroundColor: colors.card,
+                        borderColor: BaseColor.grayColor,
+                        borderWidth: 1,
+                      }} //Dropdown Container Style
+                      mainContainerStyle={{
+                        backgroundColor: colors.card,
+                        borderRadius: 5,
+                      }}
+                      chipType="outlined"
+                      chipTextStyle={{ color: colors.text }}
+                      chipStyle={{
+                        marginBottom: 10,
+                        borderColor: colors.primary,
+                      }}
+                      emptySelectionText="Selected Facilities will appear here.."
+                      emptySelectionTextStyle={{ color: colors.text }}
+                      value={selectedFacilities}
+                      onChange={onUpdateFacilities}
+                    />
+                  </View>
+
+                  <View
+                    style={[
+                      GlobalStyle.inputContainer,
+                      { marginTop: 10, marginBottom: -15 },
+                    ]}>
+                    <MultiselectDropdown
+                      title="Tags"
+                      data={tags}
+                      enableSearch
+                      floating
+                      elevation={0}
+                      borderRadius={7}
+                      searchPlaceholder="Search for a tag"
+                      emptyListText="No Tag found"
+                      itemTextStyle={{ color: colors.text }} //dropdown text unselected
+                      selectedItemTextStyle={{ color: colors.primary }} //dropdown text selected
+                      textInputStyle={{
+                        backgroundColor: colors.card,
+                      }}
+                      underlineColor={colors.card}
+                      parentDDContainerStyle={{
+                        marginTop: 70,
+                        backgroundColor: colors.card,
+                        borderColor: BaseColor.grayColor,
+                        borderWidth: 1,
+                      }} //Dropdown Container Style
+                      mainContainerStyle={{
+                        backgroundColor: colors.card,
+                        borderRadius: 5,
+                      }}
+                      chipType="outlined"
+                      chipTextStyle={{ color: colors.text }}
+                      chipStyle={{
+                        marginBottom: 10,
+                        borderColor: colors.primary,
+                      }}
+                      emptySelectionText="Selected Tags will appear here.."
+                      emptySelectionTextStyle={{ color: colors.text }}
+                      value={selectedTags}
+                      onChange={onUpdateTags}
+                    />
+                  </View>
 
                   <View style={GlobalStyle.inputContainer}>
                     <TextInput
