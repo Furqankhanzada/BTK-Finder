@@ -1,11 +1,9 @@
-# Support Issue
-- https://github.com/passionui/support/issues
-- https://codecanyon.net/user/passionui
+# Explore BTK
 
-# Facebook
+# Introduction
 
-- https://www.facebook.com/passionui/
+- https://youtu.be/gR_44czaHdM
 
-# Youtube
+# Download from play store
 
-- https://www.youtube.com/channel/UCt_7rXE3zgj_a_UbGCFUz6Q
+- https://play.google.com/store/apps/details?id=com.explore.btk
