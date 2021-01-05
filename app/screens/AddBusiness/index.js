@@ -54,92 +54,30 @@ export default function Business({ navigation }) {
   });
 
   const [selectedTags, setSelectedTags] = useState([]);
-  const [tags] = useState([
-    {
-      name: 'Food',
-    },
-    {
-      name: 'Burger',
-    },
-    {
-      name: 'Pizza',
-    },
-    {
-      name: 'Drink',
-    },
-    {
-      name: 'Clothing',
-    },
-    {
-      name: 'Mens Cloth',
-    },
-    {
-      name: 'Boys Cloth',
-    },
-    {
-      name: 'Technician',
-    },
-    {
-      name: 'School',
-    },
-    {
-      name: 'College',
-    },
-    {
-      name: 'University',
-    },
-    {
-      name: 'Cinema',
-    },
-    {
-      name: 'Madarsa',
-    },
-    {
-      name: 'Entertainment',
-    },
-    {
-      name: 'Shopping',
-    },
-    {
-      name: 'Super Market',
-    },
-    {
-      name: 'Electrician',
-    },
-    {
-      name: 'Plumber',
-    },
-    {
-      name: 'Estate',
-    },
-    {
-      name: 'Hospital',
-    },
-    {
-      name: 'Gym',
-    },
-  ]);
+  const onUpdateTags = (value) => {
+    setSelectedTags(value);
+    // console.log('########################', value);
+  };
+  const [tags, setTags] = useState([]);
 
   const [selectedFacilities, setSelectedFacilities] = useState([]);
   const onUpdateFacilities = (value) => {
     setSelectedFacilities(value);
-    console.log('########################', value);
+    // console.log('########################', value);
   };
-
-  const onUpdateTags = (value) => {
-    setSelectedTags(value);
-    console.log('########################', value);
-  };
-
   const [facilities, setFacilities] = useState([]);
-  // console.log('@@@@@@@@@@@@@@@@@@@@@@@@', facilities);
 
   useEffect(() => {
     const getFacilities = remoteConfig().getValue('facilities');
-    // console.log('##############', getFacilities._value);
+    // console.log('GET FACILITIES', getFacilities._value);
     getFacilities._value
       ? setFacilities(JSON.parse(getFacilities._value))
       : null;
+  }, []);
+  useEffect(() => {
+    const getTags = remoteConfig().getValue('tags');
+    // console.log('GET TAGS', getTags._value);
+    getTags ? setTags(JSON.parse(getTags._value)) : null;
   }, []);
 
   const getSelectedCategory = (selected) => {
