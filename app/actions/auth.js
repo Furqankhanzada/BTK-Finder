@@ -160,7 +160,6 @@ export const uploadProfileImage = (payload, form, cb) => (dispatch) => {
 
 export const setIsLogin = () => (dispatch) => {
   AsyncStorage.getItem('access_token').then((token) => {
-    console.log('token#######', token);
     if (token) {
       dispatch({ type: LOGGED_IN_SUCCESS });
     }

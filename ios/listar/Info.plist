@@ -37,6 +37,10 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>We need your location for personalizing nearby results.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>We need your location for personalizing nearby results.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>We need your location for personalizing nearby results.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
@@ -101,6 +105,7 @@
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
+		<string>location</string>
 		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
