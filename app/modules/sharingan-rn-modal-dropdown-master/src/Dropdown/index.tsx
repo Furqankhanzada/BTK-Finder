@@ -92,9 +92,11 @@ const Dropdown: React.FC<IDropdownProps> = props => {
     selectedItemViewStyle,
     removeLabel,
     mode = 'flat',
+    dropdownTitleColor= 'black',
   } = props;
   const [selected, setSelected] = useState<string | number>();
-  const [labelv, setLabelV] = useState<string>('');
+  const [labelv, setLabelV] = useState<string>('Select Category');
+  const [titleColor, setTitleColor] = useState('#9B9B9B');
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [iconColor, setIconColor] = useState<string | undefined>('grey');
   const [options, setOptions] = useState<IDropdownData[]>([]);
@@ -129,6 +131,7 @@ const Dropdown: React.FC<IDropdownProps> = props => {
     if (!Lo.isEmpty(data) && value) {
       const lFilter = Lo.filter(data, { value: value })[0];
       if (!Lo.isEmpty(lFilter)) setLabelV(lFilter.label);
+      if (!Lo.isEmpty(lFilter)) setTitleColor(dropdownTitleColor);
     }
   }, [value, data]);
 
@@ -301,7 +304,7 @@ const Dropdown: React.FC<IDropdownProps> = props => {
               error={hasError}
               disabled={disabled}
               theme={{
-                colors: { primary: primaryColor, error: errorColor },
+                colors: { primary: primaryColor, error: errorColor, text: titleColor },
                 dark: false,
               }}
               right={

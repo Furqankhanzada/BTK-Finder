@@ -35,7 +35,6 @@ const Item: React.FC<IDropdownItemProps> = ({
   const { label, value, avatarSource } = item;
   const styles = StyleSheet.create({
     unselected: {
-      color: colors.unselected,
       paddingLeft: 5,
     },
     selected: {
