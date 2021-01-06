@@ -8,14 +8,16 @@ import {
   TextInput,
   Text,
   CustomStepIndicator,
-  DropDown,
 } from '@components';
 import styles from './styles';
 import remoteConfig from '@react-native-firebase/remote-config';
 import { useDispatch, useSelector } from 'react-redux';
 import { ScrollView } from 'react-native-gesture-handler';
 import ActionButton from 'react-native-action-button';
-import { MultiselectDropdown } from '../../modules/sharingan-rn-modal-dropdown-master/src';
+import {
+  MultiselectDropdown,
+  Dropdown,
+} from '../../modules/sharingan-rn-modal-dropdown-master/src';
 import { generalFormValidation } from './Validations';
 import { Formik } from 'formik';
 import GlobalStyle from '../../assets/styling/GlobalStyle';
@@ -183,22 +185,29 @@ export default function Business({ navigation }) {
                     ) : null}
                   </View>
 
-                  <View
-                    style={[
-                      GlobalStyle.inputContainer,
-                      Platform.OS === 'ios' && {
-                        position: 'relative',
-                        zIndex: 1,
-                      },
-                    ]}>
-                    <DropDown
-                      items={getCategories}
-                      defaultValue={values.category}
-                      placeholder={'Select a Category'}
-                      searchablePlaceholder={'Search for a Category'}
-                      onChangeItem={(item) =>
-                        setFieldValue('category', item.value)
-                      }
+                  <View style={[GlobalStyle.inputContainer, { marginTop: 10 }]}>
+                    <Dropdown
+                      label=""
+                      data={getCategories}
+                      value={values.category}
+                      floating
+                      elevation={0}
+                      borderRadius={7}
+                      dropdownTitleColor={colors.text}
+                      itemTextStyle={{ color: colors.text }}
+                      selectedItemTextStyle={{ color: colors.primary }}
+                      parentDDContainerStyle={{
+                        marginTop: 70,
+                        backgroundColor: colors.card,
+                        borderColor: BaseColor.grayColor,
+                        borderWidth: 1,
+                      }}
+                      mainContainerStyle={{
+                        backgroundColor: colors.card,
+                        borderRadius: 5,
+                      }}
+                      underlineColor="transparent"
+                      onChange={(item) => setFieldValue('category', item)}
                     />
                     {errors.category ? (
                       <Text style={GlobalStyle.errorText}>
@@ -213,6 +222,7 @@ export default function Business({ navigation }) {
                       { marginTop: 10, marginBottom: -15 },
                     ]}>
                     <MultiselectDropdown
+                      label=""
                       title="Facilities"
                       titleColor={
                         selectedFacilities?.length
@@ -229,10 +239,7 @@ export default function Business({ navigation }) {
                       emptyListText="No facility found"
                       itemTextStyle={{ color: colors.text }} //dropdown text unselected
                       selectedItemTextStyle={{ color: colors.primary }} //dropdown text selected
-                      textInputStyle={{
-                        backgroundColor: colors.card,
-                      }}
-                      underlineColor={colors.card}
+                      underlineColor="transparent"
                       parentDDContainerStyle={{
                         marginTop: 70,
                         backgroundColor: colors.card,
@@ -262,6 +269,7 @@ export default function Business({ navigation }) {
                       { marginTop: 10, marginBottom: -15 },
                     ]}>
                     <MultiselectDropdown
+                      label=""
                       title="Tags"
                       titleColor={
                         selectedTags?.length ? colors.text : BaseColor.grayColor
@@ -275,10 +283,7 @@ export default function Business({ navigation }) {
                       emptyListText="No Tag found"
                       itemTextStyle={{ color: colors.text }} //dropdown text unselected
                       selectedItemTextStyle={{ color: colors.primary }} //dropdown text selected
-                      textInputStyle={{
-                        backgroundColor: colors.card,
-                      }}
-                      underlineColor={colors.card}
+                      underlineColor="transparent"
                       parentDDContainerStyle={{
                         marginTop: 70,
                         backgroundColor: colors.card,
