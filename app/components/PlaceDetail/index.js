@@ -101,6 +101,7 @@ export default function PlaceDetailComponent(props) {
       title: t('address'),
       type: 'map',
       information: business.address,
+      location: business?.location?.coordinates
     },
     {
       id: '2',
@@ -124,6 +125,13 @@ export default function PlaceDetailComponent(props) {
       information: business.website ? business.website : '',
     },
   ]);
+
+
+  const openGps = (lat, lng) => {
+    let company = Platform.OS === 'ios' ? 'apple' : 'google';
+    let url = `http://maps.${company}.com/maps?daddr=${lat},${lng}`;
+    Linking.openURL(url);
+  };
 
   const onOpen = (item) => {
     Alert.alert(
@@ -149,9 +157,7 @@ export default function PlaceDetailComponent(props) {
                 Linking.openURL('mailto:' + item.information);
                 break;
               case 'map':
-                Linking.openURL(
-                  'http://maps.apple.com/?ll=37.484847,-122.148386',
-                );
+                openGps(item?.location[0], item?.location[1]);
                 break;
             }
           },
