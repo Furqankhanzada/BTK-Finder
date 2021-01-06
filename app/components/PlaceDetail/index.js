@@ -84,7 +84,7 @@ export default function PlaceDetailComponent(props) {
   }, [business.category, dispatch]);
 
   const navigateBusinessDetail = (id) => {
-    navigation.push('PlaceDetail', { id });
+    navigation.replace('PlaceDetail', { id });
   };
   const navigateToReview = (id) => {
     navigation.navigate('Review', { id });
