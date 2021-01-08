@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import remoteConfig from '@react-native-firebase/remote-config';
 import { View, ScrollView, ImageBackground, Linking } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { BaseStyle, useTheme } from '@config';
@@ -10,7 +11,6 @@ import {
   ProfileDescription,
 } from '@components';
 import styles from './styles';
-import remoteConfig from '@react-native-firebase/remote-config';
 
 export default function AboutUs({ navigation }) {
   const { t } = useTranslation();
@@ -19,10 +19,7 @@ export default function AboutUs({ navigation }) {
 
   useEffect(() => {
     const getAboutUsData = remoteConfig().getValue('aboutUs');
-    // console.log('***GET ABOUT DATA***', getAboutUsData?._value);
-    getAboutUsData?._value
-      ? setAboutUs(JSON.parse(getAboutUsData?._value))
-      : null;
+    getAboutUsData._value && setAboutUs(JSON.parse(getAboutUsData?._value));
   }, []);
 
   return (
