@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SectionList, TouchableOpacity, View } from 'react-native';
 import { BaseStyle, useTheme, Images } from '@config';
 import {
@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 import call from 'react-native-phone-call';
 import Modal from 'react-native-modal';
 import styles from '../../components/FilterSort/styles';
+import remoteConfig from '@react-native-firebase/remote-config';
 
 const HelpLine = React.memo(({ navigation }) => {
   const { colors } = useTheme();
@@ -39,92 +40,12 @@ const HelpLine = React.memo(({ navigation }) => {
     );
   };
 
-  const btkNumbers = ['02137170555', '02138771555'];
-  const DATA = [
-    {
-      title: 'Emergency Numbers',
-      data: [
-        {
-          title: 'Bahria Hospital',
-          numbers: ['021111111284'],
-          image: Images.logo,
-        },
-        {
-          title: 'Bahria Medical Center',
-          numbers: ['02136435400', '02138771555'],
-          extension: '660',
-          description:
-            '24/7 Pharmacy, Clinical & Interventional Neurology, Dental Centre, Eye Department and More.',
-          image: Images.logo,
-        },
-        {
-          title: 'Bahria Security',
-          numbers: ['03212810185', '02138771555'],
-          extension: '624',
-          description:
-            'You can call on this number regarding to Bahria Town security issues.',
-          image: Images.logo,
-        },
-        {
-          title: 'Bahria Fire Brigade',
-          numbers: ['02138771555'],
-          extension: '959',
-          description:
-            'Call to Bahria Fire Depart if their are fires in buildings, vehicles or on outdoor structures.',
-          image: Images.logo,
-        },
-        {
-          title: 'Bahria Ambulance',
-          numbers: ['02136435406'],
-          image: Images.logo,
-        },
-        {
-          title: 'Madadgar (15)',
-          numbers: ['15'],
-          image: Images.madadgar15,
-        },
-        {
-          title: 'Edhi',
-          numbers: ['115'],
-          image: Images.edhi,
-        },
-      ],
-    },
-    {
-      title: 'General Numbers',
-      data: [
-        {
-          title: 'Complaint Department',
-          description:
-            'You can complain about anything like: Power break down, Water tanker request, Gas cylinder request, Electrical fault.',
-          numbers: ['02134110447', '02138771555'],
-          extension: '700',
-          image: Images.logo,
-        },
-        {
-          title: 'Billing Department',
-          numbers: btkNumbers,
-          extension: '1031',
-          description: 'Regarding Maintenance bill and electrical bill.',
-          image: Images.logo,
-        },
-        {
-          title: 'Possession Department',
-          numbers: btkNumbers,
-          extension: '618',
-          description: 'Regarding to new homes, plots and properties.',
-          image: Images.logo,
-        },
-        {
-          title: 'Police Station',
-          numbers: ['02134644407', '02134642971'],
-          description:
-            'Call Bahria Town Police Station if you witness a crime like a robbery, an assault, or another type of criminal behavior.',
-          image: Images.police,
-        },
-      ],
-    },
-  ];
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    const getHelplines = remoteConfig().getValue('helplines');
+    console.log('GET HELPLINE NUMBERS', getHelplines._value);
+    getHelplines._value ? setData(JSON.parse(getHelplines._value)) : null;
+  }, []);
 
   const Item = ({ record }) => (
     <HelpLineItem
@@ -146,7 +67,7 @@ const HelpLine = React.memo(({ navigation }) => {
         onPressLeft={() => navigation.goBack()}
       />
       <SectionList
-        sections={DATA}
+        sections={data}
         keyExtractor={(item, index) => item + index}
         renderItem={({ item }) => <Item record={item} />}
         renderSectionHeader={({ section: { title } }) => (
