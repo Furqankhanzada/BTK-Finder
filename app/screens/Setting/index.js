@@ -31,7 +31,7 @@ export default function Setting({ navigation }) {
   return (
     <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
       <Header
-        title="Settings"
+        title={t('settings')}
         renderLeft={() => {
           return (
             <Icon
