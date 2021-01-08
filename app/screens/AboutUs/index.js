@@ -1,39 +1,29 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, ScrollView, ImageBackground, Linking } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { BaseStyle, Images, useTheme } from '@config';
+import { BaseStyle, useTheme } from '@config';
 import {
   Header,
   SafeAreaView,
   Icon,
   Text,
-  Card,
   ProfileDescription,
 } from '@components';
 import styles from './styles';
+import remoteConfig from '@react-native-firebase/remote-config';
 
 export default function AboutUs({ navigation }) {
   const { t } = useTranslation();
   const { colors } = useTheme();
-  const [ourTeam] = useState([
-    {
-      id: '2',
-      screen: 'Profile2',
-      image: Images.furqan,
-      subName: 'Founder',
-      name: 'Muhammad Furqan/فرقان خانزادہ',
-      description: 'Founder of the application Explore BTK',
-      link: 'https://www.upwork.com/o/profiles/users/~013a204a16ace5922f',
-    },
-    {
-      id: '1',
-      screen: 'Profile1',
-      image: Images.ayazJalbani,
-      subName: 'Volunteer (P10A-RCG)',
-      name: 'Ayaz Jalbani',
-      description: 'Volunteer/Admin of the whatsapp group (P10A-RCG)',
-    },
-  ]);
+  const [aboutUs, setAboutUs] = useState([]);
+
+  useEffect(() => {
+    const getAboutUsData = remoteConfig().getValue('aboutUs');
+    // console.log('***GET ABOUT DATA***', getAboutUsData?._value);
+    getAboutUsData?._value
+      ? setAboutUs(JSON.parse(getAboutUsData?._value))
+      : null;
+  }, []);
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
@@ -55,28 +45,20 @@ export default function AboutUs({ navigation }) {
       />
       <ScrollView style={{ flex: 1 }}>
         <ImageBackground
-          source={{ uri: 'https://pbs.twimg.com/media/EpLNK_aW4AAlUjc.jpg' }}
-          style={styles.banner}>
-        </ImageBackground>
+          source={{ uri: aboutUs.backgroundImage }}
+          style={styles.banner}
+        />
         <View style={styles.content}>
-          <Text headline semibold>
-            {t('who_we_are').toUpperCase()}
-          </Text>
-          <Text body2 style={{ marginTop: 10 }} numberOfLines={20}>
-            We are BAHRIANS and Residents of P10A who developed this mobile
-            application with sheer hard work and zeal to Serve community.
-            {'\n'}
-            {'\n'}
-            The man behind this mobile application is{' '}
-            <Text bold>Muhammad Furqan Khanzada</Text> who is resident of P10A
-            and very active member of P10A Residents Community Group (P10A-RCG).
-            {'\n'}
-            {'\n'}
-            This is the oldest and founder whatsapp group of P10A which is being
-            run by active Community members and this app is developed with
-            inspiration from this group. You all are welcome to give your feed
-            back and enjoy the app.
-          </Text>
+          {aboutUs?.whoWeAre ? (
+            <View>
+              <Text headline semibold>
+                {t('who_we_are').toUpperCase()}
+              </Text>
+              <Text body2 style={{ marginTop: 10 }} numberOfLines={20}>
+                {aboutUs?.whoWeAre}
+              </Text>
+            </View>
+          ) : null}
           {/*<Text headline semibold style={{ marginTop: 20 }}>*/}
           {/*  {t('what_we_do').toUpperCase()}*/}
           {/*</Text>*/}
@@ -120,33 +102,36 @@ export default function AboutUs({ navigation }) {
         {/*    </Card>*/}
         {/*  )}*/}
         {/*/>*/}
-        <Text headline semibold style={styles.title}>
-          {t('meet_our_team').toUpperCase()}
-        </Text>
-        <View style={{ paddingHorizontal: 20 }}>
-          {ourTeam.map((item, index) => {
-            return (
-              <ProfileDescription
-                key={'service' + index}
-                image={item.image}
-                name={item.name}
-                subName={item.subName}
-                description={item.description}
-                style={{ marginBottom: 10 }}
-                onPress={() => item.link && Linking.openURL(item.link)}
-              />
-            );
-          })}
-        </View>
-        <View style={{ paddingHorizontal: 20, paddingVertical: 30 }}>
-          <Text headline semibold style={{ marginBottom: 10, color: 'red' }}>
-            DISCLAIMER
-          </Text>
-          <Text>
-            This mobile application is volunteer application and does not have
-            any association with Bahria Town officially.
-          </Text>
-        </View>
+        {aboutUs?.ourTeam ? (
+          <View>
+            <Text headline semibold style={styles.title}>
+              {t('meet_our_team').toUpperCase()}
+            </Text>
+            <View style={{ paddingHorizontal: 20 }}>
+              {aboutUs?.ourTeam?.map((item, index) => {
+                return (
+                  <ProfileDescription
+                    key={'service' + index}
+                    image={item.image}
+                    name={item.name}
+                    subName={item.subName}
+                    description={item.description}
+                    style={{ marginBottom: 10 }}
+                    onPress={() => item.link && Linking.openURL(item.link)}
+                  />
+                );
+              })}
+            </View>
+          </View>
+        ) : null}
+        {aboutUs?.disclaimer ? (
+          <View style={{ paddingHorizontal: 20, paddingVertical: 30 }}>
+            <Text headline semibold style={{ marginBottom: 10, color: 'red' }}>
+              DISCLAIMER
+            </Text>
+            <Text>{aboutUs?.disclaimer}</Text>
+          </View>
+        ) : null}
       </ScrollView>
     </SafeAreaView>
   );
