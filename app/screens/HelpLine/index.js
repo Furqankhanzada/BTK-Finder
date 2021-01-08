@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import remoteConfig from '@react-native-firebase/remote-config';
 import { SectionList, TouchableOpacity, View } from 'react-native';
 import { BaseStyle, useTheme, Images } from '@config';
 import {
@@ -13,7 +14,6 @@ import { useTranslation } from 'react-i18next';
 import call from 'react-native-phone-call';
 import Modal from 'react-native-modal';
 import styles from '../../components/FilterSort/styles';
-import remoteConfig from '@react-native-firebase/remote-config';
 
 const HelpLine = React.memo(({ navigation }) => {
   const { colors } = useTheme();
@@ -43,8 +43,7 @@ const HelpLine = React.memo(({ navigation }) => {
   const [data, setData] = useState([]);
   useEffect(() => {
     const getHelplines = remoteConfig().getValue('helplines');
-    console.log('GET HELPLINE NUMBERS', getHelplines._value);
-    getHelplines._value ? setData(JSON.parse(getHelplines._value)) : null;
+    getHelplines._value && setData(JSON.parse(getHelplines._value));
   }, []);
 
   const Item = ({ record }) => (
