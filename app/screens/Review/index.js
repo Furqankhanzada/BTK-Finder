@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, RefreshControl, View } from 'react-native';
+import { FlatList, RefreshControl, View, Alert } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import moment from 'moment';
 import { BaseStyle, useTheme } from '@config';
 import {
   Header,
@@ -11,9 +14,6 @@ import {
   Loading,
 } from '@components';
 import styles from './styles';
-import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
-import moment from 'moment';
 import { getSingleBusiness } from '../../actions/business';
 
 export default function Review(props) {
@@ -26,7 +26,7 @@ export default function Review(props) {
       singleBusiness: businesses.singleBusiness,
       getSingleBusinessLoading: businesses.getSingleBusinessLoading,
       currentUserId: profile._id,
-      isLogin: auth.isLogin
+      isLogin: auth.isLogin,
     };
   });
 
@@ -74,26 +74,37 @@ export default function Review(props) {
   };
 
   const checkReviewAlreadyAdded = () => {
-   let check = false;
-    if(stateProps.singleBusiness?.reviews?.length) {
-      stateProps.singleBusiness.reviews.forEach(({owner}) => {
-        if(owner._id === stateProps.currentUserId){
+    let check = false;
+    if (stateProps.singleBusiness?.reviews?.length) {
+      stateProps.singleBusiness.reviews.forEach(({ owner }) => {
+        if (owner._id === stateProps.currentUserId) {
           check = true;
-          return false
+          return false;
         }
-      })
+      });
     }
     return check;
   };
   const checkUserLogin = () => {
-    if(stateProps.isLogin) {
-      if(!checkReviewAlreadyAdded()){
-        navigateToFeedback(stateProps.singleBusiness._id)
+    if (stateProps.isLogin) {
+      if (!checkReviewAlreadyAdded()) {
+        navigateToFeedback(stateProps.singleBusiness._id);
       } else {
         alert('You already added a review.', 'OK');
       }
     } else {
-      alert('You must login in order to add a review.', ' OK');
+      Alert.alert(
+        'Login Required',
+        'You must login in order to add a review.',
+        [
+          { text: 'Login', onPress: () => navigation.navigate('Walkthrough') },
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+        ],
+        { cancelable: false },
+      );
     }
   };
 
