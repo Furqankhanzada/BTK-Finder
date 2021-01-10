@@ -4,9 +4,8 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { BaseStyle } from '@config';
-import { Header, SafeAreaView, Icon } from '@components';
+import { Header, SafeAreaView, Icon, CardList } from '@components';
 import styles from './styles';
-import CardList from '../../components/CardList';
 import SectionList from '../Home/sectionList';
 import { getMyBusinesses } from '../../actions/business';
 
@@ -80,6 +79,8 @@ export default function MyBusinesses(props) {
                 style={{ marginBottom: 15 }}
                 onPress={() => navigateBusinessDetail(item._id)}
                 onPressTag={() => navigateToReview(item._id)}
+                editAble={true}
+                onPressEdit={() => console.log('Edit Pressed')}
               />
             );
           }}
