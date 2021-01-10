@@ -7,6 +7,7 @@ import {
   GET_RECENTLY_ADDED_BUSINESSES_API,
   GET_SINGLE_BUSINESS_API,
   GET_RELATED_BUSINESS_API,
+  GET_MY_BUSINESSES_API,
   GET_ALL_BUSINESSES_API,
   LOAD_MORE_ALL_BUSINESSES_API,
   ADD_REVIEW_API,
@@ -37,14 +38,16 @@ const initialState = {
   getSingleBusinessLoading: true,
   singleBusiness: {},
   getRelatedBusinessesLoading: true,
-  relatedBusinesses: {},
+  relatedBusinesses: [],
+  getMyBusinessesLoading: false,
+  myBusinesses: [],
   createReviewLoading: false,
   review: {},
   favoriteIds: [],
   gallery: [],
   galleryLoading: false,
   thumbnail: '',
-  thumbnailLoading: false
+  thumbnailLoading: false,
 };
 
 export default function userReducer(state = initialState, action = {}) {
@@ -60,11 +63,12 @@ export default function userReducer(state = initialState, action = {}) {
     case CREATE_BUSINESS_API:
       return { ...state, createBusinessLoading: true };
     case CREATE_BUSINESS_API_SUCCESS:
-      return { ...state,
+      return {
+        ...state,
         businessFormData: {},
         createBusinessLoading: false,
         thumbnail: '',
-        gallery: []
+        gallery: [],
       };
     case CREATE_BUSINESS_API_ERROR:
       return { ...state, createBusinessLoading: false };
@@ -108,6 +112,12 @@ export default function userReducer(state = initialState, action = {}) {
         relatedBusinesses: action.data,
         getRelatedBusinessesLoading: action.loading,
       };
+    case GET_MY_BUSINESSES_API:
+      return {
+        ...state,
+        myBusinesses: action.data,
+        getMyBusinessesLoading: action.loading,
+      };
     case ADD_REVIEW_API:
       return { ...state, createReviewLoading: true };
     case ADD_REVIEW_API_SUCCESS:
@@ -129,9 +139,9 @@ export default function userReducer(state = initialState, action = {}) {
         thumbnailLoading: action.thumbnailLoading,
       };
     case UPLOAD_GALLERY_IMAGES_API:
-      let data = [...state.gallery, ...action.gallery || []];
-      if(data.length && data[0] && !state.gallery.length){
-        data[0].cover = true
+      let data = [...state.gallery, ...(action.gallery || [])];
+      if (data.length && data[0] && !state.gallery.length) {
+        data[0].cover = true;
       }
       return {
         ...state,

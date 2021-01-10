@@ -37,6 +37,7 @@ import Hours from '@screens/AddBusiness/hours';
 import PriceRange from '@screens/AddBusiness/priceRange';
 import FinalReview from '@screens/AddBusiness/review';
 import Gallery from '@screens/AddBusiness/gallery';
+import MyBusinesses from '@screens/MyBusinesses';
 
 const MainStack = createStackNavigator();
 const BottomTab = createBottomTabNavigator();
@@ -75,6 +76,7 @@ export default function Main() {
       <MainStack.Screen name="PriceRange" component={PriceRange} />
       <MainStack.Screen name="FinalReview" component={FinalReview} />
       <MainStack.Screen name="Gallery" component={Gallery} />
+      <MainStack.Screen name="MyBusinesses" component={MyBusinesses} />
     </MainStack.Navigator>
   );
 }

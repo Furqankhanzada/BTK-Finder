@@ -9,6 +9,7 @@ import {
   GET_ALL_BUSINESSES_API,
   GET_SINGLE_BUSINESS_API,
   GET_RELATED_BUSINESS_API,
+  GET_MY_BUSINESSES_API,
   LOAD_MORE_ALL_BUSINESSES_API,
   ADD_REVIEW_API,
   ADD_REVIEW_API_SUCCESS,
@@ -133,6 +134,29 @@ export const getRalatedBusinesses = (payload) => (dispatch) => {
     .catch(({ response }) => {
       dispatch({
         type: GET_RELATED_BUSINESS_API,
+        loading: false,
+        data: [],
+      });
+      handleError(response.data);
+    });
+};
+
+export const getMyBusinesses = (payload) => (dispatch) => {
+  let queryParams = encodeQueryData(payload)
+    ? `?${encodeQueryData(payload)}`
+    : '';
+  dispatch({ type: GET_MY_BUSINESSES_API, loading: true });
+  axiosApiInstance({ method: 'GET', url: `${BUSINESSES_API}${queryParams}` })
+    .then((response) => {
+      dispatch({
+        type: GET_MY_BUSINESSES_API,
+        loading: false,
+        data: response.data || [],
+      });
+    })
+    .catch(({ response }) => {
+      dispatch({
+        type: GET_MY_BUSINESSES_API,
         loading: false,
         data: [],
       });
