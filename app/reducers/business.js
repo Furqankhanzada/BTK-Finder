@@ -8,6 +8,9 @@ import {
   GET_SINGLE_BUSINESS_API,
   GET_RELATED_BUSINESS_API,
   GET_MY_BUSINESSES_API,
+  UPDATE_BUSINESS_API,
+  UPDATE_BUSINESS_API_SUCCESS,
+  UPDATE_BUSINESS_API_ERROR,
   GET_ALL_BUSINESSES_API,
   LOAD_MORE_ALL_BUSINESSES_API,
   ADD_REVIEW_API,
@@ -35,12 +38,13 @@ const initialState = {
   popularBusinesses: [],
   getRecentlyAddedBusinessesLoading: false,
   recentlyAddedBusinesses: [],
-  getSingleBusinessLoading: true,
+  getSingleBusinessLoading: false,
   singleBusiness: {},
-  getRelatedBusinessesLoading: true,
+  getRelatedBusinessesLoading: false,
   relatedBusinesses: [],
   getMyBusinessesLoading: false,
   myBusinesses: [],
+  editBusinessLoading: false,
   createReviewLoading: false,
   review: {},
   favoriteIds: [],
@@ -117,6 +121,22 @@ export default function userReducer(state = initialState, action = {}) {
         ...state,
         myBusinesses: action.data,
         getMyBusinessesLoading: action.loading,
+      };
+    case UPDATE_BUSINESS_API:
+      return {
+        ...state,
+        editBusinessLoading: true,
+      };
+    case UPDATE_BUSINESS_API_SUCCESS:
+      return {
+        ...state,
+        editBusinessLoading: false,
+        businessFormData: {},
+      };
+    case UPDATE_BUSINESS_API_ERROR:
+      return {
+        ...state,
+        editBusinessLoading: false,
       };
     case ADD_REVIEW_API:
       return { ...state, createReviewLoading: true };

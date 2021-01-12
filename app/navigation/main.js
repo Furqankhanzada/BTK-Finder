@@ -4,7 +4,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { BaseColor, useTheme, useFont } from '@config';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '@components';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { setBusinessFormData } from '../actions/business';
 
 /* Bottom Screen */
 import Home from '@screens/Home';
@@ -77,12 +78,14 @@ export default function Main() {
       <MainStack.Screen name="FinalReview" component={FinalReview} />
       <MainStack.Screen name="Gallery" component={Gallery} />
       <MainStack.Screen name="MyBusinesses" component={MyBusinesses} />
+      <MainStack.Screen name="EditBusiness" component={Business} />
     </MainStack.Navigator>
   );
 }
 
 function BottomTabNavigator() {
   const { t } = useTranslation();
+  const dispatch = useDispatch();
   const { colors } = useTheme();
   const font = useFont();
   const isLogin = useSelector((state) => state.auth.isLogin);
@@ -137,6 +140,11 @@ function BottomTabNavigator() {
             return <Icon color={color} name="business-time" size={20} solid />;
           },
         }}
+        listeners={() => ({
+          tabPress: (e) => {
+            dispatch(setBusinessFormData({ editBusiness: false }));
+          },
+        })}
       />
       {/* <BottomTab.Screen
         name="Notification"

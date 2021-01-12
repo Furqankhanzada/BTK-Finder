@@ -67,7 +67,11 @@ export default function Hours({ navigation }) {
   return (
     <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
       <Header
-        title={'Add Your Business'}
+        title={
+          businessFormData?.editBusiness
+            ? 'Edit Your Business'
+            : 'Add Your Business'
+        }
         renderLeft={() => {
           return (
             <Icon

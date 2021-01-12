@@ -4,10 +4,10 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { BaseStyle } from '@config';
-import { Header, SafeAreaView, Icon, CardList } from '@components';
+import { Header, SafeAreaView, Icon, CardList, Loading } from '@components';
 import styles from './styles';
 import SectionList from '../Home/sectionList';
-import { getMyBusinesses } from '../../actions/business';
+import { getMyBusinesses, getSingleBusiness } from '../../actions/business';
 
 export default function MyBusinesses(props) {
   const { navigation, route } = props;
@@ -18,6 +18,7 @@ export default function MyBusinesses(props) {
     return {
       myBusinesses: businesses.myBusinesses,
       getMyBusinessesLoading: businesses.getMyBusinessesLoading,
+      getEditLoading: businesses.getSingleBusinessLoading,
     };
   });
 
@@ -31,8 +32,16 @@ export default function MyBusinesses(props) {
     );
   }, [route.params.id, dispatch]);
 
+  const onEdit = (id) => {
+    dispatch(
+      getSingleBusiness(id, true, () =>
+        navigation.navigate('EditBusiness', { id }),
+      ),
+    );
+  };
+
   const navigateBusinessDetail = (id) => {
-    navigation.replace('PlaceDetail', { id });
+    navigation.navigate('PlaceDetail', { id });
   };
   const navigateToReview = (id) => {
     navigation.navigate('Review', { id });
@@ -44,6 +53,7 @@ export default function MyBusinesses(props) {
   });
   return (
     <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
+      <Loading loading={stateProps.getEditLoading} />
       <Header
         title={t('my_businesses')}
         renderLeft={() => {
@@ -80,7 +90,7 @@ export default function MyBusinesses(props) {
                 onPress={() => navigateBusinessDetail(item._id)}
                 onPressTag={() => navigateToReview(item._id)}
                 editAble={true}
-                onPressEdit={() => console.log('Edit Pressed')}
+                onPressEdit={() => onEdit(item._id)}
               />
             );
           }}

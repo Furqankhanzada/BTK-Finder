@@ -11,23 +11,40 @@ import {
 } from '@components';
 import ActionButton from 'react-native-action-button';
 import { useDispatch, useSelector } from 'react-redux';
-import { createBusiness } from '../../actions/business';
+import {
+  createBusiness,
+  getMyBusinesses,
+  updateBusiness,
+} from '../../actions/business';
 
 export default function FinalReview({ navigation }) {
   const { colors } = useTheme();
   const dispatch = useDispatch();
 
   const stateProps = useSelector(({ businesses }) => businesses);
+  const profileData = useSelector((state) => state.profile);
 
   const {
     businessFormData,
     createBusinessLoading,
     thumbnail,
     gallery,
+    editBusinessLoading,
   } = stateProps;
 
   const addCallback = () => {
     navigation.navigate('Home');
+  };
+
+  const editBusinessCallback = () => {
+    dispatch(
+      getMyBusinesses({
+        skip: 0,
+        fields: 'name, thumbnail, category, averageRatings',
+        ownerId: profileData?._id,
+      }),
+    );
+    navigation.navigate('MyBusinesses');
   };
 
   const add = () => {
@@ -44,6 +61,9 @@ export default function FinalReview({ navigation }) {
         }
       });
     }
+    if (!payload.telephone) {
+      delete payload.telephone;
+    }
     if (!payload.email) {
       delete payload.email;
     }
@@ -57,15 +77,26 @@ export default function FinalReview({ navigation }) {
     if (gallery) {
       payload.gallery = gallery;
     }
-    dispatch(createBusiness(payload, addCallback));
+    if (businessFormData.editBusiness) {
+      dispatch(
+        updateBusiness(payload, businessFormData._id, editBusinessCallback),
+      );
+    } else {
+      dispatch(createBusiness(payload, addCallback));
+    }
   };
 
   return (
     <View style={{ flex: 1, position: 'relative' }}>
       <Loading loading={createBusinessLoading} />
+      <Loading loading={editBusinessLoading} />
       <SafeAreaView style={{ flex: 1 }} forceInset={{ top: 'always' }}>
         <Header
-          title={'Add Your Business'}
+          title={
+            businessFormData?.editBusiness
+              ? 'Edit Your Business'
+              : 'Add Your Business'
+          }
           renderLeft={() => {
             return (
               <Icon

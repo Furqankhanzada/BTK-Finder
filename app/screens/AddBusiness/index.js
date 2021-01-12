@@ -118,7 +118,26 @@ export default function Business({ navigation }) {
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
-      <Header title="Add Your Business" />
+      <Header
+        title={
+          businessFormData?.editBusiness
+            ? 'Edit Your Business'
+            : 'Add Your Business'
+        }
+        renderLeft={() => {
+          return businessFormData?.editBusiness ? (
+            <Icon
+              name="arrow-left"
+              size={20}
+              color="#5dade2"
+              enableRTL={true}
+            />
+          ) : null;
+        }}
+        onPressLeft={() => {
+          navigation.goBack();
+        }}
+      />
       <CustomStepIndicator position={0} />
       <Formik
         ref={formRef}
