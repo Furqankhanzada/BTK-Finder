@@ -32,10 +32,9 @@ export default function Gallery({ navigation }) {
       thumbnailLoading: businesses.thumbnailLoading,
       gallery: businesses.gallery,
       galleryLoading: businesses.galleryLoading,
+      businessFormData: businesses.businessFormData,
     };
   });
-  const businesses = useSelector(({ businesses }) => businesses);
-  const { businessFormData } = businesses;
 
   const onNext = () => {
     dispatch(setBusinessFormData({ gallery: stateProps.gallery }));
@@ -131,7 +130,7 @@ export default function Gallery({ navigation }) {
     <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
       <Header
         title={
-          businessFormData?.editBusiness
+          stateProps.businessFormData?.editBusiness
             ? 'Edit Your Business'
             : 'Add Your Business'
         }

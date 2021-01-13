@@ -60,14 +60,20 @@ export default function Business({ navigation }) {
     return { label: name, value: name };
   });
 
-  const [selectedTags, setSelectedTags] = useState([]);
+  const [selectedTags, setSelectedTags] = useState(
+    businessFormData?.tags
+      ? businessFormData.tags.map((tag) => ({ name: tag }))
+      : [],
+  );
   const onUpdateTags = (value) => {
     setSelectedTags(value);
     // console.log('########################', value);
   };
   const [tags, setTags] = useState([]);
 
-  const [selectedFacilities, setSelectedFacilities] = useState([]);
+  const [selectedFacilities, setSelectedFacilities] = useState(
+    businessFormData?.facilities ? businessFormData.facilities : [],
+  );
   const onUpdateFacilities = (value) => {
     setSelectedFacilities(value);
     // console.log('########################', value);

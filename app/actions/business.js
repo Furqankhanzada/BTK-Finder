@@ -22,6 +22,7 @@ import {
   REMOVE_THUMBNAIL_IMAGES,
   UPLOAD_GALLERY_IMAGES_API,
   REMOVE_GALLERY_IMAGES,
+  EDIT_BUSINESS_DATA,
 } from '../constants/business';
 import { generateFileObject, handleError } from '../utils';
 import axiosApiInstance from '../interceptor/axios-interceptor';
@@ -171,6 +172,17 @@ export const setBusinessFormData = (businessFormData) => (dispatch) => {
   dispatch({ type: SET_BUSINESS_FORM_DATA_IN_REDUX, businessFormData });
 };
 
+export const editBusinessData = (formData, thumbnail, gallery) => (
+  dispatch,
+) => {
+  dispatch({
+    type: EDIT_BUSINESS_DATA,
+    businessFormData: { editBusiness: true, ...formData },
+    thumbnail: thumbnail,
+    gallery: gallery,
+  });
+};
+
 export const getSingleBusiness = (id, editBusiness = false, cb) => (
   dispatch,
 ) => {
@@ -179,7 +191,11 @@ export const getSingleBusiness = (id, editBusiness = false, cb) => (
     .then((response) => {
       editBusiness
         ? dispatch(
-            setBusinessFormData({ editBusiness: true, ...response.data }),
+            editBusinessData(
+              response.data,
+              response.data.thumbnail,
+              response.data.gallery,
+            ),
           )
         : null;
       dispatch({

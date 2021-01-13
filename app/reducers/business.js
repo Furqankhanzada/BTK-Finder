@@ -8,6 +8,7 @@ import {
   GET_SINGLE_BUSINESS_API,
   GET_RELATED_BUSINESS_API,
   GET_MY_BUSINESSES_API,
+  EDIT_BUSINESS_DATA,
   UPDATE_BUSINESS_API,
   UPDATE_BUSINESS_API_SUCCESS,
   UPDATE_BUSINESS_API_ERROR,
@@ -122,6 +123,13 @@ export default function userReducer(state = initialState, action = {}) {
         myBusinesses: action.data,
         getMyBusinessesLoading: action.loading,
       };
+    case EDIT_BUSINESS_DATA:
+      return {
+        ...state,
+        businessFormData: action.businessFormData,
+        thumbnail: action.thumbnail,
+        gallery: action.gallery,
+      };
     case UPDATE_BUSINESS_API:
       return {
         ...state,
@@ -132,6 +140,8 @@ export default function userReducer(state = initialState, action = {}) {
         ...state,
         editBusinessLoading: false,
         businessFormData: {},
+        thumbnail: '',
+        gallery: [],
       };
     case UPDATE_BUSINESS_API_ERROR:
       return {
