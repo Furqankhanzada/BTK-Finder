@@ -1,11 +1,11 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { BaseColor, useTheme, useFont } from '@config';
-import { useTranslation } from 'react-i18next';
-import { Icon } from '@components';
 import { useDispatch, useSelector } from 'react-redux';
-import { setBusinessFormData } from '../actions/business';
+import { useTranslation } from 'react-i18next';
+import { BaseColor, useTheme, useFont } from '@config';
+import { Icon } from '@components';
+import { setEditBusiness } from '../actions/business';
 
 /* Bottom Screen */
 import Home from '@screens/Home';
@@ -142,7 +142,7 @@ function BottomTabNavigator() {
         }}
         listeners={() => ({
           tabPress: (e) => {
-            dispatch(setBusinessFormData({ editBusiness: false }));
+            dispatch(setEditBusiness(false));
           },
         })}
       />

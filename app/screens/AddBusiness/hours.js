@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+import { useDispatch, useSelector } from 'react-redux';
+import ActionButton from 'react-native-action-button';
 import { BaseStyle, useTheme } from '@config';
 import {
   Header,
@@ -10,16 +13,24 @@ import {
   HoursCheckbox,
 } from '@components';
 import styles from './styles';
-import { ScrollView } from 'react-native-gesture-handler';
-import ActionButton from 'react-native-action-button';
-import { useDispatch, useSelector } from 'react-redux';
-import { setBusinessFormData } from '../../actions/business';
+import {
+  setBusinessFormData,
+  updateEditBusinessData,
+} from '../../actions/business';
 
 export default function Hours({ navigation }) {
   const { colors } = useTheme();
   const dispatch = useDispatch();
-  const businesses = useSelector(({ businesses }) => businesses);
-  const { businessFormData } = businesses;
+  const stateProps = useSelector(({ businesses }) => {
+    return {
+      editBusiness: businesses.editBusiness,
+      editBusinessData: businesses.editBusinessData,
+      businessFormData: businesses.businessFormData,
+    };
+  });
+  const businessFormData = stateProps?.editBusiness
+    ? stateProps?.editBusinessData
+    : stateProps?.businessFormData;
 
   const [selectedDays, setSelectedDays] = useState([]);
 
@@ -52,7 +63,11 @@ export default function Hours({ navigation }) {
     if (selectedDays && selectedDays.length) {
       payload.openHours = selectedDays.filter((obj) => obj.isOpen);
     }
-    dispatch(setBusinessFormData(payload));
+    if (stateProps.editBusiness) {
+      dispatch(updateEditBusinessData(payload));
+    } else {
+      dispatch(setBusinessFormData(payload));
+    }
     navigation.navigate('PriceRange');
   };
 
@@ -76,9 +91,7 @@ export default function Hours({ navigation }) {
     <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
       <Header
         title={
-          businessFormData?.editBusiness
-            ? 'Edit Your Business'
-            : 'Add Your Business'
+          stateProps?.editBusiness ? 'Edit Your Business' : 'Add Your Business'
         }
         renderLeft={() => {
           return (

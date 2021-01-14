@@ -8,7 +8,9 @@ import {
   GET_SINGLE_BUSINESS_API,
   GET_RELATED_BUSINESS_API,
   GET_MY_BUSINESSES_API,
-  EDIT_BUSINESS_DATA,
+  SET_EDIT_BUSINESS,
+  UPDATE_EDIT_BUSINESS_DATA,
+  GET_EDIT_BUSINESS_DATA,
   UPDATE_BUSINESS_API,
   UPDATE_BUSINESS_API_SUCCESS,
   UPDATE_BUSINESS_API_ERROR,
@@ -32,6 +34,7 @@ const initialState = {
   getAllBusinessesIsLoadMore: true,
   getAllBusinessesIsLoad: true,
   businessFormData: {},
+  editBusinessData: {},
   createBusinessLoading: false,
   getAllPopularBusinessesLoading: false,
   allPopularBusinesses: [],
@@ -45,6 +48,7 @@ const initialState = {
   relatedBusinesses: [],
   getMyBusinessesLoading: false,
   myBusinesses: [],
+  editBusiness: false,
   editBusinessLoading: false,
   createReviewLoading: false,
   review: {},
@@ -123,10 +127,24 @@ export default function userReducer(state = initialState, action = {}) {
         myBusinesses: action.data,
         getMyBusinessesLoading: action.loading,
       };
-    case EDIT_BUSINESS_DATA:
+    case SET_EDIT_BUSINESS:
       return {
         ...state,
-        businessFormData: action.businessFormData,
+        editBusiness: action.editBusiness,
+      };
+    case UPDATE_EDIT_BUSINESS_DATA:
+      return {
+        ...state,
+        editBusinessData: {
+          ...state.editBusinessData,
+          ...action.editBusinessData,
+        },
+      };
+    case GET_EDIT_BUSINESS_DATA:
+      return {
+        ...state,
+        editBusiness: true,
+        editBusinessData: action.editBusinessData,
         thumbnail: action.thumbnail,
         gallery: action.gallery,
       };
@@ -139,7 +157,7 @@ export default function userReducer(state = initialState, action = {}) {
       return {
         ...state,
         editBusinessLoading: false,
-        businessFormData: {},
+        editBusinessData: {},
         thumbnail: '',
         gallery: [],
       };

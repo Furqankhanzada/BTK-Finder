@@ -22,7 +22,9 @@ import {
   REMOVE_THUMBNAIL_IMAGES,
   UPLOAD_GALLERY_IMAGES_API,
   REMOVE_GALLERY_IMAGES,
-  EDIT_BUSINESS_DATA,
+  GET_EDIT_BUSINESS_DATA,
+  SET_EDIT_BUSINESS,
+  UPDATE_EDIT_BUSINESS_DATA,
 } from '../constants/business';
 import { generateFileObject, handleError } from '../utils';
 import axiosApiInstance from '../interceptor/axios-interceptor';
@@ -172,15 +174,23 @@ export const setBusinessFormData = (businessFormData) => (dispatch) => {
   dispatch({ type: SET_BUSINESS_FORM_DATA_IN_REDUX, businessFormData });
 };
 
-export const editBusinessData = (formData, thumbnail, gallery) => (
+export const setEditBusiness = (editBusiness) => (dispatch) => {
+  dispatch({ type: SET_EDIT_BUSINESS, editBusiness: editBusiness });
+};
+
+export const getEditBusinessData = (formData, thumbnail, gallery) => (
   dispatch,
 ) => {
   dispatch({
-    type: EDIT_BUSINESS_DATA,
-    businessFormData: { editBusiness: true, ...formData },
+    type: GET_EDIT_BUSINESS_DATA,
+    editBusinessData: formData,
     thumbnail: thumbnail,
     gallery: gallery,
   });
+};
+
+export const updateEditBusinessData = (editBusinessData) => (dispatch) => {
+  dispatch({ type: UPDATE_EDIT_BUSINESS_DATA, editBusinessData });
 };
 
 export const getSingleBusiness = (id, editBusiness = false, cb) => (
@@ -191,7 +201,7 @@ export const getSingleBusiness = (id, editBusiness = false, cb) => (
     .then((response) => {
       editBusiness
         ? dispatch(
-            editBusinessData(
+            getEditBusinessData(
               response.data,
               response.data.thumbnail,
               response.data.gallery,

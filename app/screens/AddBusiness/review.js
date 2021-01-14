@@ -1,5 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import ActionButton from 'react-native-action-button';
 import { useTheme } from '@config';
 import {
   Header,
@@ -9,8 +11,6 @@ import {
   PlaceDetailComponent,
   Loading,
 } from '@components';
-import ActionButton from 'react-native-action-button';
-import { useDispatch, useSelector } from 'react-redux';
 import {
   createBusiness,
   getMyBusinesses,
@@ -21,16 +21,21 @@ export default function FinalReview({ navigation }) {
   const { colors } = useTheme();
   const dispatch = useDispatch();
 
-  const stateProps = useSelector(({ businesses }) => businesses);
+  const stateProps = useSelector(({ businesses }) => {
+    return {
+      createBusinessLoading: businesses.createBusinessLoading,
+      thumbnail: businesses.thumbnail,
+      gallery: businesses.gallery,
+      editBusinessLoading: businesses.editBusinessLoading,
+      editBusiness: businesses.editBusiness,
+      editBusinessData: businesses.editBusinessData,
+      businessFormData: businesses.businessFormData,
+    };
+  });
+  const businessFormData = stateProps?.editBusiness
+    ? stateProps?.editBusinessData
+    : stateProps?.businessFormData;
   const profileData = useSelector((state) => state.profile);
-
-  const {
-    businessFormData,
-    createBusinessLoading,
-    thumbnail,
-    gallery,
-    editBusinessLoading,
-  } = stateProps;
 
   const addCallback = () => {
     navigation.navigate('Home');
@@ -71,13 +76,13 @@ export default function FinalReview({ navigation }) {
       delete payload.website;
     }
     payload.openHours = openHours;
-    if (thumbnail) {
-      payload.thumbnail = thumbnail;
+    if (stateProps.thumbnail) {
+      payload.thumbnail = stateProps.thumbnail;
     }
-    if (gallery) {
-      payload.gallery = gallery;
+    if (stateProps.gallery) {
+      payload.gallery = stateProps.gallery;
     }
-    if (businessFormData.editBusiness) {
+    if (stateProps.editBusiness) {
       dispatch(
         updateBusiness(payload, businessFormData._id, editBusinessCallback),
       );
@@ -88,12 +93,12 @@ export default function FinalReview({ navigation }) {
 
   return (
     <View style={{ flex: 1, position: 'relative' }}>
-      <Loading loading={createBusinessLoading} />
-      <Loading loading={editBusinessLoading} />
+      <Loading loading={stateProps.createBusinessLoading} />
+      <Loading loading={stateProps.editBusinessLoading} />
       <SafeAreaView style={{ flex: 1 }} forceInset={{ top: 'always' }}>
         <Header
           title={
-            businessFormData?.editBusiness
+            stateProps?.editBusiness
               ? 'Edit Your Business'
               : 'Add Your Business'
           }
@@ -122,7 +127,7 @@ export default function FinalReview({ navigation }) {
           onPress={() => add()}
           offsetX={20}
           offsetY={10}
-          disabled={createBusinessLoading}
+          disabled={stateProps.createBusinessLoading}
           icon={<Icon name="check" size={20} color="white" enableRTL={true} />}
         />
       </SafeAreaView>

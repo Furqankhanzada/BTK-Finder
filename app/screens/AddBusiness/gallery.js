@@ -1,5 +1,9 @@
 import React, { Fragment } from 'react';
 import { View, TouchableOpacity } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+import ActionButton from 'react-native-action-button';
+import { useDispatch, useSelector } from 'react-redux';
+import ImagePicker from 'react-native-image-crop-picker';
 import { BaseStyle, useTheme } from '@config';
 import {
   Header,
@@ -11,15 +15,12 @@ import {
   Loading,
 } from '@components';
 import styles from './styles';
-import { ScrollView } from 'react-native-gesture-handler';
-import ActionButton from 'react-native-action-button';
-import { useDispatch, useSelector } from 'react-redux';
-import ImagePicker from 'react-native-image-crop-picker';
 import {
   updateImagesIntoRedux,
   uploadImages,
   uploadGalleryImages,
   setBusinessFormData,
+  updateEditBusinessData,
 } from '../../actions/business';
 
 export default function Gallery({ navigation }) {
@@ -32,12 +33,21 @@ export default function Gallery({ navigation }) {
       thumbnailLoading: businesses.thumbnailLoading,
       gallery: businesses.gallery,
       galleryLoading: businesses.galleryLoading,
+      editBusiness: businesses.editBusiness,
+      editBusinessData: businesses.editBusinessData,
       businessFormData: businesses.businessFormData,
     };
   });
+  const businessFormData = stateProps?.editBusiness
+    ? stateProps?.editBusinessData
+    : stateProps?.businessFormData;
 
   const onNext = () => {
-    dispatch(setBusinessFormData({ gallery: stateProps.gallery }));
+    if (stateProps.editBusiness) {
+      dispatch(updateEditBusinessData({ gallery: stateProps.gallery }));
+    } else {
+      dispatch(setBusinessFormData({ gallery: stateProps.gallery }));
+    }
     navigation.navigate('FinalReview');
   };
 
@@ -130,9 +140,7 @@ export default function Gallery({ navigation }) {
     <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
       <Header
         title={
-          stateProps.businessFormData?.editBusiness
-            ? 'Edit Your Business'
-            : 'Add Your Business'
+          stateProps.editBusiness ? 'Edit Your Business' : 'Add Your Business'
         }
         renderLeft={() => {
           return (
