@@ -24,25 +24,33 @@ export default function Hours({ navigation }) {
   const [selectedDays, setSelectedDays] = useState([]);
 
   useEffect(() => {
+    let array = [
+      { day: 'Monday', from: '09:00 am', to: '05:00 pm', isOpen: false },
+      { day: 'Tuesday', from: '09:00 am', to: '05:00 pm', isOpen: false },
+      { day: 'Wednesday', from: '09:00 am', to: '05:00 pm', isOpen: false },
+      { day: 'Thursday', from: '09:00 am', to: '05:00 pm', isOpen: false },
+      { day: 'Friday', from: '09:00 am', to: '05:00 pm', isOpen: false },
+      { day: 'Saturday', from: '09:00 am', to: '05:00 pm', isOpen: false },
+      { day: 'Sunday', from: '09:00 am', to: '05:00 pm', isOpen: false },
+    ];
     if (businessFormData.openHours && businessFormData.openHours.length) {
-      setSelectedDays(businessFormData.openHours);
+      array = businessFormData.openHours
+        .map((v) => ({ ...v, isOpen: true }))
+        .concat(
+          array.filter(
+            ({ day }) => !businessFormData.openHours.find((f) => f.day === day),
+          ),
+        );
+      setSelectedDays(array);
     } else {
-      setSelectedDays([
-        { day: 'Monday', from: '09:00 am', to: '05:00 pm', isOpen: false },
-        { day: 'Tuesday', from: '09:00 am', to: '05:00 pm', isOpen: false },
-        { day: 'Wednesday', from: '09:00 am', to: '05:00 pm', isOpen: false },
-        { day: 'Thursday', from: '09:00 am', to: '05:00 pm', isOpen: false },
-        { day: 'Friday', from: '09:00 am', to: '05:00 pm', isOpen: false },
-        { day: 'Saturday', from: '09:00 am', to: '05:00 pm', isOpen: false },
-        { day: 'Sunday', from: '09:00 am', to: '05:00 pm', isOpen: false },
-      ]);
+      setSelectedDays(array);
     }
-  }, []);
+  }, [businessFormData.openHours]);
 
   const onNext = () => {
     let payload = {};
     if (selectedDays && selectedDays.length) {
-      payload.openHours = selectedDays;
+      payload.openHours = selectedDays.filter((obj) => obj.isOpen);
     }
     dispatch(setBusinessFormData(payload));
     navigation.navigate('PriceRange');

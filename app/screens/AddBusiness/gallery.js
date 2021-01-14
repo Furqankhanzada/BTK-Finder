@@ -156,7 +156,7 @@ export default function Gallery({ navigation }) {
               Thumbnail
             </Text>
           </View>
-          <View style={{ marginHorizontal: 25, marginBottom: 5 }}>
+          <View style={{ marginHorizontal: 25, marginBottom: 10 }}>
             <Text>Thumbnail size must be 300x300</Text>
           </View>
           <View style={styles.thumbnailContainer}>
@@ -193,7 +193,7 @@ export default function Gallery({ navigation }) {
               Gallery
             </Text>
           </View>
-          <View style={{ marginHorizontal: 25, marginBottom: -5 }}>
+          <View style={{ marginHorizontal: 25, marginBottom: 5 }}>
             <Text>Gallery Images size must be 600x400</Text>
           </View>
           <View style={styles.gallerySectionImagesContainer}>
