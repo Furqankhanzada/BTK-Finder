@@ -1,15 +1,11 @@
 import React from 'react';
 import { View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import ActionButton from 'react-native-action-button';
-import { useTheme } from '@config';
 import {
-  Header,
   SafeAreaView,
-  Icon,
-  CustomStepIndicator,
   PlaceDetailComponent,
   Loading,
+  FloatingButton,
 } from '@components';
 import {
   createBusiness,
@@ -18,7 +14,6 @@ import {
 } from '../../actions/business';
 
 export default function FinalReview({ navigation }) {
-  const { colors } = useTheme();
   const dispatch = useDispatch();
 
   const stateProps = useSelector(({ businesses }) => {
@@ -96,40 +91,11 @@ export default function FinalReview({ navigation }) {
       <Loading loading={stateProps.createBusinessLoading} />
       <Loading loading={stateProps.editBusinessLoading} />
       <SafeAreaView style={{ flex: 1 }} forceInset={{ top: 'always' }}>
-        <Header
-          title={
-            stateProps?.editBusiness
-              ? 'Edit Your Business'
-              : 'Add Your Business'
-          }
-          renderLeft={() => {
-            return (
-              <Icon
-                name="arrow-left"
-                size={20}
-                color="#5dade2"
-                enableRTL={true}
-              />
-            );
-          }}
-          onPressLeft={() => {
-            navigation.goBack();
-          }}
-        />
-        <CustomStepIndicator position={5} />
         <PlaceDetailComponent
           business={businessFormData}
           navigation={navigation}
         />
-        <ActionButton
-          buttonColor={colors.primary}
-          nativeFeedbackRippleColor="transparent"
-          onPress={() => add()}
-          offsetX={20}
-          offsetY={10}
-          disabled={stateProps.createBusinessLoading}
-          icon={<Icon name="check" size={20} color="white" enableRTL={true} />}
-        />
+        <FloatingButton iconName="check" onPress={() => add()} />
       </SafeAreaView>
     </View>
   );

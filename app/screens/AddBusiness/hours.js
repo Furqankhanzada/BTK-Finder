@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
-import ActionButton from 'react-native-action-button';
-import { BaseStyle, useTheme } from '@config';
+import { BaseStyle } from '@config';
 import {
   Header,
   SafeAreaView,
@@ -11,6 +10,7 @@ import {
   Text,
   CustomStepIndicator,
   HoursCheckbox,
+  FloatingButton,
 } from '@components';
 import styles from './styles';
 import {
@@ -19,7 +19,6 @@ import {
 } from '../../actions/business';
 
 export default function Hours({ navigation }) {
-  const { colors } = useTheme();
   const dispatch = useDispatch();
   const stateProps = useSelector(({ businesses }) => {
     return {
@@ -126,16 +125,7 @@ export default function Hours({ navigation }) {
           })}
         </View>
       </ScrollView>
-      <ActionButton
-        buttonColor={colors.primary}
-        nativeFeedbackRippleColor="transparent"
-        onPress={() => onNext()}
-        offsetX={20}
-        offsetY={10}
-        icon={
-          <Icon name="arrow-right" size={20} color="white" enableRTL={true} />
-        }
-      />
+      <FloatingButton onPress={() => onNext()} />
     </SafeAreaView>
   );
 }

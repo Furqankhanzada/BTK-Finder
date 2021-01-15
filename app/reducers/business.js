@@ -131,6 +131,8 @@ export default function userReducer(state = initialState, action = {}) {
       return {
         ...state,
         editBusiness: action.editBusiness,
+        thumbnail: '',
+        gallery: [],
       };
     case UPDATE_EDIT_BUSINESS_DATA:
       return {

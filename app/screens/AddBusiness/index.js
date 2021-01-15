@@ -4,7 +4,6 @@ import { BaseStyle, useTheme, BaseColor } from '@config';
 import remoteConfig from '@react-native-firebase/remote-config';
 import { useDispatch, useSelector } from 'react-redux';
 import { ScrollView } from 'react-native-gesture-handler';
-import ActionButton from 'react-native-action-button';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 import {
@@ -14,6 +13,7 @@ import {
   TextInput,
   Text,
   CustomStepIndicator,
+  FloatingButton,
 } from '@components';
 import styles from './styles';
 import GlobalStyle from '../../assets/styling/GlobalStyle';
@@ -431,21 +431,7 @@ export default function Business({ navigation }) {
                   </View>
                 </View>
               </ScrollView>
-              <ActionButton
-                buttonColor={colors.primary}
-                nativeFeedbackRippleColor="transparent"
-                onPress={() => handleSubmit()}
-                offsetX={20}
-                offsetY={10}
-                icon={
-                  <Icon
-                    name="arrow-right"
-                    size={20}
-                    color="white"
-                    enableRTL={true}
-                  />
-                }
-              />
+              <FloatingButton onPress={() => handleSubmit()} />
               <DateTimePickerModal
                 isVisible={isDatePickerVisible}
                 mode="date"

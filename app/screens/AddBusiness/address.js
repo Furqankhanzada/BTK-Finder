@@ -14,8 +14,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
-import ActionButton from 'react-native-action-button';
-import { BaseStyle, useTheme } from '@config';
+import { BaseStyle } from '@config';
 import {
   Header,
   SafeAreaView,
@@ -23,6 +22,7 @@ import {
   TextInput,
   Text,
   CustomStepIndicator,
+  FloatingButton,
 } from '@components';
 import styles from './styles';
 import GlobalStyle from '../../assets/styling/GlobalStyle';
@@ -44,7 +44,6 @@ const defaultLocation = {
 };
 
 export default function Address({ navigation }) {
-  const { colors } = useTheme();
   const mapRef = useRef();
   const formRef = useRef();
   const dispatch = useDispatch();
@@ -293,21 +292,7 @@ export default function Address({ navigation }) {
                   </View>
                 </View>
               </ScrollView>
-              <ActionButton
-                buttonColor={colors.primary}
-                nativeFeedbackRippleColor="transparent"
-                onPress={() => handleSubmit()}
-                offsetX={20}
-                offsetY={10}
-                icon={
-                  <Icon
-                    name="arrow-right"
-                    size={20}
-                    color="white"
-                    enableRTL={true}
-                  />
-                }
-              />
+              <FloatingButton onPress={() => handleSubmit()} />
             </Fragment>
           );
         }}

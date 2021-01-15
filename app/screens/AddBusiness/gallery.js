@@ -1,10 +1,9 @@
 import React, { Fragment } from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import ActionButton from 'react-native-action-button';
 import { useDispatch, useSelector } from 'react-redux';
 import ImagePicker from 'react-native-image-crop-picker';
-import { BaseStyle, useTheme } from '@config';
+import { BaseStyle } from '@config';
 import {
   Header,
   SafeAreaView,
@@ -13,6 +12,7 @@ import {
   CustomStepIndicator,
   Image,
   Loading,
+  FloatingButton,
 } from '@components';
 import styles from './styles';
 import {
@@ -24,7 +24,6 @@ import {
 } from '../../actions/business';
 
 export default function Gallery({ navigation }) {
-  const { colors } = useTheme();
   const dispatch = useDispatch();
   const stateProps = useSelector(({ businesses, profile }) => {
     return {
@@ -38,9 +37,6 @@ export default function Gallery({ navigation }) {
       businessFormData: businesses.businessFormData,
     };
   });
-  const businessFormData = stateProps?.editBusiness
-    ? stateProps?.editBusinessData
-    : stateProps?.businessFormData;
 
   const onNext = () => {
     if (stateProps.editBusiness) {
@@ -223,16 +219,7 @@ export default function Gallery({ navigation }) {
           </View>
         </View>
       </ScrollView>
-      <ActionButton
-        buttonColor={colors.primary}
-        nativeFeedbackRippleColor="transparent"
-        onPress={() => onNext()}
-        offsetX={20}
-        offsetY={10}
-        icon={
-          <Icon name="arrow-right" size={20} color="white" enableRTL={true} />
-        }
-      />
+      <FloatingButton onPress={() => onNext()} />
     </SafeAreaView>
   );
 }

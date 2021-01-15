@@ -3,7 +3,6 @@ import { View, Platform } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 import TextInputMask from 'react-native-text-input-mask';
-import ActionButton from 'react-native-action-button';
 import { BaseStyle, BaseColor, useTheme } from '@config';
 import {
   Header,
@@ -11,6 +10,7 @@ import {
   Icon,
   Text,
   CustomStepIndicator,
+  FloatingButton,
 } from '@components';
 import styles from './styles';
 import {
@@ -140,16 +140,7 @@ export default function PriceRange({ navigation }) {
           />
         </View>
       </ScrollView>
-      <ActionButton
-        buttonColor={colors.primary}
-        nativeFeedbackRippleColor="transparent"
-        onPress={() => onNext()}
-        offsetX={20}
-        offsetY={10}
-        icon={
-          <Icon name="arrow-right" size={20} color="white" enableRTL={true} />
-        }
-      />
+      <FloatingButton onPress={() => onNext()} />
     </SafeAreaView>
   );
 }

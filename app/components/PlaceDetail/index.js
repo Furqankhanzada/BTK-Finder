@@ -288,9 +288,9 @@ export default function PlaceDetailComponent(props) {
       <SafeAreaView style={{ flex: 1 }} forceInset={{ top: 'always' }}>
         {/* Header */}
         <Header
-          title=""
+          title={isPreview ? 'Business Review' : ''}
           renderLeft={() => {
-            return isPreview ? null : (
+            return (
               <Icon name="arrow-left" size={20} color={BaseColor.whiteColor} />
             );
           }}
