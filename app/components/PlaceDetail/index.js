@@ -56,9 +56,9 @@ export default function PlaceDetailComponent(props) {
 
   const stateProps = useSelector(({ businesses }) => {
     return {
-      recentlyAddedBusinesses: businesses.recentlyAddedBusinesses,
+      recentlyAddedBusinesses: businesses.placeDetailRecentlyAddedBusinesses,
       getRecentlyAddedBusinessesLoading:
-        businesses.getRecentlyAddedBusinessesLoading,
+        businesses.placeDetailRecentlyAddedBusinessesLoading,
       relatedBusiness: businesses.relatedBusinesses,
       getRelatedBusinessesLoading: businesses.getRelatedBusinessesLoading,
       favoriteIds: businesses.favoriteIds,
@@ -76,6 +76,7 @@ export default function PlaceDetailComponent(props) {
     );
     dispatch(
       getBusinesses({
+        placeDetail: true,
         limit: 5,
         skip: 0,
         fields: 'name, thumbnail, category, address, averageRatings',
@@ -101,7 +102,7 @@ export default function PlaceDetailComponent(props) {
       title: t('address'),
       type: 'map',
       information: business.address,
-      location: business?.location?.coordinates
+      location: business?.location?.coordinates,
     },
     {
       id: '2',
@@ -125,7 +126,6 @@ export default function PlaceDetailComponent(props) {
       information: business.website ? business.website : '',
     },
   ]);
-
 
   const openGps = (lat, lng) => {
     let company = Platform.OS === 'ios' ? 'apple' : 'google';
@@ -396,7 +396,7 @@ export default function PlaceDetailComponent(props) {
               </View>
               {isPreview ? null : stateProps?.favoriteIds?.includes(
                   business._id,
-              ) ? (
+                ) ? (
                 <Icon2
                   onPress={() => favorite(business._id)}
                   name={'heart'}
@@ -605,43 +605,44 @@ export default function PlaceDetailComponent(props) {
             </View>
           </View>
           {business?.facilities?.length ? (
-                <View>
-                  <Text
-                      title3
-                      semibold
+            <View>
+              <Text
+                title3
+                semibold
+                style={{
+                  paddingHorizontal: 20,
+                  paddingBottom: 5,
+                  paddingTop: 15,
+                }}>
+                {t('facilities')}
+              </Text>
+              <View
+                style={[styles.wrapContent, { borderColor: colors.border }]}>
+                {business?.facilities?.map((item) => {
+                  return (
+                    <Tag
+                      icon={
+                        <Icon
+                          name={item.icon}
+                          size={12}
+                          color={colors.accent}
+                          solid
+                          style={{ marginRight: 5 }}
+                        />
+                      }
+                      chip
+                      key={item.id}
                       style={{
-                        paddingHorizontal: 20,
-                        paddingBottom: 5,
-                        paddingTop: 15,
+                        marginTop: 8,
+                        marginRight: 8,
                       }}>
-                    {t('facilities')}
-                  </Text>
-                  <View style={[styles.wrapContent, { borderColor: colors.border }]}>
-                    {business?.facilities?.map((item) => {
-                      return (
-                          <Tag
-                              icon={
-                                <Icon
-                                    name={item.icon}
-                                    size={12}
-                                    color={colors.accent}
-                                    solid
-                                    style={{ marginRight: 5 }}
-                                />
-                              }
-                              chip
-                              key={item.id}
-                              style={{
-                                marginTop: 8,
-                                marginRight: 8,
-                              }}>
-                            {item?.name}
-                          </Tag>
-                      );
-                    })}
-                  </View>
-                </View>
-            ) : null}
+                      {item?.name}
+                    </Tag>
+                  );
+                })}
+              </View>
+            </View>
+          ) : null}
           {isPreview ? null : (
             <View style={{ marginTop: 20 }}>
               <SectionList

@@ -6,6 +6,7 @@ import {
   SET_BUSINESS_FORM_DATA_IN_REDUX,
   GET_POPULAR_BUSINESSES_API,
   GET_RECENTLY_ADDED_BUSINESSES_API,
+  GET_RECENTLY_ADDED_BUSINESSES_PLACE_DETAIL,
   GET_ALL_BUSINESSES_API,
   GET_SINGLE_BUSINESS_API,
   GET_RELATED_BUSINESS_API,
@@ -34,6 +35,13 @@ export const createBusiness = (payload, cb) => (dispatch) => {
     .then((response) => {
       console.log('response', response);
       dispatch({ type: CREATE_BUSINESS_API_SUCCESS });
+      dispatch(
+        getBusinesses({
+          limit: 15,
+          skip: 0,
+          fields: 'name, thumbnail, category, averageRatings',
+        }),
+      );
       Toast.show({
         type: 'success',
         topOffset: 55,
@@ -61,7 +69,11 @@ export const getBusinesses = (payload) => (dispatch) => {
   if (payload.popular) {
     dispatchType = GET_POPULAR_BUSINESSES_API;
   } else {
-    dispatchType = GET_RECENTLY_ADDED_BUSINESSES_API;
+    if (payload.placeDetail) {
+      dispatchType = GET_RECENTLY_ADDED_BUSINESSES_PLACE_DETAIL;
+    } else {
+      dispatchType = GET_RECENTLY_ADDED_BUSINESSES_API;
+    }
   }
   let queryParams = encodeQueryData(payload)
     ? `?${encodeQueryData(payload)}`
@@ -170,6 +182,13 @@ export const addReview = (payload, cb, id) => (dispatch) => {
     .then((response) => {
       dispatch({ type: ADD_REVIEW_API_SUCCESS });
       dispatch(getSingleBusiness(id));
+      dispatch(
+        getBusinesses({
+          limit: 15,
+          skip: 0,
+          fields: 'name, thumbnail, category, averageRatings',
+        }),
+      );
       Toast.show({
         type: 'success',
         topOffset: 55,

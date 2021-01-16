@@ -5,6 +5,7 @@ import {
   SET_BUSINESS_FORM_DATA_IN_REDUX,
   GET_POPULAR_BUSINESSES_API,
   GET_RECENTLY_ADDED_BUSINESSES_API,
+  GET_RECENTLY_ADDED_BUSINESSES_PLACE_DETAIL,
   GET_SINGLE_BUSINESS_API,
   GET_RELATED_BUSINESS_API,
   GET_ALL_BUSINESSES_API,
@@ -34,6 +35,8 @@ const initialState = {
   popularBusinesses: [],
   getRecentlyAddedBusinessesLoading: false,
   recentlyAddedBusinesses: [],
+  placeDetailRecentlyAddedBusinessesLoading: false,
+  placeDetailRecentlyAddedBusinesses: [],
   getSingleBusinessLoading: true,
   singleBusiness: {},
   getRelatedBusinessesLoading: true,
@@ -44,7 +47,7 @@ const initialState = {
   gallery: [],
   galleryLoading: false,
   thumbnail: '',
-  thumbnailLoading: false
+  thumbnailLoading: false,
 };
 
 export default function userReducer(state = initialState, action = {}) {
@@ -60,11 +63,12 @@ export default function userReducer(state = initialState, action = {}) {
     case CREATE_BUSINESS_API:
       return { ...state, createBusinessLoading: true };
     case CREATE_BUSINESS_API_SUCCESS:
-      return { ...state,
+      return {
+        ...state,
         businessFormData: {},
         createBusinessLoading: false,
         thumbnail: '',
-        gallery: []
+        gallery: [],
       };
     case CREATE_BUSINESS_API_ERROR:
       return { ...state, createBusinessLoading: false };
@@ -79,6 +83,12 @@ export default function userReducer(state = initialState, action = {}) {
         ...state,
         recentlyAddedBusinesses: action.data || [],
         getRecentlyAddedBusinessesLoading: action.loading,
+      };
+    case GET_RECENTLY_ADDED_BUSINESSES_PLACE_DETAIL:
+      return {
+        ...state,
+        placeDetailRecentlyAddedBusinesses: action.data || [],
+        placeDetailRecentlyAddedBusinessesLoading: action.loading,
       };
     case GET_ALL_BUSINESSES_API:
       return {
@@ -129,9 +139,9 @@ export default function userReducer(state = initialState, action = {}) {
         thumbnailLoading: action.thumbnailLoading,
       };
     case UPLOAD_GALLERY_IMAGES_API:
-      let data = [...state.gallery, ...action.gallery || []];
-      if(data.length && data[0] && !state.gallery.length){
-        data[0].cover = true
+      let data = [...state.gallery, ...(action.gallery || [])];
+      if (data.length && data[0] && !state.gallery.length) {
+        data[0].cover = true;
       }
       return {
         ...state,
