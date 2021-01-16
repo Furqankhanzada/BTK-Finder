@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
-  FlatList,
   RefreshControl,
   View,
   Animated,
@@ -564,8 +563,13 @@ export default function Place(props) {
         }}
       />
       <View style={{ position: 'relative', flex: 1 }}>
-        <Loading loading={stateProps.loading} />
-        {mapView ? renderMapView() : renderList()}
+        {stateProps.loading ? (
+          <Loading loading={true} />
+        ) : mapView ? (
+          renderMapView()
+        ) : (
+          renderList()
+        )}
       </View>
     </SafeAreaView>
   );
