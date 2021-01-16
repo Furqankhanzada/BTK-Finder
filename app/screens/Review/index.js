@@ -32,7 +32,7 @@ export default function Review(props) {
 
   useEffect(() => {
     dispatch(getSingleBusiness(route?.params?.id));
-  }, [dispatch]);
+  }, [route.params.id, dispatch]);
 
   const totalRating =
     stateProps?.singleBusiness?.reviewStats?.fiveStarCount +
@@ -69,6 +69,10 @@ export default function Review(props) {
     ],
   };
 
+  const navigateToWalktrhough = (lastRoute, id) => {
+    navigation.navigate('Walkthrough', { lastRoute, id });
+  };
+
   const navigateToFeedback = (id) => {
     navigation.navigate('Feedback', { id });
   };
@@ -90,14 +94,17 @@ export default function Review(props) {
       if (!checkReviewAlreadyAdded()) {
         navigateToFeedback(stateProps.singleBusiness._id);
       } else {
-        alert('You already added a review.', 'OK');
+        Alert.alert('Review Found', 'You have already added a Review.');
       }
     } else {
       Alert.alert(
         'Login Required',
         'You must login in order to add a review.',
         [
-          { text: 'Login', onPress: () => navigation.navigate('Walkthrough') },
+          {
+            text: 'Login',
+            onPress: () => navigateToWalktrhough('Review', route?.params?.id),
+          },
           {
             text: 'Cancel',
             style: 'cancel',
