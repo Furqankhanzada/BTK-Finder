@@ -10,7 +10,7 @@ import * as Utils from '@utils';
 import { useTranslation } from 'react-i18next';
 
 export default function Walkthrough(props) {
-  const { navigation, lastRoute } = props;
+  const { navigation, lastRoute, route } = props;
 
   const [loading, setLoading] = useState(false);
   const [scrollEnabled, setScrollEnabled] = useState(true);
@@ -70,7 +70,11 @@ export default function Walkthrough(props) {
             full
             style={{ marginTop: 20 }}
             loading={loading}
-            onPress={() => navigation.navigate('SignIn', { lastRoute })}>
+            onPress={() =>
+              navigation.navigate('SignIn', {
+                lastRoute: route?.params ?? lastRoute,
+              })
+            }>
             {t('sign_in')}
           </Button>
           <View style={styles.contentActionBottom}>
@@ -78,7 +82,11 @@ export default function Walkthrough(props) {
               OR
             </Text>
             <TouchableOpacity
-              onPress={() => navigation.navigate('SignUp', { lastRoute })}>
+              onPress={() =>
+                navigation.navigate('SignUp', {
+                  lastRoute: route?.params ?? lastRoute,
+                })
+              }>
               <Text body1 primaryColor>
                 {t('register')}
               </Text>
