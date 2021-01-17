@@ -102,6 +102,7 @@ export default function PlaceDetailComponent(props) {
       type: 'map',
       information: business.address,
       location: business?.location?.coordinates,
+      rightText: 'Get Directions',
     },
     {
       id: '2',
@@ -109,6 +110,7 @@ export default function PlaceDetailComponent(props) {
       title: t('tel'),
       type: 'phone',
       information: business.telephone,
+      rightText: 'Call Now',
     },
     {
       id: '3',
@@ -116,6 +118,7 @@ export default function PlaceDetailComponent(props) {
       title: t('email'),
       type: 'email',
       information: business.email ? business.email : '',
+      rightText: 'Send Mail',
     },
     {
       id: '4',
@@ -123,19 +126,19 @@ export default function PlaceDetailComponent(props) {
       title: t('website'),
       type: 'web',
       information: business.website ? business.website : '',
+      rightText: 'Visit Website',
     },
   ]);
 
   const openGps = (lat, lng) => {
-    let company = Platform.OS === 'ios' ? 'apple' : 'google';
-    let url = `http://maps.${company}.com/maps?daddr=${lat},${lng}`;
+    let url = `http://maps.google.com/maps?daddr=${lat},${lng}`;
     Linking.openURL(url);
   };
 
   const onOpen = (item) => {
     Alert.alert(
       'Explore BTK',
-      `${t('do_you_want_open')} ${item.title} ?`,
+      `${t('do_you_want_to')} ${item.rightText} ?`,
       [
         {
           text: t('cancel'),
@@ -143,7 +146,7 @@ export default function PlaceDetailComponent(props) {
           style: 'cancel',
         },
         {
-          text: t('done'),
+          text: t('yes'),
           onPress: () => {
             switch (item.type) {
               case 'web':
@@ -440,6 +443,11 @@ export default function PlaceDetailComponent(props) {
                       </Text>
                       <Text footnote semibold style={{ marginTop: 5 }}>
                         {item.information}
+                      </Text>
+                    </View>
+                    <View>
+                      <Text caption1 semibold style={{ color: colors.primary }}>
+                        {item.rightText}
                       </Text>
                     </View>
                   </TouchableOpacity>
