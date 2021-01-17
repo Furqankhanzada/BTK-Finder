@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, Platform } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+import { useDispatch, useSelector } from 'react-redux';
+import TextInputMask from 'react-native-text-input-mask';
 import { BaseStyle, BaseColor, useTheme } from '@config';
 import {
   Header,
@@ -7,20 +10,28 @@ import {
   Icon,
   Text,
   CustomStepIndicator,
+  FloatingButton,
 } from '@components';
 import styles from './styles';
-import TextInputMask from 'react-native-text-input-mask';
-import { ScrollView } from 'react-native-gesture-handler';
-import ActionButton from 'react-native-action-button';
-import { useDispatch, useSelector } from 'react-redux';
-import { setBusinessFormData } from '../../actions/business';
+import {
+  setBusinessFormData,
+  updateEditBusinessData,
+} from '../../actions/business';
 
 export default function PriceRange({ navigation }) {
   const dispatch = useDispatch();
   const { colors } = useTheme();
   const cardColor = colors.card;
-  const businesses = useSelector(({ businesses }) => businesses);
-  const { businessFormData } = businesses;
+  const stateProps = useSelector(({ businesses }) => {
+    return {
+      editBusiness: businesses.editBusiness,
+      editBusinessData: businesses.editBusinessData,
+      businessFormData: businesses.businessFormData,
+    };
+  });
+  const businessFormData = stateProps?.editBusiness
+    ? stateProps?.editBusinessData
+    : stateProps?.businessFormData;
   const [priceFrom, setPriceFrom] = useState('');
   const [priceTo, setPriceTo] = useState('');
 
@@ -35,7 +46,7 @@ export default function PriceRange({ navigation }) {
         businessFormData.priceRange.to ? businessFormData.priceRange.to : '',
       );
     }
-  }, []);
+  }, [businessFormData.priceRange]);
 
   const onNext = () => {
     let payload = {};
@@ -52,9 +63,11 @@ export default function PriceRange({ navigation }) {
       };
     }
 
-    dispatch(setBusinessFormData(payload));
-
-    // navigation.navigate('FinalReview');
+    if (stateProps.editBusiness) {
+      dispatch(updateEditBusinessData(payload));
+    } else {
+      dispatch(setBusinessFormData(payload));
+    }
     navigation.navigate('Gallery');
   };
 
@@ -65,7 +78,9 @@ export default function PriceRange({ navigation }) {
   return (
     <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
       <Header
-        title={'Add Your Business'}
+        title={
+          stateProps?.editBusiness ? 'Edit Your Business' : 'Add Your Business'
+        }
         renderLeft={() => {
           return (
             <Icon
@@ -125,16 +140,7 @@ export default function PriceRange({ navigation }) {
           />
         </View>
       </ScrollView>
-      <ActionButton
-        buttonColor={colors.primary}
-        nativeFeedbackRippleColor="transparent"
-        onPress={() => onNext()}
-        offsetX={20}
-        offsetY={10}
-        icon={
-          <Icon name="arrow-right" size={20} color="white" enableRTL={true} />
-        }
-      />
+      <FloatingButton onPress={() => onNext()} />
     </SafeAreaView>
   );
 }

@@ -1,6 +1,11 @@
 import React, { Fragment, useState, useRef, useEffect } from 'react';
 import { View, Platform, TouchableOpacity } from 'react-native';
 import { BaseStyle, useTheme, BaseColor } from '@config';
+import remoteConfig from '@react-native-firebase/remote-config';
+import { useDispatch, useSelector } from 'react-redux';
+import { ScrollView } from 'react-native-gesture-handler';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import moment from 'moment';
 import {
   Header,
   SafeAreaView,
@@ -8,22 +13,20 @@ import {
   TextInput,
   Text,
   CustomStepIndicator,
+  FloatingButton,
 } from '@components';
 import styles from './styles';
-import remoteConfig from '@react-native-firebase/remote-config';
-import { useDispatch, useSelector } from 'react-redux';
-import { ScrollView } from 'react-native-gesture-handler';
-import ActionButton from 'react-native-action-button';
+import GlobalStyle from '../../assets/styling/GlobalStyle';
 import {
   MultiselectDropdown,
   Dropdown,
 } from '../../modules/sharingan-rn-modal-dropdown-master/src';
 import { generalFormValidation } from './Validations';
 import { Formik } from 'formik';
-import GlobalStyle from '../../assets/styling/GlobalStyle';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import moment from 'moment';
-import { setBusinessFormData } from '../../actions/business';
+import {
+  updateEditBusinessData,
+  setBusinessFormData,
+} from '../../actions/business';
 
 export default function Business({ navigation }) {
   const description = useRef(null);
@@ -36,10 +39,14 @@ export default function Business({ navigation }) {
   const stateProps = useSelector(({ categories, businesses }) => {
     return {
       categories: categories.all,
-      businesses,
+      editBusiness: businesses.editBusiness,
+      editBusinessData: businesses.editBusinessData,
+      businessFormData: businesses.businessFormData,
     };
   });
-  const { businessFormData } = stateProps.businesses;
+  const businessFormData = stateProps?.editBusiness
+    ? stateProps?.editBusinessData
+    : stateProps?.businessFormData;
 
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
@@ -60,14 +67,20 @@ export default function Business({ navigation }) {
     return { label: name, value: name };
   });
 
-  const [selectedTags, setSelectedTags] = useState([]);
+  const [selectedTags, setSelectedTags] = useState(
+    businessFormData?.tags
+      ? businessFormData.tags.map((tag) => ({ name: tag }))
+      : [],
+  );
   const onUpdateTags = (value) => {
     setSelectedTags(value);
     // console.log('########################', value);
   };
   const [tags, setTags] = useState([]);
 
-  const [selectedFacilities, setSelectedFacilities] = useState([]);
+  const [selectedFacilities, setSelectedFacilities] = useState(
+    businessFormData?.facilities ? businessFormData.facilities : [],
+  );
   const onUpdateFacilities = (value) => {
     setSelectedFacilities(value);
     // console.log('########################', value);
@@ -106,19 +119,46 @@ export default function Business({ navigation }) {
   });
 
   const submit = (values) => {
-    dispatch(
-      setBusinessFormData({
-        ...values,
-        tags: selectedTags.map((el) => el.name),
-        facilities: selectedFacilities,
-      }),
-    );
+    if (stateProps.editBusiness) {
+      dispatch(
+        updateEditBusinessData({
+          ...values,
+          tags: selectedTags.map((el) => el.name),
+          facilities: selectedFacilities,
+        }),
+      );
+    } else {
+      dispatch(
+        setBusinessFormData({
+          ...values,
+          tags: selectedTags.map((el) => el.name),
+          facilities: selectedFacilities,
+        }),
+      );
+    }
     onNext();
   };
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
-      <Header title="Add Your Business" />
+      <Header
+        title={
+          stateProps?.editBusiness ? 'Edit Your Business' : 'Add Your Business'
+        }
+        renderLeft={() => {
+          return stateProps?.editBusiness ? (
+            <Icon
+              name="arrow-left"
+              size={20}
+              color="#5dade2"
+              enableRTL={true}
+            />
+          ) : null;
+        }}
+        onPressLeft={() => {
+          navigation.goBack();
+        }}
+      />
       <CustomStepIndicator position={0} />
       <Formik
         ref={formRef}
@@ -391,21 +431,7 @@ export default function Business({ navigation }) {
                   </View>
                 </View>
               </ScrollView>
-              <ActionButton
-                buttonColor={colors.primary}
-                nativeFeedbackRippleColor="transparent"
-                onPress={() => handleSubmit()}
-                offsetX={20}
-                offsetY={10}
-                icon={
-                  <Icon
-                    name="arrow-right"
-                    size={20}
-                    color="white"
-                    enableRTL={true}
-                  />
-                }
-              />
+              <FloatingButton onPress={() => handleSubmit()} />
               <DateTimePickerModal
                 isVisible={isDatePickerVisible}
                 mode="date"

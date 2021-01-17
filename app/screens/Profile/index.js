@@ -30,6 +30,10 @@ export default function Profile(props) {
     isLogin ? dispatch(getProfile()) : null;
   }, [dispatch, isLogin]);
 
+  const navigateToMyBusinesses = (id) => {
+    navigation.navigate('MyBusinesses', { id });
+  };
+
   /**
    * @description Simple logout with Redux
    * @author Passion UI <passionui.com>
@@ -94,6 +98,21 @@ export default function Profile(props) {
                 // }}
                 onPress={showBetaModal}>
                 <Text body1>{t('change_password')}</Text>
+                <Icon
+                  name="angle-right"
+                  size={18}
+                  color={colors.primary}
+                  style={{ marginLeft: 5 }}
+                  enableRTL={true}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.profileItem,
+                  { borderBottomColor: colors.border, borderBottomWidth: 1 },
+                ]}
+                onPress={() => navigateToMyBusinesses(profileData._id)}>
+                <Text body1>{t('my_businesses')}</Text>
                 <Icon
                   name="angle-right"
                   size={18}

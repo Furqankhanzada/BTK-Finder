@@ -7,6 +7,13 @@ import {
   GET_RECENTLY_ADDED_BUSINESSES_API,
   GET_SINGLE_BUSINESS_API,
   GET_RELATED_BUSINESS_API,
+  GET_MY_BUSINESSES_API,
+  SET_EDIT_BUSINESS,
+  UPDATE_EDIT_BUSINESS_DATA,
+  GET_EDIT_BUSINESS_DATA,
+  UPDATE_BUSINESS_API,
+  UPDATE_BUSINESS_API_SUCCESS,
+  UPDATE_BUSINESS_API_ERROR,
   GET_ALL_BUSINESSES_API,
   LOAD_MORE_ALL_BUSINESSES_API,
   ADD_REVIEW_API,
@@ -27,6 +34,7 @@ const initialState = {
   getAllBusinessesIsLoadMore: true,
   getAllBusinessesIsLoad: true,
   businessFormData: {},
+  editBusinessData: {},
   createBusinessLoading: false,
   getAllPopularBusinessesLoading: false,
   allPopularBusinesses: [],
@@ -34,17 +42,21 @@ const initialState = {
   popularBusinesses: [],
   getRecentlyAddedBusinessesLoading: false,
   recentlyAddedBusinesses: [],
-  getSingleBusinessLoading: true,
+  getSingleBusinessLoading: false,
   singleBusiness: {},
-  getRelatedBusinessesLoading: true,
-  relatedBusinesses: {},
+  getRelatedBusinessesLoading: false,
+  relatedBusinesses: [],
+  getMyBusinessesLoading: false,
+  myBusinesses: [],
+  editBusiness: false,
+  editBusinessLoading: false,
   createReviewLoading: false,
   review: {},
   favoriteIds: [],
   gallery: [],
   galleryLoading: false,
   thumbnail: '',
-  thumbnailLoading: false
+  thumbnailLoading: false,
 };
 
 export default function userReducer(state = initialState, action = {}) {
@@ -60,11 +72,12 @@ export default function userReducer(state = initialState, action = {}) {
     case CREATE_BUSINESS_API:
       return { ...state, createBusinessLoading: true };
     case CREATE_BUSINESS_API_SUCCESS:
-      return { ...state,
+      return {
+        ...state,
         businessFormData: {},
         createBusinessLoading: false,
         thumbnail: '',
-        gallery: []
+        gallery: [],
       };
     case CREATE_BUSINESS_API_ERROR:
       return { ...state, createBusinessLoading: false };
@@ -108,6 +121,53 @@ export default function userReducer(state = initialState, action = {}) {
         relatedBusinesses: action.data,
         getRelatedBusinessesLoading: action.loading,
       };
+    case GET_MY_BUSINESSES_API:
+      return {
+        ...state,
+        myBusinesses: action.data,
+        getMyBusinessesLoading: action.loading,
+      };
+    case SET_EDIT_BUSINESS:
+      return {
+        ...state,
+        editBusiness: action.editBusiness,
+        thumbnail: '',
+        gallery: [],
+      };
+    case UPDATE_EDIT_BUSINESS_DATA:
+      return {
+        ...state,
+        editBusinessData: {
+          ...state.editBusinessData,
+          ...action.editBusinessData,
+        },
+      };
+    case GET_EDIT_BUSINESS_DATA:
+      return {
+        ...state,
+        editBusiness: true,
+        editBusinessData: action.editBusinessData,
+        thumbnail: action.thumbnail,
+        gallery: action.gallery,
+      };
+    case UPDATE_BUSINESS_API:
+      return {
+        ...state,
+        editBusinessLoading: true,
+      };
+    case UPDATE_BUSINESS_API_SUCCESS:
+      return {
+        ...state,
+        editBusinessLoading: false,
+        editBusinessData: {},
+        thumbnail: '',
+        gallery: [],
+      };
+    case UPDATE_BUSINESS_API_ERROR:
+      return {
+        ...state,
+        editBusinessLoading: false,
+      };
     case ADD_REVIEW_API:
       return { ...state, createReviewLoading: true };
     case ADD_REVIEW_API_SUCCESS:
@@ -129,9 +189,9 @@ export default function userReducer(state = initialState, action = {}) {
         thumbnailLoading: action.thumbnailLoading,
       };
     case UPLOAD_GALLERY_IMAGES_API:
-      let data = [...state.gallery, ...action.gallery || []];
-      if(data.length && data[0] && !state.gallery.length){
-        data[0].cover = true
+      let data = [...state.gallery, ...(action.gallery || [])];
+      if (data.length && data[0] && !state.gallery.length) {
+        data[0].cover = true;
       }
       return {
         ...state,
