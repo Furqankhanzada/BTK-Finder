@@ -33,7 +33,7 @@ import PlaceItem from '../PlaceItem';
 import CardList from '../CardList';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  getRalatedBusinesses,
+  getRelatedBusinesses,
   getBusinesses,
   toggleFavorite,
 } from '../../actions/business';
@@ -67,7 +67,7 @@ export default function PlaceDetailComponent(props) {
 
   useEffect(() => {
     dispatch(
-      getRalatedBusinesses({
+      getRelatedBusinesses({
         limit: 5,
         skip: 0,
         fields: 'name, thumbnail, category, averageRatings',

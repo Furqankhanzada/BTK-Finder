@@ -33,7 +33,6 @@ export const createBusiness = (payload, cb) => (dispatch) => {
     data: payload,
   })
     .then((response) => {
-      console.log('response', response);
       dispatch({ type: CREATE_BUSINESS_API_SUCCESS });
       dispatch(
         getBusinesses({
@@ -91,21 +90,32 @@ export const getBusinesses = (payload) => (dispatch) => {
     });
 };
 
-export const getAllBusinesses = (payload) => (dispatch) => {
+export const getAllBusinesses = (payload, cb) => (dispatch) => {
   let dispatchType = GET_ALL_BUSINESSES_API;
+  let dispatchParams = {
+    loading: payload.loading,
+    refreshLoading: payload.refreshLoading,
+    loadMoreLoading: true,
+    data: [],
+  };
+  if (payload.skip === 0) {
+    dispatchParams = {
+      isLoadMore: false,
+      ...dispatchParams,
+    };
+  }
   let queryParams = encodeQueryData(payload)
     ? `?${encodeQueryData(payload)}`
     : '';
 
   if (payload.skip > 0) {
     dispatchType = LOAD_MORE_ALL_BUSINESSES_API;
+    dispatchParams = { ...dispatchParams, refreshLoading: false };
   }
 
   dispatch({
     type: dispatchType,
-    loading: true,
-    loadMoreLoading: true,
-    data: [],
+    ...dispatchParams,
   });
 
   axiosApiInstance({ method: 'GET', url: `${BUSINESSES_API}${queryParams}` })
@@ -113,23 +123,26 @@ export const getAllBusinesses = (payload) => (dispatch) => {
       dispatch({
         type: dispatchType,
         loading: false,
+        refreshLoading: false,
         loadMoreLoading: false,
         data: response.data || [],
-        isLoadMore: !(response.data && response.data.length < 10),
+        isLoadMore: response.data.length < 10,
       });
+      cb && cb();
     })
     .catch(({ response }) => {
       dispatch({
         type: dispatchType,
-        loading: false,
         loadMoreLoading: false,
+        loading: false,
+        refreshLoading: false,
         data: [],
       });
       handleError(response.data);
     });
 };
 
-export const getRalatedBusinesses = (payload) => (dispatch) => {
+export const getRelatedBusinesses = (payload) => (dispatch) => {
   let queryParams = encodeQueryData(payload)
     ? `?${encodeQueryData(payload)}`
     : '';
