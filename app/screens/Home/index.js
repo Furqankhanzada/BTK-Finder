@@ -28,7 +28,8 @@ import FeaturedCategoryPlaceholderComponent from '../../components/Placeholders/
 import SectionList from './sectionList';
 import {
   getBusinesses,
-  getFavoriteIdsIntoStorage, toggleFavorite,
+  getFavoriteIdsIntoStorage,
+  toggleFavorite,
 } from '../../actions/business';
 import PlaceItem from '../../components/PlaceItem';
 

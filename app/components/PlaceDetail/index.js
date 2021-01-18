@@ -56,9 +56,9 @@ export default function PlaceDetailComponent(props) {
 
   const stateProps = useSelector(({ businesses }) => {
     return {
-      recentlyAddedBusinesses: businesses.recentlyAddedBusinesses,
+      recentlyAddedBusinesses: businesses.placeDetailRecentlyAddedBusinesses,
       getRecentlyAddedBusinessesLoading:
-        businesses.getRecentlyAddedBusinessesLoading,
+        businesses.placeDetailRecentlyAddedBusinessesLoading,
       relatedBusiness: businesses.relatedBusinesses,
       getRelatedBusinessesLoading: businesses.getRelatedBusinessesLoading,
       favoriteIds: businesses.favoriteIds,
@@ -76,6 +76,7 @@ export default function PlaceDetailComponent(props) {
     );
     dispatch(
       getBusinesses({
+        placeDetail: true,
         limit: 5,
         skip: 0,
         fields: 'name, thumbnail, category, address, averageRatings',

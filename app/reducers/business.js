@@ -5,6 +5,7 @@ import {
   SET_BUSINESS_FORM_DATA_IN_REDUX,
   GET_POPULAR_BUSINESSES_API,
   GET_RECENTLY_ADDED_BUSINESSES_API,
+  GET_RECENTLY_ADDED_BUSINESSES_PLACE_DETAIL,
   GET_SINGLE_BUSINESS_API,
   GET_RELATED_BUSINESS_API,
   GET_MY_BUSINESSES_API,
@@ -43,6 +44,8 @@ const initialState = {
   getRecentlyAddedBusinessesLoading: false,
   recentlyAddedBusinesses: [],
   getSingleBusinessLoading: false,
+  placeDetailRecentlyAddedBusinessesLoading: false,
+  placeDetailRecentlyAddedBusinesses: [],
   singleBusiness: {},
   getRelatedBusinessesLoading: false,
   relatedBusinesses: [],
@@ -92,6 +95,12 @@ export default function userReducer(state = initialState, action = {}) {
         ...state,
         recentlyAddedBusinesses: action.data || [],
         getRecentlyAddedBusinessesLoading: action.loading,
+      };
+    case GET_RECENTLY_ADDED_BUSINESSES_PLACE_DETAIL:
+      return {
+        ...state,
+        placeDetailRecentlyAddedBusinesses: action.data || [],
+        placeDetailRecentlyAddedBusinessesLoading: action.loading,
       };
     case GET_ALL_BUSINESSES_API:
       return {

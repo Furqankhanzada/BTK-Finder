@@ -38,7 +38,8 @@ export default function SignUp(props) {
    *
    */
   const onSignUp = () => {
-    let lastRoute = params && params.lastRoute ? params.lastRoute : '';
+    let lastRoute = params?.lastRoute?.lastRoute ?? params.lastRoute ?? '';
+    let id = params?.lastRoute?.id ?? '';
 
     if (name === '' || email === '' || phone === '' || password === '') {
       setSuccess({
@@ -58,7 +59,7 @@ export default function SignUp(props) {
         (error) => {
           setLoading(false);
           if (!error) {
-            navigation.navigate('SignIn', { lastRoute });
+            navigation.navigate(lastRoute ? lastRoute : 'Profile');
             Toast.show({
               type: 'success',
               topOffset: 55,
