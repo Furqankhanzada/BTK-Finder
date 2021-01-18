@@ -1,10 +1,11 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { BaseColor, useTheme, useFont } from '@config';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { BaseColor, useTheme, useFont } from '@config';
 import { Icon } from '@components';
-import { useSelector } from 'react-redux';
+import { setEditBusiness } from '../actions/business';
 
 /* Bottom Screen */
 import Home from '@screens/Home';
@@ -37,6 +38,7 @@ import Hours from '@screens/AddBusiness/hours';
 import PriceRange from '@screens/AddBusiness/priceRange';
 import FinalReview from '@screens/AddBusiness/review';
 import Gallery from '@screens/AddBusiness/gallery';
+import MyBusinesses from '@screens/MyBusinesses';
 
 const MainStack = createStackNavigator();
 const BottomTab = createBottomTabNavigator();
@@ -75,12 +77,15 @@ export default function Main() {
       <MainStack.Screen name="PriceRange" component={PriceRange} />
       <MainStack.Screen name="FinalReview" component={FinalReview} />
       <MainStack.Screen name="Gallery" component={Gallery} />
+      <MainStack.Screen name="MyBusinesses" component={MyBusinesses} />
+      <MainStack.Screen name="EditBusiness" component={Business} />
     </MainStack.Navigator>
   );
 }
 
 function BottomTabNavigator() {
   const { t } = useTranslation();
+  const dispatch = useDispatch();
   const { colors } = useTheme();
   const font = useFont();
   const isLogin = useSelector((state) => state.auth.isLogin);
@@ -135,6 +140,11 @@ function BottomTabNavigator() {
             return <Icon color={color} name="business-time" size={20} solid />;
           },
         }}
+        listeners={() => ({
+          tabPress: (e) => {
+            dispatch(setEditBusiness(false));
+          },
+        })}
       />
       {/* <BottomTab.Screen
         name="Notification"

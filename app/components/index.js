@@ -30,6 +30,7 @@ import PlaceDetailComponent from './PlaceDetail';
 import Loading from './Loading';
 import DropDown from './DropdownPicker';
 import DropDownMultiSelect from './DropDownMultiSelect';
+import FloatingButton from './FloatingButton';
 
 export {
   TextInput,
@@ -64,4 +65,5 @@ export {
   Loading,
   DropDown,
   DropDownMultiSelect,
+  FloatingButton,
 };
