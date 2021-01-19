@@ -10,6 +10,10 @@ import {
   GET_ALL_BUSINESSES_API,
   GET_SINGLE_BUSINESS_API,
   GET_RELATED_BUSINESS_API,
+  GET_MY_BUSINESSES_API,
+  UPDATE_BUSINESS_API,
+  UPDATE_BUSINESS_API_SUCCESS,
+  UPDATE_BUSINESS_API_ERROR,
   LOAD_MORE_ALL_BUSINESSES_API,
   ADD_REVIEW_API,
   ADD_REVIEW_API_SUCCESS,
@@ -19,6 +23,9 @@ import {
   REMOVE_THUMBNAIL_IMAGES,
   UPLOAD_GALLERY_IMAGES_API,
   REMOVE_GALLERY_IMAGES,
+  GET_EDIT_BUSINESS_DATA,
+  SET_EDIT_BUSINESS,
+  UPDATE_EDIT_BUSINESS_DATA,
 } from '../constants/business';
 import { generateFileObject, handleError } from '../utils';
 import axiosApiInstance from '../interceptor/axios-interceptor';
@@ -44,8 +51,8 @@ export const createBusiness = (payload, cb) => (dispatch) => {
       Toast.show({
         type: 'success',
         topOffset: 55,
-        text1: 'Successfully',
-        text2: 'Successfully added business!',
+        text1: 'Business Added',
+        text2: 'You have Successfully added your Business!',
       });
       cb && cb();
     })
@@ -165,22 +172,99 @@ export const getRelatedBusinesses = (payload) => (dispatch) => {
     });
 };
 
+export const getMyBusinesses = (payload) => (dispatch) => {
+  let queryParams = encodeQueryData(payload)
+    ? `?${encodeQueryData(payload)}`
+    : '';
+  dispatch({ type: GET_MY_BUSINESSES_API, loading: true });
+  axiosApiInstance({ method: 'GET', url: `${BUSINESSES_API}${queryParams}` })
+    .then((response) => {
+      dispatch({
+        type: GET_MY_BUSINESSES_API,
+        loading: false,
+        data: response.data || [],
+      });
+    })
+    .catch(({ response }) => {
+      dispatch({
+        type: GET_MY_BUSINESSES_API,
+        loading: false,
+        data: [],
+      });
+      handleError(response.data);
+    });
+};
+
 export const setBusinessFormData = (businessFormData) => (dispatch) => {
   dispatch({ type: SET_BUSINESS_FORM_DATA_IN_REDUX, businessFormData });
 };
 
-export const getSingleBusiness = (id) => (dispatch) => {
+export const setEditBusiness = (editBusiness) => (dispatch) => {
+  dispatch({ type: SET_EDIT_BUSINESS, editBusiness: editBusiness });
+};
+
+export const getEditBusinessData = (formData, thumbnail, gallery) => (
+  dispatch,
+) => {
+  dispatch({
+    type: GET_EDIT_BUSINESS_DATA,
+    editBusinessData: formData,
+    thumbnail: thumbnail,
+    gallery: gallery,
+  });
+};
+
+export const updateEditBusinessData = (editBusinessData) => (dispatch) => {
+  dispatch({ type: UPDATE_EDIT_BUSINESS_DATA, editBusinessData });
+};
+
+export const getSingleBusiness = (id, editBusiness = false, cb) => (
+  dispatch,
+) => {
   dispatch({ type: GET_SINGLE_BUSINESS_API, loading: true });
   axiosApiInstance({ method: 'GET', url: `${BUSINESSES_API}/${id}` })
     .then((response) => {
+      editBusiness
+        ? dispatch(
+            getEditBusinessData(
+              response.data,
+              response.data.thumbnail,
+              response.data.gallery,
+            ),
+          )
+        : null;
       dispatch({
         type: GET_SINGLE_BUSINESS_API,
         loading: false,
         data: response.data,
       });
+      cb && cb();
     })
     .catch(({ response }) => {
       dispatch({ type: GET_SINGLE_BUSINESS_API, loading: false });
+      handleError(response.data);
+    });
+};
+
+export const updateBusiness = (payload, id, cb) => (dispatch) => {
+  dispatch({ type: UPDATE_BUSINESS_API });
+  axiosApiInstance({
+    method: 'PUT',
+    url: `${BUSINESSES_API}/${id}`,
+    data: payload,
+  })
+    .then((response) => {
+      dispatch({ type: UPDATE_BUSINESS_API_SUCCESS });
+      Toast.show({
+        type: 'success',
+        topOffset: 55,
+        text1: 'Business Updated',
+        text2: 'You have Successfully updated your Business!',
+      });
+      cb && cb();
+    })
+    .catch(({ response }) => {
+      dispatch({ type: UPDATE_BUSINESS_API_ERROR });
       handleError(response.data);
     });
 };

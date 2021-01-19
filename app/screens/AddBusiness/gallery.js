@@ -1,6 +1,9 @@
 import React, { Fragment } from 'react';
 import { View, TouchableOpacity } from 'react-native';
-import { BaseStyle, useTheme } from '@config';
+import { ScrollView } from 'react-native-gesture-handler';
+import { useDispatch, useSelector } from 'react-redux';
+import ImagePicker from 'react-native-image-crop-picker';
+import { BaseStyle } from '@config';
 import {
   Header,
   SafeAreaView,
@@ -9,21 +12,18 @@ import {
   CustomStepIndicator,
   Image,
   Loading,
+  FloatingButton,
 } from '@components';
 import styles from './styles';
-import { ScrollView } from 'react-native-gesture-handler';
-import ActionButton from 'react-native-action-button';
-import { useDispatch, useSelector } from 'react-redux';
-import ImagePicker from 'react-native-image-crop-picker';
 import {
   updateImagesIntoRedux,
   uploadImages,
   uploadGalleryImages,
   setBusinessFormData,
+  updateEditBusinessData,
 } from '../../actions/business';
 
 export default function Gallery({ navigation }) {
-  const { colors } = useTheme();
   const dispatch = useDispatch();
   const stateProps = useSelector(({ businesses, profile }) => {
     return {
@@ -32,11 +32,18 @@ export default function Gallery({ navigation }) {
       thumbnailLoading: businesses.thumbnailLoading,
       gallery: businesses.gallery,
       galleryLoading: businesses.galleryLoading,
+      editBusiness: businesses.editBusiness,
+      editBusinessData: businesses.editBusinessData,
+      businessFormData: businesses.businessFormData,
     };
   });
 
   const onNext = () => {
-    dispatch(setBusinessFormData({ gallery: stateProps.gallery }));
+    if (stateProps.editBusiness) {
+      dispatch(updateEditBusinessData({ gallery: stateProps.gallery }));
+    } else {
+      dispatch(setBusinessFormData({ gallery: stateProps.gallery }));
+    }
     navigation.navigate('FinalReview');
   };
 
@@ -128,7 +135,9 @@ export default function Gallery({ navigation }) {
   return (
     <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
       <Header
-        title={'Add Your Business'}
+        title={
+          stateProps.editBusiness ? 'Edit Your Business' : 'Add Your Business'
+        }
         renderLeft={() => {
           return (
             <Icon
@@ -151,7 +160,7 @@ export default function Gallery({ navigation }) {
               Thumbnail
             </Text>
           </View>
-          <View style={{ marginHorizontal: 25, marginBottom: 5 }}>
+          <View style={{ marginHorizontal: 25, marginBottom: 10 }}>
             <Text>Thumbnail size must be 300x300</Text>
           </View>
           <View style={styles.thumbnailContainer}>
@@ -188,7 +197,7 @@ export default function Gallery({ navigation }) {
               Gallery
             </Text>
           </View>
-          <View style={{ marginHorizontal: 25, marginBottom: -5 }}>
+          <View style={{ marginHorizontal: 25, marginBottom: 5 }}>
             <Text>Gallery Images size must be 600x400</Text>
           </View>
           <View style={styles.gallerySectionImagesContainer}>
@@ -210,16 +219,7 @@ export default function Gallery({ navigation }) {
           </View>
         </View>
       </ScrollView>
-      <ActionButton
-        buttonColor={colors.primary}
-        nativeFeedbackRippleColor="transparent"
-        onPress={() => onNext()}
-        offsetX={20}
-        offsetY={10}
-        icon={
-          <Icon name="arrow-right" size={20} color="white" enableRTL={true} />
-        }
-      />
+      <FloatingButton onPress={() => onNext()} />
     </SafeAreaView>
   );
 }

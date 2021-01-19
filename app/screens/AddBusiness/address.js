@@ -11,7 +11,10 @@ import {
   TouchableOpacity,
   PermissionsAndroid,
 } from 'react-native';
-import { BaseStyle, useTheme } from '@config';
+import { useDispatch, useSelector } from 'react-redux';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import Geolocation from 'react-native-geolocation-service';
+import { BaseStyle } from '@config';
 import {
   Header,
   SafeAreaView,
@@ -19,16 +22,16 @@ import {
   TextInput,
   Text,
   CustomStepIndicator,
+  FloatingButton,
 } from '@components';
 import styles from './styles';
-import ActionButton from 'react-native-action-button';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
-import Geolocation from 'react-native-geolocation-service';
+import GlobalStyle from '../../assets/styling/GlobalStyle';
 import { Formik } from 'formik';
 import { addressSFormValidation } from './Validations';
-import GlobalStyle from '../../assets/styling/GlobalStyle';
-import { useDispatch, useSelector } from 'react-redux';
-import { setBusinessFormData } from '../../actions/business';
+import {
+  updateEditBusinessData,
+  setBusinessFormData,
+} from '../../actions/business';
 import { ScrollView } from 'react-native-gesture-handler';
 
 let defaultDelta = {
@@ -41,12 +44,19 @@ const defaultLocation = {
 };
 
 export default function Address({ navigation }) {
-  const { colors } = useTheme();
   const mapRef = useRef();
   const formRef = useRef();
   const dispatch = useDispatch();
-  const businesses = useSelector(({ businesses }) => businesses);
-  const { businessFormData } = businesses;
+  const stateProps = useSelector(({ businesses }) => {
+    return {
+      editBusiness: businesses.editBusiness,
+      editBusinessData: businesses.editBusinessData,
+      businessFormData: businesses.businessFormData,
+    };
+  });
+  const businessFormData = stateProps?.editBusiness
+    ? stateProps?.editBusinessData
+    : stateProps?.businessFormData;
 
   const onNext = () => {
     navigation.navigate('Hours');
@@ -193,7 +203,11 @@ export default function Address({ navigation }) {
         coordinates: [location.latitude, location.longitude],
       };
     }
-    dispatch(setBusinessFormData(payload));
+    if (stateProps.editBusiness) {
+      dispatch(updateEditBusinessData(payload));
+    } else {
+      dispatch(setBusinessFormData(payload));
+    }
     onNext();
   };
 
@@ -205,7 +219,9 @@ export default function Address({ navigation }) {
   return (
     <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
       <Header
-        title={'Add Your Business'}
+        title={
+          stateProps?.editBusiness ? 'Edit Your Business' : 'Add Your Business'
+        }
         renderLeft={() => {
           return (
             <Icon
@@ -276,21 +292,7 @@ export default function Address({ navigation }) {
                   </View>
                 </View>
               </ScrollView>
-              <ActionButton
-                buttonColor={colors.primary}
-                nativeFeedbackRippleColor="transparent"
-                onPress={() => handleSubmit()}
-                offsetX={20}
-                offsetY={10}
-                icon={
-                  <Icon
-                    name="arrow-right"
-                    size={20}
-                    color="white"
-                    enableRTL={true}
-                  />
-                }
-              />
+              <FloatingButton onPress={() => handleSubmit()} />
             </Fragment>
           );
         }}
