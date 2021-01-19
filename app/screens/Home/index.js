@@ -26,11 +26,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getCategories } from '../../actions/category';
 import FeaturedCategoryPlaceholderComponent from '../../components/Placeholders/featuredCategories';
 import SectionList from './sectionList';
-import {
-  getBusinesses,
-  getFavoriteIdsIntoStorage,
-  toggleFavorite,
-} from '../../actions/business';
+import { getBusinesses } from '../../actions/business';
 import PlaceItem from '../../components/PlaceItem';
 
 export default function Home({ navigation }) {
@@ -41,7 +37,6 @@ export default function Home({ navigation }) {
       recentlyAddedBusinesses: businesses.recentlyAddedBusinesses,
       getRecentlyAddedBusinessesLoading:
         businesses.getRecentlyAddedBusinessesLoading,
-      favoriteIds: businesses.favoriteIds,
     };
   });
 
@@ -87,7 +82,6 @@ export default function Home({ navigation }) {
   }, [dispatch]);
 
   useEffect(() => {
-    dispatch(getFavoriteIdsIntoStorage());
     dispatch(
       getBusinesses({
         limit: 15,
@@ -107,10 +101,6 @@ export default function Home({ navigation }) {
 
   const navigateBusinessDetail = (id) => {
     navigation.navigate('PlaceDetail', { id });
-  };
-
-  const favorite = (id) => {
-    dispatch(toggleFavorite(id));
   };
 
   const seeMore = (payload = {}) => {
@@ -298,8 +288,8 @@ export default function Home({ navigation }) {
                   subtitle={item.category}
                   location={item?.address}
                   rate={item?.averageRatings || '0.0'}
-                  favoriteOnPress={() => favorite(item._id)}
-                  isFavorite={stateProps?.favoriteIds?.includes(item._id)}
+                  favoriteOnPress={() => console.log('Fav Pressed')}
+                  isFavorite={true}
                   // status='Open Now'
                   onPress={() => navigateBusinessDetail(item._id)}
                   onPressTag={() => navigateToReview(item._id)}

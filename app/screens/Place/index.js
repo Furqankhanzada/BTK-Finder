@@ -23,7 +23,7 @@ import * as Utils from '@utils';
 import { PlaceListData } from '@data';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllBusinesses, toggleFavorite } from '../../actions/business';
+import { getAllBusinesses } from '../../actions/business';
 import { showBetaModal } from '../../popup/betaPopup';
 
 export default function Place(props) {
@@ -61,7 +61,6 @@ export default function Place(props) {
       loadMoreLoading: businesses.getAllBusinessesLoadMoreLoading,
       isLoadMore: businesses.isLoadMore,
       refreshLoading: businesses.refreshLoading,
-      favoriteIds: businesses.favoriteIds,
     };
   });
 
@@ -202,10 +201,6 @@ export default function Place(props) {
     );
   };
 
-  const favorite = (id) => {
-    dispatch(toggleFavorite(id));
-  };
-
   /**
    * @description Render container view
    * @author Passion UI <passionui.com>
@@ -267,8 +262,8 @@ export default function Place(props) {
                   status={item?.status}
                   // rateStatus={item?.rateStatus}
                   numReviews={item?.reviews?.length}
-                  favoriteOnPress={() => favorite(item._id)}
-                  isFavorite={stateProps?.favoriteIds?.includes(item._id)}
+                  favoriteOnPress={() => console.log('Fav Pressed')}
+                  isFavorite={null}
                   onPress={() => navigateBusinessDetail(item._id)}
                   onPressTag={() => navigateToReview(item._id)}
                 />
@@ -339,8 +334,8 @@ export default function Place(props) {
                   status={item?.status}
                   rateStatus={item?.rateStatus}
                   numReviews={item?.reviews?.length}
-                  favoriteOnPress={() => favorite(item._id)}
-                  isFavorite={stateProps?.favoriteIds?.includes(item._id)}
+                  favoriteOnPress={() => (console.log('Fav Pressed'))}
+                  isFavorite={null}
                   style={{
                     marginBottom: 15,
                   }}
@@ -420,8 +415,8 @@ export default function Place(props) {
                   status={item?.status}
                   rateStatus={item?.rateStatus}
                   numReviews={item?.reviews.length}
-                  favoriteOnPress={() => favorite(item._id)}
-                  isFavorite={stateProps?.favoriteIds?.includes(item._id)}
+                  favoriteOnPress={() => (console.log('Fav Pressed'))}
+                  isFavorite={null}
                   style={{
                     marginLeft: 15,
                     marginBottom: 15,

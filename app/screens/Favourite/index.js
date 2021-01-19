@@ -1,26 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { FlatList, View } from 'react-native';
 import { BaseStyle } from '@config';
-import { Header, SafeAreaView, CardList, Text, Loading } from '@components';
-import { useDispatch, useSelector } from 'react-redux';
-import { getFavoriteBusinesses } from '../../actions/favorites';
+import { Header, SafeAreaView, Text } from '@components';
 import styles from '../Place/styles';
 
 export default function Favourite({ navigation }) {
-  const dispatch = useDispatch();
-
-  const stateProps = useSelector(({ favorites, businesses }) => {
-    return {
-      loading: favorites.loadingFavoriteBusinesses,
-      data: favorites.favoriteBusinesses,
-      ids: businesses.favoriteIds,
-    };
-  });
-
-  useEffect(() => {
-    dispatch(getFavoriteBusinesses());
-  }, [stateProps.ids]);
-
   const listEmptyComponent = () => {
     return (
       <View style={styles.sectionEmpty}>
@@ -37,31 +21,36 @@ export default function Favourite({ navigation }) {
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
-      <Header title="Favourite" />
-      <View style={{ flex: 1 }}>
-        <Loading loading={stateProps.loading} />
-        <FlatList
-          contentContainerStyle={{
-            paddingHorizontal: 20,
-            paddingTop: 15,
-            flex: stateProps?.data?.length ? 0 : 1,
-          }}
-          data={stateProps.data}
-          ListEmptyComponent={listEmptyComponent}
-          keyExtractor={(item, index) => item.id}
-          renderItem={({ item, index }) => {
-            return (
-              <CardList
-                image={item?.thumbnail}
-                title={item?.name}
-                subtitle={item?.category}
-                rate={item?.averageRatings}
-                style={{ marginBottom: 15 }}
-                onPress={() => navigateBusinessDetail(item._id)}
-              />
-            );
-          }}
-        />
+      <Header title="Favourite Businesses" />
+      {/*<View style={{ flex: 1 }}>*/}
+      {/*  <Loading loading={stateProps.loading} />*/}
+      {/*  <FlatList*/}
+      {/*    contentContainerStyle={{*/}
+      {/*      paddingHorizontal: 20,*/}
+      {/*      paddingTop: 15,*/}
+      {/*      flex: stateProps?.data?.length ? 0 : 1,*/}
+      {/*    }}*/}
+      {/*    data={[]}*/}
+      {/*    ListEmptyComponent={listEmptyComponent}*/}
+      {/*    keyExtractor={(item, index) => item.id}*/}
+      {/*    renderItem={({ item, index }) => {*/}
+      {/*      return (*/}
+      {/*        <CardList*/}
+      {/*          image={item?.thumbnail}*/}
+      {/*          title={item?.name}*/}
+      {/*          subtitle={item?.category}*/}
+      {/*          rate={item?.averageRatings}*/}
+      {/*          style={{ marginBottom: 15 }}*/}
+      {/*          onPress={() => navigateBusinessDetail(item._id)}*/}
+      {/*        />*/}
+      {/*      );*/}
+      {/*    }}*/}
+      {/*  />*/}
+      {/*</View>*/}
+      <View style={{ flex: 1, paddingTop: 100 }}>
+        <Text semibold style={styles.sectionEmptyText}>
+          Favourite Businesses Will Appear Here
+        </Text>
       </View>
     </SafeAreaView>
   );
