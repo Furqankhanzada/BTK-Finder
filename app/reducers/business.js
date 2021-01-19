@@ -25,6 +25,7 @@ import {
   REMOVE_THUMBNAIL_IMAGES,
   UPLOAD_GALLERY_IMAGES_API,
   REMOVE_GALLERY_IMAGES,
+  CLEAR_ALL_BUSINESSES_API,
 } from '../constants/business';
 
 //initial state.
@@ -32,7 +33,7 @@ const initialState = {
   getAllBusinessesLoading: false,
   allBusinesses: [],
   getAllBusinessesLoadMoreLoading: false,
-  getAllBusinessesIsLoadMore: true,
+  getAllBusinessesIsLoadMore: false,
   getAllBusinessesIsLoad: true,
   businessFormData: {},
   editBusinessData: {},
@@ -60,6 +61,7 @@ const initialState = {
   galleryLoading: false,
   thumbnail: '',
   thumbnailLoading: false,
+  refreshLoading: false,
 };
 
 export default function userReducer(state = initialState, action = {}) {
@@ -102,13 +104,20 @@ export default function userReducer(state = initialState, action = {}) {
         placeDetailRecentlyAddedBusinesses: action.data || [],
         placeDetailRecentlyAddedBusinessesLoading: action.loading,
       };
+    case CLEAR_ALL_BUSINESSES_API:
+      return {
+        ...state,
+        allBusinesses: [],
+      };
     case GET_ALL_BUSINESSES_API:
       return {
         ...state,
-        allBusinesses: action.data,
+        allBusinesses: action.data.length ? action.data : state.allBusinesses,
         getAllBusinessesLoading: action.loading,
         getAllBusinessesLoadMoreLoading: true,
         getAllBusinessesLoadMore: true,
+        getAllBusinessesIsLoadMore: action.isLoadMore,
+        refreshLoading: action.refreshLoading,
       };
     case LOAD_MORE_ALL_BUSINESSES_API:
       return {
@@ -116,7 +125,8 @@ export default function userReducer(state = initialState, action = {}) {
         allBusinesses: [...state.allBusinesses, ...action.data],
         getAllBusinessesLoading: false,
         getAllBusinessesLoadMoreLoading: action.loadMoreLoading,
-        getAllBusinessesLoadMore: action.isLoadMore,
+        getAllBusinessesIsLoadMore: action?.isLoadMore ?? state.getAllBusinessesIsLoadMore,
+        refreshLoading: action.refreshLoading,
       };
     case GET_SINGLE_BUSINESS_API:
       return {

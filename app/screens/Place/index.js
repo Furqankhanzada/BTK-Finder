@@ -31,9 +31,10 @@ export default function Place(props) {
   const dispatch = useDispatch();
   const [limit] = useState(10);
   const [skip, setSkip] = useState(0);
+  const [refresh, setRefresh] = useState(false);
 
-  useEffect(() => {
-    let payload = { limit, skip };
+  const getBusinesses = () => {
+    let payload = { limit, skip, loading: !refresh, refreshLoading: refresh };
     if (route?.params?.popular) {
       payload.popular = true;
     }
@@ -41,17 +42,29 @@ export default function Place(props) {
       payload.category = route.params.category;
     }
     dispatch(getAllBusinesses(payload));
+  };
+
+  useEffect(() => {
+    getBusinesses();
   }, [skip]);
+
+  useEffect(() => {
+    return () => {
+      dispatch({ type: 'CLEAR_ALL_BUSINESSES_API' });
+    };
+  }, [dispatch]);
 
   const stateProps = useSelector(({ businesses }) => {
     return {
       loading: businesses.getAllBusinessesLoading,
       data: businesses.allBusinesses,
       loadMoreLoading: businesses.getAllBusinessesLoadMoreLoading,
-      isLoadMore: businesses.getAllBusinessesLoadMore,
+      isLoadMore: businesses.isLoadMore,
+      refreshLoading: businesses.refreshLoading,
       favoriteIds: businesses.favoriteIds,
     };
   });
+
   const { t } = useTranslation();
   const { colors } = useTheme();
   const scrollAnim = new Animated.Value(0);
@@ -73,7 +86,6 @@ export default function Place(props) {
 
   const [active, setActive] = useState(0);
   const [viewportWidth, setViewportWidth] = useState(Utils.getWidthDevice());
-  const [refreshing] = useState(false);
   const [modeView, setModeView] = useState('grid');
   const [mapView, setMapView] = useState(false);
   const [region, setRegion] = useState({
@@ -159,17 +171,18 @@ export default function Place(props) {
   };
 
   const onScrollHandler = () => {
-    if (stateProps.isLoadMore) {
-      setSkip(skip + 10);
+    if (stateProps.loading || stateProps.isLoadMore) {
+      return;
     }
+    setSkip(stateProps.data.length);
   };
   const onRefreshHandler = () => {
-    // setLimit(10);
+    setRefresh(true);
     setSkip(0);
   };
 
   const renderFooter = () => {
-    if (!stateProps.loadMoreLoading && stateProps.isLoadMore) {
+    if (stateProps.data.length && stateProps.loadMoreLoading) {
       return (
         <View style={styles.listFooter}>
           <ActivityIndicator size="large" color={BaseColor.blueColor} />
@@ -218,12 +231,13 @@ export default function Place(props) {
                 <RefreshControl
                   colors={[colors.primary]}
                   tintColor={colors.primary}
-                  refreshing={refreshing}
+                  refreshing={stateProps.refreshLoading}
+                  progressViewOffset={80}
                   onRefresh={() => onRefreshHandler()}
                 />
               }
               onEndReached={onScrollHandler}
-              onEndThreshold={0}
+              onEndThreshold={0.1}
               scrollEventThrottle={1}
               onScroll={Animated.event(
                 [
@@ -239,7 +253,7 @@ export default function Place(props) {
               )}
               data={stateProps.data}
               key={'block'}
-              keyExtractor={(item, index) => item.id}
+              keyExtractor={(item, index) => item._id}
               ListEmptyComponent={listEmptyComponent}
               renderItem={({ item, index }) => (
                 <PlaceItem
@@ -288,12 +302,13 @@ export default function Place(props) {
                 <RefreshControl
                   colors={[colors.primary]}
                   tintColor={colors.primary}
-                  refreshing={refreshing}
+                  refreshing={stateProps.refreshLoading}
+                  progressViewOffset={80}
                   onRefresh={() => onRefreshHandler()}
                 />
               }
               onEndReached={onScrollHandler}
-              onEndThreshold={0}
+              onEndThreshold={0.1}
               scrollEventThrottle={1}
               onScroll={Animated.event(
                 [
@@ -309,7 +324,7 @@ export default function Place(props) {
               )}
               data={stateProps.data}
               key={'list'}
-              keyExtractor={(item, index) => item.id}
+              keyExtractor={(item, index) => item._id}
               ListFooterComponent={renderFooter}
               ListEmptyComponent={listEmptyComponent}
               renderItem={({ item, index }) => (
@@ -366,12 +381,13 @@ export default function Place(props) {
                 <RefreshControl
                   colors={[colors.primary]}
                   tintColor={colors.primary}
-                  refreshing={refreshing}
+                  refreshing={stateProps.refreshLoading}
+                  progressViewOffset={80}
                   onRefresh={() => onRefreshHandler()}
                 />
               }
               onEndReached={onScrollHandler}
-              onEndThreshold={0}
+              onEndThreshold={0.1}
               scrollEventThrottle={1}
               onScroll={Animated.event(
                 [
@@ -389,7 +405,7 @@ export default function Place(props) {
               numColumns={2}
               data={stateProps.data}
               key={'grid'}
-              keyExtractor={(item, index) => item.id}
+              keyExtractor={(item, index) => item._id}
               ListFooterComponent={renderFooter}
               ListEmptyComponent={listEmptyComponent}
               renderItem={({ item, index }) => (
