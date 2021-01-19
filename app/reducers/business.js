@@ -20,7 +20,6 @@ import {
   ADD_REVIEW_API,
   ADD_REVIEW_API_SUCCESS,
   ADD_REVIEW_API_ERROR,
-  TOGGLE_FAVORITE,
   UPLOAD_THUMBNAIL_IMAGE_API,
   REMOVE_THUMBNAIL_IMAGES,
   UPLOAD_GALLERY_IMAGES_API,
@@ -56,7 +55,6 @@ const initialState = {
   editBusinessLoading: false,
   createReviewLoading: false,
   review: {},
-  favoriteIds: [],
   gallery: [],
   galleryLoading: false,
   thumbnail: '',
@@ -125,7 +123,8 @@ export default function userReducer(state = initialState, action = {}) {
         allBusinesses: [...state.allBusinesses, ...action.data],
         getAllBusinessesLoading: false,
         getAllBusinessesLoadMoreLoading: action.loadMoreLoading,
-        getAllBusinessesIsLoadMore: action?.isLoadMore ?? state.getAllBusinessesIsLoadMore,
+        getAllBusinessesIsLoadMore:
+          action?.isLoadMore ?? state.getAllBusinessesIsLoadMore,
         refreshLoading: action.refreshLoading,
       };
     case GET_SINGLE_BUSINESS_API:
@@ -193,8 +192,6 @@ export default function userReducer(state = initialState, action = {}) {
       return { ...state, review: {}, createReviewLoading: false };
     case ADD_REVIEW_API_ERROR:
       return { ...state, createReviewLoading: false };
-    case TOGGLE_FAVORITE:
-      return { ...state, favoriteIds: action.ids };
     case UPLOAD_THUMBNAIL_IMAGE_API:
       return {
         ...state,

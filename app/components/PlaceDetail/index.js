@@ -32,11 +32,7 @@ import moment from 'moment';
 import PlaceItem from '../PlaceItem';
 import CardList from '../CardList';
 import { useSelector, useDispatch } from 'react-redux';
-import {
-  getRelatedBusinesses,
-  getBusinesses,
-  toggleFavorite,
-} from '../../actions/business';
+import { getRelatedBusinesses, getBusinesses } from '../../actions/business';
 import SectionList from '../../screens/Home/sectionList';
 import Icon2 from 'react-native-vector-icons/FontAwesome';
 import NumberFormat from 'react-number-format';
@@ -61,7 +57,6 @@ export default function PlaceDetailComponent(props) {
         businesses.placeDetailRecentlyAddedBusinessesLoading,
       relatedBusiness: businesses.relatedBusinesses,
       getRelatedBusinessesLoading: businesses.getRelatedBusinessesLoading,
-      favoriteIds: businesses.favoriteIds,
     };
   });
 
@@ -212,10 +207,6 @@ export default function PlaceDetailComponent(props) {
   const onCollapse = () => {
     Utils.enableExperimental();
     setCollapseHour(!collapseHour);
-  };
-
-  const favorite = (id) => {
-    dispatch(toggleFavorite(id));
   };
 
   const updateOpenHours = (data) => {
@@ -397,23 +388,23 @@ export default function PlaceDetailComponent(props) {
                   </TouchableOpacity>
                 )}
               </View>
-              {isPreview ? null : stateProps?.favoriteIds?.includes(
-                  business._id,
-                ) ? (
-                <Icon2
-                  onPress={() => favorite(business._id)}
-                  name={'heart'}
-                  color={colors.primaryLight}
-                  size={24}
-                />
-              ) : (
-                <Icon
-                  onPress={() => favorite(business._id)}
-                  name={'heart'}
-                  color={colors.primaryLight}
-                  size={24}
-                />
-              )}
+              {/*{isPreview ? null : stateProps?.favoriteIds?.includes(*/}
+              {/*    business._id,*/}
+              {/*  ) ? (*/}
+              {/*  <Icon2*/}
+              {/*    onPress={() => console.log('Fav Pressed')}*/}
+              {/*    name={'heart'}*/}
+              {/*    color={colors.primaryLight}*/}
+              {/*    size={24}*/}
+              {/*  />*/}
+              {/*) : (*/}
+              {/*  <Icon*/}
+              {/*    onPress={() => console.log('Fav Pressed')}*/}
+              {/*    name={'heart'}*/}
+              {/*    color={colors.primaryLight}*/}
+              {/*    size={24}*/}
+              {/*  />*/}
+              {/*)}*/}
             </View>
             {information.map((item) => {
               if (item.information) {
@@ -667,8 +658,8 @@ export default function PlaceDetailComponent(props) {
                       subtitle={item.category}
                       location={item?.address}
                       rate={item?.averageRatings || '0.0'}
-                      favoriteOnPress={() => favorite(item._id)}
-                      isFavorite={stateProps?.favoriteIds?.includes(item._id)}
+                      favoriteOnPress={() => console.log('Fav Pressed')}
+                      isFavorite={null}
                       // status='Open Now'
                       onPress={() => navigateBusinessDetail(item._id)}
                       onPressTag={() => navigateToReview(item._id)}

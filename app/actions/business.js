@@ -18,7 +18,6 @@ import {
   ADD_REVIEW_API,
   ADD_REVIEW_API_SUCCESS,
   ADD_REVIEW_API_ERROR,
-  TOGGLE_FAVORITE,
   UPLOAD_THUMBNAIL_IMAGE_API,
   REMOVE_THUMBNAIL_IMAGES,
   UPLOAD_GALLERY_IMAGES_API,
@@ -298,41 +297,6 @@ export const addReview = (payload, cb, id) => (dispatch) => {
       dispatch({ type: ADD_REVIEW_API_ERROR });
       handleError({ message: response.data.message[0] });
     });
-};
-
-export const getFavoriteIdsIntoStorage = () => async (dispatch) => {
-  try {
-    const jsonValue = await AsyncStorage.getItem('FAVORITE_IDS');
-    dispatch({
-      type: TOGGLE_FAVORITE,
-      ids: jsonValue != null ? JSON.parse(jsonValue) : null,
-    });
-  } catch (e) {
-    // error reading value
-  }
-};
-
-export const toggleFavorite = (id) => async (dispatch, getState) => {
-  try {
-    const { businesses } = getState();
-    const { favoriteIds } = businesses;
-    const jsonValue = await AsyncStorage.getItem('FAVORITE_IDS');
-    let ids = [];
-    if (jsonValue) {
-      ids = JSON.parse(jsonValue);
-    } else {
-      ids = favoriteIds && favoriteIds.length ? [...favoriteIds] : [];
-    }
-    if (ids?.length && ids.includes(id)) {
-      ids = ids.filter((el) => el !== id);
-    } else {
-      ids.push(id);
-    }
-    dispatch({ type: TOGGLE_FAVORITE, ids });
-    AsyncStorage.setItem('FAVORITE_IDS', JSON.stringify(ids));
-  } catch (e) {
-    // error reading value
-  }
 };
 
 export const uploadImages = (image) => (dispatch, getState) => {
