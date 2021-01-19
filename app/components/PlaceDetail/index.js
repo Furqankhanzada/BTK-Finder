@@ -33,6 +33,10 @@ import PlaceItem from '../PlaceItem';
 import CardList from '../CardList';
 import { useSelector, useDispatch } from 'react-redux';
 import { getRelatedBusinesses, getBusinesses } from '../../actions/business';
+import {
+  addFavoriteBusiness,
+  removeFavoriteBusiness,
+} from '../../actions/favorites';
 import SectionList from '../../screens/Home/sectionList';
 import Icon2 from 'react-native-vector-icons/FontAwesome';
 import NumberFormat from 'react-number-format';
@@ -50,13 +54,14 @@ export default function PlaceDetailComponent(props) {
   const dispatch = useDispatch();
   const { navigation, business } = props;
 
-  const stateProps = useSelector(({ businesses }) => {
+  const stateProps = useSelector(({ businesses, favorites }) => {
     return {
       recentlyAddedBusinesses: businesses.placeDetailRecentlyAddedBusinesses,
       getRecentlyAddedBusinessesLoading:
         businesses.placeDetailRecentlyAddedBusinessesLoading,
       relatedBusiness: businesses.relatedBusinesses,
       getRelatedBusinessesLoading: businesses.getRelatedBusinessesLoading,
+      favoriteBusinesses: favorites.getFavoriteBusinesses,
     };
   });
 
@@ -78,6 +83,16 @@ export default function PlaceDetailComponent(props) {
       }),
     );
   }, [business.category, dispatch]);
+
+  const addToFavorites = (id) => {
+    const allFavoriteBusinesses = stateProps.favoriteBusinesses;
+    const isFavoriteExist = allFavoriteBusinesses.some((obj) => obj._id === id);
+    if (isFavoriteExist) {
+      dispatch(removeFavoriteBusiness(id));
+    } else {
+      dispatch(addFavoriteBusiness(id));
+    }
+  };
 
   const navigateBusinessDetail = (id) => {
     navigation.replace('PlaceDetail', { id });
@@ -388,23 +403,23 @@ export default function PlaceDetailComponent(props) {
                   </TouchableOpacity>
                 )}
               </View>
-              {/*{isPreview ? null : stateProps?.favoriteIds?.includes(*/}
-              {/*    business._id,*/}
-              {/*  ) ? (*/}
-              {/*  <Icon2*/}
-              {/*    onPress={() => console.log('Fav Pressed')}*/}
-              {/*    name={'heart'}*/}
-              {/*    color={colors.primaryLight}*/}
-              {/*    size={24}*/}
-              {/*  />*/}
-              {/*) : (*/}
-              {/*  <Icon*/}
-              {/*    onPress={() => console.log('Fav Pressed')}*/}
-              {/*    name={'heart'}*/}
-              {/*    color={colors.primaryLight}*/}
-              {/*    size={24}*/}
-              {/*  />*/}
-              {/*)}*/}
+              {isPreview ? null : stateProps?.favoriteBusinesses?.some(
+                  (obj) => obj._id === business._id,
+                ) ? (
+                <Icon2
+                  onPress={() => dispatch(removeFavoriteBusiness(business._id))}
+                  name={'heart'}
+                  color={colors.primaryLight}
+                  size={24}
+                />
+              ) : (
+                <Icon
+                  onPress={() => dispatch(addFavoriteBusiness(business._id))}
+                  name={'heart'}
+                  color={colors.primaryLight}
+                  size={24}
+                />
+              )}
             </View>
             {information.map((item) => {
               if (item.information) {
@@ -658,8 +673,10 @@ export default function PlaceDetailComponent(props) {
                       subtitle={item.category}
                       location={item?.address}
                       rate={item?.averageRatings || '0.0'}
-                      favoriteOnPress={() => console.log('Fav Pressed')}
-                      isFavorite={null}
+                      favoriteOnPress={() => addToFavorites(item?._id)}
+                      isFavorite={stateProps?.favoriteBusinesses?.some(
+                        (obj) => obj._id === item?._id,
+                      )}
                       // status='Open Now'
                       onPress={() => navigateBusinessDetail(item._id)}
                       onPressTag={() => navigateToReview(item._id)}

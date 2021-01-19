@@ -6,6 +6,9 @@ import {
   TouchableOpacity,
   FlatList,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import Swiper from 'react-native-swiper';
 import {
   Header,
   Button,
@@ -14,29 +17,32 @@ import {
   Icon,
   SafeAreaView,
   CardList,
+  PlaceItem,
   Card,
 } from '@components';
 import { BaseColor, useTheme } from '@config';
 import * as Utils from '@utils';
 import styles from './styles';
-import Swiper from 'react-native-swiper';
 import { HomeBannerData } from '@data';
-import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
 import { getCategories } from '../../actions/category';
 import FeaturedCategoryPlaceholderComponent from '../../components/Placeholders/featuredCategories';
 import SectionList from './sectionList';
 import { getBusinesses } from '../../actions/business';
-import PlaceItem from '../../components/PlaceItem';
+import {
+  getFavoriteBusinesses,
+  addFavoriteBusiness,
+  removeFavoriteBusiness,
+} from '../../actions/favorites';
 
 export default function Home({ navigation }) {
-  const stateProps = useSelector(({ businesses }) => {
+  const stateProps = useSelector(({ businesses, favorites }) => {
     return {
       popularBusinesses: businesses.popularBusinesses,
       getPopularBusinessesLoading: businesses.getPopularBusinessesLoading,
       recentlyAddedBusinesses: businesses.recentlyAddedBusinesses,
       getRecentlyAddedBusinessesLoading:
         businesses.getRecentlyAddedBusinessesLoading,
+      favoriteBusinesses: favorites.getFavoriteBusinesses,
     };
   });
 
@@ -97,7 +103,24 @@ export default function Home({ navigation }) {
         fields: 'name, thumbnail, category, averageRatings',
       }),
     );
+    dispatch(
+      getFavoriteBusinesses({
+        favorite: true,
+        skip: 0,
+        fields: 'name, thumbnail, category, averageRatings',
+      }),
+    );
   }, [dispatch]);
+
+  const addToFavorites = (id) => {
+    const allFavoriteBusinesses = stateProps.favoriteBusinesses;
+    const isFavoriteExist = allFavoriteBusinesses.some((obj) => obj._id === id);
+    if (isFavoriteExist) {
+      dispatch(removeFavoriteBusiness(id));
+    } else {
+      dispatch(addFavoriteBusiness(id));
+    }
+  };
 
   const navigateBusinessDetail = (id) => {
     navigation.navigate('PlaceDetail', { id });
@@ -287,9 +310,11 @@ export default function Home({ navigation }) {
                   title={item.name}
                   subtitle={item.category}
                   location={item?.address}
-                  rate={item?.averageRatings || '0.0'}
-                  favoriteOnPress={() => console.log('Fav Pressed')}
-                  isFavorite={true}
+                  rate={item?.averageRatings || 0.0}
+                  favoriteOnPress={() => addToFavorites(item?._id)}
+                  isFavorite={stateProps?.favoriteBusinesses?.some(
+                    (obj) => obj._id === item?._id,
+                  )}
                   // status='Open Now'
                   onPress={() => navigateBusinessDetail(item._id)}
                   onPressTag={() => navigateToReview(item._id)}
@@ -316,7 +341,7 @@ export default function Home({ navigation }) {
                   image={item?.thumbnail}
                   title={item.name}
                   subtitle={item.category}
-                  rate={item?.averageRatings || '0.0'}
+                  rate={item?.averageRatings || 0.0}
                   style={{ marginBottom: 15 }}
                   onPress={() => navigateBusinessDetail(item._id)}
                   onPressTag={() => navigateToReview(item._id)}
