@@ -267,6 +267,8 @@ export default function Place(props) {
                     (obj) => obj._id === item?._id,
                   )}
                   businessId={item?._id}
+                  navigation={navigation}
+                  lastRoute={route?.param?.category ? 'Category' : 'Place'}
                   onPress={() => navigateBusinessDetail(item._id)}
                   onPressTag={() => navigateToReview(item._id)}
                 />
@@ -341,6 +343,8 @@ export default function Place(props) {
                     (obj) => obj._id === item?._id,
                   )}
                   businessId={item?._id}
+                  navigation={navigation}
+                  lastRoute={route?.param?.category ? 'Category' : 'Place'}
                   style={{
                     marginBottom: 15,
                   }}
@@ -424,6 +428,8 @@ export default function Place(props) {
                     (obj) => obj._id === item?._id,
                   )}
                   businessId={item?._id}
+                  navigation={navigation}
+                  lastRoute={route?.param?.category ? 'Category' : 'Place'}
                   style={{
                     marginLeft: 15,
                     marginBottom: 15,

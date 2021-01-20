@@ -11,7 +11,14 @@ import {
 } from '../../actions/favorites';
 
 export default function FavouriteIcon(props) {
-  const { style, isFavorite, favoriteId } = props;
+  const {
+    style,
+    isFavorite,
+    favoriteId,
+    navigation,
+    lastRoute,
+    routeId,
+  } = props;
   const dispatch = useDispatch();
   const isLogin = useSelector((state) => state.auth.isLogin);
   const [loading, setLoading] = useState(false);
@@ -26,17 +33,8 @@ export default function FavouriteIcon(props) {
     setLoading(false);
   };
 
-  const loginAlert = () => {
-    return Alert.alert(
-      'Login Required',
-      'You must login in order to add favorites.',
-      [
-        {
-          text: 'Ok',
-        },
-      ],
-      { cancelable: false },
-    );
+  const navigateToWalktrhough = (lastRoute, id) => {
+    navigation.navigate('Walkthrough', { lastRoute, id });
   };
 
   const onPressFavorite = (id) => {
@@ -52,7 +50,21 @@ export default function FavouriteIcon(props) {
         dispatch(addFavoriteBusiness(id, afterResponse));
       }
     } else {
-      loginAlert();
+      Alert.alert(
+        'Login Required',
+        'You must login in order to add favorites.',
+        [
+          {
+            text: 'Login',
+            onPress: () => navigateToWalktrhough(lastRoute, routeId),
+          },
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+        ],
+        { cancelable: false },
+      );
     }
   };
 

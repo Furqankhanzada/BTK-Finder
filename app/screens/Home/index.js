@@ -28,11 +28,7 @@ import { getCategories } from '../../actions/category';
 import FeaturedCategoryPlaceholderComponent from '../../components/Placeholders/featuredCategories';
 import SectionList from './sectionList';
 import { getBusinesses } from '../../actions/business';
-import {
-  getFavoriteBusinesses,
-  addFavoriteBusiness,
-  removeFavoriteBusiness,
-} from '../../actions/favorites';
+import { getFavoriteBusinesses } from '../../actions/favorites';
 
 export default function Home({ navigation }) {
   const stateProps = useSelector(({ businesses, favorites }) => {
@@ -43,7 +39,6 @@ export default function Home({ navigation }) {
       getRecentlyAddedBusinessesLoading:
         businesses.getRecentlyAddedBusinessesLoading,
       favoriteBusinesses: favorites.getFavoriteBusinesses,
-      isFavoriteLoading: favorites.isFavoriteLoading,
     };
   });
 
@@ -306,6 +301,8 @@ export default function Home({ navigation }) {
                     (obj) => obj._id === item?._id,
                   )}
                   businessId={item?._id}
+                  navigation={navigation}
+                  lastRoute="Home"
                   // status='Open Now'
                   onPress={() => navigateBusinessDetail(item._id)}
                   onPressTag={() => navigateToReview(item._id)}

@@ -393,6 +393,9 @@ export default function PlaceDetailComponent(props) {
               {isPreview ? null : (
                 <FavouriteIcon
                   style={styles.iconGirdLike}
+                  navigation={navigation}
+                  lastRoute="PlaceDetail"
+                  routeId={business?._id}
                   isFavorite={stateProps?.favoriteBusinesses?.some(
                     (obj) => obj._id === business?._id,
                   )}
@@ -656,6 +659,9 @@ export default function PlaceDetailComponent(props) {
                         (obj) => obj._id === item?._id,
                       )}
                       businessId={item?._id}
+                      navigation={navigation}
+                      lastRoute="PlaceDetail"
+                      routeId={business?._id}
                       // status='Open Now'
                       onPress={() => navigateBusinessDetail(item._id)}
                       onPressTag={() => navigateToReview(item._id)}
