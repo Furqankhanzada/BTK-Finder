@@ -117,7 +117,13 @@ function BottomTabNavigator() {
 
       <BottomTab.Screen
         name="Favourite"
-        component={Favourite}
+        component={(props) =>
+          isLogin ? (
+            <Favourite {...props} />
+          ) : (
+            <Walkthrough lastRoute={'Favourite'} {...props} />
+          )
+        }
         options={{
           title: 'Favourite',
           tabBarIcon: ({ color }) => {
