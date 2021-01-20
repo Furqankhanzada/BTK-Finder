@@ -43,6 +43,7 @@ export default function Home({ navigation }) {
       getRecentlyAddedBusinessesLoading:
         businesses.getRecentlyAddedBusinessesLoading,
       favoriteBusinesses: favorites.getFavoriteBusinesses,
+      isFavoriteLoading: favorites.isFavoriteLoading,
     };
   });
 
@@ -111,16 +112,6 @@ export default function Home({ navigation }) {
       }),
     );
   }, [dispatch]);
-
-  const addToFavorites = (id) => {
-    const allFavoriteBusinesses = stateProps.favoriteBusinesses;
-    const isFavoriteExist = allFavoriteBusinesses.some((obj) => obj._id === id);
-    if (isFavoriteExist) {
-      dispatch(removeFavoriteBusiness(id));
-    } else {
-      dispatch(addFavoriteBusiness(id));
-    }
-  };
 
   const navigateBusinessDetail = (id) => {
     navigation.navigate('PlaceDetail', { id });
@@ -311,10 +302,10 @@ export default function Home({ navigation }) {
                   subtitle={item.category}
                   location={item?.address}
                   rate={item?.averageRatings || 0.0}
-                  favoriteOnPress={() => addToFavorites(item?._id)}
                   isFavorite={stateProps?.favoriteBusinesses?.some(
                     (obj) => obj._id === item?._id,
                   )}
+                  businessId={item?._id}
                   // status='Open Now'
                   onPress={() => navigateBusinessDetail(item._id)}
                   onPressTag={() => navigateToReview(item._id)}

@@ -25,10 +25,6 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllBusinesses } from '../../actions/business';
 import { showBetaModal } from '../../popup/betaPopup';
-import {
-  addFavoriteBusiness,
-  removeFavoriteBusiness,
-} from '../../actions/favorites';
 
 export default function Place(props) {
   const { navigation, route } = props;
@@ -166,16 +162,6 @@ export default function Place(props) {
     }
   };
 
-  const addToFavorites = (id) => {
-    const allFavoriteBusinesses = stateProps.favoriteBusinesses;
-    const isFavoriteExist = allFavoriteBusinesses.some((obj) => obj._id === id);
-    if (isFavoriteExist) {
-      dispatch(removeFavoriteBusiness(id));
-    } else {
-      dispatch(addFavoriteBusiness(id));
-    }
-  };
-
   const navigateBusinessDetail = (id) => {
     navigation.navigate('PlaceDetail', { id });
   };
@@ -277,10 +263,10 @@ export default function Place(props) {
                   status={item?.status}
                   // rateStatus={item?.rateStatus}
                   numReviews={item?.reviews?.length}
-                  favoriteOnPress={() => addToFavorites(item?._id)}
                   isFavorite={stateProps?.favoriteBusinesses?.some(
                     (obj) => obj._id === item?._id,
                   )}
+                  businessId={item?._id}
                   onPress={() => navigateBusinessDetail(item._id)}
                   onPressTag={() => navigateToReview(item._id)}
                 />
@@ -351,10 +337,10 @@ export default function Place(props) {
                   status={item?.status}
                   rateStatus={item?.rateStatus}
                   numReviews={item?.reviews?.length}
-                  favoriteOnPress={() => addToFavorites(item?._id)}
                   isFavorite={stateProps?.favoriteBusinesses?.some(
                     (obj) => obj._id === item?._id,
                   )}
+                  businessId={item?._id}
                   style={{
                     marginBottom: 15,
                   }}
@@ -434,10 +420,10 @@ export default function Place(props) {
                   status={item?.status}
                   rateStatus={item?.rateStatus}
                   numReviews={item?.reviews.length}
-                  favoriteOnPress={() => addToFavorites(item?._id)}
                   isFavorite={stateProps?.favoriteBusinesses?.some(
                     (obj) => obj._id === item?._id,
                   )}
+                  businessId={item?._id}
                   style={{
                     marginLeft: 15,
                     marginBottom: 15,

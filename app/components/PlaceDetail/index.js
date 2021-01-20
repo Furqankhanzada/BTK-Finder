@@ -13,7 +13,6 @@ import {
   TouchableOpacity,
   Linking,
   Alert,
-  ActivityIndicator,
 } from 'react-native';
 import { BaseColor, Images, useTheme } from '@config';
 import {
@@ -24,6 +23,7 @@ import {
   StarRating,
   Tag,
   Image,
+  FavouriteIcon,
 } from '@components';
 import { useTranslation } from 'react-i18next';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
@@ -34,12 +34,7 @@ import PlaceItem from '../PlaceItem';
 import CardList from '../CardList';
 import { useSelector, useDispatch } from 'react-redux';
 import { getRelatedBusinesses, getBusinesses } from '../../actions/business';
-import {
-  addFavoriteBusiness,
-  removeFavoriteBusiness,
-} from '../../actions/favorites';
 import SectionList from '../../screens/Home/sectionList';
-import Icon2 from 'react-native-vector-icons/FontAwesome';
 import NumberFormat from 'react-number-format';
 
 let defaultDelta = {
@@ -53,8 +48,7 @@ export default function PlaceDetailComponent(props) {
   const deltaY = new Animated.Value(0);
   const { colors } = useTheme();
   const dispatch = useDispatch();
-  const { navigation, business, route } = props;
-  const isLogin = useSelector((state) => state.auth.isLogin);
+  const { navigation, business } = props;
 
   const stateProps = useSelector(({ businesses, favorites }) => {
     return {
@@ -86,38 +80,6 @@ export default function PlaceDetailComponent(props) {
       }),
     );
   }, [business.category, dispatch]);
-
-  const addToFavorites = (id) => {
-    const allFavoriteBusinesses = stateProps.favoriteBusinesses;
-    const isFavoriteExist = allFavoriteBusinesses.some((obj) => obj._id === id);
-    if (isFavoriteExist) {
-      dispatch(removeFavoriteBusiness(id));
-    } else {
-      dispatch(addFavoriteBusiness(id));
-    }
-  };
-
-  const navigateToWalktrhough = (lastRoute, id) => {
-    navigation.navigate('Walkthrough', { lastRoute, id });
-  };
-
-  const loginAlert = () => {
-    return Alert.alert(
-      'Login Required',
-      'You must login in order to add favorites.',
-      [
-        {
-          text: 'Login',
-          onPress: () => navigateToWalktrhough('PlaceDetail', business._id),
-        },
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-      ],
-      { cancelable: false },
-    );
-  };
 
   const navigateBusinessDetail = (id) => {
     navigation.replace('PlaceDetail', { id });
@@ -428,31 +390,13 @@ export default function PlaceDetailComponent(props) {
                   </TouchableOpacity>
                 )}
               </View>
-              {isPreview ? null : stateProps.isFavoriteLoading ? (
-                <ActivityIndicator size="small" color={colors.primary} />
-              ) : stateProps?.favoriteBusinesses?.some(
-                  (obj) => obj._id === business._id,
-                ) ? (
-                <Icon2
-                  onPress={() => {
-                    isLogin
-                      ? dispatch(removeFavoriteBusiness(business._id))
-                      : loginAlert();
-                  }}
-                  name={'heart'}
-                  color={colors.primaryLight}
-                  size={24}
-                />
-              ) : (
-                <Icon
-                  onPress={() => {
-                    isLogin
-                      ? dispatch(addFavoriteBusiness(business._id))
-                      : loginAlert();
-                  }}
-                  name={'heart'}
-                  color={colors.primaryLight}
-                  size={24}
+              {isPreview ? null : (
+                <FavouriteIcon
+                  style={styles.iconGirdLike}
+                  isFavorite={stateProps?.favoriteBusinesses?.some(
+                    (obj) => obj._id === business?._id,
+                  )}
+                  favoriteId={business?._id}
                 />
               )}
             </View>
@@ -708,10 +652,10 @@ export default function PlaceDetailComponent(props) {
                       subtitle={item.category}
                       location={item?.address}
                       rate={item?.averageRatings || '0.0'}
-                      favoriteOnPress={() => addToFavorites(item?._id)}
                       isFavorite={stateProps?.favoriteBusinesses?.some(
                         (obj) => obj._id === item?._id,
                       )}
+                      businessId={item?._id}
                       // status='Open Now'
                       onPress={() => navigateBusinessDetail(item._id)}
                       onPressTag={() => navigateToReview(item._id)}
