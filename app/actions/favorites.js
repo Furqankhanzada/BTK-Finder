@@ -17,7 +17,7 @@ const encodeQueryData = (data) => {
   return ret.join('&');
 };
 
-export const getFavoriteBusinesses = (payload) => (dispatch) => {
+export const getFavoriteBusinesses = (payload, cb) => (dispatch) => {
   dispatch({ type: GET_FAVORITES_API, loading: true });
   let queryParams = encodeQueryData(payload)
     ? `?${encodeQueryData(payload)}`
@@ -29,6 +29,7 @@ export const getFavoriteBusinesses = (payload) => (dispatch) => {
         loading: false,
         data: response.data || [],
       });
+      cb && cb();
     })
     .catch(({ response }) => {
       dispatch({
@@ -40,18 +41,21 @@ export const getFavoriteBusinesses = (payload) => (dispatch) => {
     });
 };
 
-export const addFavoriteBusiness = (id) => (dispatch) => {
+export const addFavoriteBusiness = (id, cb) => (dispatch) => {
   dispatch({ type: ADD_FAVORITE_API, loading: true });
   axiosApiInstance({ method: 'POST', url: `${BUSINESSES_API}/${id}/favorite` })
     .then((response) => {
-      dispatch(
-        getFavoriteBusinesses({
-          favorite: true,
-          skip: 0,
-          fields: 'name, thumbnail, category, averageRatings',
-        }),
-      );
       dispatch({ type: ADD_FAVORITE_API, loading: false });
+      dispatch(
+        getFavoriteBusinesses(
+          {
+            favorite: true,
+            skip: 0,
+            fields: 'name, thumbnail, category, averageRatings',
+          },
+          cb,
+        ),
+      );
     })
     .catch(({ response }) => {
       dispatch({ type: ADD_FAVORITE_API, loading: false });
@@ -59,21 +63,24 @@ export const addFavoriteBusiness = (id) => (dispatch) => {
     });
 };
 
-export const removeFavoriteBusiness = (id) => (dispatch) => {
+export const removeFavoriteBusiness = (id, cb) => (dispatch) => {
   dispatch({ type: REMOVE_FAVORITE_API, loading: true });
   axiosApiInstance({
     method: 'DELETE',
     url: `${BUSINESSES_API}/${id}/favorite`,
   })
     .then((response) => {
-      dispatch(
-        getFavoriteBusinesses({
-          favorite: true,
-          skip: 0,
-          fields: 'name, thumbnail, category, averageRatings',
-        }),
-      );
       dispatch({ type: REMOVE_FAVORITE_API, loading: false });
+      dispatch(
+        getFavoriteBusinesses(
+          {
+            favorite: true,
+            skip: 0,
+            fields: 'name, thumbnail, category, averageRatings',
+          },
+          cb,
+        ),
+      );
     })
     .catch(({ response }) => {
       dispatch({ type: REMOVE_FAVORITE_API, loading: false });

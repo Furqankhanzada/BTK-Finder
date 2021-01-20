@@ -31,6 +31,7 @@ import Loading from './Loading';
 import DropDown from './DropdownPicker';
 import DropDownMultiSelect from './DropDownMultiSelect';
 import FloatingButton from './FloatingButton';
+import FavouriteIcon from './FavouriteIcon';
 
 export {
   TextInput,
@@ -66,4 +67,5 @@ export {
   DropDown,
   DropDownMultiSelect,
   FloatingButton,
+  FavouriteIcon,
 };
