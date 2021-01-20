@@ -13,6 +13,7 @@ import {
   TouchableOpacity,
   Linking,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { BaseColor, Images, useTheme } from '@config';
 import {
@@ -52,7 +53,8 @@ export default function PlaceDetailComponent(props) {
   const deltaY = new Animated.Value(0);
   const { colors } = useTheme();
   const dispatch = useDispatch();
-  const { navigation, business } = props;
+  const { navigation, business, route } = props;
+  const isLogin = useSelector((state) => state.auth.isLogin);
 
   const stateProps = useSelector(({ businesses, favorites }) => {
     return {
@@ -62,6 +64,7 @@ export default function PlaceDetailComponent(props) {
       relatedBusiness: businesses.relatedBusinesses,
       getRelatedBusinessesLoading: businesses.getRelatedBusinessesLoading,
       favoriteBusinesses: favorites.getFavoriteBusinesses,
+      isFavoriteLoading: favorites.isFavoriteLoading,
     };
   });
 
@@ -92,6 +95,28 @@ export default function PlaceDetailComponent(props) {
     } else {
       dispatch(addFavoriteBusiness(id));
     }
+  };
+
+  const navigateToWalktrhough = (lastRoute, id) => {
+    navigation.navigate('Walkthrough', { lastRoute, id });
+  };
+
+  const loginAlert = () => {
+    return Alert.alert(
+      'Login Required',
+      'You must login in order to add favorites.',
+      [
+        {
+          text: 'Login',
+          onPress: () => navigateToWalktrhough('PlaceDetail', business._id),
+        },
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+      ],
+      { cancelable: false },
+    );
   };
 
   const navigateBusinessDetail = (id) => {
@@ -403,18 +428,28 @@ export default function PlaceDetailComponent(props) {
                   </TouchableOpacity>
                 )}
               </View>
-              {isPreview ? null : stateProps?.favoriteBusinesses?.some(
+              {isPreview ? null : stateProps.isFavoriteLoading ? (
+                <ActivityIndicator size="small" color={colors.primary} />
+              ) : stateProps?.favoriteBusinesses?.some(
                   (obj) => obj._id === business._id,
                 ) ? (
                 <Icon2
-                  onPress={() => dispatch(removeFavoriteBusiness(business._id))}
+                  onPress={() => {
+                    isLogin
+                      ? dispatch(removeFavoriteBusiness(business._id))
+                      : loginAlert();
+                  }}
                   name={'heart'}
                   color={colors.primaryLight}
                   size={24}
                 />
               ) : (
                 <Icon
-                  onPress={() => dispatch(addFavoriteBusiness(business._id))}
+                  onPress={() => {
+                    isLogin
+                      ? dispatch(addFavoriteBusiness(business._id))
+                      : loginAlert();
+                  }}
                   name={'heart'}
                   color={colors.primaryLight}
                   size={24}

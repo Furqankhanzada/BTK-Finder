@@ -18,10 +18,10 @@ const encodeQueryData = (data) => {
 };
 
 export const getFavoriteBusinesses = (payload) => (dispatch) => {
+  dispatch({ type: GET_FAVORITES_API, loading: true });
   let queryParams = encodeQueryData(payload)
     ? `?${encodeQueryData(payload)}`
     : '';
-  dispatch({ type: GET_FAVORITES_API, loading: true });
   axiosApiInstance({ method: 'GET', url: `${BUSINESSES_API}${queryParams}` })
     .then((response) => {
       dispatch({
@@ -66,7 +66,6 @@ export const removeFavoriteBusiness = (id) => (dispatch) => {
     url: `${BUSINESSES_API}/${id}/favorite`,
   })
     .then((response) => {
-      dispatch({ type: REMOVE_FAVORITE_API, loading: false });
       dispatch(
         getFavoriteBusinesses({
           favorite: true,
@@ -74,6 +73,7 @@ export const removeFavoriteBusiness = (id) => (dispatch) => {
           fields: 'name, thumbnail, category, averageRatings',
         }),
       );
+      dispatch({ type: REMOVE_FAVORITE_API, loading: false });
     })
     .catch(({ response }) => {
       dispatch({ type: REMOVE_FAVORITE_API, loading: false });
