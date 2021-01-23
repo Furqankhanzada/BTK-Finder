@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { View, ScrollView, TouchableOpacity } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { AuthActions } from '@actions';
@@ -12,7 +12,6 @@ import {
   ProfileDetail,
 } from '@components';
 import styles from './styles';
-import { getProfile } from '../../actions/auth';
 import { useTranslation } from 'react-i18next';
 import { showBetaModal } from '../../popup/betaPopup';
 
@@ -25,10 +24,6 @@ export default function Profile(props) {
   const signOutLoading = useSelector((state) => state.auth.signOutLoading);
   const profileData = useSelector((state) => state.profile);
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    isLogin ? dispatch(getProfile()) : null;
-  }, [dispatch, isLogin]);
 
   const navigateToMyBusinesses = (id) => {
     navigation.navigate('MyBusinesses', { id });

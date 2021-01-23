@@ -24,11 +24,12 @@ import { BaseColor, useTheme } from '@config';
 import * as Utils from '@utils';
 import styles from './styles';
 import { HomeBannerData } from '@data';
-import { getCategories } from '../../actions/category';
 import FeaturedCategoryPlaceholderComponent from '../../components/Placeholders/featuredCategories';
 import SectionList from './sectionList';
+import { getCategories } from '../../actions/category';
 import { getBusinesses } from '../../actions/business';
 import { getFavoriteBusinesses } from '../../actions/favorites';
+import { getProfile } from '../../actions/auth';
 
 export default function Home({ navigation }) {
   const stateProps = useSelector(({ businesses, favorites }) => {
@@ -46,6 +47,7 @@ export default function Home({ navigation }) {
     navigation.navigate('Review', { id });
   };
 
+  const isLogin = useSelector((state) => state.auth.isLogin);
   const [loading, setLoading] = useState(true);
   const deltaY = new Animated.Value(0);
   const { colors } = useTheme();
@@ -70,6 +72,12 @@ export default function Home({ navigation }) {
 
   const heightImageBanner = Utils.scaleWithPixel(225);
   const marginTopBanner = heightImageBanner - heightHeader + 10;
+
+  useEffect(() => {
+    if (isLogin) {
+      dispatch(getProfile());
+    }
+  }, [dispatch, isLogin]);
 
   useEffect(() => {
     dispatch(getCategories({ limit: 7 }, null, true));
