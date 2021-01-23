@@ -471,6 +471,8 @@ PODS:
     - React
   - RNDateTimePicker (3.0.8):
     - React-Core
+  - RNDeviceInfo (7.3.1):
+    - React-Core
   - RNFastImage (8.3.4):
     - React-Core
     - SDWebImage (~> 5.8)
@@ -499,7 +501,7 @@ PODS:
     - Firebase/Messaging (~> 7.3.0)
     - React-Core
     - RNFBApp
-  - RNFBRemoteConfig (10.3.1):
+  - RNFBRemoteConfig (10.4.0):
     - Firebase/RemoteConfig (~> 7.3.0)
     - React-Core
     - RNFBApp
@@ -595,6 +597,7 @@ DEPENDENCIES:
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
   - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
+  - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNFastImage (from `../node_modules/react-native-fast-image`)
   - "RNFBAnalytics (from `../node_modules/@react-native-firebase/analytics`)"
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
@@ -728,6 +731,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/masked-view"
   RNDateTimePicker:
     :path: "../node_modules/@react-native-community/datetimepicker"
+  RNDeviceInfo:
+    :path: "../node_modules/react-native-device-info"
   RNFastImage:
     :path: "../node_modules/react-native-fast-image"
   RNFBAnalytics:
@@ -830,6 +835,7 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: b03032fdbdb725bea0bd9e5ec5a7272865ae7398
   RNCMaskedView: 5a8ec07677aa885546a0d98da336457e2bea557f
   RNDateTimePicker: 8eba76de1afd556bc00c874f4d0c0616e30e32f1
+  RNDeviceInfo: 6ecb1d1c87d20e4c62354be0348de23362824dcd
   RNFastImage: d4870d58f5936111c56218dbd7fcfc18e65b58ff
   RNFBAnalytics: 2fb60eedb8cead61797417cc7c33f087ce78e6c3
   RNFBApp: d5bc110403b55ba26ac441716259bd514d559cc5
@@ -837,7 +843,7 @@ SPEC CHECKSUMS:
   RNFBDynamicLinks: 1516a852ab41a939ebe71abf1172e7c71592bfce
   RNFBInAppMessaging: c96bf48847b566acb64327b49e059ef4b2c6668b
   RNFBMessaging: b2f402097f6643e733586bcb6d5f65dec7a6bce1
-  RNFBRemoteConfig: 5d0c44a0a0ad9cc013b4b57e5b5fe51c21a45d5f
+  RNFBRemoteConfig: 548e1fda1ae4f402600c9347a5052117d73daec9
   RNGestureHandler: 9b7e605a741412e20e13c512738a31bd1611759b
   RNImageCropPicker: 9e0bf18cf4184a846fed55747c8e622208b39947
   RNInputMask: 815461ebdf396beb62cf58916c35cf6930adb991
