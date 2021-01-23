@@ -8,6 +8,7 @@ import SplashScreen from 'react-native-splash-screen';
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
+import { navigationRef, isReadyRef } from '../services/NavigationService';
 
 /* Main Stack Navigator */
 import Main from 'app/navigation/main';
@@ -49,12 +50,23 @@ export default function Navigator() {
   }, [colors.primary, isDarkMode, storeLanguage]);
 
   useEffect(() => {
+    return () => {
+      isReadyRef.current = false;
+    };
+  }, []);
+
+  useEffect(() => {
     dispatch(setIsLogin());
   }, [dispatch]);
 
   return (
     <DarkModeProvider>
-      <NavigationContainer theme={theme}>
+      <NavigationContainer
+        theme={theme}
+        ref={navigationRef}
+        onReady={() => {
+          isReadyRef.current = true;
+        }}>
         <RootStack.Navigator
           mode="modal"
           headerMode="none"

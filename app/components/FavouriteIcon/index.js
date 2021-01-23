@@ -77,14 +77,14 @@ export default function FavouriteIcon(props) {
           onPress={() => onPressFavorite(favoriteId)}
           name={'heart'}
           color={BaseColor.orangeColor}
-          size={18}
+          size={20}
         />
       ) : (
         <Icon
           onPress={() => onPressFavorite(favoriteId)}
           name={'heart'}
           color={BaseColor.orangeColor}
-          size={18}
+          size={20}
         />
       )}
     </View>

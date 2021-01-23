@@ -3,10 +3,41 @@ import { store } from 'app/store';
 import { Provider } from 'react-redux';
 import remoteConfig from '@react-native-firebase/remote-config';
 import messaging from '@react-native-firebase/messaging';
+import dynamicLinks from '@react-native-firebase/dynamic-links';
+import queryString from 'query-string';
+import * as NavigationService from './services/NavigationService';
 import Navigator from './navigation';
 console.disableYellowBox = true;
 
 export default function App() {
+  const navigateToBusinessDetail = (id) => {
+    const interval = setInterval(() => {
+      if (NavigationService.isReadyRef.current) {
+        clearInterval(interval);
+        NavigationService.navigate('PlaceDetail', { id });
+      }
+    }, 1000);
+  };
+
+  const handleDynamicLink = (link) => {
+    const parsed = queryString.parseUrl(link.url);
+    navigateToBusinessDetail(parsed.query.id);
+  };
+
+  useEffect(() => {
+    const unsubscribe = dynamicLinks().onLink(handleDynamicLink);
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    dynamicLinks()
+      .getInitialLink()
+      .then((link) => {
+        const parsed = queryString.parseUrl(link.url);
+        navigateToBusinessDetail(parsed.query.id);
+      });
+  }, []);
+
   messaging().setBackgroundMessageHandler(async (remoteMessage) => {
     console.log('Message handled in the background!', remoteMessage);
   });

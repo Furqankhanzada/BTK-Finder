@@ -13,7 +13,15 @@ import {
   TouchableOpacity,
   Linking,
   Alert,
+  ToastAndroid,
 } from 'react-native';
+import Clipboard from '@react-native-community/clipboard';
+import dynamicLinks from '@react-native-firebase/dynamic-links';
+import { useTranslation } from 'react-i18next';
+import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
+import { useSelector, useDispatch } from 'react-redux';
+import NumberFormat from 'react-number-format';
+import moment from 'moment';
 import { BaseColor, Images, useTheme } from '@config';
 import {
   Header,
@@ -25,17 +33,12 @@ import {
   Image,
   FavouriteIcon,
 } from '@components';
-import { useTranslation } from 'react-i18next';
-import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import * as Utils from '@utils';
 import styles from './styles';
-import moment from 'moment';
 import PlaceItem from '../PlaceItem';
 import CardList from '../CardList';
-import { useSelector, useDispatch } from 'react-redux';
 import { getRelatedBusinesses, getBusinesses } from '../../actions/business';
 import SectionList from '../../screens/Home/sectionList';
-import NumberFormat from 'react-number-format';
 
 let defaultDelta = {
   latitudeDelta: 0.003,
@@ -61,6 +64,26 @@ export default function PlaceDetailComponent(props) {
       isFavoriteLoading: favorites.isFavoriteLoading,
     };
   });
+
+  async function onPressShare() {
+    const link = await dynamicLinks().buildShortLink({
+      link: `https://explorebtk.page.link/PlaceDetail?id=${business._id}`,
+      domainUriPrefix: 'https://explorebtk.page.link',
+      android: {
+        packageName: 'com.explore.btk',
+      },
+    });
+
+    Clipboard.setString(link);
+    ToastAndroid.showWithGravityAndOffset(
+      'Link copied to clipboard',
+      ToastAndroid.SHORT,
+      ToastAndroid.BOTTOM,
+      0,
+      100,
+    );
+    return link;
+  }
 
   useEffect(() => {
     dispatch(
@@ -391,16 +414,31 @@ export default function PlaceDetailComponent(props) {
                 )}
               </View>
               {isPreview ? null : (
-                <FavouriteIcon
-                  style={styles.iconGirdLike}
-                  navigation={navigation}
-                  lastRoute="PlaceDetail"
-                  routeId={business?._id}
-                  isFavorite={stateProps?.favoriteBusinesses?.some(
-                    (obj) => obj._id === business?._id,
-                  )}
-                  favoriteId={business?._id}
-                />
+                <View
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <FavouriteIcon
+                    style={styles.iconGirdLike}
+                    navigation={navigation}
+                    lastRoute="PlaceDetail"
+                    routeId={business?._id}
+                    isFavorite={stateProps?.favoriteBusinesses?.some(
+                      (obj) => obj._id === business?._id,
+                    )}
+                    favoriteId={business?._id}
+                  />
+                  <Icon
+                    onPress={() => onPressShare()}
+                    name={'share'}
+                    color={BaseColor.orangeColor}
+                    size={20}
+                    style={{ marginLeft: 10 }}
+                  />
+                </View>
               )}
             </View>
             {information.map((item) => {
