@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { ActivityIndicator, Alert, View } from 'react-native';
+import { ActivityIndicator, Alert, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import Icon2 from 'react-native-vector-icons/FontAwesome';
 import { BaseColor } from '@config';
-import { Icon } from '@components';
+import { Icon, Text } from '@components';
 import PropTypes from 'prop-types';
+import styles from './styles';
 import {
   addFavoriteBusiness,
   removeFavoriteBusiness,
@@ -18,6 +19,7 @@ export default function FavouriteIcon(props) {
     navigation,
     lastRoute,
     routeId,
+    showText,
   } = props;
   const dispatch = useDispatch();
   const isLogin = useSelector((state) => state.auth.isLogin);
@@ -69,25 +71,38 @@ export default function FavouriteIcon(props) {
   };
 
   return (
-    <View style={style}>
+    <TouchableOpacity style={style} onPress={() => onPressFavorite(favoriteId)}>
       {loading ? (
-        <ActivityIndicator size="small" color={BaseColor.orangeColor} />
+        <View style={styles.container}>
+          <ActivityIndicator size="small" color={BaseColor.orangeColor} />
+          {showText ? <Text style={styles.bottomText}>Loading...</Text> : null}
+        </View>
       ) : isFavorite ? (
-        <Icon2
-          onPress={() => onPressFavorite(favoriteId)}
-          name={'heart'}
-          color={BaseColor.orangeColor}
-          size={20}
-        />
+        <View style={styles.container}>
+          <Icon2
+            onPress={() => onPressFavorite(favoriteId)}
+            name={'heart'}
+            color={BaseColor.orangeColor}
+            size={20}
+          />
+          {showText ? (
+            <Text style={styles.bottomText}>Remove Favorite</Text>
+          ) : null}
+        </View>
       ) : (
-        <Icon
-          onPress={() => onPressFavorite(favoriteId)}
-          name={'heart'}
-          color={BaseColor.orangeColor}
-          size={20}
-        />
+        <View style={styles.container}>
+          <Icon
+            onPress={() => onPressFavorite(favoriteId)}
+            name={'heart'}
+            color={BaseColor.orangeColor}
+            size={20}
+          />
+          {showText ? (
+            <Text style={styles.bottomText}>Add Favorite</Text>
+          ) : null}
+        </View>
       )}
-    </View>
+    </TouchableOpacity>
   );
 }
 
@@ -95,10 +110,12 @@ FavouriteIcon.propTypes = {
   style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
   isFavorite: PropTypes.bool,
   favoriteId: PropTypes.string,
+  showText: PropTypes.bool,
 };
 
 FavouriteIcon.defaultProps = {
   style: {},
   isFavorite: false,
   favoriteId: '',
+  showText: false,
 };
