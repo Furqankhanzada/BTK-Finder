@@ -25,6 +25,7 @@ import {
   UPLOAD_GALLERY_IMAGES_API,
   REMOVE_GALLERY_IMAGES,
   CLEAR_ALL_BUSINESSES_API,
+  SET_SEARCH_BUSINESS,
 } from '../constants/business';
 
 //initial state.
@@ -60,6 +61,7 @@ const initialState = {
   thumbnail: '',
   thumbnailLoading: false,
   refreshLoading: false,
+  searchBusiness: '',
 };
 
 export default function userReducer(state = initialState, action = {}) {
@@ -110,7 +112,7 @@ export default function userReducer(state = initialState, action = {}) {
     case GET_ALL_BUSINESSES_API:
       return {
         ...state,
-        allBusinesses: action.data.length ? action.data : state.allBusinesses,
+        allBusinesses: action.data,
         getAllBusinessesLoading: action.loading,
         getAllBusinessesLoadMoreLoading: true,
         getAllBusinessesLoadMore: true,
@@ -132,6 +134,11 @@ export default function userReducer(state = initialState, action = {}) {
         ...state,
         singleBusiness: action.data || {},
         getSingleBusinessLoading: action.loading,
+      };
+    case SET_SEARCH_BUSINESS:
+      return {
+        ...state,
+        searchBusiness: action.search,
       };
     case GET_RELATED_BUSINESS_API:
       return {
