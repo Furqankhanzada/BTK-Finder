@@ -26,6 +26,8 @@ import {
   REMOVE_GALLERY_IMAGES,
   CLEAR_ALL_BUSINESSES_API,
   SET_SEARCH_BUSINESS,
+  SET_SEARCH_HISTORY,
+  CLEAR_SEARCH_HISTORY,
 } from '../constants/business';
 
 //initial state.
@@ -62,6 +64,7 @@ const initialState = {
   thumbnailLoading: false,
   refreshLoading: false,
   searchBusiness: '',
+  searchHistory: [],
 };
 
 export default function userReducer(state = initialState, action = {}) {
@@ -139,6 +142,16 @@ export default function userReducer(state = initialState, action = {}) {
       return {
         ...state,
         searchBusiness: action.search,
+      };
+    case SET_SEARCH_HISTORY:
+      return {
+        ...state,
+        searchHistory: [action.searchHistory, ...state.searchHistory],
+      };
+    case CLEAR_SEARCH_HISTORY:
+      return {
+        ...state,
+        searchHistory: [],
       };
     case GET_RELATED_BUSINESS_API:
       return {

@@ -2,18 +2,29 @@ import React, { useState } from 'react';
 import {
   View,
   TouchableOpacity,
-  FlatList,
-  ActivityIndicator,
   ScrollView,
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import { BaseStyle, BaseColor, Images, useTheme } from '@config';
-import { Header, SafeAreaView, TextInput, Icon, Text, Card, Loading } from '@components';
-import styles from './styles';
-import { useTranslation } from 'react-i18next';
-import { getAllBusinesses, setSearchBusiness } from '../../actions/business';
 import { useSelector, useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import { BaseStyle, BaseColor, useTheme } from '@config';
+import {
+  Header,
+  SafeAreaView,
+  TextInput,
+  Icon,
+  Text,
+  Loading,
+} from '@components';
+import styles from './styles';
+import {
+  getAllBusinesses,
+  setSearchBusiness,
+  setSearchHistory,
+  clearSearchHistory,
+} from '../../actions/business';
+import Toast from 'react-native-simple-toast';
 
 export default function SearchHistory(props) {
   const { navigation, route } = props;
@@ -24,51 +35,12 @@ export default function SearchHistory(props) {
   const stateProps = useSelector(({ businesses }) => {
     return {
       loading: businesses.getAllBusinessesLoading,
+      searchHistory: businesses.searchHistory,
     };
   });
-  console.log('LOADING', stateProps.loading);
 
   const [search, setSearch] = useState('');
-  const [searchHistory, setSearchHistory] = useState([
-    { id: '1', keyword: 'Delux Room' },
-    { id: '2', keyword: 'Tripple Room' },
-    { id: '3', keyword: 'Single Room' },
-    { id: '4', keyword: 'King Room' },
-    { id: '5', keyword: 'Lux Room' },
-  ]);
-  // const [discoverMore] = useState([
-  //   { id: '1', keyword: 'Hotel California' },
-  //   { id: '2', keyword: 'Top 10 Things Must To Do In This Autum' },
-  //   { id: '3', keyword: 'Best Hotel Indonesia' },
-  // ]);
-  // const [recentlyView] = useState([
-  //   { id: '1', name: 'France', image: Images.trip1 },
-  //   { id: '2', name: 'Dublin', image: Images.trip2 },
-  //   { id: '3', name: 'Houston', image: Images.trip3 },
-  //   { id: '4', name: 'Houston', image: Images.trip4 },
-  // ]);
-
-  /**
-   * call when search data
-   * @param {*} keyword
-   */
-  const onSearch = (keyword) => {
-    // const found = searchHistory.some((item) => item.keyword == keyword);
-    // let searchData = [];
-    //
-    // if (found) {
-    //   searchData = searchHistory.map((item) => {
-    //     return {
-    //       ...item,
-    //       checked: item.keyword == keyword,
-    //     };
-    //   });
-    // } else {
-    //   searchData = searchHistory.concat({
-    //     keyword: search,
-    //   });
-    // }
-    // setSearchHistory(searchData);
+  const onSearch = () => {
     let payload = {
       limit: 10,
       skip: 0,
@@ -82,7 +54,12 @@ export default function SearchHistory(props) {
       payload.category = route.params.category;
     }
     dispatch(setSearchBusiness(search));
+    dispatch(setSearchHistory(search));
     dispatch(getAllBusinesses(payload, navigation.goBack()));
+  };
+
+  const clearHistoryToast = () => {
+    return Toast.show('Search History Cleared');
   };
 
   const offsetKeyboard = Platform.select({
@@ -112,7 +89,7 @@ export default function SearchHistory(props) {
             placeholder={t('search')}
             value={search}
             onSubmitEditing={() => {
-              onSearch(search);
+              onSearch();
             }}
             blurOnSubmit={true}
             icon={
@@ -128,7 +105,8 @@ export default function SearchHistory(props) {
           <View style={{ paddingTop: 20 }}>
             <View style={styles.rowTitle}>
               <Text headline>{t('search_history').toUpperCase()}</Text>
-              <TouchableOpacity onPress={() => setSearchHistory([])}>
+              <TouchableOpacity
+                onPress={() => dispatch(clearSearchHistory(clearHistoryToast))}>
                 <Text caption1 accentColor>
                   {t('clear')}
                 </Text>
@@ -139,32 +117,29 @@ export default function SearchHistory(props) {
                 flexDirection: 'row',
                 flexWrap: 'wrap',
               }}>
-              {searchHistory.map((item, index) => (
-                <TouchableOpacity
-                  style={[
-                    styles.itemHistory,
-                    { backgroundColor: colors.card },
-                    item.checked
-                      ? {
-                          backgroundColor: colors.primary,
-                        }
-                      : {},
-                  ]}
-                  onPress={() => onSearch(item.keyword)}
-                  key={'search' + index}>
-                  <Text
-                    caption2
-                    style={
-                      item.checked
-                        ? {
-                            color: BaseColor.whiteColor,
-                          }
-                        : {}
-                    }>
-                    {item.keyword}
-                  </Text>
-                </TouchableOpacity>
-              ))}
+              {stateProps?.searchHistory?.length ? (
+                stateProps?.searchHistory?.map((item, index) => (
+                  <TouchableOpacity
+                    style={[
+                      styles.itemHistory,
+                      { backgroundColor: colors.card },
+                    ]}
+                    onPress={() => {}}
+                    key={'search' + index}>
+                    <Text caption2>{item}</Text>
+                  </TouchableOpacity>
+                ))
+              ) : (
+                <View style={styles.emptyHistoryArea}>
+                  <Icon
+                    name="search"
+                    color={colors.text}
+                    size={30}
+                    style={{ marginBottom: 10 }}
+                  />
+                  <Text>Search history will appear here</Text>
+                </View>
+              )}
             </View>
           </View>
           {/*<View style={{ paddingTop: 20 }}>*/}
