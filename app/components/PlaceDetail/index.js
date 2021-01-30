@@ -13,9 +13,8 @@ import {
   TouchableOpacity,
   Linking,
   Alert,
-  ToastAndroid,
+  Share,
 } from 'react-native';
-import Clipboard from '@react-native-community/clipboard';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import { useTranslation } from 'react-i18next';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
@@ -52,6 +51,8 @@ export default function PlaceDetailComponent(props) {
   const { colors } = useTheme();
   const dispatch = useDispatch();
   const { navigation, business } = props;
+  const [businessLink, setBusinessLink] = useState('');
+  const appLink = 'http://onelink.to/xwhffr';
 
   const stateProps = useSelector(({ businesses, favorites }) => {
     return {
@@ -65,25 +66,19 @@ export default function PlaceDetailComponent(props) {
     };
   });
 
-  async function onPressShare() {
-    const link = await dynamicLinks().buildShortLink({
-      link: `https://explorebtk.page.link/PlaceDetail?id=${business._id}`,
-      domainUriPrefix: 'https://explorebtk.page.link',
-      android: {
-        packageName: 'com.explore.btk',
-      },
-    });
-
-    Clipboard.setString(link);
-    ToastAndroid.showWithGravityAndOffset(
-      'Link copied to clipboard',
-      ToastAndroid.SHORT,
-      ToastAndroid.BOTTOM,
-      0,
-      100,
-    );
-    return link;
-  }
+  useEffect(() => {
+    async function businessLink() {
+      const link = await dynamicLinks().buildShortLink({
+        link: `https://explorebtk.page.link/PlaceDetail?id=${business._id}`,
+        domainUriPrefix: 'https://explorebtk.page.link',
+        android: {
+          packageName: 'com.explore.btk',
+        },
+      });
+      setBusinessLink(link);
+    }
+    businessLink();
+  }, [business._id]);
 
   useEffect(() => {
     dispatch(
@@ -103,6 +98,19 @@ export default function PlaceDetailComponent(props) {
       }),
     );
   }, [business.category, dispatch]);
+
+  const onShare = async () => {
+    try {
+      await Share.share({
+        message: `${business.name}: ${businessLink} \n \nDownload Explore BTK: ${appLink}`,
+        url: businessLink,
+        title: business.name,
+        dialogTitle: business.name,
+      });
+    } catch (error) {
+      console.log('Error while sharing Business', error.message);
+    }
+  };
 
   const navigateBusinessDetail = (id) => {
     navigation.replace('PlaceDetail', { id });
@@ -430,14 +438,14 @@ export default function PlaceDetailComponent(props) {
                       (obj) => obj._id === business?._id,
                     )}
                     favoriteId={business?._id}
+                    showText={true}
                   />
-                  <Icon
-                    onPress={() => onPressShare()}
-                    name={'share'}
-                    color={BaseColor.orangeColor}
-                    size={20}
-                    style={{ marginLeft: 10 }}
-                  />
+                  <TouchableOpacity
+                    onPress={() => onShare()}
+                    style={styles.shareIcon}>
+                    <Icon name="share" color={colors.primary} size={20} />
+                    <Text style={{ fontSize: 8, marginTop: 5 }}>Share</Text>
+                  </TouchableOpacity>
                 </View>
               )}
             </View>

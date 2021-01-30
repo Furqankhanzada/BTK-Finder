@@ -38,7 +38,7 @@ export default function Favourite({ navigation }) {
   return (
     <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
       <Loading loading={stateProps?.loading} />
-      <Header title="Favourite Businesses" />
+      <Header title="Favorite Businesses" />
       {stateProps?.favoriteBusinesses?.length ? (
         <ScrollView
           behavior={Platform.OS === 'android' ? 'height' : 'padding'}
@@ -69,7 +69,7 @@ export default function Favourite({ navigation }) {
       ) : (
         <View style={styles.sectionEmpty}>
           <Text semibold style={styles.sectionEmptyText}>
-            No Favourite Businesses Available
+            No Favorite Businesses Available
           </Text>
         </View>
       )}

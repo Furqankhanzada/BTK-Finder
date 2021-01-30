@@ -1,6 +1,10 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
+  shareIcon: {
+    width: 40,
+    alignItems: 'center',
+  },
   imgBanner: {
     width: '100%',
     height: 250,
@@ -67,10 +71,10 @@ export default StyleSheet.create({
   },
   priceRangeSection: {
     flex: 1,
-    alignItems: 'flex-end'
+    alignItems: 'flex-end',
   },
   prices: {
     display: 'flex',
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
 });

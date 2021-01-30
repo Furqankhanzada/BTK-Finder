@@ -125,7 +125,7 @@ function BottomTabNavigator() {
           )
         }
         options={{
-          title: 'Favourite',
+          title: 'Favorite',
           tabBarIcon: ({ color }) => {
             return <Icon color={color} name="heart" size={20} solid />;
           },
