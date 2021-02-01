@@ -28,6 +28,7 @@ import {
   SET_SEARCH_BUSINESS,
   SET_SEARCH_HISTORY,
   CLEAR_SEARCH_HISTORY,
+  SET_FILTERED_CATEGORY,
 } from '../constants/business';
 
 //initial state.
@@ -65,6 +66,7 @@ const initialState = {
   refreshLoading: false,
   searchBusiness: '',
   searchHistory: [],
+  filteredCategory: [],
 };
 
 export default function userReducer(state = initialState, action = {}) {
@@ -152,6 +154,11 @@ export default function userReducer(state = initialState, action = {}) {
       return {
         ...state,
         searchHistory: [],
+      };
+    case SET_FILTERED_CATEGORY:
+      return {
+        ...state,
+        filteredCategory: [action.category, ...state.filteredCategory],
       };
     case GET_RELATED_BUSINESS_API:
       return {

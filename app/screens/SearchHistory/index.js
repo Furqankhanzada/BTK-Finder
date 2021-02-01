@@ -41,21 +41,25 @@ export default function SearchHistory(props) {
 
   const [search, setSearch] = useState('');
   const onSearch = () => {
-    let payload = {
-      limit: 10,
-      skip: 0,
-      search: search,
-      loading: true,
-    };
-    if (route?.params?.popular) {
-      payload.popular = true;
+    if (search) {
+      let payload = {
+        limit: 10,
+        skip: 0,
+        search: search,
+        loading: true,
+      };
+      if (route?.params?.popular) {
+        payload.popular = true;
+      }
+      if (route?.params?.category) {
+        payload.category = route.params.category;
+      }
+      dispatch(setSearchBusiness(search));
+      dispatch(setSearchHistory(search));
+      dispatch(getAllBusinesses(payload, navigation.goBack()));
+    } else {
+      Toast.show('Please enter keywords to search');
     }
-    if (route?.params?.category) {
-      payload.category = route.params.category;
-    }
-    dispatch(setSearchBusiness(search));
-    dispatch(setSearchHistory(search));
-    dispatch(getAllBusinesses(payload, navigation.goBack()));
   };
 
   const clearHistoryToast = () => {
@@ -105,12 +109,16 @@ export default function SearchHistory(props) {
           <View style={{ paddingTop: 20 }}>
             <View style={styles.rowTitle}>
               <Text headline>{t('search_history').toUpperCase()}</Text>
-              <TouchableOpacity
-                onPress={() => dispatch(clearSearchHistory(clearHistoryToast))}>
-                <Text caption1 accentColor>
-                  {t('clear')}
-                </Text>
-              </TouchableOpacity>
+              {stateProps?.searchHistory?.length ? (
+                <TouchableOpacity
+                  onPress={() =>
+                    dispatch(clearSearchHistory(clearHistoryToast))
+                  }>
+                  <Text caption1 accentColor>
+                    {t('clear')}
+                  </Text>
+                </TouchableOpacity>
+              ) : null}
             </View>
             <View
               style={{
@@ -131,13 +139,7 @@ export default function SearchHistory(props) {
                 ))
               ) : (
                 <View style={styles.emptyHistoryArea}>
-                  <Icon
-                    name="search"
-                    color={colors.text}
-                    size={30}
-                    style={{ marginBottom: 10 }}
-                  />
-                  <Text>Search history will appear here</Text>
+                  <Text>No search history found.</Text>
                 </View>
               )}
             </View>

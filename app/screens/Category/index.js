@@ -22,8 +22,10 @@ import styles from './styles';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCategories } from '../../actions/category';
+import { setFilteredCategory } from '../../actions/business';
 
-export default function Category({ navigation }) {
+export default function Category(props) {
+  const { navigation, route } = props;
   const { t } = useTranslation();
   const { colors } = useTheme();
 
@@ -78,6 +80,19 @@ export default function Category({ navigation }) {
     }
   };
 
+  const onPressItem = (item) => {
+    if (route?.params?.filter) {
+      dispatch(setFilteredCategory(item.name));
+      navigation.goBack();
+    } else {
+      navigation.navigate('Place', {
+        title: item.name,
+        category: item.name,
+        route: item.route,
+      });
+    }
+  };
+
   /**
    * render Item category
    * @param {*} item
@@ -92,26 +107,20 @@ export default function Category({ navigation }) {
             icon={item.icon}
             title={item.name}
             // subtitle={200}
-            onPress={() => navigation.navigate('Place', {
-              title: item.name,
-              category: item.name,
-              route: item.route
-            })}
+            onPress={() => onPressItem(item)}
             style={[styles.itemIcon, { borderColor: colors.border }]}
           />
         );
       case 'full':
         return (
           <CategoryFull
-            image={{ uri: item.image || 'https://i.ibb.co/VpvP0X5/empty-image.jpg' }}
+            image={{
+              uri: item.image || 'https://i.ibb.co/VpvP0X5/empty-image.jpg',
+            }}
             icon={item.icon}
             title={item.name}
             // subtitle={300}
-            onPress={() => navigation.navigate('Place', {
-              title: item.name,
-              category: item.name,
-              route: item.route
-            })}
+            onPress={() => onPressItem(item)}
             style={styles.itemFull}
           />
         );

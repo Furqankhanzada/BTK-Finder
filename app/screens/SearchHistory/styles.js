@@ -21,9 +21,7 @@ export default StyleSheet.create({
   },
   emptyHistoryArea: {
     marginTop: 25,
-    display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
     width: '100%',
   },
 });

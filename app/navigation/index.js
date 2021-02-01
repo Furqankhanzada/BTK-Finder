@@ -15,12 +15,13 @@ import Main from 'app/navigation/main';
 /* Modal Screen only affect iOS */
 import Loading from '@screens/Loading';
 import Filter from '@screens/Filter';
-import ChooseLocation from '@screens/ChooseLocation';
+import ChooseItems from '@screens/ChooseItems';
 import SearchHistory from '@screens/SearchHistory';
 import PreviewImage from '@screens/PreviewImage';
 import SelectDarkOption from '@screens/SelectDarkOption';
 import SelectFontOption from '@screens/SelectFontOption';
 import HelpLine from '@screens/HelpLine';
+import Category from '@screens/Category';
 import Toast from 'react-native-toast-message';
 import { setIsLogin } from '../actions/auth';
 
@@ -78,8 +79,9 @@ export default function Navigator() {
           />
           <RootStack.Screen name="Main" component={Main} />
           <RootStack.Screen name="HelpLine" component={HelpLine} />
+          <RootStack.Screen name="Category" component={Category} />
           <RootStack.Screen name="Filter" component={Filter} />
-          <RootStack.Screen name="ChooseLocation" component={ChooseLocation} />
+          <RootStack.Screen name="ChooseItems" component={ChooseItems} />
           <RootStack.Screen name="SearchHistory" component={SearchHistory} />
           <RootStack.Screen name="PreviewImage" component={PreviewImage} />
           <RootStack.Screen

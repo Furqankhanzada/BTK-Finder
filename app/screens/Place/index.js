@@ -24,7 +24,6 @@ import { PlaceListData } from '@data';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllBusinesses, setSearchBusiness } from '../../actions/business';
-import { showBetaModal } from '../../popup/betaPopup';
 
 export default function Place(props) {
   const { navigation, route } = props;
@@ -125,8 +124,7 @@ export default function Place(props) {
    * @date 2019-09-01
    */
   const onFilter = () => {
-    showBetaModal();
-    // navigation.navigate('Filter');
+    navigation.navigate('Filter');
   };
 
   /**

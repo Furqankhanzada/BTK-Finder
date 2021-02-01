@@ -28,6 +28,7 @@ import {
   SET_SEARCH_BUSINESS,
   SET_SEARCH_HISTORY,
   CLEAR_SEARCH_HISTORY,
+  SET_FILTERED_CATEGORY,
 } from '../constants/business';
 import { generateFileObject, handleError } from '../utils';
 import axiosApiInstance from '../interceptor/axios-interceptor';
@@ -207,6 +208,10 @@ export const setSearchHistory = (history) => (dispatch) => {
 export const clearSearchHistory = (cb) => (dispatch) => {
   dispatch({ type: CLEAR_SEARCH_HISTORY });
   cb && cb();
+};
+
+export const setFilteredCategory = (category) => (dispatch) => {
+  dispatch({ type: SET_FILTERED_CATEGORY, category: category });
 };
 
 export const setBusinessFormData = (businessFormData) => (dispatch) => {
