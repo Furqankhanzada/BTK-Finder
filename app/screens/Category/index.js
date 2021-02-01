@@ -6,8 +6,9 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
 import { BaseStyle, BaseColor, useTheme, Images } from '@config';
-
 import {
   Header,
   SafeAreaView,
@@ -19,13 +20,9 @@ import {
 } from '@components';
 import * as Utils from '@utils';
 import styles from './styles';
-import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
 import { getCategories } from '../../actions/category';
-import { setFilteredCategory } from '../../actions/business';
 
-export default function Category(props) {
-  const { navigation, route } = props;
+export default function Category({ navigation }) {
   const { t } = useTranslation();
   const { colors } = useTheme();
 
@@ -80,19 +77,6 @@ export default function Category(props) {
     }
   };
 
-  const onPressItem = (item) => {
-    if (route?.params?.filter) {
-      dispatch(setFilteredCategory(item.name));
-      navigation.goBack();
-    } else {
-      navigation.navigate('Place', {
-        title: item.name,
-        category: item.name,
-        route: item.route,
-      });
-    }
-  };
-
   /**
    * render Item category
    * @param {*} item
@@ -107,7 +91,13 @@ export default function Category(props) {
             icon={item.icon}
             title={item.name}
             // subtitle={200}
-            onPress={() => onPressItem(item)}
+            onPress={() =>
+              navigation.navigate('Place', {
+                title: item.name,
+                category: item.name,
+                route: item.route,
+              })
+            }
             style={[styles.itemIcon, { borderColor: colors.border }]}
           />
         );
@@ -120,7 +110,13 @@ export default function Category(props) {
             icon={item.icon}
             title={item.name}
             // subtitle={300}
-            onPress={() => onPressItem(item)}
+            onPress={() =>
+              navigation.navigate('Place', {
+                title: item.name,
+                category: item.name,
+                route: item.route,
+              })
+            }
             style={styles.itemFull}
           />
         );

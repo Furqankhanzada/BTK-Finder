@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, FlatList, TouchableOpacity, ScrollView } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import remoteConfig from '@react-native-firebase/remote-config';
 import { BaseStyle, BaseColor, useTheme } from '@config';
 import {
   Header,
@@ -11,20 +14,18 @@ import {
   StarRating,
   TextInput,
 } from '@components';
-import RangeSlider from 'rn-range-slider';
 import * as Utils from '@utils';
 import styles from './styles';
-import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
-import remoteConfig from '@react-native-firebase/remote-config';
+import { getCategories } from '../../actions/category';
 
 export default function Filter({ navigation }) {
   const { colors } = useTheme();
   const { t } = useTranslation();
+  const dispatch = useDispatch();
 
-  const stateProps = useSelector(({ businesses }) => {
+  const stateProps = useSelector(({ categories }) => {
     return {
-      filteredCategory: businesses.filteredCategory,
+      categories: categories.all,
     };
   });
 
@@ -32,10 +33,9 @@ export default function Filter({ navigation }) {
   const [priceEnd, setPriceEnd] = useState(100);
   const [rate, setRate] = useState(5);
   const [search, setSearch] = useState('');
+  const [selectedCategories, setSelectedCategories] = useState([]);
   const [facilities, setFacilities] = useState([]);
   const [selectedFacilities, setSelectedFacilities] = useState([]);
-  const [location, setLocation] = useState([]);
-  const [area, setArea] = useState([]);
   const [scrollEnabled, setScrollEnabled] = useState(true);
 
   useEffect(() => {
@@ -45,49 +45,20 @@ export default function Filter({ navigation }) {
       : null;
   }, []);
 
-  /**
-   * @description export text location
-   * @author Passion UI <passionui.com>
-   * @date 2020-02-01
-   * @param {*} select
-   */
-  // const renderTextFromList = (list) => {
-  //   let listString = [];
-  //   listString = list.map((item) => {
-  //     return item.location;
-  //   });
-  //   return listString.join(',');
-  // };
+  useEffect(() => {
+    dispatch(getCategories({}));
+  }, [dispatch]);
 
-  /**
-   * @description Called when filtering option > location
-   * @author Passion UI <passionui.com>
-   * @date 2020-02-01
-   * @param {*} select
-   */
-  // const onNavigateLocation = () => {
-  //   navigation.navigate('ChooseItems', {
-  //     onApply: (data) => {
-  //       setLocation(data);
-  //     },
-  //     selected: location,
-  //   });
-  // };
-
-  /**
-   * @description Called when filtering option > area
-   * @author Passion UI <passionui.com>
-   * @date 2020-02-01
-   * @param {*} select
-   */
-  // const onNavigateArea = () => {
-  //   navigation.navigate('ChooseItems', {
-  //     onApply: (data) => {
-  //       setArea(data);
-  //     },
-  //     selected: area,
-  //   });
-  // };
+  const onAddCategory = () => {
+    navigation.navigate('ChooseItems', {
+      onApply: (data) => {
+        setSelectedCategories(data);
+      },
+      items: stateProps.categories,
+      selected: selectedCategories,
+      title: 'Categories',
+    });
+  };
 
   const onAddFacility = () => {
     navigation.navigate('ChooseItems', {
@@ -138,25 +109,34 @@ export default function Filter({ navigation }) {
               </TouchableOpacity>
             }
           />
-          <Text headline semibold style={{ marginTop: 20 }}>
+          <Text headline semibold style={{ marginTop: 30 }}>
             {t('category').toUpperCase()}
           </Text>
           <View style={styles.wrapContent}>
-            {stateProps?.filteredCategory?.map((item, index) => {
+            {selectedCategories.map((item) => {
               return (
                 <Tag
                   outline={true}
-                  key={item + index}
+                  icon={
+                    <Icon
+                      name={item.icon}
+                      size={12}
+                      color={colors.primary}
+                      solid
+                      style={{ marginRight: 5 }}
+                    />
+                  }
+                  key={item.name}
                   style={{
                     marginTop: 8,
                     marginRight: 8,
                   }}>
-                  {item}
+                  {item.name}
                 </Tag>
               );
             })}
             <TouchableOpacity
-              onPress={() => navigation.navigate('Category', { filter: true })}
+              onPress={() => onAddCategory()}
               style={[styles.addItem, { backgroundColor: colors.primary }]}>
               <Text style={{ fontSize: 10, marginRight: 5, color: 'white' }}>
                 Add Category
@@ -164,7 +144,7 @@ export default function Filter({ navigation }) {
               <Icon size={10} name="plus" color="white" />
             </TouchableOpacity>
           </View>
-          <Text headline semibold style={{ marginTop: 20 }}>
+          <Text headline semibold style={{ marginTop: 30 }}>
             {t('facilities').toUpperCase()}
           </Text>
           <View style={styles.wrapContent}>
