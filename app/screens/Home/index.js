@@ -8,19 +8,16 @@ import {
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import Swiper from 'react-native-swiper';
 import {
   Header,
   Button,
-  Image,
   Text,
   Icon,
   SafeAreaView,
   CardList,
   PlaceItem,
-  Card,
 } from '@components';
-import { BaseColor, useTheme } from '@config';
+import { BaseColor, useTheme, BaseStyle } from '@config';
 import * as Utils from '@utils';
 import styles from './styles';
 import { HomeBannerData } from '@data';
@@ -30,7 +27,6 @@ import { getCategories } from '../../actions/category';
 import { getBusinesses } from '../../actions/business';
 import { getFavoriteBusinesses } from '../../actions/favorites';
 import { getProfile } from '../../actions/auth';
-
 export default function Home({ navigation }) {
   const stateProps = useSelector(({ businesses, favorites }) => {
     return {
@@ -130,47 +126,15 @@ export default function Home({ navigation }) {
 
   return (
     <View style={{ flex: 1 }}>
-      <Animated.View
-        style={[
-          styles.imageBackground,
-          {
-            height: deltaY.interpolate({
-              inputRange: [
-                0,
-                Utils.scaleWithPixel(150),
-                Utils.scaleWithPixel(150),
-              ],
-              outputRange: [heightImageBanner, heightHeader, heightHeader],
-            }),
-          },
-        ]}>
-        <Swiper
-          dotStyle={{
-            backgroundColor: colors.text,
-          }}
-          activeDotColor={colors.primary}
-          paginationStyle={styles.contentPage}
-          removeClippedSubviews={false}
-          autoplay={true}
-          autoplayTimeout={2}
-          showsPagination={false}>
-          {banner.map((item, index) => {
-            return (
-              <Image key={item.id} source={item.image} style={{ flex: 1 }} />
-            );
-          })}
-        </Swiper>
-      </Animated.View>
       <SafeAreaView style={{ flex: 1 }} forceInset={{ top: 'always' }}>
         <Header
-          title={''}
+          title={'Explore BTK'}
           renderRight={() => {
-            // return <Icon name={'call'} size={20} color={colors.primary} />;
             return (
               <Button
-                styleText={{ marginLeft: 8 }}
-                style={{ width: 130, paddingHorizontal: 10, height: 30 }}
-                icon={<Icon name={'phone'} size={15} color={'white'} solid />}
+                styleText={{ marginLeft: 5, fontSize: 10 }}
+                style={{ width: 100, paddingHorizontal: 10, height: 30 }}
+                icon={<Icon name={'phone'} size={10} color={'white'} solid />}
                 full
                 round
                 onPress={() => navigation.navigate('HelpLine')}>
@@ -191,48 +155,43 @@ export default function Home({ navigation }) {
             setHeightHeader(Utils.heightHeader());
           }}
           scrollEventThrottle={8}>
-          {/*<View*/}
-          {/*  style={[*/}
-          {/*    styles.searchForm,*/}
-          {/*    {*/}
-          {/*      backgroundColor: colors.background,*/}
-          {/*      borderColor: colors.border,*/}
-          {/*      shadowColor: colors.border,*/}
-          {/*    },*/}
-          {/*    { marginTop: marginTopBanner },*/}
-          {/*  ]}>*/}
-          {/*  <TouchableOpacity*/}
-          {/*    onPress={() => navigation.navigate('SearchHistory')}>*/}
-          {/*    <View*/}
-          {/*      style={[BaseStyle.textInput, { backgroundColor: colors.card }]}>*/}
-          {/*      <Text body1 grayColor style={{ flex: 1 }}>*/}
-          {/*        {t('search_location')}*/}
-          {/*      </Text>*/}
-          {/*      <View style={{ paddingVertical: 8 }}>*/}
-          {/*        <View*/}
-          {/*          style={[*/}
-          {/*            styles.lineForm,*/}
-          {/*            { backgroundColor: colors.border },*/}
-          {/*          ]}*/}
-          {/*        />*/}
-          {/*      </View>*/}
-          {/*      <Icon*/}
-          {/*        name="location-arrow"*/}
-          {/*        size={18}*/}
-          {/*        color={colors.primaryLight}*/}
-          {/*        solid*/}
-          {/*      />*/}
-          {/*    </View>*/}
-          {/*  </TouchableOpacity>*/}
-          {/*</View>*/}
-          {/* services */}
+          <View
+            style={[
+              styles.searchForm,
+              {
+                marginTop: 20,
+                backgroundColor: colors.background,
+                borderColor: colors.border,
+                shadowColor: colors.border,
+              },
+            ]}>
+            <TouchableOpacity onPress={() => navigation.navigate('Filter')}>
+              <View
+                style={[BaseStyle.textInput, { backgroundColor: colors.card }]}>
+                <Text body1 grayColor style={{ flex: 1 }}>
+                  {t('search_location')}
+                </Text>
+                <View style={{ paddingVertical: 8 }}>
+                  <View
+                    style={[
+                      styles.lineForm,
+                      { backgroundColor: colors.border },
+                    ]}
+                  />
+                </View>
+                <Icon
+                  name="location-arrow"
+                  size={18}
+                  color={colors.primaryLight}
+                  solid
+                />
+              </View>
+            </TouchableOpacity>
+          </View>
 
           {loading ? (
             <FlatList
-              contentContainerStyle={{
-                padding: 20,
-                marginTop: marginTopBanner,
-              }}
+              contentContainerStyle={{ padding: 20 }}
               data={placeholderItems}
               numColumns={'4'}
               renderItem={() => {
@@ -245,10 +204,7 @@ export default function Home({ navigation }) {
             />
           ) : (
             <FlatList
-              contentContainerStyle={{
-                padding: 20,
-                marginTop: marginTopBanner,
-              }}
+              contentContainerStyle={{ padding: 20 }}
               data={featuredCategories}
               numColumns={'4'}
               keyExtractor={(item, index) => item.id}
