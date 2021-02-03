@@ -116,7 +116,7 @@ export default function userReducer(state = initialState, action = {}) {
     case GET_ALL_BUSINESSES_API:
       return {
         ...state,
-        allBusinesses: action.data,
+        allBusinesses: action.data.length ? action.data : state.allBusinesses,
         getAllBusinessesLoading: action.loading,
         getAllBusinessesLoadMoreLoading: true,
         getAllBusinessesLoadMore: true,

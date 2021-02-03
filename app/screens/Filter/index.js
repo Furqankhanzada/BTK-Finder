@@ -17,8 +17,10 @@ import {
 import * as Utils from '@utils';
 import styles from './styles';
 import { getCategories } from '../../actions/category';
+import { getAllBusinesses, setSearchBusiness } from '../../actions/business';
 
-export default function Filter({ navigation }) {
+export default function Filter(props) {
+  const { navigation, route } = props;
   const { colors } = useTheme();
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -71,6 +73,26 @@ export default function Filter({ navigation }) {
     });
   };
 
+  const onApply = () => {
+    let payload = {
+      limit: 10,
+      skip: 0,
+      search: search,
+      loading: true,
+      categories: selectedCategories,
+      facilities: selectedFacilities,
+    };
+    // if (route?.params?.popular) {
+    //   payload.popular = true;
+    // }
+    // if (route?.params?.category) {
+    //   payload.category = route.params.category;
+    // }
+    // dispatch(setSearchBusiness(search));
+    // dispatch(getAllBusinesses(payload, navigation.goBack()));
+    console.log('Filtered Data', payload);
+  };
+
   return (
     <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
       <Header
@@ -86,7 +108,7 @@ export default function Filter({ navigation }) {
           );
         }}
         onPressLeft={() => navigation.goBack()}
-        onPressRight={() => navigation.goBack()}
+        onPressRight={() => onApply()}
       />
       <ScrollView
         scrollEnabled={scrollEnabled}
@@ -98,7 +120,7 @@ export default function Filter({ navigation }) {
             onChangeText={(text) => setSearch(text)}
             placeholder={t('search')}
             value={search}
-            onSubmitEditing={() => {}}
+            blurOnSubmit={true}
             icon={
               <TouchableOpacity
                 onPress={() => {

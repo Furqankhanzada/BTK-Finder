@@ -119,15 +119,6 @@ export default function Place(props) {
   const onChangeSort = () => {};
 
   /**
-   * @description Open modal when filterring mode is applied
-   * @author Passion UI <passionui.com>
-   * @date 2019-09-01
-   */
-  const onFilter = () => {
-    navigation.navigate('Filter');
-  };
-
-  /**
    * @description Open modal when view mode is pressed
    * @author Passion UI <passionui.com>
    * @date 2019-09-01
@@ -169,7 +160,7 @@ export default function Place(props) {
   };
 
   const navigateToSearchPage = () => {
-    navigation.navigate('SearchHistory', {
+    navigation.navigate('Filter', {
       popular: route?.params?.popular,
       category: route?.params?.category,
     });
@@ -299,7 +290,6 @@ export default function Place(props) {
                 modeView={modeView}
                 onChangeSort={onChangeSort}
                 onChangeView={onChangeView}
-                onFilter={onFilter}
               />
             </Animated.View>
           </View>
@@ -379,7 +369,6 @@ export default function Place(props) {
                 modeView={modeView}
                 onChangeSort={onChangeSort}
                 onChangeView={onChangeView}
-                onFilter={onFilter}
               />
             </Animated.View>
           </View>
@@ -465,7 +454,6 @@ export default function Place(props) {
                 modeView={modeView}
                 onChangeSort={onChangeSort}
                 onChangeView={onChangeView}
-                onFilter={onFilter}
               />
             </Animated.View>
           </View>

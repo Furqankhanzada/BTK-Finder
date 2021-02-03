@@ -1,16 +1,16 @@
-import React, {useEffect, useState} from 'react';
-import {View, TouchableOpacity} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, TouchableOpacity } from 'react-native';
 import styles from './styles';
-import {Icon, Text, Button} from '@components';
+import { Icon, Text, Button } from '@components';
 import PropTypes from 'prop-types';
-import {BaseColor, useTheme} from '@config';
+import { BaseColor, useTheme } from '@config';
 import Modal from 'react-native-modal';
-import {useTranslation} from 'react-i18next';
-import {showBetaModal} from "../../popup/betaPopup";
+import { useTranslation } from 'react-i18next';
+import { showBetaModal } from '../../popup/betaPopup';
 
 export default function FilterSort(props) {
-  const {colors} = useTheme();
-  const {t} = useTranslation();
+  const { colors } = useTheme();
+  const { t } = useTranslation();
   const backgroundColor = colors.background;
   const cardColor = colors.card;
 
@@ -20,7 +20,7 @@ export default function FilterSort(props) {
 
   useEffect(() => {
     setSortOption(
-      sortOption.map(item => {
+      sortOption.map((item) => {
         return {
           ...item,
           checked: item.value == sortSelected.value,
@@ -29,9 +29,9 @@ export default function FilterSort(props) {
     );
   }, []);
 
-  const onSelectFilter = selected => {
+  const onSelectFilter = (selected) => {
     setSortOption(
-      sortOption.map(item => {
+      sortOption.map((item) => {
         return {
           ...item,
           checked: item.value == selected.value,
@@ -41,7 +41,7 @@ export default function FilterSort(props) {
   };
 
   const onOpenSort = () => {
-    showBetaModal()
+    showBetaModal();
     // setModalVisible(true);
     //
     // setSortOption(
@@ -55,8 +55,8 @@ export default function FilterSort(props) {
   };
 
   const onApply = () => {
-    const {onChangeSort} = props;
-    const sorted = sortOption.filter(item => item.checked);
+    const { onChangeSort } = props;
+    const sorted = sortOption.filter((item) => item.checked);
     if (sorted.length > 0) {
       setSortSelected(sorted[0]);
       setModalVisible(false);
@@ -64,7 +64,7 @@ export default function FilterSort(props) {
     }
   };
 
-  const iconModeView = modeView => {
+  const iconModeView = (modeView) => {
     switch (modeView) {
       case 'block':
         return 'square';
@@ -77,7 +77,7 @@ export default function FilterSort(props) {
     }
   };
 
-  const {style, modeView, onFilter, onChangeView, labelCustom} = props;
+  const { style, modeView, onChangeView, labelCustom } = props;
   const customAction =
     modeView != '' ? (
       <TouchableOpacity onPress={onChangeView} style={styles.contentModeView}>
@@ -95,7 +95,7 @@ export default function FilterSort(props) {
     );
 
   return (
-    <View style={[styles.contain, {backgroundColor}, style]}>
+    <View style={[styles.contain, { backgroundColor }, style]}>
       <Modal
         isVisible={modalVisible}
         onSwipeComplete={() => {
@@ -105,7 +105,7 @@ export default function FilterSort(props) {
         swipeDirection={['down']}
         style={styles.bottomModal}>
         <View
-          style={[styles.contentFilterBottom, {backgroundColor: cardColor}]}>
+          style={[styles.contentFilterBottom, { backgroundColor: cardColor }]}>
           <View style={styles.contentSwipeDown}>
             <View style={styles.lineSwipeDown} />
           </View>
@@ -113,7 +113,7 @@ export default function FilterSort(props) {
             <TouchableOpacity
               style={[
                 styles.contentActionModalBottom,
-                {borderBottomColor: colors.border},
+                { borderBottomColor: colors.border },
               ]}
               key={item.value}
               onPress={() => onSelectFilter(item)}>
@@ -127,14 +127,14 @@ export default function FilterSort(props) {
           ))}
           <Button
             full
-            style={{marginTop: 10, marginBottom: 20}}
+            style={{ marginTop: 10, marginBottom: 20 }}
             onPress={() => onApply()}>
             {t('apply')}
           </Button>
         </View>
       </Modal>
       <TouchableOpacity
-        style={{flexDirection: 'row', alignItems: 'center'}}
+        style={{ flexDirection: 'row', alignItems: 'center' }}
         onPress={() => onOpenSort()}>
         <Icon
           name={sortSelected.icon}
@@ -142,19 +142,12 @@ export default function FilterSort(props) {
           color={BaseColor.grayColor}
           solid
         />
-        <Text headline grayColor style={{marginLeft: 5}}>
+        <Text headline grayColor style={{ marginLeft: 5 }}>
           {t(sortSelected.text)}
         </Text>
       </TouchableOpacity>
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         {customAction}
-        <View style={styles.line} />
-        <TouchableOpacity onPress={onFilter} style={styles.contentFilter}>
-          <Icon name="filter" size={16} color={BaseColor.grayColor} solid />
-          <Text headline grayColor style={{marginLeft: 5}}>
-            {t('filter')}
-          </Text>
-        </TouchableOpacity>
       </View>
     </View>
   );
@@ -168,7 +161,6 @@ FilterSort.propTypes = {
   labelCustom: PropTypes.string,
   onChangeSort: PropTypes.func,
   onChangeView: PropTypes.func,
-  onFilter: PropTypes.func,
 };
 
 FilterSort.defaultProps = {
@@ -204,5 +196,4 @@ FilterSort.defaultProps = {
   labelCustom: '',
   onChangeSort: () => {},
   onChangeView: () => {},
-  onFilter: () => {},
 };
