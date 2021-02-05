@@ -17,7 +17,7 @@ import {
 import * as Utils from '@utils';
 import styles from './styles';
 import { getCategories } from '../../actions/category';
-import { getAllBusinesses, setSearchBusiness } from '../../actions/business';
+import { getAllBusinesses, setFilteredData } from '../../actions/business';
 
 export default function Filter(props) {
   const { navigation, route } = props;
@@ -78,19 +78,18 @@ export default function Filter(props) {
       limit: 10,
       skip: 0,
       search: search,
+      category: selectedCategories.map((e) => e.name),
+      facilities: selectedFacilities.map((e) => e.name),
       loading: true,
-      categories: selectedCategories,
-      facilities: selectedFacilities,
     };
-    // if (route?.params?.popular) {
-    //   payload.popular = true;
-    // }
-    // if (route?.params?.category) {
-    //   payload.category = route.params.category;
-    // }
-    // dispatch(setSearchBusiness(search));
-    // dispatch(getAllBusinesses(payload, navigation.goBack()));
-    console.log('Filtered Data', payload);
+    if (route?.params?.popular) {
+      payload.popular = true;
+    }
+    if (route?.params?.category) {
+      payload.category = route.params.category;
+    }
+    dispatch(setFilteredData({ ...payload }));
+    dispatch(getAllBusinesses(payload, navigation.goBack()));
   };
 
   return (

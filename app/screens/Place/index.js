@@ -23,7 +23,7 @@ import * as Utils from '@utils';
 import { PlaceListData } from '@data';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllBusinesses, setSearchBusiness } from '../../actions/business';
+import { getAllBusinesses, setFilteredData } from '../../actions/business';
 
 export default function Place(props) {
   const { navigation, route } = props;
@@ -38,13 +38,21 @@ export default function Place(props) {
       skip,
       loading: !refresh,
       refreshLoading: refresh,
-      search: stateProps.searchBusiness,
     };
     if (route?.params?.popular) {
       payload.popular = true;
     }
     if (route?.params?.category) {
       payload.category = route.params.category;
+    }
+    if (stateProps?.filteredData?.search) {
+      payload.search = stateProps.filteredData.search;
+    }
+    if (stateProps?.filteredData?.category) {
+      payload.category = stateProps.filteredData.category;
+    }
+    if (stateProps?.filteredData?.facilities) {
+      payload.facilities = stateProps.filteredData.facilities;
     }
     dispatch(getAllBusinesses(payload));
   };
@@ -56,7 +64,7 @@ export default function Place(props) {
   useEffect(() => {
     return () => {
       dispatch({ type: 'CLEAR_ALL_BUSINESSES_API' });
-      dispatch(setSearchBusiness(''));
+      dispatch(setFilteredData({}));
     };
   }, [dispatch]);
 
@@ -68,7 +76,7 @@ export default function Place(props) {
       isLoadMore: businesses.isLoadMore,
       refreshLoading: businesses.refreshLoading,
       favoriteBusinesses: favorites.getFavoriteBusinesses,
-      searchBusiness: businesses.searchBusiness,
+      filteredData: businesses.filteredData,
     };
   });
 

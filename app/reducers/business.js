@@ -25,7 +25,7 @@ import {
   UPLOAD_GALLERY_IMAGES_API,
   REMOVE_GALLERY_IMAGES,
   CLEAR_ALL_BUSINESSES_API,
-  SET_SEARCH_BUSINESS,
+  SET_FILTER_DATA_IN_REDUX,
   SET_SEARCH_HISTORY,
   CLEAR_SEARCH_HISTORY,
 } from '../constants/business';
@@ -63,7 +63,7 @@ const initialState = {
   thumbnail: '',
   thumbnailLoading: false,
   refreshLoading: false,
-  searchBusiness: '',
+  filteredData: '',
   searchHistory: [],
   filteredCategory: [],
 };
@@ -116,7 +116,7 @@ export default function userReducer(state = initialState, action = {}) {
     case GET_ALL_BUSINESSES_API:
       return {
         ...state,
-        allBusinesses: action.data.length ? action.data : state.allBusinesses,
+        allBusinesses: action.data,
         getAllBusinessesLoading: action.loading,
         getAllBusinessesLoadMoreLoading: true,
         getAllBusinessesLoadMore: true,
@@ -139,10 +139,10 @@ export default function userReducer(state = initialState, action = {}) {
         singleBusiness: action.data || {},
         getSingleBusinessLoading: action.loading,
       };
-    case SET_SEARCH_BUSINESS:
+    case SET_FILTER_DATA_IN_REDUX:
       return {
         ...state,
-        searchBusiness: action.search,
+        filteredData: action.filteredData,
       };
     case SET_SEARCH_HISTORY:
       return {
