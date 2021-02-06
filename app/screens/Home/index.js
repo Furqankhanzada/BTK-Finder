@@ -133,7 +133,7 @@ export default function Home({ navigation }) {
             return (
               <Button
                 styleText={{ marginLeft: 5, fontSize: 10 }}
-                style={{ width: 100, paddingHorizontal: 10, height: 30 }}
+                style={{ width: 80, paddingHorizontal: 10, height: 25 }}
                 icon={<Icon name={'phone'} size={10} color={'white'} solid />}
                 full
                 round
@@ -159,7 +159,8 @@ export default function Home({ navigation }) {
             style={[
               styles.searchForm,
               {
-                marginTop: 20,
+                marginTop: 10,
+                marginBottom: 10,
                 backgroundColor: colors.background,
                 borderColor: colors.border,
                 shadowColor: colors.border,
