@@ -23,8 +23,7 @@ import * as Utils from '@utils';
 import { PlaceListData } from '@data';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllBusinesses } from '../../actions/business';
-import { showBetaModal } from '../../popup/betaPopup';
+import { getAllBusinesses, setSearchBusiness } from '../../actions/business';
 
 export default function Place(props) {
   const { navigation, route } = props;
@@ -34,7 +33,13 @@ export default function Place(props) {
   const [refresh, setRefresh] = useState(false);
 
   const getBusinesses = () => {
-    let payload = { limit, skip, loading: !refresh, refreshLoading: refresh };
+    let payload = {
+      limit,
+      skip,
+      loading: !refresh,
+      refreshLoading: refresh,
+      search: stateProps.searchBusiness,
+    };
     if (route?.params?.popular) {
       payload.popular = true;
     }
@@ -51,6 +56,7 @@ export default function Place(props) {
   useEffect(() => {
     return () => {
       dispatch({ type: 'CLEAR_ALL_BUSINESSES_API' });
+      dispatch(setSearchBusiness(''));
     };
   }, [dispatch]);
 
@@ -62,6 +68,7 @@ export default function Place(props) {
       isLoadMore: businesses.isLoadMore,
       refreshLoading: businesses.refreshLoading,
       favoriteBusinesses: favorites.getFavoriteBusinesses,
+      searchBusiness: businesses.searchBusiness,
     };
   });
 
@@ -112,16 +119,6 @@ export default function Place(props) {
   const onChangeSort = () => {};
 
   /**
-   * @description Open modal when filterring mode is applied
-   * @author Passion UI <passionui.com>
-   * @date 2019-09-01
-   */
-  const onFilter = () => {
-    showBetaModal();
-    // navigation.navigate('Filter');
-  };
-
-  /**
    * @description Open modal when view mode is pressed
    * @author Passion UI <passionui.com>
    * @date 2019-09-01
@@ -162,6 +159,13 @@ export default function Place(props) {
     }
   };
 
+  const navigateToSearchPage = () => {
+    navigation.navigate('Filter', {
+      popular: route?.params?.popular,
+      category: route?.params?.category,
+    });
+  };
+
   const navigateBusinessDetail = (id) => {
     navigation.navigate('PlaceDetail', { id });
   };
@@ -196,7 +200,9 @@ export default function Place(props) {
     return (
       <View style={styles.sectionEmpty}>
         <Text semibold style={styles.sectionEmptyText}>
-          No {route?.params?.title || t('place')} Available
+          {stateProps.searchBusiness
+            ? 'No Search Results Found, Try different keywords'
+            : `No ${route?.params?.title || t('place')} Available`}
         </Text>
       </View>
     );
@@ -284,7 +290,6 @@ export default function Place(props) {
                 modeView={modeView}
                 onChangeSort={onChangeSort}
                 onChangeView={onChangeView}
-                onFilter={onFilter}
               />
             </Animated.View>
           </View>
@@ -364,7 +369,6 @@ export default function Place(props) {
                 modeView={modeView}
                 onChangeSort={onChangeSort}
                 onChangeView={onChangeView}
-                onFilter={onFilter}
               />
             </Animated.View>
           </View>
@@ -450,7 +454,6 @@ export default function Place(props) {
                 modeView={modeView}
                 onChangeSort={onChangeSort}
                 onChangeView={onChangeView}
-                onFilter={onFilter}
               />
             </Animated.View>
           </View>
@@ -578,10 +581,7 @@ export default function Place(props) {
         renderRightSecond={() => {
           return <Icon name="search" size={20} color={colors.primary} />;
         }}
-        onPressRightSecond={() => {
-          showBetaModal();
-          // navigation.navigate('SearchHistory');
-        }}
+        onPressRightSecond={() => navigateToSearchPage()}
         onPressRight={() => {
           onChangeMapView();
         }}

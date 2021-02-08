@@ -6,8 +6,9 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
 import { BaseStyle, BaseColor, useTheme, Images } from '@config';
-
 import {
   Header,
   SafeAreaView,
@@ -19,8 +20,6 @@ import {
 } from '@components';
 import * as Utils from '@utils';
 import styles from './styles';
-import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
 import { getCategories } from '../../actions/category';
 
 export default function Category({ navigation }) {
@@ -92,26 +91,32 @@ export default function Category({ navigation }) {
             icon={item.icon}
             title={item.name}
             // subtitle={200}
-            onPress={() => navigation.navigate('Place', {
-              title: item.name,
-              category: item.name,
-              route: item.route
-            })}
+            onPress={() =>
+              navigation.navigate('Place', {
+                title: item.name,
+                category: item.name,
+                route: item.route,
+              })
+            }
             style={[styles.itemIcon, { borderColor: colors.border }]}
           />
         );
       case 'full':
         return (
           <CategoryFull
-            image={{ uri: item.image || 'https://i.ibb.co/VpvP0X5/empty-image.jpg' }}
+            image={{
+              uri: item.image || 'https://i.ibb.co/VpvP0X5/empty-image.jpg',
+            }}
             icon={item.icon}
             title={item.name}
             // subtitle={300}
-            onPress={() => navigation.navigate('Place', {
-              title: item.name,
-              category: item.name,
-              route: item.route
-            })}
+            onPress={() =>
+              navigation.navigate('Place', {
+                title: item.name,
+                category: item.name,
+                route: item.route,
+              })
+            }
             style={styles.itemFull}
           />
         );

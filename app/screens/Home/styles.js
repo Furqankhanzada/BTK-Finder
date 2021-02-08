@@ -1,6 +1,6 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 import * as Utils from '@utils';
-import {BaseColor} from "../../config";
+import { BaseColor } from '../../config';
 
 export default StyleSheet.create({
   imageBackground: {
@@ -12,7 +12,7 @@ export default StyleSheet.create({
     bottom: 10,
   },
   searchForm: {
-    marginHorizontal: 15,
+    marginHorizontal: 20,
     padding: 10,
     borderRadius: 10,
     borderWidth: 0.5,
@@ -54,17 +54,17 @@ export default StyleSheet.create({
   },
 
   section: {
-    marginBottom: 25
+    marginBottom: 25,
   },
   sectionHeader: {
     marginHorizontal: 20,
     marginBottom: 15,
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   sectionHeaderContent: {
     flex: 1,
-    alignItems: 'flex-start'
+    alignItems: 'flex-start',
   },
   sectionHeaderButton: {
     flexDirection: 'row',
@@ -72,16 +72,16 @@ export default StyleSheet.create({
   },
   sectionHeaderButtonText: {
     fontSize: 16,
-    color: BaseColor.blueColor
+    color: BaseColor.blueColor,
   },
   sectionHeaderButtonIcon: {
     marginLeft: 5,
     fontSize: 18,
-    color: BaseColor.blueColor
+    color: BaseColor.blueColor,
   },
   sectionLoading: {
     height: Utils.scaleWithPixel(160),
-    position: 'relative'
+    position: 'relative',
   },
   sectionEmpty: {
     alignItems: 'center',
@@ -90,10 +90,10 @@ export default StyleSheet.create({
     flex: 1,
   },
   sectionEmptyText: {
-    textAlign: 'center'
+    textAlign: 'center',
   },
   sectionListContainer: {
     paddingLeft: 5,
-    paddingRight: 15
-  }
+    paddingRight: 15,
+  },
 });

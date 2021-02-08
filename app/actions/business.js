@@ -25,11 +25,13 @@ import {
   GET_EDIT_BUSINESS_DATA,
   SET_EDIT_BUSINESS,
   UPDATE_EDIT_BUSINESS_DATA,
+  SET_SEARCH_BUSINESS,
+  SET_SEARCH_HISTORY,
+  CLEAR_SEARCH_HISTORY,
 } from '../constants/business';
 import { generateFileObject, handleError } from '../utils';
 import axiosApiInstance from '../interceptor/axios-interceptor';
 import Toast from 'react-native-toast-message';
-import AsyncStorage from '@react-native-community/async-storage';
 
 export const createBusiness = (payload, cb) => (dispatch) => {
   dispatch({ type: CREATE_BUSINESS_API });
@@ -192,6 +194,19 @@ export const getMyBusinesses = (payload) => (dispatch) => {
       });
       handleError(response.data);
     });
+};
+
+export const setSearchBusiness = (search) => (dispatch) => {
+  dispatch({ type: SET_SEARCH_BUSINESS, search: search });
+};
+
+export const setSearchHistory = (history) => (dispatch) => {
+  dispatch({ type: SET_SEARCH_HISTORY, searchHistory: history });
+};
+
+export const clearSearchHistory = (cb) => (dispatch) => {
+  dispatch({ type: CLEAR_SEARCH_HISTORY });
+  cb && cb();
 };
 
 export const setBusinessFormData = (businessFormData) => (dispatch) => {

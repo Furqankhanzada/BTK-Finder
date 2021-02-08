@@ -1,66 +1,69 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   TouchableOpacity,
-  FlatList,
-  ActivityIndicator,
   ScrollView,
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import {BaseStyle, BaseColor, Images, useTheme} from '@config';
-import {Header, SafeAreaView, TextInput, Icon, Text, Card} from '@components';
+import { useSelector, useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import { BaseStyle, BaseColor, useTheme } from '@config';
+import {
+  Header,
+  SafeAreaView,
+  TextInput,
+  Icon,
+  Text,
+  Loading,
+} from '@components';
 import styles from './styles';
-import {useTranslation} from 'react-i18next';
+import {
+  getAllBusinesses,
+  setSearchBusiness,
+  setSearchHistory,
+  clearSearchHistory,
+} from '../../actions/business';
+import Toast from 'react-native-simple-toast';
 
-export default function SearchHistory({navigation}) {
-  const {colors} = useTheme();
-  const {t} = useTranslation();
+export default function SearchHistory(props) {
+  const { navigation, route } = props;
+  const { colors } = useTheme();
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
+
+  const stateProps = useSelector(({ businesses }) => {
+    return {
+      loading: businesses.getAllBusinessesLoading,
+      searchHistory: businesses.searchHistory,
+    };
+  });
 
   const [search, setSearch] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [searchHistory, setSearchHistory] = useState([
-    {id: '1', keyword: 'Delux Room'},
-    {id: '2', keyword: 'Tripple Room'},
-    {id: '3', keyword: 'Single Room'},
-    {id: '4', keyword: 'King Room'},
-    {id: '5', keyword: 'Lux Room'},
-  ]);
-  const [discoverMore] = useState([
-    {id: '1', keyword: 'Hotel California'},
-    {id: '2', keyword: 'Top 10 Things Must To Do In This Autum'},
-    {id: '3', keyword: 'Best Hotel Indonesia'},
-  ]);
-  const [recentlyView] = useState([
-    {id: '1', name: 'France', image: Images.trip1},
-    {id: '2', name: 'Dublin', image: Images.trip2},
-    {id: '3', name: 'Houston', image: Images.trip3},
-    {id: '4', name: 'Houston', image: Images.trip4},
-  ]);
-
-  /**
-   * call when search data
-   * @param {*} keyword
-   */
-  const onSearch = keyword => {
-    const found = searchHistory.some(item => item.keyword == keyword);
-    let searchData = [];
-
-    if (found) {
-      searchData = searchHistory.map(item => {
-        return {
-          ...item,
-          checked: item.keyword == keyword,
-        };
-      });
+  const onSearch = () => {
+    if (search) {
+      let payload = {
+        limit: 10,
+        skip: 0,
+        search: search,
+        loading: true,
+      };
+      if (route?.params?.popular) {
+        payload.popular = true;
+      }
+      if (route?.params?.category) {
+        payload.category = route.params.category;
+      }
+      dispatch(setSearchBusiness(search));
+      dispatch(setSearchHistory(search));
+      dispatch(getAllBusinesses(payload, navigation.goBack()));
     } else {
-      searchData = searchHistory.concat({
-        keyword: search,
-      });
+      Toast.show('Please enter keywords to search');
     }
-    setSearchHistory(searchData);
-    setLoading(true);
-    setTimeout(() => navigation.goBack(), 1000);
+  };
+
+  const clearHistoryToast = () => {
+    return Toast.show('Search History Cleared');
   };
 
   const offsetKeyboard = Platform.select({
@@ -69,16 +72,12 @@ export default function SearchHistory({navigation}) {
   });
 
   return (
-    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{top: 'always'}}>
+    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
+      <Loading loading={stateProps.loading} />
       <Header
         title={t('search')}
         renderLeft={() => {
           return <Icon name="times" size={20} color={colors.primary} />;
-        }}
-        renderRight={() => {
-          if (loading) {
-            return <ActivityIndicator size="small" color={colors.primary} />;
-          }
         }}
         onPressLeft={() => {
           navigation.goBack();
@@ -87,15 +86,16 @@ export default function SearchHistory({navigation}) {
       <KeyboardAvoidingView
         behavior={Platform.OS === 'android' ? 'height' : 'padding'}
         keyboardVerticalOffset={offsetKeyboard}
-        style={{flex: 1}}>
-        <ScrollView contentContainerStyle={{padding: 20}}>
+        style={{ flex: 1 }}>
+        <ScrollView contentContainerStyle={{ padding: 20 }}>
           <TextInput
-            onChangeText={text => setSearch(text)}
+            onChangeText={(text) => setSearch(text)}
             placeholder={t('search')}
             value={search}
             onSubmitEditing={() => {
-              onSearch(search);
+              onSearch();
             }}
+            blurOnSubmit={true}
             icon={
               <TouchableOpacity
                 onPress={() => {
@@ -106,91 +106,87 @@ export default function SearchHistory({navigation}) {
               </TouchableOpacity>
             }
           />
-          <View style={{paddingTop: 20}}>
+          <View style={{ paddingTop: 20 }}>
             <View style={styles.rowTitle}>
               <Text headline>{t('search_history').toUpperCase()}</Text>
-              <TouchableOpacity onPress={() => setSearchHistory([])}>
-                <Text caption1 accentColor>
-                  {t('clear')}
-                </Text>
-              </TouchableOpacity>
+              {stateProps?.searchHistory?.length ? (
+                <TouchableOpacity
+                  onPress={() =>
+                    dispatch(clearSearchHistory(clearHistoryToast))
+                  }>
+                  <Text caption1 accentColor>
+                    {t('clear')}
+                  </Text>
+                </TouchableOpacity>
+              ) : null}
             </View>
             <View
               style={{
                 flexDirection: 'row',
                 flexWrap: 'wrap',
               }}>
-              {searchHistory.map((item, index) => (
-                <TouchableOpacity
-                  style={[
-                    styles.itemHistory,
-                    {backgroundColor: colors.card},
-                    item.checked
-                      ? {
-                          backgroundColor: colors.primary,
-                        }
-                      : {},
-                  ]}
-                  onPress={() => onSearch(item.keyword)}
-                  key={'search' + index}>
-                  <Text
-                    caption2
-                    style={
-                      item.checked
-                        ? {
-                            color: BaseColor.whiteColor,
-                          }
-                        : {}
-                    }>
-                    {item.keyword}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
-          <View style={{paddingTop: 20}}>
-            <View style={styles.rowTitle}>
-              <Text headline>{t('discover_more').toUpperCase()}</Text>
-              <TouchableOpacity>
-                <Text caption1 accentColor>
-                  {t('refresh')}
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-              {discoverMore.map((item, index) => (
-                <TouchableOpacity
-                  style={[styles.itemHistory, {backgroundColor: colors.card}]}
-                  key={'discover' + index}>
-                  <Text caption2>{item.keyword}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
-          <View style={{paddingTop: 20}}>
-            <Text headline>{t('recently_view').toUpperCase()}</Text>
-            <FlatList
-              horizontal={true}
-              showsHorizontalScrollIndicator={false}
-              data={recentlyView}
-              keyExtractor={(item, index) => item.id}
-              renderItem={({item, index}) => (
-                <Card
-                  style={{
-                    width: 100,
-                    height: 100,
-                    marginRight: 20,
-                    marginTop: 5,
-                  }}
-                  image={item.image}
-                  onPress={() => navigation.navigate('HotelDetail')}>
-                  <Text headline semibold whiteColor>
-                    {item.name}
-                  </Text>
-                </Card>
+              {stateProps?.searchHistory?.length ? (
+                stateProps?.searchHistory?.map((item, index) => (
+                  <TouchableOpacity
+                    style={[
+                      styles.itemHistory,
+                      { backgroundColor: colors.card },
+                    ]}
+                    onPress={() => {}}
+                    key={'search' + index}>
+                    <Text caption2>{item}</Text>
+                  </TouchableOpacity>
+                ))
+              ) : (
+                <View style={styles.emptyHistoryArea}>
+                  <Text>No search history found.</Text>
+                </View>
               )}
-            />
+            </View>
           </View>
+          {/*<View style={{ paddingTop: 20 }}>*/}
+          {/*  <View style={styles.rowTitle}>*/}
+          {/*    <Text headline>{t('discover_more').toUpperCase()}</Text>*/}
+          {/*    <TouchableOpacity>*/}
+          {/*      <Text caption1 accentColor>*/}
+          {/*        {t('refresh')}*/}
+          {/*      </Text>*/}
+          {/*    </TouchableOpacity>*/}
+          {/*  </View>*/}
+          {/*  <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>*/}
+          {/*    {discoverMore.map((item, index) => (*/}
+          {/*      <TouchableOpacity*/}
+          {/*        style={[styles.itemHistory, { backgroundColor: colors.card }]}*/}
+          {/*        key={'discover' + index}>*/}
+          {/*        <Text caption2>{item.keyword}</Text>*/}
+          {/*      </TouchableOpacity>*/}
+          {/*    ))}*/}
+          {/*  </View>*/}
+          {/*</View>*/}
+          {/*<View style={{ paddingTop: 20 }}>*/}
+          {/*  <Text headline>{t('recently_view').toUpperCase()}</Text>*/}
+          {/*  <FlatList*/}
+          {/*    horizontal={true}*/}
+          {/*    showsHorizontalScrollIndicator={false}*/}
+          {/*    data={recentlyView}*/}
+          {/*    keyExtractor={(item, index) => item.id}*/}
+          {/*    renderItem={({ item, index }) => (*/}
+          {/*      <Card*/}
+          {/*        style={{*/}
+          {/*          width: 100,*/}
+          {/*          height: 100,*/}
+          {/*          marginRight: 20,*/}
+          {/*          marginTop: 5,*/}
+          {/*        }}*/}
+          {/*        image={item.image}*/}
+          {/*        onPress={() => navigation.navigate('HotelDetail')}>*/}
+          {/*        <Text headline semibold whiteColor>*/}
+          {/*          {item.name}*/}
+          {/*        </Text>*/}
+          {/*      </Card>*/}
+          {/*    )}*/}
+          {/*  />*/}
+          {/*</View>*/}
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
