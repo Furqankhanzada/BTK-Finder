@@ -24,6 +24,7 @@ import { PlaceListData } from '@data';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllBusinesses, setFilteredData } from '../../actions/business';
+import useLocation from '../../hooks/useLocation';
 
 export default function Place(props) {
   const { navigation, route } = props;
@@ -31,6 +32,11 @@ export default function Place(props) {
   const [limit] = useState(10);
   const [skip, setSkip] = useState(0);
   const [refresh, setRefresh] = useState(false);
+  const [isSortLocation, setSortLocation] = useState(false);
+  const [location, setLocation] = useState({
+    latitude: '67.3205535',
+    longitude: '25.0645649',
+  });
 
   const getBusinesses = () => {
     let payload = {
@@ -54,6 +60,11 @@ export default function Place(props) {
     if (stateProps?.filteredData?.facilities) {
       payload.facilities = stateProps.filteredData.facilities;
     }
+    if (isSortLocation) {
+      payload.latitude = location.latitude;
+      payload.longitude = location.longitude;
+    }
+    console.log('$$$$$$$$$$$$$$$$$$$$$', payload);
     dispatch(getAllBusinesses(payload));
   };
 
@@ -167,6 +178,13 @@ export default function Place(props) {
     }
   };
 
+  const onSortLocation = () => {
+    console.log('$$$$$$$$$$$$$$$$$$$$$ SORT LOCATION PRESSED');
+    setSkip(0);
+    setRefresh(false);
+    setSortLocation(true);
+  };
+
   const navigateToSearchPage = () => {
     navigation.navigate('Filter', {
       popular: route?.params?.popular,
@@ -208,8 +226,8 @@ export default function Place(props) {
     return (
       <View style={styles.sectionEmpty}>
         <Text semibold style={styles.sectionEmptyText}>
-          {stateProps.searchBusiness
-            ? 'No Search Results Found, Try different keywords'
+          {stateProps?.filteredData?.search
+            ? 'No search results found, Try different keywords'
             : `No ${route?.params?.title || t('place')} Available`}
         </Text>
       </View>
@@ -462,6 +480,7 @@ export default function Place(props) {
                 modeView={modeView}
                 onChangeSort={onChangeSort}
                 onChangeView={onChangeView}
+                onLocation={onSortLocation}
               />
             </Animated.View>
           </View>

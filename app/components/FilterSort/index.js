@@ -77,7 +77,7 @@ export default function FilterSort(props) {
     }
   };
 
-  const { style, modeView, onChangeView, labelCustom } = props;
+  const { style, modeView, onChangeView, labelCustom, onLocation } = props;
   const customAction =
     modeView != '' ? (
       <TouchableOpacity onPress={onChangeView} style={styles.contentModeView}>
@@ -147,6 +147,15 @@ export default function FilterSort(props) {
         </Text>
       </TouchableOpacity>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <TouchableOpacity onPress={onLocation} style={styles.contentFilter}>
+          <Icon
+            name="map-marker-alt"
+            size={16}
+            color={BaseColor.grayColor}
+            solid
+          />
+        </TouchableOpacity>
+        <View style={styles.line} />
         {customAction}
       </View>
     </View>
@@ -161,6 +170,7 @@ FilterSort.propTypes = {
   labelCustom: PropTypes.string,
   onChangeSort: PropTypes.func,
   onChangeView: PropTypes.func,
+  onLocation: PropTypes.func,
 };
 
 FilterSort.defaultProps = {
@@ -196,4 +206,5 @@ FilterSort.defaultProps = {
   labelCustom: '',
   onChangeSort: () => {},
   onChangeView: () => {},
+  onLocation: () => {},
 };
