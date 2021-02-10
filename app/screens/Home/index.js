@@ -27,6 +27,7 @@ import { getCategories } from '../../actions/category';
 import { getBusinesses } from '../../actions/business';
 import { getFavoriteBusinesses } from '../../actions/favorites';
 import { getProfile } from '../../actions/auth';
+import useLocation from '../../hooks/useLocation';
 export default function Home({ navigation }) {
   const stateProps = useSelector(({ businesses, favorites }) => {
     return {
@@ -49,6 +50,7 @@ export default function Home({ navigation }) {
   const { colors } = useTheme();
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const getLocation = useLocation();
   let placeholderItems = [1, 2, 3, 4, 5, 6, 7, 8];
   let featuredCategories = useSelector((state) => state.categories.featured);
   featuredCategories = [
@@ -248,6 +250,8 @@ export default function Home({ navigation }) {
               seeMore({
                 popular: true,
                 title: 'Popular Businesses',
+                latitude: getLocation?.latitude ?? null,
+                longitude: getLocation?.longitude ?? null,
               })
             }
             data={stateProps.popularBusinesses}
@@ -283,6 +287,8 @@ export default function Home({ navigation }) {
             seeMoreFunc={() =>
               seeMore({
                 title: 'Recently Added Businesses',
+                latitude: getLocation?.latitude ?? null,
+                longitude: getLocation?.longitude ?? null,
               })
             }
             data={stateProps.recentlyAddedBusinesses}

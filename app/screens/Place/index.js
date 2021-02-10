@@ -4,6 +4,7 @@ import {
   View,
   Animated,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import { BaseStyle, BaseColor, useTheme } from '@config';
@@ -24,7 +25,6 @@ import { PlaceListData } from '@data';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllBusinesses, setFilteredData } from '../../actions/business';
-import useLocation from '../../hooks/useLocation';
 
 export default function Place(props) {
   const { navigation, route } = props;
@@ -34,8 +34,8 @@ export default function Place(props) {
   const [refresh, setRefresh] = useState(false);
   const [isSortLocation, setSortLocation] = useState(false);
   const [location, setLocation] = useState({
-    latitude: '67.3205535',
-    longitude: '25.0645649',
+    latitude: route?.params?.latitude,
+    longitude: route?.params?.longitude,
   });
 
   const getBusinesses = () => {
@@ -61,10 +61,9 @@ export default function Place(props) {
       payload.facilities = stateProps.filteredData.facilities;
     }
     if (isSortLocation) {
-      payload.latitude = location.latitude;
-      payload.longitude = location.longitude;
+      payload.latitude = location.longitude;
+      payload.longitude = location.latitude;
     }
-    console.log('$$$$$$$$$$$$$$$$$$$$$', payload);
     dispatch(getAllBusinesses(payload));
   };
 
@@ -179,10 +178,16 @@ export default function Place(props) {
   };
 
   const onSortLocation = () => {
-    console.log('$$$$$$$$$$$$$$$$$$$$$ SORT LOCATION PRESSED');
-    setSkip(0);
-    setRefresh(false);
-    setSortLocation(true);
+    if (route?.params?.latitude && route?.params?.longitude) {
+      setSkip(0);
+      setRefresh(false);
+      setSortLocation(true);
+    } else {
+      Alert.alert(
+        'Location Access Required',
+        'If you want to see Businesses near you. Go to your mobile Location settings and allow Explore BTK to access your location',
+      );
+    }
   };
 
   const navigateToSearchPage = () => {
