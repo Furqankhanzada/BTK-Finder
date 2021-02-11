@@ -7,7 +7,7 @@ import dynamicLinks from '@react-native-firebase/dynamic-links';
 import queryString from 'query-string';
 import * as NavigationService from './services/NavigationService';
 import Navigator from './navigation';
-import { Alert, Linking } from 'react-native';
+import { Linking } from 'react-native';
 console.disableYellowBox = true;
 
 export default function App() {
@@ -20,13 +20,13 @@ export default function App() {
     }, 1000);
   };
 
-  const handleDynamicLink = (link) => {
-    const parsed = queryString.parseUrl(link.url);
-    navigateToBusinessDetail(parsed.query.id);
-  };
-
   useEffect(() => {
-    const unsubscribe = dynamicLinks().onLink(handleDynamicLink);
+    const unsubscribe = dynamicLinks().onLink((link) => {
+      if (link && link.url) {
+        const parsed = queryString.parseUrl(link.url);
+        navigateToBusinessDetail(parsed.query.id);
+      }
+    });
     return () => unsubscribe();
   }, []);
 
@@ -34,8 +34,10 @@ export default function App() {
     dynamicLinks()
       .getInitialLink()
       .then((link) => {
-        const parsed = queryString.parseUrl(link.url);
-        navigateToBusinessDetail(parsed.query.id);
+        if (link && link.url) {
+          const parsed = queryString.parseUrl(link.url);
+          navigateToBusinessDetail(parsed.query.id);
+        }
       });
   }, []);
 
@@ -69,7 +71,7 @@ export default function App() {
         const url = isURL(remoteMessage.notification.body);
         if (remoteMessage) {
           if (url) {
-            Linking.openURL(remoteMessage.notification.body);
+            Linking.openURL(remoteMessage.notification.body).catch(console.log);
           }
         }
       });
