@@ -4,10 +4,10 @@ import { Provider } from 'react-redux';
 import remoteConfig from '@react-native-firebase/remote-config';
 import messaging from '@react-native-firebase/messaging';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
+import { Linking } from 'react-native';
 import queryString from 'query-string';
 import * as NavigationService from './services/NavigationService';
 import Navigator from './navigation';
-import { Linking } from 'react-native';
 console.disableYellowBox = true;
 
 export default function App() {
@@ -41,26 +41,12 @@ export default function App() {
       });
   }, []);
 
-  const isURL = (str) => {
-    const pattern = new RegExp(
-      '^(https?:\\/\\/)?' + // protocol
-        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-        '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-        '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-        '(\\#[-a-z\\d_]*)?$',
-      'i',
-    ); // fragment locator
-    return !!pattern.test(str);
-  };
-
   // On Click Notification
   useEffect(() => {
     // Caused app to open from background state
     messaging().onNotificationOpenedApp((remoteMessage) => {
-      const url = isURL(remoteMessage.notification.body);
-      if (url) {
-        Linking.openURL(remoteMessage.notification.body);
+      if (remoteMessage?.data?.link) {
+        Linking.openURL(remoteMessage?.data?.link);
       }
     });
 
@@ -68,10 +54,9 @@ export default function App() {
     messaging()
       .getInitialNotification()
       .then((remoteMessage) => {
-        const url = isURL(remoteMessage.notification.body);
         if (remoteMessage) {
-          if (url) {
-            Linking.openURL(remoteMessage.notification.body).catch(console.log);
+          if (remoteMessage?.data?.link) {
+            Linking.openURL(remoteMessage?.data?.link);
           }
         }
       });
