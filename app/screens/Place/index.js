@@ -55,10 +55,12 @@ export default function Place(props) {
       payload.search = stateProps.filteredData.search;
     }
     if (stateProps?.filteredData?.category) {
-      payload.category = stateProps.filteredData.category;
+      payload.category = stateProps.filteredData.category.map((e) => e.name);
     }
     if (stateProps?.filteredData?.facilities) {
-      payload.facilities = stateProps.filteredData.facilities;
+      payload.facilities = stateProps.filteredData.facilities.map(
+        (e) => e.name,
+      );
     }
     if (isSortLocation) {
       payload.latitude = location.longitude;
@@ -191,10 +193,18 @@ export default function Place(props) {
   };
 
   const navigateToSearchPage = () => {
-    navigation.navigate('Filter', {
+    let params = {
       popular: route?.params?.popular,
       category: route?.params?.category,
-    });
+      categoryIcon: route?.params?.categoryIcon,
+    };
+    if (isSortLocation) {
+      params.coordinates = {
+        latitude: route?.params?.latitude,
+        longitude: route?.params?.longitude,
+      };
+    }
+    navigation.navigate('Filter', { ...params });
   };
 
   const navigateBusinessDetail = (id) => {

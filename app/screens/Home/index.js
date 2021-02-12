@@ -168,7 +168,16 @@ export default function Home({ navigation }) {
                 shadowColor: colors.border,
               },
             ]}>
-            <TouchableOpacity onPress={() => navigation.navigate('Filter')}>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('Filter', {
+                  home: true,
+                  coordinates: {
+                    latitude: getLocation?.latitude ?? null,
+                    longitude: getLocation?.longitude ?? null,
+                  },
+                })
+              }>
               <View
                 style={[BaseStyle.textInput, { backgroundColor: colors.card }]}>
                 <Text body1 grayColor style={{ flex: 1 }}>
@@ -219,7 +228,10 @@ export default function Home({ navigation }) {
                       seeMore({
                         title: item.name,
                         category: item.name,
+                        categoryIcon: item.icon,
                         route: item.route,
+                        latitude: getLocation?.latitude ?? null,
+                        longitude: getLocation?.longitude ?? null,
                       })
                     }>
                     <View
