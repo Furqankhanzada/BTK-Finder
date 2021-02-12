@@ -20,13 +20,13 @@ export default function App() {
     }, 1000);
   };
 
-  const handleDynamicLink = (link) => {
-    const parsed = queryString.parseUrl(link.url);
-    navigateToBusinessDetail(parsed.query.id);
-  };
-
   useEffect(() => {
-    const unsubscribe = dynamicLinks().onLink(handleDynamicLink);
+    const unsubscribe = dynamicLinks().onLink((link) => {
+      if (link && link.url) {
+        const parsed = queryString.parseUrl(link.url);
+        navigateToBusinessDetail(parsed.query.id);
+      }
+    });
     return () => unsubscribe();
   }, []);
 
@@ -34,8 +34,10 @@ export default function App() {
     dynamicLinks()
       .getInitialLink()
       .then((link) => {
-        const parsed = queryString.parseUrl(link.url);
-        navigateToBusinessDetail(parsed.query.id);
+        if (link && link.url) {
+          const parsed = queryString.parseUrl(link.url);
+          navigateToBusinessDetail(parsed.query.id);
+        }
       });
   }, []);
 
