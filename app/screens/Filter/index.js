@@ -1,10 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { View, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
+import {
+  View,
+  TouchableOpacity,
+  ScrollView,
+  ActivityIndicator,
+} from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import remoteConfig from '@react-native-firebase/remote-config';
 import { BaseStyle, BaseColor, useTheme } from '@config';
-import { Header, SafeAreaView, Icon, Text, Tag, TextInput } from '@components';
+import {
+  Header,
+  SafeAreaView,
+  Icon,
+  Text,
+  Tag,
+  TextInput,
+  Loading,
+} from '@components';
 import * as Utils from '@utils';
 import styles from './styles';
 import { getCategories } from '../../actions/category';
@@ -27,6 +40,7 @@ export default function Filter(props) {
   // const [priceBegin, setPriceBegin] = useState(0);
   // const [priceEnd, setPriceEnd] = useState(100);
   // const [rate, setRate] = useState(5);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState(stateProps?.filteredData?.search ?? '');
   const [selectedCategories, setSelectedCategories] = useState(
     stateProps?.filteredData?.category ?? [],
@@ -45,7 +59,11 @@ export default function Filter(props) {
   }, []);
 
   useEffect(() => {
-    dispatch(getCategories({}));
+    dispatch(
+      getCategories({}, () => {
+        setLoading(false);
+      }),
+    );
   }, [dispatch]);
 
   useEffect(() => {
@@ -124,6 +142,7 @@ export default function Filter(props) {
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
+      <Loading loading={loading} />
       <Header
         title={t('filtering')}
         renderLeft={() => {
