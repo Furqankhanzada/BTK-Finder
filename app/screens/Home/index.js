@@ -184,7 +184,7 @@ export default function Home({ navigation }) {
               <View
                 style={[BaseStyle.textInput, { backgroundColor: colors.card }]}>
                 <Text body1 grayColor style={{ flex: 1 }}>
-                  {t('search_location')}
+                  {t('search_businesses')}
                 </Text>
                 <View style={{ paddingVertical: 8 }}>
                   <View
@@ -197,7 +197,7 @@ export default function Home({ navigation }) {
                 <Icon
                   name="location-arrow"
                   size={18}
-                  color={colors.primaryLight}
+                  color={colors.primary}
                   solid
                 />
               </View>

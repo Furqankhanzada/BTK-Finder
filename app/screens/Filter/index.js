@@ -68,12 +68,14 @@ export default function Filter(props) {
 
   useEffect(() => {
     if (route?.params?.category && route?.params?.categoryIcon) {
-      setSelectedCategories([
-        {
-          name: route.params.category,
-          icon: route.params.categoryIcon,
-        },
-      ]);
+      if (!selectedCategories.length) {
+        setSelectedCategories([
+          {
+            name: route.params.category,
+            icon: route.params.categoryIcon,
+          },
+        ]);
+      }
     }
   }, [dispatch]);
 
@@ -105,6 +107,7 @@ export default function Filter(props) {
         title: 'Search Results',
         latitude: route?.params?.coordinates?.latitude ?? null,
         longitude: route?.params?.coordinates?.longitude ?? null,
+        category: null,
       });
     } else {
       navigation.navigate('Place');
@@ -144,7 +147,11 @@ export default function Filter(props) {
     <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
       <Loading loading={loading} />
       <Header
-        title={t('filtering')}
+        title={
+          route?.params?.locationSort
+            ? 'Search Nearby Businesses'
+            : t('filtering')
+        }
         renderLeft={() => {
           return <Icon name="times" size={20} color={colors.primary} />;
         }}
@@ -182,7 +189,7 @@ export default function Filter(props) {
             }
           />
           <Text headline semibold style={{ marginTop: 30 }}>
-            {t('category').toUpperCase()}
+            {t('categories').toUpperCase()}
           </Text>
           <View style={styles.wrapContent}>
             {selectedCategories.map((item) => {

@@ -183,7 +183,7 @@ export default function Place(props) {
     if (route?.params?.latitude && route?.params?.longitude) {
       setSkip(0);
       setRefresh(false);
-      setSortLocation(true);
+      setSortLocation(!isSortLocation);
     } else {
       Alert.alert(
         'Location Access Required',
@@ -203,6 +203,7 @@ export default function Place(props) {
         latitude: route?.params?.latitude,
         longitude: route?.params?.longitude,
       };
+      params.locationSort = true;
     }
     navigation.navigate('Filter', { ...params });
   };
@@ -331,6 +332,8 @@ export default function Place(props) {
                 modeView={modeView}
                 onChangeSort={onChangeSort}
                 onChangeView={onChangeView}
+                onLocation={onSortLocation}
+                isLocation={isSortLocation}
               />
             </Animated.View>
           </View>
@@ -410,6 +413,8 @@ export default function Place(props) {
                 modeView={modeView}
                 onChangeSort={onChangeSort}
                 onChangeView={onChangeView}
+                onLocation={onSortLocation}
+                isLocation={isSortLocation}
               />
             </Animated.View>
           </View>
@@ -496,6 +501,7 @@ export default function Place(props) {
                 onChangeSort={onChangeSort}
                 onChangeView={onChangeView}
                 onLocation={onSortLocation}
+                isLocation={isSortLocation}
               />
             </Animated.View>
           </View>
