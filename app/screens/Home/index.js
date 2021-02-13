@@ -120,7 +120,10 @@ export default function Home({ navigation }) {
 
   const seeMore = (payload = {}) => {
     if (payload.route === 'Category') {
-      navigation.navigate('Category');
+      navigation.navigate('Category', {
+        latitude: getLocation?.latitude ?? null,
+        longitude: getLocation?.longitude ?? null,
+      });
     } else {
       navigation.navigate('Place', payload);
     }

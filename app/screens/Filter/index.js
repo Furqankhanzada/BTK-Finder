@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, TouchableOpacity, ScrollView } from 'react-native';
+import { View, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import remoteConfig from '@react-native-firebase/remote-config';
@@ -20,6 +20,7 @@ export default function Filter(props) {
     return {
       categories: categories.all,
       filteredData: businesses.filteredData,
+      loading: businesses.getAllBusinessesLoading,
     };
   });
 
@@ -81,7 +82,7 @@ export default function Filter(props) {
   };
 
   const callBack = () => {
-    if (route?.params?.home) {
+    if (route?.params?.home || route?.params?.category) {
       navigation.navigate('Place', {
         title: 'Search Results',
         latitude: route?.params?.coordinates?.latitude ?? null,
@@ -104,7 +105,10 @@ export default function Filter(props) {
     if (route?.params?.popular) {
       payload.popular = true;
     }
-    if (route?.params?.coordinates) {
+    if (
+      route?.params?.coordinates?.latitude &&
+      route?.params?.coordinates?.longitude
+    ) {
       payload.latitude = route.params.coordinates.longitude;
       payload.longitude = route.params.coordinates.latitude;
     }
@@ -126,7 +130,9 @@ export default function Filter(props) {
           return <Icon name="times" size={20} color={colors.primary} />;
         }}
         renderRight={() => {
-          return (
+          return stateProps.loading ? (
+            <ActivityIndicator color={colors.primary} size="small" />
+          ) : (
             <Text headline primaryColor numberOfLines={1}>
               {t('apply')}
             </Text>
