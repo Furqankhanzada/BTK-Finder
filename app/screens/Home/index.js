@@ -27,6 +27,7 @@ import { getCategories } from '../../actions/category';
 import { getBusinesses } from '../../actions/business';
 import { getFavoriteBusinesses } from '../../actions/favorites';
 import { getProfile } from '../../actions/auth';
+import useLocation from '../../hooks/useLocation';
 export default function Home({ navigation }) {
   const stateProps = useSelector(({ businesses, favorites }) => {
     return {
@@ -49,6 +50,7 @@ export default function Home({ navigation }) {
   const { colors } = useTheme();
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const getLocation = useLocation();
   let placeholderItems = [1, 2, 3, 4, 5, 6, 7, 8];
   let featuredCategories = useSelector((state) => state.categories.featured);
   featuredCategories = [
@@ -118,7 +120,10 @@ export default function Home({ navigation }) {
 
   const seeMore = (payload = {}) => {
     if (payload.route === 'Category') {
-      navigation.navigate('Category');
+      navigation.navigate('Category', {
+        latitude: getLocation?.latitude ?? null,
+        longitude: getLocation?.longitude ?? null,
+      });
     } else {
       navigation.navigate('Place', payload);
     }
@@ -166,11 +171,20 @@ export default function Home({ navigation }) {
                 shadowColor: colors.border,
               },
             ]}>
-            <TouchableOpacity onPress={() => navigation.navigate('Filter')}>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('Filter', {
+                  home: true,
+                  coordinates: {
+                    latitude: getLocation?.latitude ?? null,
+                    longitude: getLocation?.longitude ?? null,
+                  },
+                })
+              }>
               <View
                 style={[BaseStyle.textInput, { backgroundColor: colors.card }]}>
                 <Text body1 grayColor style={{ flex: 1 }}>
-                  {t('search_location')}
+                  {t('search_businesses')}
                 </Text>
                 <View style={{ paddingVertical: 8 }}>
                   <View
@@ -183,7 +197,7 @@ export default function Home({ navigation }) {
                 <Icon
                   name="location-arrow"
                   size={18}
-                  color={colors.primaryLight}
+                  color={colors.primary}
                   solid
                 />
               </View>
@@ -217,7 +231,10 @@ export default function Home({ navigation }) {
                       seeMore({
                         title: item.name,
                         category: item.name,
+                        categoryIcon: item.icon,
                         route: item.route,
+                        latitude: getLocation?.latitude ?? null,
+                        longitude: getLocation?.longitude ?? null,
                       })
                     }>
                     <View
@@ -248,6 +265,8 @@ export default function Home({ navigation }) {
               seeMore({
                 popular: true,
                 title: 'Popular Businesses',
+                latitude: getLocation?.latitude ?? null,
+                longitude: getLocation?.longitude ?? null,
               })
             }
             data={stateProps.popularBusinesses}
@@ -283,6 +302,8 @@ export default function Home({ navigation }) {
             seeMoreFunc={() =>
               seeMore({
                 title: 'Recently Added Businesses',
+                latitude: getLocation?.latitude ?? null,
+                longitude: getLocation?.longitude ?? null,
               })
             }
             data={stateProps.recentlyAddedBusinesses}

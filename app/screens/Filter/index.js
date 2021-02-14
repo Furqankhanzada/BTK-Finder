@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, FlatList, TouchableOpacity, ScrollView } from 'react-native';
+import {
+  View,
+  TouchableOpacity,
+  ScrollView,
+  ActivityIndicator,
+} from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import remoteConfig from '@react-native-firebase/remote-config';
@@ -10,14 +15,13 @@ import {
   Icon,
   Text,
   Tag,
-  BookingTime,
-  StarRating,
   TextInput,
+  Loading,
 } from '@components';
 import * as Utils from '@utils';
 import styles from './styles';
 import { getCategories } from '../../actions/category';
-import { getAllBusinesses, setSearchBusiness } from '../../actions/business';
+import { getAllBusinesses, setFilteredData } from '../../actions/business';
 
 export default function Filter(props) {
   const { navigation, route } = props;
@@ -25,19 +29,26 @@ export default function Filter(props) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
-  const stateProps = useSelector(({ categories }) => {
+  const stateProps = useSelector(({ categories, businesses }) => {
     return {
       categories: categories.all,
+      filteredData: businesses.filteredData,
+      loading: businesses.getAllBusinessesLoading,
     };
   });
 
-  const [priceBegin, setPriceBegin] = useState(0);
-  const [priceEnd, setPriceEnd] = useState(100);
-  const [rate, setRate] = useState(5);
-  const [search, setSearch] = useState('');
-  const [selectedCategories, setSelectedCategories] = useState([]);
+  // const [priceBegin, setPriceBegin] = useState(0);
+  // const [priceEnd, setPriceEnd] = useState(100);
+  // const [rate, setRate] = useState(5);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState(stateProps?.filteredData?.search ?? '');
+  const [selectedCategories, setSelectedCategories] = useState(
+    stateProps?.filteredData?.category ?? [],
+  );
   const [facilities, setFacilities] = useState([]);
-  const [selectedFacilities, setSelectedFacilities] = useState([]);
+  const [selectedFacilities, setSelectedFacilities] = useState(
+    stateProps?.filteredData?.facilities ?? [],
+  );
   const [scrollEnabled, setScrollEnabled] = useState(true);
 
   useEffect(() => {
@@ -48,7 +59,24 @@ export default function Filter(props) {
   }, []);
 
   useEffect(() => {
-    dispatch(getCategories({}));
+    dispatch(
+      getCategories({}, () => {
+        setLoading(false);
+      }),
+    );
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (route?.params?.category && route?.params?.categoryIcon) {
+      if (!selectedCategories.length) {
+        setSelectedCategories([
+          {
+            name: route.params.category,
+            icon: route.params.categoryIcon,
+          },
+        ]);
+      }
+    }
   }, [dispatch]);
 
   const onAddCategory = () => {
@@ -73,35 +101,64 @@ export default function Filter(props) {
     });
   };
 
+  const callBack = () => {
+    if (route?.params?.home || route?.params?.category) {
+      navigation.navigate('Place', {
+        title: 'Search Results',
+        latitude: route?.params?.coordinates?.latitude ?? null,
+        longitude: route?.params?.coordinates?.longitude ?? null,
+        category: null,
+      });
+    } else {
+      navigation.navigate('Place');
+    }
+  };
+
   const onApply = () => {
     let payload = {
       limit: 10,
       skip: 0,
       search: search,
+      category: selectedCategories.map((e) => e.name),
+      facilities: selectedFacilities.map((e) => e.name),
       loading: true,
-      categories: selectedCategories,
-      facilities: selectedFacilities,
     };
-    // if (route?.params?.popular) {
-    //   payload.popular = true;
-    // }
-    // if (route?.params?.category) {
-    //   payload.category = route.params.category;
-    // }
-    // dispatch(setSearchBusiness(search));
-    // dispatch(getAllBusinesses(payload, navigation.goBack()));
-    console.log('Filtered Data', payload);
+    if (route?.params?.popular) {
+      payload.popular = true;
+    }
+    if (
+      route?.params?.coordinates?.latitude &&
+      route?.params?.coordinates?.longitude
+    ) {
+      payload.latitude = route.params.coordinates.longitude;
+      payload.longitude = route.params.coordinates.latitude;
+    }
+    dispatch(
+      setFilteredData({
+        search: search,
+        category: selectedCategories,
+        facilities: selectedFacilities,
+      }),
+    );
+    dispatch(getAllBusinesses(payload, callBack));
   };
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
+      <Loading loading={loading} />
       <Header
-        title={t('filtering')}
+        title={
+          route?.params?.locationSort
+            ? 'Search Nearby Businesses'
+            : t('filtering')
+        }
         renderLeft={() => {
           return <Icon name="times" size={20} color={colors.primary} />;
         }}
         renderRight={() => {
-          return (
+          return stateProps.loading ? (
+            <ActivityIndicator color={colors.primary} size="small" />
+          ) : (
             <Text headline primaryColor numberOfLines={1}>
               {t('apply')}
             </Text>
@@ -132,7 +189,7 @@ export default function Filter(props) {
             }
           />
           <Text headline semibold style={{ marginTop: 30 }}>
-            {t('category').toUpperCase()}
+            {t('categories').toUpperCase()}
           </Text>
           <View style={styles.wrapContent}>
             {selectedCategories.map((item) => {

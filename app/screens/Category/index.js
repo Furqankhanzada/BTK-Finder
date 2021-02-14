@@ -22,7 +22,8 @@ import * as Utils from '@utils';
 import styles from './styles';
 import { getCategories } from '../../actions/category';
 
-export default function Category({ navigation }) {
+export default function Category(props) {
+  const { navigation, route } = props;
   const { t } = useTranslation();
   const { colors } = useTheme();
 
@@ -95,7 +96,10 @@ export default function Category({ navigation }) {
               navigation.navigate('Place', {
                 title: item.name,
                 category: item.name,
+                categoryIcon: item.icon,
                 route: item.route,
+                latitude: route?.params?.latitude ?? null,
+                longitude: route?.params?.longitude ?? null,
               })
             }
             style={[styles.itemIcon, { borderColor: colors.border }]}

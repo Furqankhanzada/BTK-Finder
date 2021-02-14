@@ -25,7 +25,7 @@ import {
   GET_EDIT_BUSINESS_DATA,
   SET_EDIT_BUSINESS,
   UPDATE_EDIT_BUSINESS_DATA,
-  SET_SEARCH_BUSINESS,
+  SET_FILTER_DATA_IN_REDUX,
   SET_SEARCH_HISTORY,
   CLEAR_SEARCH_HISTORY,
 } from '../constants/business';
@@ -63,12 +63,21 @@ export const createBusiness = (payload, cb) => (dispatch) => {
     });
 };
 
-const encodeQueryData = (data) => {
-  const ret = [];
-  for (const d in data) {
-    ret.push(encodeURIComponent(d) + '=' + encodeURIComponent(data[d]));
+const encodeQueryData = (obj, prefix) => {
+  let str = [],
+    p;
+  for (p in obj) {
+    if (obj.hasOwnProperty(p)) {
+      let k = prefix ? prefix + '[' + p + ']' : p,
+        v = obj[p];
+      str.push(
+        v !== null && typeof v === 'object'
+          ? encodeQueryData(v, k)
+          : encodeURIComponent(k) + '=' + encodeURIComponent(v),
+      );
+    }
   }
-  return ret.join('&');
+  return str.join('&');
 };
 
 export const getBusinesses = (payload) => (dispatch) => {
@@ -196,8 +205,8 @@ export const getMyBusinesses = (payload) => (dispatch) => {
     });
 };
 
-export const setSearchBusiness = (search) => (dispatch) => {
-  dispatch({ type: SET_SEARCH_BUSINESS, search: search });
+export const setFilteredData = (filteredData) => (dispatch) => {
+  dispatch({ type: SET_FILTER_DATA_IN_REDUX, filteredData });
 };
 
 export const setSearchHistory = (history) => (dispatch) => {

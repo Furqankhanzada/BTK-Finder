@@ -4,6 +4,7 @@ import {
   View,
   Animated,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import { BaseStyle, BaseColor, useTheme } from '@config';
@@ -23,28 +24,45 @@ import * as Utils from '@utils';
 import { PlaceListData } from '@data';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllBusinesses, setSearchBusiness } from '../../actions/business';
+import { getAllBusinesses, setFilteredData } from '../../actions/business';
 
 export default function Place(props) {
   const { navigation, route } = props;
   const dispatch = useDispatch();
   const [limit] = useState(10);
   const [skip, setSkip] = useState(0);
-  const [refresh, setRefresh] = useState(false);
+  const [isSortLocation, setSortLocation] = useState(false);
+  const [location, setLocation] = useState({
+    latitude: route?.params?.latitude,
+    longitude: route?.params?.longitude,
+  });
 
   const getBusinesses = () => {
     let payload = {
       limit,
       skip,
-      loading: !refresh,
-      refreshLoading: refresh,
-      search: stateProps.searchBusiness,
+      loading: true,
     };
     if (route?.params?.popular) {
       payload.popular = true;
     }
     if (route?.params?.category) {
       payload.category = route.params.category;
+    }
+    if (stateProps?.filteredData?.search) {
+      payload.search = stateProps.filteredData.search;
+    }
+    if (stateProps?.filteredData?.category) {
+      payload.category = stateProps.filteredData.category.map((e) => e.name);
+    }
+    if (stateProps?.filteredData?.facilities) {
+      payload.facilities = stateProps.filteredData.facilities.map(
+        (e) => e.name,
+      );
+    }
+    if (isSortLocation) {
+      payload.latitude = location.longitude;
+      payload.longitude = location.latitude;
     }
     dispatch(getAllBusinesses(payload));
   };
@@ -56,7 +74,7 @@ export default function Place(props) {
   useEffect(() => {
     return () => {
       dispatch({ type: 'CLEAR_ALL_BUSINESSES_API' });
-      dispatch(setSearchBusiness(''));
+      dispatch(setFilteredData({}));
     };
   }, [dispatch]);
 
@@ -66,9 +84,8 @@ export default function Place(props) {
       data: businesses.allBusinesses,
       loadMoreLoading: businesses.getAllBusinessesLoadMoreLoading,
       isLoadMore: businesses.isLoadMore,
-      refreshLoading: businesses.refreshLoading,
       favoriteBusinesses: favorites.getFavoriteBusinesses,
-      searchBusiness: businesses.searchBusiness,
+      filteredData: businesses.filteredData,
     };
   });
 
@@ -159,11 +176,32 @@ export default function Place(props) {
     }
   };
 
+  const onSortLocation = () => {
+    if (route?.params?.latitude && route?.params?.longitude) {
+      setSkip(0);
+      setSortLocation(!isSortLocation);
+    } else {
+      Alert.alert(
+        'Location Access Required',
+        'If you want to see Businesses near you. Go to your mobile Location settings and allow Explore BTK to access your location',
+      );
+    }
+  };
+
   const navigateToSearchPage = () => {
-    navigation.navigate('Filter', {
+    let params = {
       popular: route?.params?.popular,
       category: route?.params?.category,
-    });
+      categoryIcon: route?.params?.categoryIcon,
+    };
+    if (isSortLocation) {
+      params.coordinates = {
+        latitude: route?.params?.latitude,
+        longitude: route?.params?.longitude,
+      };
+      params.locationSort = true;
+    }
+    navigation.navigate('Filter', { ...params });
   };
 
   const navigateBusinessDetail = (id) => {
@@ -181,7 +219,6 @@ export default function Place(props) {
     setSkip(stateProps.data.length);
   };
   const onRefreshHandler = () => {
-    setRefresh(true);
     setSkip(0);
   };
 
@@ -200,8 +237,8 @@ export default function Place(props) {
     return (
       <View style={styles.sectionEmpty}>
         <Text semibold style={styles.sectionEmptyText}>
-          {stateProps.searchBusiness
-            ? 'No Search Results Found, Try different keywords'
+          {stateProps?.filteredData?.search
+            ? 'No search results found, Try different keywords'
             : `No ${route?.params?.title || t('place')} Available`}
         </Text>
       </View>
@@ -233,7 +270,7 @@ export default function Place(props) {
                 <RefreshControl
                   colors={[colors.primary]}
                   tintColor={colors.primary}
-                  refreshing={stateProps.refreshLoading}
+                  refreshing={false}
                   progressViewOffset={80}
                   onRefresh={() => onRefreshHandler()}
                 />
@@ -290,6 +327,8 @@ export default function Place(props) {
                 modeView={modeView}
                 onChangeSort={onChangeSort}
                 onChangeView={onChangeView}
+                onLocation={onSortLocation}
+                isLocation={isSortLocation}
               />
             </Animated.View>
           </View>
@@ -307,7 +346,7 @@ export default function Place(props) {
                 <RefreshControl
                   colors={[colors.primary]}
                   tintColor={colors.primary}
-                  refreshing={stateProps.refreshLoading}
+                  refreshing={false}
                   progressViewOffset={80}
                   onRefresh={() => onRefreshHandler()}
                 />
@@ -369,6 +408,8 @@ export default function Place(props) {
                 modeView={modeView}
                 onChangeSort={onChangeSort}
                 onChangeView={onChangeView}
+                onLocation={onSortLocation}
+                isLocation={isSortLocation}
               />
             </Animated.View>
           </View>
@@ -389,7 +430,7 @@ export default function Place(props) {
                 <RefreshControl
                   colors={[colors.primary]}
                   tintColor={colors.primary}
-                  refreshing={stateProps.refreshLoading}
+                  refreshing={false}
                   progressViewOffset={80}
                   onRefresh={() => onRefreshHandler()}
                 />
@@ -454,6 +495,8 @@ export default function Place(props) {
                 modeView={modeView}
                 onChangeSort={onChangeSort}
                 onChangeView={onChangeView}
+                onLocation={onSortLocation}
+                isLocation={isSortLocation}
               />
             </Animated.View>
           </View>
