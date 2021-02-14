@@ -31,7 +31,6 @@ export default function Place(props) {
   const dispatch = useDispatch();
   const [limit] = useState(10);
   const [skip, setSkip] = useState(0);
-  const [refresh, setRefresh] = useState(false);
   const [isSortLocation, setSortLocation] = useState(false);
   const [location, setLocation] = useState({
     latitude: route?.params?.latitude,
@@ -42,8 +41,7 @@ export default function Place(props) {
     let payload = {
       limit,
       skip,
-      loading: !refresh,
-      refreshLoading: refresh,
+      loading: true,
     };
     if (route?.params?.popular) {
       payload.popular = true;
@@ -86,7 +84,6 @@ export default function Place(props) {
       data: businesses.allBusinesses,
       loadMoreLoading: businesses.getAllBusinessesLoadMoreLoading,
       isLoadMore: businesses.isLoadMore,
-      refreshLoading: businesses.refreshLoading,
       favoriteBusinesses: favorites.getFavoriteBusinesses,
       filteredData: businesses.filteredData,
     };
@@ -182,7 +179,6 @@ export default function Place(props) {
   const onSortLocation = () => {
     if (route?.params?.latitude && route?.params?.longitude) {
       setSkip(0);
-      setRefresh(false);
       setSortLocation(!isSortLocation);
     } else {
       Alert.alert(
@@ -223,7 +219,6 @@ export default function Place(props) {
     setSkip(stateProps.data.length);
   };
   const onRefreshHandler = () => {
-    setRefresh(true);
     setSkip(0);
   };
 
@@ -275,7 +270,7 @@ export default function Place(props) {
                 <RefreshControl
                   colors={[colors.primary]}
                   tintColor={colors.primary}
-                  refreshing={stateProps.refreshLoading}
+                  refreshing={false}
                   progressViewOffset={80}
                   onRefresh={() => onRefreshHandler()}
                 />
@@ -351,7 +346,7 @@ export default function Place(props) {
                 <RefreshControl
                   colors={[colors.primary]}
                   tintColor={colors.primary}
-                  refreshing={stateProps.refreshLoading}
+                  refreshing={false}
                   progressViewOffset={80}
                   onRefresh={() => onRefreshHandler()}
                 />
@@ -435,7 +430,7 @@ export default function Place(props) {
                 <RefreshControl
                   colors={[colors.primary]}
                   tintColor={colors.primary}
-                  refreshing={stateProps.refreshLoading}
+                  refreshing={false}
                   progressViewOffset={80}
                   onRefresh={() => onRefreshHandler()}
                 />
