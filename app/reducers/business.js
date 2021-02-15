@@ -9,6 +9,7 @@ import {
   GET_SINGLE_BUSINESS_API,
   GET_RELATED_BUSINESS_API,
   GET_MY_BUSINESSES_API,
+  LOAD_MORE_MY_BUSINESSES_API,
   SET_EDIT_BUSINESS,
   UPDATE_EDIT_BUSINESS_DATA,
   GET_EDIT_BUSINESS_DATA,
@@ -53,6 +54,7 @@ const initialState = {
   getRelatedBusinessesLoading: false,
   relatedBusinesses: [],
   getMyBusinessesLoading: false,
+  getMyBusinessesLoadMoreLoading: false,
   myBusinesses: [],
   editBusiness: false,
   editBusinessLoading: false,
@@ -165,6 +167,14 @@ export default function userReducer(state = initialState, action = {}) {
         ...state,
         myBusinesses: action.data,
         getMyBusinessesLoading: action.loading,
+        getMyBusinessesLoadMoreLoading: action.loadMoreLoading,
+      };
+    case LOAD_MORE_MY_BUSINESSES_API:
+      return {
+        ...state,
+        myBusinesses: [...state.myBusinesses, ...action.data],
+        getMyBusinessesLoading: false,
+        getMyBusinessesLoadMoreLoading: action.loadMoreLoading,
       };
     case SET_EDIT_BUSINESS:
       return {

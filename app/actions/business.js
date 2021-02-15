@@ -11,6 +11,7 @@ import {
   GET_SINGLE_BUSINESS_API,
   GET_RELATED_BUSINESS_API,
   GET_MY_BUSINESSES_API,
+  LOAD_MORE_MY_BUSINESSES_API,
   UPDATE_BUSINESS_API,
   UPDATE_BUSINESS_API_SUCCESS,
   UPDATE_BUSINESS_API_ERROR,
@@ -183,23 +184,34 @@ export const getRelatedBusinesses = (payload) => (dispatch) => {
 };
 
 export const getMyBusinesses = (payload) => (dispatch) => {
+  let dispatchType = GET_MY_BUSINESSES_API;
+  let dispatchParams = {
+    data: [],
+    loading: true,
+    loadMoreLoading: true,
+  };
+  if (payload.skip > 0) {
+    dispatchType = LOAD_MORE_MY_BUSINESSES_API;
+  }
   let queryParams = encodeQueryData(payload)
     ? `?${encodeQueryData(payload)}`
     : '';
-  dispatch({ type: GET_MY_BUSINESSES_API, loading: true });
+  dispatch({ type: dispatchType, ...dispatchParams });
   axiosApiInstance({ method: 'GET', url: `${BUSINESSES_API}${queryParams}` })
     .then((response) => {
       dispatch({
-        type: GET_MY_BUSINESSES_API,
-        loading: false,
+        type: dispatchType,
         data: response.data || [],
+        loading: false,
+        loadMoreLoading: false,
       });
     })
     .catch(({ response }) => {
       dispatch({
-        type: GET_MY_BUSINESSES_API,
-        loading: false,
+        type: dispatchType,
         data: [],
+        loading: false,
+        loadMoreLoading: false,
       });
       handleError(response.data);
     });
