@@ -22,12 +22,12 @@ export default function CardList(props) {
   } = props;
   return (
     <TouchableOpacity
-      style={[styles.contain, style]}
+      style={[styles.contain, { overflow: 'hidden' }, style]}
       onPress={onPress}
       activeOpacity={0.9}>
       <Image source={image} style={styles.image} />
       <View style={{ paddingHorizontal: 10, justifyContent: 'center' }}>
-        <Text headline semibold>
+        <Text headline semibold numberOfLines={1}>
           {title}
         </Text>
         <Text footnote semibold grayColor style={{ marginTop: 4 }}>
