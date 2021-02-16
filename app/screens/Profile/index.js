@@ -128,8 +128,7 @@ export default function Profile(props) {
               styles.profileItem,
               { borderBottomColor: colors.border, borderBottomWidth: 1 },
             ]}
-            // onPress={() => navigation.navigate('ContactUs')}
-            onPress={showBetaModal}>
+            onPress={() => navigation.navigate('ContactUs')}>
             <Text body1>{t('contact_us')}</Text>
             <Icon
               name="angle-right"
