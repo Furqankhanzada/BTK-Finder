@@ -105,8 +105,6 @@ export default function Filter(props) {
     if (route?.params?.home || route?.params?.category) {
       navigation.navigate('Place', {
         title: 'Search Results',
-        latitude: route?.params?.coordinates?.latitude ?? null,
-        longitude: route?.params?.coordinates?.longitude ?? null,
         category: null,
       });
     } else {
