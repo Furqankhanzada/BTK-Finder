@@ -102,7 +102,15 @@ export default function Filter(props) {
   };
 
   const callBack = () => {
-    if (route?.params?.home || route?.params?.category) {
+    if (route?.params?.home) {
+      navigation.navigate('Place', {
+        title: 'Search Results',
+        latitude: route?.params?.coordinates?.latitude ?? null,
+        longitude: route?.params?.coordinates?.longitude ?? null,
+        category: null,
+      });
+    }
+    if (route?.params?.category) {
       navigation.navigate('Place', {
         title: 'Search Results',
         category: null,
