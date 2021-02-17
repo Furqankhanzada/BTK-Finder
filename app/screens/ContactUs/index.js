@@ -33,7 +33,7 @@ export default function ContactUs({ navigation }) {
     },
     {
       name: 'Email',
-      information: 'furqan.khanzada@gmail.com',
+      information: 'explore.btk@gmail.com',
       type: 'email',
       icon: 'envelope',
       iconColor: '#EA4335',
