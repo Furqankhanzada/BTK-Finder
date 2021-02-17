@@ -46,6 +46,9 @@ export default function Place(props) {
     if (route?.params?.popular) {
       payload.popular = true;
     }
+    if (route?.params?.recent) {
+      payload.recent = true;
+    }
     if (route?.params?.category) {
       payload.category = route.params.category;
     }
@@ -191,6 +194,7 @@ export default function Place(props) {
   const navigateToSearchPage = () => {
     let params = {
       popular: route?.params?.popular,
+      recent: route?.params?.recent,
       category: route?.params?.category,
       categoryIcon: route?.params?.categoryIcon,
     };
