@@ -1,6 +1,6 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
-import {BaseColor, Typography, FontWeight} from '@config';
+import { StyleSheet } from 'react-native';
+import { BaseColor, Typography, FontWeight } from '@config';
 
 export default StyleSheet.create({
   default: {
@@ -15,7 +15,7 @@ export default StyleSheet.create({
   },
   textPrimary: StyleSheet.flatten([
     Typography.caption1,
-    {color: BaseColor.whiteColor},
+    { color: BaseColor.whiteColor },
   ]),
   outline: {
     paddingVertical: 5,
@@ -43,7 +43,7 @@ export default StyleSheet.create({
   },
   textSmall: StyleSheet.flatten([
     Typography.caption2,
-    {color: BaseColor.whiteColor},
+    { color: BaseColor.whiteColor },
   ]),
   light: {
     padding: 5,
@@ -61,8 +61,8 @@ export default StyleSheet.create({
   },
   textGray: StyleSheet.flatten([Typography.caption2]),
   chip: {
-    paddingVertical: 4,
-    paddingHorizontal: 6,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
     borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
@@ -78,7 +78,7 @@ export default StyleSheet.create({
   },
   textStatus: StyleSheet.flatten([
     Typography.caption2,
-    {color: BaseColor.whiteColor, fontWeight: FontWeight.bold},
+    { color: BaseColor.whiteColor, fontWeight: FontWeight.bold },
   ]),
   rate: {
     paddingVertical: 5,
@@ -92,7 +92,7 @@ export default StyleSheet.create({
 
   textRate: StyleSheet.flatten([
     Typography.headline,
-    {color: BaseColor.whiteColor, fontWeight: FontWeight.bold},
+    { color: BaseColor.whiteColor, fontWeight: FontWeight.bold },
   ]),
   rateSmall: {
     borderTopLeftRadius: 4,
@@ -105,7 +105,7 @@ export default StyleSheet.create({
   },
   textRateSmall: StyleSheet.flatten([
     Typography.caption2,
-    {color: BaseColor.whiteColor, fontWeight: FontWeight.bold},
+    { color: BaseColor.whiteColor, fontWeight: FontWeight.bold },
   ]),
   sale: {
     width: 50,
@@ -116,6 +116,6 @@ export default StyleSheet.create({
   },
   textSale: StyleSheet.flatten([
     Typography.headline,
-    {color: BaseColor.whiteColor, fontWeight: FontWeight.bold},
+    { color: BaseColor.whiteColor, fontWeight: FontWeight.bold },
   ]),
 });
