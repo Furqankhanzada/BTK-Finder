@@ -74,6 +74,13 @@ export default function Home({ navigation }) {
   useEffect(() => {
     if (isLogin) {
       dispatch(getProfile());
+      dispatch(
+        getFavoriteBusinesses({
+          favorite: true,
+          skip: 0,
+          fields: 'name, thumbnail, category, averageRatings',
+        }),
+      );
     }
   }, [dispatch, isLogin]);
 
@@ -101,13 +108,6 @@ export default function Home({ navigation }) {
     dispatch(
       getBusinesses({
         limit: 15,
-        skip: 0,
-        fields: 'name, thumbnail, category, averageRatings',
-      }),
-    );
-    dispatch(
-      getFavoriteBusinesses({
-        favorite: true,
         skip: 0,
         fields: 'name, thumbnail, category, averageRatings',
       }),

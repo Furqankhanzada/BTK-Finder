@@ -14,6 +14,7 @@ import {
 import styles from './styles';
 import { useTranslation } from 'react-i18next';
 import { showBetaModal } from '../../popup/betaPopup';
+import { clearFavoriteBusiness } from '../../actions/favorites';
 
 export default function Profile(props) {
   const { navigation, lastRoute } = props;
@@ -36,6 +37,7 @@ export default function Profile(props) {
    */
   const onLogOut = () => {
     dispatch(AuthActions.authentication(false, (response) => {}));
+    dispatch(clearFavoriteBusiness());
   };
 
   return (
