@@ -109,6 +109,7 @@ export default function Home({ navigation }) {
       getBusinesses({
         limit: 15,
         skip: 0,
+        recent: true,
         fields: 'name, thumbnail, category, averageRatings',
       }),
     );
@@ -301,6 +302,7 @@ export default function Home({ navigation }) {
             subTitle="Lets find out what's new"
             seeMoreFunc={() =>
               seeMore({
+                recent: true,
                 title: 'Recently Added Businesses',
                 latitude: getLocation?.latitude ?? null,
                 longitude: getLocation?.longitude ?? null,

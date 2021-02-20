@@ -92,6 +92,7 @@ export default function PlaceDetailComponent(props) {
     dispatch(
       getBusinesses({
         placeDetail: true,
+        recent: true,
         limit: 5,
         skip: 0,
         fields: 'name, thumbnail, category, address, averageRatings',

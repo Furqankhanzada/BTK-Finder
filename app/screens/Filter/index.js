@@ -132,6 +132,9 @@ export default function Filter(props) {
     if (route?.params?.popular) {
       payload.popular = true;
     }
+    if (route?.params?.recent) {
+      payload.recent = true;
+    }
     if (
       route?.params?.coordinates?.latitude &&
       route?.params?.coordinates?.longitude
