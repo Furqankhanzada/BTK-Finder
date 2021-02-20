@@ -45,6 +45,8 @@ export default function Filter(props) {
   const [selectedCategories, setSelectedCategories] = useState(
     stateProps?.filteredData?.category ?? [],
   );
+  const [tags, setTags] = useState([]);
+  const [selectedTags, setSelectedTags] = useState(stateProps?.filteredData?.tags ?? []);
   const [facilities, setFacilities] = useState([]);
   const [selectedFacilities, setSelectedFacilities] = useState(
     stateProps?.filteredData?.facilities ?? [],
@@ -56,6 +58,11 @@ export default function Filter(props) {
     getFacilities._value
       ? setFacilities(JSON.parse(getFacilities._value))
       : null;
+  }, []);
+
+  useEffect(() => {
+    const getTags = remoteConfig().getValue('tags');
+    getTags ? setTags(JSON.parse(getTags._value)) : null;
   }, []);
 
   useEffect(() => {
@@ -87,6 +94,17 @@ export default function Filter(props) {
       items: stateProps.categories,
       selected: selectedCategories,
       title: 'Categories',
+    });
+  };
+
+  const onAddTags = () => {
+    navigation.navigate('ChooseItems', {
+      onApply: (data) => {
+        setSelectedTags(data);
+      },
+      items: tags,
+      selected: selectedTags,
+      title: 'Tags',
     });
   };
 
@@ -126,6 +144,7 @@ export default function Filter(props) {
       skip: 0,
       search: search,
       category: selectedCategories.map((e) => e.name),
+      tags: selectedTags.map((e) => e.name),
       facilities: selectedFacilities.map((e) => e.name),
       loading: true,
     };
@@ -146,6 +165,7 @@ export default function Filter(props) {
       setFilteredData({
         search: search,
         category: selectedCategories,
+        tags: selectedTags,
         facilities: selectedFacilities,
       }),
     );
@@ -228,6 +248,32 @@ export default function Filter(props) {
               style={[styles.addItem, { backgroundColor: colors.primary }]}>
               <Text style={{ fontSize: 10, marginRight: 5, color: 'white' }}>
                 Add Category
+              </Text>
+              <Icon size={10} name="plus" color="white" />
+            </TouchableOpacity>
+          </View>
+          <Text headline semibold style={{ marginTop: 30 }}>
+            {t('tags').toUpperCase()}
+          </Text>
+          <View style={styles.wrapContent}>
+            {selectedTags.map((item) => {
+              return (
+                <Tag
+                  outline={true}
+                  key={item.name}
+                  style={{
+                    marginTop: 8,
+                    marginRight: 8,
+                  }}>
+                  {item.name}
+                </Tag>
+              );
+            })}
+            <TouchableOpacity
+              onPress={() => onAddTags()}
+              style={[styles.addItem, { backgroundColor: colors.primary }]}>
+              <Text style={{ fontSize: 10, marginRight: 5, color: 'white' }}>
+                Add Tag
               </Text>
               <Icon size={10} name="plus" color="white" />
             </TouchableOpacity>

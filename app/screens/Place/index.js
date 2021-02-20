@@ -58,6 +58,9 @@ export default function Place(props) {
     if (stateProps?.filteredData?.category) {
       payload.category = stateProps.filteredData.category.map((e) => e.name);
     }
+    if (stateProps?.filteredData?.tags) {
+      payload.tags = stateProps.filteredData.tags.map((e) => e.name);
+    }
     if (stateProps?.filteredData?.facilities) {
       payload.facilities = stateProps.filteredData.facilities.map(
         (e) => e.name,
