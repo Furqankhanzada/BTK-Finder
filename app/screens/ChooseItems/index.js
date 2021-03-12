@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { View, FlatList, TouchableOpacity } from 'react-native';
 import { BaseStyle, useTheme } from '@config';
-import { Header, SafeAreaView, Icon, Text, Button } from '@components';
+import {
+  Header,
+  SafeAreaView,
+  Icon,
+  Text,
+  Button,
+  TextInput,
+} from '@components';
 import styles from './styles';
 import { useTranslation } from 'react-i18next';
 
@@ -10,6 +17,8 @@ export default function ChooseItems({ route, navigation }) {
   const { t } = useTranslation();
 
   const [items, setItems] = useState(route.params.items);
+  const [search, setSearch] = useState('');
+  const [selected, setSelected] = useState([]);
   const [loading, setLoading] = useState(false);
 
   /**
@@ -20,16 +29,8 @@ export default function ChooseItems({ route, navigation }) {
    */
   useEffect(() => {
     const { selected } = route.params;
-
-    if (selected.length > 0) {
-      setItems(
-        items.map((item) => {
-          return {
-            ...item,
-            checked: selected.some((check) => check.name === item.name),
-          };
-        }),
-      );
+    if (selected) {
+      setSelected(selected);
     }
   }, []);
 
@@ -43,7 +44,7 @@ export default function ChooseItems({ route, navigation }) {
     const { onApply } = route.params;
     setLoading(true);
     setTimeout(() => {
-      onApply(items.filter((item) => item.checked));
+      onApply(selected);
       navigation.goBack();
     }, 500);
   };
@@ -55,17 +56,26 @@ export default function ChooseItems({ route, navigation }) {
    * @param {object} select
    */
   const onChange = (select) => {
-    setItems(
-      items.map((item) => {
-        if (item.name === select.name) {
-          return {
-            ...item,
-            checked: !item.checked,
-          };
-        }
-        return item;
-      }),
-    );
+    const isItemSelected = selected.some((obj) => obj.name === select.name);
+    if (!isItemSelected) {
+      setSelected([...selected, select]);
+    } else {
+      const arr = selected.filter((item) => item.name != select.name);
+      setSelected(arr);
+    }
+  };
+
+  const onSearch = (keyword) => {
+    setSearch(keyword);
+    if (!keyword) {
+      setItems(route.params.items ?? []);
+    } else {
+      setItems(
+        items.filter((item) => {
+          return item.name.toUpperCase().includes(search.toUpperCase());
+        }),
+      );
+    }
   };
 
   const listEmptyComponent = () => {
@@ -94,38 +104,53 @@ export default function ChooseItems({ route, navigation }) {
         }}
       />
       <View style={styles.contain}>
+        {route?.params?.search ? (
+          <TextInput
+            onChangeText={(text) => onSearch(text)}
+            placeholder={t('search')}
+            value={search}
+            icon={
+              <TouchableOpacity onPress={() => onSearch('')}>
+                <Icon name="times" size={16} color={colors.primaryLight} />
+              </TouchableOpacity>
+            }
+          />
+        ) : null}
         <FlatList
           contentContainerStyle={{ paddingVertical: 10 }}
           data={items}
           keyExtractor={(item, index) => item.id}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={[styles.item, { backgroundColor: colors.card }]}
-              onPress={() => onChange(item)}>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Icon
-                  name={item.icon}
-                  color={item?.checked ? colors.primary : colors.text}
-                  style={{ marginRight: 10 }}
-                  size={15}
-                />
-                <Text
-                  body1
-                  style={
-                    item.checked
-                      ? {
-                          color: colors.primary,
-                        }
-                      : {}
-                  }>
-                  {item.name}
-                </Text>
-              </View>
-              {item.checked && (
-                <Icon name="check" size={14} color={colors.primary} />
-              )}
-            </TouchableOpacity>
-          )}
+          renderItem={({ item }) => {
+            const checked = selected.some((obj) => obj.name === item.name);
+            return (
+              <TouchableOpacity
+                style={[styles.item, { backgroundColor: colors.card }]}
+                onPress={() => onChange(item)}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Icon
+                    name={item.icon}
+                    color={item?.checked ? colors.primary : colors.text}
+                    style={{ marginRight: 10 }}
+                    size={15}
+                  />
+                  <Text
+                    body1
+                    style={
+                      checked
+                        ? {
+                            color: colors.primary,
+                          }
+                        : {}
+                    }>
+                    {item.name}
+                  </Text>
+                </View>
+                {checked && (
+                  <Icon name="check" size={14} color={colors.primary} />
+                )}
+              </TouchableOpacity>
+            );
+          }}
           ListEmptyComponent={listEmptyComponent}
         />
         <Button full loading={loading} onPress={() => onApply()}>

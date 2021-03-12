@@ -46,7 +46,9 @@ export default function Filter(props) {
     stateProps?.filteredData?.category ?? [],
   );
   const [tags, setTags] = useState([]);
-  const [selectedTags, setSelectedTags] = useState(stateProps?.filteredData?.tags ?? []);
+  const [selectedTags, setSelectedTags] = useState(
+    stateProps?.filteredData?.tags ?? [],
+  );
   const [facilities, setFacilities] = useState([]);
   const [selectedFacilities, setSelectedFacilities] = useState(
     stateProps?.filteredData?.facilities ?? [],
@@ -105,6 +107,7 @@ export default function Filter(props) {
       items: tags,
       selected: selectedTags,
       title: 'Tags',
+      search: true,
     });
   };
 
