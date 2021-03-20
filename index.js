@@ -1,6 +1,5 @@
-import "react-native-gesture-handler";
-import { AppRegistry } from "react-native";
-import App from "app/index.js";
-import { BaseSetting } from "@config";
+import 'react-native-gesture-handler';
+import {AppRegistry} from 'react-native';
+import App from 'app/index.js';
 
-AppRegistry.registerComponent(BaseSetting.name, () => App);
+AppRegistry.registerComponent('explore.btk', () => App);

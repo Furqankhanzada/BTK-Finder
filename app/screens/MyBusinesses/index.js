@@ -36,6 +36,7 @@ export default function MyBusinesses(props) {
     let payload = {
       skip: skip,
       limit: limit,
+      recent: true,
       fields: 'name, thumbnail, category, averageRatings',
       ownerId: route?.params?.id,
     };
@@ -135,11 +136,11 @@ export default function MyBusinesses(props) {
             renderItem={({ item, index }) => {
               return (
                 <CardList
-                  key={index}
+                  key={item._id}
                   image={item?.thumbnail}
                   title={item.name}
                   subtitle={item.category}
-                  rate={item?.averageRatings || '0.0'}
+                  rate={item?.averageRatings || 0.0}
                   style={{ marginBottom: 15 }}
                   onPress={() => navigateBusinessDetail(item._id)}
                   onPressTag={() => navigateToReview(item._id)}
