@@ -47,6 +47,7 @@ export const createBusiness = (payload, cb) => (dispatch) => {
         getBusinesses({
           limit: 15,
           skip: 0,
+          recent: true,
           fields: 'name, thumbnail, category, averageRatings',
         }),
       );
