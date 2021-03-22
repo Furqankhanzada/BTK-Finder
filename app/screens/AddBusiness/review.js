@@ -40,6 +40,8 @@ export default function FinalReview({ navigation }) {
     dispatch(
       getMyBusinesses({
         skip: 0,
+        limit: 10,
+        recent: true,
         fields: 'name, thumbnail, category, averageRatings',
         ownerId: profileData?._id,
       }),
