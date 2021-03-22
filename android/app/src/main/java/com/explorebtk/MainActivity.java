@@ -11,7 +11,7 @@ public class MainActivity extends ReactActivity {
    */
   @Override
   protected String getMainComponentName() {
-    return "explore.btk";
+    return "explorebtk";
   }
 
   @Override
