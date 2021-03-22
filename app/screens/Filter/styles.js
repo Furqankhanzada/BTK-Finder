@@ -1,5 +1,4 @@
 import { StyleSheet } from 'react-native';
-import { BaseColor, BaseStyle } from '@config';
 
 export default StyleSheet.create({
   wrapContent: {
@@ -52,5 +51,10 @@ export default StyleSheet.create({
     padding: 7,
     borderRadius: 20,
     marginTop: 8,
+  },
+  rowTitle: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 });

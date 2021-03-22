@@ -17,6 +17,7 @@ import {
   Tag,
   TextInput,
   Loading,
+  Button,
 } from '@components';
 import * as Utils from '@utils';
 import styles from './styles';
@@ -175,6 +176,41 @@ export default function Filter(props) {
     dispatch(getAllBusinesses(payload, callBack));
   };
 
+  const onClearFilter = () => {
+    setSearch('');
+    setSelectedTags([]);
+    setSelectedCategories([]);
+    setSelectedFacilities([]);
+  };
+
+  const clearFilterButton = () => {
+    if (
+      search ||
+      selectedTags?.length ||
+      selectedCategories?.length ||
+      selectedFacilities?.length
+    ) {
+      return (
+        <Button
+          round
+          outline={true}
+          icon={
+            <Icon
+              name={'times'}
+              size={15}
+              color={colors.primary}
+              solid
+              style={{ marginRight: 5 }}
+            />
+          }
+          style={{ marginTop: 40 }}
+          onPress={() => onClearFilter()}>
+          Clear Filters
+        </Button>
+      );
+    }
+  };
+
   return (
     <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
       <Loading loading={loading} />
@@ -316,6 +352,7 @@ export default function Filter(props) {
               <Icon size={10} name="plus" color="white" />
             </TouchableOpacity>
           </View>
+          {clearFilterButton()}
           {/*<TouchableOpacity*/}
           {/*  style={styles.locationContent}*/}
           {/*  onPress={() => onNavigateLocation()}>*/}
