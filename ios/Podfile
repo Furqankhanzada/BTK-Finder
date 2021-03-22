@@ -19,13 +19,15 @@ target 'explorebtk' do
   pod 'react-native-safe-area-context', :path => '../node_modules/react-native-safe-area-context'
 
   pod 'react-native-config', :path => '../node_modules/react-native-config'
-  
+
+  pod 'RNInputMask', :path => '../node_modules/react-native-text-input-mask/ios/InputMask'
+
   # React Native Maps dependencies
   rn_maps_path = '../node_modules/react-native-maps'
   pod 'react-native-google-maps', :path => rn_maps_path
   pod 'GoogleMaps'
   pod 'Google-Maps-iOS-Utils'
-  
+
   target 'explorebtkTests' do
     inherit! :complete
     # Pods for testing

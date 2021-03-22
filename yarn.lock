@@ -5983,10 +5983,10 @@ react-native-swiper@^1.6.0:
   dependencies:
     prop-types "^15.5.10"
 
-react-native-text-input-mask@^3.0.3:
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/react-native-text-input-mask/-/react-native-text-input-mask-3.0.3.tgz#e595e1baab2b27e6ea72f21a4b69af54c84aaa95"
-  integrity sha512-/2r3GFDkTf6uAZUZwqfSMO2MO+SzWYhG/6zJdc0Abd4PdO3w5Elc0FddVnWo3TTPjfxJ6vR0F9v9/XtgG64cNQ==
+react-native-text-input-mask@2.0.0:
+  version "2.0.0"
+  resolved "https://npm.rise.tech/react-native-text-input-mask/-/react-native-text-input-mask-2.0.0.tgz#9cb793e764355d9282d92ea5231d8030a7ca5692"
+  integrity sha512-kP8gURb1+6iR6CxfUx802f4ja9Jzer76hY1w0cjaCVsfbbzyykYIAANTnlxbmFFv/8pQl4NTm1CbQqkg0Cp/gA==
 
 react-native-toast-message@^1.4.9:
   version "1.4.9"
