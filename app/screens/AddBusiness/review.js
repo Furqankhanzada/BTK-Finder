@@ -95,6 +95,7 @@ export default function FinalReview({ navigation }) {
       <SafeAreaView style={{ flex: 1 }} forceInset={{ top: 'always' }}>
         <PlaceDetailComponent
           business={businessFormData}
+          preview={true}
           navigation={navigation}
         />
         <FloatingButton iconName="check" onPress={() => add()} />
