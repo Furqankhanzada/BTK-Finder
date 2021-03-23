@@ -39,6 +39,7 @@ export default StyleSheet.create({
   boxInfo: {
     padding: 10,
     height: 120,
+    marginBottom: 20,
     width: '100%',
     borderRadius: 8,
     borderWidth: 0.5,

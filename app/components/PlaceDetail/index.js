@@ -29,6 +29,7 @@ import {
 } from 'rn-placeholder';
 import { BaseColor, Images, useTheme } from '@config';
 import {
+  ContactItems,
   Header,
   SafeAreaView,
   Icon,
@@ -229,6 +230,9 @@ export default function PlaceDetailComponent(props) {
               case 'email':
                 Linking.openURL('mailto:' + item.information);
                 break;
+              case 'whatsapp':
+                Linking.openURL('whatsapp://send?phone=' + checkPhoneCode(item.information));
+                break;
               case 'map':
                 openGps(item?.location[0], item?.location[1]);
                 break;
@@ -238,6 +242,14 @@ export default function PlaceDetailComponent(props) {
       ],
       { cancelable: true },
     );
+  };
+
+  const checkPhoneCode = (phone) => {
+      if(business?.telephone?.includes('03')) {
+          return `+92${phone.slice(1)}`
+      }
+
+      return phone
   };
 
   const [region, setRegion] = useState({
@@ -433,6 +445,21 @@ export default function PlaceDetailComponent(props) {
               )}
             </View>
           </View>
+            <ContactItems
+                data={business}
+                onPressWhatsApp={() => onOpen({
+                    title: t('tel'),
+                    type: 'whatsapp',
+                    information: business?.telephone,
+                    rightText: 'open WhatsApp'
+                })}
+                onPressPhone={() => onOpen({
+                    title: t('tel'),
+                    type: 'phone',
+                    information: business?.telephone,
+                    rightText: 'call'
+                })}
+            />
           <View>
             {information?.map((item) => {
               if (item?.information) {
