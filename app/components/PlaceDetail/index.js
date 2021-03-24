@@ -138,7 +138,7 @@ export default function PlaceDetailComponent(props) {
         let getCurrentDay = days[dt.getDay()];
 
         //Return Open if current day is available in open hours days
-        if(business?.openHours.find(item => item.day === getCurrentDay)) {
+        if(business?.openHours?.find(item => item.day === getCurrentDay)) {
             //12 hours to 24 hours converting function
             const convertTime12to24 = (time12h) => {
                 const [time, modifier] = time12h.split(' ');
@@ -396,7 +396,7 @@ export default function PlaceDetailComponent(props) {
                         <View>
                             <View style={styles.contentStatus}>
                                 <Text caption2 accentColor medium>
-                                    {businessStatus()}
+                                    {business?.openHours && businessStatus()}
                                 </Text>
                                 <View style={styles.dot} />
                                 <Text caption2 grayColor style={{flex: 1}} numberOfLines={1}>
