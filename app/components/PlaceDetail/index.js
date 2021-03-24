@@ -394,23 +394,15 @@ export default function PlaceDetailComponent(props) {
                             {business.name}
                         </Text>
                         <View>
-                            {business.status ? (
-                                <View style={styles.contentStatus}>
-                                    <Text caption2 accentColor medium>
-                                        {businessStatus()}
-                                    </Text>
-                                    <View style={styles.dot} />
-                                    <Text caption2 grayColor style={{flex: 1}} numberOfLines={1}>
-                                        {business.category}
-                                    </Text>
-                                </View>
-                            ) : <View>
-                                <View style={styles.contentStatus}>
-                                    <Text caption2 grayColor style={{flex: 1}} numberOfLines={1}>
-                                        {business.category}
-                                    </Text>
-                                </View>
-                            </View>}
+                            <View style={styles.contentStatus}>
+                                <Text caption2 accentColor medium>
+                                    {businessStatus()}
+                                </Text>
+                                <View style={styles.dot} />
+                                <Text caption2 grayColor style={{flex: 1}} numberOfLines={1}>
+                                    {business.category}
+                                </Text>
+                            </View>
                         </View>
                         <View style={styles.contentStatus}>
                             {isPreview ? (
@@ -432,33 +424,39 @@ export default function PlaceDetailComponent(props) {
                                 </TouchableOpacity>
                             ) : (
                                 <TouchableOpacity
-                                    onPress={() => navigateToReview(business._id)}
-                                    style={[
-                                        styles.tagRate,
-                                        {backgroundColor: colors.primaryLight},
-                                    ]}>
-                                    <Icon
-                                        name="star"
-                                        size={10}
-                                        color={BaseColor.whiteColor}
-                                        solid
-                                    />
-                                    <Text caption2 whiteColor semibold style={{marginLeft: 4}}>
-                                        <NumberFormat
-                                            value={
-                                                business?.reviewStats?.averageRatings
-                                                    ? business?.reviewStats?.averageRatings
-                                                    : '0.0'
-                                            }
-                                            displayType={'text'}
-                                            decimalScale={1}
-                                            fixedDecimalScale={true}
-                                            renderText={(value) => (
-                                                <Text style={{ fontSize: 10, color: 'white' }}>
-                                                    {value}
-                                                </Text>
-                                            )}
+                                    style={{flexDirection: 'row', alignItems: 'center'}}
+                                    onPress={() => navigateToReview(business._id)}>
+                                    <View
+                                        style={[
+                                            styles.tagRate,
+                                            {backgroundColor: colors.primaryLight},
+                                        ]}>
+                                        <Icon
+                                            name="star"
+                                            size={10}
+                                            color={BaseColor.whiteColor}
+                                            solid
                                         />
+                                        <Text caption2 whiteColor semibold style={{marginLeft: 4}}>
+                                            <NumberFormat
+                                                value={
+                                                    business?.reviewStats?.averageRatings
+                                                        ? business?.reviewStats?.averageRatings
+                                                        : '0.0'
+                                                }
+                                                displayType={'text'}
+                                                decimalScale={1}
+                                                fixedDecimalScale={true}
+                                                renderText={(value) => (
+                                                    <Text style={{ fontSize: 10, color: 'white' }}>
+                                                        {value}
+                                                    </Text>
+                                                )}
+                                            />
+                                        </Text>
+                                    </View>
+                                    <Text caption2 style={{ marginLeft: 5, color: colors.primaryLight}} numberOfLines={1}>
+                                        View Reviews
                                     </Text>
                                 </TouchableOpacity>
                             )}
