@@ -23,12 +23,12 @@ import NumberFormat from 'react-number-format';
 import moment from 'moment';
 import {
     Placeholder,
-    PlaceholderLine,
-    Progressive,
-    PlaceholderMedia,
+    Loader,
+    PlaceholderMedia, Progressive,
 } from 'rn-placeholder';
 import { BaseColor, Images, useTheme } from '@config';
 import {
+    PlaceDetailPlaceholder,
     ContactItems,
     Header,
     SafeAreaView,
@@ -374,24 +374,7 @@ export default function PlaceDetailComponent(props) {
     const renderContent = () => {
         if (stateProps?.getSingleBusinessLoading) {
             return (
-                <View>
-                    <Placeholder Animation={Progressive}>
-                        <PlaceholderLine
-                            style={{width: '90%', height: 20, marginTop: 80}}
-                        />
-                        <PlaceholderLine style={{width: '90%', height: 20}} />
-                        <PlaceholderLine style={{width: '90%', height: 20}} />
-                        <PlaceholderLine style={{width: '90%', height: 20}} />
-                        <PlaceholderLine style={{width: '90%', height: 20}} />
-                        <PlaceholderLine style={{width: '90%', height: 20}} />
-                        <PlaceholderLine style={{width: '90%', height: 20}} />
-                        <PlaceholderLine style={{width: '90%', height: 20}} />
-                        <PlaceholderLine style={{width: '90%', height: 20}} />
-                        <PlaceholderLine style={{width: '90%', height: 20}} />
-                        <PlaceholderLine style={{width: '90%', height: 20}} />
-                        <PlaceholderLine style={{width: '90%', height: 20}} />
-                    </Placeholder>
-                </View>
+                <PlaceDetailPlaceholder/>
             );
         }
 
