@@ -79,8 +79,8 @@ export default function PlaceDetailComponent(props) {
     useEffect(() => {
         async function businessLink() {
             const link = await dynamicLinks().buildShortLink({
-                link: `https://explorebtk.page.link/PlaceDetail?id=${business._id}`,
-                domainUriPrefix: 'https://explorebtk.page.link',
+                link: `https://link.explorebtk.com/${business.category}?id=${business._id}`,
+                domainUriPrefix: 'https://link.explorebtk.com',
                 android: {
                     packageName: 'com.explore.btk',
                 },
