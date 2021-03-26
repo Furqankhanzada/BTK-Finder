@@ -32,6 +32,8 @@ import DropDown from './DropdownPicker';
 import DropDownMultiSelect from './DropDownMultiSelect';
 import FloatingButton from './FloatingButton';
 import FavouriteIcon from './FavouriteIcon';
+import ContactItems from './ContactItems';
+import PlaceDetailPlaceholder from './Placeholders/placeDetail';
 
 export {
   TextInput,
@@ -68,4 +70,6 @@ export {
   DropDownMultiSelect,
   FloatingButton,
   FavouriteIcon,
+  ContactItems,
+  PlaceDetailPlaceholder,
 };
