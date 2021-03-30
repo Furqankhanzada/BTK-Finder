@@ -23,10 +23,10 @@ import NumberFormat from 'react-number-format';
 import moment from 'moment';
 import {
     Placeholder,
-    Loader,
-    PlaceholderMedia, Progressive,
+    Progressive,
+    PlaceholderMedia,
 } from 'rn-placeholder';
-import { BaseColor, Images, useTheme } from '@config';
+import { BaseColor, Images, useTheme, BaseStyle } from '@config';
 import {
     PlaceDetailPlaceholder,
     ContactItems,
@@ -374,59 +374,43 @@ export default function PlaceDetailComponent(props) {
     const renderContent = () => {
         if (stateProps?.getSingleBusinessLoading) {
             return (
-                <PlaceDetailPlaceholder/>
+                <View style={{ paddingHorizontal: 20 }}>
+                    <PlaceDetailPlaceholder/>
+                </View>
             );
         }
 
         return (
             <View>
-                <View
-                    style={[
-                        styles.boxInfo,
-                        {
-                            backgroundColor: colors.card,
-                            shadowColor: colors.border,
-                            borderColor: colors.border,
-                        },
-                    ]}>
-                    <View style={{flex: 1}}>
-                        <Text title1 semibold numberOfLines={1}>
-                            {business.name}
-                        </Text>
-                        <View>
-                            <View style={styles.contentStatus}>
-                                <Text caption2 accentColor medium>
-                                    {business?.openHours && businessStatus()}
-                                </Text>
-                                <View style={styles.dot} />
-                                <Text caption2 grayColor style={{flex: 1}} numberOfLines={1}>
-                                    {business.category}
-                                </Text>
-                            </View>
-                        </View>
-                        <View style={styles.contentStatus}>
-                            {isPreview ? (
-                                <TouchableOpacity
-                                    onPress={() => {}}
-                                    style={[
-                                        styles.tagRate,
-                                        {backgroundColor: colors.primaryLight},
-                                    ]}>
-                                    <Icon
-                                        name="star"
-                                        size={10}
-                                        color={BaseColor.whiteColor}
-                                        solid
-                                    />
-                                    <Text caption2 whiteColor semibold style={{marginLeft: 4}}>
-                                        0.0
+                <View style={{ paddingHorizontal: 20 }}>
+                    <View
+                        style={[
+                            styles.boxInfo,
+                            {
+                                backgroundColor: colors.card,
+                                shadowColor: colors.border,
+                                borderColor: colors.border,
+                            },
+                        ]}>
+                        <View style={{flex: 1}}>
+                            <Text title1 semibold numberOfLines={1}>
+                                {business.name}
+                            </Text>
+                            <View>
+                                <View style={styles.contentStatus}>
+                                    <Text caption2 accentColor medium>
+                                        {business?.openHours && businessStatus()}
                                     </Text>
-                                </TouchableOpacity>
-                            ) : (
-                                <TouchableOpacity
-                                    style={{flexDirection: 'row', alignItems: 'center'}}
-                                    onPress={() => navigateToReview(business._id)}>
-                                    <View
+                                    <View style={styles.dot} />
+                                    <Text caption2 grayColor style={{flex: 1}} numberOfLines={1}>
+                                        {business.category}
+                                    </Text>
+                                </View>
+                            </View>
+                            <View style={styles.contentStatus}>
+                                {isPreview ? (
+                                    <TouchableOpacity
+                                        onPress={() => {}}
                                         style={[
                                             styles.tagRate,
                                             {backgroundColor: colors.primaryLight},
@@ -438,307 +422,320 @@ export default function PlaceDetailComponent(props) {
                                             solid
                                         />
                                         <Text caption2 whiteColor semibold style={{marginLeft: 4}}>
-                                            <NumberFormat
-                                                value={
-                                                    business?.reviewStats?.averageRatings
-                                                        ? business?.reviewStats?.averageRatings
-                                                        : '0.0'
-                                                }
-                                                displayType={'text'}
-                                                decimalScale={1}
-                                                fixedDecimalScale={true}
-                                                renderText={(value) => (
-                                                    <Text style={{ fontSize: 10, color: 'white' }}>
-                                                        {value}
-                                                    </Text>
-                                                )}
-                                            />
+                                            0.0
                                         </Text>
-                                    </View>
-                                    <Text caption2 style={{ marginLeft: 5, color: colors.primaryLight}} numberOfLines={1}>
-                                        View Reviews
-                                    </Text>
-                                </TouchableOpacity>
+                                    </TouchableOpacity>
+                                ) : (
+                                    <TouchableOpacity
+                                        style={{flexDirection: 'row', alignItems: 'center'}}
+                                        onPress={() => navigateToReview(business._id)}>
+                                        <View
+                                            style={[
+                                                styles.tagRate,
+                                                {backgroundColor: colors.primaryLight},
+                                            ]}>
+                                            <Icon
+                                                name="star"
+                                                size={10}
+                                                color={BaseColor.whiteColor}
+                                                solid
+                                            />
+                                            <Text caption2 whiteColor semibold style={{marginLeft: 4}}>
+                                                <NumberFormat
+                                                    value={
+                                                        business?.reviewStats?.averageRatings
+                                                            ? business?.reviewStats?.averageRatings
+                                                            : '0.0'
+                                                    }
+                                                    displayType={'text'}
+                                                    decimalScale={1}
+                                                    fixedDecimalScale={true}
+                                                    renderText={(value) => (
+                                                        <Text style={{ fontSize: 10, color: 'white' }}>
+                                                            {value}
+                                                        </Text>
+                                                    )}
+                                                />
+                                            </Text>
+                                        </View>
+                                        <Text caption2 style={{ marginLeft: 5, color: colors.primaryLight}} numberOfLines={1}>
+                                            View Reviews
+                                        </Text>
+                                    </TouchableOpacity>
+                                )}
+                            </View>
+                        </View>
+                        <View style={styles.boxContentRight}>
+                            {isPreview ? null : (
+                                <View
+                                    style={styles.iconLike}>
+                                    <FavouriteIcon
+                                        style={styles.iconGirdLike}
+                                        navigation={navigation}
+                                        lastRoute="PlaceDetail"
+                                        routeId={business?._id}
+                                        isFavorite={stateProps?.favoriteBusinesses?.some(
+                                            (obj) => obj._id === business?._id,
+                                        )}
+                                        favoriteId={business?._id}
+                                    />
+                                </View>
                             )}
                         </View>
                     </View>
-                    <View style={styles.boxContentRight}>
-                        {isPreview ? null : (
-                            <View
-                                style={styles.iconLike}>
-                                <FavouriteIcon
-                                    style={styles.iconGirdLike}
-                                    navigation={navigation}
-                                    lastRoute="PlaceDetail"
-                                    routeId={business?._id}
-                                    isFavorite={stateProps?.favoriteBusinesses?.some(
-                                        (obj) => obj._id === business?._id,
-                                    )}
-                                    favoriteId={business?._id}
-                                />
-                            </View>
-                        )}
-                    </View>
-                </View>
-                <ContactItems
-                    data={business}
-                    onPressWhatsApp={() => onOpen({
-                        title: t('tel'),
-                        type: 'whatsapp',
-                        information: business?.telephone,
-                        rightText: 'open WhatsApp'
-                    })}
-                    onPressPhone={() => onOpen({
-                        title: t('tel'),
-                        type: 'phone',
-                        information: business?.telephone,
-                        rightText: 'call'
-                    })}
-                />
-                <View>
-                    {information?.map((item) => {
-                        if (item?.information) {
-                            return (
-                                <TouchableOpacity
-                                    style={styles.line}
-                                    key={item.id}
-                                    onPress={() => onOpen(item)}>
+                    <ContactItems
+                        data={business}
+                        onPressWhatsApp={() => onOpen({
+                            title: t('tel'),
+                            type: 'whatsapp',
+                            information: business?.telephone,
+                            rightText: 'open WhatsApp'
+                        })}
+                        onPressPhone={() => onOpen({
+                            title: t('tel'),
+                            type: 'phone',
+                            information: business?.telephone,
+                            rightText: 'call'
+                        })}
+                    />
+                    <View>
+                        {information?.map((item) => {
+                            if (item?.information) {
+                                return (
+                                    <TouchableOpacity
+                                        style={styles.line}
+                                        key={item.id}
+                                        onPress={() => onOpen(item)}>
+                                        <View
+                                            style={[
+                                                styles.contentIcon,
+                                                { backgroundColor: colors.border },
+                                            ]}>
+                                            <Icon
+                                                name={item.icon}
+                                                size={16}
+                                                color={BaseColor.whiteColor}
+                                            />
+                                        </View>
+                                        <View
+                                            style={{
+                                                marginLeft: 10,
+                                                flexDirection: 'column',
+                                                flex: 1,
+                                            }}>
+                                            <Text caption2 grayColor>
+                                                {item.title}
+                                            </Text>
+                                            <Text footnote semibold style={{ marginTop: 5 }}>
+                                                {item.information}
+                                            </Text>
+                                        </View>
+                                        <View>
+                                            <Text caption1 semibold style={{ color: colors.primary }}>
+                                                {item.rightText}
+                                            </Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                );
+                            }
+                        })}
+                        {business?.openHours && business?.openHours?.length ? (
+                            <Fragment>
+                                <TouchableOpacity style={styles.line} onPress={onCollapse}>
                                     <View
                                         style={[
                                             styles.contentIcon,
                                             { backgroundColor: colors.border },
                                         ]}>
+                                        <Icon name="clock" size={16} color={BaseColor.whiteColor} />
+                                    </View>
+                                    <View style={styles.contentInforAction}>
+                                        <View>
+                                            <Text caption2 grayColor>
+                                                {' '}
+                                                {t('open_hour')}{' '}
+                                            </Text>
+                                            <Text footnote semibold style={{ marginTop: 5 }}>
+                                                {business.openHours[0].from
+                                                    ? business.openHours[0].from.toLowerCase()
+                                                    : ''}
+                                                {' - '}
+                                                {business.openHours[0].to
+                                                    ? business.openHours[0].to.toLowerCase()
+                                                    : ''}
+                                            </Text>
+                                        </View>
                                         <Icon
-                                            name={item.icon}
-                                            size={16}
-                                            color={BaseColor.whiteColor}
+                                            name={collapseHour ? 'angle-down' : 'angle-up'}
+                                            size={24}
+                                            color={BaseColor.grayColor}
                                         />
                                     </View>
+                                </TouchableOpacity>
+                                {business?.openHours?.length > 1 ? (
                                     <View
                                         style={{
-                                            marginLeft: 10,
-                                            flexDirection: 'column',
-                                            flex: 1,
+                                            paddingLeft: 40,
+                                            paddingRight: 20,
+                                            marginTop: 5,
+                                            height: collapseHour ? 0 : null,
+                                            overflow: 'hidden',
                                         }}>
-                                        <Text caption2 grayColor>
-                                            {item.title}
-                                        </Text>
-                                        <Text footnote semibold style={{ marginTop: 5 }}>
-                                            {item.information}
-                                        </Text>
-                                    </View>
-                                    <View>
-                                        <Text caption1 semibold style={{ color: colors.primary }}>
-                                            {item.rightText}
-                                        </Text>
-                                    </View>
-                                </TouchableOpacity>
-                            );
-                        }
-                    })}
-                    {business?.openHours && business?.openHours?.length ? (
-                        <Fragment>
-                            <TouchableOpacity style={styles.line} onPress={onCollapse}>
-                                <View
-                                    style={[
-                                        styles.contentIcon,
-                                        { backgroundColor: colors.border },
-                                    ]}>
-                                    <Icon name="clock" size={16} color={BaseColor.whiteColor} />
-                                </View>
-                                <View style={styles.contentInforAction}>
-                                    <View>
-                                        <Text caption2 grayColor>
-                                            {' '}
-                                            {t('open_hour')}{' '}
-                                        </Text>
-                                        <Text footnote semibold style={{ marginTop: 5 }}>
-                                            {business.openHours[0].from
-                                                ? business.openHours[0].from.toLowerCase()
-                                                : ''}
-                                            {' - '}
-                                            {business.openHours[0].to
-                                                ? business.openHours[0].to.toLowerCase()
-                                                : ''}
-                                        </Text>
-                                    </View>
-                                    <Icon
-                                        name={collapseHour ? 'angle-down' : 'angle-up'}
-                                        size={24}
-                                        color={BaseColor.grayColor}
-                                    />
-                                </View>
-                            </TouchableOpacity>
-                            {business?.openHours?.length > 1 ? (
-                                <View
-                                    style={{
-                                        paddingLeft: 40,
-                                        paddingRight: 20,
-                                        marginTop: 5,
-                                        height: collapseHour ? 0 : null,
-                                        overflow: 'hidden',
-                                    }}>
-                                    {updateOpenHours(business.openHours).map((item) => {
-                                        return (
-                                            <View
-                                                style={[
-                                                    styles.lineWorkHours,
-                                                    { borderColor: colors.border },
-                                                ]}
-                                                key={item.day}>
-                                                <Text body2 grayColor>
-                                                    {item.day}
-                                                </Text>
-                                                {'isOpen' in item && !item.isOpen ? (
-                                                    <Text body2 accentColor semibold>
-                                                        {' '}
-                                                        Close{' '}
+                                        {updateOpenHours(business.openHours).map((item) => {
+                                            return (
+                                                <View
+                                                    style={[
+                                                        styles.lineWorkHours,
+                                                        { borderColor: colors.border },
+                                                    ]}
+                                                    key={item.day}>
+                                                    <Text body2 grayColor>
+                                                        {item.day}
                                                     </Text>
-                                                ) : (
-                                                    <Text body2 accentColor semibold>
-                                                        {item.from ? item.from.toLowerCase() : ''}
-                                                        {!(item.isOpen || item.from || item.to)
-                                                            ? 'Close'
-                                                            : ''}
-                                                        {item.from && item.to ? ' - ' : ''}
-                                                        {item.to ? item.to.toLowerCase() : ''}
-                                                    </Text>
-                                                )}
-                                            </View>
-                                        );
-                                    })}
+                                                    {'isOpen' in item && !item.isOpen ? (
+                                                        <Text body2 accentColor semibold>
+                                                            {' '}
+                                                            Close{' '}
+                                                        </Text>
+                                                    ) : (
+                                                        <Text body2 accentColor semibold>
+                                                            {item.from ? item.from.toLowerCase() : ''}
+                                                            {!(item.isOpen || item.from || item.to)
+                                                                ? 'Close'
+                                                                : ''}
+                                                            {item.from && item.to ? ' - ' : ''}
+                                                            {item.to ? item.to.toLowerCase() : ''}
+                                                        </Text>
+                                                    )}
+                                                </View>
+                                            );
+                                        })}
+                                    </View>
+                                ) : null}
+                            </Fragment>
+                        ) : null}
+                    </View>
+                    <View
+                        style={[styles.contentDescription, { borderColor: colors.border }]}>
+                        {business.description ? (
+                            <Text body2 numberOfLines={100} style={{ lineHeight: 20 }}>
+                                {business.description}
+                            </Text>
+                        ) : null}
+                        <View
+                            style={{
+                                paddingVertical: 20,
+                                flexDirection: 'row',
+                            }}>
+                            {business.established ? (
+                                <View style={{ flex: 1 }}>
+                                    <Text caption1 grayColor>
+                                        {t('date_established')}
+                                    </Text>
+                                    <Text headline style={{ marginTop: 5 }}>
+                                        {moment(business.established).format('DD/MM/YYYY')}
+                                    </Text>
                                 </View>
                             ) : null}
-                        </Fragment>
-                    ) : null}
-                </View>
-                <View
-                    style={[styles.contentDescription, { borderColor: colors.border }]}>
-                    {business.description ? (
-                        <Text body2 numberOfLines={100} style={{ lineHeight: 20 }}>
-                            {business.description}
-                        </Text>
-                    ) : null}
-                    <View
-                        style={{
-                            paddingVertical: 20,
-                            flexDirection: 'row',
-                        }}>
-                        {business.established ? (
-                            <View style={{ flex: 1 }}>
-                                <Text caption1 grayColor>
-                                    {t('date_established')}
-                                </Text>
-                                <Text headline style={{ marginTop: 5 }}>
-                                    {moment(business.established).format('DD/MM/YYYY')}
-                                </Text>
-                            </View>
-                        ) : null}
-                        {business.priceRange &&
-                        (business.priceRange.from || business.priceRange.to) ? (
-                            <View style={styles.priceRangeSection}>
-                                <Text caption1 grayColor>
-                                    {t('price_range')}
-                                </Text>
-                                <View style={styles.prices}>
-                                    <NumberFormat
-                                        value={
-                                            business.priceRange.from
-                                                ? `${business.priceRange.from}`
-                                                : ''
-                                        }
-                                        displayType={'text'}
-                                        prefix={' RS '}
-                                        thousandSeparator={true}
-                                        renderText={(value) => (
-                                            <Text headline style={{ marginTop: 5 }}>
-                                                {value} -
-                                            </Text>
-                                        )}
-                                    />
-                                    <NumberFormat
-                                        value={
-                                            business.priceRange.to
-                                                ? `${business.priceRange.to}`
-                                                : ''
-                                        }
-                                        displayType={'text'}
-                                        prefix={' RS '}
-                                        thousandSeparator={true}
-                                        renderText={(value) => (
-                                            <Text headline style={{ marginTop: 5 }}>
-                                                {value}
-                                            </Text>
-                                        )}
-                                    />
+                            {business.priceRange &&
+                            (business.priceRange.from || business.priceRange.to) ? (
+                                <View style={styles.priceRangeSection}>
+                                    <Text caption1 grayColor>
+                                        {t('price_range')}
+                                    </Text>
+                                    <View style={styles.prices}>
+                                        <NumberFormat
+                                            value={
+                                                business.priceRange.from
+                                                    ? `${business.priceRange.from}`
+                                                    : ''
+                                            }
+                                            displayType={'text'}
+                                            prefix={' RS '}
+                                            thousandSeparator={true}
+                                            renderText={(value) => (
+                                                <Text headline style={{ marginTop: 5 }}>
+                                                    {value} -
+                                                </Text>
+                                            )}
+                                        />
+                                        <NumberFormat
+                                            value={
+                                                business.priceRange.to
+                                                    ? `${business.priceRange.to}`
+                                                    : ''
+                                            }
+                                            displayType={'text'}
+                                            prefix={' RS '}
+                                            thousandSeparator={true}
+                                            renderText={(value) => (
+                                                <Text headline style={{ marginTop: 5 }}>
+                                                    {value}
+                                                </Text>
+                                            )}
+                                        />
+                                    </View>
                                 </View>
-                            </View>
-                        ) : null}
-                    </View>
-                    <View
-                        style={{
-                            height: 180,
-                            paddingVertical: 20,
-                        }}>
-                        <MapView
-                            ref={mapRef}
-                            scrollEnabled={false}
-                            pitchEnabled={false}
-                            zoomEnabled={false}
-                            provider={PROVIDER_GOOGLE}
-                            style={styles.map}
-                            region={region}
-                            onRegionChange={() => {}}>
-                            <Marker coordinate={location} />
-                        </MapView>
-                    </View>
-                </View>
-                {business?.facilities?.length ? (
-                    <View>
-                        <Text
-                            title3
-                            semibold
-                            style={{
-                                paddingBottom: 5,
-                                paddingTop: 15,
-                            }}>
-                            {t('facilities')}
-                        </Text>
+                            ) : null}
+                        </View>
                         <View
-                            style={[styles.wrapContent, { borderColor: colors.border }]}>
-                            {business?.facilities?.map((item) => {
-                                return (
-                                    <Tag
-                                        icon={
-                                            <Icon
-                                                name={item.icon}
-                                                size={12}
-                                                color={colors.accent}
-                                                solid
-                                                style={{ marginRight: 5 }}
-                                            />
-                                        }
-                                        chip
-                                        key={item.id}
-                                        style={{
-                                            marginTop: 8,
-                                            marginRight: 8,
-                                        }}>
-                                        {item?.name}
-                                    </Tag>
-                                );
-                            })}
+                            style={{
+                                height: 180,
+                                paddingVertical: 20,
+                            }}>
+                            <MapView
+                                ref={mapRef}
+                                scrollEnabled={false}
+                                pitchEnabled={false}
+                                zoomEnabled={false}
+                                provider={PROVIDER_GOOGLE}
+                                style={styles.map}
+                                region={region}
+                                onRegionChange={() => {}}>
+                                <Marker coordinate={location} />
+                            </MapView>
                         </View>
                     </View>
-                ) : null}
-            </View>
-        )
-    };
-
-    const renderRecentBusinesses = () => {
-        if(!stateProps?.getSingleBusinessLoading) {
-            return (
-                isPreview ? null : (
+                    {business?.facilities?.length ? (
+                        <View>
+                            <Text
+                                title3
+                                semibold
+                                style={{
+                                    paddingBottom: 5,
+                                    paddingTop: 15,
+                                }}>
+                                {t('facilities')}
+                            </Text>
+                            <View
+                                style={[styles.wrapContent, { borderColor: colors.border }]}>
+                                {business?.facilities?.map((item) => {
+                                    return (
+                                        <Tag
+                                            icon={
+                                                <Icon
+                                                    name={item.icon}
+                                                    size={12}
+                                                    color={colors.accent}
+                                                    solid
+                                                    style={{ marginRight: 5 }}
+                                                />
+                                            }
+                                            chip
+                                            key={item.id}
+                                            style={{
+                                                marginTop: 8,
+                                                marginRight: 8,
+                                            }}>
+                                            {item?.name}
+                                        </Tag>
+                                    );
+                                })}
+                            </View>
+                        </View>
+                    ) : null}
+                </View>
+                {isPreview ? null : (
                     <View style={{ marginTop: 20 }}>
                         <SectionList
                             title="Recently Added"
@@ -770,15 +767,8 @@ export default function PlaceDetailComponent(props) {
                             }}
                         />
                     </View>
-                )
-            )
-        }
-    };
-
-    const renderRelatedBusinesses = () => {
-        if(!stateProps?.getSingleBusinessLoading && business?.category) {
-            return (
-                isPreview ? null : (
+                )}
+                {isPreview ? null : (
                     <SectionList
                         title={t('related')}
                         data={stateProps.relatedBusiness}
@@ -798,14 +788,14 @@ export default function PlaceDetailComponent(props) {
                             );
                         }}
                     />
-                )
-            )
-        }
+                )}
+            </View>
+        )
     };
 
     return (
         <View style={{ flex: 1 }}>
-            <Header title={isPreview ? 'Business Review' : ''} />
+            <Header title={isPreview ? 'Business Review' : business?.name} />
             <Animated.View
                 style={[
                     styles.headerImageStyle,
@@ -879,7 +869,7 @@ export default function PlaceDetailComponent(props) {
                     }}
                 />
             </Animated.View>
-            <SafeAreaView style={{ flex: 1 }} forceInset={{ top: 'always' }}>
+            <SafeAreaView style={BaseStyle.safeAreaView} edges={['left', 'right']}>
                 <ScrollView
                     onContentSizeChange={() => {
                         setHeightHeader(Utils.heightHeader());
@@ -899,11 +889,7 @@ export default function PlaceDetailComponent(props) {
                         },
                     )}>
                     <View style={{height: 170 - heightHeader}} />
-                    <View style={{ paddingHorizontal: 20 }}>
                         {renderContent()}
-                    </View>
-                    {renderRecentBusinesses()}
-                    {renderRelatedBusinesses()}
                 </ScrollView>
             </SafeAreaView>
         </View>
