@@ -257,13 +257,7 @@ export default function PlaceDetailComponent(props) {
     ];
 
     const openGps = (lat, lng) => {
-        const scheme = Platform.select({ ios: 'maps:0,0?q=', android: 'geo:0,0?q=' });
-        const latLng = `${lat},${lng}`;
-        const label = business?.name;
-        const url = Platform.select({
-            ios: `${scheme}${label}@${latLng}`,
-            android: `${scheme}${latLng}(${label})`
-        });
+        let url = `http://maps.google.com/maps?daddr=${lat},${lng}`;
         Linking.openURL(url);
     };
 
