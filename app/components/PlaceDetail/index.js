@@ -795,37 +795,23 @@ export default function PlaceDetailComponent(props) {
 
     return (
         <View style={{ flex: 1 }}>
-            <Header title={isPreview ? 'Business Review' : business?.name} />
-            <Animated.View
-                style={[
-                    styles.headerImageStyle,
-                    {
-                        opacity: headerImageOpacity,
-                        height: heightViewImg,
-                    },
-                ]}>
-                {renderBanner()}
-            </Animated.View>
-            <Animated.View style={[styles.headerStyle, {position: 'absolute'}]}>
-                <Header
-                    title={isPreview ? 'Business Review' : ''}
-                    renderLeft={() => {
-                        return (
-                            <Animated.Image
-                                resizeMode="contain"
-                                style={[
-                                    styles.icon,
-                                    {
-                                        tintColor: headerBackgroundColor,
-                                    },
-                                ]}
-                                source={Images.back}
-                            />
-                        );
-                    }}
-                    renderRightSecond={() => {
-                        return (
-                            <View style={styles.iconContent}>
+            <SafeAreaView style={BaseStyle.safeAreaView} edges={['left', 'right']}>
+                <Header title={isPreview ? 'Business Review' : business?.name} />
+                <Animated.View
+                    style={[
+                        styles.headerImageStyle,
+                        {
+                            opacity: headerImageOpacity,
+                            height: heightViewImg,
+                        },
+                    ]}>
+                    {renderBanner()}
+                </Animated.View>
+                <Animated.View style={[styles.headerStyle, {position: 'absolute'}]}>
+                    <Header
+                        title={isPreview ? 'Business Review' : ''}
+                        renderLeft={() => {
+                            return (
                                 <Animated.Image
                                     resizeMode="contain"
                                     style={[
@@ -834,13 +820,11 @@ export default function PlaceDetailComponent(props) {
                                             tintColor: headerBackgroundColor,
                                         },
                                     ]}
-                                    source={Images.gallery}
+                                    source={Images.back}
                                 />
-                            </View>
-                        );
-                    }}
-                    renderRight={isPreview ? null : (
-                        () => {
+                            );
+                        }}
+                        renderRightSecond={() => {
                             return (
                                 <View style={styles.iconContent}>
                                     <Animated.Image
@@ -851,25 +835,41 @@ export default function PlaceDetailComponent(props) {
                                                 tintColor: headerBackgroundColor,
                                             },
                                         ]}
-                                        source={Images.share}
+                                        source={Images.gallery}
                                     />
                                 </View>
                             );
-                        }
-                    )}
-                    onPressLeft={() => {
-                        navigation.goBack();
-                    }}
-                    onPressRight={() => onShare()}
-                    onPressRightSecond={() => {
-                        navigation.navigate('PreviewImage', {
-                            title: business.name,
-                            gallery: business.gallery,
-                        });
-                    }}
-                />
-            </Animated.View>
-            <SafeAreaView style={BaseStyle.safeAreaView} edges={['left', 'right']}>
+                        }}
+                        renderRight={isPreview ? null : (
+                            () => {
+                                return (
+                                    <View style={styles.iconContent}>
+                                        <Animated.Image
+                                            resizeMode="contain"
+                                            style={[
+                                                styles.icon,
+                                                {
+                                                    tintColor: headerBackgroundColor,
+                                                },
+                                            ]}
+                                            source={Images.share}
+                                        />
+                                    </View>
+                                );
+                            }
+                        )}
+                        onPressLeft={() => {
+                            navigation.goBack();
+                        }}
+                        onPressRight={() => onShare()}
+                        onPressRightSecond={() => {
+                            navigation.navigate('PreviewImage', {
+                                title: business.name,
+                                gallery: business.gallery,
+                            });
+                        }}
+                    />
+                </Animated.View>
                 <ScrollView
                     onContentSizeChange={() => {
                         setHeightHeader(Utils.heightHeader());
