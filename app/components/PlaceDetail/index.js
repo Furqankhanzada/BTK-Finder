@@ -807,7 +807,7 @@ export default function PlaceDetailComponent(props) {
                     ]}>
                     {renderBanner()}
                 </Animated.View>
-                <Animated.View style={[styles.headerStyle, {position: 'absolute'}]}>
+                <Animated.View style={[styles.headerStyle, {position: 'absolute', top: 45}]}>
                     <Header
                         title={isPreview ? 'Business Review' : ''}
                         renderLeft={() => {
