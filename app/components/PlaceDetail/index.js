@@ -14,6 +14,7 @@ import {
     Linking,
     Alert,
     Share,
+    Platform,
 } from 'react-native';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import { useTranslation } from 'react-i18next';
@@ -807,7 +808,7 @@ export default function PlaceDetailComponent(props) {
                     ]}>
                     {renderBanner()}
                 </Animated.View>
-                <Animated.View style={[styles.headerStyle, {position: 'absolute', top: 45}]}>
+                <Animated.View style={[styles.headerStyle, {position: 'absolute', top: Platform.OS === 'android' ? 0 : 45}]}>
                     <Header
                         title={isPreview ? 'Business Review' : ''}
                         renderLeft={() => {
