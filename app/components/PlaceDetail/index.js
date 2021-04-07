@@ -797,7 +797,6 @@ export default function PlaceDetailComponent(props) {
     return (
         <View style={{ flex: 1 }}>
             <SafeAreaView style={BaseStyle.safeAreaView} edges={['left', 'right']}>
-                <Header title={isPreview ? 'Business Review' : business?.name} />
                 <Animated.View
                     style={[
                         styles.headerImageStyle,
@@ -808,7 +807,7 @@ export default function PlaceDetailComponent(props) {
                     ]}>
                     {renderBanner()}
                 </Animated.View>
-                <Animated.View style={[styles.headerStyle, {position: 'absolute', top: Platform.OS === 'android' ? 0 : 45}]}>
+                <Animated.View style={[styles.headerStyle]}>
                     <Header
                         title={isPreview ? 'Business Review' : ''}
                         renderLeft={() => {
