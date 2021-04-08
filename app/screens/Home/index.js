@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import {
-  View,
-  ScrollView,
-  Animated,
-  TouchableOpacity,
-  FlatList,
+    View,
+    ScrollView,
+    Animated,
+    TouchableOpacity,
+    FlatList,
+    Alert,
+    Linking,
+    Platform,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
+import { checkNotifications } from 'react-native-permissions';
 import {
   Header,
   Button,
@@ -70,6 +74,25 @@ export default function Home({ navigation }) {
 
   const heightImageBanner = Utils.scaleWithPixel(225);
   const marginTopBanner = heightImageBanner - heightHeader + 10;
+
+    useEffect(() => {
+        checkNotifications().then(({status}) => {
+            let message = Platform.OS === 'android'
+                ? 'Open Settings > Manage Notifications > Allow notifications from Explore BTK'
+                : 'Open Settings > Notifications > Allow notifications from Explore BTK';
+            if (status === 'blocked') {
+                Alert.alert('Allow Notifications', message, [
+                    {
+                        text: 'Cancel',
+                        style: 'cancel',
+                    },
+                    { text: 'Open Settings', onPress: () => Linking.openSettings() },
+                ], {
+                    cancelable: false,
+                });
+            }
+        });
+    }, []);
 
   useEffect(() => {
     if (isLogin) {
