@@ -14,7 +14,6 @@ import {
     Linking,
     Alert,
     Share,
-    Platform,
 } from 'react-native';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import { useTranslation } from 'react-i18next';
@@ -43,7 +42,7 @@ import * as Utils from '@utils';
 import styles from './styles';
 import PlaceItem from '../PlaceItem';
 import CardList from '../CardList';
-import {getRelatedBusinesses, getBusinesses, getSingleBusiness} from '../../actions/business';
+import {getRelatedBusinesses, getBusinesses} from '../../actions/business';
 import SectionList from '../../screens/Home/sectionList';
 
 let defaultDelta = {
@@ -57,6 +56,7 @@ export default function PlaceDetailComponent(props) {
     const { t } = useTranslation();
     const { colors } = useTheme();
     const dispatch = useDispatch();
+    const slugify = require('slugify');
     const { navigation, business, preview } = props;
     const [isPreview] = useState(preview);
     const [collapseHour, setCollapseHour] = useState(true);
@@ -79,8 +79,12 @@ export default function PlaceDetailComponent(props) {
 
     useEffect(() => {
         async function businessLink() {
+            let businessCategory = slugify(business.category, {
+                replacement: '-',  // replace spaces with replacement character, defaults to `-`
+                lower: true,      // convert to lower case, defaults to `false`
+            });
             const link = await dynamicLinks().buildShortLink({
-                link: `https://link.explorebtk.com/${business.category}?id=${business._id}`,
+                link: `https://link.explorebtk.com/${businessCategory}?id=${business._id}`,
                 domainUriPrefix: 'https://link.explorebtk.com',
                 android: {
                     packageName: 'com.explore.btk',
