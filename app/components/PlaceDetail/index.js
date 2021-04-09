@@ -165,7 +165,7 @@ export default function PlaceDetailComponent(props) {
             };
 
             //Get Data of current day from Open hours
-            let currentDayObject = business?.openHours.filter((obj) => obj.day === 'Tuesday');
+            let currentDayObject = business?.openHours.filter((obj) => obj.day === getCurrentDay);
 
             let startTime = convertTime12to24(currentDayObject[0].from);
             let endTime = convertTime12to24(currentDayObject[0].to);
