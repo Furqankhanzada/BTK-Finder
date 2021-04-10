@@ -21,6 +21,7 @@ import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import { useSelector, useDispatch } from 'react-redux';
 import NumberFormat from 'react-number-format';
 import moment from 'moment';
+import slugify from 'slugify';
 import {
     Placeholder,
     Progressive,
@@ -56,7 +57,6 @@ export default function PlaceDetailComponent(props) {
     const { t } = useTranslation();
     const { colors } = useTheme();
     const dispatch = useDispatch();
-    const slugify = require('slugify');
     const { navigation, business, preview } = props;
     const [isPreview] = useState(preview);
     const [collapseHour, setCollapseHour] = useState(true);
@@ -79,12 +79,12 @@ export default function PlaceDetailComponent(props) {
 
     useEffect(() => {
         async function businessLink() {
-            let businessCategory = slugify(business.category, {
+            let slugifyCategory = slugify(business.category, {
                 replacement: '-',  // replace spaces with replacement character, defaults to `-`
                 lower: true,      // convert to lower case, defaults to `false`
             });
             const link = await dynamicLinks().buildShortLink({
-                link: `https://link.explorebtk.com/${businessCategory}?id=${business._id}`,
+                link: `https://link.explorebtk.com/${slugifyCategory}?id=${business._id}`,
                 domainUriPrefix: 'https://link.explorebtk.com',
                 android: {
                     packageName: 'com.explore.btk',
