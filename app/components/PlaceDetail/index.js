@@ -133,7 +133,7 @@ export default function PlaceDetailComponent(props) {
         }
     }, [business.location]);
 
-    const businessStatus = () => {
+    const isBusinessOpened = () => {
         //Week Days
         const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
@@ -206,6 +206,27 @@ export default function PlaceDetailComponent(props) {
         if (rating <= 5) {
             return 'Excellent';
         }
+    };
+
+    const businessStatus = () => {
+        const isVerified = (status) => {
+            if (status === 'VERIFIED') {
+                return 'VERIFIED'
+            }
+            return 'UNVERIFIED'
+        };
+
+        return (
+            <View
+                style={[
+                    styles.promotionTag,
+                    {backgroundColor: business?.status === 'VERIFIED' ? '#6acc58' + '4D' : colors.primary + '4D'},
+                ]}>
+                <Text overline medium style={{color: business?.status === 'VERIFIED' ? '#6acc58' : colors.primary}}>
+                    {isVerified(business?.status)}
+                </Text>
+            </View>
+        )
     };
 
     const onShare = async () => {
@@ -426,7 +447,7 @@ export default function PlaceDetailComponent(props) {
                             <View>
                                 <View style={styles.contentStatus}>
                                     <Text caption2 accentColor medium>
-                                        {business?.openHours && businessStatus()}
+                                        {business?.openHours && isBusinessOpened()}
                                     </Text>
                                     <View style={styles.dot} />
                                     <Text caption2 grayColor style={{flex: 1}} numberOfLines={1}>
@@ -504,6 +525,7 @@ export default function PlaceDetailComponent(props) {
                             </View>
                         </View>
                         <View style={styles.boxContentRight}>
+                            {businessStatus()}
                             {isPreview ? null : (
                                 <View
                                     style={styles.iconLike}>
