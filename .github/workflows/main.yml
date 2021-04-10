@@ -80,4 +80,8 @@ jobs:
           PLAY_CONFIG_JSON: ${{ secrets.PLAY_CONFIG_JSON }}
 
       - name: Distribute app to Beta track 🚀
-        run: bundle exec fastlane beta
+        run: |
+          cd android
+          echo "ls dir"
+          ls
+          bundle exec fastlane deploy
