@@ -188,22 +188,24 @@ export default function PlaceDetailComponent(props) {
     };
 
     const ratingStatus = (rating) => {
-        if (rating <= 1) {
+        if (rating <= 0) {
+            return 'No Ratings'
+        }
+        if (rating <= 1.9) {
             return 'Poor';
         }
-        if (rating <= 2) {
+        if (rating <= 2.9) {
             return 'Fair';
         }
-        if (rating <= 3) {
+        if (rating <= 3.9) {
             return 'Average';
         }
-        if (rating <= 4) {
+        if (rating <= 4.9) {
             return 'Good';
         }
         if (rating <= 5) {
             return 'Excellent';
         }
-        return null;
     };
 
     const onShare = async () => {
@@ -721,9 +723,9 @@ export default function PlaceDetailComponent(props) {
                             }}>
                             <MapView
                                 ref={mapRef}
-                                scrollEnabled={false}
+                                scrollEnabled={true}
                                 pitchEnabled={false}
-                                zoomEnabled={false}
+                                zoomEnabled={true}
                                 provider={PROVIDER_GOOGLE}
                                 style={styles.map}
                                 region={region}
