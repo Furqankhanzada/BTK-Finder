@@ -17,6 +17,7 @@ import {
 } from 'react-native';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import { useTranslation } from 'react-i18next';
+import Config from 'react-native-config';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import { useSelector, useDispatch } from 'react-redux';
 import NumberFormat from 'react-number-format';
@@ -84,8 +85,8 @@ export default function PlaceDetailComponent(props) {
                 lower: true,      // convert to lower case, defaults to `false`
             });
             const link = await dynamicLinks().buildShortLink({
-                link: `https://link.explorebtk.com/${slugifyCategory}?id=${business._id}`,
-                domainUriPrefix: 'https://link.explorebtk.com',
+                link: `${Config.DYNAMIC_LINK_URL}/${slugifyCategory}?id=${business._id}`,
+                domainUriPrefix: Config.DYNAMIC_LINK_URL,
                 android: {
                     packageName: 'com.explore.btk',
                 },
