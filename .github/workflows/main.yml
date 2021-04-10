@@ -64,6 +64,9 @@ jobs:
           bundle install --jobs 4 --retry 3
       - name: Configure Keystore
         run: |
+          cd android
+          echo "ls dir"
+          ls
           echo "$ANDROID_KEYSTORE_FILE" > keystore.jks.b64
           base64 -d -i keystore.jks.b64 > app/keystore.jks
           echo "storeFile=keystore.jks" >> keystore.properties
@@ -78,6 +81,9 @@ jobs:
 
       - name: Create Google Play Config file
         run : |
+          cd android
+          echo "ls dir"
+          ls
           echo "$PLAY_CONFIG_JSON" > play_config.json.b64
           base64 -d -i play_config.json.b64 > play_config.json
         env:
