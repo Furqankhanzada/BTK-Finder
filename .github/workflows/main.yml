@@ -48,12 +48,13 @@ jobs:
       - name: Grant Permission to Execute
         run: |
           cd android
-          echo "ls dir"
-          ls
           chmod +x gradlew
 
       - name: Install bundle
         run: |
+          cd android
+          echo "ls dir"
+          ls
           bundle config path vendor/bundle
           bundle install --jobs 4 --retry 3
       - name: Configure Keystore
