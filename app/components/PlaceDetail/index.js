@@ -37,6 +37,7 @@ import {
     Tag,
     Image,
     FavouriteIcon,
+    StarRating,
 } from '@components';
 import * as Utils from '@utils';
 import styles from './styles';
@@ -184,6 +185,25 @@ export default function PlaceDetailComponent(props) {
         }
 
         return 'Closed'
+    };
+
+    const ratingStatus = (rating) => {
+        if (rating <= 1) {
+            return 'Poor';
+        }
+        if (rating <= 2) {
+            return 'Fair';
+        }
+        if (rating <= 3) {
+            return 'Average';
+        }
+        if (rating <= 4) {
+            return 'Good';
+        }
+        if (rating <= 5) {
+            return 'Excellent';
+        }
+        return null;
     };
 
     const onShare = async () => {
@@ -414,58 +434,69 @@ export default function PlaceDetailComponent(props) {
                             </View>
                             <View style={styles.contentStatus}>
                                 {isPreview ? (
-                                    <TouchableOpacity
-                                        onPress={() => {}}
-                                        style={[
-                                            styles.tagRate,
-                                            {backgroundColor: colors.primaryLight},
-                                        ]}>
-                                        <Icon
-                                            name="star"
-                                            size={10}
-                                            color={BaseColor.whiteColor}
-                                            solid
-                                        />
-                                        <Text caption2 whiteColor semibold style={{marginLeft: 4}}>
-                                            0.0
-                                        </Text>
+                                    <TouchableOpacity style={styles.contentRate} onPress={() => navigateToReview(business._id)}>
+                                        <View
+                                            style={{flexDirection: 'row', alignItems: 'center'}}>
+                                            <Tag rate>
+                                                <Text caption2 whiteColor semibold style={{marginLeft: 4}}>
+                                                    0.0
+                                                </Text>
+                                            </Tag>
+                                            <View style={{marginLeft: 10}}>
+                                                <StarRating
+                                                    disabled={true}
+                                                    starSize={10}
+                                                    maxStars={5}
+                                                    rating={business?.reviewStats?.averageRatings}
+                                                    fullStarColor={BaseColor.yellowColor}
+                                                    containerStyle={{marginRight: 5}}
+                                                />
+                                            </View>
+                                        </View>
                                     </TouchableOpacity>
                                 ) : (
-                                    <TouchableOpacity
-                                        style={{flexDirection: 'row', alignItems: 'center'}}
-                                        onPress={() => navigateToReview(business._id)}>
+                                    <TouchableOpacity style={styles.contentRate} onPress={() => navigateToReview(business._id)}>
                                         <View
-                                            style={[
-                                                styles.tagRate,
-                                                {backgroundColor: colors.primaryLight},
-                                            ]}>
-                                            <Icon
-                                                name="star"
-                                                size={10}
-                                                color={BaseColor.whiteColor}
-                                                solid
-                                            />
-                                            <Text caption2 whiteColor semibold style={{marginLeft: 4}}>
-                                                <NumberFormat
-                                                    value={
-                                                        business?.reviewStats?.averageRatings
-                                                            ? business?.reviewStats?.averageRatings
-                                                            : '0.0'
-                                                    }
-                                                    displayType={'text'}
-                                                    decimalScale={1}
-                                                    fixedDecimalScale={true}
-                                                    renderText={(value) => (
-                                                        <Text style={{ fontSize: 10, color: 'white' }}>
-                                                            {value}
-                                                        </Text>
-                                                    )}
+                                            style={{flexDirection: 'row', alignItems: 'center'}}>
+                                            <Tag rate>
+                                                <Text caption2 whiteColor semibold style={{marginLeft: 4}}>
+                                                    <NumberFormat
+                                                        value={
+                                                            business?.reviewStats?.averageRatings
+                                                                ? business?.reviewStats?.averageRatings
+                                                                : '0.0'
+                                                        }
+                                                        displayType={'text'}
+                                                        decimalScale={1}
+                                                        fixedDecimalScale={true}
+                                                        renderText={(value) => (
+                                                            <Text style={{ fontSize: 10, color: 'white' }}>
+                                                                {value}
+                                                            </Text>
+                                                        )}
+                                                    />
+                                                </Text>
+                                            </Tag>
+                                            <View style={{marginLeft: 10}}>
+                                                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                                                    <Text caption2 whiteColor semibold>
+                                                        {ratingStatus(business?.reviewStats?.averageRatings)}
+                                                    </Text>
+                                                    <View style={styles.dot} />
+                                                    <Text caption2 whiteColor semibold>
+                                                        ({business?.reviews?.length}) {t('reviews')}
+                                                    </Text>
+                                                </View>
+                                                <StarRating
+                                                    disabled={true}
+                                                    starSize={10}
+                                                    maxStars={5}
+                                                    rating={business?.reviewStats?.averageRatings}
+                                                    fullStarColor={BaseColor.yellowColor}
+                                                    containerStyle={{width: 50}}
                                                 />
-                                            </Text>
+                                            </View>
                                         </View>
-                                        <Text caption2 style={{ marginLeft: 5, color: colors.primaryLight}} numberOfLines={1}>
-                                            View Reviews
-                                        </Text>
                                     </TouchableOpacity>
                                 )}
                             </View>
