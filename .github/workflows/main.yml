@@ -84,12 +84,21 @@ jobs:
         env:
           PLAY_CONFIG_JSON: ${{ secrets.PLAY_CONFIG_JSON }}
 
+      - name: Bump release version
+        id: bump_version
+        uses: christian-draeger/increment-semantic-version@1.0.2
+        with:
+          current-version: '0.2.0-beta1'
+          version-fragment: 'feature'
+      - name: Do something with your bumped release version
+        run: echo ${{ steps.bump_version.outputs.next-version }}
+
       - name: Bump version
         uses: chkfung/android-version-actions@v1.1
         with:
           gradlePath: android/app/build.gradle
           versionCode: ${{github.run_number}}
-          versionName: 0.2.0
+          versionName: ${{ steps.bump_version.outputs.next-version }}
 
       - name: Distribute app to Beta track 🚀
         run: |
