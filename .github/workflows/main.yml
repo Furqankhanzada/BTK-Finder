@@ -92,7 +92,7 @@ jobs:
           version-fragment: 'beta'
       - name: Do something with your bumped release version
         run: echo ${{ steps.bump_version.outputs.next-version }}
-        #29
+        #30
 
       - name: Bump version
         uses: chkfung/android-version-actions@v1.1
