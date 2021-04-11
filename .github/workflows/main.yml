@@ -88,7 +88,7 @@ jobs:
         uses: chkfung/android-version-actions@v1.1
         with:
           gradlePath: app/build.gradle
-          versionCode: ${{github.run_number + 18}}
+          versionCode: ${{github.run_number}}
           versionName: 0.2.0
 
       - name: Distribute app to Beta track 🚀
