@@ -14,14 +14,15 @@ import {
     Linking,
     Alert,
     Share,
-    Platform,
 } from 'react-native';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import { useTranslation } from 'react-i18next';
+import Config from 'react-native-config';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import { useSelector, useDispatch } from 'react-redux';
 import NumberFormat from 'react-number-format';
 import moment from 'moment';
+import slugify from 'slugify';
 import {
     Placeholder,
     Progressive,
@@ -43,7 +44,7 @@ import * as Utils from '@utils';
 import styles from './styles';
 import PlaceItem from '../PlaceItem';
 import CardList from '../CardList';
-import {getRelatedBusinesses, getBusinesses, getSingleBusiness} from '../../actions/business';
+import {getRelatedBusinesses, getBusinesses} from '../../actions/business';
 import SectionList from '../../screens/Home/sectionList';
 
 let defaultDelta = {
@@ -79,9 +80,13 @@ export default function PlaceDetailComponent(props) {
 
     useEffect(() => {
         async function businessLink() {
+            let slugifyCategory = slugify(business.category, {
+                replacement: '-',  // replace spaces with replacement character, defaults to `-`
+                lower: true,      // convert to lower case, defaults to `false`
+            });
             const link = await dynamicLinks().buildShortLink({
-                link: `https://link.explorebtk.com/${business.category}?id=${business._id}`,
-                domainUriPrefix: 'https://link.explorebtk.com',
+                link: `${Config.DYNAMIC_LINK_URL}/${slugifyCategory}?id=${business._id}`,
+                domainUriPrefix: Config.DYNAMIC_LINK_URL,
                 android: {
                     packageName: 'com.explore.btk',
                 },
@@ -161,7 +166,7 @@ export default function PlaceDetailComponent(props) {
             };
 
             //Get Data of current day from Open hours
-            let currentDayObject = business?.openHours.filter((obj) => obj.day === 'Tuesday');
+            let currentDayObject = business?.openHours.filter((obj) => obj.day === getCurrentDay);
 
             let startTime = convertTime12to24(currentDayObject[0].from);
             let endTime = convertTime12to24(currentDayObject[0].to);
