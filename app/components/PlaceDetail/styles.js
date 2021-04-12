@@ -143,4 +143,9 @@ export default StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
   },
+  promotionTag: {
+    borderRadius: 7,
+    height: 14,
+    paddingHorizontal: 7,
+  },
 });
