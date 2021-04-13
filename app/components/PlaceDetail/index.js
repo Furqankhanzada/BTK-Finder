@@ -512,11 +512,11 @@ export default function PlaceDetailComponent(props) {
                                             </Tag>
                                             <View style={{marginLeft: 10}}>
                                                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                                                    <Text caption2 whiteColor semibold>
+                                                    <Text caption2 whiteColor semibold style={{ color: colors.text}}>
                                                         {ratingStatus(business?.reviewStats?.averageRatings)}
                                                     </Text>
                                                     <View style={styles.dot} />
-                                                    <Text caption2 whiteColor semibold>
+                                                    <Text caption2 whiteColor semibold style={{ color: colors.text}}>
                                                         ({business?.reviews?.length}) {t('reviews')}
                                                     </Text>
                                                 </View>
