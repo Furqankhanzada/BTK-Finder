@@ -19,6 +19,7 @@ import dynamicLinks from '@react-native-firebase/dynamic-links';
 import { useTranslation } from 'react-i18next';
 import Config from 'react-native-config';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
+import { showLocation } from 'react-native-map-link';
 import { useSelector, useDispatch } from 'react-redux';
 import NumberFormat from 'react-number-format';
 import moment from 'moment';
@@ -278,6 +279,7 @@ export default function PlaceDetailComponent(props) {
             information: business?.address,
             location: business?.location?.coordinates,
             rightText: 'Get Directions',
+            name: business?.name,
         },
         {
             id: '2',
@@ -305,9 +307,16 @@ export default function PlaceDetailComponent(props) {
         },
     ];
 
-    const openGps = (lat, lng) => {
-        let url = `http://maps.google.com/maps?daddr=${lat},${lng}`;
-        Linking.openURL(url);
+    const openGps = (item) => {
+        showLocation({
+            latitude: item?.location[0],
+            longitude: item?.location[1],
+            title: item.name,  // optional
+            googleForceLatLon: true,  // optionally force GoogleMaps to use the latlon for the query instead of the title
+            alwaysIncludeGoogle: true, // optional, true will always add Google Maps to iOS and open in Safari, even if app is not installed (default: false)
+            appsWhiteList: ['google-maps'], // optionally you can set which apps to show (default: will show all supported apps installed on device)
+            appTitles: { 'google-maps': item.name } // optionally you can override default app titles
+        })
     };
 
     const onOpen = (item) => {
@@ -337,7 +346,7 @@ export default function PlaceDetailComponent(props) {
                                 Linking.openURL('whatsapp://send?phone=' + checkPhoneCode(item.information));
                                 break;
                             case 'map':
-                                openGps(item?.location[0], item?.location[1]);
+                                openGps(item);
                                 break;
                         }
                     },
@@ -503,11 +512,11 @@ export default function PlaceDetailComponent(props) {
                                             </Tag>
                                             <View style={{marginLeft: 10}}>
                                                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                                                    <Text caption2 whiteColor semibold>
+                                                    <Text caption2 whiteColor semibold style={{ color: colors.text}}>
                                                         {ratingStatus(business?.reviewStats?.averageRatings)}
                                                     </Text>
                                                     <View style={styles.dot} />
-                                                    <Text caption2 whiteColor semibold>
+                                                    <Text caption2 whiteColor semibold style={{ color: colors.text}}>
                                                         ({business?.reviews?.length}) {t('reviews')}
                                                     </Text>
                                                 </View>
