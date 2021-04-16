@@ -30,6 +30,8 @@ target 'explorebtk' do
   pod 'GoogleMaps'
   pod 'Google-Maps-iOS-Utils'
 
+  pod 'react-native-version-check', :path => '../node_modules/react-native-version-check'
+
   target 'explorebtkTests' do
     inherit! :complete
     # Pods for testing

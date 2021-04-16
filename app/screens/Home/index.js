@@ -12,6 +12,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { checkNotifications } from 'react-native-permissions';
+import VersionCheck from 'react-native-version-check';
 import {
   Header,
   Button,
@@ -74,6 +75,23 @@ export default function Home({ navigation }) {
 
   const heightImageBanner = Utils.scaleWithPixel(225);
   const marginTopBanner = heightImageBanner - heightHeader + 10;
+
+    useEffect(() => {
+        VersionCheck.needUpdate()
+            .then(async res => {
+                if (res.isNeeded) {
+                    Alert.alert('Update Required', 'Your application version is outdated, Click on Update Now to update it.', [
+                        {
+                            text: 'Cancel',
+                            style: 'cancel',
+                        },
+                        { text: 'Update Now', onPress: () => Linking.openURL(res.storeUrl) },
+                    ], {
+                        cancelable: false,
+                    });
+                }
+            });
+    }, []);
 
     useEffect(() => {
         checkNotifications().then(({status}) => {
