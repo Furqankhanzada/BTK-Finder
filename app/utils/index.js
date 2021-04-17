@@ -5,6 +5,7 @@ import {
   PixelRatio,
   Dimensions,
   I18nManager,
+  Linking,
 } from 'react-native';
 import RNRestart from 'react-native-restart';
 import Toast from 'react-native-toast-message';
@@ -175,4 +176,14 @@ export const generateFileObject = (file) => {
     type: 'multipart/form-data',
     name: filename,
   };
-}
+};
+
+export const canOpenFacebookPage = (id, url) => {
+  Linking.canOpenURL('fb://page/' + id).then(supported => {
+    if (supported) {
+      return Linking.openURL('fb://page/' + id);
+    } else {
+      return Linking.openURL(url);
+    }
+  });
+};

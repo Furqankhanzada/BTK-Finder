@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { BaseStyle, useTheme, Images } from '@config';
 import { useTranslation } from 'react-i18next';
+import { canOpenFacebookPage } from "../../utils";
 import { Header, SafeAreaView, Icon, Text, Image } from '@components';
 import styles from './styles';
 
@@ -64,15 +65,7 @@ export default function ContactUs({ navigation }) {
           onPress: () => {
             switch (item.type) {
               case 'facebook':
-                Linking.canOpenURL('fb://page/' + item.information).then(supported => {
-                  if (supported) {
-                    return Linking.openURL(
-                        'fb://page/' + item.information,
-                    );
-                  } else {
-                    return Linking.openURL("https://www.facebook.com/explore.btk");
-                  }
-                });
+                canOpenFacebookPage(item.information, "https://www.facebook.com/explore.btk");
                 break;
               case 'whatsapp':
                 Linking.openURL('whatsapp://send?phone=' + item.information);
