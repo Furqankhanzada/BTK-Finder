@@ -26,8 +26,8 @@ export default function ContactUs({ navigation }) {
     },
     {
       name: 'Facebook',
-      information: 'furqankhanzada',
-      type: 'social',
+      information: '103019245119931',
+      type: 'facebook',
       icon: 'facebook-square',
       iconColor: '#4267B2',
     },
@@ -63,11 +63,16 @@ export default function ContactUs({ navigation }) {
           text: t('yes'),
           onPress: () => {
             switch (item.type) {
-              case 'social':
-                Linking.openURL(
-                  'fb://facewebmodal/f?href=https://www.facebook.com/' +
-                    item.information,
-                );
+              case 'facebook':
+                Linking.canOpenURL('fb://page/' + item.information).then(supported => {
+                  if (supported) {
+                    return Linking.openURL(
+                        'fb://page/' + item.information,
+                    );
+                  } else {
+                    return Linking.openURL("https://www.facebook.com/explore.btk");
+                  }
+                });
                 break;
               case 'whatsapp':
                 Linking.openURL('whatsapp://send?phone=' + item.information);
