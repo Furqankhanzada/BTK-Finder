@@ -222,9 +222,9 @@ export default function PlaceDetailComponent(props) {
             <View
                 style={[
                     styles.promotionTag,
-                    {backgroundColor: business?.status === 'VERIFIED' ? '#6acc58' + '4D' : colors.primary + '4D'},
+                    {backgroundColor: business?.status === 'VERIFIED' ? '#6acc58' + '4D' : colors.border},
                 ]}>
-                <Text overline medium style={{color: business?.status === 'VERIFIED' ? '#6acc58' : colors.primary}}>
+                <Text overline medium style={{color: business?.status === 'VERIFIED' ? '#6acc58' : colors.text}}>
                     {isVerified(business?.status)}
                 </Text>
             </View>
@@ -451,7 +451,7 @@ export default function PlaceDetailComponent(props) {
                             },
                         ]}>
                         <View style={{flex: 1}}>
-                            <Text title1 semibold numberOfLines={1}>
+                            <Text title3 semibold>
                                 {business.name}
                             </Text>
                             <View>
