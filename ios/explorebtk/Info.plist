@@ -66,6 +66,10 @@
 	<string>Need location to show nearby business and better experience.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>For uploading user avatar and businesses images.</string>
+	<key>LSApplicationQueriesSchemes</key>
+    <array>
+      <string>fb</string>
+    </array>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Merriweather-Black.ttf</string>

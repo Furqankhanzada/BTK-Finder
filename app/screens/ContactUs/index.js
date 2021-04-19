@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { BaseStyle, useTheme, Images } from '@config';
 import { useTranslation } from 'react-i18next';
+import { canOpenFacebookPage } from "../../utils";
 import { Header, SafeAreaView, Icon, Text, Image } from '@components';
 import styles from './styles';
 
@@ -26,8 +27,8 @@ export default function ContactUs({ navigation }) {
     },
     {
       name: 'Facebook',
-      information: 'furqankhanzada',
-      type: 'social',
+      information: '103019245119931',
+      type: 'facebook',
       icon: 'facebook-square',
       iconColor: '#4267B2',
     },
@@ -63,11 +64,8 @@ export default function ContactUs({ navigation }) {
           text: t('yes'),
           onPress: () => {
             switch (item.type) {
-              case 'social':
-                Linking.openURL(
-                  'fb://facewebmodal/f?href=https://www.facebook.com/' +
-                    item.information,
-                );
+              case 'facebook':
+                canOpenFacebookPage(item.information, "https://www.facebook.com/explore.btk");
                 break;
               case 'whatsapp':
                 Linking.openURL('whatsapp://send?phone=' + item.information);
