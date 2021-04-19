@@ -84,14 +84,23 @@ jobs:
         env:
           PLAY_CONFIG_JSON: ${{ secrets.PLAY_CONFIG_JSON }}
 
+      - name: Get Previous tag
+        id: previoustag
+        uses: "WyriHaximus/github-action-get-previous-tag@v1"
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          
+      - name: Previous Tag
+        run: ${{ steps.previoustag.outputs.tag }}
+        
       - name: Bump release version
         id: bump_version
         uses: christian-draeger/increment-semantic-version@1.0.2
         with:
-          current-version: '0.2.0-beta1'
+          current-version: ${{ steps.previoustag.outputs.tag }}
           version-fragment: 'beta'
       - name: Do something with your bumped release version
-        run: echo ${{ steps.bump_version.outputs.next-version }}
+        run: echo ${{ steps.bump_version.outputs.next-version }} 
         #37
 
       - name: Bump version
