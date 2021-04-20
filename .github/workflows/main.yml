@@ -93,7 +93,7 @@ jobs:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           
       - name: Previous Tag
-        run: ${{ steps.previoustag.outputs.tag }}
+        run: echo ${{ steps.previoustag.outputs.tag }}
         
       - name: Bump release version
         id: bump_version
