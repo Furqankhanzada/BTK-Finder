@@ -1,16 +1,18 @@
-import React, { useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import { store } from 'app/store';
 import { Provider } from 'react-redux';
 import remoteConfig from '@react-native-firebase/remote-config';
 import messaging from '@react-native-firebase/messaging';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import { Linking } from 'react-native';
+import PushNotification from "react-native-push-notification";
 import queryString from 'query-string';
 import * as NavigationService from './services/NavigationService';
 import Navigator from './navigation';
 console.disableYellowBox = true;
 
 export default function App() {
+  const [localNotificationInfo, setLocalNotificationInfo] = useState({});
   const navigateToBusinessDetail = (id) => {
     const interval = setInterval(() => {
       if (NavigationService.isReadyRef.current) {
@@ -19,6 +21,25 @@ export default function App() {
       }
     }, 1000);
   };
+
+  PushNotification.configure({
+    onNotification: (notification) => {
+      if (notification.userInteraction === false) {
+        setLocalNotificationInfo(notification);
+      }
+      if (notification.userInteraction === true) {
+        if (localNotificationInfo?.data?.link) {
+          Linking.openURL(localNotificationInfo.data.link);
+        }
+      }
+    },
+    permissions: {
+      alert: true,
+      badge: true,
+      sound: true
+    },
+    requestPermissions: true
+  });
 
   useEffect(() => {
     const unsubscribe = dynamicLinks().onLink((link) => {
@@ -69,7 +90,11 @@ export default function App() {
   useEffect(() => {
     requestUserPermission();
     const unsubscribe = messaging().onMessage(async (remoteMessage) => {
-      // Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+      PushNotification.localNotification({
+        title: remoteMessage.notification.title,
+        message: remoteMessage.notification.body,
+        bigPictureUrl: remoteMessage.notification.android.imageUrl,
+      });
     });
     return unsubscribe;
   });
