@@ -4,8 +4,9 @@ import { Provider } from 'react-redux';
 import remoteConfig from '@react-native-firebase/remote-config';
 import messaging from '@react-native-firebase/messaging';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
-import { Linking } from 'react-native';
+import {Linking, Platform} from 'react-native';
 import PushNotification from "react-native-push-notification";
+import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import queryString from 'query-string';
 import * as NavigationService from './services/NavigationService';
 import Navigator from './navigation';
@@ -21,6 +22,24 @@ export default function App() {
       }
     }, 1000);
   };
+
+    useEffect(() => {
+        if (Platform.OS === 'ios') {
+            PushNotificationIOS.addEventListener('notification', onRemoteNotification);
+        }
+    });
+
+    const onRemoteNotification = (notification) => {
+        if (Platform.OS === 'ios') {
+            const isClicked = notification.getData().userInteraction === 1;
+
+            if (isClicked) {
+               console.log('User Clicked the notification')
+            } else {
+                console.log('User Dismissed the notification')
+            }
+        }
+    };
 
   PushNotification.configure({
     onNotification: (notification) => {
@@ -90,11 +109,18 @@ export default function App() {
   useEffect(() => {
     requestUserPermission();
     const unsubscribe = messaging().onMessage(async (remoteMessage) => {
-      PushNotification.localNotification({
-        title: remoteMessage.notification.title,
-        message: remoteMessage.notification.body,
-        bigPictureUrl: remoteMessage.notification.android.imageUrl,
-      });
+        if (Platform.OS === 'ios') {
+            PushNotificationIOS.presentLocalNotification({
+                alertTitle: remoteMessage?.notification?.title,
+                alertBody: remoteMessage?.notification?.body,
+            })
+        } else {
+            PushNotification.localNotification({
+                title: remoteMessage.notification.title,
+                message: remoteMessage.notification.body,
+                bigPictureUrl: remoteMessage.notification.android.imageUrl,
+            });
+        }
     });
     return unsubscribe;
   });
