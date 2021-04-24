@@ -113,6 +113,14 @@ jobs:
           versionCode: ${{github.run_number}}
           versionName: ${{ steps.bump_version.outputs.next-version }}
 
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          prerelease: true
+          tag_name: ${{ steps.bump_version.outputs.next-version }} 
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
       - name: Distribute app to Beta track 🚀
         run: |
           cd android
