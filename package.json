@@ -12,6 +12,7 @@
   "dependencies": {
     "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/datetimepicker": "^3.4.0",
+    "@react-native-community/push-notification-ios": "^1.8.0",
     "@react-native-firebase/analytics": "^11.1.2",
     "@react-native-firebase/app": "^11.1.2",
     "@react-native-firebase/crashlytics": "^11.1.2",
@@ -48,6 +49,7 @@
     "react-native-paper": "^4.7.2",
     "react-native-permissions": "^3.0.1",
     "react-native-phone-call": "^1.0.9",
+    "react-native-push-notification": "^7.2.3",
     "react-native-responsive-dimensions": "^3.1.1",
     "react-native-restart": "^0.0.22",
     "react-native-safe-area-context": "^3.2.0",
