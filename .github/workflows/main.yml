@@ -20,6 +20,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v2
         with:
           node-version: '15.x'
@@ -90,14 +92,15 @@ jobs:
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           
-      - name: Previous Tag
-        run: ${{ steps.previoustag.outputs.tag }}
+      - name: Previous Tag v1
+        run: echo ${{ steps.semvers.outputs.patch }}
         
       - name: Bump release version
         id: bump_version
         uses: christian-draeger/increment-semantic-version@1.0.2
         with:
           current-version: ${{ steps.previoustag.outputs.tag }}
+          # current-version: '1.0.1'
           version-fragment: 'beta'
       - name: Do something with your bumped release version
         run: echo ${{ steps.bump_version.outputs.next-version }} 
@@ -110,6 +113,14 @@ jobs:
           versionCode: ${{github.run_number}}
           versionName: ${{ steps.bump_version.outputs.next-version }}
 
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          prerelease: true
+          tag_name: ${{ steps.bump_version.outputs.next-version }} 
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
       - name: Distribute app to Beta track 🚀
         run: |
           cd android
