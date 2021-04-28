@@ -187,3 +187,13 @@ export const canOpenFacebookPage = (id, url) => {
     }
   });
 };
+
+export const canOpenUrl = (url, altUrl) => {
+  Linking.canOpenURL(url).then(supported => {
+    if (supported) {
+      return Linking.openURL(url);
+    } else {
+      return Linking.openURL(altUrl);
+    }
+  });
+};

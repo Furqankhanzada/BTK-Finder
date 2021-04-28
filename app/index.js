@@ -8,6 +8,7 @@ import {Linking, Platform} from 'react-native';
 import PushNotification from "react-native-push-notification";
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import queryString from 'query-string';
+import { canOpenUrl } from "./utils";
 import * as NavigationService from './services/NavigationService';
 import Navigator from './navigation';
 console.disableYellowBox = true;
@@ -47,7 +48,9 @@ export default function App() {
         setLocalNotificationInfo(notification);
       }
       if (notification.userInteraction === true) {
-        if (localNotificationInfo?.data?.link) {
+        if (localNotificationInfo?.data?.facebook) {
+          canOpenUrl(localNotificationInfo?.data?.facebook, localNotificationInfo?.data?.link);
+        } else if (localNotificationInfo?.data?.link) {
           Linking.openURL(localNotificationInfo.data.link);
         }
       }
@@ -85,7 +88,9 @@ export default function App() {
   useEffect(() => {
     // Caused app to open from background state
     messaging().onNotificationOpenedApp((remoteMessage) => {
-      if (remoteMessage?.data?.link) {
+      if (remoteMessage?.data?.facebook) {
+        canOpenUrl(remoteMessage?.data?.facebook, remoteMessage?.data?.link);
+      } else if (remoteMessage?.data?.link) {
         Linking.openURL(remoteMessage?.data?.link);
       }
     });
@@ -95,7 +100,12 @@ export default function App() {
       .getInitialNotification()
       .then((remoteMessage) => {
         if (remoteMessage) {
-          if (remoteMessage?.data?.link) {
+          if (remoteMessage?.data?.facebook) {
+            canOpenUrl(
+              remoteMessage?.data?.facebook,
+              remoteMessage?.data?.link,
+            );
+          } else if (remoteMessage?.data?.link) {
             Linking.openURL(remoteMessage?.data?.link);
           }
         }
