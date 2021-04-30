@@ -24,29 +24,30 @@ export default function App() {
     }, 1000);
   };
 
-    useEffect(() => {
-        if (Platform.OS === 'ios') {
-            PushNotificationIOS.addEventListener('notification', onRemoteNotification);
+  //IOS local notification on click functionality
+  useEffect(() => {
+    if (Platform.OS === 'ios') {
+        PushNotificationIOS.addEventListener('localNotification', onRemoteNotification);
+    }
+  });
+
+  const onRemoteNotification = (notification) => {
+    if (Platform.OS === 'ios') {
+      const isClicked = notification.getData().userInteraction === 1;
+
+      if (isClicked) {
+        if (localNotificationInfo?.data?.facebook) {
+          canOpenUrl(localNotificationInfo?.data?.facebook, localNotificationInfo?.data?.link);
+        } else if (localNotificationInfo?.data?.link) {
+          Linking.openURL(localNotificationInfo.data.link);
         }
-    });
+      }
+    }
+  };
 
-    const onRemoteNotification = (notification) => {
-        if (Platform.OS === 'ios') {
-            const isClicked = notification.getData().userInteraction === 1;
-
-            if (isClicked) {
-               console.log('User Clicked the notification')
-            } else {
-                console.log('User Dismissed the notification')
-            }
-        }
-    };
-
+    //Android local notification on click functionality and configuration
   PushNotification.configure({
     onNotification: (notification) => {
-      if (notification.userInteraction === false) {
-        setLocalNotificationInfo(notification);
-      }
       if (notification.userInteraction === true) {
         if (localNotificationInfo?.data?.facebook) {
           canOpenUrl(localNotificationInfo?.data?.facebook, localNotificationInfo?.data?.link);
@@ -119,6 +120,7 @@ export default function App() {
   useEffect(() => {
     requestUserPermission();
     const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+        setLocalNotificationInfo(remoteMessage);
         if (Platform.OS === 'ios') {
             PushNotificationIOS.presentLocalNotification({
                 alertTitle: remoteMessage?.notification?.title,
