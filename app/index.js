@@ -8,6 +8,7 @@ import {Linking, Platform} from 'react-native';
 import PushNotification from "react-native-push-notification";
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import queryString from 'query-string';
+import { canOpenUrl } from "./utils";
 import * as NavigationService from './services/NavigationService';
 import Navigator from './navigation';
 console.disableYellowBox = true;
@@ -23,31 +24,34 @@ export default function App() {
     }, 1000);
   };
 
-    useEffect(() => {
-        if (Platform.OS === 'ios') {
-            PushNotificationIOS.addEventListener('notification', onRemoteNotification);
+  //IOS local notification on click functionality
+  useEffect(() => {
+    if (Platform.OS === 'ios') {
+        PushNotificationIOS.addEventListener('localNotification', onRemoteNotification);
+    }
+  });
+
+  const onRemoteNotification = (notification) => {
+    if (Platform.OS === 'ios') {
+      const isClicked = notification.getData().userInteraction === 1;
+
+      if (isClicked) {
+        if (localNotificationInfo?.data?.facebook) {
+          canOpenUrl(localNotificationInfo?.data?.facebook, localNotificationInfo?.data?.link);
+        } else if (localNotificationInfo?.data?.link) {
+          Linking.openURL(localNotificationInfo.data.link);
         }
-    });
+      }
+    }
+  };
 
-    const onRemoteNotification = (notification) => {
-        if (Platform.OS === 'ios') {
-            const isClicked = notification.getData().userInteraction === 1;
-
-            if (isClicked) {
-               console.log('User Clicked the notification')
-            } else {
-                console.log('User Dismissed the notification')
-            }
-        }
-    };
-
+    //Android local notification on click functionality and configuration
   PushNotification.configure({
     onNotification: (notification) => {
-      if (notification.userInteraction === false) {
-        setLocalNotificationInfo(notification);
-      }
       if (notification.userInteraction === true) {
-        if (localNotificationInfo?.data?.link) {
+        if (localNotificationInfo?.data?.facebook) {
+          canOpenUrl(localNotificationInfo?.data?.facebook, localNotificationInfo?.data?.link);
+        } else if (localNotificationInfo?.data?.link) {
           Linking.openURL(localNotificationInfo.data.link);
         }
       }
@@ -85,7 +89,9 @@ export default function App() {
   useEffect(() => {
     // Caused app to open from background state
     messaging().onNotificationOpenedApp((remoteMessage) => {
-      if (remoteMessage?.data?.link) {
+      if (remoteMessage?.data?.facebook) {
+        canOpenUrl(remoteMessage?.data?.facebook, remoteMessage?.data?.link);
+      } else if (remoteMessage?.data?.link) {
         Linking.openURL(remoteMessage?.data?.link);
       }
     });
@@ -95,7 +101,12 @@ export default function App() {
       .getInitialNotification()
       .then((remoteMessage) => {
         if (remoteMessage) {
-          if (remoteMessage?.data?.link) {
+          if (remoteMessage?.data?.facebook) {
+            canOpenUrl(
+              remoteMessage?.data?.facebook,
+              remoteMessage?.data?.link,
+            );
+          } else if (remoteMessage?.data?.link) {
             Linking.openURL(remoteMessage?.data?.link);
           }
         }
@@ -109,6 +120,7 @@ export default function App() {
   useEffect(() => {
     requestUserPermission();
     const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+        setLocalNotificationInfo(remoteMessage);
         if (Platform.OS === 'ios') {
             PushNotificationIOS.presentLocalNotification({
                 alertTitle: remoteMessage?.notification?.title,
