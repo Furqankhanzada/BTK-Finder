@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { View, ScrollView, TouchableOpacity } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { AuthActions } from '@actions';
@@ -12,9 +12,9 @@ import {
   ProfileDetail,
 } from '@components';
 import styles from './styles';
-import { getProfile } from '../../actions/auth';
 import { useTranslation } from 'react-i18next';
 import { showBetaModal } from '../../popup/betaPopup';
+import { clearFavoriteBusiness } from '../../actions/favorites';
 
 export default function Profile(props) {
   const { navigation, lastRoute } = props;
@@ -26,9 +26,9 @@ export default function Profile(props) {
   const profileData = useSelector((state) => state.profile);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    isLogin ? dispatch(getProfile()) : null;
-  }, [dispatch, isLogin]);
+  const navigateToMyBusinesses = (id) => {
+    navigation.navigate('MyBusinesses', { id });
+  };
 
   /**
    * @description Simple logout with Redux
@@ -37,6 +37,7 @@ export default function Profile(props) {
    */
   const onLogOut = () => {
     dispatch(AuthActions.authentication(false, (response) => {}));
+    dispatch(clearFavoriteBusiness());
   };
 
   return (
@@ -102,6 +103,21 @@ export default function Profile(props) {
                   enableRTL={true}
                 />
               </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.profileItem,
+                  { borderBottomColor: colors.border, borderBottomWidth: 1 },
+                ]}
+                onPress={() => navigateToMyBusinesses(profileData._id)}>
+                <Text body1>{t('my_businesses')}</Text>
+                <Icon
+                  name="angle-right"
+                  size={18}
+                  color={colors.primary}
+                  style={{ marginLeft: 5 }}
+                  enableRTL={true}
+                />
+              </TouchableOpacity>
             </View>
           ) : (
             <ProfileDetail
@@ -114,8 +130,7 @@ export default function Profile(props) {
               styles.profileItem,
               { borderBottomColor: colors.border, borderBottomWidth: 1 },
             ]}
-            // onPress={() => navigation.navigate('ContactUs')}
-            onPress={showBetaModal}>
+            onPress={() => navigation.navigate('ContactUs')}>
             <Text body1>{t('contact_us')}</Text>
             <Icon
               name="angle-right"

@@ -7,24 +7,28 @@ import { useTheme, BaseSetting } from '@config';
 import SplashScreen from 'react-native-splash-screen';
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { navigationRef, isReadyRef } from '../services/NavigationService';
 
 /* Main Stack Navigator */
 import Main from 'app/navigation/main';
 /* Modal Screen only affect iOS */
 import Loading from '@screens/Loading';
 import Filter from '@screens/Filter';
-import ChooseLocation from '@screens/ChooseLocation';
+import ChooseItems from '@screens/ChooseItems';
 import SearchHistory from '@screens/SearchHistory';
 import PreviewImage from '@screens/PreviewImage';
 import SelectDarkOption from '@screens/SelectDarkOption';
 import SelectFontOption from '@screens/SelectFontOption';
 import HelpLine from '@screens/HelpLine';
+import Category from '@screens/Category';
 import Toast from 'react-native-toast-message';
+import { setIsLogin } from '../actions/auth';
 
 const RootStack = createStackNavigator();
 
 export default function Navigator() {
+  const dispatch = useDispatch();
   const storeLanguage = useSelector((state) => state.application.language);
   const { theme, colors } = useTheme();
   const isDarkMode = useDarkMode();
@@ -46,9 +50,24 @@ export default function Navigator() {
     StatusBar.setBarStyle(isDarkMode ? 'light-content' : 'dark-content', true);
   }, [colors.primary, isDarkMode, storeLanguage]);
 
+  useEffect(() => {
+    return () => {
+      isReadyRef.current = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    dispatch(setIsLogin());
+  }, [dispatch]);
+
   return (
     <DarkModeProvider>
-      <NavigationContainer theme={theme}>
+      <NavigationContainer
+        theme={theme}
+        ref={navigationRef}
+        onReady={() => {
+          isReadyRef.current = true;
+        }}>
         <RootStack.Navigator
           mode="modal"
           headerMode="none"
@@ -60,8 +79,9 @@ export default function Navigator() {
           />
           <RootStack.Screen name="Main" component={Main} />
           <RootStack.Screen name="HelpLine" component={HelpLine} />
+          <RootStack.Screen name="Category" component={Category} />
           <RootStack.Screen name="Filter" component={Filter} />
-          <RootStack.Screen name="ChooseLocation" component={ChooseLocation} />
+          <RootStack.Screen name="ChooseItems" component={ChooseItems} />
           <RootStack.Screen name="SearchHistory" component={SearchHistory} />
           <RootStack.Screen name="PreviewImage" component={PreviewImage} />
           <RootStack.Screen

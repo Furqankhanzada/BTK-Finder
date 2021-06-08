@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, RefreshControl, View } from 'react-native';
+import { FlatList, RefreshControl, View, Alert } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import moment from 'moment';
 import { BaseStyle, useTheme } from '@config';
 import {
   Header,
@@ -11,9 +14,6 @@ import {
   Loading,
 } from '@components';
 import styles from './styles';
-import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
-import moment from 'moment';
 import { getSingleBusiness } from '../../actions/business';
 
 export default function Review(props) {
@@ -21,16 +21,18 @@ export default function Review(props) {
   const { colors } = useTheme();
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const stateProps = useSelector(({ businesses }) => {
+  const stateProps = useSelector(({ businesses, profile, auth }) => {
     return {
       singleBusiness: businesses.singleBusiness,
       getSingleBusinessLoading: businesses.getSingleBusinessLoading,
+      currentUserId: profile._id,
+      isLogin: auth.isLogin,
     };
   });
 
   useEffect(() => {
     dispatch(getSingleBusiness(route?.params?.id));
-  }, [dispatch]);
+  }, [route.params.id, dispatch]);
 
   const totalRating =
     stateProps?.singleBusiness?.reviewStats?.fiveStarCount +
@@ -67,9 +69,50 @@ export default function Review(props) {
     ],
   };
 
-  const isLogin = useSelector((state) => state.auth.isLogin);
+  const navigateToWalktrhough = (lastRoute, id) => {
+    navigation.navigate('Walkthrough', { lastRoute, id });
+  };
+
   const navigateToFeedback = (id) => {
     navigation.navigate('Feedback', { id });
+  };
+
+  const checkReviewAlreadyAdded = () => {
+    let check = false;
+    if (stateProps.singleBusiness?.reviews?.length) {
+      stateProps.singleBusiness.reviews.forEach(({ owner }) => {
+        if (owner._id === stateProps.currentUserId) {
+          check = true;
+          return false;
+        }
+      });
+    }
+    return check;
+  };
+  const checkUserLogin = () => {
+    if (stateProps.isLogin) {
+      if (!checkReviewAlreadyAdded()) {
+        navigateToFeedback(stateProps.singleBusiness._id);
+      } else {
+        Alert.alert('Review Found', 'You have already added a Review.');
+      }
+    } else {
+      Alert.alert(
+        'Login Required',
+        'You must login in order to add a review.',
+        [
+          {
+            text: 'Login',
+            onPress: () => navigateToWalktrhough('Review', route?.params?.id),
+          },
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+        ],
+        { cancelable: false },
+      );
+    }
   };
 
   return (
@@ -106,11 +149,7 @@ export default function Review(props) {
         onPressLeft={() => {
           navigation.goBack();
         }}
-        onPressRight={() => {
-          isLogin
-            ? navigateToFeedback(stateProps.singleBusiness._id)
-            : alert('You must login in order to add a review.', ' OK');
-        }}
+        onPressRight={() => checkUserLogin()}
       />
       {stateProps.getSingleBusinessLoading ? (
         <Loading loading={true} />
@@ -128,7 +167,7 @@ export default function Review(props) {
             />
           }
           data={stateProps.singleBusiness.reviews}
-          keyExtractor={(item, index) => item.id}
+          keyExtractor={(item) => item.id}
           ListHeaderComponent={() => (
             <RateDetail
               point={rateDetail.point}
@@ -143,7 +182,7 @@ export default function Review(props) {
               image={item.owner.avatar}
               name={item.owner.name}
               rate={item.rating}
-              date={moment(item.createdAt, 'YYYYMMDD').fromNow()}
+              date={moment(item.createdAt).fromNow()}
               title={item.title}
               comment={item.description}
             />

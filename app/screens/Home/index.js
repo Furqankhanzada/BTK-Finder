@@ -1,46 +1,47 @@
 import React, { useEffect, useState } from 'react';
 import {
-  View,
-  ScrollView,
-  Animated,
-  TouchableOpacity,
-  FlatList,
+    View,
+    ScrollView,
+    Animated,
+    TouchableOpacity,
+    FlatList,
+    Alert,
+    Linking,
+    Platform,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { checkNotifications } from 'react-native-permissions';
+import VersionCheck from 'react-native-version-check';
 import {
   Header,
   Button,
-  Image,
   Text,
   Icon,
   SafeAreaView,
   CardList,
-  Card,
+  PlaceItem,
 } from '@components';
-import { BaseColor, useTheme } from '@config';
+import { BaseColor, useTheme, BaseStyle } from '@config';
 import * as Utils from '@utils';
 import styles from './styles';
-import Swiper from 'react-native-swiper';
 import { HomeBannerData } from '@data';
-import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
-import { getCategories } from '../../actions/category';
 import FeaturedCategoryPlaceholderComponent from '../../components/Placeholders/featuredCategories';
 import SectionList from './sectionList';
-import {
-  getBusinesses,
-  getFavoriteIdsIntoStorage, toggleFavorite,
-} from '../../actions/business';
-import PlaceItem from '../../components/PlaceItem';
-
+import { getCategories } from '../../actions/category';
+import { getBusinesses } from '../../actions/business';
+import { getFavoriteBusinesses } from '../../actions/favorites';
+import { getProfile } from '../../actions/auth';
+import useLocation from '../../hooks/useLocation';
 export default function Home({ navigation }) {
-  const stateProps = useSelector(({ businesses }) => {
+  const stateProps = useSelector(({ businesses, favorites }) => {
     return {
       popularBusinesses: businesses.popularBusinesses,
       getPopularBusinessesLoading: businesses.getPopularBusinessesLoading,
       recentlyAddedBusinesses: businesses.recentlyAddedBusinesses,
       getRecentlyAddedBusinessesLoading:
         businesses.getRecentlyAddedBusinessesLoading,
-      favoriteIds: businesses.favoriteIds,
+      favoriteBusinesses: favorites.getFavoriteBusinesses,
     };
   });
 
@@ -48,11 +49,13 @@ export default function Home({ navigation }) {
     navigation.navigate('Review', { id });
   };
 
+  const isLogin = useSelector((state) => state.auth.isLogin);
   const [loading, setLoading] = useState(true);
   const deltaY = new Animated.Value(0);
   const { colors } = useTheme();
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const getLocation = useLocation();
   let placeholderItems = [1, 2, 3, 4, 5, 6, 7, 8];
   let featuredCategories = useSelector((state) => state.categories.featured);
   featuredCategories = [
@@ -73,6 +76,55 @@ export default function Home({ navigation }) {
   const heightImageBanner = Utils.scaleWithPixel(225);
   const marginTopBanner = heightImageBanner - heightHeader + 10;
 
+    useEffect(() => {
+        VersionCheck.needUpdate()
+            .then(async res => {
+                if (res.isNeeded) {
+                    Alert.alert('Update Required', 'Your application version is outdated, Click on Update Now to update it.', [
+                        {
+                            text: 'Cancel',
+                            style: 'cancel',
+                        },
+                        { text: 'Update Now', onPress: () => Linking.openURL(res.storeUrl) },
+                    ], {
+                        cancelable: false,
+                    });
+                }
+            });
+    }, []);
+
+    useEffect(() => {
+        checkNotifications().then(({status}) => {
+            let message = Platform.OS === 'android'
+                ? 'Open Settings > Manage Notifications > Allow notifications from Explore BTK'
+                : 'Open Settings > Notifications > Allow notifications from Explore BTK';
+            if (status === 'blocked') {
+                Alert.alert('Allow Notifications', message, [
+                    {
+                        text: 'Cancel',
+                        style: 'cancel',
+                    },
+                    { text: 'Open Settings', onPress: () => Linking.openSettings() },
+                ], {
+                    cancelable: false,
+                });
+            }
+        });
+    }, []);
+
+  useEffect(() => {
+    if (isLogin) {
+      dispatch(getProfile());
+      dispatch(
+        getFavoriteBusinesses({
+          favorite: true,
+          skip: 0,
+          fields: 'name, thumbnail, category, averageRatings',
+        }),
+      );
+    }
+  }, [dispatch, isLogin]);
+
   useEffect(() => {
     dispatch(getCategories({ limit: 7 }, null, true));
   }, [dispatch]);
@@ -86,7 +138,6 @@ export default function Home({ navigation }) {
   }, [dispatch]);
 
   useEffect(() => {
-    dispatch(getFavoriteIdsIntoStorage());
     dispatch(
       getBusinesses({
         limit: 15,
@@ -99,6 +150,7 @@ export default function Home({ navigation }) {
       getBusinesses({
         limit: 15,
         skip: 0,
+        recent: true,
         fields: 'name, thumbnail, category, averageRatings',
       }),
     );
@@ -108,13 +160,12 @@ export default function Home({ navigation }) {
     navigation.navigate('PlaceDetail', { id });
   };
 
-  const favorite = (id) => {
-    dispatch(toggleFavorite(id));
-  };
-
   const seeMore = (payload = {}) => {
     if (payload.route === 'Category') {
-      navigation.navigate('Category');
+      navigation.navigate('Category', {
+        latitude: getLocation?.latitude ?? null,
+        longitude: getLocation?.longitude ?? null,
+      });
     } else {
       navigation.navigate('Place', payload);
     }
@@ -122,47 +173,15 @@ export default function Home({ navigation }) {
 
   return (
     <View style={{ flex: 1 }}>
-      <Animated.View
-        style={[
-          styles.imageBackground,
-          {
-            height: deltaY.interpolate({
-              inputRange: [
-                0,
-                Utils.scaleWithPixel(150),
-                Utils.scaleWithPixel(150),
-              ],
-              outputRange: [heightImageBanner, heightHeader, heightHeader],
-            }),
-          },
-        ]}>
-        <Swiper
-          dotStyle={{
-            backgroundColor: colors.text,
-          }}
-          activeDotColor={colors.primary}
-          paginationStyle={styles.contentPage}
-          removeClippedSubviews={false}
-          autoplay={true}
-          autoplayTimeout={2}
-          showsPagination={false}>
-          {banner.map((item, index) => {
-            return (
-              <Image key={item.id} source={item.image} style={{ flex: 1 }} />
-            );
-          })}
-        </Swiper>
-      </Animated.View>
       <SafeAreaView style={{ flex: 1 }} forceInset={{ top: 'always' }}>
         <Header
-          title={''}
+          title={'Explore BTK'}
           renderRight={() => {
-            // return <Icon name={'call'} size={20} color={colors.primary} />;
             return (
               <Button
-                styleText={{ marginLeft: 8 }}
-                style={{ width: 130, paddingHorizontal: 10, height: 30 }}
-                icon={<Icon name={'phone'} size={15} color={'white'} solid />}
+                styleText={{ marginLeft: 5, fontSize: 10 }}
+                style={{ width: 80, paddingHorizontal: 10, height: 25 }}
+                icon={<Icon name={'phone'} size={10} color={'white'} solid />}
                 full
                 round
                 onPress={() => navigation.navigate('HelpLine')}>
@@ -183,48 +202,53 @@ export default function Home({ navigation }) {
             setHeightHeader(Utils.heightHeader());
           }}
           scrollEventThrottle={8}>
-          {/*<View*/}
-          {/*  style={[*/}
-          {/*    styles.searchForm,*/}
-          {/*    {*/}
-          {/*      backgroundColor: colors.background,*/}
-          {/*      borderColor: colors.border,*/}
-          {/*      shadowColor: colors.border,*/}
-          {/*    },*/}
-          {/*    { marginTop: marginTopBanner },*/}
-          {/*  ]}>*/}
-          {/*  <TouchableOpacity*/}
-          {/*    onPress={() => navigation.navigate('SearchHistory')}>*/}
-          {/*    <View*/}
-          {/*      style={[BaseStyle.textInput, { backgroundColor: colors.card }]}>*/}
-          {/*      <Text body1 grayColor style={{ flex: 1 }}>*/}
-          {/*        {t('search_location')}*/}
-          {/*      </Text>*/}
-          {/*      <View style={{ paddingVertical: 8 }}>*/}
-          {/*        <View*/}
-          {/*          style={[*/}
-          {/*            styles.lineForm,*/}
-          {/*            { backgroundColor: colors.border },*/}
-          {/*          ]}*/}
-          {/*        />*/}
-          {/*      </View>*/}
-          {/*      <Icon*/}
-          {/*        name="location-arrow"*/}
-          {/*        size={18}*/}
-          {/*        color={colors.primaryLight}*/}
-          {/*        solid*/}
-          {/*      />*/}
-          {/*    </View>*/}
-          {/*  </TouchableOpacity>*/}
-          {/*</View>*/}
-          {/* services */}
+          <View
+            style={[
+              styles.searchForm,
+              {
+                marginTop: 10,
+                marginBottom: 10,
+                backgroundColor: colors.background,
+                borderColor: colors.border,
+                shadowColor: colors.border,
+              },
+            ]}>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('Filter', {
+                  home: true,
+                  coordinates: {
+                    latitude: getLocation?.latitude ?? null,
+                    longitude: getLocation?.longitude ?? null,
+                  },
+                })
+              }>
+              <View
+                style={[BaseStyle.textInput, { backgroundColor: colors.card }]}>
+                <Text body1 grayColor style={{ flex: 1 }}>
+                  {t('search_businesses')}
+                </Text>
+                <View style={{ paddingVertical: 8 }}>
+                  <View
+                    style={[
+                      styles.lineForm,
+                      { backgroundColor: colors.border },
+                    ]}
+                  />
+                </View>
+                <Icon
+                  name="location-arrow"
+                  size={18}
+                  color={colors.primary}
+                  solid
+                />
+              </View>
+            </TouchableOpacity>
+          </View>
 
           {loading ? (
             <FlatList
-              contentContainerStyle={{
-                padding: 20,
-                marginTop: marginTopBanner,
-              }}
+              contentContainerStyle={{ padding: 20 }}
               data={placeholderItems}
               numColumns={'4'}
               renderItem={() => {
@@ -237,10 +261,7 @@ export default function Home({ navigation }) {
             />
           ) : (
             <FlatList
-              contentContainerStyle={{
-                padding: 20,
-                marginTop: marginTopBanner,
-              }}
+              contentContainerStyle={{ padding: 20 }}
               data={featuredCategories}
               numColumns={'4'}
               keyExtractor={(item, index) => item.id}
@@ -252,7 +273,10 @@ export default function Home({ navigation }) {
                       seeMore({
                         title: item.name,
                         category: item.name,
+                        categoryIcon: item.icon,
                         route: item.route,
+                        latitude: getLocation?.latitude ?? null,
+                        longitude: getLocation?.longitude ?? null,
                       })
                     }>
                     <View
@@ -283,6 +307,8 @@ export default function Home({ navigation }) {
               seeMore({
                 popular: true,
                 title: 'Popular Businesses',
+                latitude: getLocation?.latitude ?? null,
+                longitude: getLocation?.longitude ?? null,
               })
             }
             data={stateProps.popularBusinesses}
@@ -296,9 +322,13 @@ export default function Home({ navigation }) {
                   title={item.name}
                   subtitle={item.category}
                   location={item?.address}
-                  rate={item?.averageRatings || '0.0'}
-                  favoriteOnPress={() => favorite(item._id)}
-                  isFavorite={stateProps?.favoriteIds?.includes(item._id)}
+                  rate={item?.averageRatings || 0.0}
+                  isFavorite={stateProps?.favoriteBusinesses?.some(
+                    (obj) => obj._id === item?._id,
+                  )}
+                  businessId={item?._id}
+                  navigation={navigation}
+                  lastRoute="Home"
                   // status='Open Now'
                   onPress={() => navigateBusinessDetail(item._id)}
                   onPressTag={() => navigateToReview(item._id)}
@@ -313,7 +343,10 @@ export default function Home({ navigation }) {
             subTitle="Lets find out what's new"
             seeMoreFunc={() =>
               seeMore({
+                recent: true,
                 title: 'Recently Added Businesses',
+                latitude: getLocation?.latitude ?? null,
+                longitude: getLocation?.longitude ?? null,
               })
             }
             data={stateProps.recentlyAddedBusinesses}
@@ -325,7 +358,7 @@ export default function Home({ navigation }) {
                   image={item?.thumbnail}
                   title={item.name}
                   subtitle={item.category}
-                  rate={item?.averageRatings || '0.0'}
+                  rate={item?.averageRatings || 0.0}
                   style={{ marginBottom: 15 }}
                   onPress={() => navigateBusinessDetail(item._id)}
                   onPressTag={() => navigateToReview(item._id)}

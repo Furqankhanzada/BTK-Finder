@@ -1,22 +1,33 @@
 import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
-import { BaseColor } from '@config';
-import { Image, Text, StarRating, Tag } from '@components';
+import { BaseColor, useTheme } from '@config';
+import { Image, Text, StarRating, Tag, Icon } from '@components';
 import styles from './styles';
 import PropTypes from 'prop-types';
 import { Images } from '../../config/images';
 import NumberFormat from 'react-number-format';
 
 export default function CardList(props) {
-  const { style, image, title, subtitle, rate, onPress, onPressTag } = props;
+  const { colors } = useTheme();
+  const {
+    style,
+    image,
+    title,
+    subtitle,
+    rate,
+    onPress,
+    onPressTag,
+    editAble,
+    onPressEdit,
+  } = props;
   return (
     <TouchableOpacity
-      style={[styles.contain, style]}
+      style={[styles.contain, { overflow: 'hidden' }, style]}
       onPress={onPress}
       activeOpacity={0.9}>
       <Image source={image} style={styles.image} />
       <View style={{ paddingHorizontal: 10, justifyContent: 'center' }}>
-        <Text headline semibold>
+        <Text headline semibold numberOfLines={1}>
           {title}
         </Text>
         <Text footnote semibold grayColor style={{ marginTop: 4 }}>
@@ -44,6 +55,13 @@ export default function CardList(props) {
           />
         </View>
       </View>
+      {editAble ? (
+        <TouchableOpacity
+          onPress={onPressEdit}
+          style={[styles.editIcon, { backgroundColor: colors.primary }]}>
+          <Icon name="pencil-alt" color="white" />
+        </TouchableOpacity>
+      ) : null}
     </TouchableOpacity>
   );
 }
@@ -56,6 +74,8 @@ CardList.propTypes = {
   rate: PropTypes.number,
   onPress: PropTypes.func,
   onPressTag: PropTypes.func,
+  editAble: PropTypes.bool,
+  onPressEdit: PropTypes.func,
 };
 
 CardList.defaultProps = {
@@ -66,4 +86,6 @@ CardList.defaultProps = {
   rate: 0,
   onPress: () => {},
   onPressTag: () => {},
+  editAble: false,
+  onPressEdit: () => {},
 };

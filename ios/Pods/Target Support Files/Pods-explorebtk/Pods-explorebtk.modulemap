@@ -1,0 +1,6 @@
+module Pods_explorebtk {
+  umbrella header "Pods-explorebtk-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -1,13 +1,12 @@
 import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
-import { Image, Text, StarRating, Tag, Icon } from '@components';
+import { Image, Text, StarRating, Tag, Icon, FavouriteIcon } from '@components';
 import { BaseColor, useTheme } from '@config';
 import PropTypes from 'prop-types';
 import styles from './styles';
 import { useTranslation } from 'react-i18next';
 import { Images } from '../../config';
 import NumberFormat from 'react-number-format';
-import Icon2 from 'react-native-vector-icons/FontAwesome';
 
 export default function PlaceItem(props) {
   const { t } = useTranslation();
@@ -26,9 +25,12 @@ export default function PlaceItem(props) {
     rateStatus,
     numReviews,
     onPress,
-    favoriteOnPress,
     isFavorite,
     onPressTag,
+    businessId,
+    navigation,
+    lastRoute,
+    routeId,
   } = props;
   /**
    * Display place item as block
@@ -43,23 +45,14 @@ export default function PlaceItem(props) {
               {t(status)}
             </Tag>
           ) : null}
-          {isFavorite ? (
-            <Icon2
-              onPress={favoriteOnPress}
-              name={'heart'}
-              color={BaseColor.orangeColor}
-              size={24}
-              style={styles.iconLike}
-            />
-          ) : (
-            <Icon
-              onPress={favoriteOnPress}
-              name={'heart'}
-              color={BaseColor.orangeColor}
-              size={24}
-              style={styles.iconLike}
-            />
-          )}
+          <FavouriteIcon
+            style={styles.iconLike}
+            navigation={navigation}
+            lastRoute={lastRoute}
+            routeId={routeId}
+            isFavorite={isFavorite}
+            favoriteId={businessId}
+          />
 
           <View style={styles.blockContentRate}>
             <View
@@ -147,23 +140,14 @@ export default function PlaceItem(props) {
       <View style={[styles.listContent, style]}>
         <TouchableOpacity onPress={onPress} activeOpacity={0.6}>
           <Image source={image} style={styles.listImage} />
-          {isFavorite ? (
-            <Icon2
-              onPress={favoriteOnPress}
-              name={'heart'}
-              color={BaseColor.orangeColor}
-              size={18}
-              style={styles.iconListLike}
-            />
-          ) : (
-            <Icon
-              onPress={favoriteOnPress}
-              name={'heart'}
-              color={BaseColor.orangeColor}
-              size={18}
-              style={styles.iconListLike}
-            />
-          )}
+          <FavouriteIcon
+            style={styles.iconListLike}
+            navigation={navigation}
+            lastRoute={lastRoute}
+            routeId={routeId}
+            isFavorite={isFavorite}
+            favoriteId={businessId}
+          />
           {/*<Tag status style={styles.listTagStatus}>*/}
           {/*  {t(status)}*/}
           {/*</Tag>*/}
@@ -222,23 +206,14 @@ export default function PlaceItem(props) {
           {/*<Tag status style={styles.tagGirdStatus}>*/}
           {/*  {t(status)}*/}
           {/*</Tag>*/}
-          {isFavorite ? (
-            <Icon2
-              onPress={favoriteOnPress}
-              name={'heart'}
-              color={BaseColor.orangeColor}
-              size={18}
-              style={styles.iconGirdLike}
-            />
-          ) : (
-            <Icon
-              onPress={favoriteOnPress}
-              name={'heart'}
-              color={BaseColor.orangeColor}
-              size={18}
-              style={styles.iconGirdLike}
-            />
-          )}
+          <FavouriteIcon
+            style={styles.iconGirdLike}
+            navigation={navigation}
+            lastRoute={lastRoute}
+            routeId={routeId}
+            isFavorite={isFavorite}
+            favoriteId={businessId}
+          />
         </TouchableOpacity>
         <TouchableOpacity onPress={onPress} activeOpacity={0.6}>
           <Text
@@ -311,7 +286,6 @@ PlaceItem.propTypes = {
   numReviews: PropTypes.number,
   onPress: PropTypes.func,
   onPressTag: PropTypes.func,
-  favoriteOnPress: PropTypes.func,
   isFavorite: PropTypes.bool,
 };
 
@@ -330,7 +304,6 @@ PlaceItem.defaultProps = {
   rateStatus: '',
   numReviews: 0,
   isFavorite: false,
-  favoriteOnPress: () => {},
   onPress: () => {},
   onPressTag: () => {},
 };

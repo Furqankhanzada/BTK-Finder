@@ -1,68 +1,78 @@
 import React, { useEffect } from 'react';
-import { FlatList, View } from 'react-native';
+import { FlatList, Platform, View } from 'react-native';
 import { BaseStyle } from '@config';
-import { Header, SafeAreaView, CardList, Text, Loading } from '@components';
+import { Header, SafeAreaView, Text, Loading, CardList } from '@components';
+import styles from '../Place/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { getFavoriteBusinesses } from '../../actions/favorites';
-import styles from '../Place/styles';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export default function Favourite({ navigation }) {
   const dispatch = useDispatch();
 
-  const stateProps = useSelector(({ favorites, businesses }) => {
+  const stateProps = useSelector(({ favorites }) => {
     return {
-      loading: favorites.loadingFavoriteBusinesses,
-      data: favorites.favoriteBusinesses,
-      ids: businesses.favoriteIds,
+      favoriteBusinesses: favorites.getFavoriteBusinesses,
+      loading: favorites.getFavoriteBusinessesLoading,
     };
   });
-
-  useEffect(() => {
-    dispatch(getFavoriteBusinesses());
-  }, [stateProps.ids]);
-
-  const listEmptyComponent = () => {
-    return (
-      <View style={styles.sectionEmpty}>
-        <Text semibold style={styles.sectionEmptyText}>
-          No Favourite Available
-        </Text>
-      </View>
-    );
-  };
 
   const navigateBusinessDetail = (id) => {
     navigation.navigate('PlaceDetail', { id });
   };
 
+  useEffect(() => {
+    dispatch(
+      getFavoriteBusinesses({
+        favorite: true,
+        skip: 0,
+        fields: 'name, thumbnail, category, averageRatings',
+      }),
+    );
+  }, [dispatch]);
+
+  const offsetKeyboard = Platform.select({
+    ios: 0,
+    android: 20,
+  });
   return (
     <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
-      <Header title="Favourite" />
-      <View style={{ flex: 1 }}>
-        <Loading loading={stateProps.loading} />
-        <FlatList
-          contentContainerStyle={{
-            paddingHorizontal: 20,
-            paddingTop: 15,
-            flex: stateProps?.data?.length ? 0 : 1,
-          }}
-          data={stateProps.data}
-          ListEmptyComponent={listEmptyComponent}
-          keyExtractor={(item, index) => item.id}
-          renderItem={({ item, index }) => {
-            return (
-              <CardList
-                image={item?.thumbnail}
-                title={item?.name}
-                subtitle={item?.category}
-                rate={item?.averageRatings}
-                style={{ marginBottom: 15 }}
-                onPress={() => navigateBusinessDetail(item._id)}
-              />
-            );
-          }}
-        />
-      </View>
+      <Loading loading={stateProps?.loading} />
+      <Header title="Favorite Businesses" />
+      {stateProps?.favoriteBusinesses?.length ? (
+        <ScrollView
+          behavior={Platform.OS === 'android' ? 'height' : 'padding'}
+          keyboardVerticalOffset={offsetKeyboard}
+          style={{ flex: 1 }}>
+          <FlatList
+            contentContainerStyle={{
+              paddingHorizontal: 20,
+              paddingTop: 15,
+              flex: stateProps?.data?.length ? 0 : 1,
+            }}
+            data={stateProps.favoriteBusinesses}
+            keyExtractor={(item, index) => item.id}
+            renderItem={({ item, index }) => {
+              return (
+                <CardList
+                  image={item?.thumbnail}
+                  title={item?.name}
+                  subtitle={item?.category}
+                  rate={item?.averageRatings}
+                  style={{ marginBottom: 15 }}
+                  onPress={() => navigateBusinessDetail(item._id)}
+                />
+              );
+            }}
+          />
+        </ScrollView>
+      ) : (
+        <View style={styles.sectionEmpty}>
+          <Text semibold style={styles.sectionEmptyText}>
+            No Favorite Businesses Available
+          </Text>
+        </View>
+      )}
     </SafeAreaView>
   );
 }

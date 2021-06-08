@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
-  FlatList,
   RefreshControl,
   View,
   Animated,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import { BaseStyle, BaseColor, useTheme } from '@config';
@@ -24,35 +24,77 @@ import * as Utils from '@utils';
 import { PlaceListData } from '@data';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllBusinesses, toggleFavorite } from '../../actions/business';
-import { showBetaModal } from '../../popup/betaPopup';
+import { getAllBusinesses, setFilteredData } from '../../actions/business';
 
 export default function Place(props) {
   const { navigation, route } = props;
   const dispatch = useDispatch();
   const [limit] = useState(10);
   const [skip, setSkip] = useState(0);
+  const [isSortLocation, setSortLocation] = useState(false);
+  const [location, setLocation] = useState({
+    latitude: route?.params?.latitude,
+    longitude: route?.params?.longitude,
+  });
 
-  useEffect(() => {
-    let payload = { limit, skip };
+  const getBusinesses = () => {
+    let payload = {
+      limit,
+      skip,
+      loading: true,
+    };
     if (route?.params?.popular) {
       payload.popular = true;
+    }
+    if (route?.params?.recent) {
+      payload.recent = true;
     }
     if (route?.params?.category) {
       payload.category = route.params.category;
     }
+    if (stateProps?.filteredData?.search) {
+      payload.search = stateProps.filteredData.search;
+    }
+    if (stateProps?.filteredData?.category) {
+      payload.category = stateProps.filteredData.category.map((e) => e.name);
+    }
+    if (stateProps?.filteredData?.tags) {
+      payload.tags = stateProps.filteredData.tags.map((e) => e.name);
+    }
+    if (stateProps?.filteredData?.facilities) {
+      payload.facilities = stateProps.filteredData.facilities.map(
+        (e) => e.name,
+      );
+    }
+    if (isSortLocation) {
+      payload.latitude = location.longitude;
+      payload.longitude = location.latitude;
+    }
     dispatch(getAllBusinesses(payload));
+  };
+
+  useEffect(() => {
+    getBusinesses();
   }, [skip]);
 
-  const stateProps = useSelector(({ businesses }) => {
+  useEffect(() => {
+    return () => {
+      dispatch({ type: 'CLEAR_ALL_BUSINESSES_API' });
+      dispatch(setFilteredData({}));
+    };
+  }, [dispatch]);
+
+  const stateProps = useSelector(({ businesses, favorites }) => {
     return {
       loading: businesses.getAllBusinessesLoading,
       data: businesses.allBusinesses,
       loadMoreLoading: businesses.getAllBusinessesLoadMoreLoading,
-      isLoadMore: businesses.getAllBusinessesLoadMore,
-      favoriteIds: businesses.favoriteIds,
+      isLoadMore: businesses.isLoadMore,
+      favoriteBusinesses: favorites.getFavoriteBusinesses,
+      filteredData: businesses.filteredData,
     };
   });
+
   const { t } = useTranslation();
   const { colors } = useTheme();
   const scrollAnim = new Animated.Value(0);
@@ -74,7 +116,6 @@ export default function Place(props) {
 
   const [active, setActive] = useState(0);
   const [viewportWidth, setViewportWidth] = useState(Utils.getWidthDevice());
-  const [refreshing] = useState(false);
   const [modeView, setModeView] = useState('grid');
   const [mapView, setMapView] = useState(false);
   const [region, setRegion] = useState({
@@ -99,16 +140,6 @@ export default function Place(props) {
    * call when on change sort
    */
   const onChangeSort = () => {};
-
-  /**
-   * @description Open modal when filterring mode is applied
-   * @author Passion UI <passionui.com>
-   * @date 2019-09-01
-   */
-  const onFilter = () => {
-    showBetaModal();
-    // navigation.navigate('Filter');
-  };
 
   /**
    * @description Open modal when view mode is pressed
@@ -151,6 +182,35 @@ export default function Place(props) {
     }
   };
 
+  const onSortLocation = () => {
+    if (route?.params?.latitude && route?.params?.longitude) {
+      setSkip(0);
+      setSortLocation(!isSortLocation);
+    } else {
+      Alert.alert(
+        'Location Access Required',
+        'If you want to see Businesses near you. Go to your mobile Location settings and allow Explore BTK to access your location',
+      );
+    }
+  };
+
+  const navigateToSearchPage = () => {
+    let params = {
+      popular: route?.params?.popular,
+      recent: route?.params?.recent,
+      category: route?.params?.category,
+      categoryIcon: route?.params?.categoryIcon,
+    };
+    if (isSortLocation) {
+      params.coordinates = {
+        latitude: route?.params?.latitude,
+        longitude: route?.params?.longitude,
+      };
+      params.locationSort = true;
+    }
+    navigation.navigate('Filter', { ...params });
+  };
+
   const navigateBusinessDetail = (id) => {
     navigation.navigate('PlaceDetail', { id });
   };
@@ -160,17 +220,17 @@ export default function Place(props) {
   };
 
   const onScrollHandler = () => {
-    if (stateProps.isLoadMore) {
-      setSkip(skip + 10);
+    if (stateProps.loading || stateProps.isLoadMore) {
+      return;
     }
+    setSkip(stateProps.data.length);
   };
   const onRefreshHandler = () => {
-    // setLimit(10);
     setSkip(0);
   };
 
   const renderFooter = () => {
-    if (!stateProps.loadMoreLoading && stateProps.isLoadMore) {
+    if (stateProps.data.length && stateProps.loadMoreLoading) {
       return (
         <View style={styles.listFooter}>
           <ActivityIndicator size="large" color={BaseColor.blueColor} />
@@ -184,14 +244,12 @@ export default function Place(props) {
     return (
       <View style={styles.sectionEmpty}>
         <Text semibold style={styles.sectionEmptyText}>
-          No {route?.params?.title || t('place')} Available
+          {stateProps?.filteredData?.search
+            ? 'No search results found, Try different keywords'
+            : `No ${route?.params?.title || t('place')} Available`}
         </Text>
       </View>
     );
-  };
-
-  const favorite = (id) => {
-    dispatch(toggleFavorite(id));
   };
 
   /**
@@ -219,12 +277,13 @@ export default function Place(props) {
                 <RefreshControl
                   colors={[colors.primary]}
                   tintColor={colors.primary}
-                  refreshing={refreshing}
+                  refreshing={false}
+                  progressViewOffset={80}
                   onRefresh={() => onRefreshHandler()}
                 />
               }
               onEndReached={onScrollHandler}
-              onEndThreshold={0}
+              onEndThreshold={0.1}
               scrollEventThrottle={1}
               onScroll={Animated.event(
                 [
@@ -240,7 +299,7 @@ export default function Place(props) {
               )}
               data={stateProps.data}
               key={'block'}
-              keyExtractor={(item, index) => item.id}
+              keyExtractor={(item, index) => item._id}
               ListEmptyComponent={listEmptyComponent}
               renderItem={({ item, index }) => (
                 <PlaceItem
@@ -254,8 +313,12 @@ export default function Place(props) {
                   status={item?.status}
                   // rateStatus={item?.rateStatus}
                   numReviews={item?.reviews?.length}
-                  favoriteOnPress={() => favorite(item._id)}
-                  isFavorite={stateProps?.favoriteIds?.includes(item._id)}
+                  isFavorite={stateProps?.favoriteBusinesses?.some(
+                    (obj) => obj._id === item?._id,
+                  )}
+                  businessId={item?._id}
+                  navigation={navigation}
+                  lastRoute={route?.param?.category ? 'Category' : 'Place'}
                   onPress={() => navigateBusinessDetail(item._id)}
                   onPressTag={() => navigateToReview(item._id)}
                 />
@@ -271,7 +334,8 @@ export default function Place(props) {
                 modeView={modeView}
                 onChangeSort={onChangeSort}
                 onChangeView={onChangeView}
-                onFilter={onFilter}
+                onLocation={onSortLocation}
+                isLocation={isSortLocation}
               />
             </Animated.View>
           </View>
@@ -289,12 +353,13 @@ export default function Place(props) {
                 <RefreshControl
                   colors={[colors.primary]}
                   tintColor={colors.primary}
-                  refreshing={refreshing}
+                  refreshing={false}
+                  progressViewOffset={80}
                   onRefresh={() => onRefreshHandler()}
                 />
               }
               onEndReached={onScrollHandler}
-              onEndThreshold={0}
+              onEndThreshold={0.1}
               scrollEventThrottle={1}
               onScroll={Animated.event(
                 [
@@ -310,7 +375,7 @@ export default function Place(props) {
               )}
               data={stateProps.data}
               key={'list'}
-              keyExtractor={(item, index) => item.id}
+              keyExtractor={(item, index) => item._id}
               ListFooterComponent={renderFooter}
               ListEmptyComponent={listEmptyComponent}
               renderItem={({ item, index }) => (
@@ -325,8 +390,12 @@ export default function Place(props) {
                   status={item?.status}
                   rateStatus={item?.rateStatus}
                   numReviews={item?.reviews?.length}
-                  favoriteOnPress={() => favorite(item._id)}
-                  isFavorite={stateProps?.favoriteIds?.includes(item._id)}
+                  isFavorite={stateProps?.favoriteBusinesses?.some(
+                    (obj) => obj._id === item?._id,
+                  )}
+                  businessId={item?._id}
+                  navigation={navigation}
+                  lastRoute={route?.param?.category ? 'Category' : 'Place'}
                   style={{
                     marginBottom: 15,
                   }}
@@ -346,7 +415,8 @@ export default function Place(props) {
                 modeView={modeView}
                 onChangeSort={onChangeSort}
                 onChangeView={onChangeView}
-                onFilter={onFilter}
+                onLocation={onSortLocation}
+                isLocation={isSortLocation}
               />
             </Animated.View>
           </View>
@@ -367,12 +437,13 @@ export default function Place(props) {
                 <RefreshControl
                   colors={[colors.primary]}
                   tintColor={colors.primary}
-                  refreshing={refreshing}
+                  refreshing={false}
+                  progressViewOffset={80}
                   onRefresh={() => onRefreshHandler()}
                 />
               }
               onEndReached={onScrollHandler}
-              onEndThreshold={0}
+              onEndThreshold={0.1}
               scrollEventThrottle={1}
               onScroll={Animated.event(
                 [
@@ -390,7 +461,7 @@ export default function Place(props) {
               numColumns={2}
               data={stateProps.data}
               key={'grid'}
-              keyExtractor={(item, index) => item.id}
+              keyExtractor={(item, index) => item._id}
               ListFooterComponent={renderFooter}
               ListEmptyComponent={listEmptyComponent}
               renderItem={({ item, index }) => (
@@ -405,8 +476,12 @@ export default function Place(props) {
                   status={item?.status}
                   rateStatus={item?.rateStatus}
                   numReviews={item?.reviews.length}
-                  favoriteOnPress={() => favorite(item._id)}
-                  isFavorite={stateProps?.favoriteIds?.includes(item._id)}
+                  isFavorite={stateProps?.favoriteBusinesses?.some(
+                    (obj) => obj._id === item?._id,
+                  )}
+                  businessId={item?._id}
+                  navigation={navigation}
+                  lastRoute={route?.param?.category ? 'Category' : 'Place'}
                   style={{
                     marginLeft: 15,
                     marginBottom: 15,
@@ -427,7 +502,8 @@ export default function Place(props) {
                 modeView={modeView}
                 onChangeSort={onChangeSort}
                 onChangeView={onChangeView}
-                onFilter={onFilter}
+                onLocation={onSortLocation}
+                isLocation={isSortLocation}
               />
             </Animated.View>
           </View>
@@ -555,17 +631,19 @@ export default function Place(props) {
         renderRightSecond={() => {
           return <Icon name="search" size={20} color={colors.primary} />;
         }}
-        onPressRightSecond={() => {
-          showBetaModal();
-          // navigation.navigate('SearchHistory');
-        }}
+        onPressRightSecond={() => navigateToSearchPage()}
         onPressRight={() => {
           onChangeMapView();
         }}
       />
       <View style={{ position: 'relative', flex: 1 }}>
-        <Loading loading={stateProps.loading} />
-        {mapView ? renderMapView() : renderList()}
+        {stateProps.loading ? (
+          <Loading loading={true} />
+        ) : mapView ? (
+          renderMapView()
+        ) : (
+          renderList()
+        )}
       </View>
     </SafeAreaView>
   );

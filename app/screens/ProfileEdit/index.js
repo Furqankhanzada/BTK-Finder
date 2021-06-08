@@ -46,9 +46,12 @@ export default function ProfileEdit({ navigation }) {
 
   const onSubmit = () => {
     dispatch(
-      editProfile({ name, email, phone, _id: profileData._id }, () => {
-        navigation.goBack();
-      }),
+      editProfile(
+        { name, email, phone: phone.replace(/\s+/g, ''), _id: profileData._id },
+        () => {
+          navigation.goBack();
+        },
+      ),
     );
   };
 

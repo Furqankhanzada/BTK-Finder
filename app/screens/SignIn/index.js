@@ -38,7 +38,8 @@ export default function SignIn(props) {
    *
    */
   const onLogin = () => {
-    let lastRoute = params && params.lastRoute ? params.lastRoute : '';
+    let lastRoute = params?.lastRoute?.lastRoute ?? params.lastRoute ?? '';
+    let id = params?.lastRoute?.id ?? '';
     if (username === '' || password === '') {
       setSuccess({
         ...success,
@@ -51,7 +52,7 @@ export default function SignIn(props) {
         login({ username, password }, (error) => {
           setLoading(false);
           if (!error) {
-            navigation.navigate(lastRoute ? lastRoute : 'Profile');
+            navigation.navigate(lastRoute ? lastRoute : 'Profile', { id });
           }
         }),
       );

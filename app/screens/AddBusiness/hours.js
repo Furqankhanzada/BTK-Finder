@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
-import { BaseStyle, useTheme } from '@config';
+import { ScrollView } from 'react-native-gesture-handler';
+import { useDispatch, useSelector } from 'react-redux';
+import { BaseStyle } from '@config';
 import {
   Header,
   SafeAreaView,
@@ -8,43 +10,63 @@ import {
   Text,
   CustomStepIndicator,
   HoursCheckbox,
+  FloatingButton,
 } from '@components';
 import styles from './styles';
-import { ScrollView } from 'react-native-gesture-handler';
-import ActionButton from 'react-native-action-button';
-import { useDispatch, useSelector } from 'react-redux';
-import { setBusinessFormData } from '../../actions/business';
+import {
+  setBusinessFormData,
+  updateEditBusinessData,
+} from '../../actions/business';
 
 export default function Hours({ navigation }) {
-  const { colors } = useTheme();
   const dispatch = useDispatch();
-  const businesses = useSelector(({ businesses }) => businesses);
-  const { businessFormData } = businesses;
+  const stateProps = useSelector(({ businesses }) => {
+    return {
+      editBusiness: businesses.editBusiness,
+      editBusinessData: businesses.editBusinessData,
+      businessFormData: businesses.businessFormData,
+    };
+  });
+  const businessFormData = stateProps?.editBusiness
+    ? stateProps?.editBusinessData
+    : stateProps?.businessFormData;
 
   const [selectedDays, setSelectedDays] = useState([]);
 
   useEffect(() => {
+    let array = [
+      { day: 'Monday', from: '09:00 am', to: '05:00 pm', isOpen: false },
+      { day: 'Tuesday', from: '09:00 am', to: '05:00 pm', isOpen: false },
+      { day: 'Wednesday', from: '09:00 am', to: '05:00 pm', isOpen: false },
+      { day: 'Thursday', from: '09:00 am', to: '05:00 pm', isOpen: false },
+      { day: 'Friday', from: '09:00 am', to: '05:00 pm', isOpen: false },
+      { day: 'Saturday', from: '09:00 am', to: '05:00 pm', isOpen: false },
+      { day: 'Sunday', from: '09:00 am', to: '05:00 pm', isOpen: false },
+    ];
     if (businessFormData.openHours && businessFormData.openHours.length) {
-      setSelectedDays(businessFormData.openHours);
+      array = businessFormData.openHours
+        .map((v) => ({ ...v, isOpen: true }))
+        .concat(
+          array.filter(
+            ({ day }) => !businessFormData.openHours.find((f) => f.day === day),
+          ),
+        );
+      setSelectedDays(array);
     } else {
-      setSelectedDays([
-        { day: 'Monday', from: '09:00 am', to: '05:00 pm', isOpen: false },
-        { day: 'Tuesday', from: '09:00 am', to: '05:00 pm', isOpen: false },
-        { day: 'Wednesday', from: '09:00 am', to: '05:00 pm', isOpen: false },
-        { day: 'Thursday', from: '09:00 am', to: '05:00 pm', isOpen: false },
-        { day: 'Friday', from: '09:00 am', to: '05:00 pm', isOpen: false },
-        { day: 'Saturday', from: '09:00 am', to: '05:00 pm', isOpen: false },
-        { day: 'Sunday', from: '09:00 am', to: '05:00 pm', isOpen: false },
-      ]);
+      setSelectedDays(array);
     }
-  }, []);
+  }, [businessFormData.openHours]);
 
   const onNext = () => {
     let payload = {};
     if (selectedDays && selectedDays.length) {
-      payload.openHours = selectedDays;
+      payload.openHours = selectedDays.filter((obj) => obj.isOpen);
     }
-    dispatch(setBusinessFormData(payload));
+    if (stateProps.editBusiness) {
+      dispatch(updateEditBusinessData(payload));
+    } else {
+      dispatch(setBusinessFormData(payload));
+    }
     navigation.navigate('PriceRange');
   };
 
@@ -67,7 +89,9 @@ export default function Hours({ navigation }) {
   return (
     <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
       <Header
-        title={'Add Your Business'}
+        title={
+          stateProps?.editBusiness ? 'Edit Your Business' : 'Add Your Business'
+        }
         renderLeft={() => {
           return (
             <Icon
@@ -101,16 +125,7 @@ export default function Hours({ navigation }) {
           })}
         </View>
       </ScrollView>
-      <ActionButton
-        buttonColor={colors.primary}
-        nativeFeedbackRippleColor="transparent"
-        onPress={() => onNext()}
-        offsetX={20}
-        offsetY={10}
-        icon={
-          <Icon name="arrow-right" size={20} color="white" enableRTL={true} />
-        }
-      />
+      <FloatingButton onPress={() => onNext()} />
     </SafeAreaView>
   );
 }

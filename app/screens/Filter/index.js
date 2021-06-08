@@ -1,200 +1,251 @@
-import React, {useState} from 'react';
-import {View, FlatList, TouchableOpacity, ScrollView} from 'react-native';
-import {BaseStyle, BaseColor, useTheme} from '@config';
+import React, { useEffect, useState } from 'react';
+import {
+  View,
+  TouchableOpacity,
+  ScrollView,
+  ActivityIndicator,
+} from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import remoteConfig from '@react-native-firebase/remote-config';
+import { BaseStyle, BaseColor, useTheme } from '@config';
 import {
   Header,
   SafeAreaView,
   Icon,
   Text,
   Tag,
-  BookingTime,
-  StarRating,
   TextInput,
+  Loading,
+  Button,
 } from '@components';
-import RangeSlider from 'rn-range-slider';
 import * as Utils from '@utils';
 import styles from './styles';
-import {useTranslation} from 'react-i18next';
+import { getCategories } from '../../actions/category';
+import { getAllBusinesses, setFilteredData } from '../../actions/business';
 
-export default function Filter({navigation}) {
-  const {colors} = useTheme();
-  const {t} = useTranslation();
+export default function Filter(props) {
+  const { navigation, route } = props;
+  const { colors } = useTheme();
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
 
-  const [priceBegin, setPriceBegin] = useState(0);
-  const [priceEnd, setPriceEnd] = useState(100);
-  const [rate, setRate] = useState(5);
-  const [search, setSearch] = useState('');
-  const [category, setCategory] = useState([
-    {id: '1', name: 'Architecture', checked: true},
-    {id: '2', name: 'Insurance'},
-    {id: '3', name: 'Beauty'},
-    {id: '4', name: 'Artists'},
-    {id: '5', name: 'Outdoors'},
-    {id: '6', name: 'Clothing'},
-    {id: '7', name: 'Jewelry'},
-  ]);
-  const [facilities, setFacilities] = useState([
-    {id: '1', icon: 'wifi', name: 'Free Wifi', checked: true},
-    {id: '2', icon: 'bath', name: 'Shower'},
-    {id: '3', icon: 'paw', name: 'Pet Allowed'},
-    {id: '4', icon: 'bus', name: 'Shuttle Bus'},
-    {id: '5', icon: 'cart-plus', name: 'Supper Market'},
-    {id: '6', icon: 'clock', name: 'Open 24/7'},
-  ]);
-  const [interio, setInterio] = useState([
-    {id: '1', name: '1', color: '#FD5739', checked: true},
-    {id: '2', name: '2', color: '#C31C0D'},
-    {id: '3', name: '3', color: '#FF8A65'},
-    {id: '4', name: '4', color: '#4A90A4'},
-    {id: '5', name: '5', color: '#212121'},
-  ]);
-  const [location, setLocation] = useState([]);
-  const [area, setArea] = useState([]);
+  const stateProps = useSelector(({ categories, businesses }) => {
+    return {
+      categories: categories.all,
+      filteredData: businesses.filteredData,
+      loading: businesses.getAllBusinessesLoading,
+    };
+  });
+
+  // const [priceBegin, setPriceBegin] = useState(0);
+  // const [priceEnd, setPriceEnd] = useState(100);
+  // const [rate, setRate] = useState(5);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState(stateProps?.filteredData?.search ?? '');
+  const [selectedCategories, setSelectedCategories] = useState(
+    stateProps?.filteredData?.category ?? [],
+  );
+  const [tags, setTags] = useState([]);
+  const [selectedTags, setSelectedTags] = useState(
+    stateProps?.filteredData?.tags ?? [],
+  );
+  const [facilities, setFacilities] = useState([]);
+  const [selectedFacilities, setSelectedFacilities] = useState(
+    stateProps?.filteredData?.facilities ?? [],
+  );
   const [scrollEnabled, setScrollEnabled] = useState(true);
 
-  /**
-   * @description export text location
-   * @author Passion UI <passionui.com>
-   * @date 2020-02-01
-   * @param {*} select
-   */
-  const renderTextFromList = list => {
-    let listString = [];
-    listString = list.map(item => {
-      return item.location;
-    });
-    return listString.join(',');
-  };
+  useEffect(() => {
+    const getFacilities = remoteConfig().getValue('facilities');
+    getFacilities._value
+      ? setFacilities(JSON.parse(getFacilities._value))
+      : null;
+  }, []);
 
-  /**
-   * @description Called when filtering option > location
-   * @author Passion UI <passionui.com>
-   * @date 2020-02-01
-   * @param {*} select
-   */
-  const onNavigateLocation = () => {
-    navigation.navigate('ChooseLocation', {
-      onApply: data => {
-        setLocation(data);
+  useEffect(() => {
+    const getTags = remoteConfig().getValue('tags');
+    getTags ? setTags(JSON.parse(getTags._value)) : null;
+  }, []);
+
+  useEffect(() => {
+    dispatch(
+      getCategories({}, () => {
+        setLoading(false);
+      }),
+    );
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (route?.params?.category && route?.params?.categoryIcon) {
+      if (!selectedCategories.length) {
+        setSelectedCategories([
+          {
+            name: route.params.category,
+            icon: route.params.categoryIcon,
+          },
+        ]);
+      }
+    }
+  }, [dispatch]);
+
+  const onAddCategory = () => {
+    navigation.navigate('ChooseItems', {
+      onApply: (data) => {
+        setSelectedCategories(data);
       },
-      selected: location,
+      items: stateProps.categories,
+      selected: selectedCategories,
+      title: 'Categories',
     });
   };
 
-  /**
-   * @description Called when filtering option > area
-   * @author Passion UI <passionui.com>
-   * @date 2020-02-01
-   * @param {*} select
-   */
-  const onNavigateArea = () => {
-    navigation.navigate('ChooseLocation', {
-      onApply: data => {
-        setArea(data);
+  const onAddTags = () => {
+    navigation.navigate('ChooseItems', {
+      onApply: (data) => {
+        setSelectedTags(data);
       },
-      selected: area,
+      items: tags,
+      selected: selectedTags,
+      title: 'Tags',
+      search: true,
     });
   };
-  /**
-   * @description Called when filtering option > category
-   * @author Passion UI <passionui.com>
-   * @date 2019-09-01
-   * @param {*} select
-   */
-  const onSelectCategory = select => {
-    setCategory(
-      category.map(item => {
-        if (item.name == select.name) {
-          return {
-            ...item,
-            checked: true,
-          };
-        } else {
-          return {
-            ...item,
-            checked: false,
-          };
-        }
-      }),
-    );
+
+  const onAddFacility = () => {
+    navigation.navigate('ChooseItems', {
+      onApply: (data) => {
+        setSelectedFacilities(data);
+      },
+      items: facilities,
+      selected: selectedFacilities,
+      title: 'Facilities',
+    });
   };
 
-  /**
-   * @description Called when filtering option > Facilities
-   * @author Passion UI <passionui.com>
-   * @date 2019-09-01
-   * @param {*} select
-   */
-  const onSelectFacilities = select => {
-    setFacilities(
-      facilities.map(item => {
-        if (item.name == select.name) {
-          return {
-            ...item,
-            checked: true,
-          };
-        } else {
-          return {
-            ...item,
-            checked: false,
-          };
-        }
-      }),
-    );
+  const callBack = () => {
+    if (route?.params?.home) {
+      navigation.navigate('Place', {
+        title: 'Search Results',
+        latitude: route?.params?.coordinates?.latitude ?? null,
+        longitude: route?.params?.coordinates?.longitude ?? null,
+        category: null,
+      });
+    }
+    if (route?.params?.category) {
+      navigation.navigate('Place', {
+        title: 'Search Results',
+        category: null,
+      });
+    } else {
+      navigation.navigate('Place');
+    }
   };
 
-  /**
-   * @description Called when filtering option > Interio
-   * @author Passion UI <passionui.com>
-   * @date 2019-09-01
-   * @param {*} select
-   */
-  const onSelectInterio = select => {
-    setInterio(
-      interio.map(item => {
-        if (item.name == select.name) {
-          return {
-            ...item,
-            checked: true,
-          };
-        } else {
-          return {
-            ...item,
-            checked: false,
-          };
-        }
+  const onApply = () => {
+    let payload = {
+      limit: 10,
+      skip: 0,
+      search: search,
+      category: selectedCategories.map((e) => e.name),
+      tags: selectedTags.map((e) => e.name),
+      facilities: selectedFacilities.map((e) => e.name),
+      loading: true,
+    };
+    if (route?.params?.popular) {
+      payload.popular = true;
+    }
+    if (route?.params?.recent) {
+      payload.recent = true;
+    }
+    if (
+      route?.params?.coordinates?.latitude &&
+      route?.params?.coordinates?.longitude
+    ) {
+      payload.latitude = route.params.coordinates.longitude;
+      payload.longitude = route.params.coordinates.latitude;
+    }
+    dispatch(
+      setFilteredData({
+        search: search,
+        category: selectedCategories,
+        tags: selectedTags,
+        facilities: selectedFacilities,
       }),
     );
+    dispatch(getAllBusinesses(payload, callBack));
+  };
+
+  const onClearFilter = () => {
+    setSearch('');
+    setSelectedTags([]);
+    setSelectedCategories([]);
+    setSelectedFacilities([]);
+  };
+
+  const clearFilterButton = () => {
+    if (
+      search ||
+      selectedTags?.length ||
+      selectedCategories?.length ||
+      selectedFacilities?.length
+    ) {
+      return (
+        <Button
+          round
+          outline={true}
+          icon={
+            <Icon
+              name={'times'}
+              size={15}
+              color={colors.primary}
+              solid
+              style={{ marginRight: 5 }}
+            />
+          }
+          style={{ marginTop: 40 }}
+          onPress={() => onClearFilter()}>
+          Clear Filters
+        </Button>
+      );
+    }
   };
 
   return (
-    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{top: 'always'}}>
+    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
+      <Loading loading={loading} />
       <Header
-        title={t('filtering')}
+        title={
+          route?.params?.locationSort
+            ? 'Search Nearby Businesses'
+            : t('filtering')
+        }
         renderLeft={() => {
           return <Icon name="times" size={20} color={colors.primary} />;
         }}
         renderRight={() => {
-          return (
+          return stateProps.loading ? (
+            <ActivityIndicator color={colors.primary} size="small" />
+          ) : (
             <Text headline primaryColor numberOfLines={1}>
               {t('apply')}
             </Text>
           );
         }}
         onPressLeft={() => navigation.goBack()}
-        onPressRight={() => navigation.goBack()}
+        onPressRight={() => onApply()}
       />
       <ScrollView
         scrollEnabled={scrollEnabled}
         onContentSizeChange={(contentWidth, contentHeight) =>
           setScrollEnabled(Utils.scrollEnabled(contentWidth, contentHeight))
         }>
-        <View style={{paddingHorizontal: 20, paddingVertical: 15}}>
+        <View style={{ paddingHorizontal: 20, paddingVertical: 15 }}>
           <TextInput
-            onChangeText={text => setSearch(text)}
+            onChangeText={(text) => setSearch(text)}
             placeholder={t('search')}
             value={search}
-            onSubmitEditing={() => {}}
+            blurOnSubmit={true}
             icon={
               <TouchableOpacity
                 onPress={() => {
@@ -205,44 +256,24 @@ export default function Filter({navigation}) {
               </TouchableOpacity>
             }
           />
-          <Text headline semibold style={{marginTop: 20}}>
-            {t('category').toUpperCase()}
+          <Text headline semibold style={{ marginTop: 30 }}>
+            {t('categories').toUpperCase()}
           </Text>
           <View style={styles.wrapContent}>
-            {category.map(item => {
+            {selectedCategories.map((item) => {
               return (
                 <Tag
-                  primary={item.checked}
-                  outline={!item.checked}
-                  key={item.id}
-                  style={{
-                    marginTop: 8,
-                    marginRight: 8,
-                  }}
-                  onPress={() => onSelectCategory(item)}>
-                  {item.name}
-                </Tag>
-              );
-            })}
-          </View>
-          <Text headline semibold style={{marginTop: 20}}>
-            {t('facilities').toUpperCase()}
-          </Text>
-          <View style={styles.wrapContent}>
-            {facilities.map(item => {
-              return (
-                <Tag
+                  outline={true}
                   icon={
                     <Icon
                       name={item.icon}
                       size={12}
-                      color={colors.accent}
+                      color={colors.primary}
                       solid
-                      style={{marginRight: 5}}
+                      style={{ marginRight: 5 }}
                     />
                   }
-                  chip
-                  key={item.id}
+                  key={item.name}
                   style={{
                     marginTop: 8,
                     marginRight: 8,
@@ -251,133 +282,203 @@ export default function Filter({navigation}) {
                 </Tag>
               );
             })}
-          </View>
-          <TouchableOpacity
-            style={styles.locationContent}
-            onPress={() => onNavigateLocation()}>
-            <View>
-              <Text headline semibold>
-                {t('location').toUpperCase()}
-              </Text>
-              {location.length > 0 ? (
-                <Text footnote primaryColor style={{marginTop: 5}}>
-                  {renderTextFromList(location)}
-                </Text>
-              ) : (
-                <Text footnote grayColor style={{marginTop: 5}}>
-                  {t('please_select')}
-                </Text>
-              )}
-            </View>
-            <Icon name="angle-right" size={18} color={BaseColor.grayColor} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.locationContent}
-            onPress={() => onNavigateArea()}>
-            <View>
-              <Text headline semibold>
-                {t('area').toUpperCase()}
-              </Text>
-              {area.length > 0 ? (
-                <Text footnote primaryColor style={{marginTop: 5}}>
-                  {renderTextFromList(area)}
-                </Text>
-              ) : (
-                <Text footnote grayColor style={{marginTop: 5}}>
-                  {t('please_select')}
-                </Text>
-              )}
-            </View>
-            <Icon name="angle-right" size={18} color={BaseColor.grayColor} />
-          </TouchableOpacity>
-          <Text headline semibold style={{marginTop: 20}}>
-            {t('price').toUpperCase()}
-          </Text>
-          <View style={styles.contentRange}>
-            <Text caption1 grayColor>
-              $0
-            </Text>
-            <Text caption1 grayColor>
-              $100
-            </Text>
-          </View>
-          <RangeSlider
-            style={{
-              width: '100%',
-              height: 40,
-            }}
-            thumbRadius={12}
-            lineWidth={5}
-            gravity={'center'}
-            labelStyle="none"
-            min={0}
-            max={100}
-            step={1}
-            selectionColor={colors.primary}
-            blankColor={colors.border}
-            onValueChanged={(low, high, fromUser) => {
-              setPriceBegin(low);
-              setPriceEnd(high);
-            }}
-            onTouchStart={() => {
-              setScrollEnabled(false);
-            }}
-            onTouchEnd={() => {
-              setScrollEnabled(true);
-            }}
-          />
-          <View style={styles.contentResultRange}>
-            <Text caption1>{t('avg_price')}</Text>
-            <Text caption1>
-              ${priceBegin} - ${priceEnd}
-            </Text>
-          </View>
-        </View>
-        <Text
-          headline
-          semibold
-          style={{
-            paddingHorizontal: 20,
-            marginTop: 5,
-          }}>
-          {t('business_color').toUpperCase()}
-        </Text>
-        <FlatList
-          contentContainerStyle={{paddingTop: 10}}
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          data={interio}
-          keyExtractor={(item, index) => item.id}
-          renderItem={({item, index}) => (
             <TouchableOpacity
-              style={[styles.circleIcon, {backgroundColor: item.color}]}
-              onPress={() => onSelectInterio(item)}>
-              {item.checked && (
-                <Icon name="check" size={16} color={BaseColor.whiteColor} />
-              )}
+              onPress={() => onAddCategory()}
+              style={[styles.addItem, { backgroundColor: colors.primary }]}>
+              <Text style={{ fontSize: 10, marginRight: 5, color: 'white' }}>
+                Add Category
+              </Text>
+              <Icon size={10} name="plus" color="white" />
             </TouchableOpacity>
-          )}
-        />
-        <View style={{paddingHorizontal: 20, marginTop: 20}}>
-          <Text headline semibold style={{marginBottom: 10}}>
-            {t('open_time').toUpperCase()}
-          </Text>
-          <BookingTime />
-        </View>
-        <View style={{paddingHorizontal: 20, marginVertical: 20}}>
-          <Text headline semibold>
-            {t('rating').toUpperCase()}
-          </Text>
-          <View style={{width: 160, marginTop: 10}}>
-            <StarRating
-              starSize={26}
-              maxStars={5}
-              rating={rate}
-              selectedStar={rate => setRate(rate)}
-              fullStarColor={BaseColor.yellowColor}
-            />
           </View>
+          <Text headline semibold style={{ marginTop: 30 }}>
+            {t('tags').toUpperCase()}
+          </Text>
+          <View style={styles.wrapContent}>
+            {selectedTags.map((item) => {
+              return (
+                <Tag
+                  outline={true}
+                  key={item.name}
+                  style={{
+                    marginTop: 8,
+                    marginRight: 8,
+                  }}>
+                  {item.name}
+                </Tag>
+              );
+            })}
+            <TouchableOpacity
+              onPress={() => onAddTags()}
+              style={[styles.addItem, { backgroundColor: colors.primary }]}>
+              <Text style={{ fontSize: 10, marginRight: 5, color: 'white' }}>
+                Add Tag
+              </Text>
+              <Icon size={10} name="plus" color="white" />
+            </TouchableOpacity>
+          </View>
+          <Text headline semibold style={{ marginTop: 30 }}>
+            {t('facilities').toUpperCase()}
+          </Text>
+          <View style={styles.wrapContent}>
+            {selectedFacilities.map((item) => {
+              return (
+                <Tag
+                  icon={
+                    <Icon
+                      name={item.icon}
+                      size={12}
+                      color={colors.accent}
+                      solid
+                      style={{ marginRight: 5 }}
+                    />
+                  }
+                  chip
+                  key={item.name}
+                  style={{
+                    marginTop: 8,
+                    marginRight: 8,
+                  }}>
+                  {item.name}
+                </Tag>
+              );
+            })}
+            <TouchableOpacity
+              onPress={() => onAddFacility()}
+              style={[styles.addItem, { backgroundColor: colors.accent }]}>
+              <Text style={{ fontSize: 10, marginRight: 5, color: 'white' }}>
+                Add Facility
+              </Text>
+              <Icon size={10} name="plus" color="white" />
+            </TouchableOpacity>
+          </View>
+          {clearFilterButton()}
+          {/*<TouchableOpacity*/}
+          {/*  style={styles.locationContent}*/}
+          {/*  onPress={() => onNavigateLocation()}>*/}
+          {/*  <View>*/}
+          {/*    <Text headline semibold>*/}
+          {/*      {t('location').toUpperCase()}*/}
+          {/*    </Text>*/}
+          {/*    {location.length > 0 ? (*/}
+          {/*      <Text footnote primaryColor style={{ marginTop: 5 }}>*/}
+          {/*        {renderTextFromList(location)}*/}
+          {/*      </Text>*/}
+          {/*    ) : (*/}
+          {/*      <Text footnote grayColor style={{ marginTop: 5 }}>*/}
+          {/*        {t('please_select')}*/}
+          {/*      </Text>*/}
+          {/*    )}*/}
+          {/*  </View>*/}
+          {/*  <Icon name="angle-right" size={18} color={BaseColor.grayColor} />*/}
+          {/*</TouchableOpacity>*/}
+          {/*<TouchableOpacity*/}
+          {/*  style={styles.locationContent}*/}
+          {/*  onPress={() => onNavigateArea()}>*/}
+          {/*  <View>*/}
+          {/*    <Text headline semibold>*/}
+          {/*      {t('area').toUpperCase()}*/}
+          {/*    </Text>*/}
+          {/*    {area.length > 0 ? (*/}
+          {/*      <Text footnote primaryColor style={{ marginTop: 5 }}>*/}
+          {/*        {renderTextFromList(area)}*/}
+          {/*      </Text>*/}
+          {/*    ) : (*/}
+          {/*      <Text footnote grayColor style={{ marginTop: 5 }}>*/}
+          {/*        {t('please_select')}*/}
+          {/*      </Text>*/}
+          {/*    )}*/}
+          {/*  </View>*/}
+          {/*  <Icon name="angle-right" size={18} color={BaseColor.grayColor} />*/}
+          {/*</TouchableOpacity>*/}
+          {/*<Text headline semibold style={{ marginTop: 20 }}>*/}
+          {/*  {t('price').toUpperCase()}*/}
+          {/*</Text>*/}
+          {/*<View style={styles.contentRange}>*/}
+          {/*  <Text caption1 grayColor>*/}
+          {/*    $0*/}
+          {/*  </Text>*/}
+          {/*  <Text caption1 grayColor>*/}
+          {/*    $100*/}
+          {/*  </Text>*/}
+          {/*</View>*/}
+          {/*<RangeSlider*/}
+          {/*  style={{*/}
+          {/*    width: '100%',*/}
+          {/*    height: 40,*/}
+          {/*  }}*/}
+          {/*  thumbRadius={12}*/}
+          {/*  lineWidth={5}*/}
+          {/*  gravity={'center'}*/}
+          {/*  labelStyle="none"*/}
+          {/*  min={0}*/}
+          {/*  max={100}*/}
+          {/*  step={1}*/}
+          {/*  selectionColor={colors.primary}*/}
+          {/*  blankColor={colors.border}*/}
+          {/*  onValueChanged={(low, high, fromUser) => {*/}
+          {/*    setPriceBegin(low);*/}
+          {/*    setPriceEnd(high);*/}
+          {/*  }}*/}
+          {/*  onTouchStart={() => {*/}
+          {/*    setScrollEnabled(false);*/}
+          {/*  }}*/}
+          {/*  onTouchEnd={() => {*/}
+          {/*    setScrollEnabled(true);*/}
+          {/*  }}*/}
+          {/*/>*/}
+          {/*<View style={styles.contentResultRange}>*/}
+          {/*  <Text caption1>{t('avg_price')}</Text>*/}
+          {/*  <Text caption1>*/}
+          {/*    ${priceBegin} - ${priceEnd}*/}
+          {/*  </Text>*/}
+          {/*</View>*/}
         </View>
+        {/*<Text*/}
+        {/*  headline*/}
+        {/*  semibold*/}
+        {/*  style={{*/}
+        {/*    paddingHorizontal: 20,*/}
+        {/*    marginTop: 5,*/}
+        {/*  }}>*/}
+        {/*  {t('business_color').toUpperCase()}*/}
+        {/*</Text>*/}
+        {/*<FlatList*/}
+        {/*  contentContainerStyle={{ paddingTop: 10 }}*/}
+        {/*  horizontal={true}*/}
+        {/*  showsHorizontalScrollIndicator={false}*/}
+        {/*  data={interio}*/}
+        {/*  keyExtractor={(item, index) => item.id}*/}
+        {/*  renderItem={({ item, index }) => (*/}
+        {/*    <TouchableOpacity*/}
+        {/*      style={[styles.circleIcon, { backgroundColor: item.color }]}*/}
+        {/*      onPress={() => onSelectInterio(item)}>*/}
+        {/*      {item.checked && (*/}
+        {/*        <Icon name="check" size={16} color={BaseColor.whiteColor} />*/}
+        {/*      )}*/}
+        {/*    </TouchableOpacity>*/}
+        {/*  )}*/}
+        {/*/>*/}
+        {/*<View style={{ paddingHorizontal: 20, marginTop: 20 }}>*/}
+        {/*  <Text headline semibold style={{ marginBottom: 10 }}>*/}
+        {/*    {t('open_time').toUpperCase()}*/}
+        {/*  </Text>*/}
+        {/*  <BookingTime />*/}
+        {/*</View>*/}
+        {/*<View style={{ paddingHorizontal: 20, marginVertical: 20 }}>*/}
+        {/*  <Text headline semibold>*/}
+        {/*    {t('rating').toUpperCase()}*/}
+        {/*  </Text>*/}
+        {/*  <View style={{ width: 160, marginTop: 10 }}>*/}
+        {/*    <StarRating*/}
+        {/*      starSize={26}*/}
+        {/*      maxStars={5}*/}
+        {/*      rating={rate}*/}
+        {/*      selectedStar={(rate) => setRate(rate)}*/}
+        {/*      fullStarColor={BaseColor.yellowColor}*/}
+        {/*    />*/}
+        {/*  </View>*/}
+        {/*</View>*/}
       </ScrollView>
     </SafeAreaView>
   );

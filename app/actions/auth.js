@@ -14,6 +14,7 @@ import {
   EDIT_PROFILE_API_SUCCESS,
   EDIT_PROFILE_API_ERROR,
   PROFILE_UPLOAD_API,
+  LOGGED_IN_SUCCESS,
 } from '../constants/auth';
 import { handleError } from '../utils';
 import axiosApiInstance from '../interceptor/axios-interceptor';
@@ -33,6 +34,7 @@ export const authentication = (login, callback) => (dispatch) => {
     };
     dispatch(onLogin(data));
     dispatch({ type: SIGNOUT, loading: false });
+    AsyncStorage.removeItem('access_token');
     if (typeof callback === 'function') {
       callback({ success: true });
     }
@@ -75,8 +77,6 @@ export const login = (user, cb) => {
             'access_token',
             response.data.access_token,
           );
-          const token = await AsyncStorage.getItem('access_token');
-          console.log('token#######', token);
         } catch (e) {
           // saving error
         }
@@ -153,4 +153,12 @@ export const uploadProfileImage = (payload, form, cb) => (dispatch) => {
       cb && cb(error);
       handleError(error);
     });
+};
+
+export const setIsLogin = () => (dispatch) => {
+  AsyncStorage.getItem('access_token').then((token) => {
+    if (token) {
+      dispatch({ type: LOGGED_IN_SUCCESS });
+    }
+  });
 };
