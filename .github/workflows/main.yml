@@ -97,7 +97,7 @@ jobs:
 
       - name: Bump release version for development
         if: github.ref == 'refs/heads/development'
-        id: bump_version
+        id: bump_version_dev
         uses: christian-draeger/increment-semantic-version@1.0.2
         with:
           current-version: ${{ steps.previoustag.outputs.tag }}
