@@ -4,14 +4,13 @@ name: CI
 
 # Controls when the action will run.
 on:
-  # Triggers the workflow on push or pull request events but only for the master branch
-  push:
-    branches: [ development ]
-  pull_request:
-    branches: [ master ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+    inputs:
+      version_fragment:
+        description: 'version fragment: Possible options are [ major | feature | bug | alpha | beta | rc ]'
+        required: true
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -101,7 +100,7 @@ jobs:
         with:
           current-version: ${{ steps.previoustag.outputs.tag }}
           # current-version: '1.0.1'
-          version-fragment: 'beta'
+          version-fragment: ${{ github.event.inputs.version_fragment }}
 
       - name: Do something with your bumped release version
         run: echo ${{ steps.bump_version.outputs.next-version }}
