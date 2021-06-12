@@ -22,6 +22,7 @@ import Category from '@screens/Category';
 import Place from '@screens/Place';
 import SignUp from '@screens/SignUp';
 import SignIn from '@screens/SignIn';
+import VerifyCode from '@screens/VerifyCode';
 import Review from '@screens/Review';
 import Feedback from '@screens/Feedback';
 import Messages from '@screens/Messages';
@@ -79,6 +80,7 @@ export default function Main() {
       <MainStack.Screen name="Gallery" component={Gallery} />
       <MainStack.Screen name="MyBusinesses" component={MyBusinesses} />
       <MainStack.Screen name="EditBusiness" component={Business} />
+      <MainStack.Screen name="VerifyCode" component={VerifyCode} />
     </MainStack.Navigator>
   );
 }

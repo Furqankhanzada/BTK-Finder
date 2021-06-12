@@ -1,29 +1,35 @@
 import React, { useState } from 'react';
 import { View, KeyboardAvoidingView, Platform } from 'react-native';
 import { BaseStyle, useTheme } from '@config';
-import { Header, SafeAreaView, Icon, TextInput, Button } from '@components';
+import {
+  Header,
+  SafeAreaView,
+  Icon,
+  TextInput,
+  Button,
+  Text,
+} from '@components';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { resetPassword } from '../../actions/auth';
+import { verifyCode } from '../../actions/auth';
 
-export default function ResetPassword(props) {
-  const { navigation } = props;
+export default function VerifyCode(props) {
+  const { navigation, route } = props;
   const { colors } = useTheme();
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const resetPasswordLoading = useSelector(
-    state => state.auth.resetPasswordLoading,
-  );
+  const verifyCodeLoading = useSelector(state => state.auth.verifyCodeLoading);
 
-  const [emailOrNumber, setEmailOrNumber] = useState('');
+  const [verificationCode, setVerificationCode] = useState('');
 
   /**
    * call when action reset pass
    */
-  const onReset = () => {
+  const onVerify = () => {
     dispatch(
-      resetPassword({ emailOrNumber: emailOrNumber }, () =>
-        navigation.navigate('VerifyCode', { emailOrNumber: emailOrNumber }),
+      verifyCode(
+        { emailOrNumber: route.params.emailOrNumber, code: verificationCode },
+        () => navigation.navigate('ChangePassword'),
       ),
     );
   };
@@ -36,7 +42,7 @@ export default function ResetPassword(props) {
   return (
     <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
       <Header
-        title={t('reset_password')}
+        title="Verify Code"
         renderLeft={() => {
           return (
             <Icon
@@ -62,12 +68,31 @@ export default function ResetPassword(props) {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
+          <View
+            style={{
+              padding: 10,
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Icon
+              name="info-circle"
+              size={20}
+              color={colors.primary}
+              enableRTL={true}
+              style={{ marginRight: 10 }}
+            />
+            <Text caption1>
+              Enter the verification code you received on your provided
+              email/phone
+            </Text>
+          </View>
           <TextInput
-            onChangeText={text => setEmailOrNumber(text)}
-            placeholder={'Email or Phone'}
-            value={emailOrNumber}
+            onChangeText={text => setVerificationCode(text)}
+            placeholder={'Enter Verification Code'}
+            value={verificationCode}
             selectionColor={colors.primary}
-            onSubmitEditing={() => onReset()}
+            onSubmitEditing={() => onVerify()}
             blurOnSubmit={true}
             returnKeyType="done"
           />
@@ -75,10 +100,10 @@ export default function ResetPassword(props) {
             style={{ marginTop: 20 }}
             full
             onPress={() => {
-              onReset();
+              onVerify();
             }}
-            loading={resetPasswordLoading}>
-            {t('reset_password')}
+            loading={verifyCodeLoading}>
+            Submit Code
           </Button>
         </View>
       </KeyboardAvoidingView>

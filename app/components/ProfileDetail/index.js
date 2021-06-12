@@ -29,12 +29,12 @@ export default function ProfileDetail(props) {
       <View style={[styles.contentLeft, styleLeft]}>
         <View>
           <Image source={image} style={[styles.thumb, styleThumb]} />
-          <View
-            style={[styles.point, { backgroundColor: colors.primaryLight }]}>
-            <Text overline whiteColor semibold>
-              {point}
-            </Text>
-          </View>
+          {/*<View*/}
+          {/*  style={[styles.point, { backgroundColor: colors.primaryLight }]}>*/}
+          {/*  <Text overline whiteColor semibold>*/}
+          {/*    {point}*/}
+          {/*  </Text>*/}
+          {/*</View>*/}
         </View>
         <View style={{ alignItems: 'flex-start' }}>
           <View style={{ display: 'flex', flexDirection: 'row' }}>
