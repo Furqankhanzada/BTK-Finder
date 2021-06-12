@@ -3,6 +3,9 @@ import Config from 'react-native-config';
 //API End Points
 export const SIGNUP = `${Config.API_URL}/auth/signup`;
 export const LOGIN = `${Config.API_URL}/auth/login`;
+export const RESET_PASSWORD = `${Config.API_URL}/auth/forgotPassword`;
+export const VERIFY_CODE = `${Config.API_URL}/auth/verifyCode`;
+export const CHANGE_PASSWORD = `${Config.API_URL}/auth/changePassword`;
 
 export const GET_CATEGORIES = `${Config.API_URL}/categories`;
 export const GET_PROFILE = `${Config.API_URL}/auth/profile`;

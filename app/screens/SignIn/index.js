@@ -18,7 +18,6 @@ import {
 import styles from './styles';
 import { useTranslation } from 'react-i18next';
 import { login } from '../../actions/auth';
-import { showBetaModal } from '../../popup/betaPopup';
 
 export default function SignIn(props) {
   const { navigation, route } = props;
@@ -49,7 +48,7 @@ export default function SignIn(props) {
     } else {
       setLoading(true);
       dispatch(
-        login({ username, password }, (error) => {
+        login({ username, password }, error => {
           setLoading(false);
           if (!error) {
             navigation.navigate(lastRoute ? lastRoute : 'Profile', { id });
@@ -88,14 +87,14 @@ export default function SignIn(props) {
         style={{ flex: 1 }}>
         <View style={styles.contain}>
           <TextInput
-            onChangeText={(text) => setUsername(text)}
+            onChangeText={text => setUsername(text)}
             onFocus={() => {
               setSuccess({
                 ...success,
                 username: true,
               });
             }}
-            placeholder="Email"
+            placeholder="Email or Phone"
             success={success.username}
             value={username}
             textContentType="emailAddress"
@@ -107,7 +106,7 @@ export default function SignIn(props) {
           <TextInput
             ref={passwordRef}
             style={{ marginTop: 10 }}
-            onChangeText={(text) => setPassword(text)}
+            onChangeText={text => setPassword(text)}
             onFocus={() => {
               setSuccess({
                 ...success,
@@ -132,8 +131,7 @@ export default function SignIn(props) {
             {t('sign_in')}
           </Button>
           <TouchableOpacity
-            // onPress={() => navigation.navigate('ResetPassword')}
-            onPress={showBetaModal}>
+            onPress={() => navigation.navigate('ResetPassword')}>
             <Text body1 grayColor style={{ marginTop: 25 }}>
               {t('forgot_your_password')}
             </Text>

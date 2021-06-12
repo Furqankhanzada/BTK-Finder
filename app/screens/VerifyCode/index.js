@@ -11,27 +11,26 @@ import {
 } from '@components';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { resetPassword } from '../../actions/auth';
-import styles from './styles';
+import { verifyCode } from '../../actions/auth';
+import styles from '../ResetPassword/styles';
 
-export default function ResetPassword(props) {
-  const { navigation } = props;
+export default function VerifyCode(props) {
+  const { navigation, route } = props;
   const { colors } = useTheme();
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const resetPasswordLoading = useSelector(
-    state => state.auth.resetPasswordLoading,
-  );
+  const verifyCodeLoading = useSelector(state => state.auth.verifyCodeLoading);
 
-  const [emailOrNumber, setEmailOrNumber] = useState('');
+  const [verificationCode, setVerificationCode] = useState('');
 
   /**
    * call when action reset pass
    */
-  const onReset = () => {
+  const onVerify = () => {
     dispatch(
-      resetPassword({ emailOrNumber: emailOrNumber }, () =>
-        navigation.navigate('VerifyCode', { emailOrNumber: emailOrNumber }),
+      verifyCode(
+        { emailOrNumber: route.params.emailOrNumber, code: verificationCode },
+        () => navigation.navigate('ChangePassword'),
       ),
     );
   };
@@ -44,7 +43,7 @@ export default function ResetPassword(props) {
   return (
     <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
       <Header
-        title={t('reset_password')}
+        title="Verify Code"
         renderLeft={() => {
           return (
             <Icon
@@ -73,28 +72,27 @@ export default function ResetPassword(props) {
               style={{ marginRight: 10 }}
             />
             <Text caption1>
-              Currently this feature is only for Emails. For mobile number we
-              are working on it and will be available in coming versions.
+              Enter the verification code you received on your provided Email
             </Text>
           </View>
           <TextInput
-            onChangeText={text => setEmailOrNumber(text)}
-            placeholder={'Email'}
-            value={emailOrNumber}
+            onChangeText={text => setVerificationCode(text)}
+            placeholder={'Enter Verification Code'}
+            value={verificationCode}
             selectionColor={colors.primary}
-            onSubmitEditing={() => onReset()}
+            keyboardType="number-pad"
+            onSubmitEditing={() => onVerify()}
             blurOnSubmit={true}
-            keyboardType="email-address"
             returnKeyType="done"
           />
           <Button
             style={{ marginTop: 20 }}
             full
             onPress={() => {
-              onReset();
+              onVerify();
             }}
-            loading={resetPasswordLoading}>
-            {t('reset_password')}
+            loading={verifyCodeLoading}>
+            Submit Code
           </Button>
         </View>
       </KeyboardAvoidingView>
