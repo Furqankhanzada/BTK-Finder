@@ -94,7 +94,7 @@ export default function SignIn(props) {
                 username: true,
               });
             }}
-            placeholder="Email"
+            placeholder="Email or Phone"
             success={success.username}
             value={username}
             textContentType="emailAddress"

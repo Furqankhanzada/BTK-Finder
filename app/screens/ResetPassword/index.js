@@ -1,10 +1,18 @@
 import React, { useState } from 'react';
 import { View, KeyboardAvoidingView, Platform } from 'react-native';
 import { BaseStyle, useTheme } from '@config';
-import { Header, SafeAreaView, Icon, TextInput, Button } from '@components';
+import {
+  Header,
+  SafeAreaView,
+  Icon,
+  TextInput,
+  Button,
+  Text,
+} from '@components';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { resetPassword } from '../../actions/auth';
+import styles from './styles';
 
 export default function ResetPassword(props) {
   const { navigation } = props;
@@ -55,20 +63,28 @@ export default function ResetPassword(props) {
         behavior={Platform.OS === 'android' ? 'height' : 'padding'}
         keyboardVerticalOffset={offsetKeyboard}
         style={{ flex: 1 }}>
-        <View
-          style={{
-            flex: 1,
-            padding: 20,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
+        <View style={styles.container}>
+          <View style={styles.info}>
+            <Icon
+              name="info-circle"
+              size={20}
+              color={colors.primary}
+              enableRTL={true}
+              style={{ marginRight: 10 }}
+            />
+            <Text caption1>
+              Currently this feature is only for Emails. For mobile number we
+              are working on it and will be available in coming versions.
+            </Text>
+          </View>
           <TextInput
             onChangeText={text => setEmailOrNumber(text)}
-            placeholder={'Email or Phone'}
+            placeholder={'Email'}
             value={emailOrNumber}
             selectionColor={colors.primary}
             onSubmitEditing={() => onReset()}
             blurOnSubmit={true}
+            keyboardType="email-address"
             returnKeyType="done"
           />
           <Button

@@ -12,6 +12,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { verifyCode } from '../../actions/auth';
+import styles from '../ResetPassword/styles';
 
 export default function VerifyCode(props) {
   const { navigation, route } = props;
@@ -61,20 +62,8 @@ export default function VerifyCode(props) {
         behavior={Platform.OS === 'android' ? 'height' : 'padding'}
         keyboardVerticalOffset={offsetKeyboard}
         style={{ flex: 1 }}>
-        <View
-          style={{
-            flex: 1,
-            padding: 20,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <View
-            style={{
-              padding: 10,
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
+        <View style={styles.container}>
+          <View style={styles.info}>
             <Icon
               name="info-circle"
               size={20}
@@ -83,8 +72,7 @@ export default function VerifyCode(props) {
               style={{ marginRight: 10 }}
             />
             <Text caption1>
-              Enter the verification code you received on your provided
-              email/phone
+              Enter the verification code you received on your provided Email
             </Text>
           </View>
           <TextInput
@@ -92,6 +80,7 @@ export default function VerifyCode(props) {
             placeholder={'Enter Verification Code'}
             value={verificationCode}
             selectionColor={colors.primary}
+            keyboardType="number-pad"
             onSubmitEditing={() => onVerify()}
             blurOnSubmit={true}
             returnKeyType="done"
