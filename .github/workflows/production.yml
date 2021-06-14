@@ -118,7 +118,6 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          prerelease: true
           tag_name: ${{ steps.bump_version.outputs.next-version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
