@@ -1177,6 +1177,11 @@
   resolved "https://registry.yarnpkg.com/@react-native-firebase/dynamic-links/-/dynamic-links-11.1.2.tgz#2e6b3b30e7f3ef6abecc93447ea9647cbd72c60d"
   integrity sha512-VuRxk5F8TRkFWwz1UItaXgz3lAonb2I/n+EPZOyKkAoR3UpcdDhXCaWHI1zU+g6oAnEr/F24d88MUCcfv/Wtcw==
 
+"@react-native-firebase/in-app-messaging@^12.1.0":
+  version "12.1.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/in-app-messaging/-/in-app-messaging-12.1.0.tgz#2272479c7d548a8724e07a0a5f2d92c1ec65f22c"
+  integrity sha512-fbVTKTvmqkwEBR9RdQvKRLhIhR/79q7zcILYYYEFsIs4bz5AooipWhlc2RXoTXWoQLhv/4NECWiPwPEcEG7RCw==
+
 "@react-native-firebase/messaging@^11.1.2":
   version "11.1.2"
   resolved "https://registry.yarnpkg.com/@react-native-firebase/messaging/-/messaging-11.1.2.tgz#1b78619bc49dd466d257173114f9da41d5a06717"
