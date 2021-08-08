@@ -32,6 +32,10 @@ target 'explorebtk' do
 
   pod 'react-native-version-check', :path => '../node_modules/react-native-version-check'
 
+  pod 'Firebase'
+  pod 'Firebase/InAppMessaging'
+  pod 'Firebase/Analytics'
+
   target 'explorebtkTests' do
     inherit! :complete
     # Pods for testing

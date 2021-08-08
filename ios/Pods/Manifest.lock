@@ -10,6 +10,8 @@ PODS:
     - React-Core (= 0.64.0)
     - React-jsi (= 0.64.0)
     - ReactCommon/turbomodule/core (= 0.64.0)
+  - Firebase (7.8.1):
+    - Firebase/Core (= 7.8.1)
   - Firebase/Analytics (7.8.1):
     - Firebase/Core
   - Firebase/Core (7.8.1):
@@ -23,6 +25,9 @@ PODS:
   - Firebase/DynamicLinks (7.8.1):
     - Firebase/CoreOnly
     - FirebaseDynamicLinks (~> 7.8.0)
+  - Firebase/InAppMessaging (7.8.1):
+    - Firebase/CoreOnly
+    - FirebaseInAppMessaging (~> 7.8.0-beta)
   - Firebase/Messaging (7.8.1):
     - Firebase/CoreOnly
     - FirebaseMessaging (~> 7.8.0)
@@ -57,6 +62,12 @@ PODS:
     - PromisesObjC (~> 1.2)
   - FirebaseDynamicLinks (7.8.0):
     - FirebaseCore (~> 7.0)
+  - FirebaseInAppMessaging (7.8.0-beta):
+    - FirebaseABTesting (~> 7.0)
+    - FirebaseCore (~> 7.0)
+    - FirebaseInstallations (~> 7.0)
+    - GoogleUtilities/Environment (~> 7.0)
+    - nanopb (~> 2.30907.0)
   - FirebaseInstallations (7.8.0):
     - FirebaseCore (~> 7.0)
     - GoogleUtilities/Environment (~> 7.0)
@@ -509,6 +520,10 @@ PODS:
     - GoogleUtilities/AppDelegateSwizzler
     - React-Core
     - RNFBApp
+  - RNFBInAppMessaging (12.4.0):
+    - Firebase/InAppMessaging (= 7.8.1)
+    - React-Core
+    - RNFBApp
   - RNFBMessaging (11.1.2):
     - Firebase/Messaging (= 7.8.1)
     - React-Core
@@ -551,6 +566,9 @@ DEPENDENCIES:
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
+  - Firebase
+  - Firebase/Analytics
+  - Firebase/InAppMessaging
   - Flipper (~> 0.75.1)
   - Flipper-DoubleConversion (= 1.1.7)
   - Flipper-Folly (~> 2.5)
@@ -619,6 +637,7 @@ DEPENDENCIES:
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBCrashlytics (from `../node_modules/@react-native-firebase/crashlytics`)"
   - "RNFBDynamicLinks (from `../node_modules/@react-native-firebase/dynamic-links`)"
+  - "RNFBInAppMessaging (from `../node_modules/@react-native-firebase/in-app-messaging`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - "RNFBRemoteConfig (from `../node_modules/@react-native-firebase/remote-config`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
@@ -640,6 +659,7 @@ SPEC REPOS:
     - FirebaseCoreDiagnostics
     - FirebaseCrashlytics
     - FirebaseDynamicLinks
+    - FirebaseInAppMessaging
     - FirebaseInstallations
     - FirebaseInstanceID
     - FirebaseMessaging
@@ -764,6 +784,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/crashlytics"
   RNFBDynamicLinks:
     :path: "../node_modules/@react-native-firebase/dynamic-links"
+  RNFBInAppMessaging:
+    :path: "../node_modules/@react-native-firebase/in-app-messaging"
   RNFBMessaging:
     :path: "../node_modules/@react-native-firebase/messaging"
   RNFBRemoteConfig:
@@ -788,7 +810,7 @@ SPEC CHECKSUMS:
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
   FBLazyVector: 49cbe4b43e445b06bf29199b6ad2057649e4c8f5
-  FBReactNativeSpec: ad1adbbd055b8bea683e06102d9af3365886cea6
+  FBReactNativeSpec: 33d1d721b603f31577135bbbbe5efebb1110971f
   Firebase: d59ad4129167f9f0d2a4f6c1f0c462254b6002c8
   FirebaseABTesting: 44acbfc9db915bca8f111ebae342da6fd4f1cc55
   FirebaseAnalytics: 3b98b563d7d64c07900511198b4805cfd9f9f61c
@@ -796,6 +818,7 @@ SPEC CHECKSUMS:
   FirebaseCoreDiagnostics: 066f996579cf097bdad3d7dc9a918d6b9e129c50
   FirebaseCrashlytics: d07e61d85aabc7d38a68f94ff99995f8557ea8d0
   FirebaseDynamicLinks: 4075f93bb208f2f726ce539d85f4fdc4b1c0e583
+  FirebaseInAppMessaging: 512aabf528509ef9406967ba11afa57cf21d8e63
   FirebaseInstallations: 7f7ed0e7e27fb51f57291e1876e2ddb1524126c1
   FirebaseInstanceID: aaecc93b4528bbcafea12c477e26827719ca1183
   FirebaseMessaging: 1d5cac3728c042d3d4700ecb56bbac893660a963
@@ -862,6 +885,7 @@ SPEC CHECKSUMS:
   RNFBApp: bb830cc7f7598e46437b833adc841df345e19e2f
   RNFBCrashlytics: 47278b69b418d41e71f3b64673eaded59d4dee63
   RNFBDynamicLinks: 3fdbe70011988b9f9dbdde0eafbe51079c20215f
+  RNFBInAppMessaging: 1b9bd168b92b958364f720015e0778b8f9adb9c8
   RNFBMessaging: ec695fc0b561e06afa33a731d86f7fa3ae49f4c1
   RNFBRemoteConfig: fe61fa38b93de8662af92bad14b263b4d1df89ed
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
@@ -877,6 +901,6 @@ SPEC CHECKSUMS:
   Yoga: 8c8436d4171c87504c648ae23b1d81242bdf3bbf
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: cb305a6a3e84453b4ef8719580f740ce89c43404
+PODFILE CHECKSUM: cfd5a223c6cb19db19775a28069f709d855b2720
 
 COCOAPODS: 1.10.1
