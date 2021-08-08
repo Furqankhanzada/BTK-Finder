@@ -17,7 +17,7 @@
     "@react-native-firebase/app": "^11.1.2",
     "@react-native-firebase/crashlytics": "^11.1.2",
     "@react-native-firebase/dynamic-links": "^11.1.2",
-    "@react-native-firebase/in-app-messaging": "^12.1.0",
+    "@react-native-firebase/in-app-messaging": "^12.4.0",
     "@react-native-firebase/messaging": "^11.1.2",
     "@react-native-firebase/remote-config": "^11.1.2",
     "@react-navigation/bottom-tabs": "^5.11.8",
