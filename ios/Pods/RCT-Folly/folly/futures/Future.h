@@ -32,16 +32,13 @@
 #include <folly/Utility.h>
 #include <folly/executors/DrivableExecutor.h>
 #include <folly/executors/TimedDrivableExecutor.h>
+#include <folly/experimental/coro/Traits.h>
+#include <folly/fibers/Baton.h>
 #include <folly/functional/Invoke.h>
 #include <folly/futures/Portability.h>
 #include <folly/futures/Promise.h>
 #include <folly/futures/detail/Types.h>
 #include <folly/lang/Exception.h>
-
-#if FOLLY_HAS_COROUTINES
-#include <folly/experimental/coro/Traits.h>
-#include <experimental/coroutine>
-#endif
 
 // boring predeclarations and details
 #include <folly/futures/Future-pre.h>
@@ -108,18 +105,13 @@ class SemiFuture;
 template <class T>
 class FutureSplitter;
 
-#if FOLLY_FUTURE_USING_FIBER
-
-namespace fibers {
-class Baton;
-}
-
-#endif
-
 namespace futures {
 namespace detail {
 template <class T>
 class FutureBase {
+ protected:
+  using Core = futures::detail::Core<T>;
+
  public:
   typedef T value_type;
 
@@ -134,7 +126,8 @@ class FutureBase {
       class T2 = T,
       typename = typename std::enable_if<
           !isFuture<typename std::decay<T2>::type>::value &&
-          !isSemiFuture<typename std::decay<T2>::type>::value>::type>
+          !isSemiFuture<typename std::decay<T2>::type>::value &&
+          std::is_constructible<Try<T>, T2>::value>::type>
   /* implicit */ FutureBase(T2&& val);
 
   /// Construct a (logical) FutureBase-of-void.
@@ -153,7 +146,7 @@ class FutureBase {
       typename std::enable_if<std::is_constructible<T, Args&&...>::value, int>::
           type = 0>
   explicit FutureBase(in_place_t, Args&&... args)
-      : core_(Core::make(in_place, std::forward<Args>(args)...)) {}
+      : core_(Core::make(in_place, static_cast<Args&&>(args)...)) {}
 
   FutureBase(FutureBase<T> const&) = delete;
   FutureBase(SemiFuture<T>&&) noexcept;
@@ -167,9 +160,7 @@ class FutureBase {
 
   /// true if this has a shared state;
   /// false if this has been either moved-out or created without a shared state.
-  bool valid() const noexcept {
-    return core_ != nullptr;
-  }
+  bool valid() const noexcept { return core_ != nullptr; }
 
   /// Returns a reference to the result value if it is ready, with a reference
   /// category and const-qualification like those of the future.
@@ -340,14 +331,12 @@ class FutureBase {
   template <class E>
   void raise(E&& exception) {
     raise(make_exception_wrapper<typename std::remove_reference<E>::type>(
-        std::forward<E>(exception)));
+        static_cast<E&&>(exception)));
   }
 
   /// Raises a FutureCancellation interrupt.
   /// See `raise(exception_wrapper)` for details.
-  void cancel() {
-    raise(FutureCancellation());
-  }
+  void cancel() { raise(FutureCancellation()); }
 
  protected:
   friend class Promise<T>;
@@ -356,19 +345,13 @@ class FutureBase {
   template <class>
   friend class Future;
 
-  using Core = futures::detail::Core<T>;
-
   // Throws FutureInvalid if there is no shared state object; else returns it
   // by ref.
   //
   // Implementation methods should usually use this instead of `this->core_`.
   // The latter should be used only when you need the possibly-null pointer.
-  Core& getCore() {
-    return getCoreImpl(*this);
-  }
-  Core const& getCore() const {
-    return getCoreImpl(*this);
-  }
+  Core& getCore() { return getCoreImpl(*this); }
+  Core const& getCore() const { return getCoreImpl(*this); }
 
   template <typename Self>
   static decltype(auto) getCoreImpl(Self& self) {
@@ -378,12 +361,8 @@ class FutureBase {
     return *self.core_;
   }
 
-  Try<T>& getCoreTryChecked() {
-    return getCoreTryChecked(*this);
-  }
-  Try<T> const& getCoreTryChecked() const {
-    return getCoreTryChecked(*this);
-  }
+  Try<T>& getCoreTryChecked() { return getCoreTryChecked(*this); }
+  Try<T> const& getCoreTryChecked() const { return getCoreTryChecked(*this); }
 
   template <typename Self>
   static decltype(auto) getCoreTryChecked(Self& self) {
@@ -409,9 +388,7 @@ class FutureBase {
 
   void assign(FutureBase<T>&& other) noexcept;
 
-  Executor* getExecutor() const {
-    return getCore().getExecutor();
-  }
+  Executor* getExecutor() const { return getCore().getExecutor(); }
 
   DeferredExecutor* getDeferredExecutor() const {
     return getCore().getDeferredExecutor();
@@ -448,6 +425,28 @@ DeferredExecutor* getDeferredExecutor(SemiFuture<T>& future);
 template <typename T>
 futures::detail::DeferredWrapper stealDeferredExecutor(SemiFuture<T>& future);
 } // namespace detail
+
+// Detach the SemiFuture by scheduling work onto exec.
+template <class T>
+void detachOn(folly::Executor::KeepAlive<> exec, folly::SemiFuture<T>&& fut);
+
+// Detach the SemiFuture by detaching work onto the global CPU executor.
+template <class T>
+void detachOnGlobalCPUExecutor(folly::SemiFuture<T>&& fut);
+
+// Detach the SemiFuture onto the global CPU executor after dur.
+// This will only hold a weak ref to the global executor and during
+// shutdown will cleanly drop the work.
+template <class T>
+void maybeDetachOnGlobalExecutorAfter(
+    HighResDuration dur, folly::SemiFuture<T>&& fut);
+
+// Detach the SemiFuture with no executor.
+// NOTE: If there is deferred work of any sort on this SemiFuture
+// will leak and not be run.
+// Use at your own risk.
+template <class T>
+void detachWithoutExecutor(folly::SemiFuture<T>&& fut);
 } // namespace futures
 
 /// The interface (along with Future) for the consumer-side of a
@@ -511,8 +510,9 @@ class SemiFuture : private futures::detail::FutureBase<T> {
       class T2 = T,
       typename = typename std::enable_if<
           !isFuture<typename std::decay<T2>::type>::value &&
-          !isSemiFuture<typename std::decay<T2>::type>::value>::type>
-  /* implicit */ SemiFuture(T2&& val) : Base(std::forward<T2>(val)) {}
+          !isSemiFuture<typename std::decay<T2>::type>::value &&
+          std::is_constructible<Try<T>, T2>::value>::type>
+  /* implicit */ SemiFuture(T2&& val) : Base(static_cast<T2&&>(val)) {}
 
   /// Construct a (logical) SemiFuture-of-void.
   ///
@@ -540,7 +540,7 @@ class SemiFuture : private futures::detail::FutureBase<T> {
       typename std::enable_if<std::is_constructible<T, Args&&...>::value, int>::
           type = 0>
   explicit SemiFuture(in_place_t, Args&&... args)
-      : Base(in_place, std::forward<Args>(args)...) {}
+      : Base(in_place, static_cast<Args&&>(args)...) {}
 
   SemiFuture(SemiFuture<T> const&) = delete;
   // movable
@@ -587,7 +587,7 @@ class SemiFuture : private futures::detail::FutureBase<T> {
   /// Postconditions:
   ///
   /// - `valid() == false`
-  T get(Duration dur) &&;
+  T get(HighResDuration dur) &&;
 
   /// Blocks until the future is fulfilled. Returns the Try of the result
   ///   (moved-out).
@@ -612,7 +612,7 @@ class SemiFuture : private futures::detail::FutureBase<T> {
   /// Postconditions:
   ///
   /// - `valid() == false`
-  Try<T> getTry(Duration dur) &&;
+  Try<T> getTry(HighResDuration dur) &&;
 
   /// Blocks the caller's thread until this Future `isReady()`, i.e., until the
   ///   asynchronous producer has stored a result or exception.
@@ -653,7 +653,7 @@ class SemiFuture : private futures::detail::FutureBase<T> {
   /// Postconditions:
   ///
   /// - `valid() == false`
-  bool wait(Duration dur) &&;
+  bool wait(HighResDuration dur) &&;
 
   /// Returns a Future which will call back on the other side of executor.
   Future<T> via(Executor::KeepAlive<> executor) &&;
@@ -784,7 +784,7 @@ class SemiFuture : private futures::detail::FutureBase<T> {
   template <class ExceptionType, class F>
   SemiFuture<T> deferError(F&& func) && {
     return std::move(*this).deferError(
-        tag_t<ExceptionType>{}, std::forward<F>(func));
+        tag_t<ExceptionType>{}, static_cast<F&&>(func));
   }
 
   /// Set an error continuation for this SemiFuture where the continuation can
@@ -850,7 +850,7 @@ class SemiFuture : private futures::detail::FutureBase<T> {
   /// - Calling code should act as if `valid() == false`,
   ///   i.e., as if `*this` was moved into RESULT.
   /// - `RESULT.valid() == true`
-  SemiFuture<T> within(Duration dur, Timekeeper* tk = nullptr) && {
+  SemiFuture<T> within(HighResDuration dur, Timekeeper* tk = nullptr) && {
     return std::move(*this).within(dur, FutureTimeout(), tk);
   }
 
@@ -869,7 +869,7 @@ class SemiFuture : private futures::detail::FutureBase<T> {
   ///   i.e., as if `*this` was moved into RESULT.
   /// - `RESULT.valid() == true`
   template <class E>
-  SemiFuture<T> within(Duration dur, E e, Timekeeper* tk = nullptr) &&;
+  SemiFuture<T> within(HighResDuration dur, E e, Timekeeper* tk = nullptr) &&;
 
   /// Delay the completion of this SemiFuture for at least this duration from
   /// now. The optional Timekeeper is as with futures::sleep().
@@ -882,7 +882,7 @@ class SemiFuture : private futures::detail::FutureBase<T> {
   ///
   /// - `valid() == false`
   /// - `RESULT.valid() == true`
-  SemiFuture<T> delayed(Duration dur, Timekeeper* tk = nullptr) &&;
+  SemiFuture<T> delayed(HighResDuration dur, Timekeeper* tk = nullptr) &&;
 
   /// Returns a future that completes inline, as if the future had no executor.
   /// Intended for porting legacy code without behavioral change, and for rare
@@ -907,8 +907,7 @@ class SemiFuture : private futures::detail::FutureBase<T> {
   // Customise the co_viaIfAsync() operator so that SemiFuture<T> can be
   // directly awaited within a folly::coro::Task coroutine.
   friend Future<T> co_viaIfAsync(
-      folly::Executor::KeepAlive<> executor,
-      SemiFuture<T>&& future) noexcept {
+      folly::Executor::KeepAlive<> executor, SemiFuture<T>&& future) noexcept {
     return std::move(future).via(std::move(executor));
   }
 
@@ -953,7 +952,7 @@ class SemiFuture : private futures::detail::FutureBase<T> {
   /// - `valid() == true`
   /// - `&RESULT == this`
   /// - `isReady()` will be indeterminate - may or may not be true
-  SemiFuture<T>& wait(Duration dur) &;
+  SemiFuture<T>& wait(HighResDuration dur) &;
 
   static void releaseDeferredExecutor(Core* core);
 };
@@ -1014,8 +1013,9 @@ class Future : private futures::detail::FutureBase<T> {
       class T2 = T,
       typename = typename std::enable_if<
           !isFuture<typename std::decay<T2>::type>::value &&
-          !isSemiFuture<typename std::decay<T2>::type>::value>::type>
-  /* implicit */ Future(T2&& val) : Base(std::forward<T2>(val)) {}
+          !isSemiFuture<typename std::decay<T2>::type>::value &&
+          std::is_constructible<Try<T>, T2>::value>::type>
+  /* implicit */ Future(T2&& val) : Base(static_cast<T2&&>(val)) {}
 
   /// Construct a (logical) Future-of-void.
   ///
@@ -1043,7 +1043,7 @@ class Future : private futures::detail::FutureBase<T> {
       typename std::enable_if<std::is_constructible<T, Args&&...>::value, int>::
           type = 0>
   explicit Future(in_place_t, Args&&... args)
-      : Base(in_place, std::forward<Args>(args)...) {}
+      : Base(in_place, static_cast<Args&&>(args)...) {}
 
   Future(Future<T> const&) = delete;
   // movable
@@ -1112,23 +1112,23 @@ class Future : private futures::detail::FutureBase<T> {
   /// Examples of DrivableExecutor include EventBase and ManualExecutor.
   ///
   /// Returns the fulfilled value (moved-out) or throws the fulfilled exception.
-  T getVia(DrivableExecutor* e);
+  T getVia(DrivableExecutor* e) &&;
 
   /// Call e->drive() repeatedly until the future is fulfilled, or `dur`
   /// elapses.
   ///
   /// Returns the fulfilled value (moved-out), throws the fulfilled exception,
   /// or on timeout throws FutureTimeout.
-  T getVia(TimedDrivableExecutor* e, Duration dur);
+  T getVia(TimedDrivableExecutor* e, HighResDuration dur) &&;
 
   /// Call e->drive() repeatedly until the future is fulfilled. Examples
   /// of DrivableExecutor include EventBase and ManualExecutor. Returns a
   /// reference to the Try of the value.
-  Try<T>& getTryVia(DrivableExecutor* e);
+  Try<T> getTryVia(DrivableExecutor* e) &&;
 
   /// getTryVia but will wait only until `dur` elapses. Returns the
   /// Try of the value (moved-out) or may throw a FutureTimeout exception.
-  Try<T>& getTryVia(TimedDrivableExecutor* e, Duration dur);
+  Try<T> getTryVia(TimedDrivableExecutor* e, HighResDuration dur) &&;
 
   /// Unwraps the case of a Future<Future<T>> instance, and returns a simple
   /// Future<T> instance.
@@ -1206,12 +1206,12 @@ class Future : private futures::detail::FutureBase<T> {
   template <typename F>
   Future<typename futures::detail::tryCallableResult<T, F>::value_type> then(
       F&& func) && {
-    return std::move(*this).thenTry(std::forward<F>(func));
+    return std::move(*this).thenTry(static_cast<F&&>(func));
   }
   template <typename F>
   Future<typename futures::detail::tryCallableResult<T, F>::value_type>
   thenInline(F&& func) && {
-    return std::move(*this).thenTryInline(std::forward<F>(func));
+    return std::move(*this).thenTryInline(static_cast<F&&>(func));
   }
 
   /// Variant where func is an member function
@@ -1236,8 +1236,7 @@ class Future : private futures::detail::FutureBase<T> {
   /// - `RESULT.valid() == true`
   template <typename R, typename Caller, typename... Args>
   Future<typename isFuture<R>::Inner> then(
-      R (Caller::*func)(Args...),
-      Caller* instance) &&;
+      R (Caller::*func)(Args...), Caller* instance) &&;
 
   /// Execute the callback via the given Executor. The executor doesn't stick.
   ///
@@ -1416,7 +1415,7 @@ class Future : private futures::detail::FutureBase<T> {
   template <class ExceptionType, class F>
   Future<T> thenError(F&& func) && {
     return std::move(*this).thenError(
-        tag_t<ExceptionType>{}, std::forward<F>(func));
+        tag_t<ExceptionType>{}, static_cast<F&&>(func));
   }
 
   /// Set an error continuation for this Future where the continuation can
@@ -1488,9 +1487,7 @@ class Future : private futures::detail::FutureBase<T> {
   /// - Calling code should act as if `valid() == false`,
   ///   i.e., as if `*this` was moved into RESULT.
   /// - `RESULT.valid() == true`
-  Future<Unit> unit() && {
-    return std::move(*this).then();
-  }
+  Future<Unit> unit() && { return std::move(*this).then(); }
 
   /// Set an error continuation for this Future. The continuation should take an
   /// argument of the type that you want to catch, and should return a value of
@@ -1500,12 +1497,12 @@ class Future : private futures::detail::FutureBase<T> {
   /// Example:
   ///
   ///   makeFuture()
-  ///     .thenValue([] {
+  ///     .thenValue([](folly::Unit&&) {
   ///       throw std::runtime_error("oh no!");
   ///       return 42;
   ///     })
-  ///     .thenError<std::runtime_error>([] (std::runtime_error& e) {
-  ///       LOG(INFO) << "std::runtime_error: " << e.what();
+  ///     .thenError([](folly::exception_wrapper&& e) {
+  ///       LOG(INFO) << "std::runtime_error: " << e.get_exception()->what();
   ///       return -1; // or makeFuture<int>(-1)
   ///     });
   ///
@@ -1522,7 +1519,7 @@ class Future : private futures::detail::FutureBase<T> {
   [[deprecated(
       "onError loses the attached executor and is weakly typed. Please move to thenError instead.")]]
   typename std::enable_if<
-      !is_invocable<F, exception_wrapper>::value &&
+      !is_invocable_v<F, exception_wrapper> &&
           !futures::detail::Extract<F>::ReturnsFuture::value,
       Future<T>>::type
   onError(F&& func) && = delete;
@@ -1542,7 +1539,7 @@ class Future : private futures::detail::FutureBase<T> {
   [[deprecated(
       "onError loses the attached executor and is weakly typed. Please move to thenError instead.")]]
   typename std::enable_if<
-      !is_invocable<F, exception_wrapper>::value &&
+      !is_invocable_v<F, exception_wrapper> &&
           futures::detail::Extract<F>::ReturnsFuture::value,
       Future<T>>::type
   onError(F&& func) && = delete;
@@ -1562,7 +1559,7 @@ class Future : private futures::detail::FutureBase<T> {
   [[deprecated(
       "onError loses the attached executor and is weakly typed. Please move to thenError instead.")]]
   typename std::enable_if<
-      is_invocable<F, exception_wrapper>::value &&
+      is_invocable_v<F, exception_wrapper> &&
           futures::detail::Extract<F>::ReturnsFuture::value,
       Future<T>>::type
   onError(F&& func) && = delete;
@@ -1582,7 +1579,7 @@ class Future : private futures::detail::FutureBase<T> {
   [[deprecated(
       "onError loses the attached executor and is weakly typed. Please move to thenError instead.")]]
   typename std::enable_if<
-      is_invocable<F, exception_wrapper>::value &&
+      is_invocable_v<F, exception_wrapper> &&
           !futures::detail::Extract<F>::ReturnsFuture::value,
       Future<T>>::type
   onError(F&& func) && = delete;
@@ -1638,7 +1635,7 @@ class Future : private futures::detail::FutureBase<T> {
   ///   i.e., as if `*this` was moved into RESULT.
   /// - `RESULT.valid() == true`
   template <class F>
-  Future<T> onTimeout(Duration, F&& func, Timekeeper* = nullptr) &&;
+  Future<T> onTimeout(HighResDuration, F&& func, Timekeeper* = nullptr) &&;
 
   /// If this Future completes within duration dur from now, propagate its
   /// value. Otherwise satisfy the returned SemiFuture with a FutureTimeout
@@ -1655,7 +1652,7 @@ class Future : private futures::detail::FutureBase<T> {
   /// - Calling code should act as if `valid() == false`,
   ///   i.e., as if `*this` was moved into RESULT.
   /// - `RESULT.valid() == true`
-  Future<T> within(Duration dur, Timekeeper* tk = nullptr) &&;
+  Future<T> within(HighResDuration dur, Timekeeper* tk = nullptr) &&;
 
   /// If this SemiFuture completes within duration dur from now, propagate its
   /// value. Otherwise satisfy the returned SemiFuture with exception e.
@@ -1672,7 +1669,8 @@ class Future : private futures::detail::FutureBase<T> {
   ///   i.e., as if `*this` was moved into RESULT.
   /// - `RESULT.valid() == true`
   template <class E>
-  Future<T> within(Duration dur, E exception, Timekeeper* tk = nullptr) &&;
+  Future<T> within(
+      HighResDuration dur, E exception, Timekeeper* tk = nullptr) &&;
 
   /// Delay the completion of this Future for at least this duration from
   /// now. The optional Timekeeper is as with futures::sleep().
@@ -1685,7 +1683,7 @@ class Future : private futures::detail::FutureBase<T> {
   ///
   /// - `valid() == false`
   /// - `RESULT.valid() == true`
-  Future<T> delayed(Duration, Timekeeper* = nullptr) &&;
+  Future<T> delayed(HighResDuration, Timekeeper* = nullptr) &&;
 
   /// Blocks until the future is fulfilled. Returns the value (moved-out), or
   /// throws the exception. The future must not already have a continuation.
@@ -1710,15 +1708,32 @@ class Future : private futures::detail::FutureBase<T> {
   /// Postconditions:
   ///
   /// - `valid() == false`
-  T get(Duration dur) &&;
+  T get(HighResDuration dur) &&;
 
-  /// A reference to the Try of the value
+  /// Blocks until the future is fulfilled. Returns the Try of the result
+  ///   (moved-out).
   ///
   /// Preconditions:
   ///
   /// - `valid() == true` (else throws FutureInvalid)
-  /// - `isReady() == true` (else throws FutureNotReady)
-  Try<T>& getTry();
+  ///
+  /// Postconditions:
+  ///
+  /// - `valid() == false`
+  Try<T> getTry() &&;
+
+  /// Blocks until the future is fulfilled, or until `dur` elapses.
+  /// Returns the Try of the result (moved-out), or throws FutureTimeout
+  /// exception.
+  ///
+  /// Preconditions:
+  ///
+  /// - `valid() == true` (else throws FutureInvalid)
+  ///
+  /// Postconditions:
+  ///
+  /// - `valid() == false`
+  Try<T> getTry(HighResDuration dur) &&;
 
   /// Blocks until this Future is complete.
   ///
@@ -1758,7 +1773,7 @@ class Future : private futures::detail::FutureBase<T> {
   /// - `valid() == true` (so you may call `wait(...)` repeatedly)
   /// - `&RESULT == this`
   /// - `isReady()` will be indeterminate - may or may not be true
-  Future<T>& wait(Duration dur) &;
+  Future<T>& wait(HighResDuration dur) &;
 
   /// Blocks until this Future is complete or until `dur` passes.
   ///
@@ -1772,7 +1787,7 @@ class Future : private futures::detail::FutureBase<T> {
   ///   by assigning or constructing the result into a distinct object).
   /// - `&RESULT == this`
   /// - `isReady()` will be indeterminate - may or may not be true
-  Future<T>&& wait(Duration dur) &&;
+  Future<T>&& wait(HighResDuration dur) &&;
 
   /// Call e->drive() repeatedly until the future is fulfilled. Examples
   /// of DrivableExecutor include EventBase and ManualExecutor. Returns a
@@ -1812,7 +1827,7 @@ class Future : private futures::detail::FutureBase<T> {
   ///
   /// - `valid() == true` (does not move-out `*this`)
   /// - `&RESULT == this`
-  Future<T>& waitVia(TimedDrivableExecutor* e, Duration dur) &;
+  Future<T>& waitVia(TimedDrivableExecutor* e, HighResDuration dur) &;
 
   /// Overload of waitVia() for rvalue Futures
   /// As waitVia but may return early after dur passes.
@@ -1826,7 +1841,7 @@ class Future : private futures::detail::FutureBase<T> {
   /// - `valid() == true` (but the calling code can trivially move-out `*this`
   ///   by assigning or constructing the result into a distinct object).
   /// - `&RESULT == this`
-  Future<T>&& waitVia(TimedDrivableExecutor* e, Duration dur) &&;
+  Future<T>&& waitVia(TimedDrivableExecutor* e, HighResDuration dur) &&;
 
   /// If the value in this Future is equal to the given Future, when they have
   /// both completed, the value of the resulting Future<bool> will be true. It
@@ -1872,17 +1887,14 @@ class Future : private futures::detail::FutureBase<T> {
   ///
   /// - `RESULT.valid() ==` the original value of `this->valid()`
   /// - RESULT will not have an Executor regardless of whether `*this` had one
-  SemiFuture<T> semi() && {
-    return SemiFuture<T>{std::move(*this)};
-  }
+  SemiFuture<T> semi() && { return SemiFuture<T>{std::move(*this)}; }
 
 #if FOLLY_HAS_COROUTINES
 
   // Overload needed to customise behaviour of awaiting a Future<T>
   // inside a folly::coro::Task coroutine.
   friend Future<T> co_viaIfAsync(
-      folly::Executor::KeepAlive<> executor,
-      Future<T>&& future) noexcept {
+      folly::Executor::KeepAlive<> executor, Future<T>&& future) noexcept {
     return std::move(future).via(std::move(executor));
   }
 
@@ -1914,8 +1926,12 @@ class Future : private futures::detail::FutureBase<T> {
 
   template <class FT>
   friend Future<FT> futures::detail::convertFuture(
-      SemiFuture<FT>&& sf,
-      const Future<FT>& f);
+      SemiFuture<FT>&& sf, const Future<FT>& f);
+
+  using Base::detach;
+  template <class T2>
+  friend void futures::detachOn(
+      folly::Executor::KeepAlive<> exec, folly::SemiFuture<T2>&& fut);
 };
 
 /// A Timekeeper handles the details of keeping time and fulfilling delay
@@ -1926,8 +1942,8 @@ class Future : private futures::detail::FutureBase<T> {
 /// Delays that are used to trigger timeouts of async operations), then you
 /// can and should cancel them to reclaim resources.
 ///
-/// Users will typically get one of these via Future::sleep(Duration dur) or
-/// use them implicitly behind the scenes by passing a timeout to some Future
+/// Users will typically get one of these via Future::sleep(HighResDuration dur)
+/// or use them implicitly behind the scenes by passing a timeout to some Future
 /// operation.
 ///
 /// Although we don't formally alias Delay = Future<Unit>,
@@ -1935,14 +1951,14 @@ class Future : private futures::detail::FutureBase<T> {
 /// Timeouts, and that's ok I guess, but that term is so overloaded I thought
 /// it made sense to introduce a cleaner term.
 ///
-/// Remember that Duration is a std::chrono duration (millisecond resolution
-/// at the time of writing). When writing code that uses specific durations,
-/// prefer using the explicit std::chrono type, e.g. std::chrono::milliseconds
-/// over Duration. This makes the code more legible and means you won't be
-/// unpleasantly surprised if we redefine Duration to microseconds, or
-/// something.
+/// Remember that HighResDuration is a std::chrono duration (millisecond
+/// resolution at the time of writing). When writing code that uses specific
+/// durations, prefer using the explicit std::chrono type, e.g.
+/// std::chrono::milliseconds over HighResDuration. This makes the code more
+/// legible and means you won't be unpleasantly surprised if we redefine
+/// HighResDuration to microseconds, or something.
 ///
-///   timekeeper.after(std::chrono::duration_cast<Duration>(someNanoseconds))
+///   timekeeper.after(std::chrono::duration_cast<HighResDuration>(someNanoseconds))
 class Timekeeper {
  public:
   virtual ~Timekeeper() = default;
@@ -1952,7 +1968,7 @@ class Timekeeper {
   /// exceptional. Use the steady (monotonic) clock.
   ///
   /// The consumer thread may cancel this Future to reclaim resources.
-  virtual SemiFuture<Unit> after(Duration dur) = 0;
+  virtual SemiFuture<Unit> after(HighResDuration dur) = 0;
 
   /// Unsafe version of after that returns an inline Future.
   /// Any work added to this future will run inline on the Timekeeper's thread.
@@ -1960,7 +1976,7 @@ class Timekeeper {
   ///
   /// Please migrate to use after + a call to via with a valid, non-inline
   /// executor.
-  Future<Unit> afterUnsafe(Duration dur) {
+  Future<Unit> afterUnsafe(HighResDuration dur) {
     return after(dur).toUnsafeFuture();
   }
 
@@ -1996,15 +2012,15 @@ std::pair<Promise<T>, Future<T>> makePromiseContract(Executor::KeepAlive<> e) {
 
 template <class F>
 auto makeAsyncTask(folly::Executor::KeepAlive<> ka, F&& func) {
-  return
-      [func = std::forward<F>(func), ka = std::move(ka)](auto&& param) mutable {
-        return via(
-            ka,
-            [func = std::move(func),
-             param = std::forward<decltype(param)>(param)]() mutable {
-              return func(std::forward<decltype(param)>(param));
-            });
-      };
+  return [func = static_cast<F&&>(func),
+          ka = std::move(ka)](auto&& param) mutable {
+    return via(
+        ka,
+        [func = std::move(func),
+         param = static_cast<decltype(param)>(param)]() mutable {
+          return static_cast<F&&>(func)(static_cast<decltype(param)&&>(param));
+        });
+  };
 }
 
 /// This namespace is for utility functions that would usually be static
@@ -2015,7 +2031,7 @@ auto makeAsyncTask(folly::Executor::KeepAlive<> ka, F&& func) {
 /// and "sleep".
 namespace futures {
 /// Returns a Future that will complete after the specified duration. The
-/// Duration typedef of a `std::chrono` duration type indicates the
+/// HighResDuration typedef of a `std::chrono` duration type indicates the
 /// resolution you can expect to be meaningful (milliseconds at the time of
 /// writing). Normally you wouldn't need to specify a Timekeeper, we will
 /// use the global futures timekeeper (we run a thread whose job it is to
@@ -2025,12 +2041,12 @@ namespace futures {
 /// The Timekeeper thread will be lazily created the first time it is
 /// needed. If your program never uses any timeouts or other time-based
 /// Futures you will pay no Timekeeper thread overhead.
-SemiFuture<Unit> sleep(Duration, Timekeeper* = nullptr);
+SemiFuture<Unit> sleep(HighResDuration, Timekeeper* = nullptr);
 [[deprecated(
     "futures::sleep now returns a SemiFuture<Unit>. "
     "sleepUnsafe is deprecated. "
     "Please call futures::sleep and apply an executor with .via")]] Future<Unit>
-sleepUnsafe(Duration, Timekeeper* = nullptr);
+sleepUnsafe(HighResDuration, Timekeeper* = nullptr);
 
 /**
  * Set func as the callback for each input Future and return a vector of
@@ -2040,8 +2056,7 @@ template <
     class It,
     class F,
     class ItT = typename std::iterator_traits<It>::value_type,
-    class Tag =
-        std::enable_if_t<is_invocable<F, typename ItT::value_type&&>::value>,
+    class Tag = std::enable_if_t<is_invocable_v<F, typename ItT::value_type&&>>,
     class Result = typename decltype(
         std::declval<ItT>().thenValue(std::declval<F>()))::value_type>
 std::vector<Future<Result>> mapValue(It first, It last, F func);
@@ -2055,7 +2070,7 @@ template <
     class F,
     class ItT = typename std::iterator_traits<It>::value_type,
     class Tag =
-        std::enable_if_t<!is_invocable<F, typename ItT::value_type&&>::value>,
+        std::enable_if_t<!is_invocable_v<F, typename ItT::value_type&&>>,
     class Result = typename decltype(
         std::declval<ItT>().thenTry(std::declval<F>()))::value_type>
 std::vector<Future<Result>> mapTry(It first, It last, F func, int = 0);
@@ -2069,8 +2084,7 @@ template <
     class It,
     class F,
     class ItT = typename std::iterator_traits<It>::value_type,
-    class Tag =
-        std::enable_if_t<is_invocable<F, typename ItT::value_type&&>::value>,
+    class Tag = std::enable_if_t<is_invocable_v<F, typename ItT::value_type&&>>,
     class Result =
         typename decltype(std::move(std::declval<ItT>())
                               .via(std::declval<Executor*>())
@@ -2087,38 +2101,38 @@ template <
     class F,
     class ItT = typename std::iterator_traits<It>::value_type,
     class Tag =
-        std::enable_if_t<!is_invocable<F, typename ItT::value_type&&>::value>,
+        std::enable_if_t<!is_invocable_v<F, typename ItT::value_type&&>>,
     class Result =
         typename decltype(std::move(std::declval<ItT>())
                               .via(std::declval<Executor*>())
                               .thenTry(std::declval<F>()))::value_type>
-std::vector<Future<Result>>
-mapTry(Executor& exec, It first, It last, F func, int = 0);
+std::vector<Future<Result>> mapTry(
+    Executor& exec, It first, It last, F func, int = 0);
 
 // Sugar for the most common case
 template <class Collection, class F>
 auto mapValue(Collection&& c, F&& func)
     -> decltype(mapValue(c.begin(), c.end(), func)) {
-  return mapValue(c.begin(), c.end(), std::forward<F>(func));
+  return mapValue(c.begin(), c.end(), static_cast<F&&>(func));
 }
 
 template <class Collection, class F>
 auto mapTry(Collection&& c, F&& func)
     -> decltype(mapTry(c.begin(), c.end(), func)) {
-  return mapTry(c.begin(), c.end(), std::forward<F>(func));
+  return mapTry(c.begin(), c.end(), static_cast<F&&>(func));
 }
 
 // Sugar for the most common case
 template <class Collection, class F>
 auto mapValue(Executor& exec, Collection&& c, F&& func)
     -> decltype(mapValue(exec, c.begin(), c.end(), func)) {
-  return mapValue(exec, c.begin(), c.end(), std::forward<F>(func));
+  return mapValue(exec, c.begin(), c.end(), static_cast<F&&>(func));
 }
 
 template <class Collection, class F>
 auto mapTry(Executor& exec, Collection&& c, F&& func)
     -> decltype(mapTry(exec, c.begin(), c.end(), func)) {
-  return mapTry(exec, c.begin(), c.end(), std::forward<F>(func));
+  return mapTry(exec, c.begin(), c.end(), static_cast<F&&>(func));
 }
 
 /// Carry out the computation contained in the given future if
@@ -2130,12 +2144,8 @@ template <class F>
 auto when(bool p, F&& thunk)
     -> decltype(std::declval<invoke_result_t<F>>().unit());
 
-#if FOLLY_FUTURE_USING_FIBER
-
 SemiFuture<Unit> wait(std::unique_ptr<fibers::Baton> baton);
 SemiFuture<Unit> wait(std::shared_ptr<fibers::Baton> baton);
-
-#endif
 
 /**
  * Returns a lazy SemiFuture constructed by f, which also ensures that ensure is
@@ -2347,22 +2357,28 @@ auto via(Executor::KeepAlive<>, Func&& func) -> Future<
   follow with `via(executor)` because it will complete in whichever thread the
   last Future completes in.
 
-  The return type for Future<T> input is a Future<std::vector<Try<T>>>
-  */
-template <class InputIterator>
-SemiFuture<std::vector<
-    Try<typename std::iterator_traits<InputIterator>::value_type::value_type>>>
-collectAllSemiFuture(InputIterator first, InputIterator last);
+  The return type for Future<T> input is a SemiFuture<std::vector<Try<T>>>
+  for collectX.
 
-/// Sugar for the most common case
+  collectXUnsafe returns an inline Future that erases the executor from the
+  incoming Futures/SemiFutures. collectXUnsafe should be phased out and
+  replaced with collectX(...).via(e) where e is a valid non-inline executor.
+  */
+// Unsafe variant, see above comment for details
+template <class InputIterator>
+Future<std::vector<
+    Try<typename std::iterator_traits<InputIterator>::value_type::value_type>>>
+collectAllUnsafe(InputIterator first, InputIterator last);
+
+// Unsafe variant sugar, see above comment for details
 template <class Collection>
-auto collectAllSemiFuture(Collection&& c)
-    -> decltype(collectAllSemiFuture(c.begin(), c.end())) {
-  return collectAllSemiFuture(c.begin(), c.end());
+auto collectAllUnsafe(Collection&& c)
+    -> decltype(collectAllUnsafe(c.begin(), c.end())) {
+  return collectAllUnsafe(c.begin(), c.end());
 }
 
 template <class InputIterator>
-Future<std::vector<
+SemiFuture<std::vector<
     Try<typename std::iterator_traits<InputIterator>::value_type::value_type>>>
 collectAll(InputIterator first, InputIterator last);
 
@@ -2371,22 +2387,25 @@ auto collectAll(Collection&& c) -> decltype(collectAll(c.begin(), c.end())) {
   return collectAll(c.begin(), c.end());
 }
 
+// Unsafe variant of collectAll, see coment above for details. Returns
+// a Future<std::tuple<Try<T1>, Try<T2>, ...>> on the Inline executor.
+template <typename... Fs>
+Future<std::tuple<Try<typename remove_cvref_t<Fs>::value_type>...>>
+collectAllUnsafe(Fs&&... fs);
+
 /// This version takes a varying number of Futures instead of an iterator.
 /// The return type for (Future<T1>, Future<T2>, ...) input
-/// is a Future<std::tuple<Try<T1>, Try<T2>, ...>>.
+/// is a SemiFuture<std::tuple<Try<T1>, Try<T2>, ...>>.
 /// The Futures are moved in, so your copies are invalid.
 template <typename... Fs>
 SemiFuture<std::tuple<Try<typename remove_cvref_t<Fs>::value_type>...>>
-collectAllSemiFuture(Fs&&... fs);
+collectAll(Fs&&... fs);
 
-template <typename... Fs>
-Future<std::tuple<Try<typename remove_cvref_t<Fs>::value_type>...>> collectAll(
-    Fs&&... fs);
 /// Like collectAll, but will short circuit on the first exception. Thus, the
-/// type of the returned Future is std::vector<T> instead of
+/// type of the returned SemiFuture is std::vector<T> instead of
 /// std::vector<Try<T>>
 template <class InputIterator>
-Future<std::vector<
+SemiFuture<std::vector<
     typename std::iterator_traits<InputIterator>::value_type::value_type>>
 collect(InputIterator first, InputIterator last);
 
@@ -2396,11 +2415,26 @@ auto collect(Collection&& c) -> decltype(collect(c.begin(), c.end())) {
   return collect(c.begin(), c.end());
 }
 
+// Unsafe variant of collect. Returns a Future<std::vector<T>> that
+// completes inline.
+template <class InputIterator>
+Future<std::vector<
+    typename std::iterator_traits<InputIterator>::value_type::value_type>>
+collectUnsafe(InputIterator first, InputIterator last);
+
+/// Sugar for the most common unsafe case. Returns a Future<std::vector<T>>
+// that completes inline.
+template <class Collection>
+auto collectUnsafe(Collection&& c)
+    -> decltype(collectUnsafe(c.begin(), c.end())) {
+  return collectUnsafe(c.begin(), c.end());
+}
+
 /// Like collectAll, but will short circuit on the first exception. Thus, the
-/// type of the returned Future is std::tuple<T1, T2, ...> instead of
+/// type of the returned SemiFuture is std::tuple<T1, T2, ...> instead of
 /// std::tuple<Try<T1>, Try<T2>, ...>
 template <typename... Fs>
-Future<std::tuple<typename remove_cvref_t<Fs>::value_type...>> collect(
+SemiFuture<std::tuple<typename remove_cvref_t<Fs>::value_type...>> collect(
     Fs&&... fs);
 
 /** The result is a pair of the index of the first Future to complete and
@@ -2410,25 +2444,15 @@ Future<std::tuple<typename remove_cvref_t<Fs>::value_type...>> collect(
   This function is thread-safe for Futures running on different threads.
   */
 template <class InputIterator>
-Future<std::pair<
-    size_t,
-    Try<typename std::iterator_traits<InputIterator>::value_type::value_type>>>
-collectAny(InputIterator first, InputIterator last);
-template <class InputIterator>
 SemiFuture<std::pair<
     size_t,
     Try<typename std::iterator_traits<InputIterator>::value_type::value_type>>>
-collectAnySemiFuture(InputIterator first, InputIterator last);
+collectAny(InputIterator first, InputIterator last);
 
 /// Sugar for the most common case
 template <class Collection>
 auto collectAny(Collection&& c) -> decltype(collectAny(c.begin(), c.end())) {
   return collectAny(c.begin(), c.end());
-}
-template <class Collection>
-auto collectAnySemiFuture(Collection&& c)
-    -> decltype(collectAnySemiFuture(c.begin(), c.end())) {
-  return collectAnySemiFuture(c.begin(), c.end());
 }
 
 /** Similar to collectAny, collectAnyWithoutException return the first Future to
@@ -2489,12 +2513,12 @@ template <
     class ItT = typename std::iterator_traits<
         typename Collection::iterator>::value_type,
     class Result = typename invoke_result_t<F, ItT&&>::value_type>
-std::vector<Future<Result>>
-window(Executor::KeepAlive<> executor, Collection input, F func, size_t n);
+std::vector<Future<Result>> window(
+    Executor::KeepAlive<> executor, Collection input, F func, size_t n);
 
 template <typename F, typename T, typename ItT>
 using MaybeTryArg = typename std::
-    conditional<is_invocable<F, T&&, Try<ItT>&&>::value, Try<ItT>, ItT>::type;
+    conditional<is_invocable_v<F, T&&, Try<ItT>&&>, Try<ItT>, ItT>::type;
 
 /** repeatedly calls func on every result, e.g.
     reduce(reduce(reduce(T initial, result of first), result of second), ...)
@@ -2511,13 +2535,10 @@ Future<T> reduce(It first, It last, T&& initial, F&& func);
 
 /// Sugar for the most common case
 template <class Collection, class T, class F>
-auto reduce(Collection&& c, T&& initial, F&& func) -> decltype(reduce(
-    c.begin(),
-    c.end(),
-    std::forward<T>(initial),
-    std::forward<F>(func))) {
-  return reduce(
-      c.begin(), c.end(), std::forward<T>(initial), std::forward<F>(func));
+auto reduce(Collection&& c, T&& initial, F&& func) -> decltype(folly::reduce(
+    c.begin(), c.end(), static_cast<T&&>(initial), static_cast<F&&>(func))) {
+  return folly::reduce(
+      c.begin(), c.end(), static_cast<T&&>(initial), static_cast<F&&>(func));
 }
 
 /** like reduce, but calls func on finished futures as they complete
@@ -2529,13 +2550,13 @@ Future<T> unorderedReduce(It first, It last, T initial, F func);
 /// Sugar for the most common case
 template <class Collection, class T, class F>
 auto unorderedReduce(Collection&& c, T&& initial, F&& func)
-    -> decltype(unorderedReduce(
+    -> decltype(folly::unorderedReduce(
         c.begin(),
         c.end(),
-        std::forward<T>(initial),
-        std::forward<F>(func))) {
-  return unorderedReduce(
-      c.begin(), c.end(), std::forward<T>(initial), std::forward<F>(func));
+        static_cast<T&&>(initial),
+        static_cast<F&&>(func))) {
+  return folly::unorderedReduce(
+      c.begin(), c.end(), static_cast<T&&>(initial), static_cast<F&&>(func));
 }
 
 /// Carry out the computation contained in the given future if
@@ -2570,30 +2591,28 @@ namespace folly {
 namespace detail {
 
 template <typename T>
-class FutureAwaitable {
+class FutureAwaiter {
  public:
-  explicit FutureAwaitable(folly::Future<T>&& future) noexcept
+  explicit FutureAwaiter(folly::Future<T>&& future) noexcept
       : future_(std::move(future)) {}
 
   bool await_ready() {
     if (future_.isReady()) {
-      result_ = std::move(future_.getTry());
+      result_ = std::move(future_.result());
       return true;
     }
     return false;
   }
 
-  T await_resume() {
-    return std::move(result_).value();
-  }
+  T await_resume() { return std::move(result_).value(); }
 
-  Try<T> await_resume_try() {
-    return std::move(result_);
+  Try<drop_unit_t<T>> await_resume_try() {
+    return static_cast<Try<drop_unit_t<T>>>(std::move(result_));
   }
 
   FOLLY_CORO_AWAIT_SUSPEND_NONTRIVIAL_ATTRIBUTES void await_suspend(
-      std::experimental::coroutine_handle<> h) {
-    // FutureAwaitable may get destroyed as soon as the callback is executed.
+      coro::coroutine_handle<> h) {
+    // FutureAwaiter may get destroyed as soon as the callback is executed.
     // Make sure the future object doesn't get destroyed until setCallback_
     // returns.
     auto future = std::move(future_);
@@ -2612,9 +2631,9 @@ class FutureAwaitable {
 } // namespace detail
 
 template <typename T>
-inline detail::FutureAwaitable<T>
+inline detail::FutureAwaiter<T>
 /* implicit */ operator co_await(Future<T>&& future) noexcept {
-  return detail::FutureAwaitable<T>(std::move(future));
+  return detail::FutureAwaiter<T>(std::move(future));
 }
 
 } // namespace folly

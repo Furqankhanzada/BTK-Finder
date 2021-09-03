@@ -16,10 +16,11 @@
 
 #pragma once
 
+#include <thread>
+
 #include <folly/futures/Future.h>
 #include <folly/io/async/EventBase.h>
 #include <folly/io/async/HHWheelTimer.h>
-#include <thread>
 
 namespace folly {
 
@@ -33,7 +34,7 @@ class ThreadWheelTimekeeper : public Timekeeper {
   ~ThreadWheelTimekeeper() override;
 
   /// Implement the Timekeeper interface
-  SemiFuture<Unit> after(Duration) override;
+  SemiFuture<Unit> after(HighResDuration) override;
 
  protected:
   folly::EventBase eventBase_;

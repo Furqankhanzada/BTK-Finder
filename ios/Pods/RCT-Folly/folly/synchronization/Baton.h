@@ -19,13 +19,16 @@
 #include <assert.h>
 #include <errno.h>
 #include <stdint.h>
+
 #include <atomic>
 #include <thread>
 
 #include <folly/Likely.h>
+#include <folly/detail/AsyncTrace.h>
 #include <folly/detail/Futex.h>
 #include <folly/detail/MemoryIdler.h>
 #include <folly/portability/Asm.h>
+#include <folly/synchronization/AtomicUtil.h>
 #include <folly/synchronization/WaitOptions.h>
 #include <folly/synchronization/detail/Spin.h>
 
@@ -55,9 +58,7 @@ namespace folly {
 template <bool MayBlock = true, template <typename> class Atom = std::atomic>
 class Baton {
  public:
-  FOLLY_ALWAYS_INLINE static constexpr WaitOptions wait_options() {
-    return {};
-  }
+  FOLLY_ALWAYS_INLINE static constexpr WaitOptions wait_options() { return {}; }
 
   constexpr Baton() noexcept : state_(INIT) {}
 
@@ -73,7 +74,7 @@ class Baton {
     // requirement in which the caller must _know_ that this is true, they
     // are not allowed to be merely lucky.  If two threads are involved,
     // the destroying thread must actually have synchronized with the
-    // waiting thread after wait() returned.  To convey causality the the
+    // waiting thread after wait() returned.  To convey causality the
     // waiting thread must have used release semantics and the destroying
     // thread must have used acquire semantics for that communication,
     // so we are guaranteed to see the post-wait() value of state_,
@@ -187,9 +188,7 @@ class Baton {
   ///   call wait, try_wait or timed_wait on the same baton without resetting
   ///
   /// @return       true if baton has been posted, false othewise
-  FOLLY_ALWAYS_INLINE bool try_wait() const noexcept {
-    return ready();
-  }
+  FOLLY_ALWAYS_INLINE bool try_wait() const noexcept { return ready(); }
 
   /// Similar to wait, but with a timeout. The thread is unblocked if the
   /// timeout expires.
@@ -263,6 +262,12 @@ class Baton {
   FOLLY_NOINLINE bool tryWaitSlow(
       const std::chrono::time_point<Clock, Duration>& deadline,
       const WaitOptions& opt) noexcept {
+    if (opt.logging_enabled()) {
+      folly::async_tracing::logBlockingOperation(
+          std::chrono::duration_cast<std::chrono::milliseconds>(
+              deadline - Clock::now()));
+    }
+
     switch (detail::spin_pause_until(deadline, opt, [=] { return ready(); })) {
       case detail::spin_result::success:
         return true;
@@ -285,15 +290,14 @@ class Baton {
 
     // guess we have to block :(
     uint32_t expected = INIT;
-    if (!state_.compare_exchange_strong(
-            expected,
-            WAITING,
+    if (!folly::atomic_compare_exchange_strong_explicit<Atom>(
+            &state_,
+            &expected,
+            static_cast<uint32_t>(WAITING),
             std::memory_order_relaxed,
-            std::memory_order_relaxed)) {
+            std::memory_order_acquire)) {
       // CAS failed, last minute reprieve
       assert(expected == EARLY_DELIVERY);
-      // TODO: move the acquire to the compare_exchange failure load after C++17
-      std::atomic_thread_fence(std::memory_order_acquire);
       return true;
     }
 

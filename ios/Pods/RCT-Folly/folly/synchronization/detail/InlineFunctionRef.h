@@ -135,7 +135,7 @@ class InlineFunctionRef<ReturnType(Args...), Size> {
       std::enable_if_t<
           !std::is_same<std::decay_t<Func>, InlineFunctionRef>{} &&
           !std::is_reference<Func>{} &&
-          folly::is_invocable_r<ReturnType, Func&&, Args&&...>{}>* = nullptr>
+          folly::is_invocable_r_v<ReturnType, Func&&, Args&&...>>* = nullptr>
   InlineFunctionRef(Func&& func) {
     // We disallow construction from lvalues, so assert that this is not a
     // reference type.  When invoked with an lvalue, Func is a lvalue
@@ -160,9 +160,7 @@ class InlineFunctionRef<ReturnType(Args...), Size> {
    * We have a function engaged if the call function points to anything other
    * than null.
    */
-  operator bool() const noexcept {
-    return call_;
-  }
+  operator bool() const noexcept { return call_; }
 
  private:
   friend class InlineFunctionRefTest;
@@ -224,7 +222,7 @@ class InlineFunctionRef<ReturnType(Args...), Size> {
   }
 
   Call call_;
-  Storage storage_;
+  Storage storage_{};
 };
 
 } // namespace detail

@@ -67,9 +67,10 @@
 // void writer() {
 //   while (true) {
 //     std::this_thread::sleep_for(std::chrono::seconds(60));
-//     ConfigData* oldConfigData = globalConfigData;
+//     ConfigData* oldConfigData;
 //     ConfigData* newConfigData = loadConfigDataFromRemoteServer();
 //     sm.lock();
+//     oldConfigData = globalConfigData;
 //     globalConfigData = newConfigData;
 //     sm.unlock();
 //     delete oldConfigData;
@@ -307,10 +308,10 @@ class rcu_token {
   rcu_token& operator=(rcu_token&& other) = default;
 
  private:
-  explicit rcu_token(uint64_t epoch) : epoch_(epoch) {}
+  explicit rcu_token(uint8_t epoch) : epoch_(epoch) {}
 
   friend class rcu_domain<Tag>;
-  uint64_t epoch_;
+  uint8_t epoch_;
 };
 
 // Defines an RCU domain.  RCU readers within a given domain block updaters
@@ -356,12 +357,15 @@ class rcu_domain {
   FOLLY_ALWAYS_INLINE rcu_token<Tag> lock_shared();
   FOLLY_ALWAYS_INLINE void unlock_shared(rcu_token<Tag>&&);
 
-  // Call a function after concurrent critical sections have finished.
-  // Does not block unless the queue is full, then may block to wait
-  // for scheduler thread, but generally does not wait for full
-  // synchronization.
+  // Invokes cbin(this) and then deletes this some time after all pre-existing
+  // RCU readers have completed.  See synchronize_rcu() for more information
+  // about RCU readers and domains.
   template <typename T>
   void call(T&& cbin);
+
+  // Invokes node->cb_(node) some time after all pre-existing RCU readers
+  // have completed.  See synchronize_rcu() for more information about RCU
+  // readers and domains.
   void retire(list_node* node) noexcept;
 
   // Ensure concurrent critical sections have finished.
@@ -409,7 +413,10 @@ inline rcu_domain<RcuTag>* rcu_default_domain() {
   return *rcu_default_domain_;
 }
 
-// Main reader guard class.
+// Main reader guard class.  Use rcu_reader instead unless you need to
+// specify a custom domain.  Note that the default domain will work
+// in almost all use cases.  Please see rcu_domain for more information on
+// custom domains.
 template <typename Tag = RcuTag>
 class rcu_reader_domain {
  public:
@@ -460,21 +467,42 @@ class rcu_reader_domain {
   rcu_domain<Tag>* domain_;
 };
 
+// Mark an RCU read-side critical section using RAII style, as in
+// folly::rcu_reader rcuGuard.
+//
+// This uses the default RCU domain, which suffices for most use cases.
+// Please see the rcu_domain documentation for more information.
 using rcu_reader = rcu_reader_domain<RcuTag>;
 
 template <typename Tag = RcuTag>
 inline void swap(
-    rcu_reader_domain<Tag>& a,
-    rcu_reader_domain<Tag>& b) noexcept {
+    rcu_reader_domain<Tag>& a, rcu_reader_domain<Tag>& b) noexcept {
   a.swap(b);
 }
 
+// Waits for all pre-existing RCU readers to complete.
+// RCU readers will normally be marked using the RAII interface rcu_reader,
+// as in folly::rcu_reader rcuGuard.
+//
+// Note that synchronize_rcu is not obligated to wait for RCU readers that
+// start after synchronize_rcu starts.  Note also that holding a lock across
+// synchronize_rcu that is acquired by any deleter (as in is passed to
+// rcu_retire, retire, or call) will result in deadlock.  Note that such
+// deadlock will normally only occur with user-written deleters, as in the
+// default of delele will normally be immune to such deadlocks.
 template <typename Tag = RcuTag>
 inline void synchronize_rcu(
     rcu_domain<Tag>* domain = rcu_default_domain()) noexcept {
   domain->synchronize();
 }
 
+// Waits for all in-flight deleters to complete.
+//
+// An in-flight deleter is one that has already been passed to rcu_retire,
+// retire, or call.  In other words, rcu_barrier is not obligated to wait
+// on any deleters passed to later calls to rcu_retire, retire, or call.
+//
+// And yes, the current implementation is buggy, and will be fixed.
 template <typename Tag = RcuTag>
 inline void rcu_barrier(
     rcu_domain<Tag>* domain = rcu_default_domain()) noexcept {
@@ -482,14 +510,16 @@ inline void rcu_barrier(
 }
 
 // Free-function retire.  Always allocates.
+//
+// This will invoke the deleter d(p) asynchronously some time after all
+// pre-existing RCU readers have completed.  See synchronize_rcu() for more
+// information about RCU readers and domains.
 template <
     typename T,
     typename D = std::default_delete<T>,
     typename Tag = RcuTag>
 void rcu_retire(
-    T* p,
-    D d = {},
-    rcu_domain<Tag>* domain = rcu_default_domain()) {
+    T* p, D d = {}, rcu_domain<Tag>* domain = rcu_default_domain()) {
   domain->call([p, del = std::move(d)]() { del(p); });
 }
 

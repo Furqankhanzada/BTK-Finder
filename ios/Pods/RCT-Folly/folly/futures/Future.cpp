@@ -15,14 +15,14 @@
  */
 
 #include <folly/futures/Future.h>
+
 #include <folly/Likely.h>
-#include <folly/SingletonThreadLocal.h>
 #include <folly/futures/ThreadWheelTimekeeper.h>
 
 namespace folly {
 namespace futures {
 
-SemiFuture<Unit> sleep(Duration dur, Timekeeper* tk) {
+SemiFuture<Unit> sleep(HighResDuration dur, Timekeeper* tk) {
   std::shared_ptr<Timekeeper> tks;
   if (LIKELY(!tk)) {
     tks = folly::detail::getTimekeeperSingleton();
@@ -36,11 +36,9 @@ SemiFuture<Unit> sleep(Duration dur, Timekeeper* tk) {
   return tk->after(dur);
 }
 
-Future<Unit> sleepUnsafe(Duration dur, Timekeeper* tk) {
+Future<Unit> sleepUnsafe(HighResDuration dur, Timekeeper* tk) {
   return sleep(dur, tk).toUnsafeFuture();
 }
-
-#if FOLLY_FUTURE_USING_FIBER
 
 namespace {
 template <typename Ptr>
@@ -77,7 +75,17 @@ SemiFuture<Unit> wait(std::shared_ptr<fibers::Baton> baton) {
   return sf;
 }
 
+} // namespace futures
+
+#if FOLLY_USE_EXTERN_FUTURE_UNIT
+namespace futures {
+namespace detail {
+template class FutureBase<Unit>;
+} // namespace detail
+} // namespace futures
+
+template class Future<Unit>;
+template class SemiFuture<Unit>;
 #endif
 
-} // namespace futures
 } // namespace folly

@@ -1,6 +1,6 @@
 {
   "name": "react-native-text-input-mask",
-  "version": "2.0.0",
+  "version": "3.1.4",
   "summary": "Text input mask for React Native.",
   "description": "Text input mask for React Native.",
   "homepage": "https://github.com/react-native-community/react-native-text-input-mask",
@@ -8,21 +8,27 @@
     "type": "MIT",
     "file": "LICENSE"
   },
-  "authors": "Ivan Zotov",
+  "authors": "Martin Treurnicht",
   "source": {
     "git": "https://github.com/react-native-community/react-native-text-input-mask.git",
-    "tag": "2.0.0"
+    "tag": "3.1.4"
   },
   "platforms": {
-    "ios": "8.0"
+    "ios": "10.0"
   },
-  "source_files": "ios/**/*.{h,m}",
+  "source_files": "ios/**/*.{h,m,swift}",
+  "requires_arc": true,
+  "swift_versions": "5.0",
   "dependencies": {
-    "React": [
+    "React-Core": [
 
     ],
-    "RNInputMask": [
+    "React-RCTText": [
 
+    ],
+    "InputMask": [
+      "~> 6.1.0"
     ]
-  }
+  },
+  "swift_version": "5.0"
 }
