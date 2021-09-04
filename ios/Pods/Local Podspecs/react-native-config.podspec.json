@@ -1,6 +1,6 @@
 {
   "name": "react-native-config",
-  "version": "1.4.2",
+  "version": "1.4.4",
   "summary": "Expose config variables to React Native apps",
   "authors": "Pedro Belo",
   "homepage": "https://github.com/luggit/react-native-config",
@@ -11,7 +11,7 @@
   },
   "source": {
     "git": "https://github.com/luggit/react-native-config.git",
-    "tag": "v1.4.2"
+    "tag": "v1.4.4"
   },
   "script_phases": {
     "name": "Config codegen",
