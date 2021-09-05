@@ -1,0 +1,78 @@
+import React from 'react';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { BaseColor, useTheme, useFont } from '@config';
+import { Icon } from '@components';
+
+/* Bottom Screen */
+import Review from '@screens/Review';
+import PlaceDetail from '@screens/PlaceDetail';
+import Menu from '@screens/Menu';
+
+const PlaceDetailStack = createStackNavigator();
+const PlaceDetailBottomTab = createBottomTabNavigator();
+
+export default function PlaceDetailNavigator() {
+  return (
+    <PlaceDetailStack.Navigator
+      headerMode="none"
+      initialRouteName="BottomTabNavigator">
+      <PlaceDetailStack.Screen
+        name="BottomTabNavigator"
+        component={BottomTabNavigator}
+      />
+    </PlaceDetailStack.Navigator>
+  );
+}
+
+function BottomTabNavigator() {
+  const { colors } = useTheme();
+  const font = useFont();
+  return (
+    <PlaceDetailBottomTab.Navigator
+      initialRouteName="PlaceDetail"
+      headerMode="none"
+      tabBarOptions={{
+        showIcon: true,
+        showLabel: true,
+        activeTintColor: colors.primary,
+        inactiveTintColor: BaseColor.grayColor,
+        style: { borderTopWidth: 1 },
+        labelStyle: {
+          fontSize: 12,
+          fontFamily: font,
+        },
+      }}>
+      <PlaceDetailBottomTab.Screen
+        name="Overview"
+        component={PlaceDetail}
+        options={{
+          title: 'Overview',
+          tabBarIcon: ({ color }) => {
+            return <Icon color={color} name="list-ul" size={20} solid />;
+          },
+        }}
+      />
+      <PlaceDetailBottomTab.Screen
+        name="Ratings"
+        component={Review}
+        options={{
+          title: 'Ratings',
+          tabBarIcon: ({ color }) => {
+            return <Icon solid color={color} name="star" size={25} />;
+          },
+        }}
+      />
+      <PlaceDetailBottomTab.Screen
+        name="Menu"
+        component={Menu}
+        options={{
+          title: 'Menu',
+          tabBarIcon: ({ color }) => {
+            return <Icon solid color={color} name="bars" size={25} />;
+          },
+        }}
+      />
+    </PlaceDetailBottomTab.Navigator>
+  );
+}

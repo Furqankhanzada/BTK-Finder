@@ -32,7 +32,7 @@ export default function Review(props) {
 
   useEffect(() => {
     dispatch(getSingleBusiness(route?.params?.id));
-  }, [route.params.id, dispatch]);
+  }, [route?.params?.id, dispatch]);
 
   const totalRating =
     stateProps?.singleBusiness?.reviewStats?.fiveStarCount +

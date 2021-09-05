@@ -157,7 +157,7 @@ export default function Home({ navigation }) {
   }, [dispatch]);
 
   const navigateBusinessDetail = (id) => {
-    navigation.navigate('PlaceDetail', { id });
+    navigation.navigate('PlaceDetailNavigator', { id });
   };
 
   const seeMore = (payload = {}) => {

@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { BaseColor, useTheme, useFont } from '@config';
 import { Icon } from '@components';
 import { setEditBusiness } from '../actions/business';
+import PlaceDetailNavigator from 'app/navigation/placeDetail';
 
 /* Bottom Screen */
 import Home from '@screens/Home';
@@ -53,6 +54,9 @@ export default function Main() {
         name="BottomTabNavigator"
         component={BottomTabNavigator}
       />
+      <MainStack.Screen name="PlaceDetailNavigator">
+        {props => <PlaceDetailNavigator {...props} />}
+      </MainStack.Screen>
       <MainStack.Screen name="ThemeSetting" component={ThemeSetting} />
       <MainStack.Screen name="Setting" component={Setting} />
       <MainStack.Screen name="Category" component={Category} />
@@ -90,7 +94,7 @@ function BottomTabNavigator() {
   const dispatch = useDispatch();
   const { colors } = useTheme();
   const font = useFont();
-  const isLogin = useSelector((state) => state.auth.isLogin);
+  const isLogin = useSelector(state => state.auth.isLogin);
   return (
     <BottomTab.Navigator
       initialRouteName="Home"
@@ -119,7 +123,7 @@ function BottomTabNavigator() {
 
       <BottomTab.Screen
         name="Favourite"
-        component={(props) =>
+        component={props =>
           isLogin ? (
             <Favourite {...props} />
           ) : (
@@ -135,7 +139,7 @@ function BottomTabNavigator() {
       />
       <BottomTab.Screen
         name="Business"
-        component={(props) =>
+        component={props =>
           isLogin ? (
             <Business {...props} />
           ) : (
@@ -149,7 +153,7 @@ function BottomTabNavigator() {
           },
         }}
         listeners={() => ({
-          tabPress: (e) => {
+          tabPress: e => {
             dispatch(setEditBusiness(false));
           },
         })}
