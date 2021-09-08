@@ -31,8 +31,10 @@ export default function Review(props) {
   });
 
   useEffect(() => {
-    dispatch(getSingleBusiness(route?.params?.id));
-  }, [route?.params?.id, dispatch]);
+    if (route?.params?.id) {
+      dispatch(getSingleBusiness(route?.params?.id));
+    }
+  }, [route?.params?.id]);
 
   const totalRating =
     stateProps?.singleBusiness?.reviewStats?.fiveStarCount +
@@ -73,7 +75,7 @@ export default function Review(props) {
     navigation.navigate('Walkthrough', { lastRoute, id });
   };
 
-  const navigateToFeedback = (id) => {
+  const navigateToFeedback = id => {
     navigation.navigate('Feedback', { id });
   };
 
@@ -167,7 +169,7 @@ export default function Review(props) {
             />
           }
           data={stateProps.singleBusiness.reviews}
-          keyExtractor={(item) => item.id}
+          keyExtractor={item => item.id}
           ListHeaderComponent={() => (
             <RateDetail
               point={rateDetail.point}

@@ -21,8 +21,10 @@ export default function PlaceDetail(props) {
   });
 
   useEffect(() => {
-    dispatch(getSingleBusiness(route?.params?.id));
-  }, []);
+    if (route?.params?.id) {
+      dispatch(getSingleBusiness(route?.params?.id));
+    }
+  }, [route?.params?.id]);
 
   return (
     <View style={{ flex: 1, position: 'relative' }}>

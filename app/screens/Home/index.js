@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import {
-    View,
-    ScrollView,
-    Animated,
-    TouchableOpacity,
-    FlatList,
-    Alert,
-    Linking,
-    Platform,
+  View,
+  ScrollView,
+  Animated,
+  TouchableOpacity,
+  FlatList,
+  Alert,
+  Linking,
+  Platform,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
@@ -29,7 +29,7 @@ import { HomeBannerData } from '@data';
 import FeaturedCategoryPlaceholderComponent from '../../components/Placeholders/featuredCategories';
 import SectionList from './sectionList';
 import { getCategories } from '../../actions/category';
-import { getBusinesses } from '../../actions/business';
+import { getBusinesses, getSingleBusiness } from '../../actions/business';
 import { getFavoriteBusinesses } from '../../actions/favorites';
 import { getProfile } from '../../actions/auth';
 import useLocation from '../../hooks/useLocation';
@@ -45,11 +45,11 @@ export default function Home({ navigation }) {
     };
   });
 
-  const navigateToReview = (id) => {
+  const navigateToReview = id => {
     navigation.navigate('Review', { id });
   };
 
-  const isLogin = useSelector((state) => state.auth.isLogin);
+  const isLogin = useSelector(state => state.auth.isLogin);
   const [loading, setLoading] = useState(true);
   const deltaY = new Animated.Value(0);
   const { colors } = useTheme();
@@ -57,7 +57,7 @@ export default function Home({ navigation }) {
   const dispatch = useDispatch();
   const getLocation = useLocation();
   let placeholderItems = [1, 2, 3, 4, 5, 6, 7, 8];
-  let featuredCategories = useSelector((state) => state.categories.featured);
+  let featuredCategories = useSelector(state => state.categories.featured);
   featuredCategories = [
     ...featuredCategories,
     ...[
@@ -76,41 +76,54 @@ export default function Home({ navigation }) {
   const heightImageBanner = Utils.scaleWithPixel(225);
   const marginTopBanner = heightImageBanner - heightHeader + 10;
 
-    useEffect(() => {
-        VersionCheck.needUpdate()
-            .then(async res => {
-                if (res.isNeeded) {
-                    Alert.alert('Update Required', 'Your application version is outdated, Click on Update Now to update it.', [
-                        {
-                            text: 'Cancel',
-                            style: 'cancel',
-                        },
-                        { text: 'Update Now', onPress: () => Linking.openURL(res.storeUrl) },
-                    ], {
-                        cancelable: false,
-                    });
-                }
-            });
-    }, []);
+  useEffect(() => {
+    VersionCheck.needUpdate().then(async res => {
+      if (res.isNeeded) {
+        Alert.alert(
+          'Update Required',
+          'Your application version is outdated, Click on Update Now to update it.',
+          [
+            {
+              text: 'Cancel',
+              style: 'cancel',
+            },
+            {
+              text: 'Update Now',
+              onPress: () => Linking.openURL(res.storeUrl),
+            },
+          ],
+          {
+            cancelable: false,
+          },
+        );
+      }
+    });
+  }, []);
 
-    useEffect(() => {
-        checkNotifications().then(({status}) => {
-            let message = Platform.OS === 'android'
-                ? 'Open Settings > Manage Notifications > Allow notifications from Explore BTK'
-                : 'Open Settings > Notifications > Allow notifications from Explore BTK';
-            if (status === 'blocked') {
-                Alert.alert('Allow Notifications', message, [
-                    {
-                        text: 'Cancel',
-                        style: 'cancel',
-                    },
-                    { text: 'Open Settings', onPress: () => Linking.openSettings() },
-                ], {
-                    cancelable: false,
-                });
-            }
-        });
-    }, []);
+  useEffect(() => {
+    checkNotifications().then(({ status }) => {
+      let message =
+        Platform.OS === 'android'
+          ? 'Open Settings > Manage Notifications > Allow notifications from Explore BTK'
+          : 'Open Settings > Notifications > Allow notifications from Explore BTK';
+      if (status === 'blocked') {
+        Alert.alert(
+          'Allow Notifications',
+          message,
+          [
+            {
+              text: 'Cancel',
+              style: 'cancel',
+            },
+            { text: 'Open Settings', onPress: () => Linking.openSettings() },
+          ],
+          {
+            cancelable: false,
+          },
+        );
+      }
+    });
+  }, []);
 
   useEffect(() => {
     if (isLogin) {
@@ -156,7 +169,8 @@ export default function Home({ navigation }) {
     );
   }, [dispatch]);
 
-  const navigateBusinessDetail = (id) => {
+  const navigateBusinessDetail = id => {
+    dispatch(getSingleBusiness(id));
     navigation.navigate('PlaceDetailNavigator', { id });
   };
 
@@ -324,7 +338,7 @@ export default function Home({ navigation }) {
                   location={item?.address}
                   rate={item?.averageRatings || 0.0}
                   isFavorite={stateProps?.favoriteBusinesses?.some(
-                    (obj) => obj._id === item?._id,
+                    obj => obj._id === item?._id,
                   )}
                   businessId={item?._id}
                   navigation={navigation}
