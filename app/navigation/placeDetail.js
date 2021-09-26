@@ -49,15 +49,15 @@ function BottomTabNavigator() {
         options={{
           title: 'Overview',
           tabBarIcon: ({ color }) => {
-            return <Icon color={color} name="list-ul" size={20} solid />;
+            return <Icon color={color} name="info-circle" size={25} solid />;
           },
         }}
       />
       <PlaceDetailBottomTab.Screen
-        name="Ratings"
+        name="Reviews"
         component={Review}
         options={{
-          title: 'Ratings',
+          title: 'Reviews',
           tabBarIcon: ({ color }) => {
             return <Icon solid color={color} name="star" size={25} />;
           },
@@ -69,7 +69,7 @@ function BottomTabNavigator() {
         options={{
           title: 'Menu',
           tabBarIcon: ({ color }) => {
-            return <Icon solid color={color} name="bars" size={25} />;
+            return <Icon solid color={color} name="elementor" size={25} />;
           },
         }}
       />

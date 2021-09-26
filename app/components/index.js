@@ -34,6 +34,7 @@ import FloatingButton from './FloatingButton';
 import FavouriteIcon from './FavouriteIcon';
 import ContactItems from './ContactItems';
 import PlaceDetailPlaceholder from './Placeholders/placeDetail';
+import MenuItem from './MenuItem';
 
 export {
   TextInput,
@@ -72,4 +73,5 @@ export {
   FavouriteIcon,
   ContactItems,
   PlaceDetailPlaceholder,
+  MenuItem,
 };
