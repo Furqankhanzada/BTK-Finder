@@ -1,37 +1,41 @@
 import React from 'react';
-import {View} from 'react-native';
+import { View } from 'react-native';
 import PropTypes from 'prop-types';
-import {Text, Icon} from '@components';
-import {BaseColor, useTheme} from '@config';
+import { Text, Icon } from '@components';
+import { BaseColor, useTheme } from '@config';
 import styles from './styles';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import NumberFormat from 'react-number-format';
 
 export default function RateDetail(props) {
-  const {colors} = useTheme();
-  const {t} = useTranslation();
-  const {style, point, maxPoint, totalRating, data} = props;
+  const { colors } = useTheme();
+  const { t } = useTranslation();
+  const { style, point, maxPoint, totalRating, data } = props;
   return (
     <View style={[styles.contain, style]}>
       <View style={styles.contentLeft}>
         <NumberFormat
-            value={point}
-            displayType={'text'}
-            decimalScale={1}
-            renderText={value => <Text primaryColor style={{fontSize: 48}}>{value}</Text>}
+          value={point}
+          displayType={'text'}
+          decimalScale={1}
+          renderText={value => (
+            <Text primaryColor style={{ fontSize: 48 }}>
+              {value}
+            </Text>
+          )}
         />
         <Text subhead grayColor semibold>
           {t('out_of')} {maxPoint}
         </Text>
       </View>
       <View style={styles.containRight}>
-        <View style={{flexDirection: 'row'}}>
+        <View style={{ flexDirection: 'row' }}>
           <View style={styles.starLeft}>
             <View style={styles.lineStar}>
               {[1, 2, 3, 4, 5].map((icon, index) => {
                 return (
                   <Icon
-                    key={`star5` + index}
+                    key={'star5' + index}
                     name="star"
                     color={BaseColor.grayColor}
                     solid
@@ -44,7 +48,7 @@ export default function RateDetail(props) {
               {[1, 2, 3, 4].map((icon, index) => {
                 return (
                   <Icon
-                    key={`star4` + index}
+                    key={'star4' + index}
                     name="star"
                     color={BaseColor.grayColor}
                     solid
@@ -57,7 +61,7 @@ export default function RateDetail(props) {
               {[1, 2, 3].map((icon, index) => {
                 return (
                   <Icon
-                    key={`star3` + index}
+                    key={'star3' + index}
                     name="star"
                     color={BaseColor.grayColor}
                     solid
@@ -70,7 +74,7 @@ export default function RateDetail(props) {
               {[1, 2].map((icon, index) => {
                 return (
                   <Icon
-                    key={`star2` + index}
+                    key={'star2' + index}
                     name="star"
                     color={BaseColor.grayColor}
                     solid
@@ -91,7 +95,7 @@ export default function RateDetail(props) {
                   <View
                     style={[
                       styles.lineStatusPrimary,
-                      {width: percent, backgroundColor: colors.primary},
+                      { width: percent, backgroundColor: colors.primary },
                     ]}
                   />
                 </View>
