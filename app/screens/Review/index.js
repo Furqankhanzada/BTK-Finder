@@ -36,6 +36,14 @@ export default function Review(props) {
     }
   }, [route?.params?.id]);
 
+  const dateSortedReviews = stateProps?.singleBusiness?.reviews
+    ?.slice(0)
+    .sort((a, b) => {
+      const dateA = new Date(a.createdAt),
+        dateB = new Date(b.createdAt);
+      return dateB - dateA;
+    });
+
   const totalRating =
     stateProps?.singleBusiness?.reviewStats?.fiveStarCount +
     stateProps?.singleBusiness?.reviewStats?.fourStarCount +
@@ -168,7 +176,7 @@ export default function Review(props) {
               }}
             />
           }
-          data={stateProps.singleBusiness.reviews}
+          data={dateSortedReviews}
           keyExtractor={item => item.id}
           ListHeaderComponent={() => (
             <RateDetail
