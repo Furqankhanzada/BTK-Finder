@@ -1,18 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import {
-    View,
-    ScrollView,
-    Animated,
-    TouchableOpacity,
-    FlatList,
-    Alert,
-    Linking,
-    Platform,
+  View,
+  ScrollView,
+  Animated,
+  TouchableOpacity,
+  FlatList,
+  Alert,
+  Linking,
+  Platform,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { checkNotifications } from 'react-native-permissions';
 import VersionCheck from 'react-native-version-check';
+import {
+  Placeholder,
+  PlaceholderLine,
+  Progressive,
+  PlaceholderMedia,
+} from 'rn-placeholder';
 import {
   Header,
   Button,
@@ -21,6 +27,8 @@ import {
   SafeAreaView,
   CardList,
   PlaceItem,
+  ListItem,
+  Image,
 } from '@components';
 import { BaseColor, useTheme, BaseStyle } from '@config';
 import * as Utils from '@utils';
@@ -29,7 +37,7 @@ import { HomeBannerData } from '@data';
 import FeaturedCategoryPlaceholderComponent from '../../components/Placeholders/featuredCategories';
 import SectionList from './sectionList';
 import { getCategories } from '../../actions/category';
-import { getBusinesses } from '../../actions/business';
+import { getBusinesses, getSingleBusiness } from '../../actions/business';
 import { getFavoriteBusinesses } from '../../actions/favorites';
 import { getProfile } from '../../actions/auth';
 import useLocation from '../../hooks/useLocation';
@@ -45,11 +53,11 @@ export default function Home({ navigation }) {
     };
   });
 
-  const navigateToReview = (id) => {
+  const navigateToReview = id => {
     navigation.navigate('Review', { id });
   };
 
-  const isLogin = useSelector((state) => state.auth.isLogin);
+  const isLogin = useSelector(state => state.auth.isLogin);
   const [loading, setLoading] = useState(true);
   const deltaY = new Animated.Value(0);
   const { colors } = useTheme();
@@ -57,7 +65,7 @@ export default function Home({ navigation }) {
   const dispatch = useDispatch();
   const getLocation = useLocation();
   let placeholderItems = [1, 2, 3, 4, 5, 6, 7, 8];
-  let featuredCategories = useSelector((state) => state.categories.featured);
+  let featuredCategories = useSelector(state => state.categories.featured);
   featuredCategories = [
     ...featuredCategories,
     ...[
@@ -65,7 +73,7 @@ export default function Home({ navigation }) {
         id: '5',
         color: BaseColor.kashmir,
         icon: 'ellipsis-h',
-        name: 'more',
+        name: 'More',
         route: 'Category',
       },
     ],
@@ -76,41 +84,54 @@ export default function Home({ navigation }) {
   const heightImageBanner = Utils.scaleWithPixel(225);
   const marginTopBanner = heightImageBanner - heightHeader + 10;
 
-    useEffect(() => {
-        VersionCheck.needUpdate()
-            .then(async res => {
-                if (res.isNeeded) {
-                    Alert.alert('Update Required', 'Your application version is outdated, Click on Update Now to update it.', [
-                        {
-                            text: 'Cancel',
-                            style: 'cancel',
-                        },
-                        { text: 'Update Now', onPress: () => Linking.openURL(res.storeUrl) },
-                    ], {
-                        cancelable: false,
-                    });
-                }
-            });
-    }, []);
+  useEffect(() => {
+    VersionCheck.needUpdate().then(async res => {
+      if (res.isNeeded) {
+        Alert.alert(
+          'Update Required',
+          'Your application version is outdated, Click on Update Now to update it.',
+          [
+            {
+              text: 'Cancel',
+              style: 'cancel',
+            },
+            {
+              text: 'Update Now',
+              onPress: () => Linking.openURL(res.storeUrl),
+            },
+          ],
+          {
+            cancelable: false,
+          },
+        );
+      }
+    });
+  }, []);
 
-    useEffect(() => {
-        checkNotifications().then(({status}) => {
-            let message = Platform.OS === 'android'
-                ? 'Open Settings > Manage Notifications > Allow notifications from Explore BTK'
-                : 'Open Settings > Notifications > Allow notifications from Explore BTK';
-            if (status === 'blocked') {
-                Alert.alert('Allow Notifications', message, [
-                    {
-                        text: 'Cancel',
-                        style: 'cancel',
-                    },
-                    { text: 'Open Settings', onPress: () => Linking.openSettings() },
-                ], {
-                    cancelable: false,
-                });
-            }
-        });
-    }, []);
+  useEffect(() => {
+    checkNotifications().then(({ status }) => {
+      let message =
+        Platform.OS === 'android'
+          ? 'Open Settings > Manage Notifications > Allow notifications from Explore BTK'
+          : 'Open Settings > Notifications > Allow notifications from Explore BTK';
+      if (status === 'blocked') {
+        Alert.alert(
+          'Allow Notifications',
+          message,
+          [
+            {
+              text: 'Cancel',
+              style: 'cancel',
+            },
+            { text: 'Open Settings', onPress: () => Linking.openSettings() },
+          ],
+          {
+            cancelable: false,
+          },
+        );
+      }
+    });
+  }, []);
 
   useEffect(() => {
     if (isLogin) {
@@ -151,13 +172,14 @@ export default function Home({ navigation }) {
         limit: 15,
         skip: 0,
         recent: true,
-        fields: 'name, thumbnail, category, averageRatings',
+        fields: 'name, thumbnail, category, address, averageRatings',
       }),
     );
   }, [dispatch]);
 
-  const navigateBusinessDetail = (id) => {
-    navigation.navigate('PlaceDetail', { id });
+  const navigateBusinessDetail = id => {
+    dispatch(getSingleBusiness(id));
+    navigation.navigate('PlaceDetailNavigator', { id });
   };
 
   const seeMore = (payload = {}) => {
@@ -169,6 +191,264 @@ export default function Home({ navigation }) {
     } else {
       navigation.navigate('Place', payload);
     }
+  };
+
+  const renderCategory = () => {
+    let list = (
+      <FlatList
+        contentContainerStyle={{
+          paddingLeft: 10,
+          paddingRight: 20,
+        }}
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        data={[1, 2, 3, 4, 5, 6]}
+        keyExtractor={(item, index) => `Category ${index}`}
+        renderItem={({ item, index }) => {
+          return (
+            <View>
+              <Placeholder Animation={Progressive}>
+                <View style={styles.categoryContent}>
+                  <PlaceholderMedia style={styles.imageContent} />
+                  <PlaceholderLine
+                    style={{ width: 50, height: 8, marginTop: 10 }}
+                  />
+                </View>
+              </Placeholder>
+            </View>
+          );
+        }}
+      />
+    );
+    if (featuredCategories?.length > 1) {
+      list = (
+        <FlatList
+          contentContainerStyle={{ paddingHorizontal: 10 }}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          data={featuredCategories}
+          keyExtractor={(item, index) => `Category ${index}`}
+          renderItem={({ item, index }) => {
+            return (
+              <View>
+                <TouchableOpacity
+                  style={styles.categoryContent}
+                  onPress={() =>
+                    seeMore({
+                      title: item.name,
+                      category: item.name,
+                      categoryIcon: item.icon,
+                      route: item.route,
+                      latitude: getLocation?.latitude ?? null,
+                      longitude: getLocation?.longitude ?? null,
+                    })
+                  }>
+                  <View
+                    style={[
+                      styles.imageContent,
+                      { backgroundColor: item.color },
+                    ]}>
+                    <Icon
+                      name={item.icon}
+                      size={20}
+                      color={BaseColor.whiteColor}
+                      solid
+                    />
+                  </View>
+                  <Text
+                    footnote
+                    numberOfLines={1}
+                    style={{
+                      marginTop: 10,
+                    }}>
+                    {item.name}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            );
+          }}
+        />
+      );
+    }
+
+    return (
+      <View>
+        <Text title3 bold style={{ paddingHorizontal: 20, marginBottom: 5 }}>
+          Explore by Category
+        </Text>
+        {list}
+      </View>
+    );
+  };
+
+  const renderPopular = () => {
+    let list = (
+      <FlatList
+        contentContainerStyle={{ paddingLeft: 20 }}
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        data={[1, 2, 3, 4, 5, 6]}
+        keyExtractor={(item, index) => `popular${index}`}
+        renderItem={({ item, index }) => (
+          <ListItem
+            loading={true}
+            grid
+            style={{
+              marginRight: 15,
+              width: 200,
+            }}
+          />
+        )}
+      />
+    );
+
+    if (stateProps?.popularBusinesses?.length) {
+      list = (
+        <FlatList
+          contentContainerStyle={{ paddingLeft: 5, paddingRight: 20 }}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          data={stateProps.popularBusinesses}
+          keyExtractor={(item, index) => `popular${index}`}
+          renderItem={({ item, index }) => (
+            <ListItem
+              grid
+              title={item?.name}
+              subtitle={item?.description}
+              image={item?.thumbnail}
+              address={item?.address}
+              rate={item?.averageRatings || 0.0}
+              isFavorite={stateProps?.favoriteBusinesses?.some(
+                obj => obj._id === item?._id,
+              )}
+              businessId={item?._id}
+              navigation={navigation}
+              lastRoute="Home"
+              style={{
+                marginLeft: 15,
+                width: 200,
+              }}
+              onPress={() => navigateBusinessDetail(item._id)}
+              onPressTag={() => navigateToReview(item._id)}
+            />
+          )}
+        />
+      );
+    }
+
+    return (
+      <View>
+        <View style={[styles.sectionHeader, { marginTop: 20 }]}>
+          <View style={styles.sectionHeaderContent}>
+            <Text title3 bold>
+              Popular Businesses
+            </Text>
+            <Text body2 grayColor>
+              Find the most viewed businesses
+            </Text>
+          </View>
+          <TouchableOpacity
+            style={styles.sectionHeaderButton}
+            onPress={() =>
+              seeMore({
+                popular: true,
+                title: 'Popular Businesses',
+                latitude: getLocation?.latitude ?? null,
+                longitude: getLocation?.longitude ?? null,
+              })
+            }>
+            <Text semibold style={styles.sectionHeaderButtonText}>
+              See More
+            </Text>
+            <Icon
+              name="angle-double-right"
+              style={styles.sectionHeaderButtonIcon}
+            />
+          </TouchableOpacity>
+        </View>
+        {list}
+      </View>
+    );
+  };
+
+  const renderRecentlyAdded = () => {
+    let list = (
+      <View style={{ paddingHorizontal: 20 }}>
+        {[1, 2, 3, 4, 5].map((item, index) => {
+          return (
+            <ListItem
+              key={`RecentLocation ${index}`}
+              loading={true}
+              list
+              style={{ marginBottom: 15 }}
+            />
+          );
+        })}
+      </View>
+    );
+
+    if (stateProps?.recentlyAddedBusinesses?.length) {
+      list = (
+        <View style={{ paddingHorizontal: 20 }}>
+          {stateProps.recentlyAddedBusinesses.map((item, index) => {
+            return (
+              <ListItem
+                key={`RecentlyAdded ${index}`}
+                list
+                title={item.name}
+                subtitle={item.category}
+                image={item.thumbnail}
+                rate={item?.averageRatings ?? 0.0}
+                address={item.address}
+                isFavorite={stateProps?.favoriteBusinesses?.some(
+                  obj => obj._id === item?._id,
+                )}
+                businessId={item?._id}
+                navigation={navigation}
+                lastRoute="Home"
+                style={{ marginBottom: 15 }}
+                onPress={() => navigateBusinessDetail(item._id)}
+                onPressTag={() => navigateToReview(item._id)}
+              />
+            );
+          })}
+        </View>
+      );
+    }
+
+    return (
+      <View>
+        <View style={[styles.sectionHeader, { marginTop: 20 }]}>
+          <View style={styles.sectionHeaderContent}>
+            <Text title3 bold>
+              Recently Added Businesses
+            </Text>
+            <Text body2 grayColor>
+              Let's find what's new
+            </Text>
+          </View>
+          <TouchableOpacity
+            style={styles.sectionHeaderButton}
+            onPress={() =>
+              seeMore({
+                recent: true,
+                title: 'Recently Added Businesses',
+                latitude: getLocation?.latitude ?? null,
+                longitude: getLocation?.longitude ?? null,
+              })
+            }>
+            <Text semibold style={styles.sectionHeaderButtonText}>
+              See More
+            </Text>
+            <Icon
+              name="angle-double-right"
+              style={styles.sectionHeaderButtonIcon}
+            />
+          </TouchableOpacity>
+        </View>
+        {list}
+      </View>
+    );
   };
 
   return (
@@ -198,19 +478,14 @@ export default function Home({ navigation }) {
               },
             },
           ])}
-          onContentSizeChange={() => {
-            setHeightHeader(Utils.heightHeader());
-          }}
           scrollEventThrottle={8}>
           <View
             style={[
               styles.searchForm,
               {
                 marginTop: 10,
-                marginBottom: 10,
+                marginBottom: 20,
                 backgroundColor: colors.background,
-                borderColor: colors.border,
-                shadowColor: colors.border,
               },
             ]}>
             <TouchableOpacity
@@ -245,127 +520,9 @@ export default function Home({ navigation }) {
               </View>
             </TouchableOpacity>
           </View>
-
-          {loading ? (
-            <FlatList
-              contentContainerStyle={{ padding: 20 }}
-              data={placeholderItems}
-              numColumns={'4'}
-              renderItem={() => {
-                return (
-                  <View style={styles.serviceItem}>
-                    <FeaturedCategoryPlaceholderComponent />
-                  </View>
-                );
-              }}
-            />
-          ) : (
-            <FlatList
-              contentContainerStyle={{ padding: 20 }}
-              data={featuredCategories}
-              numColumns={'4'}
-              keyExtractor={(item, index) => item.id}
-              renderItem={({ item }) => {
-                return (
-                  <TouchableOpacity
-                    style={styles.serviceItem}
-                    onPress={() =>
-                      seeMore({
-                        title: item.name,
-                        category: item.name,
-                        categoryIcon: item.icon,
-                        route: item.route,
-                        latitude: getLocation?.latitude ?? null,
-                        longitude: getLocation?.longitude ?? null,
-                      })
-                    }>
-                    <View
-                      style={[
-                        styles.serviceCircleIcon,
-                        { backgroundColor: item.color },
-                      ]}>
-                      <Icon
-                        name={item.icon}
-                        size={20}
-                        color={BaseColor.whiteColor}
-                        solid
-                      />
-                    </View>
-                    <Text footnote numberOfLines={1}>
-                      {t(item.name)}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              }}
-            />
-          )}
-          {/* Popular Businesses Section */}
-          <SectionList
-            title="Popular Businesses"
-            subTitle="Find the most interesting things"
-            seeMoreFunc={() =>
-              seeMore({
-                popular: true,
-                title: 'Popular Businesses',
-                latitude: getLocation?.latitude ?? null,
-                longitude: getLocation?.longitude ?? null,
-              })
-            }
-            data={stateProps.popularBusinesses}
-            horizontal={true}
-            loading={stateProps.getPopularBusinessesLoading}
-            renderItem={({ item, index }) => {
-              return (
-                <PlaceItem
-                  grid
-                  image={item?.thumbnail}
-                  title={item.name}
-                  subtitle={item.category}
-                  location={item?.address}
-                  rate={item?.averageRatings || 0.0}
-                  isFavorite={stateProps?.favoriteBusinesses?.some(
-                    (obj) => obj._id === item?._id,
-                  )}
-                  businessId={item?._id}
-                  navigation={navigation}
-                  lastRoute="Home"
-                  // status='Open Now'
-                  onPress={() => navigateBusinessDetail(item._id)}
-                  onPressTag={() => navigateToReview(item._id)}
-                  style={{ marginLeft: 15, width: 175 }}
-                />
-              );
-            }}
-          />
-          {/* Recently Added Businesses Section */}
-          <SectionList
-            title="Recently Added Businesses"
-            subTitle="Lets find out what's new"
-            seeMoreFunc={() =>
-              seeMore({
-                recent: true,
-                title: 'Recently Added Businesses',
-                latitude: getLocation?.latitude ?? null,
-                longitude: getLocation?.longitude ?? null,
-              })
-            }
-            data={stateProps.recentlyAddedBusinesses}
-            loading={stateProps.getRecentlyAddedBusinessesLoading}
-            renderItem={({ item, index }) => {
-              return (
-                <CardList
-                  key={index}
-                  image={item?.thumbnail}
-                  title={item.name}
-                  subtitle={item.category}
-                  rate={item?.averageRatings || 0.0}
-                  style={{ marginBottom: 15 }}
-                  onPress={() => navigateBusinessDetail(item._id)}
-                  onPressTag={() => navigateToReview(item._id)}
-                />
-              );
-            }}
-          />
+          {renderCategory()}
+          {renderPopular()}
+          {renderRecentlyAdded()}
         </ScrollView>
       </SafeAreaView>
     </View>

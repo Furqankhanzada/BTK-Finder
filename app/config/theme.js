@@ -205,12 +205,12 @@ export const DefaultTheme = {
 /**
  * Define list font use for whole application
  */
-export const FontSupport = ['Raleway', 'Roboto', 'Merriweather'];
+export const FontSupport = ['Roboto', 'Raleway', 'Merriweather'];
 
 /**
  * Define font default use for whole application
  */
-export const DefaultFont = 'Raleway';
+export const DefaultFont = 'Roboto';
 
 /**
  * export theme and colors for application
@@ -218,9 +218,9 @@ export const DefaultFont = 'Raleway';
  */
 export const useTheme = () => {
   const isDarkMode = useDarkMode();
-  const forceDark = useSelector((state) => state.application.force_dark);
-  const themeStorage = useSelector((state) => state.application.theme);
-  const listTheme = ThemeSupport.filter((item) => item.theme == themeStorage);
+  const forceDark = useSelector(state => state.application.force_dark);
+  const themeStorage = useSelector(state => state.application.theme);
+  const listTheme = ThemeSupport.filter(item => item.theme == themeStorage);
   const theme = ThemeSupport[2];
 
   if (forceDark) {
@@ -239,6 +239,6 @@ export const useTheme = () => {
  * @returns font
  */
 export const useFont = () => {
-  const font = useSelector((state) => state.application.font);
+  const font = useSelector(state => state.application.font);
   return font ?? DefaultFont;
 };

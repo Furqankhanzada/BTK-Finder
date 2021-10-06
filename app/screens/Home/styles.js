@@ -13,13 +13,7 @@ export default StyleSheet.create({
   },
   searchForm: {
     marginHorizontal: 20,
-    padding: 10,
     borderRadius: 10,
-    borderWidth: 0.5,
-    shadowOffset: { width: 1.5, height: 1.5 },
-    shadowOpacity: 0.3,
-    shadowRadius: 1,
-    elevation: 1,
   },
   lineForm: {
     width: 1,
@@ -95,5 +89,18 @@ export default StyleSheet.create({
   sectionListContainer: {
     paddingLeft: 5,
     paddingRight: 15,
+  },
+  imageContent: {
+    width: 35,
+    height: 35,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  categoryContent: {
+    alignItems: 'center',
+    padding: 10,
+    paddingBottom: 0,
+    borderRadius: 10,
   },
 });
