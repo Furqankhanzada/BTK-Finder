@@ -178,8 +178,7 @@ export default function Home({ navigation }) {
   }, [dispatch]);
 
   const navigateBusinessDetail = id => {
-    dispatch(getSingleBusiness(id));
-    navigation.navigate('PlaceDetailNavigator', { id });
+    navigation.navigate('PlaceDetail', { id });
   };
 
   const seeMore = (payload = {}) => {
