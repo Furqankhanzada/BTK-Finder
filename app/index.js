@@ -1,21 +1,23 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { store } from 'app/store';
 import { Provider } from 'react-redux';
 import remoteConfig from '@react-native-firebase/remote-config';
 import messaging from '@react-native-firebase/messaging';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
-import {Linking, Platform} from 'react-native';
-import PushNotification from "react-native-push-notification";
+import { Linking, Platform } from 'react-native';
+import PushNotification from 'react-native-push-notification';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import queryString from 'query-string';
-import { canOpenUrl } from "./utils";
+import { ApolloProvider } from '@apollo/client';
+import { canOpenUrl } from './utils';
 import * as NavigationService from './services/NavigationService';
 import Navigator from './navigation';
+import { client } from './services/network/client';
 console.disableYellowBox = true;
 
 export default function App() {
   const [localNotificationInfo, setLocalNotificationInfo] = useState({});
-  const navigateToBusinessDetail = (id) => {
+  const navigateToBusinessDetail = id => {
     const interval = setInterval(() => {
       if (NavigationService.isReadyRef.current) {
         clearInterval(interval);
@@ -27,17 +29,23 @@ export default function App() {
   //IOS local notification on click functionality
   useEffect(() => {
     if (Platform.OS === 'ios') {
-        PushNotificationIOS.addEventListener('localNotification', onRemoteNotification);
+      PushNotificationIOS.addEventListener(
+        'localNotification',
+        onRemoteNotification,
+      );
     }
   });
 
-  const onRemoteNotification = (notification) => {
+  const onRemoteNotification = notification => {
     if (Platform.OS === 'ios') {
       const isClicked = notification.getData().userInteraction === 1;
 
       if (isClicked) {
         if (localNotificationInfo?.data?.facebook) {
-          canOpenUrl(localNotificationInfo?.data?.facebook, localNotificationInfo?.data?.link);
+          canOpenUrl(
+            localNotificationInfo?.data?.facebook,
+            localNotificationInfo?.data?.link,
+          );
         } else if (localNotificationInfo?.data?.link) {
           Linking.openURL(localNotificationInfo.data.link);
         }
@@ -45,12 +53,15 @@ export default function App() {
     }
   };
 
-    //Android local notification on click functionality and configuration
+  //Android local notification on click functionality and configuration
   PushNotification.configure({
-    onNotification: (notification) => {
+    onNotification: notification => {
       if (notification.userInteraction === true) {
         if (localNotificationInfo?.data?.facebook) {
-          canOpenUrl(localNotificationInfo?.data?.facebook, localNotificationInfo?.data?.link);
+          canOpenUrl(
+            localNotificationInfo?.data?.facebook,
+            localNotificationInfo?.data?.link,
+          );
         } else if (localNotificationInfo?.data?.link) {
           Linking.openURL(localNotificationInfo.data.link);
         }
@@ -59,13 +70,13 @@ export default function App() {
     permissions: {
       alert: true,
       badge: true,
-      sound: true
+      sound: true,
     },
-    requestPermissions: true
+    requestPermissions: true,
   });
 
   useEffect(() => {
-    const unsubscribe = dynamicLinks().onLink((link) => {
+    const unsubscribe = dynamicLinks().onLink(link => {
       if (link && link.url) {
         const parsed = queryString.parseUrl(link.url);
         navigateToBusinessDetail(parsed.query.id);
@@ -77,7 +88,7 @@ export default function App() {
   useEffect(() => {
     dynamicLinks()
       .getInitialLink()
-      .then((link) => {
+      .then(link => {
         if (link && link.url) {
           const parsed = queryString.parseUrl(link.url);
           navigateToBusinessDetail(parsed.query.id);
@@ -88,7 +99,7 @@ export default function App() {
   // On Click Notification
   useEffect(() => {
     // Caused app to open from background state
-    messaging().onNotificationOpenedApp((remoteMessage) => {
+    messaging().onNotificationOpenedApp(remoteMessage => {
       if (remoteMessage?.data?.facebook) {
         canOpenUrl(remoteMessage?.data?.facebook, remoteMessage?.data?.link);
       } else if (remoteMessage?.data?.link) {
@@ -99,7 +110,7 @@ export default function App() {
     // Caused app to open from quit / closed state
     messaging()
       .getInitialNotification()
-      .then((remoteMessage) => {
+      .then(remoteMessage => {
         if (remoteMessage) {
           if (remoteMessage?.data?.facebook) {
             canOpenUrl(
@@ -113,26 +124,26 @@ export default function App() {
       });
   }, []);
 
-  messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+  messaging().setBackgroundMessageHandler(async remoteMessage => {
     console.log('Message handled in the background!', remoteMessage);
   });
 
   useEffect(() => {
     requestUserPermission();
-    const unsubscribe = messaging().onMessage(async (remoteMessage) => {
-        setLocalNotificationInfo(remoteMessage);
-        if (Platform.OS === 'ios') {
-            PushNotificationIOS.presentLocalNotification({
-                alertTitle: remoteMessage?.notification?.title,
-                alertBody: remoteMessage?.notification?.body,
-            })
-        } else {
-            PushNotification.localNotification({
-                title: remoteMessage.notification.title,
-                message: remoteMessage.notification.body,
-                bigPictureUrl: remoteMessage.notification.android.imageUrl,
-            });
-        }
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      setLocalNotificationInfo(remoteMessage);
+      if (Platform.OS === 'ios') {
+        PushNotificationIOS.presentLocalNotification({
+          alertTitle: remoteMessage?.notification?.title,
+          alertBody: remoteMessage?.notification?.body,
+        });
+      } else {
+        PushNotification.localNotification({
+          title: remoteMessage.notification.title,
+          message: remoteMessage.notification.body,
+          bigPictureUrl: remoteMessage.notification.android.imageUrl,
+        });
+      }
     });
     return unsubscribe;
   });
@@ -175,8 +186,10 @@ export default function App() {
   }, []);
 
   return (
-    <Provider store={store}>
-      <Navigator />
-    </Provider>
+    <ApolloProvider client={client}>
+      <Provider store={store}>
+        <Navigator />
+      </Provider>
+    </ApolloProvider>
   );
 }

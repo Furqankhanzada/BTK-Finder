@@ -5,6 +5,8 @@ import { Header, SafeAreaView, Icon, Text, MenuItem, Image } from '@components';
 import { BaseStyle, useTheme, Images } from '@config';
 import styles from './styles';
 import Modal from 'react-native-modal';
+import { useQuery } from '@apollo/client';
+import { GET_PRODUCTS } from '../../requests/shop/menu';
 
 export default function Menu(props) {
   const { navigation } = props;
@@ -271,6 +273,14 @@ export default function Menu(props) {
   };
 
   const Item = ({ item, index }) => {
+    const { data, loading, error } = useQuery(GET_PRODUCTS, {
+      variables: { shopId: 'cmVhY3Rpb24vc2hvcDpzaVh5U05QWVNQcDdhRk11QQ==' },
+    });
+
+    console.log('Data ###', data);
+    console.log('loading ###', loading);
+    console.log('error ###', error);
+
     return (
       <MenuItem
         style={{ borderLeftWidth: index === 0 ? 1 : 0 }}
