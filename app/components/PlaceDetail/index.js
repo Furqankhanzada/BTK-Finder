@@ -97,24 +97,26 @@ export default function PlaceDetailComponent(props) {
   }, [business._id]);
 
   useEffect(() => {
-    dispatch(
-      getRelatedBusinesses({
-        limit: 5,
-        skip: 0,
-        fields: 'name, thumbnail, category, averageRatings',
-        category: business.category,
-      }),
-    );
-    dispatch(
-      getBusinesses({
-        placeDetail: true,
-        recent: true,
-        limit: 5,
-        skip: 0,
-        fields: 'name, thumbnail, category, address, averageRatings',
-      }),
-    );
-  }, [business.category, dispatch]);
+    if (business?.category) {
+      dispatch(
+        getRelatedBusinesses({
+          limit: 5,
+          skip: 0,
+          fields: 'name, thumbnail, category, averageRatings',
+          category: business.category,
+        }),
+      );
+      dispatch(
+        getBusinesses({
+          placeDetail: true,
+          recent: true,
+          limit: 5,
+          skip: 0,
+          fields: 'name, thumbnail, category, address, averageRatings',
+        }),
+      );
+    }
+  }, [business?.category, dispatch]);
 
   useEffect(() => {
     let loc =
