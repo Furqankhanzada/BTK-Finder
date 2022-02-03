@@ -7,7 +7,7 @@ interface EmptyListProps {
   emptyItemMessage?: string;
 }
 
-const EmptyList: React.FC<EmptyListProps> = props => {
+const EmptyList: React.FC<EmptyListProps> = (props) => {
   const { emptyItemMessage } = props;
   return (
     <View style={styles.emptyItemView}>

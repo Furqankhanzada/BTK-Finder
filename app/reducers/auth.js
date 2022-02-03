@@ -44,7 +44,10 @@ export default function userReducer(state = initialState, action = {}) {
     case LOGIN_API_ERROR:
       return Object.assign({}, state, action.error);
     case SIGNOUT:
-      return Object.assign({}, state, { signOutLoading: action.loading, isLogin: false });
+      return Object.assign({}, state, {
+        signOutLoading: action.loading,
+        isLogin: false,
+      });
     case GET_PROFILE_API_SUCCESS:
       return Object.assign({}, state, { ...action.profile });
     case GET_PROFILE_API_ERROR:

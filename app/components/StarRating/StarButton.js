@@ -1,19 +1,19 @@
-import React from "react";
-import { StyleSheet, ViewPropTypes, TouchableOpacity } from "react-native";
-import { Image } from "@components";
-import PropTypes from "prop-types";
-import { createIconSetFromIcoMoon } from "react-native-vector-icons";
-import EntypoIcons from "react-native-vector-icons/Entypo";
-import EvilIconsIcons from "react-native-vector-icons/EvilIcons";
-import FeatherIcons from "react-native-vector-icons/Feather";
-import FontAwesomeIcons from "react-native-vector-icons/FontAwesome";
-import FoundationIcons from "react-native-vector-icons/Foundation";
-import IoniconsIcons from "react-native-vector-icons/Ionicons";
-import MaterialIconsIcons from "react-native-vector-icons/MaterialIcons";
-import MaterialCommunityIconsIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import OcticonsIcons from "react-native-vector-icons/Octicons";
-import ZocialIcons from "react-native-vector-icons/Zocial";
-import SimpleLineIconsIcons from "react-native-vector-icons/SimpleLineIcons";
+import React from 'react';
+import { StyleSheet, ViewPropTypes, TouchableOpacity } from 'react-native';
+import { Image } from '@components';
+import PropTypes from 'prop-types';
+import { createIconSetFromIcoMoon } from 'react-native-vector-icons';
+import EntypoIcons from 'react-native-vector-icons/Entypo';
+import EvilIconsIcons from 'react-native-vector-icons/EvilIcons';
+import FeatherIcons from 'react-native-vector-icons/Feather';
+import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome';
+import FoundationIcons from 'react-native-vector-icons/Foundation';
+import IoniconsIcons from 'react-native-vector-icons/Ionicons';
+import MaterialIconsIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialCommunityIconsIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import OcticonsIcons from 'react-native-vector-icons/Octicons';
+import ZocialIcons from 'react-native-vector-icons/Zocial';
+import SimpleLineIconsIcons from 'react-native-vector-icons/SimpleLineIcons';
 
 const iconSets = {
   Entypo: EntypoIcons,
@@ -26,7 +26,7 @@ const iconSets = {
   MaterialCommunityIcons: MaterialCommunityIconsIcons,
   Octicons: OcticonsIcons,
   Zocial: ZocialIcons,
-  SimpleLineIcons: SimpleLineIconsIcons
+  SimpleLineIcons: SimpleLineIconsIcons,
 };
 
 const propTypes = {
@@ -41,18 +41,18 @@ const propTypes = {
   starIconName: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.object,
-    PropTypes.number
+    PropTypes.number,
   ]).isRequired,
   starSize: PropTypes.number.isRequired,
   activeOpacity: PropTypes.number.isRequired,
   starStyle: ViewPropTypes.style,
-  onStarButtonPress: PropTypes.func.isRequired
+  onStarButtonPress: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
   buttonStyle: {},
   icoMoonJson: undefined,
-  starStyle: {}
+  starStyle: {},
 };
 
 function StarButton(props) {
@@ -69,10 +69,10 @@ function StarButton(props) {
     starStyle,
     activeOpacity,
     buttonStyle,
-    disabled
+    disabled,
   } = props;
 
-  const onButtonPress = event => {
+  const onButtonPress = (event) => {
     let addition = 0;
 
     if (halfStarEnabled) {
@@ -98,13 +98,13 @@ function StarButton(props) {
     const newStarStyle = {
       transform: [
         {
-          scaleX: reversed ? -1 : 1
-        }
+          scaleX: reversed ? -1 : 1,
+        },
       ],
-      ...StyleSheet.flatten(starStyle)
+      ...StyleSheet.flatten(starStyle),
     };
 
-    if (typeof starIconName === "string") {
+    if (typeof starIconName === 'string') {
       iconElement = (
         <Icon
           name={starIconName}
@@ -117,7 +117,7 @@ function StarButton(props) {
       const imageStyle = {
         width: starSize,
         height: starSize,
-        resizeMode: "contain"
+        resizeMode: 'contain',
       };
 
       const iconStyles = [imageStyle, newStarStyle];
@@ -133,8 +133,7 @@ function StarButton(props) {
       activeOpacity={activeOpacity}
       disabled={disabled}
       style={buttonStyle}
-      onPress={disabled ? () => {} : onButtonPress}
-    >
+      onPress={disabled ? () => {} : onButtonPress}>
       {renderIcon()}
     </TouchableOpacity>
   );

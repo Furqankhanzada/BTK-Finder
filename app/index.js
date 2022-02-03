@@ -1,14 +1,14 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { store } from 'app/store';
 import { Provider } from 'react-redux';
 import remoteConfig from '@react-native-firebase/remote-config';
 import messaging from '@react-native-firebase/messaging';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
-import {Linking, Platform} from 'react-native';
-import PushNotification from "react-native-push-notification";
+import { Linking, Platform } from 'react-native';
+import PushNotification from 'react-native-push-notification';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import queryString from 'query-string';
-import { canOpenUrl } from "./utils";
+import { canOpenUrl } from './utils';
 import * as NavigationService from './services/NavigationService';
 import Navigator from './navigation';
 console.disableYellowBox = true;
@@ -27,7 +27,10 @@ export default function App() {
   //IOS local notification on click functionality
   useEffect(() => {
     if (Platform.OS === 'ios') {
-        PushNotificationIOS.addEventListener('localNotification', onRemoteNotification);
+      PushNotificationIOS.addEventListener(
+        'localNotification',
+        onRemoteNotification,
+      );
     }
   });
 
@@ -37,7 +40,10 @@ export default function App() {
 
       if (isClicked) {
         if (localNotificationInfo?.data?.facebook) {
-          canOpenUrl(localNotificationInfo?.data?.facebook, localNotificationInfo?.data?.link);
+          canOpenUrl(
+            localNotificationInfo?.data?.facebook,
+            localNotificationInfo?.data?.link,
+          );
         } else if (localNotificationInfo?.data?.link) {
           Linking.openURL(localNotificationInfo.data.link);
         }
@@ -45,12 +51,15 @@ export default function App() {
     }
   };
 
-    //Android local notification on click functionality and configuration
+  //Android local notification on click functionality and configuration
   PushNotification.configure({
     onNotification: (notification) => {
       if (notification.userInteraction === true) {
         if (localNotificationInfo?.data?.facebook) {
-          canOpenUrl(localNotificationInfo?.data?.facebook, localNotificationInfo?.data?.link);
+          canOpenUrl(
+            localNotificationInfo?.data?.facebook,
+            localNotificationInfo?.data?.link,
+          );
         } else if (localNotificationInfo?.data?.link) {
           Linking.openURL(localNotificationInfo.data.link);
         }
@@ -59,9 +68,9 @@ export default function App() {
     permissions: {
       alert: true,
       badge: true,
-      sound: true
+      sound: true,
     },
-    requestPermissions: true
+    requestPermissions: true,
   });
 
   useEffect(() => {
@@ -120,19 +129,19 @@ export default function App() {
   useEffect(() => {
     requestUserPermission();
     const unsubscribe = messaging().onMessage(async (remoteMessage) => {
-        setLocalNotificationInfo(remoteMessage);
-        if (Platform.OS === 'ios') {
-            PushNotificationIOS.presentLocalNotification({
-                alertTitle: remoteMessage?.notification?.title,
-                alertBody: remoteMessage?.notification?.body,
-            })
-        } else {
-            PushNotification.localNotification({
-                title: remoteMessage.notification.title,
-                message: remoteMessage.notification.body,
-                bigPictureUrl: remoteMessage.notification.android.imageUrl,
-            });
-        }
+      setLocalNotificationInfo(remoteMessage);
+      if (Platform.OS === 'ios') {
+        PushNotificationIOS.presentLocalNotification({
+          alertTitle: remoteMessage?.notification?.title,
+          alertBody: remoteMessage?.notification?.body,
+        });
+      } else {
+        PushNotification.localNotification({
+          title: remoteMessage.notification.title,
+          message: remoteMessage.notification.body,
+          bigPictureUrl: remoteMessage.notification.android.imageUrl,
+        });
+      }
     });
     return unsubscribe;
   });

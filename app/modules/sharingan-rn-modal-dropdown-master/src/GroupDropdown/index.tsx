@@ -52,7 +52,7 @@ const theme = {
   dark: true,
 };
 
-const GroupDropdown: React.FC<IGroupDropdownProps> = props => {
+const GroupDropdown: React.FC<IGroupDropdownProps> = (props) => {
   const {
     error,
     value,
@@ -134,8 +134,8 @@ const GroupDropdown: React.FC<IGroupDropdownProps> = props => {
 
   useEffect(() => {
     const destructuredData: IDropdownData[] = [];
-    Lo.forEach(data, d => {
-      Lo.forEach(d.data, dv => destructuredData.push(dv));
+    Lo.forEach(data, (d) => {
+      Lo.forEach(d.data, (dv) => destructuredData.push(dv));
     });
     setSingularData(destructuredData);
     setOptions(data);
@@ -211,7 +211,7 @@ const GroupDropdown: React.FC<IGroupDropdownProps> = props => {
         } else {
           setConMeasure({ vx, vy: ddTop, vWidth, vHeight });
         }
-      }
+      },
     );
     // }
     setIsVisible(true);
@@ -229,7 +229,7 @@ const GroupDropdown: React.FC<IGroupDropdownProps> = props => {
           } else {
             setConMeasure({ vx, vy: ddTop, vWidth, vHeight });
           }
-        }
+        },
       );
     }
   };
@@ -266,13 +266,13 @@ const GroupDropdown: React.FC<IGroupDropdownProps> = props => {
     setSearchQuery(query);
     if (!Lo.isEmpty(data) && query) {
       let matches: IGroupDropdownData[] = [];
-      data.forEach(e => {
-        const sF = e.data.filter(c =>
+      data.forEach((e) => {
+        const sF = e.data.filter((c) =>
           c.label
             .toString()
             .toLowerCase()
             .trim()
-            .includes(query.toString().toLowerCase())
+            .includes(query.toString().toLowerCase()),
         );
         if (!Lo.isEmpty(sF))
           matches = matches.concat([{ title: e.title, data: sF }]);
@@ -305,14 +305,12 @@ const GroupDropdown: React.FC<IGroupDropdownProps> = props => {
           <PressableTouch
             onPress={onTextInputFocus}
             disabled={disabled}
-            rippleColor={rippleColor}
-          >
+            rippleColor={rippleColor}>
             <View
               style={[styles.fullWidth, mainContainerStyle]}
               ref={pViewRef}
               onLayout={androidOnLayout}
-              pointerEvents="none"
-            >
+              pointerEvents="none">
               <TextInput
                 label={labelAction()}
                 value={labelv}
@@ -340,8 +338,7 @@ const GroupDropdown: React.FC<IGroupDropdownProps> = props => {
               <HelperText
                 type="error"
                 theme={{ colors: { error: errorColor } }}
-                visible={hasError}
-              >
+                visible={hasError}>
                 {helperText ? helperText : `${label} is required`}
               </HelperText>
             ) : null}
@@ -357,8 +354,7 @@ const GroupDropdown: React.FC<IGroupDropdownProps> = props => {
             animationOut={animationOut}
             animationInTiming={animationInTiming}
             animationOutTiming={animationOutTiming}
-            supportedOrientations={supportedOrientations}
-          >
+            supportedOrientations={supportedOrientations}>
             <View
               style={{
                 backgroundColor: 'transparent',
@@ -368,16 +364,14 @@ const GroupDropdown: React.FC<IGroupDropdownProps> = props => {
                 right: 0,
                 position: 'absolute',
                 padding: floating ? 20 : 0,
-              }}
-            >
+              }}>
               <Surface
                 style={[
                   styles.surface,
                   parentDDContainerStyle,
                   { elevation, borderRadius },
                   floating ? { maxHeight: dimension.dh / 2 } : null,
-                ]}
-              >
+                ]}>
                 {showLoader ? (
                   <View style={[styles.loader, { borderRadius }]}>
                     <ActivityIndicator
@@ -434,8 +428,7 @@ const GroupDropdown: React.FC<IGroupDropdownProps> = props => {
                     <View
                       style={{
                         backgroundColor: showLoader ? 'transparent' : '#FFFFFF',
-                      }}
-                    >
+                      }}>
                       <Divider style={styles.divider} />
                       <View style={[styles.headerView, headerContainerStyle]}>
                         <Text style={[styles.headerText, headerTextStyle]}>

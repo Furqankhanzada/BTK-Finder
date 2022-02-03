@@ -239,48 +239,47 @@ export const setEditBusiness = (editBusiness) => (dispatch) => {
   dispatch({ type: SET_EDIT_BUSINESS, editBusiness: editBusiness });
 };
 
-export const getEditBusinessData = (formData, thumbnail, gallery) => (
-  dispatch,
-) => {
-  dispatch({
-    type: GET_EDIT_BUSINESS_DATA,
-    editBusinessData: formData,
-    thumbnail: thumbnail,
-    gallery: gallery,
-  });
-};
+export const getEditBusinessData =
+  (formData, thumbnail, gallery) => (dispatch) => {
+    dispatch({
+      type: GET_EDIT_BUSINESS_DATA,
+      editBusinessData: formData,
+      thumbnail: thumbnail,
+      gallery: gallery,
+    });
+  };
 
 export const updateEditBusinessData = (editBusinessData) => (dispatch) => {
   dispatch({ type: UPDATE_EDIT_BUSINESS_DATA, editBusinessData });
 };
 
-export const getSingleBusiness = (id, editBusiness = false, cb) => (
-  dispatch,
-) => {
-  dispatch({ type: GET_SINGLE_BUSINESS_API, loading: true });
-  axiosApiInstance({ method: 'GET', url: `${BUSINESSES_API}/${id}` })
-    .then((response) => {
-      editBusiness
-        ? dispatch(
-            getEditBusinessData(
-              response.data,
-              response.data.thumbnail,
-              response.data.gallery,
-            ),
-          )
-        : null;
-      dispatch({
-        type: GET_SINGLE_BUSINESS_API,
-        loading: false,
-        data: response.data,
+export const getSingleBusiness =
+  (id, editBusiness = false, cb) =>
+  (dispatch) => {
+    dispatch({ type: GET_SINGLE_BUSINESS_API, loading: true });
+    axiosApiInstance({ method: 'GET', url: `${BUSINESSES_API}/${id}` })
+      .then((response) => {
+        editBusiness
+          ? dispatch(
+              getEditBusinessData(
+                response.data,
+                response.data.thumbnail,
+                response.data.gallery,
+              ),
+            )
+          : null;
+        dispatch({
+          type: GET_SINGLE_BUSINESS_API,
+          loading: false,
+          data: response.data,
+        });
+        cb && cb();
+      })
+      .catch(({ response }) => {
+        dispatch({ type: GET_SINGLE_BUSINESS_API, loading: false });
+        handleError(response.data);
       });
-      cb && cb();
-    })
-    .catch(({ response }) => {
-      dispatch({ type: GET_SINGLE_BUSINESS_API, loading: false });
-      handleError(response.data);
-    });
-};
+  };
 
 export const updateBusiness = (payload, id, cb) => (dispatch) => {
   dispatch({ type: UPDATE_BUSINESS_API });

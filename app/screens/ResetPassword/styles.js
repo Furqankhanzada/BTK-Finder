@@ -1,6 +1,6 @@
-import React from "react";
-import { StyleSheet } from "react-native";
-import { BaseColor } from "@config";
+import React from 'react';
+import { StyleSheet } from 'react-native';
+import { BaseColor } from '@config';
 
 export default StyleSheet.create({
   textInput: {
@@ -9,6 +9,6 @@ export default StyleSheet.create({
     borderRadius: 5,
     marginTop: 65,
     padding: 10,
-    width: "100%"
-  }
+    width: '100%',
+  },
 });

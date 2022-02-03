@@ -76,15 +76,13 @@ const Item: React.FC<IDropdownItemProps> = ({
       onPress={handleSelectValue}
       disabled={disabled}
       key={Math.random().toString()}
-      rippleColor={rippleColor}
-    >
+      rippleColor={rippleColor}>
       <View
         style={[
           styles.listView,
           itemContainerStyle,
           selected === value && selectedItemViewStyle,
-        ]}
-      >
+        ]}>
         <View style={styles.textView}>
           {enableAvatar && (
             <Avatar.Image
@@ -97,8 +95,7 @@ const Item: React.FC<IDropdownItemProps> = ({
             style={[
               itemTextStyle,
               selected === value ? getSelectedStyles() : styles.unselected,
-            ]}
-          >
+            ]}>
             {label}
           </Text>
         </View>

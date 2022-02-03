@@ -1,16 +1,16 @@
-import React, {useState} from 'react';
-import {View, KeyboardAvoidingView, Platform} from 'react-native';
-import {BaseStyle, useTheme} from '@config';
-import {Header, SafeAreaView, Icon, TextInput, Button} from '@components';
-import {useTranslation} from 'react-i18next';
+import React, { useState } from 'react';
+import { View, KeyboardAvoidingView, Platform } from 'react-native';
+import { BaseStyle, useTheme } from '@config';
+import { Header, SafeAreaView, Icon, TextInput, Button } from '@components';
+import { useTranslation } from 'react-i18next';
 
-export default function ResetPassword({navigation}) {
-  const {colors} = useTheme();
-  const {t} = useTranslation();
+export default function ResetPassword({ navigation }) {
+  const { colors } = useTheme();
+  const { t } = useTranslation();
 
   const [email, seteEmail] = useState('');
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState({email: true});
+  const [success, setSuccess] = useState({ email: true });
 
   /**
    * call when action reset pass
@@ -36,7 +36,7 @@ export default function ResetPassword({navigation}) {
   });
 
   return (
-    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{top: 'always'}}>
+    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
       <Header
         title={t('reset_password')}
         renderLeft={() => {
@@ -56,7 +56,7 @@ export default function ResetPassword({navigation}) {
       <KeyboardAvoidingView
         behavior={Platform.OS === 'android' ? 'height' : 'padding'}
         keyboardVerticalOffset={offsetKeyboard}
-        style={{flex: 1}}>
+        style={{ flex: 1 }}>
         <View
           style={{
             flex: 1,
@@ -65,7 +65,7 @@ export default function ResetPassword({navigation}) {
             alignItems: 'center',
           }}>
           <TextInput
-            onChangeText={text => seteEmail(text)}
+            onChangeText={(text) => seteEmail(text)}
             onFocus={() => {
               setSuccess({
                 ...success,
@@ -78,7 +78,7 @@ export default function ResetPassword({navigation}) {
             selectionColor={colors.primary}
           />
           <Button
-            style={{marginTop: 20}}
+            style={{ marginTop: 20 }}
             full
             onPress={() => {
               onReset();

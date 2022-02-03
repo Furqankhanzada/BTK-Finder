@@ -1,16 +1,23 @@
-import React, {useState} from 'react';
-import {View, KeyboardAvoidingView, Platform, ScrollView} from 'react-native';
-import {BaseStyle, useTheme} from '@config';
-import {useTranslation} from 'react-i18next';
-import {Header, SafeAreaView, Icon, Text, Button, TextInput} from '@components';
+import React, { useState } from 'react';
+import { View, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { BaseStyle, useTheme } from '@config';
+import { useTranslation } from 'react-i18next';
+import {
+  Header,
+  SafeAreaView,
+  Icon,
+  Text,
+  Button,
+  TextInput,
+} from '@components';
 import styles from './styles';
 
-export default function ChangePassword({navigation}) {
-  const {t} = useTranslation();
+export default function ChangePassword({ navigation }) {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [password, setPassword] = useState('');
   const [repassword, setRepassword] = useState('');
-  const {colors} = useTheme();
+  const { colors } = useTheme();
 
   const offsetKeyboard = Platform.select({
     ios: 0,
@@ -18,7 +25,7 @@ export default function ChangePassword({navigation}) {
   });
 
   return (
-    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{top: 'always'}}>
+    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
       <Header
         title={t('change_password')}
         renderLeft={() => {
@@ -37,7 +44,7 @@ export default function ChangePassword({navigation}) {
       />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'android' ? 'height' : 'padding'}
-        style={{flex: 1, justifyContent: 'center'}}
+        style={{ flex: 1, justifyContent: 'center' }}
         keyboardVerticalOffset={offsetKeyboard}>
         <ScrollView
           contentContainerStyle={{
@@ -51,7 +58,7 @@ export default function ChangePassword({navigation}) {
             </Text>
           </View>
           <TextInput
-            onChangeText={text => setPassword(text)}
+            onChangeText={(text) => setPassword(text)}
             secureTextEntry={true}
             placeholder="Password"
             value={password}
@@ -62,12 +69,12 @@ export default function ChangePassword({navigation}) {
             </Text>
           </View>
           <TextInput
-            onChangeText={text => setRepassword(text)}
+            onChangeText={(text) => setRepassword(text)}
             secureTextEntry={true}
             placeholder={t('password_confirm')}
             value={repassword}
           />
-          <View style={{paddingVertical: 15}}>
+          <View style={{ paddingVertical: 15 }}>
             <Button
               loading={loading}
               full

@@ -47,7 +47,7 @@ const theme = {
   dark: true,
 };
 
-const Dropdown: React.FC<IDropdownProps> = props => {
+const Dropdown: React.FC<IDropdownProps> = (props) => {
   const {
     error,
     value,
@@ -92,7 +92,7 @@ const Dropdown: React.FC<IDropdownProps> = props => {
     selectedItemViewStyle,
     removeLabel,
     mode = 'flat',
-    dropdownTitleColor= 'black',
+    dropdownTitleColor = 'black',
   } = props;
   const [selected, setSelected] = useState<string | number>();
   const [labelv, setLabelV] = useState<string>('Select Category');
@@ -193,7 +193,7 @@ const Dropdown: React.FC<IDropdownProps> = props => {
         } else {
           setConMeasure({ vx, vy: ddTop, vWidth, vHeight });
         }
-      }
+      },
     );
     setIsVisible(true);
   };
@@ -209,7 +209,7 @@ const Dropdown: React.FC<IDropdownProps> = props => {
           } else {
             setConMeasure({ vx, vy: ddTop, vWidth, vHeight });
           }
-        }
+        },
       );
     }
   };
@@ -247,12 +247,12 @@ const Dropdown: React.FC<IDropdownProps> = props => {
   const onChangeSearch = (query: string) => {
     setSearchQuery(query);
     if (!Lo.isEmpty(data) && query) {
-      const lFilter = data.filter(opt =>
+      const lFilter = data.filter((opt) =>
         opt.label
           .toString()
           .toLowerCase()
           .trim()
-          .includes(query.toString().toLowerCase())
+          .includes(query.toString().toLowerCase()),
       );
       if (lFilter.length === 0) {
         setOptions([]);
@@ -284,14 +284,12 @@ const Dropdown: React.FC<IDropdownProps> = props => {
         <PressableTouch
           onPress={onTextInputFocus}
           disabled={disabled}
-          rippleColor={rippleColor}
-        >
+          rippleColor={rippleColor}>
           <View
             style={[styles.fullWidth, mainContainerStyle]}
             ref={pViewRef}
             onLayout={androidOnLayout}
-            pointerEvents="none"
-          >
+            pointerEvents="none">
             <TextInput
               label={labelAction()}
               placeholder={textInputPlaceholder}
@@ -304,7 +302,11 @@ const Dropdown: React.FC<IDropdownProps> = props => {
               error={hasError}
               disabled={disabled}
               theme={{
-                colors: { primary: primaryColor, error: errorColor, text: titleColor },
+                colors: {
+                  primary: primaryColor,
+                  error: errorColor,
+                  text: titleColor,
+                },
                 dark: false,
               }}
               right={
@@ -317,8 +319,7 @@ const Dropdown: React.FC<IDropdownProps> = props => {
             <HelperText
               type="error"
               theme={{ colors: { error: errorColor } }}
-              visible={hasError}
-            >
+              visible={hasError}>
               {helperText ? helperText : `${label} is required`}
             </HelperText>
           ) : null}
@@ -332,8 +333,7 @@ const Dropdown: React.FC<IDropdownProps> = props => {
           animationOut={animationOut}
           animationInTiming={animationInTiming}
           animationOutTiming={animationOutTiming}
-          supportedOrientations={supportedOrientations}
-        >
+          supportedOrientations={supportedOrientations}>
           <View
             style={{
               backgroundColor: 'transparent',
@@ -343,16 +343,14 @@ const Dropdown: React.FC<IDropdownProps> = props => {
               right: 0,
               position: 'absolute',
               padding: floating ? 20 : 0,
-            }}
-          >
+            }}>
             <Surface
               style={[
                 styles.surface,
                 parentDDContainerStyle,
                 { elevation, borderRadius },
                 floating ? { maxHeight: dimension.dh / 2 } : null,
-              ]}
-            >
+              ]}>
               {showLoader ? (
                 <View style={[styles.loader, { borderRadius }]}>
                   <ActivityIndicator

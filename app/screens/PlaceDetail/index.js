@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getSingleBusiness } from '../../actions/business';
 
 export default function PlaceDetail(props) {
-  const {navigation, route} = props;
+  const { navigation, route } = props;
   const dispatch = useDispatch();
   const stateProps = useSelector(({ businesses }) => {
     return {
@@ -26,7 +26,10 @@ export default function PlaceDetail(props) {
 
   return (
     <View style={{ flex: 1, position: 'relative' }}>
-      <PlaceDetailComponent business={stateProps.singleBusiness} navigation={navigation} />
+      <PlaceDetailComponent
+        business={stateProps.singleBusiness}
+        navigation={navigation}
+      />
     </View>
   );
 }

@@ -1,11 +1,11 @@
 import React from 'react';
-import {View, TouchableOpacity} from 'react-native';
-import {Image, Text} from '@components';
+import { View, TouchableOpacity } from 'react-native';
+import { Image, Text } from '@components';
 import styles from './styles';
 import PropTypes from 'prop-types';
-import {useTheme} from '@config';
+import { useTheme } from '@config';
 export default function ListThumbCircle(props) {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const {
     style,
     imageStyle,
@@ -19,7 +19,7 @@ export default function ListThumbCircle(props) {
     <TouchableOpacity
       style={[
         styles.contain,
-        {borderBottomWidth: 1, borderBottomColor: colors.border},
+        { borderBottomWidth: 1, borderBottomColor: colors.border },
         style,
       ]}
       onPress={onPress}

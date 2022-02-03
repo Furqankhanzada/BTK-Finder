@@ -1,8 +1,8 @@
-import {StyleSheet} from 'react-native';
-import {BaseColor} from '@config';
+import { StyleSheet } from 'react-native';
+import { BaseColor } from '@config';
 
 export default StyleSheet.create({
-  contain: {paddingVertical: 10, flexDirection: 'row'},
+  contain: { paddingVertical: 10, flexDirection: 'row' },
   contentLeft: {
     flex: 1,
     flexDirection: 'row',

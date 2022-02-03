@@ -52,7 +52,7 @@ const theme = {
   dark: true,
 };
 
-const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
+const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = (props) => {
   const {
     error,
     value,
@@ -138,14 +138,18 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
 
   useEffect(() => {
     if (!Lo.isEmpty(data) && value) {
-      setLabelV(value.length ? `${value.length} ${title} selected` : `Select ${title}`);
+      setLabelV(
+        value.length ? `${value.length} ${title} selected` : `Select ${title}`,
+      );
       setSelectedItems(value);
     }
   }, [value, data]);
 
   useEffect(() => {
     if (value) {
-      setLabelV(value.length ? `${value.length} ${title} selected` : `Select ${title}`);
+      setLabelV(
+        value.length ? `${value.length} ${title} selected` : `Select ${title}`,
+      );
       setSelectedItems(value);
     }
   }, [value, data]);
@@ -198,7 +202,7 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
             vHeight,
           });
         }
-      }
+      },
     );
     setIsVisible(true);
   };
@@ -214,7 +218,7 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
           } else {
             setConMeasure({ vx, vy: ddTop, vWidth, vHeight });
           }
-        }
+        },
       );
     }
   };
@@ -233,7 +237,7 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
   const handleOptionSelect = (v: string | number) => {
     if (onChange && typeof onChange === 'function') {
       if (value.includes(v)) {
-        onChange(Lo.remove(value, s => s !== v));
+        onChange(Lo.remove(value, (s) => s !== v));
       } else {
         onChange([...value, v]);
       }
@@ -252,12 +256,12 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
   const onChangeSearch = (query: string) => {
     setSearchQuery(query);
     if (!Lo.isEmpty(data) && query) {
-      const lFilter = data.filter(opt =>
+      const lFilter = data.filter((opt) =>
         opt.name
           .toString()
           .toLowerCase()
           .trim()
-          .includes(query.toString().toLowerCase())
+          .includes(query.toString().toLowerCase()),
       );
       if (lFilter.length === 0) {
         setOptions([]);
@@ -272,7 +276,7 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
   const removeChip = (rmV: string | number) => {
     if (!showLoader) {
       if (onChange && typeof onChange === 'function') {
-        onChange(Lo.remove(value, s => s !== rmV));
+        onChange(Lo.remove(value, (s) => s !== rmV));
       }
     }
   };
@@ -297,14 +301,12 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
         <PressableTouch
           onPress={onTextInputFocus}
           disabled={disabled}
-          rippleColor={rippleColor}
-        >
+          rippleColor={rippleColor}>
           <View
             style={[styles.fullWidth, mainContainerStyle]}
             ref={pViewRef}
             onLayout={androidOnLayout}
-            pointerEvents="none"
-          >
+            pointerEvents="none">
             <TextInput
               label={labelAction()}
               value={labelv}
@@ -331,8 +333,7 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
             <HelperText
               type="error"
               theme={{ colors: { error: errorColor } }}
-              visible={hasError}
-            >
+              visible={hasError}>
               {helperText ? helperText : `${name} is required`}
             </HelperText>
           ) : null}
@@ -367,8 +368,7 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
                       />
                     </View>
                   )
-                }
-              >
+                }>
                 <Text style={chipTextStyle}>{item.name}</Text>
               </Chip>
             </View>
@@ -383,8 +383,7 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
           animationOut={animationOut}
           animationInTiming={animationInTiming}
           animationOutTiming={animationOutTiming}
-          supportedOrientations={supportedOrientations}
-        >
+          supportedOrientations={supportedOrientations}>
           <View
             style={{
               backgroundColor: 'transparent',
@@ -394,16 +393,14 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
               right: 0,
               position: 'absolute',
               padding: floating ? 20 : 0,
-            }}
-          >
+            }}>
             <Surface
               style={[
                 styles.multiSelectSurface,
                 parentDDContainerStyle,
                 { elevation, borderRadius },
                 floating ? { maxHeight: dimension.dh / 2 } : null,
-              ]}
-            >
+              ]}>
               {showLoader ? (
                 <View style={[styles.loader, { borderRadius }]}>
                   <ActivityIndicator
@@ -446,13 +443,16 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
                             </View>
                           )
                         }
-                        onClose={() => removeChip(item)}
-                      >
+                        onClose={() => removeChip(item)}>
                         <Text style={chipTextStyle}>{item.name}</Text>
                       </Chip>
                     </View>
                   )}
-                  ListEmptyComponent={<Caption style={emptySelectionTextStyle}>{emptySelectionText}</Caption>}
+                  ListEmptyComponent={
+                    <Caption style={emptySelectionTextStyle}>
+                      {emptySelectionText}
+                    </Caption>
+                  }
                 />
               </View>
               <Divider style={styles.divider} />
@@ -470,7 +470,7 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
                         placeholder={searchPlaceholder}
                         onChangeText={onChangeSearch}
                         value={searchQuery}
-                        iconColor= 'gray'
+                        iconColor="gray"
                         theme={{ colors: { primary: primaryColor } }}
                         style={{
                           elevation: 0,

@@ -5,18 +5,23 @@ import PropTypes from 'prop-types';
 import { BaseColor, useTheme } from '@config';
 
 export default function DropDown(props) {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const cardColor = colors.card;
-  const { items, defaultValue, onChangeItem, placeholder, searchablePlaceholder } = props;
+  const {
+    items,
+    defaultValue,
+    onChangeItem,
+    placeholder,
+    searchablePlaceholder,
+  } = props;
   return (
-      <View
-          style={{
-              ...(Platform.OS !== 'android' && {
-                  zIndex: 10
-              })
-          }}
-      >
-    <DropDownPicker
+    <View
+      style={{
+        ...(Platform.OS !== 'android' && {
+          zIndex: 10,
+        }),
+      }}>
+      <DropDownPicker
         items={items}
         zIndex={5000}
         containerStyle={{
@@ -40,21 +45,24 @@ export default function DropDown(props) {
         itemStyle={{ justifyContent: 'flex-start' }}
         placeholder={placeholder}
         searchable={true}
-        searchableStyle={{ borderColor: BaseColor.grayColor, color: colors.text }}
+        searchableStyle={{
+          borderColor: BaseColor.grayColor,
+          color: colors.text,
+        }}
         searchablePlaceholder={searchablePlaceholder}
         searchablePlaceholderTextColor={BaseColor.grayColor}
         dropDownStyle={{
           backgroundColor: cardColor,
           color: colors.text,
-          borderColor: BaseColor.grayColor
+          borderColor: BaseColor.grayColor,
         }}
         dropDownMaxHeight={250}
         onChangeItem={onChangeItem}
-        placeholderStyle={{color: BaseColor.grayColor}}
-        activeLabelStyle={{color: colors.primary}}
-        labelStyle={{color: colors.text}}
+        placeholderStyle={{ color: BaseColor.grayColor }}
+        activeLabelStyle={{ color: colors.primary }}
+        labelStyle={{ color: colors.text }}
       />
-      </View>
+    </View>
   );
 }
 

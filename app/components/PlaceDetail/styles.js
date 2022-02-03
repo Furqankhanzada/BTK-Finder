@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import {BaseColor} from '@config';
+import { BaseColor } from '@config';
 
 export default StyleSheet.create({
   headerStyle: {
@@ -43,7 +43,7 @@ export default StyleSheet.create({
     width: '100%',
     borderRadius: 8,
     borderWidth: 0.5,
-    shadowOffset: {width: 1.5, height: 1.5},
+    shadowOffset: { width: 1.5, height: 1.5 },
     shadowOpacity: 1.0,
     elevation: 5,
     flexDirection: 'row',

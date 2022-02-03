@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import {
-    View,
-    ScrollView,
-    Animated,
-    TouchableOpacity,
-    FlatList,
-    Alert,
-    Linking,
-    Platform,
+  View,
+  ScrollView,
+  Animated,
+  TouchableOpacity,
+  FlatList,
+  Alert,
+  Linking,
+  Platform,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
@@ -76,41 +76,54 @@ export default function Home({ navigation }) {
   const heightImageBanner = Utils.scaleWithPixel(225);
   const marginTopBanner = heightImageBanner - heightHeader + 10;
 
-    useEffect(() => {
-        VersionCheck.needUpdate()
-            .then(async res => {
-                if (res.isNeeded) {
-                    Alert.alert('Update Required', 'Your application version is outdated, Click on Update Now to update it.', [
-                        {
-                            text: 'Cancel',
-                            style: 'cancel',
-                        },
-                        { text: 'Update Now', onPress: () => Linking.openURL(res.storeUrl) },
-                    ], {
-                        cancelable: false,
-                    });
-                }
-            });
-    }, []);
+  useEffect(() => {
+    VersionCheck.needUpdate().then(async (res) => {
+      if (res.isNeeded) {
+        Alert.alert(
+          'Update Required',
+          'Your application version is outdated, Click on Update Now to update it.',
+          [
+            {
+              text: 'Cancel',
+              style: 'cancel',
+            },
+            {
+              text: 'Update Now',
+              onPress: () => Linking.openURL(res.storeUrl),
+            },
+          ],
+          {
+            cancelable: false,
+          },
+        );
+      }
+    });
+  }, []);
 
-    useEffect(() => {
-        checkNotifications().then(({status}) => {
-            let message = Platform.OS === 'android'
-                ? 'Open Settings > Manage Notifications > Allow notifications from Explore BTK'
-                : 'Open Settings > Notifications > Allow notifications from Explore BTK';
-            if (status === 'blocked') {
-                Alert.alert('Allow Notifications', message, [
-                    {
-                        text: 'Cancel',
-                        style: 'cancel',
-                    },
-                    { text: 'Open Settings', onPress: () => Linking.openSettings() },
-                ], {
-                    cancelable: false,
-                });
-            }
-        });
-    }, []);
+  useEffect(() => {
+    checkNotifications().then(({ status }) => {
+      let message =
+        Platform.OS === 'android'
+          ? 'Open Settings > Manage Notifications > Allow notifications from Explore BTK'
+          : 'Open Settings > Notifications > Allow notifications from Explore BTK';
+      if (status === 'blocked') {
+        Alert.alert(
+          'Allow Notifications',
+          message,
+          [
+            {
+              text: 'Cancel',
+              style: 'cancel',
+            },
+            { text: 'Open Settings', onPress: () => Linking.openSettings() },
+          ],
+          {
+            cancelable: false,
+          },
+        );
+      }
+    });
+  }, []);
 
   useEffect(() => {
     if (isLogin) {

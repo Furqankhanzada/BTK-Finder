@@ -9,7 +9,7 @@ interface PressableTouchProps {
   onPress: () => void;
 }
 
-const PressableTouch: React.FC<PressableTouchProps> = props => {
+const PressableTouch: React.FC<PressableTouchProps> = (props) => {
   const { rippleColor, disabled, onPress, children } = props;
 
   return (
@@ -23,8 +23,7 @@ const PressableTouch: React.FC<PressableTouchProps> = props => {
         },
         styles.rippleStyle,
       ]}
-      android_ripple={{ color: rippleColor }}
-    >
+      android_ripple={{ color: rippleColor }}>
       {children}
     </Pressable>
   );

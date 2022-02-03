@@ -158,28 +158,26 @@ export const handleError = (error) => {
 export const uuid = () => {
   let s4 = () => {
     return Math.floor((1 + Math.random()) * 0x10000)
-        .toString(16)
-        .substring(1);
+      .toString(16)
+      .substring(1);
   };
   //return id of format 'aaaaaaaa'-'aaaa'-'aaaa'-'aaaa'-'aaaaaaaaaaaa'
   // return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-  return s4() + s4() + "-" + s4();
+  return s4() + s4() + '-' + s4();
 };
 
 export const generateFileObject = (file) => {
   const filename = file.path.replace(/^.*[\\\/]/, '');
   return {
     uri:
-        Platform.OS === 'android'
-            ? file.path
-            : file.path.replace('file://', ''),
+      Platform.OS === 'android' ? file.path : file.path.replace('file://', ''),
     type: 'multipart/form-data',
     name: filename,
   };
 };
 
 export const canOpenFacebookPage = (id, url) => {
-  Linking.canOpenURL('fb://page/' + id).then(supported => {
+  Linking.canOpenURL('fb://page/' + id).then((supported) => {
     if (supported) {
       return Linking.openURL('fb://page/' + id);
     } else {
@@ -189,7 +187,7 @@ export const canOpenFacebookPage = (id, url) => {
 };
 
 export const canOpenUrl = (url, altUrl) => {
-  Linking.canOpenURL(url).then(supported => {
+  Linking.canOpenURL(url).then((supported) => {
     if (supported) {
       return Linking.openURL(url);
     } else {

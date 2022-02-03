@@ -7,7 +7,7 @@ import Lo from 'lodash';
 import { colors, ITEMLAYOUT } from '../constants';
 import type { IMultiselectDropdownItemProps } from '../types';
 import PressableTouch from './PressableTouch';
-import styles from "../styles";
+import styles from '../styles';
 
 const defaultProps = {
   selectedColor: colors.primary,
@@ -77,15 +77,13 @@ const MultiselectItem: React.FC<IMultiselectDropdownItemProps> = ({
       onPress={handleSelectValue}
       disabled={disabled}
       key={Math.random().toString()}
-      rippleColor={rippleColor}
-    >
+      rippleColor={rippleColor}>
       <View
         style={[
           styles.listView,
           itemContainerStyle,
           selected.includes(item) ? selectedItemViewStyle : {},
-        ]}
-      >
+        ]}>
         <View style={styles.textView}>
           {enableAvatar && (
             <Avatar.Icon
@@ -98,11 +96,8 @@ const MultiselectItem: React.FC<IMultiselectDropdownItemProps> = ({
           <Text
             style={[
               itemTextStyle,
-              selected.includes(item)
-                ? getSelectedStyles()
-                : styles.unselected,
-            ]}
-          >
+              selected.includes(item) ? getSelectedStyles() : styles.unselected,
+            ]}>
             {name}
           </Text>
         </View>
