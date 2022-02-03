@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { useDarkMode } from 'react-native-dark-mode';
+import { useDarkMode } from 'react-native-dynamic';
 
 /**
  * Define Const color use for whole application
@@ -218,9 +218,9 @@ export const DefaultFont = 'Raleway';
  */
 export const useTheme = () => {
   const isDarkMode = useDarkMode();
-  const forceDark = useSelector((state) => state.application.force_dark);
-  const themeStorage = useSelector((state) => state.application.theme);
-  const listTheme = ThemeSupport.filter((item) => item.theme == themeStorage);
+  const forceDark = useSelector(state => state.application.force_dark);
+  const themeStorage = useSelector(state => state.application.theme);
+  const listTheme = ThemeSupport.filter(item => item.theme == themeStorage);
   const theme = ThemeSupport[2];
 
   if (forceDark) {
@@ -239,6 +239,6 @@ export const useTheme = () => {
  * @returns font
  */
 export const useFont = () => {
-  const font = useSelector((state) => state.application.font);
+  const font = useSelector(state => state.application.font);
   return font ?? DefaultFont;
 };
