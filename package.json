@@ -7,7 +7,8 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "postinstall": "if [ $GITHUB_ACTION ]; then npx patch-package; else npx patch-package && npx jetify && npx pod-install; fi;"
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.12.1",
@@ -26,6 +27,8 @@
     "formik": "^2.2.6",
     "i18next": "^19.9.2",
     "moment": "^2.29.1",
+    "patch-package": "^6.4.7",
+    "postinstall-postinstall": "^2.1.0",
     "query-string": "^7.0.0",
     "react": "17.0.2",
     "react-i18next": "^11.8.10",
