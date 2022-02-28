@@ -11,7 +11,7 @@
     "postinstall": "if [ $GITHUB_ACTION ]; then npx patch-package; else npx patch-package && npx jetify && npx pod-install; fi;"
   },
   "dependencies": {
-    "@react-native-community/async-storage": "^1.12.1",
+    "@react-native-async-storage/async-storage": "^1.16.1",
     "@react-native-community/datetimepicker": "^3.4.0",
     "@react-native-community/push-notification-ios": "^1.10.1",
     "@react-native-firebase/analytics": "^14.3.0",
