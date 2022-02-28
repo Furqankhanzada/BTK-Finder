@@ -1,4 +1,4 @@
-import {Images} from '@config';
+import { Images } from '@config';
 
 const PlaceListData = [
   {
@@ -100,4 +100,4 @@ const PlaceListData = [
   },
 ];
 
-export {PlaceListData};
+export { PlaceListData };

@@ -1,12 +1,12 @@
 import React from 'react';
-import {TouchableOpacity, StyleSheet} from 'react-native';
-import {useTheme} from '@config';
+import { TouchableOpacity, StyleSheet } from 'react-native';
+import { useTheme } from '@config';
 import PropTypes from 'prop-types';
 import Text from '@components/Text';
 import styles from './styles';
 
 export default function Tag(props) {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const {
     style,
     textStyle,
@@ -34,29 +34,32 @@ export default function Tag(props) {
       {...rest}
       style={StyleSheet.flatten([
         styles.default,
-        primary && [styles.primary, {backgroundColor: colors.primary}],
+        primary && [styles.primary, { backgroundColor: colors.primary }],
         primaryIcon && styles.primary,
         outline && [
           styles.outline,
-          {borderColor: colors.primary, backgroundColor: colors.card},
+          { borderColor: colors.primary, backgroundColor: colors.card },
         ],
         outlineIcon && styles.outline,
         outlineSecondary && styles.outlineSecondary,
         outlineSecondaryIcon && [
           styles.outlineSecondary,
-          {borderColor: colors.accent},
+          { borderColor: colors.accent },
         ],
-        small && [styles.small, {backgroundColor: colors.primary}],
-        light && [styles.light, {backgroundColor: colors.primary}],
+        small && [styles.small, { backgroundColor: colors.primary }],
+        light && [styles.light, { backgroundColor: colors.primary }],
         gray && styles.gray,
         chip && [
           styles.chip,
-          {backgroundColor: colors.card, borderColor: colors.accent},
+          { backgroundColor: colors.card, borderColor: colors.accent },
         ],
-        status && [styles.status, {backgroundColor: colors.primary}],
-        rate && [styles.rate, {backgroundColor: colors.primaryLight}],
-        rateSmall && [styles.rateSmall, {backgroundColor: colors.primaryLight}],
-        sale && [styles.sale, {backgroundColor: colors.primaryLight}],
+        status && [styles.status, { backgroundColor: colors.primary }],
+        rate && [styles.rate, { backgroundColor: colors.primaryLight }],
+        rateSmall && [
+          styles.rateSmall,
+          { backgroundColor: colors.primaryLight },
+        ],
+        sale && [styles.sale, { backgroundColor: colors.primaryLight }],
         style,
       ])}
       activeOpacity={0.9}>
@@ -65,20 +68,20 @@ export default function Tag(props) {
         style={StyleSheet.flatten([
           primary && styles.textPrimary,
           primaryIcon && styles.textPrimary,
-          outline && [styles.textOutline, {color: colors.primary}],
-          outlineIcon && [styles.textOutline, {color: colors.primary}],
+          outline && [styles.textOutline, { color: colors.primary }],
+          outlineIcon && [styles.textOutline, { color: colors.primary }],
           outlineSecondary && [
             styles.textOutlineSecondary,
-            {color: colors.accent},
+            { color: colors.accent },
           ],
           outlineSecondaryIcon && [
             styles.textOutlineSecondary,
-            {color: colors.accent},
+            { color: colors.accent },
           ],
           small && styles.textSmall,
-          light && [styles.textLight, {color: colors.primaryLight}],
+          light && [styles.textLight, { color: colors.primaryLight }],
           gray && styles.textGray,
-          chip && [styles.textChip, {color: colors.accent}],
+          chip && [styles.textChip, { color: colors.accent }],
           status && styles.textStatus,
           rate && styles.textRate,
           rateSmall && styles.textRateSmall,

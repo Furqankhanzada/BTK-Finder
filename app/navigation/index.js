@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { DarkModeProvider, useDarkMode } from 'react-native-dark-mode';
+import { useDarkMode, ColorSchemeProvider } from 'react-native-dynamic';
 import { useTheme, BaseSetting } from '@config';
 import SplashScreen from 'react-native-splash-screen';
 import i18n from 'i18next';
@@ -61,7 +61,7 @@ export default function Navigator() {
   }, [dispatch]);
 
   return (
-    <DarkModeProvider>
+    <ColorSchemeProvider>
       <NavigationContainer
         theme={theme}
         ref={navigationRef}
@@ -105,6 +105,6 @@ export default function Navigator() {
         </RootStack.Navigator>
       </NavigationContainer>
       <Toast ref={(ref) => Toast.setRef(ref)} />
-    </DarkModeProvider>
+    </ColorSchemeProvider>
   );
 }

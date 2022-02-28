@@ -4,7 +4,7 @@ export default StyleSheet.create({
   errorText: {
     fontSize: 12,
     color: 'red',
-    marginTop: 5
+    marginTop: 5,
   },
   inputContainer: {
     flexDirection: 'column',
@@ -17,10 +17,10 @@ export default StyleSheet.create({
     marginTop: 10,
     padding: 15,
     width: '100%',
-    justifyContent: 'center'
+    justifyContent: 'center',
     // flex: 1
   },
   datePickerContainerText: {
-    fontSize: 14
-  }
+    fontSize: 14,
+  },
 });

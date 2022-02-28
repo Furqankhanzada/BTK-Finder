@@ -1,4 +1,4 @@
-import {Images} from '@config';
+import { Images } from '@config';
 
 const UserData = [
   {
@@ -13,9 +13,9 @@ const UserData = [
     about:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ',
     performance: [
-      {value: '97.01%', title: 'feedback'},
-      {value: '999', title: 'items'},
-      {value: '120k', title: 'followers'},
+      { value: '97.01%', title: 'feedback' },
+      { value: '999', title: 'items' },
+      { value: '120k', title: 'followers' },
     ],
   },
   {
@@ -30,9 +30,9 @@ const UserData = [
     about:
       'Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Curabitur aliquet quam id dui posuere blandit.',
     performance: [
-      {value: '97.01%', title: 'feedback'},
-      {value: '999', title: 'items'},
-      {value: '120k', title: 'followers'},
+      { value: '97.01%', title: 'feedback' },
+      { value: '999', title: 'items' },
+      { value: '120k', title: 'followers' },
     ],
   },
   {
@@ -47,9 +47,9 @@ const UserData = [
     about:
       'Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Curabitur aliquet quam id dui posuere blandit.',
     performance: [
-      {value: '97.01%', title: 'feedback'},
-      {value: '999', title: 'items'},
-      {value: '120k', title: 'followers'},
+      { value: '97.01%', title: 'feedback' },
+      { value: '999', title: 'items' },
+      { value: '120k', title: 'followers' },
     ],
   },
   {
@@ -64,11 +64,11 @@ const UserData = [
     about:
       'Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Curabitur aliquet quam id dui posuere blandit.',
     performance: [
-      {value: '97.01%', title: 'feedback'},
-      {value: '999', title: 'items'},
-      {value: '120k', title: 'followers'},
+      { value: '97.01%', title: 'feedback' },
+      { value: '999', title: 'items' },
+      { value: '120k', title: 'followers' },
     ],
   },
 ];
 
-export {UserData};
+export { UserData };

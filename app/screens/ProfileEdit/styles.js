@@ -1,6 +1,6 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
-import {BaseColor} from '@config';
+import { StyleSheet } from 'react-native';
+import { BaseColor } from '@config';
 
 export default StyleSheet.create({
   contentTitle: {
@@ -33,12 +33,12 @@ export default StyleSheet.create({
     overflow: 'hidden',
     width: 100,
     height: 100,
-    marginBottom: 15
+    marginBottom: 15,
   },
 
   imageLoading: {
     ...StyleSheet.absoluteFill,
     backgroundColor: 'red',
-    zIndex: 1
-  }
+    zIndex: 1,
+  },
 });

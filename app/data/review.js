@@ -1,4 +1,4 @@
-import {Images} from '@config';
+import { Images } from '@config';
 
 const ReviewData = [
   {
@@ -23,4 +23,4 @@ const ReviewData = [
   },
 ];
 
-export {ReviewData};
+export { ReviewData };

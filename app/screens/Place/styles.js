@@ -1,5 +1,5 @@
-import {StyleSheet} from 'react-native';
-import {BaseColor} from '@config';
+import { StyleSheet } from 'react-native';
+import { BaseColor } from '@config';
 
 export default StyleSheet.create({
   navbar: {
@@ -47,10 +47,10 @@ export default StyleSheet.create({
     flex: 1,
   },
   sectionEmptyText: {
-    textAlign: 'center'
+    textAlign: 'center',
   },
   sectionListContainer: {
     paddingLeft: 5,
-    paddingRight: 15
-  }
+    paddingRight: 15,
+  },
 });

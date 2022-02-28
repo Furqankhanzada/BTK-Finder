@@ -102,7 +102,7 @@ export default function PreviewImage({ route: { params }, navigation }) {
         }}>
         <View style={styles.lineText}>
           <Text body2 whiteColor>
-            { title }
+            {title}
           </Text>
           <Text body2 whiteColor>
             {indexSelected + 1}/{images.length}

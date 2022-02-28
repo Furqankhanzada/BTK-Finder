@@ -1,12 +1,12 @@
 import React from 'react';
-import {View, TouchableOpacity} from 'react-native';
-import {Image, Text, Icon} from '@components';
-import {useTheme} from '@config';
+import { View, TouchableOpacity } from 'react-native';
+import { Image, Text, Icon } from '@components';
+import { useTheme } from '@config';
 import styles from './styles';
 import PropTypes from 'prop-types';
 
 export default function ProfileGroup(props) {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const {
     style,
     users,
@@ -24,7 +24,7 @@ export default function ProfileGroup(props) {
         style={[styles.contentLeft, styleLeft]}
         onPress={onPress}
         activeOpacity={0.9}>
-        <View style={{flexDirection: 'row', marginRight: 7}}>
+        <View style={{ flexDirection: 'row', marginRight: 7 }}>
           {users.map((item, index) => {
             return (
               <Image
@@ -32,7 +32,7 @@ export default function ProfileGroup(props) {
                 source={item.image}
                 style={[
                   styles.thumb,
-                  index != 0 ? {marginLeft: -15} : {},
+                  index != 0 ? { marginLeft: -15 } : {},
                   styleThumb,
                 ]}
               />

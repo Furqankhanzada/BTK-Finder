@@ -64,5 +64,5 @@ HelpLineItem.defaultProps = {
   txtLeftTitle: '',
   txtContent: '',
   txtRight: '',
-  onPress: () => { },
+  onPress: () => {},
 };
