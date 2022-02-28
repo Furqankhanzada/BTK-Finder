@@ -12,6 +12,9 @@ import {
   EDIT_PROFILE_API_SUCCESS,
   EDIT_PROFILE_API_ERROR,
   PROFILE_UPLOAD_API,
+  RESET_PASSWORD_API,
+  VERIFY_CODE_API,
+  CHANGE_PASSWORD_API,
 } from '../constants/auth';
 
 //initial state.
@@ -25,6 +28,9 @@ const initialState = {
   editProfileLoading: false,
   profileImageLoading: false,
   signOutLoading: false,
+  resetPasswordLoading: false,
+  verifyCodeLoading: false,
+  changePasswordLoading: false,
 };
 
 export default function userReducer(state = initialState, action = {}) {
@@ -64,6 +70,14 @@ export default function userReducer(state = initialState, action = {}) {
       });
     case PROFILE_UPLOAD_API:
       return Object.assign({}, state, { profileImageLoading: action.loading });
+    case RESET_PASSWORD_API:
+      return Object.assign({}, state, { resetPasswordLoading: action.loading });
+    case VERIFY_CODE_API:
+      return Object.assign({}, state, { verifyCodeLoading: action.loading });
+    case CHANGE_PASSWORD_API:
+      return Object.assign({}, state, {
+        changePasswordLoading: action.loading,
+      });
     default:
       return state;
   }
