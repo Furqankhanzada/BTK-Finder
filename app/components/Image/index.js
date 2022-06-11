@@ -34,7 +34,7 @@ export default function Image(props) {
 }
 
 Image.propTypes = {
-  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array])
+  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
 };
 
 Image.defaultProps = {

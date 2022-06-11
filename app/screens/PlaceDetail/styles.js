@@ -1,6 +1,6 @@
 import React from 'react';
-import {StyleSheet, Platform} from 'react-native';
-import {BaseColor} from '@config';
+import { StyleSheet, Platform } from 'react-native';
+import { BaseColor } from '@config';
 import * as Utils from '@utils';
 
 export default StyleSheet.create({

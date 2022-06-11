@@ -1,20 +1,20 @@
-import React, {useState, useEffect} from 'react';
-import {useSelector, useDispatch} from 'react-redux';
-import {View, TouchableOpacity} from 'react-native';
-import {BaseStyle, useTheme, FontSupport, DefaultFont} from '@config';
-import {SafeAreaView, Icon, Text} from '@components';
-import {ApplicationActions} from '@actions';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { View, TouchableOpacity } from 'react-native';
+import { BaseStyle, useTheme, FontSupport, DefaultFont } from '@config';
+import { SafeAreaView, Icon, Text } from '@components';
+import { ApplicationActions } from '@actions';
 import styles from './styles';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
-export default function SelectFontOption({navigation}) {
-  const storageFont = useSelector(state => state.application.font);
-  const {colors} = useTheme();
+export default function SelectFontOption({ navigation }) {
+  const storageFont = useSelector((state) => state.application.font);
+  const { colors } = useTheme();
   const dispatch = useDispatch();
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   const [font, setFont] = useState(storageFont);
-  const onChange = font => {
+  const onChange = (font) => {
     dispatch(ApplicationActions.onChangeFont(font));
     navigation.goBack();
   };
@@ -24,10 +24,10 @@ export default function SelectFontOption({navigation}) {
   }, []);
 
   return (
-    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{top: 'always'}}>
+    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
       <View style={styles.contain}>
-        <View style={[styles.contentModal, {backgroundColor: colors.card}]}>
-          <View style={{padding: 8}}>
+        <View style={[styles.contentModal, { backgroundColor: colors.card }]}>
+          <View style={{ padding: 8 }}>
             {FontSupport.map((item, index) => {
               return (
                 <TouchableOpacity
@@ -41,8 +41,8 @@ export default function SelectFontOption({navigation}) {
                     },
                   ]}
                   onPress={() => setFont(item)}>
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Text body1 style={{marginHorizontal: 8}}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Text body1 style={{ marginHorizontal: 8 }}>
                       {item}
                     </Text>
                   </View>
@@ -55,7 +55,7 @@ export default function SelectFontOption({navigation}) {
           </View>
           <View style={styles.contentAction}>
             <TouchableOpacity
-              style={{padding: 8, marginHorizontal: 24}}
+              style={{ padding: 8, marginHorizontal: 24 }}
               onPress={() => navigation.goBack()}>
               <Text body1 grayColor>
                 {t('cancel')}
@@ -63,7 +63,7 @@ export default function SelectFontOption({navigation}) {
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={{padding: 8}}
+              style={{ padding: 8 }}
               onPress={() => onChange(font)}>
               <Text body1 primaryColor>
                 {t('apply')}

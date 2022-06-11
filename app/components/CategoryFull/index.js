@@ -1,16 +1,16 @@
 import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import ImageLoad from 'react-native-image-placeholder';
-import {BaseColor, useTheme} from '@config';
-import {Text, Icon, Image} from '@components';
+import { BaseColor, useTheme } from '@config';
+import { Text, Icon, Image } from '@components';
 import styles from './styles';
 import PropTypes from 'prop-types';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 export default function CategoryFull(props) {
-  const {t} = useTranslation();
-  const {colors} = useTheme();
-  const {style, image, icon, title, subtitle, onPress} = props;
+  const { t } = useTranslation();
+  const { colors } = useTheme();
+  const { style, image, icon, title, subtitle, onPress } = props;
   return (
     <TouchableOpacity
       style={[styles.contain, style]}
@@ -20,16 +20,16 @@ export default function CategoryFull(props) {
         source={image}
         style={{ flex: 1, borderRadius: 8 }}
         isShowActivity={false}
-        placeholderStyle={{ height: 50, width: 50}}
+        placeholderStyle={{ height: 50, width: 50 }}
         loadingStyle={{ size: 'large', color: '#68c9ef' }}
-        borderRadius= {10}
+        borderRadius={10}
       />
       <View style={styles.contentIcon}>
         <View
-          style={[styles.iconCircle, {backgroundColor: colors.primaryLight}]}>
+          style={[styles.iconCircle, { backgroundColor: colors.primaryLight }]}>
           <Icon name={icon} size={18} color={BaseColor.whiteColor} />
         </View>
-        <View style={{paddingLeft: 10}}>
+        <View style={{ paddingLeft: 10 }}>
           <Text headline bold whiteColor>
             {title}
           </Text>

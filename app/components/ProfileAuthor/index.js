@@ -1,8 +1,8 @@
-import React from "react";
-import { View, TouchableOpacity } from "react-native";
-import { Image, Text } from "@components";
-import styles from "./styles";
-import PropTypes from "prop-types";
+import React from 'react';
+import { View, TouchableOpacity } from 'react-native';
+import { Image, Text } from '@components';
+import styles from './styles';
+import PropTypes from 'prop-types';
 
 export default function ProfileAuthor(props) {
   const {
@@ -14,14 +14,13 @@ export default function ProfileAuthor(props) {
     onPress,
     name,
     description,
-    textRight
+    textRight,
   } = props;
   return (
     <TouchableOpacity
       style={[styles.contain, style]}
       onPress={onPress}
-      activeOpacity={0.9}
-    >
+      activeOpacity={0.9}>
       <View style={[styles.contentLeft, styleLeft]}>
         <Image source={image} style={[styles.thumb, styleThumb]} />
         <View>
@@ -51,17 +50,17 @@ ProfileAuthor.propTypes = {
   styleLeft: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
   styleThumb: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
   styleRight: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-  onPress: PropTypes.func
+  onPress: PropTypes.func,
 };
 
 ProfileAuthor.defaultProps = {
-  image: "",
-  name: "",
-  description: "",
-  textRight: "",
+  image: '',
+  name: '',
+  description: '',
+  textRight: '',
   styleLeft: {},
   styleThumb: {},
   styleRight: {},
   style: {},
-  onPress: () => {}
+  onPress: () => {},
 };

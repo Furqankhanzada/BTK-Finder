@@ -1,20 +1,20 @@
-import React, {useState} from 'react';
-import {RefreshControl, FlatList} from 'react-native';
-import {BaseStyle, useTheme} from '@config';
-import {Header, SafeAreaView, ListThumbSquare} from '@components';
+import React, { useState } from 'react';
+import { RefreshControl, FlatList } from 'react-native';
+import { BaseStyle, useTheme } from '@config';
+import { Header, SafeAreaView, ListThumbSquare } from '@components';
 import styles from './styles';
-import {MessagesData} from '@data';
-import {useTranslation} from 'react-i18next';
+import { MessagesData } from '@data';
+import { useTranslation } from 'react-i18next';
 
-export default function Messenger({navigation}) {
-  const {colors} = useTheme();
-  const {t} = useTranslation();
+export default function Messenger({ navigation }) {
+  const { colors } = useTheme();
+  const { t } = useTranslation();
 
   const [refreshing] = useState(false);
   const [messenger] = useState(MessagesData);
 
   return (
-    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{top: 'always'}}>
+    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
       <Header title={t('messenger')} />
       <FlatList
         refreshControl={
@@ -27,7 +27,7 @@ export default function Messenger({navigation}) {
         }
         data={messenger}
         keyExtractor={(item, index) => item.id}
-        renderItem={({item, index}) => (
+        renderItem={({ item, index }) => (
           <ListThumbSquare
             onPress={() => {
               navigation.navigate('Messages');

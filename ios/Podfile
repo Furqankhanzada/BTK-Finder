@@ -9,28 +9,18 @@ target 'explorebtk' do
   use_react_native!(
     :path => config[:reactNativePath],
     # to enable hermes on iOS, change `false` to `true` and then install pods
-    :hermes_enabled => true
+    :hermes_enabled => false
   )
 
-  pod 'react-native-splash-screen', :path => '../node_modules/react-native-splash-screen'
-
-  pod 'react-native-restart', :path => '../node_modules/react-native-restart'
-
-  pod 'react-native-safe-area-context', :path => '../node_modules/react-native-safe-area-context'
-
-  pod 'react-native-config', :path => '../node_modules/react-native-config'
-
   pod 'React-RCTText', :path => '../node_modules/react-native/Libraries/Text', :modular_headers => true
-
-  pod 'Permission-Notifications', :path => '../node_modules/react-native-permissions/ios/Notifications'
-
   # React Native Maps dependencies
   rn_maps_path = '../node_modules/react-native-maps'
   pod 'react-native-google-maps', :path => rn_maps_path
-  pod 'GoogleMaps'
-  pod 'Google-Maps-iOS-Utils'
 
-  pod 'react-native-version-check', :path => '../node_modules/react-native-version-check'
+  permissions_path = '../node_modules/react-native-permissions/ios'
+
+  pod 'Permission-Notifications', :path => "#{permissions_path}/Notifications"
+
 
   target 'explorebtkTests' do
     inherit! :complete
@@ -45,5 +35,6 @@ target 'explorebtk' do
 
   post_install do |installer|
     react_native_post_install(installer)
+    __apply_Xcode_12_5_M1_post_install_workaround(installer)
   end
 end

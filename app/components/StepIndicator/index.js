@@ -4,11 +4,17 @@ import StepIndicator from 'react-native-step-indicator';
 import PropTypes from 'prop-types';
 
 export default function CustomStepIndicator(props) {
-
   const { colors } = useTheme();
 
   const { position } = props;
-  const labels = ['General', 'Address', 'Hours', 'Price Range', 'Gallery', 'Review'];
+  const labels = [
+    'General',
+    'Address',
+    'Hours',
+    'Price Range',
+    'Gallery',
+    'Review',
+  ];
   const customStyles = {
     stepIndicatorSize: 25,
     currentStepIndicatorSize: 30,
@@ -40,13 +46,13 @@ export default function CustomStepIndicator(props) {
       labels={labels}
       stepCount={6}
     />
-  )
+  );
 }
 
 CustomStepIndicator.propTypes = {
-    position: PropTypes.string,
-  };
+  position: PropTypes.string,
+};
 
 CustomStepIndicator.defaultProps = {
-    position: '',
+  position: '',
 };

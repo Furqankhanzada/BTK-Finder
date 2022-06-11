@@ -17,10 +17,7 @@ import {
 } from '@components';
 import styles from './styles';
 import GlobalStyle from '../../assets/styling/GlobalStyle';
-import {
-  MultiselectDropdown,
-  Dropdown,
-} from '../../modules/sharingan-rn-modal-dropdown-master/src';
+import { MultiselectDropdown, Dropdown } from 'sharingan-rn-modal-dropdown';
 import { generalFormValidation } from './Validations';
 import { Formik } from 'formik';
 import {
