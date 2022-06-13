@@ -82,16 +82,19 @@ export default function PlaceDetailComponent(props) {
         replacement: '-', // replace spaces with replacement character, defaults to `-`
         lower: true, // convert to lower case, defaults to `false`
       });
+
+      const fallbackUrl = `${Config.ADMIN_URL}businesses/${business._id}`;
+
       const link = await dynamicLinks().buildShortLink({
         link: `${Config.DYNAMIC_LINK_URL}/${slugifyCategory}?id=${business._id}`,
         domainUriPrefix: Config.DYNAMIC_LINK_URL,
         android: {
           packageName: 'com.explore.btk',
-          fallbackUrl: `${Config.FALL_BACK_URL}/${business._id}`,
+          fallbackUrl,
         },
         ios: {
           bundleId: 'com.explore.btk',
-          fallbackUrl: `${Config.FALL_BACK_URL}/${business._id}`,
+          fallbackUrl,
         },
       });
       setBusinessLink(link);
