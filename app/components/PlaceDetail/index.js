@@ -62,6 +62,7 @@ export default function PlaceDetailComponent(props) {
   const [heightHeader, setHeightHeader] = useState(Utils.heightHeader());
   const [businessLink, setBusinessLink] = useState('');
   const appLink = 'http://onelink.to/xwhffr';
+  const fallBackURL = 'https://app.explorebtk.com/businesses';
 
   const stateProps = useSelector(({ businesses, favorites }) => {
     return {
@@ -87,6 +88,11 @@ export default function PlaceDetailComponent(props) {
         domainUriPrefix: Config.DYNAMIC_LINK_URL,
         android: {
           packageName: 'com.explore.btk',
+          fallbackUrl: `${fallBackURL}/${business._id}`,
+        },
+        ios: {
+          bundleId: 'com.explore.btk',
+          fallbackUrl: `${fallBackURL}/${business._id}`,
         },
       });
       setBusinessLink(link);
