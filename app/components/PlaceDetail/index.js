@@ -83,10 +83,11 @@ export default function PlaceDetailComponent(props) {
         lower: true, // convert to lower case, defaults to `false`
       });
 
-      const fallbackUrl = `${Config.ADMIN_URL}businesses/${business._id}`;
+      const fallbackUrl = `${Config.ADMIN_URL}/businesses/${business._id}?publicView=true`;
 
       const link = await dynamicLinks().buildShortLink({
-        link: `${Config.DYNAMIC_LINK_URL}/${slugifyCategory}?id=${business._id}`,
+        link: fallbackUrl,
+        // link: `${Config.ADMIN_URL}/${slugifyCategory}?id=${business._id}`,
         domainUriPrefix: Config.DYNAMIC_LINK_URL,
         android: {
           packageName: 'com.explore.btk',
@@ -97,6 +98,7 @@ export default function PlaceDetailComponent(props) {
           fallbackUrl,
         },
       });
+      console.log('link', link);
       setBusinessLink(link);
     }
     businessLink();

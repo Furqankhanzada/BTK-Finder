@@ -76,8 +76,10 @@ export default function App() {
   useEffect(() => {
     const unsubscribe = dynamicLinks().onLink((link) => {
       if (link && link.url) {
+        const splitUrl = link.url.split('/');
+        const id = splitUrl[splitUrl.length - 1];
         const parsed = queryString.parseUrl(link.url);
-        navigateToBusinessDetail(parsed.query.id);
+        navigateToBusinessDetail(id);
       }
     });
     return () => unsubscribe();
@@ -88,8 +90,10 @@ export default function App() {
       .getInitialLink()
       .then((link) => {
         if (link && link.url) {
+          const splitUrl = link.url.split('/');
+          const id = splitUrl[splitUrl.length - 1];
           const parsed = queryString.parseUrl(link.url);
-          navigateToBusinessDetail(parsed.query.id);
+          navigateToBusinessDetail(id);
         }
       });
   }, []);
