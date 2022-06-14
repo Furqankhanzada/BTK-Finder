@@ -1,0 +1,1335 @@
+diff --git a/node_modules/sharingan-rn-modal-dropdown/src/Components/Item.tsx b/node_modules/sharingan-rn-modal-dropdown/src/Components/Item.tsx
+index 2d4c4c4..c289d37 100644
+--- a/node_modules/sharingan-rn-modal-dropdown/src/Components/Item.tsx
++++ b/node_modules/sharingan-rn-modal-dropdown/src/Components/Item.tsx
+@@ -1,51 +1,20 @@
+ import React from 'react';
+ import { View, Text, StyleSheet } from 'react-native';
+-import { Avatar, useTheme } from 'react-native-paper';
++import { Avatar } from 'react-native-paper';
+ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+ import Lo from 'lodash';
+-import { colors as ConstColors, ITEMLAYOUT } from '../constants';
++import { colors, ITEMLAYOUT } from '../constants';
+ import type { IDropdownItemProps } from '../types';
+ import PressableTouch from './PressableTouch';
+ 
+ const defaultProps = {
+-  selectedColor: ConstColors.primary,
++  selectedColor: colors.primary,
+   itemTextStyle: {},
+   itemContainerStyle: {},
+   rippleColor: 'rgba(0,0,0,0.1)',
+   enableAvatar: false,
+-  disabled: false,
+ };
+ 
+-const styles = StyleSheet.create({
+-  selected: {
+-    paddingLeft: 5,
+-  },
+-  listView: {
+-    flex: 1,
+-    paddingVertical: 10,
+-    height: ITEMLAYOUT,
+-    flexDirection: 'row',
+-    justifyContent: 'space-between',
+-    alignItems: 'center',
+-  },
+-  iconView: {
+-    width: 30,
+-  },
+-  textView: {
+-    alignItems: 'center',
+-    flexDirection: 'row',
+-  },
+-  avatarView: {
+-    backgroundColor: 'transparent',
+-  },
+-  disabledText: {
+-    color: 'grey',
+-  },
+-  disabledItemView: {
+-    backgroundColor: 'transparent',
+-  },
+-});
+-
+ const defaultAvatar = require('../assets/ddicon.png');
+ 
+ const Item: React.FC<IDropdownItemProps> = ({
+@@ -56,53 +25,52 @@ const Item: React.FC<IDropdownItemProps> = ({
+   itemTextStyle,
+   itemContainerStyle,
+   rippleColor,
+-  disabled = true,
++  disabled,
+   enableAvatar,
+   avatarSize,
+   disableSelectionTick,
+   selectedItemTextStyle,
+   selectedItemViewStyle,
+-  disabledItemViewStyle = styles.disabledItemView,
+-  disabledItemTextStyle = styles.disabledText,
+-  itemSelectIcon = 'check',
+-  itemSelectIconSize = 18,
+ }) => {
+-  const { label, value, avatarSource, avatarComponent } = item;
+-  const { colors } = useTheme();
++  const { label, value, avatarSource } = item;
++  const styles = StyleSheet.create({
++    unselected: {
++      paddingLeft: 5,
++    },
++    selected: {
++      color: selectedColor,
++      paddingLeft: 5,
++    },
++    listView: {
++      flex: 1,
++      paddingVertical: 10,
++      height: ITEMLAYOUT,
++      flexDirection: 'row',
++      justifyContent: 'space-between',
++      alignItems: 'center',
++    },
++    iconView: {
++      width: 30,
++    },
++    textView: {
++      alignItems: 'center',
++      flexDirection: 'row',
++    },
++    avatarView: {
++      backgroundColor: 'transparent',
++    },
++  });
++
+   const handleSelectValue = () => {
+     onSelect(value);
+   };
+ 
+   const getSelectedStyles = () => {
+     if (!Lo.isEmpty(selectedItemTextStyle)) {
+-      return {
+-        ...styles.selected,
+-        color: selectedColor,
+-        ...(selectedItemTextStyle as {}),
+-      };
++      return { ...styles.selected, ...(selectedItemTextStyle as {}) };
+     } else return styles.selected;
+   };
+ 
+-  const renderIcon = () => {
+-    if (typeof itemSelectIcon === 'string') {
+-      return (
+-        <MaterialCommunityIcons
+-          name={itemSelectIcon}
+-          size={itemSelectIconSize}
+-          color={selectedColor}
+-        />
+-      );
+-    }
+-    return itemSelectIcon;
+-  };
+-
+-  const inlineStyle = StyleSheet.create({
+-    unselected: {
+-      color: colors.text,
+-      paddingLeft: 5,
+-    },
+-  });
+-
+   return (
+     <PressableTouch
+       onPress={handleSelectValue}
+@@ -115,33 +83,33 @@ const Item: React.FC<IDropdownItemProps> = ({
+           styles.listView,
+           itemContainerStyle,
+           selected === value && selectedItemViewStyle,
+-          disabled && disabledItemViewStyle,
+         ]}
+       >
+         <View style={styles.textView}>
+-          {enableAvatar ? (
+-            avatarComponent ? (
+-              avatarComponent
+-            ) : (
+-              <Avatar.Image
+-                size={avatarSize}
+-                style={styles.avatarView}
+-                source={avatarSource || defaultAvatar}
+-              />
+-            )
+-          ) : null}
++          {enableAvatar && (
++            <Avatar.Image
++              size={avatarSize}
++              style={styles.avatarView}
++              source={avatarSource || defaultAvatar}
++            />
++          )}
+           <Text
+             style={[
+               itemTextStyle,
+-              selected === value ? getSelectedStyles() : inlineStyle.unselected,
+-              disabled && disabledItemTextStyle,
++              selected === value ? getSelectedStyles() : styles.unselected,
+             ]}
+           >
+             {label}
+           </Text>
+         </View>
+         <View style={styles.iconView}>
+-          {!disableSelectionTick && selected === value && renderIcon()}
++          {!disableSelectionTick && selected === value ? (
++            <MaterialCommunityIcons
++              name="check"
++              size={18}
++              color={selectedColor}
++            />
++          ) : null}
+         </View>
+       </View>
+     </PressableTouch>
+diff --git a/node_modules/sharingan-rn-modal-dropdown/src/Components/MultiselectItem.tsx b/node_modules/sharingan-rn-modal-dropdown/src/Components/MultiselectItem.tsx
+index 857646f..3c4e787 100644
+--- a/node_modules/sharingan-rn-modal-dropdown/src/Components/MultiselectItem.tsx
++++ b/node_modules/sharingan-rn-modal-dropdown/src/Components/MultiselectItem.tsx
+@@ -1,49 +1,21 @@
+ import React from 'react';
+ import { View, Text, StyleSheet } from 'react-native';
+-import { Avatar, useTheme } from 'react-native-paper';
++import { Avatar } from 'react-native-paper';
+ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+ import Lo from 'lodash';
+ 
+-import { colors as ConstColors, ITEMLAYOUT } from '../constants';
++import { colors, ITEMLAYOUT } from '../constants';
+ import type { IMultiselectDropdownItemProps } from '../types';
+ import PressableTouch from './PressableTouch';
++import styles from "../styles";
+ 
+ const defaultProps = {
+-  selectedColor: ConstColors.primary,
++  selectedColor: colors.primary,
+   itemTextStyle: {},
+   itemContainerStyle: {},
+   rippleColor: 'rgba(0,0,0,0.1)',
+   enableAvatar: false,
+ };
+-const styles = StyleSheet.create({
+-  selected: {
+-    paddingLeft: 5,
+-  },
+-  listView: {
+-    flex: 1,
+-    paddingVertical: 10,
+-    height: ITEMLAYOUT,
+-    flexDirection: 'row',
+-    justifyContent: 'space-between',
+-    alignItems: 'center',
+-  },
+-  iconView: {
+-    width: 30,
+-  },
+-  textView: {
+-    alignItems: 'center',
+-    flexDirection: 'row',
+-  },
+-  avatarView: {
+-    backgroundColor: 'transparent',
+-  },
+-  disabledText: {
+-    color: '#CFCFCF',
+-  },
+-  disabledItemView: {
+-    backgroundColor: 'transparent',
+-  },
+-});
+ 
+ const defaultAvatar = require('../assets/ddicon.png');
+ 
+@@ -61,48 +33,45 @@ const MultiselectItem: React.FC<IMultiselectDropdownItemProps> = ({
+   disableSelectionTick,
+   selectedItemTextStyle,
+   selectedItemViewStyle,
+-  disabledItemViewStyle = styles.disabledItemView,
+-  disabledItemTextStyle = styles.disabledText,
+-  itemSelectIcon = 'check',
+-  itemSelectIconSize = 18,
+ }) => {
+-  const { label, value, avatarSource, avatarComponent } = item;
+-  const { colors } = useTheme();
++  const { name, value, avatarSource } = item;
++  const styles = StyleSheet.create({
++    unselected: {
++      paddingLeft: 5,
++    },
++    selected: {
++      paddingLeft: 5,
++    },
++    listView: {
++      flex: 1,
++      paddingVertical: 10,
++      height: ITEMLAYOUT,
++      flexDirection: 'row',
++      justifyContent: 'space-between',
++      alignItems: 'center',
++    },
++    iconView: {
++      width: 30,
++    },
++    textView: {
++      alignItems: 'center',
++      flexDirection: 'row',
++    },
++    avatarView: {
++      backgroundColor: 'transparent',
++    },
++  });
+ 
+   const handleSelectValue = () => {
+-    onSelect(value);
++    onSelect(item);
+   };
+ 
+   const getSelectedStyles = () => {
+     if (!Lo.isEmpty(selectedItemTextStyle)) {
+-      return {
+-        ...styles.selected,
+-        color: selectedColor,
+-        ...(selectedItemTextStyle as {}),
+-      };
++      return { ...styles.selected, ...(selectedItemTextStyle as {}) };
+     } else return styles.selected;
+   };
+ 
+-  const renderIcon = () => {
+-    if (typeof itemSelectIcon === 'string') {
+-      return (
+-        <MaterialCommunityIcons
+-          name={itemSelectIcon}
+-          size={itemSelectIconSize}
+-          color={selectedColor}
+-        />
+-      );
+-    }
+-    return itemSelectIcon;
+-  };
+-
+-  const inlineStyle = StyleSheet.create({
+-    unselected: {
+-      color: colors.text,
+-      paddingLeft: 5,
+-    },
+-  });
+-
+   return (
+     <PressableTouch
+       onPress={handleSelectValue}
+@@ -114,36 +83,37 @@ const MultiselectItem: React.FC<IMultiselectDropdownItemProps> = ({
+         style={[
+           styles.listView,
+           itemContainerStyle,
+-          selected.includes(value) ? selectedItemViewStyle : {},
+-          disabled && disabledItemViewStyle,
++          selected.includes(item) ? selectedItemViewStyle : {},
+         ]}
+       >
+         <View style={styles.textView}>
+-          {enableAvatar ? (
+-            avatarComponent ? (
+-              avatarComponent
+-            ) : (
+-              <Avatar.Image
+-                size={avatarSize}
+-                style={styles.avatarView}
+-                source={avatarSource || defaultAvatar}
+-              />
+-            )
+-          ) : null}
++          {enableAvatar && (
++            <Avatar.Icon
++              size={avatarSize}
++              style={styles.avatarView}
++              icon={item.icon}
++              color="#5dade2"
++            />
++          )}
+           <Text
+             style={[
+               itemTextStyle,
+-              selected.includes(value)
++              selected.includes(item)
+                 ? getSelectedStyles()
+-                : inlineStyle.unselected,
+-              disabled && disabledItemTextStyle,
++                : styles.unselected,
+             ]}
+           >
+-            {label}
++            {name}
+           </Text>
+         </View>
+         <View style={styles.iconView}>
+-          {selected.includes(value) && !disableSelectionTick && renderIcon()}
++          {selected.includes(item) && !disableSelectionTick ? (
++            <MaterialCommunityIcons
++              name="check"
++              size={18}
++              color={selectedColor}
++            />
++          ) : null}
+         </View>
+       </View>
+     </PressableTouch>
+diff --git a/node_modules/sharingan-rn-modal-dropdown/src/Dropdown/index.tsx b/node_modules/sharingan-rn-modal-dropdown/src/Dropdown/index.tsx
+index 62216af..d50f753 100644
+--- a/node_modules/sharingan-rn-modal-dropdown/src/Dropdown/index.tsx
++++ b/node_modules/sharingan-rn-modal-dropdown/src/Dropdown/index.tsx
+@@ -6,7 +6,7 @@ import {
+   HelperText,
+   Searchbar,
+   Provider as PaperProvider,
+-  useTheme,
++  DefaultTheme,
+ } from 'react-native-paper';
+ import {
+   View,
+@@ -26,6 +26,27 @@ import { deviceWidth, deviceHeight } from '../util';
+ import EmptyList from '../Components/EmptyList';
+ import PressableTouch from '../Components/PressableTouch';
+ 
++const theme = {
++  ...DefaultTheme,
++  roundness: 2,
++  colors: {
++    ...DefaultTheme.colors,
++    colors: {
++      primary: '#6200ee',
++      accent: '#03dac4',
++      background: '#f6f6f6',
++      surface: '#FFFFFF',
++      error: '#B00020',
++      text: '#000000',
++      onBackground: '#000000',
++      onSurface: '#000000',
++      placeholder: 'rgba(0,0,0,0.54)',
++      disabled: 'rgba(0,0,0,0.26)',
++    },
++  },
++  dark: true,
++};
++
+ const Dropdown: React.FC<IDropdownProps> = props => {
+   const {
+     error,
+@@ -42,7 +63,7 @@ const Dropdown: React.FC<IDropdownProps> = props => {
+     borderRadius,
+     activityIndicatorColor,
+     searchPlaceholder,
+-    rippleColor = 'transparent',
++    rippleColor,
+     helperText,
+     errorColor,
+     itemTextStyle,
+@@ -71,18 +92,11 @@ const Dropdown: React.FC<IDropdownProps> = props => {
+     selectedItemViewStyle,
+     removeLabel,
+     mode = 'flat',
+-    disabledItemTextStyle,
+-    disabledItemViewStyle,
+-    dropdownIcon = 'menu-down',
+-    dropdownIconSize = 30,
+-    itemSelectIcon,
+-    itemSelectIconSize,
+-    multiline = false,
+-    searchInputTheme,
++    dropdownTitleColor= 'black',
+   } = props;
+-  const { colors } = useTheme();
+   const [selected, setSelected] = useState<string | number>();
+-  const [labelv, setLabelV] = useState<string>('');
++  const [labelv, setLabelV] = useState<string>('Select Category');
++  const [titleColor, setTitleColor] = useState('#9B9B9B');
+   const [isVisible, setIsVisible] = useState<boolean>(false);
+   const [iconColor, setIconColor] = useState<string | undefined>('grey');
+   const [options, setOptions] = useState<IDropdownData[]>([]);
+@@ -117,6 +131,7 @@ const Dropdown: React.FC<IDropdownProps> = props => {
+     if (!Lo.isEmpty(data) && value) {
+       const lFilter = Lo.filter(data, { value: value })[0];
+       if (!Lo.isEmpty(lFilter)) setLabelV(lFilter.label);
++      if (!Lo.isEmpty(lFilter)) setTitleColor(dropdownTitleColor);
+     }
+   }, [value, data]);
+ 
+@@ -264,7 +279,7 @@ const Dropdown: React.FC<IDropdownProps> = props => {
+   };
+ 
+   return (
+-    <PaperProvider theme={paperTheme}>
++    <PaperProvider theme={paperTheme || theme}>
+       <View>
+         <PressableTouch
+           onPress={onTextInputFocus}
+@@ -288,17 +303,12 @@ const Dropdown: React.FC<IDropdownProps> = props => {
+               editable={false}
+               error={hasError}
+               disabled={disabled}
+-              multiline={multiline}
+               theme={{
+-                ...searchInputTheme,
+-                colors: { primary: primaryColor, error: errorColor },
++                colors: { primary: primaryColor, error: errorColor, text: titleColor },
++                dark: false,
+               }}
+               right={
+-                <TextInput.Icon
+-                  name={dropdownIcon}
+-                  size={dropdownIconSize}
+-                  color={iconColor}
+-                />
++                <TextInput.Icon name="menu-down" size={30} color={iconColor} />
+               }
+               mode={mode}
+             />
+@@ -326,7 +336,7 @@ const Dropdown: React.FC<IDropdownProps> = props => {
+         >
+           <View
+             style={{
+-              backgroundColor: colors.background,
++              backgroundColor: 'transparent',
+               width: !floating ? contMeasure.vWidth : 'auto',
+               left: !floating ? contMeasure.vx : 0,
+               top: !floating ? contMeasure.vy : 100,
+@@ -370,7 +380,7 @@ const Dropdown: React.FC<IDropdownProps> = props => {
+                           elevation: 0,
+                           backgroundColor: showLoader
+                             ? 'transparent'
+-                            : colors.background,
++                            : '#FFFFFF',
+                           height: ITEMLAYOUT,
+                         }}
+                       />
+@@ -388,16 +398,12 @@ const Dropdown: React.FC<IDropdownProps> = props => {
+                     itemTextStyle={itemTextStyle}
+                     itemContainerStyle={itemContainerStyle}
+                     rippleColor={rippleColor}
+-                    disabled={showLoader || item?.disabled}
++                    disabled={showLoader}
+                     enableAvatar={enableAvatar}
+                     avatarSize={avatarSize}
+                     disableSelectionTick={disableSelectionTick}
+                     selectedItemTextStyle={selectedItemTextStyle}
+                     selectedItemViewStyle={selectedItemViewStyle}
+-                    disabledItemTextStyle={disabledItemTextStyle}
+-                    disabledItemViewStyle={disabledItemViewStyle}
+-                    itemSelectIcon={itemSelectIcon}
+-                    itemSelectIconSize={itemSelectIconSize}
+                   />
+                 )}
+                 keyExtractor={() => Math.random().toString()}
+diff --git a/node_modules/sharingan-rn-modal-dropdown/src/GroupDropdown/index.tsx b/node_modules/sharingan-rn-modal-dropdown/src/GroupDropdown/index.tsx
+index 68ba362..c56c99c 100644
+--- a/node_modules/sharingan-rn-modal-dropdown/src/GroupDropdown/index.tsx
++++ b/node_modules/sharingan-rn-modal-dropdown/src/GroupDropdown/index.tsx
+@@ -7,7 +7,7 @@ import {
+   Searchbar,
+   Text,
+   Provider as PaperProvider,
+-  useTheme,
++  DefaultTheme,
+ } from 'react-native-paper';
+ import {
+   View,
+@@ -31,6 +31,27 @@ import { deviceWidth, deviceHeight } from '../util';
+ import EmptyList from '../Components/EmptyList';
+ import PressableTouch from '../Components/PressableTouch';
+ 
++const theme = {
++  ...DefaultTheme,
++  roundness: 2,
++  colors: {
++    ...DefaultTheme.colors,
++    colors: {
++      primary: '#6200ee',
++      accent: '#03dac4',
++      background: '#f6f6f6',
++      surface: '#FFFFFF',
++      error: '#B00020',
++      text: '#000000',
++      onBackground: '#000000',
++      onSurface: '#000000',
++      placeholder: 'rgba(0,0,0,0.54)',
++      disabled: 'rgba(0,0,0,0.26)',
++    },
++  },
++  dark: true,
++};
++
+ const GroupDropdown: React.FC<IGroupDropdownProps> = props => {
+   const {
+     error,
+@@ -75,16 +96,7 @@ const GroupDropdown: React.FC<IGroupDropdownProps> = props => {
+     selectedItemViewStyle,
+     removeLabel,
+     mode = 'flat',
+-    disabledItemTextStyle,
+-    disabledItemViewStyle,
+-    dropdownIcon = 'menu-down',
+-    dropdownIconSize = 30,
+-    itemSelectIcon,
+-    itemSelectIconSize,
+-    multiline = false,
+-    searchInputTheme,
+   } = props;
+-  const { colors } = useTheme();
+   const [selected, setSelected] = useState<string | number>();
+   const [labelv, setlabelV] = useState<string>('');
+   const [isVisible, setIsVisible] = useState<boolean>(false);
+@@ -287,7 +299,7 @@ const GroupDropdown: React.FC<IGroupDropdownProps> = props => {
+   };
+ 
+   return (
+-    <PaperProvider theme={paperTheme}>
++    <PaperProvider theme={paperTheme || theme}>
+       <View>
+         <View>
+           <PressableTouch
+@@ -310,15 +322,14 @@ const GroupDropdown: React.FC<IGroupDropdownProps> = props => {
+                 editable={false}
+                 error={hasError}
+                 disabled={disabled}
+-                multiline={multiline}
+                 theme={{
+-                  ...searchInputTheme,
+                   colors: { primary: primaryColor, error: errorColor },
++                  dark: false,
+                 }}
+                 right={
+                   <TextInput.Icon
+-                    name={dropdownIcon}
+-                    size={dropdownIconSize}
++                    name="menu-down"
++                    size={30}
+                     color={iconColor}
+                   />
+                 }
+@@ -393,7 +404,7 @@ const GroupDropdown: React.FC<IGroupDropdownProps> = props => {
+                             elevation: 0,
+                             backgroundColor: showLoader
+                               ? 'transparent'
+-                              : colors.background,
++                              : '#FFFFFF',
+                             height: ITEMLAYOUT,
+                           }}
+                         />
+@@ -411,25 +422,18 @@ const GroupDropdown: React.FC<IGroupDropdownProps> = props => {
+                       itemTextStyle={itemTextStyle}
+                       itemContainerStyle={itemContainerStyle}
+                       rippleColor={rippleColor}
+-                      disabled={showLoader || item?.disabled}
++                      disabled={showLoader}
+                       enableAvatar={enableAvatar}
+                       avatarSize={avatarSize}
+                       disableSelectionTick={disableSelectionTick}
+                       selectedItemTextStyle={selectedItemTextStyle}
+                       selectedItemViewStyle={selectedItemViewStyle}
+-                      disabledItemTextStyle={disabledItemTextStyle}
+-                      disabledItemViewStyle={disabledItemViewStyle}
+-                      itemSelectIcon={itemSelectIcon}
+-                      itemSelectIconSize={itemSelectIconSize}
+                     />
+                   )}
+                   renderSectionHeader={({ section: { title } }) => (
+                     <View
+                       style={{
+-                        backgroundColor: showLoader
+-                          ? 'transparent'
+-                          : colors.background,
+-                        borderRadius: 3,
++                        backgroundColor: showLoader ? 'transparent' : '#FFFFFF',
+                       }}
+                     >
+                       <Divider style={styles.divider} />
+diff --git a/node_modules/sharingan-rn-modal-dropdown/src/MultiselectDropdown/index.tsx b/node_modules/sharingan-rn-modal-dropdown/src/MultiselectDropdown/index.tsx
+index 291e90e..500509e 100644
+--- a/node_modules/sharingan-rn-modal-dropdown/src/MultiselectDropdown/index.tsx
++++ b/node_modules/sharingan-rn-modal-dropdown/src/MultiselectDropdown/index.tsx
+@@ -10,7 +10,7 @@ import {
+   Text,
+   Avatar,
+   Provider as PaperProvider,
+-  useTheme,
++  DefaultTheme,
+ } from 'react-native-paper';
+ import {
+   View,
+@@ -22,54 +22,48 @@ import {
+ } from 'react-native';
+ import Modal from 'react-native-modal';
+ import Lo from 'lodash';
+-
++import { BaseStyle, useTheme, BaseColor } from '@config';
+ import MultiselectItem from '../Components/MultiselectItem';
+-import {
+-  colors as ConsColors,
+-  defaultDropdownProps,
+-  ITEMLAYOUT,
+-} from '../constants';
++import { colors, defaultDropdownProps, ITEMLAYOUT } from '../constants';
+ import type { IDropdownData, IMultiselectDropdownProps } from '../types';
+ import styles from '../styles';
+ import { deviceWidth, deviceHeight } from '../util';
+ import EmptyList from '../Components/EmptyList';
+ import PressableTouch from '../Components/PressableTouch';
+ 
+-// const theme = {
+-//   ...DefaultTheme,
+-//   roundness: 2,
+-//   colors: {
+-//     ...DefaultTheme.colors,
+-//     colors: {
+-//       primary: '#6200ee',
+-//       accent: '#03dac4',
+-//       background: '#f6f6f6',
+-//       surface: '#FFFFFF',
+-//       error: '#B00020',
+-//       text: '#000000',
+-//       onBackground: '#000000',
+-//       onSurface: '#000000',
+-//       placeholder: 'rgba(0,0,0,0.54)',
+-//       disabled: 'rgba(0,0,0,0.26)',
+-//     },
+-//   },
+-//   dark: true,
+-// };
+-
+-const defaultAvatar = require('../assets/ddicon.png');
++const theme = {
++  ...DefaultTheme,
++  roundness: 2,
++  colors: {
++    ...DefaultTheme.colors,
++    colors: {
++      primary: '#6200ee',
++      accent: '#03dac4',
++      background: '#f6f6f6',
++      surface: '#FFFFFF',
++      error: '#B00020',
++      text: '#000000',
++      onBackground: '#000000',
++      onSurface: '#000000',
++      placeholder: 'rgba(0,0,0,0.54)',
++      disabled: 'rgba(0,0,0,0.26)',
++    },
++  },
++  dark: true,
++};
+ 
+ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
+   const {
+     error,
+     value,
+-    label,
++    name,
+     required,
+     disabled,
+     data,
+     onChange,
+     floating,
+     enableSearch,
+-    primaryColor = ConsColors.primary,
++    primaryColor = colors.primary,
+     elevation,
+     borderRadius,
+     activityIndicatorColor,
+@@ -95,6 +89,7 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
+     chipTextStyle = {},
+     onBlur,
+     emptySelectionText,
++    emptySelectionTextStyle,
+     paperTheme,
+     textInputStyle,
+     chipStyle = {},
+@@ -105,19 +100,10 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
+     selectedItemViewStyle,
+     removeLabel,
+     mode = 'flat',
+-    selectedItemsText,
+-    disabledItemTextStyle,
+-    disabledItemViewStyle,
+-    hideChip = false,
+-    dropdownIcon = 'menu-down',
+-    dropdownIconSize = 30,
+-    itemSelectIcon,
+-    itemSelectIconSize,
+-    multiline = false,
+-    searchInputTheme,
++    title = '',
++    titleColor = 'black',
+   } = props;
+-  const { colors } = useTheme();
+-
++  // const [selected, setSelected] = useState<string[]>([]);
+   const [selectedItems, setSelectedItems] = useState<IDropdownData[]>([]);
+   const [labelv, setLabelV] = useState<string>('');
+   const [isVisible, setIsVisible] = useState<boolean>(false);
+@@ -152,17 +138,17 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
+ 
+   useEffect(() => {
+     if (!Lo.isEmpty(data) && value) {
+-      setLabelV(`${value.length} ${selectedItemsText || 'selected'}`);
+-      setSelectedItems(Lo.filter(data, d => value.includes(d.value)));
++      setLabelV(value.length ? `${value.length} ${title} selected` : `Select ${title}`);
++      setSelectedItems(value);
+     }
+-  }, [value, data, selectedItemsText]);
++  }, [value, data]);
+ 
+   useEffect(() => {
+     if (value) {
+-      setLabelV(`${value.length} ${selectedItemsText || 'selected'}`);
+-      setSelectedItems(Lo.filter(data, d => value.includes(d.value)));
++      setLabelV(value.length ? `${value.length} ${title} selected` : `Select ${title}`);
++      setSelectedItems(value);
+     }
+-  }, [value, data, selectedItemsText]);
++  }, [value, data]);
+ 
+   useEffect(() => {
+     if (disabled) {
+@@ -178,7 +164,7 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
+ 
+   useEffect(() => {
+     if (!disableSort)
+-      setOptions(Lo.orderBy(data, ['label'], [defaultSortOrder]));
++      setOptions(Lo.orderBy(data, ['name'], [defaultSortOrder]));
+     else setOptions(data);
+   }, [data, disableSort, defaultSortOrder]);
+ 
+@@ -196,7 +182,7 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
+     if (hasError) {
+       setIconColor('red');
+     } else {
+-      setIconColor(primaryColor);
++      setIconColor('#5dade2');
+     }
+     pViewRef.current.measureInWindow(
+       (vx: number, vy: number, vWidth: number, vHeight: number) => {
+@@ -259,7 +245,7 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
+     }
+     setSearchQuery('');
+     if (!disableSort)
+-      setOptions(Lo.orderBy(data, ['label'], [defaultSortOrder]));
++      setOptions(Lo.orderBy(data, ['name'], [defaultSortOrder]));
+     else setOptions(data);
+   };
+ 
+@@ -267,7 +253,7 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
+     setSearchQuery(query);
+     if (!Lo.isEmpty(data) && query) {
+       const lFilter = data.filter(opt =>
+-        opt.label
++        opt.name
+           .toString()
+           .toLowerCase()
+           .trim()
+@@ -279,7 +265,7 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
+         setOptions(lFilter);
+       }
+     } else if (!Lo.isEmpty(data) && !query && !disableSort) {
+-      setOptions(Lo.sortBy(data, 'label'));
++      setOptions(Lo.sortBy(data, 'name'));
+     } else setOptions(data);
+   };
+ 
+@@ -301,12 +287,12 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
+     if (removeLabel) {
+       return '';
+     } else {
+-      return required ? `${label}*` : label;
++      return required ? `${name}*` : name;
+     }
+   };
+ 
+   return (
+-    <PaperProvider theme={paperTheme}>
++    <PaperProvider theme={paperTheme || theme}>
+       <View>
+         <PressableTouch
+           onPress={onTextInputFocus}
+@@ -328,20 +314,15 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
+               editable={false}
+               error={hasError}
+               disabled={disabled}
+-              multiline={multiline}
+               theme={{
+-                ...searchInputTheme,
+                 colors: {
+                   primary: primaryColor,
+                   error: errorColor,
++                  text: titleColor,
+                 },
+               }}
+               right={
+-                <TextInput.Icon
+-                  name={dropdownIcon}
+-                  size={dropdownIconSize}
+-                  color={iconColor}
+-                />
++                <TextInput.Icon name="menu-down" size={30} color={iconColor} />
+               }
+               mode={mode}
+             />
+@@ -352,53 +333,47 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
+               theme={{ colors: { error: errorColor } }}
+               visible={hasError}
+             >
+-              {helperText ? helperText : `${label} is required`}
++              {helperText ? helperText : `${name} is required`}
+             </HelperText>
+           ) : null}
+         </PressableTouch>
+-        {!hideChip && (
+-          <FlatList
+-            data={selectedItems}
+-            style={styles.chipScrollView}
+-            horizontal
+-            keyExtractor={() => Math.random().toString()}
+-            renderItem={({ item }) => (
+-              <View style={styles.chipWrapper}>
+-                <Chip
+-                  mode={chipType}
+-                  style={[
+-                    styles.chip,
+-                    {
+-                      borderColor: primaryColor,
+-                      backgroundColor:
+-                        chipType === 'flat' ? primaryColor : 'transparent',
+-                    },
+-                    chipStyle,
+-                  ]}
+-                  ellipsizeMode="tail"
+-                  onClose={() => removeChip(item.value)}
+-                  avatar={
+-                    enableAvatar && (
+-                      <View style={styles.textView}>
+-                        {item.avatarComponent ? (
+-                          item.avatarComponent
+-                        ) : (
+-                          <Avatar.Image
+-                            size={avatarSize}
+-                            style={styles.avatarView}
+-                            source={item.avatarSource || defaultAvatar}
+-                          />
+-                        )}
+-                      </View>
+-                    )
+-                  }
+-                >
+-                  <Text style={chipTextStyle}>{item.label}</Text>
+-                </Chip>
+-              </View>
+-            )}
+-          />
+-        )}
++        <FlatList
++          data={selectedItems}
++          style={styles.chipScrollView}
++          horizontal
++          keyExtractor={() => Math.random().toString()}
++          renderItem={({ item }) => (
++            <View style={styles.chipWrapper}>
++              <Chip
++                mode={chipType}
++                style={[
++                  styles.chip,
++                  {
++                    backgroundColor:
++                      chipType === 'flat' ? primaryColor : 'transparent',
++                  },
++                  chipStyle,
++                ]}
++                ellipsizeMode="tail"
++                onClose={() => removeChip(item)}
++                avatar={
++                  enableAvatar && (
++                    <View style={styles.textView}>
++                      <Avatar.Icon
++                        size={avatarSize}
++                        style={styles.avatarView}
++                        icon={item.icon}
++                        color="#5dade2"
++                      />
++                    </View>
++                  )
++                }
++              >
++                <Text style={chipTextStyle}>{item.name}</Text>
++              </Chip>
++            </View>
++          )}
++        />
+         <Modal
+           isVisible={isVisible}
+           onBackdropPress={onModalBlur}
+@@ -412,7 +387,7 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
+         >
+           <View
+             style={{
+-              backgroundColor: colors.background,
++              backgroundColor: 'transparent',
+               width: !floating ? contMeasure.vWidth : 'auto',
+               left: !floating ? contMeasure.vx : 0,
+               top: !floating ? contMeasure.vy : 100,
+@@ -438,52 +413,47 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
+                 </View>
+               ) : null}
+               <View>
+-                {!hideChip && (
+-                  <FlatList
+-                    data={selectedItems}
+-                    style={styles.chipScrollView}
+-                    horizontal
+-                    keyExtractor={() => Math.random().toString()}
+-                    renderItem={({ item }) => (
+-                      <View style={styles.chipWrapper}>
+-                        <Chip
+-                          mode={chipType}
+-                          style={[
+-                            styles.chip,
+-                            {
+-                              borderColor: primaryColor,
+-                              backgroundColor:
+-                                chipType === 'flat'
+-                                  ? primaryColor
+-                                  : 'transparent',
+-                            },
+-                            chipStyle,
+-                          ]}
+-                          ellipsizeMode="tail"
+-                          avatar={
+-                            enableAvatar && (
+-                              <View style={styles.textView}>
+-                                {item.avatarComponent ? (
+-                                  item.avatarComponent
+-                                ) : (
+-                                  <Avatar.Image
+-                                    size={avatarSize}
+-                                    style={styles.avatarView}
+-                                    source={item.avatarSource || defaultAvatar}
+-                                  />
+-                                )}
+-                              </View>
+-                            )
+-                          }
+-                          onClose={() => removeChip(item.value)}
+-                        >
+-                          <Text style={chipTextStyle}>{item.label}</Text>
+-                        </Chip>
+-                      </View>
+-                    )}
+-                    ListEmptyComponent={<Caption>{emptySelectionText}</Caption>}
+-                  />
+-                )}
++                <FlatList
++                  data={selectedItems}
++                  style={styles.chipScrollView}
++                  horizontal
++                  keyExtractor={() => Math.random().toString()}
++                  renderItem={({ item }) => (
++                    <View style={styles.chipWrapper}>
++                      <Chip
++                        mode={chipType}
++                        style={[
++                          styles.chip,
++                          {
++                            borderColor: primaryColor,
++                            backgroundColor:
++                              chipType === 'flat'
++                                ? primaryColor
++                                : 'transparent',
++                          },
++                          chipStyle,
++                        ]}
++                        ellipsizeMode="tail"
++                        avatar={
++                          enableAvatar && (
++                            <View style={styles.textView}>
++                              <Avatar.Icon
++                                size={avatarSize}
++                                style={styles.avatarView}
++                                icon={item.icon}
++                                color="#5dade2"
++                              />
++                            </View>
++                          )
++                        }
++                        onClose={() => removeChip(item)}
++                      >
++                        <Text style={chipTextStyle}>{item.name}</Text>
++                      </Chip>
++                    </View>
++                  )}
++                  ListEmptyComponent={<Caption style={emptySelectionTextStyle}>{emptySelectionText}</Caption>}
++                />
+               </View>
+               <Divider style={styles.divider} />
+               <FlatList
+@@ -500,14 +470,16 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
+                         placeholder={searchPlaceholder}
+                         onChangeText={onChangeSearch}
+                         value={searchQuery}
++                        iconColor= 'gray'
+                         theme={{ colors: { primary: primaryColor } }}
+                         style={{
+                           elevation: 0,
+                           backgroundColor: showLoader
+                             ? 'transparent'
+-                            : colors.background,
++                            : colors.baseColor,
+                           height: ITEMLAYOUT,
+                         }}
++                        inputStyle={{ color: 'gray' }}
+                       />
+                       <Divider style={styles.divider} />
+                     </View>
+@@ -523,16 +495,12 @@ const MultiselectDropdown: React.FC<IMultiselectDropdownProps> = props => {
+                     itemTextStyle={itemTextStyle}
+                     itemContainerStyle={itemContainerStyle}
+                     rippleColor={rippleColor}
+-                    disabled={showLoader || item?.disabled}
++                    disabled={showLoader}
+                     enableAvatar={enableAvatar}
+                     avatarSize={avatarSize}
+                     disableSelectionTick={disableSelectionTick}
+                     selectedItemTextStyle={selectedItemTextStyle}
+                     selectedItemViewStyle={selectedItemViewStyle}
+-                    disabledItemTextStyle={disabledItemTextStyle}
+-                    disabledItemViewStyle={disabledItemViewStyle}
+-                    itemSelectIcon={itemSelectIcon}
+-                    itemSelectIconSize={itemSelectIconSize}
+                   />
+                 )}
+                 keyExtractor={() => Math.random().toString()}
+diff --git a/node_modules/sharingan-rn-modal-dropdown/src/__tests__/index.test.tsx b/node_modules/sharingan-rn-modal-dropdown/src/__tests__/index.test.tsx
+new file mode 100644
+index 0000000..bf84291
+--- /dev/null
++++ b/node_modules/sharingan-rn-modal-dropdown/src/__tests__/index.test.tsx
+@@ -0,0 +1 @@
++it.todo('write a test');
+diff --git a/node_modules/sharingan-rn-modal-dropdown/src/constants.ts b/node_modules/sharingan-rn-modal-dropdown/src/constants.ts
+index 28712fa..0597371 100644
+--- a/node_modules/sharingan-rn-modal-dropdown/src/constants.ts
++++ b/node_modules/sharingan-rn-modal-dropdown/src/constants.ts
+@@ -1,8 +1,12 @@
++import { BaseStyle, useTheme, BaseColor } from '@config';
++
+ export const colors = {
+-  primary: '#2196F3',
+-  unselected: '#545C66',
++  primary: '#5dade2',
++  unselected: '#2e3742',
+   actIndicator: '#2e3742',
+   error: 'red',
++  baseColor: useTheme.cardColor,
++  textColor: useTheme.text,
+ };
+ 
+ export const ITEMLAYOUT = 40;
+@@ -29,7 +33,7 @@ export const defaultDropdownProps = {
+   stickySectionHeadersEnabled: true,
+   parentDDContainerStyle: {},
+   itemContainerStyle: {},
+-  rippleColor: undefined,
++  rippleColor: 'rgba(0,0,0,0.1)',
+   disableSort: false,
+   enableAvatar: false,
+   avatarSize: 30,
+diff --git a/node_modules/sharingan-rn-modal-dropdown/src/styles.ts b/node_modules/sharingan-rn-modal-dropdown/src/styles.ts
+index 998a2d4..9d58050 100644
+--- a/node_modules/sharingan-rn-modal-dropdown/src/styles.ts
++++ b/node_modules/sharingan-rn-modal-dropdown/src/styles.ts
+@@ -14,14 +14,19 @@ export default StyleSheet.create({
+     // flex: 1,
+     width: '100%',
+     backgroundColor: 'transparent',
++    borderRadius: 5,
+   },
+   modalStyle: {
+     margin: 0,
+     borderRadius: 0,
+   },
+   textInput: {
+-    // backgroundColor: 'transparent',
++    backgroundColor: 'transparent',
+     borderColor: 'black',
++    fontSize: 14,
++    height: 46,
++    borderRadius: 5,
++    paddingHorizontal: 15,
+   },
+   rippleStyle: {
+     width: '100%',
+@@ -45,6 +50,7 @@ export default StyleSheet.create({
+     ...StyleSheet.absoluteFillObject,
+   },
+   surface: {
++    backgroundColor: 'white',
+     paddingLeft: 10,
+     paddingRight: 10,
+     paddingBottom: 5,
+@@ -55,6 +61,7 @@ export default StyleSheet.create({
+     borderColor: 'rgba(0,0,0,0.1)',
+   },
+   multiSelectSurface: {
++    backgroundColor: 'white',
+     paddingLeft: 10,
+     paddingRight: 10,
+     paddingBottom: 5,
+diff --git a/node_modules/sharingan-rn-modal-dropdown/src/types.ts b/node_modules/sharingan-rn-modal-dropdown/src/types.ts
+index 86a539b..dd62f9c 100644
+--- a/node_modules/sharingan-rn-modal-dropdown/src/types.ts
++++ b/node_modules/sharingan-rn-modal-dropdown/src/types.ts
+@@ -35,7 +35,6 @@ export interface IDropdownDefault {
+    * ### Default: false
+    */
+   disabled?: boolean;
+-
+   /**
+    * Open the dropdown like the modal.
+    * ### Default: false
+@@ -83,7 +82,7 @@ export interface IDropdownDefault {
+   searchPlaceholder?: string;
+   /**
+    * Change the ripple color.
+-   * ### Default: undefined
++   * ### Default: rgba(0,0,0,0.1)
+    */
+   rippleColor?: string;
+   /**
+@@ -165,6 +164,7 @@ export interface IDropdownDefault {
+   /**
+    * Since the dropdown build on top of Native Paper you can over write the theme
+    * by passing your own native paper theme, for more info refer https://callstack.github.io/react-native-paper/theming.html
++   * ### Default: light theme config
+    */
+   paperTheme?: ReactNativePaper.Theme | undefined;
+ 
+@@ -208,16 +208,6 @@ export interface IDropdownDefault {
+    */
+   selectedItemViewStyle?: StyleProp<ViewStyle>;
+ 
+-  /**
+-   * Change the disabled text view style for the dropdown item.
+-   */
+-  disabledItemTextStyle?: StyleProp<TextStyle>;
+-
+-  /**
+-   * Change the disabled item view style for the dropdown item.
+-   */
+-  disabledItemViewStyle?: StyleProp<ViewStyle>;
+-
+   /**
+    * Remove TextInput label. Note: Empty string must be passed since label is a required field
+    */
+@@ -232,52 +222,18 @@ export interface IDropdownDefault {
+    * This component render TextInputOutlined or TextInputFlat based on that props
+    */
+   mode?: 'flat' | 'outlined';
+-
+-  /**
+-   * Material community icon string to change the dropdown down arrow
+-   */
+-  dropdownIcon?: string;
+-
+-  /**
+-   * Change dropdown icon size default: 30
+-   */
+-  dropdownIconSize?: number;
+-
+-  /**
+-   * Material community icon string to change the dropdown item check string
+-   */
+-  itemSelectIcon?: string | React.ReactNode;
+-
+-  /**
+-   * Change dropdown icon size default: 18
+-   */
+-  itemSelectIconSize?: number;
+-
+-  /**
+-   * set multiline option for text input default: false
+-   */
+-  multiline?: boolean;
+-
+-  /**
+-   * Since the dropdown build on top of Native Paper you can over write the theme
+-   * by passing your own native paper input theme, for more info refer https://callstack.github.io/react-native-paper/theming.html
+-   */
+-  searchInputTheme?: ReactNativePaper.Theme | undefined;
+ }
+ 
+ export interface IDropdownData {
+   label: string;
+   value: string | number;
+   avatarSource?: ImageSourcePropType;
+-  avatarComponent?: ReactNode;
+-  disabled?: boolean;
+ }
+ 
+ export interface IGroupDropdownData {
+   title: string;
+   data: IDropdownData[];
+   avatarSource?: ImageSourcePropType;
+-  avatarComponent?: ReactNode;
+ }
+ 
+ export interface IGroupDropdownProps extends IDropdownDefault, IDefaultValue {
+@@ -417,11 +373,6 @@ export interface IMultiselectDropdownProps extends IDropdownDefault {
+    */
+   chipTextStyle?: StyleProp<TextStyle>;
+ 
+-  /**
+-   * Show/Hide the chip view for multi selected items
+-   */
+-  hideChip?: boolean;
+-
+   /**
+    * Change the selection section empty text value
+    * ### Default: Selected items will appear here...
+@@ -432,12 +383,6 @@ export interface IMultiselectDropdownProps extends IDropdownDefault {
+    * Change the chip view style
+    */
+   chipStyle?: StyleProp<ViewStyle>;
+-
+-  /**
+-   * Change the label for the selected items
+-   * ### Default: (count) selected
+-   */
+-  selectedItemsText?: string;
+ }
+ 
+ export interface IDropdownItemProps {
+@@ -454,10 +399,6 @@ export interface IDropdownItemProps {
+   disableSelectionTick?: boolean;
+   selectedItemTextStyle?: StyleProp<TextStyle>;
+   selectedItemViewStyle?: StyleProp<ViewStyle>;
+-  disabledItemTextStyle?: StyleProp<TextStyle>;
+-  disabledItemViewStyle?: StyleProp<ViewStyle>;
+-  itemSelectIcon?: string | React.ReactNode;
+-  itemSelectIconSize?: number;
+ }
+ 
+ export interface IMultiselectDropdownItemProps {
+@@ -474,8 +415,4 @@ export interface IMultiselectDropdownItemProps {
+   disableSelectionTick?: boolean;
+   selectedItemTextStyle?: StyleProp<TextStyle>;
+   selectedItemViewStyle?: StyleProp<ViewStyle>;
+-  disabledItemTextStyle?: StyleProp<TextStyle>;
+-  disabledItemViewStyle?: StyleProp<ViewStyle>;
+-  itemSelectIcon?: string | React.ReactNode;
+-  itemSelectIconSize?: number;
+ }

@@ -1,4 +1,4 @@
-import {Images} from '@config';
+import { Images } from '@config';
 
 const MessagesData = [
   {
@@ -45,4 +45,4 @@ const MessagesData = [
   },
 ];
 
-export {MessagesData};
+export { MessagesData };

@@ -77,14 +77,8 @@ export default function FilterSort(props) {
     }
   };
 
-  const {
-    style,
-    modeView,
-    onChangeView,
-    labelCustom,
-    onLocation,
-    isLocation,
-  } = props;
+  const { style, modeView, onChangeView, labelCustom, onLocation, isLocation } =
+    props;
   const customAction =
     modeView != '' ? (
       <TouchableOpacity onPress={onChangeView} style={styles.contentModeView}>

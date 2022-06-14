@@ -15,7 +15,7 @@ console.disableYellowBox = true;
 
 export default function App() {
   const [localNotificationInfo, setLocalNotificationInfo] = useState({});
-  const navigateToBusinessDetail = id => {
+  const navigateToBusinessDetail = (id) => {
     const interval = setInterval(() => {
       if (NavigationService.isReadyRef.current) {
         clearInterval(interval);
@@ -34,7 +34,7 @@ export default function App() {
     }
   });
 
-  const onRemoteNotification = notification => {
+  const onRemoteNotification = (notification) => {
     if (Platform.OS === 'ios') {
       const isClicked = notification.getData().userInteraction === 1;
 
@@ -53,7 +53,7 @@ export default function App() {
 
   //Android local notification on click functionality and configuration
   PushNotification.configure({
-    onNotification: notification => {
+    onNotification: (notification) => {
       if (notification.userInteraction === true) {
         if (localNotificationInfo?.data?.facebook) {
           canOpenUrl(
@@ -74,7 +74,7 @@ export default function App() {
   });
 
   useEffect(() => {
-    const unsubscribe = dynamicLinks().onLink(link => {
+    const unsubscribe = dynamicLinks().onLink((link) => {
       if (link && link.url) {
         const parsed = queryString.parseUrl(link.url);
         navigateToBusinessDetail(parsed.query.id);
@@ -86,7 +86,7 @@ export default function App() {
   useEffect(() => {
     dynamicLinks()
       .getInitialLink()
-      .then(link => {
+      .then((link) => {
         if (link && link.url) {
           const parsed = queryString.parseUrl(link.url);
           navigateToBusinessDetail(parsed.query.id);
@@ -97,7 +97,7 @@ export default function App() {
   // On Click Notification
   useEffect(() => {
     // Caused app to open from background state
-    messaging().onNotificationOpenedApp(remoteMessage => {
+    messaging().onNotificationOpenedApp((remoteMessage) => {
       if (remoteMessage?.data?.facebook) {
         canOpenUrl(remoteMessage?.data?.facebook, remoteMessage?.data?.link);
       } else if (remoteMessage?.data?.link) {
@@ -108,7 +108,7 @@ export default function App() {
     // Caused app to open from quit / closed state
     messaging()
       .getInitialNotification()
-      .then(remoteMessage => {
+      .then((remoteMessage) => {
         if (remoteMessage) {
           if (remoteMessage?.data?.facebook) {
             canOpenUrl(
@@ -122,13 +122,13 @@ export default function App() {
       });
   }, []);
 
-  messaging().setBackgroundMessageHandler(async remoteMessage => {
+  messaging().setBackgroundMessageHandler(async (remoteMessage) => {
     console.log('Message handled in the background!', remoteMessage);
   });
 
   useEffect(() => {
     requestUserPermission();
-    const unsubscribe = messaging().onMessage(async remoteMessage => {
+    const unsubscribe = messaging().onMessage(async (remoteMessage) => {
       setLocalNotificationInfo(remoteMessage);
       if (Platform.OS === 'ios') {
         PushNotificationIOS.presentLocalNotification({

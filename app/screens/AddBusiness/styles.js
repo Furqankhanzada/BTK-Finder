@@ -138,16 +138,16 @@ export default StyleSheet.create({
     left: 15,
   },
   titleCenter: {
-    textAlign: 'center'
+    textAlign: 'center',
   },
   textArea: {
     height: 100,
-    padding: 10
+    padding: 10,
   },
 
   thumbnailSection: {
     marginTop: 20,
-    marginBottom: 30
+    marginBottom: 30,
   },
   thumbnailContainer: {
     marginHorizontal: 25,
@@ -164,7 +164,7 @@ export default StyleSheet.create({
   },
   thumbnailAddOverlayText: {
     fontSize: 20,
-    color: BaseColor.whiteColor
+    color: BaseColor.whiteColor,
   },
   thumbnailContainerImage: {
     width: '100%',
@@ -173,7 +173,7 @@ export default StyleSheet.create({
   },
 
   gallerySection: {
-    marginBottom: 25
+    marginBottom: 25,
   },
   galleryActionButton: {
     width: 32,
@@ -185,15 +185,15 @@ export default StyleSheet.create({
     position: 'absolute',
     zIndex: 1,
     right: -10,
-    top: -10
+    top: -10,
   },
   galleryActionButtonIcon: {
-    color: BaseColor.whiteColor
+    color: BaseColor.whiteColor,
   },
   gallerySectionImagesContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    paddingHorizontal: 15
+    paddingHorizontal: 15,
   },
   galleryImageContainer: {
     width: '28%',
@@ -203,13 +203,13 @@ export default StyleSheet.create({
     backgroundColor: BaseColor.grayColor,
     justifyContent: 'center',
     alignItems: 'center',
-    position: 'relative'
+    position: 'relative',
   },
   galleryImageButton: {
     width: '100%',
     height: '100%',
     borderRadius: 5,
-    overflow: 'hidden'
+    overflow: 'hidden',
   },
   galleryImage: {
     width: '100%',
@@ -225,18 +225,18 @@ export default StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    textAlign: 'center'
+    textAlign: 'center',
   },
   galleryImageAddIconContainer: {
     width: 52,
     height: 52,
-    borderRadius: 52/2,
+    borderRadius: 52 / 2,
     backgroundColor: BaseColor.whiteColor,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   galleryImageAddIcon: {
     color: BaseColor.blueColor,
-    fontSize: 22
-  }
+    fontSize: 22,
+  },
 });

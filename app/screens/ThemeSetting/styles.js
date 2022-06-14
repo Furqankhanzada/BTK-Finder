@@ -1,24 +1,24 @@
-import React from "react";
-import { StyleSheet } from "react-native";
-import { BaseColor } from "@config";
+import React from 'react';
+import { StyleSheet } from 'react-native';
+import { BaseColor } from '@config';
 
 export default StyleSheet.create({
   contain: {
     flex: 1,
     paddingHorizontal: 20,
-    paddingVertical: 15
+    paddingVertical: 15,
   },
   profileItem: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     borderBottomWidth: 1,
-    paddingVertical: 20
+    paddingVertical: 20,
   },
   themeItem: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingVertical: 15
-  }
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 15,
+  },
 });
