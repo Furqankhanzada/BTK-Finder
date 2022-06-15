@@ -7,7 +7,6 @@ import dynamicLinks from '@react-native-firebase/dynamic-links';
 import { Linking, Platform } from 'react-native';
 import PushNotification from 'react-native-push-notification';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
-import queryString from 'query-string';
 import { canOpenUrl } from './utils';
 import * as NavigationService from './services/NavigationService';
 import Navigator from './navigation';
@@ -78,7 +77,6 @@ export default function App() {
       if (link && link.url) {
         const splitUrl = link.url.split('/');
         const id = splitUrl[splitUrl.length - 1];
-        const parsed = queryString.parseUrl(link.url);
         navigateToBusinessDetail(id);
       }
     });
@@ -92,7 +90,6 @@ export default function App() {
         if (link && link.url) {
           const splitUrl = link.url.split('/');
           const id = splitUrl[splitUrl.length - 1];
-          const parsed = queryString.parseUrl(link.url);
           navigateToBusinessDetail(id);
         }
       });

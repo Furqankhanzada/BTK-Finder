@@ -23,7 +23,6 @@ import { showLocation } from 'react-native-map-link';
 import { useSelector, useDispatch } from 'react-redux';
 import NumberFormat from 'react-number-format';
 import moment from 'moment';
-import slugify from 'slugify';
 import { Placeholder, Progressive, PlaceholderMedia } from 'rn-placeholder';
 import { BaseColor, Images, useTheme, BaseStyle } from '@config';
 import {
@@ -77,17 +76,11 @@ export default function PlaceDetailComponent(props) {
   });
 
   useEffect(() => {
-    async function businessLink() {
-      let slugifyCategory = slugify(business.category, {
-        replacement: '-', // replace spaces with replacement character, defaults to `-`
-        lower: true, // convert to lower case, defaults to `false`
-      });
-
+    async function businessUrl() {
       const fallbackUrl = `${Config.ADMIN_URL}/businesses/${business._id}?publicView=true`;
 
       const link = await dynamicLinks().buildShortLink({
         link: fallbackUrl,
-        // link: `${Config.ADMIN_URL}/${slugifyCategory}?id=${business._id}`,
         domainUriPrefix: Config.DYNAMIC_LINK_URL,
         android: {
           packageName: 'com.explore.btk',
@@ -98,10 +91,9 @@ export default function PlaceDetailComponent(props) {
           fallbackUrl,
         },
       });
-      console.log('link', link);
       setBusinessLink(link);
     }
-    businessLink();
+    businessUrl();
   }, [business._id]);
 
   useEffect(() => {
