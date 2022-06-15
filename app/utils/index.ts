@@ -36,6 +36,10 @@ export const scrollEnabled = (_: any, contentHeight: number) => {
   return contentHeight > Dimensions.get('window').height - heightHeader();
 };
 
+export const getWidthDevice = () => {
+  return Dimensions.get('window').width;
+};
+
 export const handleError = (error: any) => {
   let title = 'Error';
   let description = error.message;
