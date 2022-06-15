@@ -7,7 +7,7 @@ import dynamicLinks from '@react-native-firebase/dynamic-links';
 import { Linking, Platform } from 'react-native';
 import PushNotification from 'react-native-push-notification';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
-import { canOpenUrl } from './utils';
+import { canOpenUrl, getLastIndex } from './utils';
 import * as NavigationService from './services/NavigationService';
 import Navigator from './navigation';
 console.disableYellowBox = true;
@@ -75,8 +75,7 @@ export default function App() {
   useEffect(() => {
     const unsubscribe = dynamicLinks().onLink((link) => {
       if (link && link.url) {
-        const splitUrl = link.url.split('/');
-        const id = splitUrl[splitUrl.length - 1];
+        const id = getLastIndex(link.url);
         navigateToBusinessDetail(id);
       }
     });
@@ -88,8 +87,7 @@ export default function App() {
       .getInitialLink()
       .then((link) => {
         if (link && link.url) {
-          const splitUrl = link.url.split('/');
-          const id = splitUrl[splitUrl.length - 1];
+          const id = getLastIndex(link.url);
           navigateToBusinessDetail(id);
         }
       });

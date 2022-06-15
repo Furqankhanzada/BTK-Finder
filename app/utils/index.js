@@ -195,3 +195,10 @@ export const canOpenUrl = (url, altUrl) => {
     }
   });
 };
+
+export const getLastIndex = (item) => {
+  const splitUrl = item.split('/');
+  const id = splitUrl[splitUrl.length - 1];
+
+  return id;
+};
