@@ -3,9 +3,8 @@ import dynamicLinks, {
   FirebaseDynamicLinksTypes,
 } from '@react-native-firebase/dynamic-links';
 
-import { getLastIndex } from '../utils';
+import { getLastIndex } from '@utils';
 import * as NavigationService from '../services/NavigationService';
-import DynamicLink = FirebaseDynamicLinksTypes.DynamicLink;
 
 export default function useDynamicLinks() {
   useEffect(() => {
@@ -14,7 +13,9 @@ export default function useDynamicLinks() {
     return () => unsubscribe();
   });
 
-  const onDynamicLinkOpen = (link: DynamicLink | null) => {
+  const onDynamicLinkOpen = (
+    link: FirebaseDynamicLinksTypes.DynamicLink | null,
+  ) => {
     if (link && link.url) {
       const id = getLastIndex(link.url);
       navigateToBusinessDetail(id);

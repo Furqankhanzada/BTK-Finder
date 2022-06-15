@@ -10,16 +10,15 @@ import PushNotificationIOS, {
   PushNotification as PushNotificationIOSType,
 } from '@react-native-community/push-notification-ios';
 
-import { canOpenUrl } from './utils';
+import { canOpenUrl } from '@utils';
 import Navigator from './navigation';
 import { store } from './store';
 
-import RemoteMessage = FirebaseMessagingTypes.RemoteMessage;
 import useDynamicLinks from './hooks/useDynamicLinks';
 
 export default function App() {
   const [localNotificationInfo, setLocalNotificationInfo] =
-    useState<RemoteMessage>();
+    useState<FirebaseMessagingTypes.RemoteMessage>();
 
   // Firebase Dynamic links handling
   useDynamicLinks();
@@ -64,22 +63,24 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    return messaging().onMessage(async (remoteMessage: RemoteMessage) => {
-      setLocalNotificationInfo(remoteMessage);
-      if (Platform.OS === 'ios') {
-        PushNotificationIOS.addNotificationRequest({
-          id: remoteMessage.messageId!,
-          title: remoteMessage?.notification?.title,
-          body: remoteMessage?.notification?.body,
-        });
-      } else {
-        PushNotification.localNotification({
-          title: remoteMessage?.notification?.title,
-          message: remoteMessage?.notification?.body!,
-          bigPictureUrl: remoteMessage?.notification?.android?.imageUrl,
-        });
-      }
-    });
+    return messaging().onMessage(
+      async (remoteMessage: FirebaseMessagingTypes.RemoteMessage) => {
+        setLocalNotificationInfo(remoteMessage);
+        if (Platform.OS === 'ios') {
+          PushNotificationIOS.addNotificationRequest({
+            id: remoteMessage.messageId!,
+            title: remoteMessage?.notification?.title,
+            body: remoteMessage?.notification?.body,
+          });
+        } else {
+          PushNotification.localNotification({
+            title: remoteMessage?.notification?.title,
+            message: remoteMessage?.notification?.body!,
+            bigPictureUrl: remoteMessage?.notification?.android?.imageUrl,
+          });
+        }
+      },
+    );
   });
 
   useEffect(() => {
