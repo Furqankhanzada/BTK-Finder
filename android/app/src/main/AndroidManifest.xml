@@ -46,9 +46,9 @@
         </intent-filter>
       </activity>
     </application>
-      <queries>
+    <queries>
       <intent>
         <action android:name="android.intent.action.DIAL" />
       </intent>
-      </queries>
+    </queries>
 </manifest>

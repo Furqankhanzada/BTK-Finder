@@ -9,10 +9,10 @@ import {
   HelpLineItem,
   Text,
   Button,
-  Modal,
 } from '@components';
 import { useTranslation } from 'react-i18next';
 import call from 'react-native-phone-call';
+import Modal from 'react-native-modal';
 import styles from '../../components/FilterSort/styles';
 
 const HelpLine = React.memo(({ navigation }) => {
