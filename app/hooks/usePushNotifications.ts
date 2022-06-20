@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import remoteConfig from '@react-native-firebase/remote-config';
 import messaging, {
   FirebaseMessagingTypes,
 } from '@react-native-firebase/messaging';
@@ -74,22 +73,6 @@ export default function usePushNotifications() {
       },
     );
   });
-
-  useEffect(() => {
-    async function fetchData() {
-      await remoteConfig().fetch(60 * 60);
-
-      const fetchedRemotely = await remoteConfig().fetchAndActivate();
-      if (fetchedRemotely) {
-        console.log('Configs were retrieved from the backend and activated.');
-      } else {
-        console.log(
-          'No configs were fetched from the backend, and the local configs were already activated',
-        );
-      }
-    }
-    fetchData();
-  }, []);
 
   useEffect(() => {
     requestUserPermission();
