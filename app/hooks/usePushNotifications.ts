@@ -7,8 +7,9 @@ import PushNotification from 'react-native-push-notification';
 import PushNotificationIOS, {
   PushNotification as PushNotificationIOSType,
 } from '@react-native-community/push-notification-ios';
+import Config from 'react-native-config';
 
-import { canOpenUrl } from '@utils';
+import { canOpenUrl, createChannel } from '@utils';
 
 export default function usePushNotifications() {
   const [localNotificationInfo, setLocalNotificationInfo] =
@@ -56,6 +57,7 @@ export default function usePushNotifications() {
   useEffect(() => {
     return messaging().onMessage(
       async (remoteMessage: FirebaseMessagingTypes.RemoteMessage) => {
+        createChannel();
         setLocalNotificationInfo(remoteMessage);
         if (Platform.OS === 'ios') {
           PushNotificationIOS.addNotificationRequest({
@@ -65,6 +67,7 @@ export default function usePushNotifications() {
           });
         } else {
           PushNotification.localNotification({
+            channelId: Config.ANDROID_CHANNEL_ID,
             title: remoteMessage?.notification?.title,
             message: remoteMessage?.notification?.body!,
             bigPictureUrl: remoteMessage?.notification?.android?.imageUrl,
