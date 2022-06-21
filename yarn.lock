@@ -1432,6 +1432,11 @@
   resolved "https://registry.yarnpkg.com/@react-native-firebase/dynamic-links/-/dynamic-links-14.3.0.tgz#48208b1ebac3bae09d20cd4d71261d920007e22c"
   integrity sha512-Jd39BVmbZZlw/PHQblHtxEOMW1xe+7i/J4MIPBs9KVAKY8v58YVZqARHbOQKRlwZ8nAHNyv3tsVF94GWgctFPA==
 
+"@react-native-firebase/in-app-messaging@^14.11.0":
+  version "14.11.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/in-app-messaging/-/in-app-messaging-14.11.0.tgz#0886a7001523e1a3858cb7635977c73190448b7a"
+  integrity sha512-knyXQVSvs0HFOs6hXGGKsadEedn4l39nJwVjB6C6muBVjeAKfTlvrYuyiYkuuZKf0YKQahikvk+lYRCgib14OA==
+
 "@react-native-firebase/messaging@^14.3.0":
   version "14.3.0"
   resolved "https://registry.yarnpkg.com/@react-native-firebase/messaging/-/messaging-14.3.0.tgz#648ca4093ae5d1c442703e0c5d1831392883dd47"
@@ -1655,6 +1660,11 @@
   version "15.7.4"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.4.tgz#fcf7205c25dff795ee79af1e30da2c9790808f11"
   integrity sha512-rZ5drC/jWjrArrS8BR6SIr4cWpW09RNTYt9AMZo3Jwwif+iacXAqgVjm0B0Bv/S1jhDXKHqRVNCbACkJ89RAnQ==
+
+"@types/react-native-push-notification@^8.1.0":
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/@types/react-native-push-notification/-/react-native-push-notification-8.1.0.tgz#e931a563c4d2b41319b714960028d06bf3523eeb"
+  integrity sha512-Pi6SuNa6p09h3603oWq74erIdVEqURC9AdNYcA3eawiDPC6C8neghISqNpJOhrQUu4RFcIa29LzdADbwvUQR8w==
 
 "@types/react-native-vector-icons@^6.4.10":
   version "6.4.10"

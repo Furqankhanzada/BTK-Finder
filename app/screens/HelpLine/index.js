@@ -19,6 +19,7 @@ const HelpLine = React.memo(({ navigation }) => {
   const { colors } = useTheme();
   const { t } = useTranslation();
   const cardColor = colors.card;
+  const [data, setData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState({ numbers: [] });
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -40,7 +41,6 @@ const HelpLine = React.memo(({ navigation }) => {
     );
   };
 
-  const [data, setData] = useState([]);
   useEffect(() => {
     const getHelplines = remoteConfig().getValue('helplines');
     getHelplines._value && setData(JSON.parse(getHelplines._value));
@@ -88,7 +88,6 @@ const HelpLine = React.memo(({ navigation }) => {
         isVisible={modalVisible}
         onSwipeComplete={() => {
           setModalVisible(false);
-          // setSortOption(props.sortOption);
         }}
         swipeDirection={['down']}
         style={styles.bottomModal}>
