@@ -9,55 +9,70 @@ import PushNotificationIOS, {
 } from '@react-native-community/push-notification-ios';
 import Config from 'react-native-config';
 
-import { canOpenUrl, createChannel } from '@utils';
+import { canOpenUrl } from '@utils';
 
 export default function usePushNotifications() {
   const [localNotificationInfo, setLocalNotificationInfo] =
     useState<FirebaseMessagingTypes.RemoteMessage>();
 
+  const createChannel = () => {
+    PushNotification.createChannel(
+      {
+        channelId: Config.ANDROID_CHANNEL_ID, // (required)
+        channelName: 'Special message', // (required)
+        channelDescription: 'Notification for special message', // (optional) default: undefined.
+        importance: 4, // (optional) default: 4. Int value of the Android notification importance
+        vibrate: true, // (optional) default: true. Creates the default vibration patten if true.
+      },
+      (created) => console.log(`createChannel returned '${created}'`), // (optional) callback returns whether the channel was created, false means it already existed.
+    );
+  };
+
+  interface NotificationType {
+    data: {
+      facebook: string;
+      link: string;
+    };
+  }
+
+  const navigateToLink = (notification: any) => {
+    if (notification?.data?.facebook) {
+      canOpenUrl(notification?.data?.facebook, notification?.data?.link);
+    } else if (notification?.data?.link) {
+      Linking.openURL(notification.data.link);
+    }
+  };
+
   //IOS local notification on click functionality
   useEffect(() => {
-    if (Platform.OS !== 'ios') {
-      return;
+    if (Platform.OS === 'ios') {
+      PushNotificationIOS.addEventListener(
+        'notification',
+        onRemoteNotificationIOS,
+      );
+    } else {
+      handleAndroidPushNotification();
     }
-    PushNotificationIOS.addEventListener(
-      'localNotification',
-      onRemoteNotification,
-    );
   });
 
   // On Click Notification
   useEffect(() => {
     // Caused app to open from background state
     messaging().onNotificationOpenedApp((remoteMessage) => {
-      if (remoteMessage?.data?.facebook) {
-        canOpenUrl(remoteMessage?.data?.facebook, remoteMessage?.data?.link);
-      } else if (remoteMessage?.data?.link) {
-        Linking.openURL(remoteMessage?.data?.link);
-      }
+      navigateToLink(remoteMessage);
     });
 
     // Caused app to open from quit / closed state
     messaging()
       .getInitialNotification()
       .then((remoteMessage) => {
-        if (remoteMessage) {
-          if (remoteMessage?.data?.facebook) {
-            canOpenUrl(
-              remoteMessage?.data?.facebook,
-              remoteMessage?.data?.link,
-            );
-          } else if (remoteMessage?.data?.link) {
-            Linking.openURL(remoteMessage?.data?.link);
-          }
-        }
+        navigateToLink(remoteMessage);
       });
   }, []);
 
   useEffect(() => {
     return messaging().onMessage(
       async (remoteMessage: FirebaseMessagingTypes.RemoteMessage) => {
-        createChannel();
         setLocalNotificationInfo(remoteMessage);
         if (Platform.OS === 'ios') {
           PushNotificationIOS.addNotificationRequest({
@@ -66,6 +81,8 @@ export default function usePushNotifications() {
             body: remoteMessage?.notification?.body,
           });
         } else {
+          // In the future we can create multiple channels here like Promotional, Informational, Events, etc ...
+          createChannel();
           PushNotification.localNotification({
             channelId: Config.ANDROID_CHANNEL_ID,
             title: remoteMessage?.notification?.title,
@@ -80,40 +97,28 @@ export default function usePushNotifications() {
   useEffect(() => {
     requestUserPermission();
   });
+  [];
 
   //Android local notification on click functionality and configuration
-  PushNotification.configure({
-    onNotification: (notification) => {
-      if (notification.userInteraction) {
-        if (localNotificationInfo?.data?.facebook) {
-          canOpenUrl(
-            localNotificationInfo?.data?.facebook,
-            localNotificationInfo?.data?.link,
-          );
-        } else if (localNotificationInfo?.data?.link) {
-          Linking.openURL(localNotificationInfo.data.link);
+  const handleAndroidPushNotification = () =>
+    PushNotification.configure({
+      onNotification: (notification) => {
+        if (notification.userInteraction) {
+          navigateToLink(localNotificationInfo);
         }
-      }
-    },
-    permissions: {
-      alert: true,
-      badge: true,
-      sound: true,
-    },
-    requestPermissions: true,
-  });
+      },
+      permissions: {
+        alert: true,
+        badge: true,
+        sound: true,
+      },
+      requestPermissions: true,
+    });
 
-  const onRemoteNotification = (notification: PushNotificationIOSType) => {
+  const onRemoteNotificationIOS = (notification: PushNotificationIOSType) => {
     const isClicked = notification.getData().userInteraction === 1;
     if (isClicked) {
-      if (localNotificationInfo?.data?.facebook) {
-        canOpenUrl(
-          localNotificationInfo?.data?.facebook,
-          localNotificationInfo?.data?.link,
-        );
-      } else if (localNotificationInfo?.data?.link) {
-        Linking.openURL(localNotificationInfo.data.link);
-      }
+      navigateToLink(localNotificationInfo);
     }
   };
 

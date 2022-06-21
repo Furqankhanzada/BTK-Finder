@@ -1,23 +1,8 @@
 import { Platform, Dimensions, Linking, PixelRatio } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { Image } from 'react-native-image-crop-picker';
-import PushNotification from 'react-native-push-notification';
-import Config from 'react-native-config';
 
 const scaleValue = PixelRatio.get() / 2;
-
-export const createChannel = () => {
-  PushNotification.createChannel(
-    {
-      channelId: Config.ANDROID_CHANNEL_ID, // (required)
-      channelName: 'Special message', // (required)
-      channelDescription: 'Notification for special message', // (optional) default: undefined.
-      importance: 4, // (optional) default: 4. Int value of the Android notification importance
-      vibrate: true, // (optional) default: true. Creates the default vibration patten if true.
-    },
-    (created) => console.log(`createChannel returned '${created}'`), // (optional) callback returns whether the channel was created, false means it already existed.
-  );
-};
 
 export const scaleWithPixel = (size: number, limitScale = 1.2) => {
   /* setting default upto 20% when resolution device upto 20% with defalt iPhone 7 */

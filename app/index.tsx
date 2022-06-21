@@ -10,7 +10,7 @@ import useDynamicLinks from './hooks/useDynamicLinks';
 export default function App() {
   // Firebase Dynamic links handling
   useDynamicLinks();
-  // Firebase Dynamic push notification and cloud messaging
+  // Firebase push notification and cloud messaging
   usePushNotifications();
 
   useEffect(() => {
