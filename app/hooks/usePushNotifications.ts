@@ -1,49 +1,20 @@
 import { useEffect, useState } from 'react';
-import messaging, {
-  FirebaseMessagingTypes,
-} from '@react-native-firebase/messaging';
 import { Linking, Platform } from 'react-native';
+import Config from 'react-native-config';
 import PushNotification from 'react-native-push-notification';
 import PushNotificationIOS, {
   PushNotification as PushNotificationIOSType,
 } from '@react-native-community/push-notification-ios';
-import Config from 'react-native-config';
+import messaging, {
+  FirebaseMessagingTypes,
+} from '@react-native-firebase/messaging';
 
 import { canOpenUrl } from '@utils';
 
 export default function usePushNotifications() {
   const [localNotificationInfo, setLocalNotificationInfo] =
-    useState<FirebaseMessagingTypes.RemoteMessage>();
+    useState<FirebaseMessagingTypes.RemoteMessage | null>(null);
 
-  const createChannel = () => {
-    PushNotification.createChannel(
-      {
-        channelId: Config.ANDROID_CHANNEL_ID, // (required)
-        channelName: 'Special message', // (required)
-        channelDescription: 'Notification for special message', // (optional) default: undefined.
-        importance: 4, // (optional) default: 4. Int value of the Android notification importance
-        vibrate: true, // (optional) default: true. Creates the default vibration patten if true.
-      },
-      (created) => console.log(`createChannel returned '${created}'`), // (optional) callback returns whether the channel was created, false means it already existed.
-    );
-  };
-
-  interface NotificationType {
-    data: {
-      facebook: string;
-      link: string;
-    };
-  }
-
-  const navigateToLink = (notification: any) => {
-    if (notification?.data?.facebook) {
-      canOpenUrl(notification?.data?.facebook, notification?.data?.link);
-    } else if (notification?.data?.link) {
-      Linking.openURL(notification.data.link);
-    }
-  };
-
-  //IOS local notification on click functionality
   useEffect(() => {
     if (Platform.OS === 'ios') {
       PushNotificationIOS.addEventListener(
@@ -55,14 +26,15 @@ export default function usePushNotifications() {
     }
   });
 
-  // On Click Notification
   useEffect(() => {
-    // Caused app to open from background state
+    // When the user presses a notification displayed via FCM,
+    // this listener will be called if the app has opened from a background state.
     messaging().onNotificationOpenedApp((remoteMessage) => {
       navigateToLink(remoteMessage);
     });
 
-    // Caused app to open from quit / closed state
+    // When a notification from FCM has triggered the application to open from a quit state,
+    // this method will return a RemoteMessage containing the notification data, or null if the app was opened via another method.
     messaging()
       .getInitialNotification()
       .then((remoteMessage) => {
@@ -71,6 +43,7 @@ export default function usePushNotifications() {
   }, []);
 
   useEffect(() => {
+    // When any FCM payload is received, the listener callback is called with a `RemoteMessage`.
     return messaging().onMessage(
       async (remoteMessage: FirebaseMessagingTypes.RemoteMessage) => {
         setLocalNotificationInfo(remoteMessage);
@@ -97,23 +70,41 @@ export default function usePushNotifications() {
   useEffect(() => {
     requestUserPermission();
   });
-  [];
 
-  //Android local notification on click functionality and configuration
-  const handleAndroidPushNotification = () =>
+  const createChannel = () => {
+    PushNotification.createChannel(
+      {
+        channelId: Config.ANDROID_CHANNEL_ID,
+        channelName: 'Announcements',
+        channelDescription: 'Announcements related to BTK official and events.', // (optional) default: undefined.
+      },
+      (created) => console.log(`createChannel returned '${created}'`), // (optional) callback returns whether the channel was created, false means it already existed.
+    );
+  };
+
+  const navigateToLink = (
+    notification: FirebaseMessagingTypes.RemoteMessage | null,
+  ) => {
+    if (notification && notification.data) {
+      const { facebook, link } = notification.data;
+      if (facebook) {
+        canOpenUrl(facebook, link);
+      } else if (link) {
+        Linking.openURL(link);
+      }
+    }
+  };
+
+  // Android local notification on click functionality and configuration
+  const handleAndroidPushNotification = () => {
     PushNotification.configure({
       onNotification: (notification) => {
         if (notification.userInteraction) {
           navigateToLink(localNotificationInfo);
         }
       },
-      permissions: {
-        alert: true,
-        badge: true,
-        sound: true,
-      },
-      requestPermissions: true,
     });
+  };
 
   const onRemoteNotificationIOS = (notification: PushNotificationIOSType) => {
     const isClicked = notification.getData().userInteraction === 1;
