@@ -15,12 +15,24 @@ export default function usePushNotifications() {
   const [localNotificationInfo, setLocalNotificationInfo] =
     useState<FirebaseMessagingTypes.RemoteMessage | null>(null);
 
+  // request user permission
+  useEffect(() => {
+    messaging()
+      .hasPermission()
+      .then((status) => {
+        if (status === messaging.AuthorizationStatus.NOT_DETERMINED) {
+          messaging().requestPermission();
+        }
+      });
+  });
+
   useEffect(() => {
     if (Platform.OS === 'ios') {
-      PushNotificationIOS.addEventListener(
-        'notification',
-        onRemoteNotificationIOS,
-      );
+      const type = 'notification';
+      PushNotificationIOS.addEventListener(type, onRemoteNotificationIOS);
+      return () => {
+        PushNotificationIOS.removeEventListener(type);
+      };
     } else {
       handleAndroidPushNotification();
     }
@@ -67,10 +79,6 @@ export default function usePushNotifications() {
     );
   });
 
-  useEffect(() => {
-    requestUserPermission();
-  });
-
   const createChannel = () => {
     PushNotification.createChannel(
       {
@@ -78,7 +86,8 @@ export default function usePushNotifications() {
         channelName: 'Announcements',
         channelDescription: 'Announcements related to BTK official and events.', // (optional) default: undefined.
       },
-      (created) => console.log(`createChannel returned '${created}'`), // (optional) callback returns whether the channel was created, false means it already existed.
+      // typescript required callback
+      () => {},
     );
   };
 
@@ -110,31 +119,6 @@ export default function usePushNotifications() {
     const isClicked = notification.getData().userInteraction === 1;
     if (isClicked) {
       navigateToLink(localNotificationInfo);
-    }
-  };
-
-  messaging().setBackgroundMessageHandler(async (remoteMessage) => {
-    console.log('Message handled in the background!', remoteMessage);
-  });
-
-  const requestUserPermission = async () => {
-    const authStatus = await messaging().requestPermission();
-    const enabled =
-      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-
-    if (enabled) {
-      await getFcmToken();
-      console.log('Authorization status:', authStatus);
-    }
-  };
-
-  const getFcmToken = async () => {
-    const fcmToken = await messaging().getToken();
-    if (fcmToken) {
-      console.log('Your Firebase Token is:', fcmToken);
-    } else {
-      console.log('Failed', 'No token received');
     }
   };
 }
