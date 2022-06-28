@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -9,6 +9,7 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { navigationRef, isReadyRef } from '../services/NavigationService';
+import analytics from '@react-native-firebase/analytics';
 
 /* Main Stack Navigator */
 import Main from 'app/navigation/main';
@@ -32,6 +33,7 @@ export default function Navigator() {
   const storeLanguage = useSelector((state) => state.application.language);
   const { theme, colors } = useTheme();
   const isDarkMode = useDarkMode();
+  const routeNameRef = useRef();
 
   const forFade = ({ current, closing }) => ({
     cardStyle: {
@@ -67,6 +69,18 @@ export default function Navigator() {
         ref={navigationRef}
         onReady={() => {
           isReadyRef.current = true;
+        }}
+        onStateChange={async () => {
+          const previousRouteName = routeNameRef.current;
+          const currentRouteName = navigationRef.current.getCurrentRoute().name;
+
+          if (previousRouteName !== currentRouteName) {
+            await analytics().logScreenView({
+              screen_name: currentRouteName,
+              screen_class: currentRouteName,
+            });
+          }
+          routeNameRef.current = currentRouteName;
         }}>
         <RootStack.Navigator
           mode="modal"

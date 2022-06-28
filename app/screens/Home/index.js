@@ -33,6 +33,8 @@ import { getBusinesses } from '../../actions/business';
 import { getFavoriteBusinesses } from '../../actions/favorites';
 import { getProfile } from '../../actions/auth';
 import useLocation from '../../hooks/useLocation';
+import analytics from '@react-native-firebase/analytics';
+
 export default function Home({ navigation }) {
   const stateProps = useSelector(({ businesses, favorites }) => {
     return {
@@ -44,6 +46,13 @@ export default function Home({ navigation }) {
       favoriteBusinesses: favorites.getFavoriteBusinesses,
     };
   });
+
+  const onHelpLineClick = async () => {
+    navigation.navigate('HelpLine');
+    await analytics().logEvent('helpline', {
+      screen: 'Home Screen',
+    });
+  };
 
   const navigateToReview = (id) => {
     navigation.navigate('Review', { id });
@@ -169,11 +178,14 @@ export default function Home({ navigation }) {
     );
   }, [dispatch]);
 
-  const navigateBusinessDetail = (id) => {
+  const navigateBusinessDetail = async (id, name) => {
     navigation.navigate('PlaceDetail', { id });
+    await analytics().logEvent('business', {
+      id,
+      name,
+    });
   };
-
-  const seeMore = (payload = {}) => {
+  const seeMore = async (payload = {}) => {
     if (payload.route === 'Category') {
       navigation.navigate('Category', {
         latitude: getLocation?.latitude ?? null,
@@ -181,6 +193,10 @@ export default function Home({ navigation }) {
       });
     } else {
       navigation.navigate('Place', payload);
+      await analytics().logEvent('category', {
+        title: payload.title,
+        category: payload.category,
+      });
     }
   };
 
@@ -197,7 +213,7 @@ export default function Home({ navigation }) {
                 icon={<Icon name={'phone'} size={10} color={'white'} solid />}
                 full
                 round
-                onPress={() => navigation.navigate('HelpLine')}>
+                onPress={onHelpLineClick}>
                 {t('help_line')}
               </Button>
             );
@@ -343,7 +359,7 @@ export default function Home({ navigation }) {
                   navigation={navigation}
                   lastRoute="Home"
                   // status='Open Now'
-                  onPress={() => navigateBusinessDetail(item._id)}
+                  onPress={() => navigateBusinessDetail(item._id, item.name)}
                   onPressTag={() => navigateToReview(item._id)}
                   style={{ marginLeft: 15, width: 175 }}
                 />
@@ -373,7 +389,7 @@ export default function Home({ navigation }) {
                   subtitle={item.category}
                   rate={item?.averageRatings || 0.0}
                   style={{ marginBottom: 15 }}
-                  onPress={() => navigateBusinessDetail(item._id)}
+                  onPress={() => navigateBusinessDetail(item._id, item.name)}
                   onPressTag={() => navigateToReview(item._id)}
                 />
               );
