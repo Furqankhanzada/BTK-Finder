@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next';
 import call from 'react-native-phone-call';
 import Modal from 'react-native-modal';
 import styles from '../../components/FilterSort/styles';
-import analytics from '@react-native-firebase/analytics';
+import { trackEvent, EVENTS } from '../../userTracking';
 
 const HelpLine = React.memo(({ navigation }) => {
   const { colors } = useTheme();
@@ -25,26 +25,26 @@ const HelpLine = React.memo(({ navigation }) => {
   const [selectedRecord, setSelectedRecord] = useState({ numbers: [] });
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-  const onItemClick = async (record) => {
+  const onItemClick = (record) => {
     if (record.numbers.length > 1) {
       setSelectedIndex(0);
       setSelectedRecord(record);
       setModalVisible(true);
     } else {
       call({ number: record.numbers[0] }).catch((e) => console.log(e));
-      await analytics().logEvent('helpline_number', {
+      trackEvent(EVENTS.CALL_ON_HELPLINE, {
         title: record.title,
         number: record.numbers[0],
       });
     }
   };
 
-  const callNow = async () => {
+  const callNow = () => {
     setModalVisible(false);
     call({ number: selectedRecord.numbers[selectedIndex] }).catch((e) =>
       console.log(e),
     );
-    await analytics().logEvent('helpline_number', {
+    trackEvent(EVENTS.CALL_ON_HELPLINE, {
       title: selectedRecord.title,
       number: selectedRecord.numbers[selectedIndex],
     });

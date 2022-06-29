@@ -33,7 +33,7 @@ import { getBusinesses } from '../../actions/business';
 import { getFavoriteBusinesses } from '../../actions/favorites';
 import { getProfile } from '../../actions/auth';
 import useLocation from '../../hooks/useLocation';
-import analytics from '@react-native-firebase/analytics';
+import { trackEvent, EVENTS } from '../../userTracking';
 
 export default function Home({ navigation }) {
   const stateProps = useSelector(({ businesses, favorites }) => {
@@ -47,11 +47,9 @@ export default function Home({ navigation }) {
     };
   });
 
-  const onHelpLineClick = async () => {
+  const onHelpLineClick = () => {
     navigation.navigate('HelpLine');
-    await analytics().logEvent('helpline', {
-      screen: 'Home Screen',
-    });
+    trackEvent(EVENTS.HELPLINE_SCREEN_VISITED);
   };
 
   const navigateToReview = (id) => {
@@ -178,22 +176,31 @@ export default function Home({ navigation }) {
     );
   }, [dispatch]);
 
-  const navigateBusinessDetail = async (id, name) => {
+  const navigateBusinessDetail = (id, name, type) => {
     navigation.navigate('PlaceDetail', { id });
-    await analytics().logEvent('business', {
+
+    const business = {
       id,
       name,
-    });
+    };
+
+    if (type === 'popularBusiness') {
+      trackEvent(EVENTS.POPULAR_BUSINESS_VISITED, business);
+    } else {
+      trackEvent(EVENTS.RECENTLY_ADDED_BUSINESS_VISITED, business);
+    }
   };
-  const seeMore = async (payload = {}) => {
+
+  const seeMore = (payload = {}) => {
     if (payload.route === 'Category') {
       navigation.navigate('Category', {
         latitude: getLocation?.latitude ?? null,
         longitude: getLocation?.longitude ?? null,
       });
+      trackEvent(EVENTS.CATEGORIES_SCREEN_VISITED);
     } else {
       navigation.navigate('Place', payload);
-      await analytics().logEvent('category', {
+      trackEvent(EVENTS.CATEGORY_VISITED, {
         title: payload.title,
         category: payload.category,
       });
@@ -359,7 +366,13 @@ export default function Home({ navigation }) {
                   navigation={navigation}
                   lastRoute="Home"
                   // status='Open Now'
-                  onPress={() => navigateBusinessDetail(item._id, item.name)}
+                  onPress={() =>
+                    navigateBusinessDetail(
+                      item._id,
+                      item.name,
+                      'popularBusiness',
+                    )
+                  }
                   onPressTag={() => navigateToReview(item._id)}
                   style={{ marginLeft: 15, width: 175 }}
                 />
@@ -389,7 +402,13 @@ export default function Home({ navigation }) {
                   subtitle={item.category}
                   rate={item?.averageRatings || 0.0}
                   style={{ marginBottom: 15 }}
-                  onPress={() => navigateBusinessDetail(item._id, item.name)}
+                  onPress={() =>
+                    navigateBusinessDetail(
+                      item._id,
+                      item.name,
+                      'recentBusiness',
+                    )
+                  }
                   onPressTag={() => navigateToReview(item._id)}
                 />
               );

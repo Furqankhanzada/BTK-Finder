@@ -43,6 +43,7 @@ import PlaceItem from '../PlaceItem';
 import CardList from '../CardList';
 import { getRelatedBusinesses, getBusinesses } from '../../actions/business';
 import SectionList from '../../screens/Home/sectionList';
+import { trackEvent, EVENTS } from '../../userTracking';
 
 let defaultDelta = {
   latitudeDelta: 0.003,
@@ -349,6 +350,11 @@ export default function PlaceDetailComponent(props) {
     });
   };
 
+  const businessDetails = {
+    id: business?._id,
+    name: business?.name,
+  };
+
   const onOpen = (item) => {
     Alert.alert(
       'Explore BTK',
@@ -365,20 +371,39 @@ export default function PlaceDetailComponent(props) {
             switch (item.type) {
               case 'web':
                 Linking.openURL(item.information);
+                trackEvent(EVENTS.VISITED_BUSINESS_WEBSITE, {
+                  ...businessDetails,
+                  website: item.information,
+                });
                 break;
               case 'phone':
                 Linking.openURL('tel://' + item.information);
+                trackEvent(EVENTS.CONTACTED_BUSINESS_VIA_PHONE_NUMBER, {
+                  ...businessDetails,
+                  phone: item.information,
+                });
                 break;
               case 'email':
                 Linking.openURL('mailto:' + item.information);
+                trackEvent(EVENTS.CONTACTED_BUSINESS_VIA_EMAIL, {
+                  ...businessDetails,
+                  email: item.information,
+                });
                 break;
               case 'whatsapp':
                 Linking.openURL(
                   'whatsapp://send?phone=' + checkPhoneCode(item.information),
                 );
+                trackEvent(EVENTS.CONTACTED_BUSINESS_VIA_WHATSAPP, {
+                  ...businessDetails,
+                  whatsapp: item.information,
+                });
                 break;
               case 'map':
                 openGps(item);
+                trackEvent(EVENTS.CHECKED_BUSINESS_DIRECTION, {
+                  ...businessDetails,
+                });
                 break;
             }
           },
