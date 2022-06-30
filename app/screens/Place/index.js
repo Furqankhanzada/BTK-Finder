@@ -25,6 +25,7 @@ import { PlaceListData } from '@data';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllBusinesses, setFilteredData } from '../../actions/business';
+import { EVENTS, trackEvent } from '../../userTracking';
 
 export default function Place(props) {
   const { navigation, route } = props;
@@ -211,8 +212,13 @@ export default function Place(props) {
     navigation.navigate('Filter', { ...params });
   };
 
-  const navigateBusinessDetail = (id) => {
+  const navigateBusinessDetail = (id, name, category) => {
     navigation.navigate('PlaceDetail', { id });
+    trackEvent(EVENTS.VISITED_BUSINESS, {
+      id,
+      name,
+      category,
+    });
   };
 
   const navigateToReview = (id) => {
@@ -319,7 +325,9 @@ export default function Place(props) {
                   businessId={item?._id}
                   navigation={navigation}
                   lastRoute={route?.param?.category ? 'Category' : 'Place'}
-                  onPress={() => navigateBusinessDetail(item._id)}
+                  onPress={() =>
+                    navigateBusinessDetail(item._id, item?.name, item.category)
+                  }
                   onPressTag={() => navigateToReview(item._id)}
                 />
               )}
@@ -399,7 +407,9 @@ export default function Place(props) {
                   style={{
                     marginBottom: 15,
                   }}
-                  onPress={() => navigateBusinessDetail(item._id)}
+                  onPress={() =>
+                    navigateBusinessDetail(item._id, item?.name, item.category)
+                  }
                   onPressTag={() => navigateToReview(item._id)}
                 />
               )}
@@ -486,7 +496,9 @@ export default function Place(props) {
                     marginLeft: 15,
                     marginBottom: 15,
                   }}
-                  onPress={() => navigateBusinessDetail(item._id)}
+                  onPress={() =>
+                    navigateBusinessDetail(item._id, item?.name, item.category)
+                  }
                   onPressTag={() => navigateToReview(item._id)}
                 />
               )}
@@ -570,7 +582,9 @@ export default function Place(props) {
                   shadowRadius: 3.84,
                   elevation: 5,
                 }}
-                onPress={() => navigateBusinessDetail(item._id)}
+                onPress={() =>
+                  navigateBusinessDetail(item._id, item?.name, item.category)
+                }
                 onPressTag={() => navigateToReview(item._id)}
               />
             )}

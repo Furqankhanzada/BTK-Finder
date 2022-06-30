@@ -207,6 +207,16 @@ export default function Home({ navigation }) {
     }
   };
 
+  const navigateToFilter = () => {
+    navigation.navigate('Filter', {
+      home: true,
+      coordinates: {
+        latitude: getLocation?.latitude ?? null,
+        longitude: getLocation?.longitude ?? null,
+      },
+    });
+  };
+
   return (
     <View style={{ flex: 1 }}>
       <SafeAreaView style={{ flex: 1 }} forceInset={{ top: 'always' }}>
@@ -249,16 +259,7 @@ export default function Home({ navigation }) {
                 shadowColor: colors.border,
               },
             ]}>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('Filter', {
-                  home: true,
-                  coordinates: {
-                    latitude: getLocation?.latitude ?? null,
-                    longitude: getLocation?.longitude ?? null,
-                  },
-                })
-              }>
+            <TouchableOpacity onPress={navigateToFilter}>
               <View
                 style={[BaseStyle.textInput, { backgroundColor: colors.card }]}>
                 <Text body1 grayColor style={{ flex: 1 }}>

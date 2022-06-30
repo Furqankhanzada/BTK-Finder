@@ -77,7 +77,6 @@ export default function Navigator() {
           if (previousRouteName !== currentRouteName) {
             await analytics().logScreenView({
               screen_name: currentRouteName,
-              screen_class: currentRouteName,
             });
           }
           routeNameRef.current = currentRouteName;

@@ -270,6 +270,10 @@ export default function PlaceDetailComponent(props) {
         title: business.name,
         dialogTitle: business.name,
       });
+      trackEvent(EVENTS.SHARE_BUTTON_CLICKED, {
+        url: businessLink,
+        title: business.name,
+      });
     } catch (error) {
       console.log('Error while sharing Business', error.message);
     }
@@ -626,6 +630,7 @@ export default function PlaceDetailComponent(props) {
               {isPreview ? null : (
                 <View style={styles.iconLike}>
                   <FavouriteIcon
+                    name={business.name}
                     style={styles.iconGirdLike}
                     navigation={navigation}
                     lastRoute="PlaceDetail"
@@ -1028,6 +1033,7 @@ export default function PlaceDetailComponent(props) {
                 title: business.name,
                 gallery: business.gallery,
               });
+              trackEvent(EVENTS.SEE_MORE_IMAGES, { title: business.name });
             }}
           />
         </Animated.View>

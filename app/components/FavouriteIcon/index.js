@@ -10,10 +10,12 @@ import {
   addFavoriteBusiness,
   removeFavoriteBusiness,
 } from '../../actions/favorites';
+import { trackEvent, EVENTS } from '../../userTracking';
 
 export default function FavouriteIcon(props) {
   const {
     style,
+    name,
     isFavorite,
     favoriteId,
     navigation,
@@ -48,8 +50,10 @@ export default function FavouriteIcon(props) {
       );
       if (isFavoriteExist) {
         dispatch(removeFavoriteBusiness(id, afterResponse));
+        trackEvent(EVENTS.UNFAVORITE_BUTTON_CLICKED, { id, name });
       } else {
         dispatch(addFavoriteBusiness(id, afterResponse));
+        trackEvent(EVENTS.FAVORITE_BUTTON_CLICKED, { id, name });
       }
     } else {
       Alert.alert(
