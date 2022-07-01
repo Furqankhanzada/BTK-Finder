@@ -33,6 +33,7 @@ import { getBusinesses } from '../../actions/business';
 import { getFavoriteBusinesses } from '../../actions/favorites';
 import { getProfile } from '../../actions/auth';
 import useLocation from '../../hooks/useLocation';
+import analytics from '@react-native-firebase/analytics';
 import { trackEvent, EVENTS } from '../../userTracking';
 
 export default function Home({ navigation }) {
@@ -57,6 +58,7 @@ export default function Home({ navigation }) {
   };
 
   const isLogin = useSelector((state) => state.auth.isLogin);
+  const profileData = useSelector((state) => state.profile);
   const [loading, setLoading] = useState(true);
   const deltaY = new Animated.Value(0);
   const { colors } = useTheme();
@@ -131,6 +133,15 @@ export default function Home({ navigation }) {
       }
     });
   }, []);
+
+  useEffect(() => {
+    if (isLogin) {
+      if (profileData?._id) {
+        analytics().setUserId(profileData?._id);
+        analytics().setUserProperties({ ['username']: profileData?.name });
+      }
+    }
+  }, [isLogin, profileData?._id]);
 
   useEffect(() => {
     if (isLogin) {
