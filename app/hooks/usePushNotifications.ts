@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Linking, Platform } from 'react-native';
-import Config from 'react-native-config';
 import PushNotification from 'react-native-push-notification';
 import PushNotificationIOS, {
   PushNotification as PushNotificationIOSType,
@@ -67,9 +66,9 @@ export default function usePushNotifications() {
           });
         } else {
           // In the future we can create multiple channels here like Promotional, Informational, Events, etc ...
-          createChannel();
+          createChannel(remoteMessage?.notification?.android?.channelId);
           PushNotification.localNotification({
-            channelId: Config.ANDROID_CHANNEL_ID,
+            channelId: remoteMessage?.notification?.android?.channelId,
             title: remoteMessage?.notification?.title,
             message: remoteMessage?.notification?.body!,
             bigPictureUrl: remoteMessage?.notification?.android?.imageUrl,
@@ -79,10 +78,10 @@ export default function usePushNotifications() {
     );
   });
 
-  const createChannel = () => {
+  const createChannel = (channelId: any) => {
     PushNotification.createChannel(
       {
-        channelId: Config.ANDROID_CHANNEL_ID,
+        channelId,
         channelName: 'Announcements',
         channelDescription: 'Announcements related to BTK official and events.', // (optional) default: undefined.
       },
