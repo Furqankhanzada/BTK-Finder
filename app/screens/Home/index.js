@@ -33,8 +33,7 @@ import { getBusinesses } from '../../actions/business';
 import { getFavoriteBusinesses } from '../../actions/favorites';
 import { getProfile } from '../../actions/auth';
 import useLocation from '../../hooks/useLocation';
-import analytics from '@react-native-firebase/analytics';
-import { trackEvent, EVENTS } from '../../userTracking';
+import { trackEvent, EVENTS, setUser } from '../../userTracking';
 
 export default function Home({ navigation }) {
   const stateProps = useSelector(({ businesses, favorites }) => {
@@ -137,8 +136,7 @@ export default function Home({ navigation }) {
   useEffect(() => {
     if (isLogin) {
       if (profileData?._id) {
-        analytics().setUserId(profileData?._id);
-        analytics().setUserProperties({ ['username']: profileData?.name });
+        setUser(profileData);
       }
     }
   }, [isLogin, profileData?._id]);

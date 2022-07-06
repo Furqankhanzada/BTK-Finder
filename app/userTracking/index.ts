@@ -1,5 +1,5 @@
 import EVENTS from './Events';
 import SCREENS from './Screens';
-import { trackScreenView, trackEvent } from './setup';
+import { trackScreenView, trackEvent, setUser } from './setup';
 
-export { EVENTS, SCREENS, trackScreenView, trackEvent };
+export { EVENTS, SCREENS, trackScreenView, trackEvent, setUser };

@@ -1,26 +1,17 @@
 import analytics from '@react-native-firebase/analytics';
-import humps from 'humps';
 import SCREENS from './Screens';
 
 type User = {
-  userId: string;
+  _id: string;
   name: string;
-  phone: string;
-  email: String;
 };
 
-export function setUserProperties(data: User) {
-  const { userId, name, phone, email } = humps.camelizeKeys(data);
-
-  const userProperties = Object.assign(
-    userId && { userId },
-    name && { name },
-    phone && { phone },
-    email && { email },
-  );
+export function setUser(data: User) {
+  const { _id: userId, name } = data;
 
   try {
-    analytics().setUserProperties(userProperties);
+    analytics().setUserId(userId);
+    analytics().setUserProperties({ ['username']: name });
   } catch (err) {
     console.error(err);
   }
