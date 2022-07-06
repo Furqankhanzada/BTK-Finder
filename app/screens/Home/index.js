@@ -12,7 +12,6 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { checkNotifications } from 'react-native-permissions';
-import VersionCheck from 'react-native-version-check';
 import {
   Header,
   Button,
@@ -33,6 +32,8 @@ import { getBusinesses } from '../../actions/business';
 import { getFavoriteBusinesses } from '../../actions/favorites';
 import { getProfile } from '../../actions/auth';
 import useLocation from '../../hooks/useLocation';
+import { useNativeUpdate } from '../../hooks/useNativeUpdate';
+
 export default function Home({ navigation }) {
   const stateProps = useSelector(({ businesses, favorites }) => {
     return {
@@ -44,6 +45,9 @@ export default function Home({ navigation }) {
       favoriteBusinesses: favorites.getFavoriteBusinesses,
     };
   });
+
+  // in-app update hook
+  useNativeUpdate();
 
   const navigateToReview = (id) => {
     navigation.navigate('Review', { id });
@@ -71,34 +75,11 @@ export default function Home({ navigation }) {
     ],
   ];
   const [banner] = useState(HomeBannerData);
+
   const [heightHeader, setHeightHeader] = useState(Utils.heightHeader());
 
   const heightImageBanner = Utils.scaleWithPixel(225);
   const marginTopBanner = heightImageBanner - heightHeader + 10;
-
-  useEffect(() => {
-    VersionCheck.needUpdate().then(async (res) => {
-      if (res.isNeeded) {
-        Alert.alert(
-          'Update Required',
-          'Your application version is outdated, Click on Update Now to update it.',
-          [
-            {
-              text: 'Cancel',
-              style: 'cancel',
-            },
-            {
-              text: 'Update Now',
-              onPress: () => Linking.openURL(res.storeUrl),
-            },
-          ],
-          {
-            cancelable: false,
-          },
-        );
-      }
-    });
-  }, []);
 
   useEffect(() => {
     checkNotifications().then(({ status }) => {
