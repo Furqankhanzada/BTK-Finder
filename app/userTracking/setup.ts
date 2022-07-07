@@ -4,14 +4,16 @@ import SCREENS from './Screens';
 type User = {
   _id: string;
   name: string;
+  email: string;
+  phone: string;
 };
 
 export function setUser(data: User) {
-  const { _id: userId, name } = data;
+  const { _id: userId, name, email, phone } = data;
 
   try {
     analytics().setUserId(userId);
-    analytics().setUserProperties({ ['username']: name });
+    analytics().setUserProperties({ name, email, phone });
   } catch (err) {
     console.error(err);
   }
