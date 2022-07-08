@@ -271,8 +271,9 @@ export default function PlaceDetailComponent(props) {
         dialogTitle: business.name,
       });
       trackEvent(EVENTS.SHARE_BUTTON_CLICKED, {
-        url: businessLink,
+        businessId: business._id,
         title: business.name,
+        url: businessLink,
       });
     } catch (error) {
       console.log('Error while sharing Business', error.message);

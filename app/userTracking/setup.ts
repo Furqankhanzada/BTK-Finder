@@ -3,17 +3,23 @@ import SCREENS from './Screens';
 
 type User = {
   _id: string;
-  name: string;
-  email: string;
-  phone: string;
+  name?: string;
+  email?: string;
+  phone?: string;
 };
 
-export function setUser(data: User) {
+export function setUser(data: any) {
   const { _id: userId, name, email, phone } = data;
+
+  const userProperties = Object.assign(
+    name && { name },
+    email && { email },
+    phone && { phone },
+  );
 
   try {
     analytics().setUserId(userId);
-    analytics().setUserProperties({ name, email, phone });
+    analytics().setUserProperties(userProperties);
   } catch (err) {
     console.error(err);
   }
