@@ -1,4 +1,5 @@
 import analytics from '@react-native-firebase/analytics';
+
 import SCREENS from './Screens';
 
 type User = {
@@ -8,13 +9,14 @@ type User = {
   phone?: string;
 };
 
-export function setUser(data: any) {
+export function setUser(data: User) {
   const { _id: userId, name, email, phone } = data;
 
   const userProperties = Object.assign(
-    name && { name },
-    email && { email },
-    phone && { phone },
+    {},
+    name ? { name } : null,
+    email ? { email } : null,
+    phone ? { phone } : null,
   );
 
   try {
