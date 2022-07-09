@@ -1,40 +1,40 @@
 const SCREENS: any = {
-  Home: {
-    TRACKING_KEY: 'Home',
+  // Dashboard
+  Dashboard: {
+    TRACKING_KEY: 'dashboard',
     ATTRIBUTES: {
-      category: 'Home',
-      screenName: 'Home',
+      category: 'dashboard',
+      screenName: 'Dashboard',
     },
   },
   HelpLine: {
-    TRACKING_KEY: 'HelpLine',
+    TRACKING_KEY: 'helpLine',
     ATTRIBUTES: {
-      category: 'HelpLine',
+      category: 'dashboard',
       screenName: 'HelpLine',
     },
   },
-  // show all categories
+
   Category: {
-    TRACKING_KEY: 'Category',
+    TRACKING_KEY: 'category',
     ATTRIBUTES: {
-      category: 'Category',
+      category: 'dashboard',
       screenName: 'Category',
     },
   },
-  // show places
-  Place: {
-    TRACKING_KEY: 'Place',
+
+  Business: {
+    TRACKING_KEY: 'business',
     ATTRIBUTES: {
-      category: 'Place',
+      category: 'business',
       screenName: 'Place',
     },
   },
-  // show place/business Detail
-  PlaceDetail: {
-    TRACKING_KEY: 'PlaceDetail',
+  BusinessDetail: {
+    TRACKING_KEY: 'businessDetail',
     ATTRIBUTES: {
-      category: 'PlaceDetail',
-      screenName: 'PlaceDetail',
+      category: 'business',
+      screenName: 'BusinessDetail',
     },
   },
 };
