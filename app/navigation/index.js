@@ -73,7 +73,7 @@ export default function Navigator() {
         onStateChange={async () => {
           const previousRouteName = routeNameRef.current;
           const currentRouteName = navigationRef.current.getCurrentRoute().name;
-          console.log('currentRouteName', currentRouteName);
+
           if (previousRouteName !== currentRouteName) {
             if (previousRouteName !== currentRouteName) {
               trackScreenView(currentRouteName);
