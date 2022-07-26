@@ -9,7 +9,6 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { navigationRef, isReadyRef } from '../services/NavigationService';
-import analytics from '@react-native-firebase/analytics';
 
 /* Main Stack Navigator */
 import Main from 'app/navigation/main';
@@ -25,6 +24,7 @@ import HelpLine from '@screens/HelpLine';
 import Category from '@screens/Category';
 import Toast from 'react-native-toast-message';
 import { setIsLogin } from '../actions/auth';
+import { trackScreenView } from '../userTracking';
 
 const RootStack = createStackNavigator();
 
@@ -73,11 +73,11 @@ export default function Navigator() {
         onStateChange={async () => {
           const previousRouteName = routeNameRef.current;
           const currentRouteName = navigationRef.current.getCurrentRoute().name;
-
+          console.log('currentRouteName', currentRouteName);
           if (previousRouteName !== currentRouteName) {
-            await analytics().logScreenView({
-              screen_name: currentRouteName,
-            });
+            if (previousRouteName !== currentRouteName) {
+              trackScreenView(currentRouteName);
+            }
           }
           routeNameRef.current = currentRouteName;
         }}>
