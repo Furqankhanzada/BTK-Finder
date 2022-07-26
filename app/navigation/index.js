@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -24,6 +24,7 @@ import HelpLine from '@screens/HelpLine';
 import Category from '@screens/Category';
 import Toast from 'react-native-toast-message';
 import { setIsLogin } from '../actions/auth';
+import { trackScreenView } from '../userTracking';
 
 const RootStack = createStackNavigator();
 
@@ -32,6 +33,7 @@ export default function Navigator() {
   const storeLanguage = useSelector((state) => state.application.language);
   const { theme, colors } = useTheme();
   const isDarkMode = useDarkMode();
+  const routeNameRef = useRef();
 
   const forFade = ({ current, closing }) => ({
     cardStyle: {
@@ -67,6 +69,17 @@ export default function Navigator() {
         ref={navigationRef}
         onReady={() => {
           isReadyRef.current = true;
+        }}
+        onStateChange={async () => {
+          const previousRouteName = routeNameRef.current;
+          const currentRouteName = navigationRef.current.getCurrentRoute().name;
+
+          if (previousRouteName !== currentRouteName) {
+            if (previousRouteName !== currentRouteName) {
+              trackScreenView(currentRouteName);
+            }
+          }
+          routeNameRef.current = currentRouteName;
         }}>
         <RootStack.Navigator
           mode="modal"

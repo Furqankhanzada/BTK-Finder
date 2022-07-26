@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next';
 import call from 'react-native-phone-call';
 import Modal from 'react-native-modal';
 import styles from '../../components/FilterSort/styles';
+import { trackEvent, EVENTS } from '../../userTracking';
 
 const HelpLine = React.memo(({ navigation }) => {
   const { colors } = useTheme();
@@ -31,6 +32,10 @@ const HelpLine = React.memo(({ navigation }) => {
       setModalVisible(true);
     } else {
       call({ number: record.numbers[0] }).catch((e) => console.log(e));
+      trackEvent(EVENTS.CALL_ON_HELPLINE, {
+        title: record.title,
+        number: record.numbers[0],
+      });
     }
   };
 
@@ -39,6 +44,10 @@ const HelpLine = React.memo(({ navigation }) => {
     call({ number: selectedRecord.numbers[selectedIndex] }).catch((e) =>
       console.log(e),
     );
+    trackEvent(EVENTS.CALL_ON_HELPLINE, {
+      title: selectedRecord.title,
+      number: selectedRecord.numbers[selectedIndex],
+    });
   };
 
   useEffect(() => {

@@ -23,6 +23,7 @@ import * as Utils from '@utils';
 import styles from './styles';
 import { getCategories } from '../../actions/category';
 import { getAllBusinesses, setFilteredData } from '../../actions/business';
+import { EVENTS, trackEvent } from '../../userTracking';
 
 export default function Filter(props) {
   const { navigation, route } = props;
@@ -174,6 +175,13 @@ export default function Filter(props) {
       }),
     );
     dispatch(getAllBusinesses(payload, callBack));
+
+    trackEvent(EVENTS.APPLY_FILTERS, {
+      search: search,
+      // category: selectedCategories,
+      // tags: selectedTags,
+      // facilities: selectedFacilities,
+    });
   };
 
   const onClearFilter = () => {
