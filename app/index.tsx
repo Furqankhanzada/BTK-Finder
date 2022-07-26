@@ -3,15 +3,16 @@ import { Provider } from 'react-redux';
 import remoteConfig from '@react-native-firebase/remote-config';
 import Navigator from './navigation';
 import { store } from './store';
-
-import usePushNotifications from './hooks/usePushNotifications';
-import useDynamicLinks from './hooks/useDynamicLinks';
+// @ts-ignore
+import { usePushNotifications, useDynamicLinks, useNativeUpdate } from '@hooks';
 
 export default function App() {
   // Firebase Dynamic links handling
   useDynamicLinks();
   // Firebase push notification and cloud messaging
   usePushNotifications();
+  // in-app update hook
+  useNativeUpdate();
 
   useEffect(() => {
     async function fetchData() {

@@ -32,7 +32,6 @@ import { getBusinesses } from '../../actions/business';
 import { getFavoriteBusinesses } from '../../actions/favorites';
 import { getProfile } from '../../actions/auth';
 import useLocation from '../../hooks/useLocation';
-import { useNativeUpdate } from '../../hooks/useNativeUpdate';
 
 export default function Home({ navigation }) {
   const stateProps = useSelector(({ businesses, favorites }) => {
@@ -45,9 +44,6 @@ export default function Home({ navigation }) {
       favoriteBusinesses: favorites.getFavoriteBusinesses,
     };
   });
-
-  // in-app update hook
-  useNativeUpdate();
 
   const navigateToReview = (id) => {
     navigation.navigate('Review', { id });
