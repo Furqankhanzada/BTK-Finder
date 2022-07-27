@@ -32,6 +32,10 @@ import { getBusinesses } from '../../actions/business';
 import { getFavoriteBusinesses } from '../../actions/favorites';
 import { getProfile } from '../../actions/auth';
 import useLocation from '../../hooks/useLocation';
+<<<<<<< HEAD
+=======
+import { trackEvent, EVENTS, setUser } from '../../userTracking';
+>>>>>>> 0583761f0634da419c4e7fdc3275edf9f63a810f
 
 export default function Home({ navigation }) {
   const stateProps = useSelector(({ businesses, favorites }) => {
@@ -45,11 +49,17 @@ export default function Home({ navigation }) {
     };
   });
 
+  const onHelpLineClick = () => {
+    navigation.navigate('HelpLine');
+    trackEvent(EVENTS.HELPLINE_SCREEN_VISITED);
+  };
+
   const navigateToReview = (id) => {
     navigation.navigate('Review', { id });
   };
 
   const isLogin = useSelector((state) => state.auth.isLogin);
+  const profileData = useSelector((state) => state.profile);
   const [loading, setLoading] = useState(true);
   const deltaY = new Animated.Value(0);
   const { colors } = useTheme();
@@ -104,6 +114,14 @@ export default function Home({ navigation }) {
 
   useEffect(() => {
     if (isLogin) {
+      if (profileData?._id) {
+        setUser(profileData);
+      }
+    }
+  }, [isLogin, profileData?._id]);
+
+  useEffect(() => {
+    if (isLogin) {
       dispatch(getProfile());
       dispatch(
         getFavoriteBusinesses({
@@ -146,8 +164,19 @@ export default function Home({ navigation }) {
     );
   }, [dispatch]);
 
-  const navigateBusinessDetail = (id) => {
+  const navigateBusinessDetail = (id, name, type) => {
     navigation.navigate('PlaceDetail', { id });
+
+    const business = {
+      id,
+      name,
+    };
+
+    if (type === 'popularBusiness') {
+      trackEvent(EVENTS.POPULAR_BUSINESS_VISITED, business);
+    } else {
+      trackEvent(EVENTS.RECENTLY_ADDED_BUSINESS_VISITED, business);
+    }
   };
 
   const seeMore = (payload = {}) => {
@@ -156,9 +185,24 @@ export default function Home({ navigation }) {
         latitude: getLocation?.latitude ?? null,
         longitude: getLocation?.longitude ?? null,
       });
+      trackEvent(EVENTS.CATEGORIES_SCREEN_VISITED);
     } else {
       navigation.navigate('Place', payload);
+      trackEvent(EVENTS.CATEGORY_VISITED, {
+        title: payload.title,
+        category: payload.category,
+      });
     }
+  };
+
+  const navigateToFilter = () => {
+    navigation.navigate('Filter', {
+      home: true,
+      coordinates: {
+        latitude: getLocation?.latitude ?? null,
+        longitude: getLocation?.longitude ?? null,
+      },
+    });
   };
 
   return (
@@ -174,7 +218,7 @@ export default function Home({ navigation }) {
                 icon={<Icon name={'phone'} size={10} color={'white'} solid />}
                 full
                 round
-                onPress={() => navigation.navigate('HelpLine')}>
+                onPress={onHelpLineClick}>
                 {t('help_line')}
               </Button>
             );
@@ -203,16 +247,7 @@ export default function Home({ navigation }) {
                 shadowColor: colors.border,
               },
             ]}>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('Filter', {
-                  home: true,
-                  coordinates: {
-                    latitude: getLocation?.latitude ?? null,
-                    longitude: getLocation?.longitude ?? null,
-                  },
-                })
-              }>
+            <TouchableOpacity onPress={navigateToFilter}>
               <View
                 style={[BaseStyle.textInput, { backgroundColor: colors.card }]}>
                 <Text body1 grayColor style={{ flex: 1 }}>
@@ -320,7 +355,13 @@ export default function Home({ navigation }) {
                   navigation={navigation}
                   lastRoute="Home"
                   // status='Open Now'
-                  onPress={() => navigateBusinessDetail(item._id)}
+                  onPress={() =>
+                    navigateBusinessDetail(
+                      item._id,
+                      item.name,
+                      'popularBusiness',
+                    )
+                  }
                   onPressTag={() => navigateToReview(item._id)}
                   style={{ marginLeft: 15, width: 175 }}
                 />
@@ -350,7 +391,13 @@ export default function Home({ navigation }) {
                   subtitle={item.category}
                   rate={item?.averageRatings || 0.0}
                   style={{ marginBottom: 15 }}
-                  onPress={() => navigateBusinessDetail(item._id)}
+                  onPress={() =>
+                    navigateBusinessDetail(
+                      item._id,
+                      item.name,
+                      'recentBusiness',
+                    )
+                  }
                   onPressTag={() => navigateToReview(item._id)}
                 />
               );
