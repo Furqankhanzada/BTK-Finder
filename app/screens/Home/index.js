@@ -32,10 +32,7 @@ import { getBusinesses } from '../../actions/business';
 import { getFavoriteBusinesses } from '../../actions/favorites';
 import { getProfile } from '../../actions/auth';
 import useLocation from '../../hooks/useLocation';
-<<<<<<< HEAD
-=======
 import { trackEvent, EVENTS, setUser } from '../../userTracking';
->>>>>>> 0583761f0634da419c4e7fdc3275edf9f63a810f
 
 export default function Home({ navigation }) {
   const stateProps = useSelector(({ businesses, favorites }) => {
