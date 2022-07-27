@@ -3,7 +3,6 @@ import { Provider } from 'react-redux';
 import remoteConfig from '@react-native-firebase/remote-config';
 import Navigator from './navigation';
 import { store } from './store';
-// @ts-ignore
 import { usePushNotifications, useDynamicLinks, useNativeUpdate } from '@hooks';
 
 export default function App() {

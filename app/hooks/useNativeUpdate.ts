@@ -61,7 +61,6 @@ export default function useNativeUpdate() {
       const result = await inAppUpdates.checkNeedsUpdate();
       const shouldSkip = await checkIfUpdateSkipped(result.storeVersion);
       if (shouldSkip) {
-        // eslint-disable-next-line no-console
         console.log('[useNativeUpdate]: App update skipped by user');
         return;
       }
@@ -84,25 +83,30 @@ export default function useNativeUpdate() {
   }, [checkIfUpdateSkipped, setItem]);
 
   const handleIOS = React.useCallback(async () => {
-    if (alertShownForCurrentSession.current) return;
+    if (alertShownForCurrentSession.current) {
+      return;
+    }
 
     try {
       const inAppUpdates = new SpInAppUpdates(false);
 
       const alpha3CountryCode =
         (await Storefront.getStoreFront()) as ISO3166Alpha3;
-      if (!alpha3CountryCode) return;
+      if (!alpha3CountryCode) {
+        return;
+      }
 
       const alpha2CountryCode =
         iso3166Alpha3CountryCodeToAlpha2[alpha3CountryCode];
-      if (!alpha2CountryCode) return;
+      if (!alpha2CountryCode) {
+        return;
+      }
 
       const result = await inAppUpdates.checkNeedsUpdate({
         country: alpha2CountryCode,
       });
       const shouldSkip = await checkIfUpdateSkipped(result.storeVersion);
       if (shouldSkip) {
-        // eslint-disable-next-line no-console
         console.log('[useNativeUpdate]: App update skipped by user');
         return;
       }
