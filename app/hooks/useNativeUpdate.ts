@@ -124,7 +124,7 @@ export default function useNativeUpdate() {
             },
             {
               text: 'Update Now',
-              onPress: () => Linking.openURL(Config.DYNAMIC_LINK_URL),
+              onPress: () => Linking.openURL(Config.APP_LINK),
             },
           ],
           {
