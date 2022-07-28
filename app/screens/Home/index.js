@@ -12,7 +12,6 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { checkNotifications } from 'react-native-permissions';
-import VersionCheck from 'react-native-version-check';
 import {
   Header,
   Button,
@@ -33,6 +32,8 @@ import { getBusinesses, getSingleBusiness } from '../../actions/business';
 import { getFavoriteBusinesses } from '../../actions/favorites';
 import { getProfile } from '../../actions/auth';
 import useLocation from '../../hooks/useLocation';
+import { trackEvent, EVENTS, setUser } from '../../userTracking';
+
 export default function Home({ navigation }) {
   const stateProps = useSelector(({ businesses, favorites }) => {
     return {
@@ -45,11 +46,17 @@ export default function Home({ navigation }) {
     };
   });
 
-  const navigateToReview = id => {
+  const onHelpLineClick = () => {
+    navigation.navigate('HelpLine');
+    trackEvent(EVENTS.HELPLINE_SCREEN_VISITED);
+  };
+
+  const navigateToReview = (id) => {
     navigation.navigate('Review', { id });
   };
 
-  const isLogin = useSelector(state => state.auth.isLogin);
+  const isLogin = useSelector((state) => state.auth.isLogin);
+  const profileData = useSelector((state) => state.profile);
   const [loading, setLoading] = useState(true);
   const deltaY = new Animated.Value(0);
   const { colors } = useTheme();
@@ -57,7 +64,7 @@ export default function Home({ navigation }) {
   const dispatch = useDispatch();
   const getLocation = useLocation();
   let placeholderItems = [1, 2, 3, 4, 5, 6, 7, 8];
-  let featuredCategories = useSelector(state => state.categories.featured);
+  let featuredCategories = useSelector((state) => state.categories.featured);
   featuredCategories = [
     ...featuredCategories,
     ...[
@@ -71,34 +78,11 @@ export default function Home({ navigation }) {
     ],
   ];
   const [banner] = useState(HomeBannerData);
+
   const [heightHeader, setHeightHeader] = useState(Utils.heightHeader());
 
   const heightImageBanner = Utils.scaleWithPixel(225);
   const marginTopBanner = heightImageBanner - heightHeader + 10;
-
-  useEffect(() => {
-    VersionCheck.needUpdate().then(async res => {
-      if (res.isNeeded) {
-        Alert.alert(
-          'Update Required',
-          'Your application version is outdated, Click on Update Now to update it.',
-          [
-            {
-              text: 'Cancel',
-              style: 'cancel',
-            },
-            {
-              text: 'Update Now',
-              onPress: () => Linking.openURL(res.storeUrl),
-            },
-          ],
-          {
-            cancelable: false,
-          },
-        );
-      }
-    });
-  }, []);
 
   useEffect(() => {
     checkNotifications().then(({ status }) => {
@@ -124,6 +108,14 @@ export default function Home({ navigation }) {
       }
     });
   }, []);
+
+  useEffect(() => {
+    if (isLogin) {
+      if (profileData?._id) {
+        setUser(profileData);
+      }
+    }
+  }, [isLogin, profileData?._id]);
 
   useEffect(() => {
     if (isLogin) {
@@ -169,9 +161,19 @@ export default function Home({ navigation }) {
     );
   }, [dispatch]);
 
-  const navigateBusinessDetail = id => {
-    dispatch(getSingleBusiness(id));
-    navigation.navigate('PlaceDetailNavigator', { id });
+  const navigateBusinessDetail = (id, name, type) => {
+    navigation.navigate('PlaceDetail', { id });
+
+    const business = {
+      id,
+      name,
+    };
+
+    if (type === 'popularBusiness') {
+      trackEvent(EVENTS.POPULAR_BUSINESS_VISITED, business);
+    } else {
+      trackEvent(EVENTS.RECENTLY_ADDED_BUSINESS_VISITED, business);
+    }
   };
 
   const seeMore = (payload = {}) => {
@@ -180,9 +182,24 @@ export default function Home({ navigation }) {
         latitude: getLocation?.latitude ?? null,
         longitude: getLocation?.longitude ?? null,
       });
+      trackEvent(EVENTS.CATEGORIES_SCREEN_VISITED);
     } else {
       navigation.navigate('Place', payload);
+      trackEvent(EVENTS.CATEGORY_VISITED, {
+        title: payload.title,
+        category: payload.category,
+      });
     }
+  };
+
+  const navigateToFilter = () => {
+    navigation.navigate('Filter', {
+      home: true,
+      coordinates: {
+        latitude: getLocation?.latitude ?? null,
+        longitude: getLocation?.longitude ?? null,
+      },
+    });
   };
 
   return (
@@ -198,7 +215,7 @@ export default function Home({ navigation }) {
                 icon={<Icon name={'phone'} size={10} color={'white'} solid />}
                 full
                 round
-                onPress={() => navigation.navigate('HelpLine')}>
+                onPress={onHelpLineClick}>
                 {t('help_line')}
               </Button>
             );
@@ -227,16 +244,7 @@ export default function Home({ navigation }) {
                 shadowColor: colors.border,
               },
             ]}>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('Filter', {
-                  home: true,
-                  coordinates: {
-                    latitude: getLocation?.latitude ?? null,
-                    longitude: getLocation?.longitude ?? null,
-                  },
-                })
-              }>
+            <TouchableOpacity onPress={navigateToFilter}>
               <View
                 style={[BaseStyle.textInput, { backgroundColor: colors.card }]}>
                 <Text body1 grayColor style={{ flex: 1 }}>
@@ -338,13 +346,19 @@ export default function Home({ navigation }) {
                   location={item?.address}
                   rate={item?.averageRatings || 0.0}
                   isFavorite={stateProps?.favoriteBusinesses?.some(
-                    obj => obj._id === item?._id,
+                    (obj) => obj._id === item?._id,
                   )}
                   businessId={item?._id}
                   navigation={navigation}
                   lastRoute="Home"
                   // status='Open Now'
-                  onPress={() => navigateBusinessDetail(item._id)}
+                  onPress={() =>
+                    navigateBusinessDetail(
+                      item._id,
+                      item.name,
+                      'popularBusiness',
+                    )
+                  }
                   onPressTag={() => navigateToReview(item._id)}
                   style={{ marginLeft: 15, width: 175 }}
                 />
@@ -374,7 +388,13 @@ export default function Home({ navigation }) {
                   subtitle={item.category}
                   rate={item?.averageRatings || 0.0}
                   style={{ marginBottom: 15 }}
-                  onPress={() => navigateBusinessDetail(item._id)}
+                  onPress={() =>
+                    navigateBusinessDetail(
+                      item._id,
+                      item.name,
+                      'recentBusiness',
+                    )
+                  }
                   onPressTag={() => navigateToReview(item._id)}
                 />
               );

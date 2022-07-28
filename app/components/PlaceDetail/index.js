@@ -41,8 +41,9 @@ import * as Utils from '@utils';
 import styles from './styles';
 import PlaceItem from '../PlaceItem';
 import CardList from '../CardList';
-import {getRelatedBusinesses, getBusinesses, getSingleBusiness} from '../../actions/business';
+import { getRelatedBusinesses, getBusinesses } from '../../actions/business';
 import SectionList from '../../screens/Home/sectionList';
+import { trackEvent, EVENTS } from '../../userTracking';
 
 let defaultDelta = {
   latitudeDelta: 0.003,
@@ -156,9 +157,9 @@ export default function PlaceDetailComponent(props) {
     let getCurrentDay = days[dt.getDay()];
 
     //Return Open if current day is available in open hours days
-    if (business?.openHours?.find(item => item.day === getCurrentDay)) {
+    if (business?.openHours?.find((item) => item.day === getCurrentDay)) {
       //12 hours to 24 hours converting function
-      const convertTime12to24 = time12h => {
+      const convertTime12to24 = (time12h) => {
         const [time, modifier] = time12h.split(' ');
 
         let [hours, minutes] = time.split(':');
@@ -179,7 +180,7 @@ export default function PlaceDetailComponent(props) {
 
       //Get Data of current day from Open hours
       let currentDayObject = business?.openHours.filter(
-        obj => obj.day === getCurrentDay,
+        (obj) => obj.day === getCurrentDay,
       );
 
       let startTime = convertTime12to24(currentDayObject[0].from);
@@ -213,7 +214,7 @@ export default function PlaceDetailComponent(props) {
     return 'Closed';
   };
 
-  const ratingStatus = rating => {
+  const ratingStatus = (rating) => {
     if (rating <= 0) {
       return 'No Ratings';
     }
@@ -235,7 +236,7 @@ export default function PlaceDetailComponent(props) {
   };
 
   const businessStatus = () => {
-    const isVerified = status => {
+    const isVerified = (status) => {
       if (status === 'VERIFIED') {
         return 'VERIFIED';
       }
@@ -273,6 +274,11 @@ export default function PlaceDetailComponent(props) {
         title: business.name,
         dialogTitle: business.name,
       });
+      trackEvent(EVENTS.SHARE_BUTTON_CLICKED, {
+        businessId: business._id,
+        title: business.name,
+        url: businessLink,
+      });
     } catch (error) {
       console.log('Error while sharing Business', error.message);
     }
@@ -282,7 +288,7 @@ export default function PlaceDetailComponent(props) {
     dispatch(getSingleBusiness(id));
     navigation.replace('PlaceDetailNavigator', { id });
   };
-  const navigateToReview = id => {
+  const navigateToReview = (id) => {
     navigation.navigate('Review', { id });
   };
 
@@ -342,7 +348,7 @@ export default function PlaceDetailComponent(props) {
     },
   ];
 
-  const openGps = item => {
+  const openGps = (item) => {
     showLocation({
       latitude: item?.location[0],
       longitude: item?.location[1],
@@ -354,7 +360,12 @@ export default function PlaceDetailComponent(props) {
     });
   };
 
-  const onOpen = item => {
+  const businessDetails = {
+    id: business?._id,
+    name: business?.name,
+  };
+
+  const onOpen = (item) => {
     Alert.alert(
       'Explore BTK',
       `${t('do_you_want_to')} ${item.rightText} ?`,
@@ -370,20 +381,39 @@ export default function PlaceDetailComponent(props) {
             switch (item.type) {
               case 'web':
                 Linking.openURL(item.information);
+                trackEvent(EVENTS.VISITED_BUSINESS_WEBSITE, {
+                  ...businessDetails,
+                  website: item.information,
+                });
                 break;
               case 'phone':
                 Linking.openURL('tel://' + item.information);
+                trackEvent(EVENTS.CONTACTED_BUSINESS_VIA_PHONE_NUMBER, {
+                  ...businessDetails,
+                  phone: item.information,
+                });
                 break;
               case 'email':
                 Linking.openURL('mailto:' + item.information);
+                trackEvent(EVENTS.CONTACTED_BUSINESS_VIA_EMAIL, {
+                  ...businessDetails,
+                  email: item.information,
+                });
                 break;
               case 'whatsapp':
                 Linking.openURL(
                   'whatsapp://send?phone=' + checkPhoneCode(item.information),
                 );
+                trackEvent(EVENTS.CONTACTED_BUSINESS_VIA_WHATSAPP, {
+                  ...businessDetails,
+                  whatsapp: item.information,
+                });
                 break;
               case 'map':
                 openGps(item);
+                trackEvent(EVENTS.CHECKED_BUSINESS_DIRECTION, {
+                  ...businessDetails,
+                });
                 break;
             }
           },
@@ -393,7 +423,7 @@ export default function PlaceDetailComponent(props) {
     );
   };
 
-  const checkPhoneCode = phone => {
+  const checkPhoneCode = (phone) => {
     if (business?.telephone?.includes('03')) {
       return `+92${phone.slice(1)}`;
     }
@@ -414,7 +444,7 @@ export default function PlaceDetailComponent(props) {
     longitudeDelta: 0.004,
   });
 
-  const reCenterMap = currentLocation => {
+  const reCenterMap = (currentLocation) => {
     mapRef?.current?.animateToRegion({
       latitude: currentLocation.latitude,
       longitude: currentLocation.longitude,
@@ -428,7 +458,7 @@ export default function PlaceDetailComponent(props) {
     setCollapseHour(!collapseHour);
   };
 
-  const updateOpenHours = data => {
+  const updateOpenHours = (data) => {
     let array = [
       { day: 'Monday' },
       { day: 'Tuesday' },
@@ -440,7 +470,7 @@ export default function PlaceDetailComponent(props) {
     ];
     if (data?.length) {
       array = data.concat(
-        array.filter(({ day }) => !data.find(f => f.day === day)),
+        array.filter(({ day }) => !data.find((f) => f.day === day)),
       );
     }
     return array;
@@ -448,7 +478,7 @@ export default function PlaceDetailComponent(props) {
 
   const getCoverImage = useCallback(() => {
     if (business.gallery && business.gallery.length) {
-      return business.gallery.find(image => image?.cover)?.image;
+      return business.gallery.find((image) => image?.cover)?.image;
     } else {
       return Images.imagePlaceholder;
     }
@@ -555,7 +585,7 @@ export default function PlaceDetailComponent(props) {
                             displayType={'text'}
                             decimalScale={1}
                             fixedDecimalScale={true}
-                            renderText={value => (
+                            renderText={(value) => (
                               <Text style={{ fontSize: 10, color: 'white' }}>
                                 {value}
                               </Text>
@@ -606,12 +636,13 @@ export default function PlaceDetailComponent(props) {
               {isPreview ? null : (
                 <View style={styles.iconLike}>
                   <FavouriteIcon
+                    name={business.name}
                     style={styles.iconGirdLike}
                     navigation={navigation}
                     lastRoute="PlaceDetail"
                     routeId={business?._id}
                     isFavorite={stateProps?.favoriteBusinesses?.some(
-                      obj => obj._id === business?._id,
+                      (obj) => obj._id === business?._id,
                     )}
                     favoriteId={business?._id}
                   />
@@ -639,7 +670,7 @@ export default function PlaceDetailComponent(props) {
             }
           />
           <View>
-            {information?.map(item => {
+            {information?.map((item) => {
               if (item?.information) {
                 return (
                   <TouchableOpacity
@@ -721,7 +752,7 @@ export default function PlaceDetailComponent(props) {
                       height: collapseHour ? 0 : null,
                       overflow: 'hidden',
                     }}>
-                    {updateOpenHours(business.openHours).map(item => {
+                    {updateOpenHours(business.openHours).map((item) => {
                       return (
                         <View
                           style={[
@@ -793,7 +824,7 @@ export default function PlaceDetailComponent(props) {
                       displayType={'text'}
                       prefix={' RS '}
                       thousandSeparator={true}
-                      renderText={value => (
+                      renderText={(value) => (
                         <Text headline style={{ marginTop: 5 }}>
                           {value} -
                         </Text>
@@ -808,7 +839,7 @@ export default function PlaceDetailComponent(props) {
                       displayType={'text'}
                       prefix={' RS '}
                       thousandSeparator={true}
-                      renderText={value => (
+                      renderText={(value) => (
                         <Text headline style={{ marginTop: 5 }}>
                           {value}
                         </Text>
@@ -849,7 +880,7 @@ export default function PlaceDetailComponent(props) {
               </Text>
               <View
                 style={[styles.wrapContent, { borderColor: colors.border }]}>
-                {business?.facilities?.map(item => {
+                {business?.facilities?.map((item) => {
                   return (
                     <Tag
                       icon={
@@ -892,7 +923,7 @@ export default function PlaceDetailComponent(props) {
                     location={item?.address}
                     rate={item?.averageRatings || '0.0'}
                     isFavorite={stateProps?.favoriteBusinesses?.some(
-                      obj => obj._id === item?._id,
+                      (obj) => obj._id === item?._id,
                     )}
                     businessId={item?._id}
                     navigation={navigation}
@@ -1008,6 +1039,7 @@ export default function PlaceDetailComponent(props) {
                 title: business.name,
                 gallery: business.gallery,
               });
+              trackEvent(EVENTS.SEE_MORE_IMAGES, { title: business.name });
             }}
           />
         </Animated.View>
