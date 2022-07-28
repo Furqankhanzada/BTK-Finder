@@ -5,8 +5,8 @@ import { Header, SafeAreaView, Icon, Text, MenuItem, Image } from '@components';
 import { BaseStyle, useTheme, Images } from '@config';
 import styles from './styles';
 import Modal from 'react-native-modal';
-import { useQuery } from '@apollo/client';
-import { GET_PRODUCTS } from '../../requests/shop/menu';
+// import { useQuery } from '@apollo/client';
+// import { GET_PRODUCTS } from '../../requests/shop/menu';
 
 export default function Menu(props) {
   const { navigation } = props;
@@ -267,19 +267,19 @@ export default function Menu(props) {
     },
   ];
 
-  const onItemClick = item => {
+  const onItemClick = (item) => {
     setModalVisible(true);
     setSelectedItem(item);
   };
 
   const Item = ({ item, index }) => {
-    const { data, loading, error } = useQuery(GET_PRODUCTS, {
-      variables: { shopId: 'cmVhY3Rpb24vc2hvcDpzaVh5U05QWVNQcDdhRk11QQ==' },
-    });
-
-    console.log('Data ###', data);
-    console.log('loading ###', loading);
-    console.log('error ###', error);
+    // const { data, loading, error } = useQuery(GET_PRODUCTS, {
+    //   variables: { shopId: 'cmVhY3Rpb24vc2hvcDpzaVh5U05QWVNQcDdhRk11QQ==' },
+    // });
+    //
+    // console.log('Data ###', data);
+    // console.log('loading ###', loading);
+    // console.log('error ###', error);
 
     return (
       <MenuItem
@@ -371,7 +371,7 @@ export default function Menu(props) {
             </Text>
             <View style={styles.extraItemsSection}>
               {selectedItem?.extraItems &&
-                selectedItem.extraItems.map(item => {
+                selectedItem.extraItems.map((item) => {
                   return (
                     <View
                       style={[
