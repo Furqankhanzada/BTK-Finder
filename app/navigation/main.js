@@ -55,7 +55,7 @@ export default function Main() {
         component={BottomTabNavigator}
       />
       <MainStack.Screen name="PlaceDetailNavigator">
-        {props => <PlaceDetailNavigator {...props} />}
+        {(props) => <PlaceDetailNavigator {...props} />}
       </MainStack.Screen>
       <MainStack.Screen name="ThemeSetting" component={ThemeSetting} />
       <MainStack.Screen name="Setting" component={Setting} />
@@ -94,7 +94,7 @@ function BottomTabNavigator() {
   const dispatch = useDispatch();
   const { colors } = useTheme();
   const font = useFont();
-  const isLogin = useSelector(state => state.auth.isLogin);
+  const isLogin = useSelector((state) => state.auth.isLogin);
   return (
     <BottomTab.Navigator
       initialRouteName="Home"
@@ -123,7 +123,7 @@ function BottomTabNavigator() {
 
       <BottomTab.Screen
         name="Favourite"
-        component={props =>
+        component={(props) =>
           isLogin ? (
             <Favourite {...props} />
           ) : (
@@ -139,7 +139,7 @@ function BottomTabNavigator() {
       />
       <BottomTab.Screen
         name="Business"
-        component={props =>
+        component={(props) =>
           isLogin ? (
             <Business {...props} />
           ) : (
@@ -153,7 +153,7 @@ function BottomTabNavigator() {
           },
         }}
         listeners={() => ({
-          tabPress: e => {
+          tabPress: (e) => {
             dispatch(setEditBusiness(false));
           },
         })}

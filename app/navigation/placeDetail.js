@@ -7,7 +7,7 @@ import { Icon } from '@components';
 /* Bottom Screen */
 import Review from '@screens/Review';
 import PlaceDetail from '@screens/PlaceDetail';
-import Menu from '@screens/Menu';
+import Products from '@screens/Products';
 
 const PlaceDetailStack = createStackNavigator();
 const PlaceDetailBottomTab = createBottomTabNavigator();
@@ -65,7 +65,7 @@ function BottomTabNavigator() {
       />
       <PlaceDetailBottomTab.Screen
         name="Menu"
-        component={Menu}
+        component={Products}
         options={{
           title: 'Menu',
           tabBarIcon: ({ color }) => {

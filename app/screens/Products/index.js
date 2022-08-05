@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { SectionList, FlatList, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { Header, SafeAreaView, Icon, Text, MenuItem, Image } from '@components';
-import { BaseStyle, useTheme, Images } from '@config';
-import styles from './styles';
 import Modal from 'react-native-modal';
+
+import { Header, SafeAreaView, Icon, Text, Image } from '@components';
+import { BaseStyle, useTheme, Images } from '@config';
+
+import Product from './components/Product';
+import styles from './styles';
 // import { useQuery } from '@apollo/client';
 // import { GET_PRODUCTS } from '../../requests/shop/menu';
 
@@ -282,7 +285,7 @@ export default function Menu(props) {
     // console.log('error ###', error);
 
     return (
-      <MenuItem
+      <Product
         style={{ borderLeftWidth: index === 0 ? 1 : 0 }}
         name={item.name}
         description={item.description}
