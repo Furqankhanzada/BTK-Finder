@@ -1,9 +1,13 @@
 import React, { useEffect } from 'react';
 import { Provider } from 'react-redux';
+import { ApolloProvider } from '@apollo/client';
 import remoteConfig from '@react-native-firebase/remote-config';
+
+import { usePushNotifications, useDynamicLinks, useNativeUpdate } from '@hooks';
+
 import Navigator from './navigation';
 import { store } from './store';
-import { usePushNotifications, useDynamicLinks, useNativeUpdate } from '@hooks';
+import { client } from './services/network/client';
 
 export default function App() {
   // Firebase Dynamic links handling
@@ -30,8 +34,10 @@ export default function App() {
   }, []);
 
   return (
-    <Provider store={store}>
-      <Navigator />
-    </Provider>
+    <ApolloProvider client={client}>
+      <Provider store={store}>
+        <Navigator />
+      </Provider>
+    </ApolloProvider>
   );
 }
