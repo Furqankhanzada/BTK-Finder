@@ -1,4 +1,4 @@
-import { Typography, FontWeight, FontFamily } from './typography';
+import { Typography, FontWeight /*FontFamily*/ } from './typography';
 import { BaseSetting } from './setting';
 import { Images } from './images';
 import { BaseStyle } from './styles';
@@ -15,7 +15,7 @@ export {
   BaseColor,
   Typography,
   FontWeight,
-  FontFamily,
+  // FontFamily,
   BaseSetting,
   Images,
   BaseStyle,
