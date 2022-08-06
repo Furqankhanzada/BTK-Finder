@@ -8,6 +8,7 @@
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "generate:gql:types": "graphql-codegen --config codegen.yml",
     "postinstall": "if [ $GITHUB_ACTION ]; then npx patch-package; else npx patch-package && npx jetify && npx pod-install; fi;"
   },
   "dependencies": {
@@ -83,6 +84,7 @@
   "devDependencies": {
     "@babel/core": "^7.12.9",
     "@babel/runtime": "^7.12.5",
+    "@graphql-codegen/cli": "2.11.3",
     "@react-native-community/eslint-config": "^2.0.0",
     "@types/jest": "^26.0.23",
     "@types/react-native": "^0.66.15",
@@ -96,7 +98,11 @@
     "jest": "^26.6.3",
     "metro-react-native-babel-preset": "^0.66.2",
     "react-test-renderer": "17.0.2",
-    "typescript": "^4.4.4"
+    "typescript": "^4.4.4",
+    "@graphql-codegen/typescript": "2.7.2",
+    "@graphql-codegen/typescript-react-apollo": "3.3.2",
+    "@graphql-codegen/typescript-operations": "2.5.2",
+    "@graphql-codegen/introspection": "2.2.0"
   },
   "resolutions": {
     "@types/react": "^17"

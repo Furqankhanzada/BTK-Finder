@@ -1,14 +1,15 @@
 import { gql } from '@apollo/client';
 
 export const GET_PRODUCTS = gql(`
-query catalogItemsQuery($shopId: ID!, $tagIds: [ID] $first: ConnectionLimitInt, $last:  ConnectionLimitInt, $before: ConnectionCursor, $after: ConnectionCursor, $sortBy: CatalogItemSortByField, $sortByPriceCurrencyCode: String, $sortOrder: SortOrder, $offset: Int) {
-  catalogItems(shopIds: [$shopId], tagIds: $tagIds, first: $first, last: $last, before: $before, after: $after, sortBy: $sortBy, sortByPriceCurrencyCode: $sortByPriceCurrencyCode, sortOrder: $sortOrder, offset: $offset) {
+query catalogItemsQuery($shopIds: [ID!]!, $tagIds: [ID], $first: ConnectionLimitInt, $last: ConnectionLimitInt, $before: ConnectionCursor, $after: ConnectionCursor, $sortBy: CatalogItemSortByField, $sortByPriceCurrencyCode: String, $sortOrder: SortOrder) {
+  catalogItems(shopIds: $shopIds, tagIds: $tagIds, first: $first, last: $last, before: $before, after: $after, sortBy: $sortBy, sortByPriceCurrencyCode: $sortByPriceCurrencyCode, sortOrder: $sortOrder) {
     totalCount
     pageInfo {
       endCursor
       startCursor
       hasNextPage
       hasPreviousPage
+      __typename
     }
     edges {
       cursor
@@ -16,37 +17,39 @@ query catalogItemsQuery($shopId: ID!, $tagIds: [ID] $first: ConnectionLimitInt, 
         _id
         ... on CatalogItemProduct {
           product {
+            tags {
+              nodes {
+                _id
+                displayTitle
+                position
+              }
+            }
             _id
             title
-            slug
             description
-            vendor
             isLowQuantity
             isSoldOut
             isBackorder
-            metafields {
-              description
-              key
-              namespace
-              scope
-              value
-              valueType
-            }
             shop {
               currency {
                 code
+                __typename
               }
+              __typename
             }
             pricing {
               compareAtPrice {
                 displayAmount
+                __typename
               }
               currency {
                 code
+                __typename
               }
               displayPrice
               minPrice
               maxPrice
+              __typename
             }
             primaryImage {
               URLs {
@@ -54,12 +57,19 @@ query catalogItemsQuery($shopId: ID!, $tagIds: [ID] $first: ConnectionLimitInt, 
                 small
                 medium
                 large
+                __typename
               }
+              __typename
             }
+            __typename
           }
+          __typename
         }
+        __typename
       }
+      __typename
     }
+    __typename
   }
 }
 `);

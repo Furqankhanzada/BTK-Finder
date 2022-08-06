@@ -2,21 +2,41 @@ import React, { useState } from 'react';
 import { SectionList, FlatList, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-native-modal';
+import { useQuery } from '@apollo/client';
 
 import { Header, SafeAreaView, Icon, Text, Image } from '@components';
 import { BaseStyle, useTheme, Images } from '@config';
 
 import Product from './components/Product';
 import styles from './styles';
-// import { useQuery } from '@apollo/client';
-// import { GET_PRODUCTS } from '../../requests/shop/menu';
+import { GET_PRODUCTS } from '../../requests/shop/menu';
+import {
+  CatalogItemConnection,
+  Maybe,
+  QueryCatalogItemsArgs,
+} from '../../models/graphql';
 
-export default function Menu(props) {
+export default function Menu(props: any) {
   const { navigation } = props;
   const { colors } = useTheme();
   const { t } = useTranslation();
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedItem, setSelectedItem] = useState({});
+  const [selectedItem, setSelectedItem] = useState<any>({});
+
+  const { data, loading, error } = useQuery<
+    Maybe<CatalogItemConnection>,
+    QueryCatalogItemsArgs
+  >(GET_PRODUCTS, {
+    variables: {
+      shopIds: ['cmVhY3Rpb24vc2hvcDpGN2ZrM3plR3o4anpXaWZzQQ=='],
+      first: 20,
+    },
+  });
+
+  console.log('Data ###', data?.edges);
+  console.log('loading ###', loading);
+  console.log('error ###', error);
+
   const menuItems = [
     {
       category: 'Burgers',
@@ -270,20 +290,12 @@ export default function Menu(props) {
     },
   ];
 
-  const onItemClick = (item) => {
+  const onItemClick = (item: any) => {
     setModalVisible(true);
     setSelectedItem(item);
   };
 
-  const Item = ({ item, index }) => {
-    // const { data, loading, error } = useQuery(GET_PRODUCTS, {
-    //   variables: { shopId: 'cmVhY3Rpb24vc2hvcDpzaVh5U05QWVNQcDdhRk11QQ==' },
-    // });
-    //
-    // console.log('Data ###', data);
-    // console.log('loading ###', loading);
-    // console.log('error ###', error);
-
+  const Item = ({ item, index }: any) => {
     return (
       <Product
         style={{ borderLeftWidth: index === 0 ? 1 : 0 }}
@@ -297,7 +309,7 @@ export default function Menu(props) {
   };
 
   return (
-    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
+    <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
         title={t('menu')}
         renderLeft={() => {
@@ -319,13 +331,19 @@ export default function Menu(props) {
         stickySectionHeadersEnabled={false}
         showsVerticalScrollIndicator={false}
         sections={menuItems}
-        keyExtractor={(item, index) => item + index}
+        keyExtractor={(item: any) => item.id}
         renderSectionHeader={({ section }) => (
           <View style={{ paddingBottom: 10 }}>
-            <Text style={{ color: colors.text, paddingBottom: 10 }}>
+            <Text
+              style={{
+                color: colors.text,
+                paddingBottom: 10,
+                paddingLeft: 20,
+              }}>
               {section.category}
             </Text>
             <FlatList
+              style={{ paddingLeft: 20 }}
               horizontal
               data={section.data}
               renderItem={({ item, index }) => (
@@ -335,7 +353,7 @@ export default function Menu(props) {
             />
           </View>
         )}
-        renderItem={({ item, section }) => {
+        renderItem={({ item, section }: any) => {
           return null;
           // return <ListItem item={item} />;
         }}
@@ -374,7 +392,7 @@ export default function Menu(props) {
             </Text>
             <View style={styles.extraItemsSection}>
               {selectedItem?.extraItems &&
-                selectedItem.extraItems.map((item) => {
+                selectedItem.extraItems.map((item: any) => {
                   return (
                     <View
                       style={[
