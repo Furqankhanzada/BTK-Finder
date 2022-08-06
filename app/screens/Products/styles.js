@@ -3,7 +3,7 @@ import { BaseColor } from '@config';
 
 export default StyleSheet.create({
   menuContent: {
-    paddingHorizontal: 20,
+    // paddingHorizontal: 20,
   },
   sectionHeader: {
     paddingLeft: 20,
