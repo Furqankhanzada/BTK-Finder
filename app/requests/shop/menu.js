@@ -17,6 +17,13 @@ query catalogItemsQuery($shopIds: [ID!]!, $tagIds: [ID], $first: ConnectionLimit
         _id
         ... on CatalogItemProduct {
           product {
+            variants {
+              title
+              pricing {
+                displayPrice
+              }
+            }
+            tagIds
             tags {
               nodes {
                 _id

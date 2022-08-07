@@ -12,297 +12,71 @@ import styles from './styles';
 import { GET_PRODUCTS } from '../../requests/shop/menu';
 import {
   CatalogItemConnection,
+  CatalogItemProduct,
+  CatalogProduct,
   Maybe,
   QueryCatalogItemsArgs,
+  Tag,
 } from '../../models/graphql';
+
+type CatalogItems = {
+  catalogItems: Maybe<CatalogItemConnection>;
+};
+
+type CatalogItemPresentable = {
+  tag: Tag;
+  data: Array<CatalogProduct>;
+};
 
 export default function Menu(props: any) {
   const { navigation } = props;
   const { colors } = useTheme();
   const { t } = useTranslation();
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<any>({});
+  const [selectedItem, setSelectedItem] = useState<CatalogProduct>();
 
   const { data, loading, error } = useQuery<
-    Maybe<CatalogItemConnection>,
+    CatalogItems,
     QueryCatalogItemsArgs
   >(GET_PRODUCTS, {
     variables: {
       shopIds: ['cmVhY3Rpb24vc2hvcDpGN2ZrM3plR3o4anpXaWZzQQ=='],
       first: 20,
     },
+    // fetchPolicy: 'network-only',
   });
 
-  console.log('Data ###', data?.edges);
-  console.log('loading ###', loading);
-  console.log('error ###', error);
+  const catalogItems: Array<CatalogItemPresentable> = [];
 
-  const menuItems = [
-    {
-      category: 'Burgers',
-      data: [
-        {
-          name: 'Chicken Burger',
-          description:
-            'Big special Chicken Burger. Order once and you will come back again and again. The most delicious burger ever.',
-          price: 'Rs. 200',
-          image:
-            'https://www.saltandlavender.com/wp-content/uploads/2016/05/ground-chicken-burgers-1-500x500.jpg',
-          extraItems: [
-            { name: 'Extra Cheese', price: 'Rs. 50' },
-            { name: 'Extra Beens', price: 'Rs. 20' },
-            { name: 'Extra Crisp', price: 'Rs. 50' },
-            { name: 'Extra Burger', price: 'Rs. 180' },
-          ],
-        },
-        {
-          name: 'Chicken Zinger Burger',
-          description: 'Cheesy and Crispy Zinger Burger',
-          price: 'Rs. 220',
-          image:
-            'https://recipefairy.com/wp-content/uploads/2020/08/kfc-zinger-burger-500x500.jpg',
-        },
-        {
-          name: 'Chicken Burger',
-          description: 'Big special Chicken Burger',
-          price: 'Rs. 200',
-          image:
-            'https://www.saltandlavender.com/wp-content/uploads/2016/05/ground-chicken-burgers-1-500x500.jpg',
-        },
-        {
-          name: 'Chicken Zinger Burger',
-          description: 'Cheesy and Crispy Zinger Burger',
-          price: 'Rs. 220',
-          image:
-            'https://recipefairy.com/wp-content/uploads/2020/08/kfc-zinger-burger-500x500.jpg',
-        },
-        {
-          name: 'Beef Burger',
-          description: '',
-          price: 'Rs. 250',
-          image:
-            'https://www.pizzeria-calzone.com/image/cache/catalog/products/Burgers/701-500x500.JPG',
-        },
-      ],
-    },
-    {
-      category: 'Pizza',
-      data: [
-        {
-          name: 'BBQ Tikka',
-          description: 'Large',
-          price: 'Rs. 600-1400',
-          image:
-            'https://i.ibb.co/6RRFmJh/54b761655ff35ea4996ad9a232dd1761.png',
-          extraItems: [
-            { name: 'Extra cheese on top', price: 'Rs. 100' },
-            { name: 'Cheese borders', price: 'Rs. 150' },
-            { name: 'Extra Chicken', price: 'Rs. 200' },
-            { name: 'Bread Crumbs', price: 'Rs. 250' },
-          ],
-        },
-        {
-          name: 'Afghani Tikka',
-          description: 'Medium',
-          price: 'Rs. 600-1400',
-          image: 'https://i.ibb.co/rMhygBQ/afghani-tikka.png',
-        },
-        {
-          name: 'Chicken Fajita',
-          description: 'Small',
-          price: 'Rs. 600-1400',
-          image:
-            'https://i.ibb.co/4dBVhSm/3bc223c5e7add3397f8e40a2747d8c49.png',
-        },
-        {
-          name: 'BBQ Tikka',
-          description: 'Large',
-          price: 'Rs. 600-1400',
-          image:
-            'https://i.ibb.co/6RRFmJh/54b761655ff35ea4996ad9a232dd1761.png',
-        },
-        {
-          name: 'Afghani Tikka',
-          description: 'Medium',
-          price: 'Rs. 600-1400',
-          image: 'https://i.ibb.co/rMhygBQ/afghani-tikka.png',
-        },
-        {
-          name: 'Chicken Malai Boti',
-          description: 'Large',
-          price: 'Rs. 600-1400',
-          image:
-            'https://i.ibb.co/4N5F4Cj/be40fe795ebc207fefb8245e996acfc5.png',
-        },
-        {
-          name: 'Chicken Fajita',
-          description: 'Small',
-          price: 'Rs. 600-1400',
-          image:
-            'https://i.ibb.co/4dBVhSm/3bc223c5e7add3397f8e40a2747d8c49.png',
-        },
-      ],
-    },
-    {
-      category: 'Soft Drinks',
-      data: [
-        {
-          name: 'Pepsi',
-          description: 'Original Pepsi Cold Drink',
-          price: 'Rs. 40-140',
-          image:
-            'https://cdn.shopify.com/s/files/1/0522/2357/4165/products/1029826-1_grande.jpg?v=1614157765',
-        },
-        {
-          name: 'Coke',
-          description: 'Original Coke Cold Drink',
-          price: 'Rs. 40-140',
-          image:
-            'https://dailyease.pk/wp-content/uploads/2020/03/Coca-Cola-Bottle-2250-ml-online-grocery-600x600.jpg',
-        },
-        {
-          name: '7up',
-          description: 'Original 7up Cold Drink',
-          price: 'Rs. 40-140',
-          image:
-            'https://dailyease.pk/wp-content/uploads/2020/03/7Up-Bottle-1000-ml-online-grocery.jpg',
-        },
-        {
-          name: 'Sprite',
-          description: 'Original Sprite Cold Drink',
-          price: 'Rs. 40-140',
-          image:
-            'https://grozar.pk/wp-content/uploads/2020/07/Grozar-Sprite-Soft-Drink-2.25Ltr.jpg',
-        },
-        {
-          name: 'Fanta',
-          description: 'Original Fanta Cold Drink',
-          price: 'Rs. 40-140',
-          image:
-            'https://izmafood.com/wp-content/uploads/2020/07/Fanta-Bottle-1-Litre.jpg',
-        },
-      ],
-    },
-    {
-      category: 'Burgers',
-      data: [
-        {
-          name: 'Chicken Burger',
-          description:
-            'Big special Chicken Burger. Order once and you will come back again and again. The most delicious burger ever.',
-          price: 'Rs. 200',
-          image:
-            'https://www.saltandlavender.com/wp-content/uploads/2016/05/ground-chicken-burgers-1-500x500.jpg',
-          extraItems: [
-            { name: 'Extra Cheese', price: 'Rs. 50' },
-            { name: 'Extra Beens', price: 'Rs. 20' },
-            { name: 'Extra Crisp', price: 'Rs. 50' },
-            { name: 'Extra Burger', price: 'Rs. 180' },
-          ],
-        },
-        {
-          name: 'Chicken Zinger Burger',
-          description: 'Cheesy and Crispy Zinger Burger',
-          price: 'Rs. 220',
-          image:
-            'https://recipefairy.com/wp-content/uploads/2020/08/kfc-zinger-burger-500x500.jpg',
-        },
-        {
-          name: 'Chicken Burger',
-          description: 'Big special Chicken Burger',
-          price: 'Rs. 200',
-          image:
-            'https://www.saltandlavender.com/wp-content/uploads/2016/05/ground-chicken-burgers-1-500x500.jpg',
-        },
-        {
-          name: 'Chicken Zinger Burger',
-          description: 'Cheesy and Crispy Zinger Burger',
-          price: 'Rs. 220',
-          image:
-            'https://recipefairy.com/wp-content/uploads/2020/08/kfc-zinger-burger-500x500.jpg',
-        },
-        {
-          name: 'Beef Burger',
-          description: '',
-          price: 'Rs. 250',
-          image:
-            'https://www.pizzeria-calzone.com/image/cache/catalog/products/Burgers/701-500x500.JPG',
-        },
-      ],
-    },
-    {
-      category: 'Pizza',
-      data: [
-        {
-          name: 'BBQ Tikka',
-          description: 'Large',
-          price: 'Rs. 600-1400',
-          image:
-            'https://i.ibb.co/6RRFmJh/54b761655ff35ea4996ad9a232dd1761.png',
-          extraItems: [
-            { name: 'Extra cheese on top', price: 'Rs. 100' },
-            { name: 'Cheese borders', price: 'Rs. 150' },
-            { name: 'Extra Chicken', price: 'Rs. 200' },
-            { name: 'Bread Crumbs', price: 'Rs. 250' },
-          ],
-        },
-        {
-          name: 'Afghani Tikka',
-          description: 'Medium',
-          price: 'Rs. 600-1400',
-          image: 'https://i.ibb.co/rMhygBQ/afghani-tikka.png',
-        },
-        {
-          name: 'Chicken Fajita',
-          description: 'Small',
-          price: 'Rs. 600-1400',
-          image:
-            'https://i.ibb.co/4dBVhSm/3bc223c5e7add3397f8e40a2747d8c49.png',
-        },
-        {
-          name: 'BBQ Tikka',
-          description: 'Large',
-          price: 'Rs. 600-1400',
-          image:
-            'https://i.ibb.co/6RRFmJh/54b761655ff35ea4996ad9a232dd1761.png',
-        },
-        {
-          name: 'Afghani Tikka',
-          description: 'Medium',
-          price: 'Rs. 600-1400',
-          image: 'https://i.ibb.co/rMhygBQ/afghani-tikka.png',
-        },
-        {
-          name: 'Chicken Malai Boti',
-          description: 'Large',
-          price: 'Rs. 600-1400',
-          image:
-            'https://i.ibb.co/4N5F4Cj/be40fe795ebc207fefb8245e996acfc5.png',
-        },
-        {
-          name: 'Chicken Fajita',
-          description: 'Small',
-          price: 'Rs. 600-1400',
-          image:
-            'https://i.ibb.co/4dBVhSm/3bc223c5e7add3397f8e40a2747d8c49.png',
-        },
-      ],
-    },
-  ];
+  data?.catalogItems?.edges?.map((catalog) => {
+    const catalogItem = catalog?.node as CatalogItemProduct;
+    catalogItem.product?.tags?.nodes?.map((tag) => {
+      if (tag && !catalogItems.find((ci: any) => ci.tag._id === tag?._id)) {
+        catalogItems.push({
+          tag: tag,
+          data: [catalogItem.product],
+        } as CatalogItemPresentable);
+      } else {
+        catalogItems
+          .find((ci: any) => ci.tag._id === tag?._id)
+          ?.data.push(catalogItem.product as CatalogProduct);
+      }
+    });
+    return catalog;
+  });
 
   const onItemClick = (item: any) => {
     setModalVisible(true);
     setSelectedItem(item);
   };
 
-  const Item = ({ item, index }: any) => {
+  const Item = ({ item, index }: { item: CatalogProduct; index: number }) => {
     return (
       <Product
-        style={{ borderLeftWidth: index === 0 ? 1 : 0 }}
-        name={item.name}
-        description={item.description}
-        price={item.price}
-        image={item.image}
+        name={item.title || ''}
+        description={item.description || ''}
+        price={item.pricing.map((p) => p?.displayPrice).join('')}
+        image={item.primaryImage?.URLs?.thumbnail}
         onPress={() => onItemClick(item)}
       />
     );
@@ -329,18 +103,20 @@ export default function Menu(props: any) {
       <SectionList
         style={styles.menuContent}
         stickySectionHeadersEnabled={false}
-        showsVerticalScrollIndicator={false}
-        sections={menuItems}
+        showsVerticalScrollIndicator={true}
+        sections={catalogItems}
         keyExtractor={(item: any) => item.id}
         renderSectionHeader={({ section }) => (
           <View style={{ paddingBottom: 10 }}>
             <Text
               style={{
                 color: colors.text,
+                fontWeight: 'bold',
+                fontSize: 16,
                 paddingBottom: 10,
                 paddingLeft: 20,
               }}>
-              {section.category}
+              {section.tag.displayTitle}
             </Text>
             <FlatList
               style={{ paddingLeft: 20 }}
@@ -353,7 +129,7 @@ export default function Menu(props: any) {
             />
           </View>
         )}
-        renderItem={({ item, section }: any) => {
+        renderItem={() => {
           return null;
           // return <ListItem item={item} />;
         }}
@@ -372,7 +148,9 @@ export default function Menu(props: any) {
             { backgroundColor: colors.card },
           ]}>
           <Image
-            source={selectedItem.image ?? Images.imagePlaceholder}
+            source={
+              selectedItem?.primaryImage?.URLs?.large ?? Images.imagePlaceholder
+            }
             style={[styles.modalImage, { backgroundColor: colors.card }]}
           />
           <View style={[styles.contentSwipeDown]}>
@@ -380,7 +158,7 @@ export default function Menu(props: any) {
           </View>
           <View style={styles.contentPadding}>
             <Text semibold title1 style={styles.modalTitle}>
-              {selectedItem.name}
+              {selectedItem?.title}
             </Text>
             {selectedItem?.description ? (
               <Text body2 style={styles.modalDescription}>
@@ -388,19 +166,21 @@ export default function Menu(props: any) {
               </Text>
             ) : null}
             <Text callout bold primaryColor style={{ paddingBottom: 10 }}>
-              {selectedItem.price}
+              {selectedItem?.pricing.map((p) => p?.displayPrice).join('')}
             </Text>
             <View style={styles.extraItemsSection}>
-              {selectedItem?.extraItems &&
-                selectedItem.extraItems.map((item: any) => {
+              {selectedItem?.variants?.length &&
+                selectedItem.variants.map((variant) => {
                   return (
                     <View
                       style={[
                         styles.extraItems,
                         { borderColor: colors.border },
                       ]}>
-                      <Text body2>{item.name}</Text>
-                      <Text body2>{item.price}</Text>
+                      <Text body2>{variant?.title}</Text>
+                      <Text body2>
+                        {variant?.pricing.map((p) => p?.displayPrice).join('')}
+                      </Text>
                     </View>
                   );
                 })}
