@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { SectionList, FlatList, View } from 'react-native';
+import {
+  SectionList,
+  FlatList,
+  View,
+  ActivityIndicator,
+  RefreshControl,
+} from 'react-native';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-native-modal';
 import { useQuery } from '@apollo/client';
@@ -13,9 +19,11 @@ import { GET_PRODUCTS } from '../../requests/shop/menu';
 import {
   CatalogItemConnection,
   CatalogItemProduct,
+  CatalogItemSortByField,
   CatalogProduct,
   Maybe,
   QueryCatalogItemsArgs,
+  SortOrder,
   Tag,
 } from '../../models/graphql';
 
@@ -34,16 +42,18 @@ export default function Menu(props: any) {
   const { t } = useTranslation();
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState<CatalogProduct>();
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const { data, loading, error } = useQuery<
+  const { data, loading, refetch } = useQuery<
     CatalogItems,
     QueryCatalogItemsArgs
   >(GET_PRODUCTS, {
     variables: {
       shopIds: ['cmVhY3Rpb24vc2hvcDpGN2ZrM3plR3o4anpXaWZzQQ=='],
+      sortBy: CatalogItemSortByField.UpdatedAt,
+      sortOrder: SortOrder.Asc,
       first: 20,
     },
-    // fetchPolicy: 'network-only',
   });
 
   const catalogItems: Array<CatalogItemPresentable> = [];
@@ -70,7 +80,13 @@ export default function Menu(props: any) {
     setSelectedItem(item);
   };
 
-  const Item = ({ item, index }: { item: CatalogProduct; index: number }) => {
+  const onRefresh = async () => {
+    setIsRefreshing(true);
+    await refetch();
+    setIsRefreshing(false);
+  };
+
+  const Item = ({ item }: { item: CatalogProduct }) => {
     return (
       <Product
         name={item.title || ''}
@@ -100,45 +116,48 @@ export default function Menu(props: any) {
           navigation.goBack();
         }}
       />
-      <SectionList
-        style={styles.menuContent}
-        stickySectionHeadersEnabled={false}
-        showsVerticalScrollIndicator={true}
-        sections={catalogItems}
-        keyExtractor={(item: any) => item.id}
-        renderSectionHeader={({ section }) => (
-          <View style={{ paddingBottom: 10 }}>
-            <Text
-              style={{
-                color: colors.text,
-                fontWeight: 'bold',
-                fontSize: 16,
-                paddingBottom: 10,
-                paddingLeft: 20,
-              }}>
-              {section.tag.displayTitle}
-            </Text>
-            <FlatList
-              style={{ paddingLeft: 20 }}
-              horizontal
-              data={section.data}
-              renderItem={({ item, index }) => (
-                <Item item={item} index={index} />
-              )}
-              showsHorizontalScrollIndicator={false}
-            />
-          </View>
-        )}
-        renderItem={() => {
-          return null;
-          // return <ListItem item={item} />;
-        }}
-      />
+      {loading ? (
+        <ActivityIndicator size={'large'} style={{ flex: 1 }} />
+      ) : (
+        <SectionList
+          refreshControl={
+            <RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />
+          }
+          style={styles.menuContent}
+          stickySectionHeadersEnabled={false}
+          showsVerticalScrollIndicator={true}
+          sections={catalogItems}
+          keyExtractor={(item: any) => item.id}
+          renderSectionHeader={({ section }) => (
+            <View style={{ paddingBottom: 10 }}>
+              <Text
+                style={{
+                  color: colors.text,
+                  fontWeight: 'bold',
+                  fontSize: 16,
+                  paddingBottom: 10,
+                  paddingLeft: 20,
+                }}>
+                {section.tag.displayTitle}
+              </Text>
+              <FlatList
+                style={{ paddingLeft: 20 }}
+                horizontal
+                data={section.data}
+                renderItem={({ item }) => <Item item={item} />}
+                showsHorizontalScrollIndicator={false}
+              />
+            </View>
+          )}
+          renderItem={() => {
+            return null;
+          }}
+        />
+      )}
       <Modal
         isVisible={modalVisible}
         onSwipeComplete={() => {
           setModalVisible(false);
-          // setSortOption(props.sortOption);
         }}
         swipeDirection={['down']}
         style={styles.bottomModal}>
