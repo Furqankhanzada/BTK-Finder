@@ -9,19 +9,19 @@ import Review from '@screens/Review';
 import PlaceDetail from '@screens/PlaceDetail';
 import Products from '@screens/Products';
 
-const PlaceDetailStack = createStackNavigator();
-const PlaceDetailBottomTab = createBottomTabNavigator();
+const BusinessDetailStack = createStackNavigator();
+const BusinessDetailBottomTab = createBottomTabNavigator();
 
-export default function PlaceDetailNavigator() {
+export default function BusinessDetailNavigator() {
   return (
-    <PlaceDetailStack.Navigator
+    <BusinessDetailStack.Navigator
       headerMode="none"
       initialRouteName="BottomTabNavigator">
-      <PlaceDetailStack.Screen
+      <BusinessDetailStack.Screen
         name="BottomTabNavigator"
         component={BottomTabNavigator}
       />
-    </PlaceDetailStack.Navigator>
+    </BusinessDetailStack.Navigator>
   );
 }
 
@@ -29,7 +29,7 @@ function BottomTabNavigator() {
   const { colors } = useTheme();
   const font = useFont();
   return (
-    <PlaceDetailBottomTab.Navigator
+    <BusinessDetailBottomTab.Navigator
       initialRouteName="PlaceDetail"
       headerMode="none"
       tabBarOptions={{
@@ -43,7 +43,7 @@ function BottomTabNavigator() {
           fontFamily: font,
         },
       }}>
-      <PlaceDetailBottomTab.Screen
+      <BusinessDetailBottomTab.Screen
         name="Overview"
         component={PlaceDetail}
         options={{
@@ -53,7 +53,7 @@ function BottomTabNavigator() {
           },
         }}
       />
-      <PlaceDetailBottomTab.Screen
+      <BusinessDetailBottomTab.Screen
         name="Reviews"
         component={Review}
         options={{
@@ -63,7 +63,7 @@ function BottomTabNavigator() {
           },
         }}
       />
-      <PlaceDetailBottomTab.Screen
+      <BusinessDetailBottomTab.Screen
         name="Menu"
         component={Products}
         options={{
@@ -73,6 +73,6 @@ function BottomTabNavigator() {
           },
         }}
       />
-    </PlaceDetailBottomTab.Navigator>
+    </BusinessDetailBottomTab.Navigator>
   );
 }

@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { BaseColor, useTheme, useFont } from '@config';
 import { Icon } from '@components';
 import { setEditBusiness } from '../actions/business';
-import PlaceDetailNavigator from 'app/navigation/placeDetail';
+import BusinessDetailNavigator from 'app/navigation/businessDetailNavigator';
 
 /* Bottom Screen */
 import Home from '@screens/Home';
@@ -55,7 +55,7 @@ export default function Main() {
         component={BottomTabNavigator}
       />
       <MainStack.Screen name="PlaceDetailNavigator">
-        {(props) => <PlaceDetailNavigator {...props} />}
+        {(props) => <BusinessDetailNavigator {...props} />}
       </MainStack.Screen>
       <MainStack.Screen name="ThemeSetting" component={ThemeSetting} />
       <MainStack.Screen name="Setting" component={Setting} />
@@ -153,7 +153,7 @@ function BottomTabNavigator() {
           },
         }}
         listeners={() => ({
-          tabPress: (e) => {
+          tabPress: () => {
             dispatch(setEditBusiness(false));
           },
         })}
