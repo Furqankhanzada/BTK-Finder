@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { BaseColor, useTheme, useFont } from '@config';
 import { Icon } from '@components';
 import { setEditBusiness } from '../actions/business';
-import BusinessDetailNavigator from 'app/navigation/businessDetailNavigator';
+import BusinessDetailNavigator from '@screens/businesses/businessDetailNavigator';
 
 /* Bottom Screen */
 import Home from '@screens/Home';
@@ -54,9 +54,10 @@ export default function Main() {
         name="BottomTabNavigator"
         component={BottomTabNavigator}
       />
-      <MainStack.Screen name="PlaceDetailNavigator">
-        {(props) => <BusinessDetailNavigator {...props} />}
-      </MainStack.Screen>
+      <MainStack.Screen
+        name="BusinessDetailTabNavigator"
+        component={BusinessDetailNavigator}
+      />
       <MainStack.Screen name="ThemeSetting" component={ThemeSetting} />
       <MainStack.Screen name="Setting" component={Setting} />
       <MainStack.Screen name="Category" component={Category} />

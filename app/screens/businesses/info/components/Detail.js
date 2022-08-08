@@ -59,7 +59,7 @@ export default function PlaceDetailComponent(props) {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const dispatch = useDispatch();
-  const { navigation, preview } = props;
+  const { navigation, business, isLoading, navigateTo, preview } = props;
   const [isPreview] = useState(preview);
   const [collapseHour, setCollapseHour] = useState(true);
   const [heightHeader, setHeightHeader] = useState(Utils.heightHeader());
@@ -68,7 +68,6 @@ export default function PlaceDetailComponent(props) {
 
   const stateProps = useSelector(({ businesses, favorites }) => {
     return {
-      business: businesses.singleBusiness,
       recentlyAddedBusinesses: businesses.placeDetailRecentlyAddedBusinesses,
       getRecentlyAddedBusinessesLoading:
         businesses.placeDetailRecentlyAddedBusinessesLoading,
@@ -76,10 +75,8 @@ export default function PlaceDetailComponent(props) {
       getRelatedBusinessesLoading: businesses.getRelatedBusinessesLoading,
       favoriteBusinesses: favorites.getFavoriteBusinesses,
       isFavoriteLoading: favorites.isFavoriteLoading,
-      getSingleBusinessLoading: businesses.getSingleBusinessLoading,
     };
   });
-  const business = stateProps?.business;
 
   useEffect(() => {
     async function businessUrl() {
@@ -288,11 +285,11 @@ export default function PlaceDetailComponent(props) {
   };
 
   const navigateBusinessDetail = (id) => {
-    dispatch(getSingleBusiness(id));
-    navigation.replace('PlaceDetailNavigator', { id });
+    navigation.replace('BusinessDetailTabNavigator', { id });
   };
-  const navigateToReview = (id) => {
-    navigation.navigate('Review', { id });
+
+  const navigateToReview = () => {
+    navigateTo('Reviews');
   };
 
   const headerBackgroundColor = scrollY.interpolate({
@@ -488,7 +485,7 @@ export default function PlaceDetailComponent(props) {
   }, [business]);
 
   const renderBanner = () => {
-    if (stateProps?.getSingleBusinessLoading) {
+    if (isLoading) {
       return (
         <Placeholder Animation={Progressive}>
           <PlaceholderMedia style={{ width: '100%', height: '100%' }} />
@@ -500,7 +497,7 @@ export default function PlaceDetailComponent(props) {
   };
 
   const renderContent = () => {
-    if (stateProps?.getSingleBusinessLoading) {
+    if (isLoading) {
       return (
         <View style={{ paddingHorizontal: 20 }}>
           <PlaceDetailPlaceholder />
@@ -543,7 +540,7 @@ export default function PlaceDetailComponent(props) {
                 {isPreview ? (
                   <TouchableOpacity
                     style={styles.contentRate}
-                    onPress={() => navigateToReview(business._id)}>
+                    onPress={() => navigateToReview()}>
                     <View
                       style={{ flexDirection: 'row', alignItems: 'center' }}>
                       <Tag rate>
@@ -570,7 +567,7 @@ export default function PlaceDetailComponent(props) {
                 ) : (
                   <TouchableOpacity
                     style={styles.contentRate}
-                    onPress={() => navigateToReview(business._id)}>
+                    onPress={() => navigateToReview()}>
                     <View
                       style={{ flexDirection: 'row', alignItems: 'center' }}>
                       <Tag rate>
@@ -934,7 +931,7 @@ export default function PlaceDetailComponent(props) {
                     routeId={business?._id}
                     // status='Open Now'
                     onPress={() => navigateBusinessDetail(item._id)}
-                    onPressTag={() => navigateToReview(item._id)}
+                    // onPressTag={() => navigateToReview(item._id)}
                     style={{ marginLeft: 15, width: 175 }}
                   />
                 );
@@ -957,7 +954,7 @@ export default function PlaceDetailComponent(props) {
                   rate={item?.averageRatings || '0.0'}
                   style={{ marginBottom: 15 }}
                   onPress={() => navigateBusinessDetail(item._id)}
-                  onPressTag={() => navigateToReview(item._id)}
+                  // onPressTag={() => navigateToReview(item._id)}
                 />
               );
             }}
@@ -1073,8 +1070,10 @@ export default function PlaceDetailComponent(props) {
 }
 
 PlaceDetailComponent.propTypes = {
+  isLoading: PropTypes.bool,
   business: PropTypes.object,
   navigation: PropTypes.object,
+  navigateTo: PropTypes.func,
 };
 
 PlaceDetailComponent.defaultProps = {

@@ -172,8 +172,7 @@ export default function Home({ navigation }) {
   ]);
 
   const navigateBusinessDetail = (id, name, type) => {
-    dispatch(getSingleBusiness(id));
-    navigation.navigate('PlaceDetailNavigator', { id });
+    navigation.navigate('BusinessDetailTabNavigator', { id });
 
     const business = {
       id,

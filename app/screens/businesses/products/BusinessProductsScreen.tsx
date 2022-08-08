@@ -37,7 +37,7 @@ type CatalogItemPresentable = {
 };
 
 export default function Menu(props: any) {
-  const { navigation } = props;
+  const { navigation, route } = props;
   const { colors } = useTheme();
   const { t } = useTranslation();
   const [modalVisible, setModalVisible] = useState(false);
@@ -49,7 +49,7 @@ export default function Menu(props: any) {
     QueryCatalogItemsArgs
   >(GET_PRODUCTS, {
     variables: {
-      shopIds: ['cmVhY3Rpb24vc2hvcDpGN2ZrM3plR3o4anpXaWZzQQ=='],
+      shopIds: [route.params.shop.shopId],
       sortBy: CatalogItemSortByField.UpdatedAt,
       sortOrder: SortOrder.Asc,
       first: 20,

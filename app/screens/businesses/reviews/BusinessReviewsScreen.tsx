@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   FlatList,
   RefreshControl,
@@ -22,57 +22,40 @@ import {
 import { getSingleBusiness } from '../../../actions/business';
 
 export default function Review(props: any) {
-  const { navigation, route } = props;
+  const { navigation, route, businessId, reviews, reviewStats, isLoading } =
+    props;
   const { colors } = useTheme();
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const stateProps = useSelector(({ businesses, profile, auth }: any) => {
+  const stateProps = useSelector(({ profile, auth }: any) => {
     return {
-      singleBusiness: businesses.singleBusiness,
-      getSingleBusinessLoading: businesses.getSingleBusinessLoading,
       currentUserId: profile._id,
       isLogin: auth.isLogin,
     };
   });
 
-  useEffect(() => {
-    if (route?.params?.id) {
-      dispatch(getSingleBusiness(route?.params?.id));
-    }
-  }, [dispatch, route?.params?.id]);
-
-  const dateSortedReviews = stateProps?.singleBusiness?.reviews
-    ?.slice(0)
-    .sort((a: any, b: any) => {
-      const dateA: any = new Date(a.createdAt),
-        dateB: any = new Date(b.createdAt);
-      return dateB - dateA;
-    });
+  const dateSortedReviews = reviews?.slice(0).sort((a: any, b: any) => {
+    const dateA: any = new Date(a.createdAt),
+      dateB: any = new Date(b.createdAt);
+    return dateB - dateA;
+  });
 
   const totalRating =
-    stateProps?.singleBusiness?.reviewStats?.fiveStarCount +
-    stateProps?.singleBusiness?.reviewStats?.fourStarCount +
-    stateProps?.singleBusiness?.reviewStats?.threeStarCount +
-    stateProps?.singleBusiness?.reviewStats?.twoStarCount +
-    stateProps?.singleBusiness?.reviewStats?.oneStarCount;
+    reviewStats?.fiveStarCount +
+    reviewStats?.fourStarCount +
+    reviewStats?.threeStarCount +
+    reviewStats?.twoStarCount +
+    reviewStats?.oneStarCount;
 
-  const fiveStarPercent =
-    (stateProps?.singleBusiness?.reviewStats?.fiveStarCount * 100) /
-    totalRating;
-  const fourStarPercent =
-    (stateProps?.singleBusiness?.reviewStats?.fourStarCount * 100) /
-    totalRating;
-  const threeStarPercent =
-    (stateProps?.singleBusiness?.reviewStats?.threeStarCount * 100) /
-    totalRating;
-  const twoStarPercent =
-    (stateProps?.singleBusiness?.reviewStats?.twoStarCount * 100) / totalRating;
-  const oneStarPercent =
-    (stateProps?.singleBusiness?.reviewStats?.oneStarCount * 100) / totalRating;
+  const fiveStarPercent = (reviewStats?.fiveStarCount * 100) / totalRating;
+  const fourStarPercent = (reviewStats?.fourStarCount * 100) / totalRating;
+  const threeStarPercent = (reviewStats?.threeStarCount * 100) / totalRating;
+  const twoStarPercent = (reviewStats?.twoStarCount * 100) / totalRating;
+  const oneStarPercent = (reviewStats?.oneStarCount * 100) / totalRating;
 
   const [refreshing] = useState(false);
   const rateDetail = {
-    point: stateProps?.singleBusiness?.reviewStats?.averageRatings,
+    point: reviewStats?.averageRatings,
     maxPoint: 5,
     totalRating: totalRating,
     data: [
@@ -94,8 +77,8 @@ export default function Review(props: any) {
 
   const checkReviewAlreadyAdded = () => {
     let check = false;
-    if (stateProps.singleBusiness?.reviews?.length) {
-      stateProps.singleBusiness.reviews.forEach(({ owner }: any) => {
+    if (reviews?.length) {
+      reviews.forEach(({ owner }: any) => {
         if (owner._id === stateProps.currentUserId) {
           check = true;
           return false;
@@ -107,7 +90,7 @@ export default function Review(props: any) {
   const checkUserLogin = () => {
     if (stateProps.isLogin) {
       if (!checkReviewAlreadyAdded()) {
-        navigateToFeedback(stateProps.singleBusiness._id);
+        navigateToFeedback(businessId);
       } else {
         Alert.alert('Review Found', 'You have already added a Review.');
       }
@@ -166,9 +149,9 @@ export default function Review(props: any) {
         }}
         onPressRight={() => checkUserLogin()}
       />
-      {stateProps.getSingleBusinessLoading ? (
+      {isLoading ? (
         <Loading loading={true} />
-      ) : stateProps.singleBusiness.reviews?.length ? (
+      ) : reviews?.length ? (
         <FlatList
           contentContainerStyle={{ padding: 20 }}
           refreshControl={
