@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { Image, Text } from '@components';
 import { useTheme, Images } from '@config';
-import { Maybe } from '../../../models/graphql';
+import { Maybe } from '../../../../models/graphql';
 
 interface Props {
   style?: StyleProp<ViewStyle>;

@@ -5,9 +5,9 @@ import { BaseColor, useTheme, useFont } from '@config';
 import { Icon } from '@components';
 
 /* Bottom Screen */
-import Review from '@screens/Review';
-import PlaceDetail from '@screens/PlaceDetail';
-import Products from '@screens/Products';
+import Review from '@screens/businesses/reviews/BusinessReviewsScreen';
+import PlaceDetail from '@screens/businesses/info/BusinessInfoScreen';
+import BusinessProductsScreen from '@screens/businesses/products/BusinessProductsScreen';
 
 const BusinessDetailStack = createStackNavigator();
 const BusinessDetailBottomTab = createBottomTabNavigator();
@@ -65,7 +65,7 @@ function BottomTabNavigator() {
       />
       <BusinessDetailBottomTab.Screen
         name="Menu"
-        component={Products}
+        component={BusinessProductsScreen}
         options={{
           title: 'Menu',
           tabBarIcon: ({ color }) => {

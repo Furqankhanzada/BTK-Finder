@@ -5,17 +5,17 @@ import {
   View,
   ActivityIndicator,
   RefreshControl,
+  StyleSheet,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-native-modal';
 import { useQuery } from '@apollo/client';
 
 import { Header, SafeAreaView, Icon, Text, Image } from '@components';
-import { BaseStyle, useTheme, Images } from '@config';
+import { BaseStyle, useTheme, Images, BaseColor } from '@config';
 
 import Product from './components/Product';
-import styles from './styles';
-import { GET_PRODUCTS } from '../../requests/shop/menu';
+import { GET_PRODUCTS } from '../../../requests/shop/menu';
 import {
   CatalogItemConnection,
   CatalogItemProduct,
@@ -25,7 +25,7 @@ import {
   QueryCatalogItemsArgs,
   SortOrder,
   Tag,
-} from '../../models/graphql';
+} from '../../../models/graphql';
 
 type CatalogItems = {
   catalogItems: Maybe<CatalogItemConnection>;
@@ -123,11 +123,10 @@ export default function Menu(props: any) {
           refreshControl={
             <RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />
           }
-          style={styles.menuContent}
           stickySectionHeadersEnabled={false}
           showsVerticalScrollIndicator={true}
           sections={catalogItems}
-          keyExtractor={(item: any) => item.id}
+          keyExtractor={(item: CatalogProduct) => item._id}
           renderSectionHeader={({ section }) => (
             <View style={{ paddingBottom: 10 }}>
               <Text
@@ -210,3 +209,60 @@ export default function Menu(props: any) {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  sectionHeader: {
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop: 8,
+    paddingBottom: 8,
+  },
+  lineSwipeDown: {
+    width: 30,
+    height: 2.5,
+    backgroundColor: BaseColor.dividerColor,
+  },
+  contentSwipeDown: {
+    paddingTop: 10,
+    alignItems: 'center',
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    zIndex: 11,
+  },
+  modalImage: {
+    height: 300,
+    width: '100%',
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+  },
+  contentPadding: {
+    paddingHorizontal: 20,
+  },
+  modalTitle: {
+    paddingTop: 10,
+  },
+  modalDescription: {
+    paddingVertical: 10,
+  },
+  bottomModal: {
+    justifyContent: 'flex-end',
+    margin: 0,
+  },
+  contentFilterBottom: {
+    width: '100%',
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+    paddingHorizontal: 0,
+  },
+  extraItemsSection: {
+    paddingBottom: 10,
+  },
+  extraItems: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 10,
+    borderTopWidth: 1,
+  },
+});
