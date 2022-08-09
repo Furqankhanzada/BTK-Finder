@@ -164,7 +164,7 @@ export default function Profile(props) {
           <TouchableOpacity
             style={styles.profileItem}
             onPress={() => {
-              navigation.navigate('Setting');
+              navigation.navigate('SettingsStackNavigator');
             }}>
             <Text body1>Settings</Text>
             <Icon

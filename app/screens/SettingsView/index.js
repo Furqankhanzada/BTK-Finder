@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import DeviceInfo from 'react-native-device-info';
 import styles from './styles';
 
-export default function Setting({ navigation }) {
+export default function SettingsView({ navigation }) {
   const { t, i18n } = useTranslation();
   const { colors } = useTheme();
   const forceDark = useSelector((state) => state.application.force_dark);
@@ -79,7 +79,7 @@ export default function Setting({ navigation }) {
             { borderBottomColor: colors.border, borderBottomWidth: 1 },
           ]}
           onPress={() => {
-            navigation.navigate('ThemeSetting');
+            navigation.navigate('ThemeView');
           }}>
           <Text body1>{t('theme')}</Text>
           <View

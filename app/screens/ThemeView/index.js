@@ -8,7 +8,7 @@ import { ApplicationActions } from '@actions';
 import styles from './styles';
 import { useTranslation } from 'react-i18next';
 
-export default function ThemeSetting({ navigation }) {
+export default function ThemeView({ navigation }) {
   const themeStorage = useSelector((state) => state.application.theme);
   const { colors } = useTheme();
   const dispatch = useDispatch();

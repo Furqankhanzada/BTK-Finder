@@ -102,11 +102,11 @@ const SCREENS: any = {
       screenName: 'Setting',
     },
   },
-  ThemeSetting: {
-    TRACKING_KEY: 'themeSetting',
+  ThemeView: {
+    TRACKING_KEY: 'themeView',
     ATTRIBUTES: {
       category: 'settings',
-      screenName: 'ThemeSetting',
+      screenName: 'themeView',
     },
   },
   ProfileEdit: {

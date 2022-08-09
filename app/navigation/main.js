@@ -17,8 +17,8 @@ import Messenger from '@screens/Messenger';
 import Profile from '@screens/Profile';
 
 /* Stack Screen */
-import ThemeSetting from '@screens/ThemeSetting';
-import Setting from '@screens/Setting';
+import ThemeView from '@screens/ThemeView';
+import Setting from '@screens/SettingsView';
 import Category from '@screens/Category';
 import Place from '@screens/Place';
 import SignUp from '@screens/SignUp';
@@ -41,6 +41,7 @@ import PriceRange from '@screens/AddBusiness/priceRange';
 import FinalReview from '@screens/AddBusiness/review';
 import Gallery from '@screens/AddBusiness/gallery';
 import MyBusinesses from '@screens/MyBusinesses';
+import { SettingsStackNavigator } from './stacks';
 
 const MainStack = createStackNavigator();
 const BottomTab = createBottomTabNavigator();
@@ -58,8 +59,7 @@ export default function Main() {
         name="BusinessDetailTabNavigator"
         component={BusinessDetailNavigator}
       />
-      <MainStack.Screen name="ThemeSetting" component={ThemeSetting} />
-      <MainStack.Screen name="Setting" component={Setting} />
+      <MainStack.Screen name="SettingsStackNavigator" component={SettingsStackNavigator} />
       <MainStack.Screen name="Category" component={Category} />
       <MainStack.Screen name="Place" component={Place} />
       <MainStack.Screen name="Walkthrough" component={Walkthrough} />
@@ -69,7 +69,6 @@ export default function Main() {
       <MainStack.Screen name="Review" component={Review} />
       <MainStack.Screen name="Feedback" component={Feedback} />
       <MainStack.Screen name="Messages" component={Messages} />
-      {/* <MainStack.Screen name="Notification" component={Notification} /> */}
       <MainStack.Screen name="ResetPassword" component={ResetPassword} />
       <MainStack.Screen name="ChangePassword" component={ChangePassword} />
       <MainStack.Screen name="ProfileEdit" component={ProfileEdit} />
@@ -77,7 +76,6 @@ export default function Main() {
       <MainStack.Screen name="PlaceDetail" component={PlaceDetail} />
       <MainStack.Screen name="ContactUs" component={ContactUs} />
       <MainStack.Screen name="AboutUs" component={AboutUs} />
-      {/*<MainStack.Screen name="Business" component={Business} />*/}
       <MainStack.Screen name="Address" component={Address} />
       <MainStack.Screen name="Hours" component={Hours} />
       <MainStack.Screen name="PriceRange" component={PriceRange} />
