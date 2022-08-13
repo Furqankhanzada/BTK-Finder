@@ -68,7 +68,7 @@ function SectionList(props) {
           showsHorizontalScrollIndicator={false}
           data={data}
           ListEmptyComponent={listEmptyComponent}
-          keyExtractor={(item, index) => item.id}
+          keyExtractor={(item, index) => item._id}
           renderItem={renderItem}
         />
       )}

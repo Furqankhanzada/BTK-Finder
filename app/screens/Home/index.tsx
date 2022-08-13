@@ -28,14 +28,14 @@ import styles from './styles';
 import FeaturedCategoryPlaceholderComponent from '../../components/Placeholders/featuredCategories';
 import SectionList from './sectionList';
 import { getCategories } from '../../actions/category';
-import { getBusinesses, getSingleBusiness } from '../../actions/business';
+import { getBusinesses } from '../../actions/business';
 import { getFavoriteBusinesses } from '../../actions/favorites';
 import { getProfile } from '../../actions/auth';
 import useLocation from '../../hooks/useLocation';
 import { trackEvent, EVENTS, setUser } from '../../userTracking';
 
-export default function Home({ navigation }) {
-  const stateProps = useSelector(({ businesses, favorites }) => {
+export default function Home({ navigation }: any) {
+  const stateProps = useSelector(({ businesses, favorites }: any) => {
     return {
       popularBusinesses: businesses.popularBusinesses,
       getPopularBusinessesLoading: businesses.getPopularBusinessesLoading,
@@ -51,21 +51,23 @@ export default function Home({ navigation }) {
     trackEvent(EVENTS.HELPLINE_SCREEN_VISITED);
   };
 
-  const navigateToReview = (id) => {
+  const navigateToReview = (id: string) => {
     navigation.navigate('Review', { id });
   };
 
-  const isLogin = useSelector((state) => state.auth.isLogin);
-  const profileData = useSelector((state) => state.profile);
+  const isLogin = useSelector((state: any) => state.auth.isLogin);
+  const profileData = useSelector((state: any) => state.profile);
   const [loading, setLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const deltaY = new Animated.Value(0);
   const { colors } = useTheme();
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const getLocation = useLocation();
+  const getLocation: any = useLocation();
   let placeholderItems = [1, 2, 3, 4, 5, 6, 7, 8];
-  let featuredCategories = useSelector((state) => state.categories.featured);
+  let featuredCategories = useSelector(
+    (state: any) => state.categories.featured,
+  );
   featuredCategories = [
     ...featuredCategories,
     ...[
@@ -171,7 +173,7 @@ export default function Home({ navigation }) {
     loading,
   ]);
 
-  const navigateBusinessDetail = (id, name, type) => {
+  const navigateBusinessDetail = (id: string, name: string, type: string) => {
     navigation.navigate('BusinessDetailTabNavigator', { id });
 
     const business = {
@@ -186,7 +188,7 @@ export default function Home({ navigation }) {
     }
   };
 
-  const seeMore = (payload = {}) => {
+  const seeMore = (payload: any = {}) => {
     if (payload.route === 'Category') {
       navigation.navigate('Category', {
         latitude: getLocation?.latitude ?? null,
@@ -244,7 +246,7 @@ export default function Home({ navigation }) {
 
   return (
     <View style={{ flex: 1 }}>
-      <SafeAreaView style={{ flex: 1 }} forceInset={{ top: 'always' }}>
+      <SafeAreaView style={{ flex: 1 }}>
         <Header
           title={'Explore BTK'}
           renderRight={() => {
@@ -265,13 +267,16 @@ export default function Home({ navigation }) {
           refreshControl={
             <RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />
           }
-          onScroll={Animated.event([
-            {
-              nativeEvent: {
-                contentOffset: { y: deltaY },
+          onScroll={Animated.event(
+            [
+              {
+                nativeEvent: {
+                  contentOffset: { y: deltaY },
+                },
               },
-            },
-          ])}
+            ],
+            { useNativeDriver: true },
+          )}
           scrollEventThrottle={8}>
           <View
             style={[
@@ -312,7 +317,7 @@ export default function Home({ navigation }) {
             <FlatList
               contentContainerStyle={{ padding: 20 }}
               data={placeholderItems}
-              numColumns={'4'}
+              numColumns={4}
               renderItem={() => {
                 return (
                   <View style={styles.serviceItem}>
@@ -325,8 +330,8 @@ export default function Home({ navigation }) {
             <FlatList
               contentContainerStyle={{ padding: 20 }}
               data={featuredCategories}
-              numColumns={'4'}
-              keyExtractor={(item, index) => item.id}
+              numColumns={4}
+              keyExtractor={(item) => item.id}
               renderItem={({ item }) => {
                 return (
                   <TouchableOpacity
@@ -376,7 +381,7 @@ export default function Home({ navigation }) {
             data={stateProps.popularBusinesses}
             horizontal={true}
             loading={stateProps.getPopularBusinessesLoading}
-            renderItem={({ item, index }) => {
+            renderItem={({ item }: any) => {
               return (
                 <PlaceItem
                   grid
@@ -386,7 +391,7 @@ export default function Home({ navigation }) {
                   location={item?.address}
                   rate={item?.averageRatings || 0.0}
                   isFavorite={stateProps?.favoriteBusinesses?.some(
-                    (obj) => obj._id === item?._id,
+                    (obj: any) => obj._id === item?._id,
                   )}
                   businessId={item?._id}
                   navigation={navigation}
@@ -419,10 +424,10 @@ export default function Home({ navigation }) {
             }
             data={stateProps.recentlyAddedBusinesses}
             loading={stateProps.getRecentlyAddedBusinessesLoading}
-            renderItem={({ item, index }) => {
+            renderItem={({ item }: any) => {
               return (
                 <CardList
-                  key={index}
+                  key={item._id}
                   image={item?.thumbnail}
                   title={item.name}
                   subtitle={item.category}
