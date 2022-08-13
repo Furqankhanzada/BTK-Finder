@@ -2,15 +2,18 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import Detail from './components/Detail';
+import { useBusiness } from '../apis/queries';
 
-export default function PlaceDetail(props: any) {
-  const { navigateTo, business, isLoading } = props;
+export default function BusinessInfoScreen(props: any) {
+  const { navigation, route } = props;
+  const { isLoading, data: business } = useBusiness(route?.params?.id);
+
   return (
     <View style={styles.container}>
       <Detail
         business={business}
         isLoading={isLoading}
-        navigateTo={navigateTo}
+        navigation={navigation}
       />
     </View>
   );

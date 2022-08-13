@@ -20,10 +20,15 @@ import {
   Loading,
 } from '@components';
 import { getSingleBusiness } from '../../../actions/business';
+import { useBusiness } from '@screens/businesses/apis/queries';
 
 export default function Review(props: any) {
-  const { navigation, route, businessId, reviews, reviewStats, isLoading } =
-    props;
+  const { navigation, route } = props;
+  const {
+    isLoading,
+    data: { _id: businessId, reviews, reviewStats },
+  } = useBusiness(route?.params?.id);
+
   const { colors } = useTheme();
   const { t } = useTranslation();
   const dispatch = useDispatch();

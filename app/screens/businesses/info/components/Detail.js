@@ -59,7 +59,7 @@ export default function PlaceDetailComponent(props) {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const dispatch = useDispatch();
-  const { navigation, business, isLoading, navigateTo, preview } = props;
+  const { navigation, business, isLoading, preview } = props;
   const [isPreview] = useState(preview);
   const [collapseHour, setCollapseHour] = useState(true);
   const [heightHeader, setHeightHeader] = useState(Utils.heightHeader());
@@ -289,7 +289,7 @@ export default function PlaceDetailComponent(props) {
   };
 
   const navigateToReview = () => {
-    navigateTo('Reviews');
+    navigation.navigate('Reviews');
   };
 
   const headerBackgroundColor = scrollY.interpolate({
@@ -913,7 +913,7 @@ export default function PlaceDetailComponent(props) {
               data={stateProps.recentlyAddedBusinesses}
               horizontal={true}
               loading={stateProps.getRecentlyAddedBusinessesLoading}
-              renderItem={({ item, index }) => {
+              renderItem={({ item }) => {
                 return (
                   <PlaceItem
                     grid
@@ -931,7 +931,7 @@ export default function PlaceDetailComponent(props) {
                     routeId={business?._id}
                     // status='Open Now'
                     onPress={() => navigateBusinessDetail(item._id)}
-                    // onPressTag={() => navigateToReview(item._id)}
+                    onPressTag={() => navigateToReview(item._id)}
                     style={{ marginLeft: 15, width: 175 }}
                   />
                 );
@@ -954,7 +954,7 @@ export default function PlaceDetailComponent(props) {
                   rate={item?.averageRatings || '0.0'}
                   style={{ marginBottom: 15 }}
                   onPress={() => navigateBusinessDetail(item._id)}
-                  // onPressTag={() => navigateToReview(item._id)}
+                  onPressTag={() => navigateToReview(item._id)}
                 />
               );
             }}
@@ -1073,7 +1073,6 @@ PlaceDetailComponent.propTypes = {
   isLoading: PropTypes.bool,
   business: PropTypes.object,
   navigation: PropTypes.object,
-  navigateTo: PropTypes.func,
 };
 
 PlaceDetailComponent.defaultProps = {

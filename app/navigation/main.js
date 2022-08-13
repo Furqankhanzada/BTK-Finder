@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { BaseColor, useTheme, useFont } from '@config';
 import { Icon } from '@components';
 import { setEditBusiness } from '../actions/business';
-import BusinessDetailNavigator from '@screens/businesses/businessDetailNavigator';
+import BusinessDetailNavigator from '@screens/businesses/BusinessDetailNavigator';
 
 /* Bottom Screen */
 import Home from '@screens/Home';
