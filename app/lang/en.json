@@ -135,5 +135,6 @@
   "default": "Default",
   "listings": "Listings",
   "help_line": "Help Line",
-  "call_now": "Call Now"
+  "call_now": "Call Now",
+  "menu": "Menu"
 }

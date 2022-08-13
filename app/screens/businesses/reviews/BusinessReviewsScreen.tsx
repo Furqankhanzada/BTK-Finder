@@ -1,5 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { FlatList, RefreshControl, View, Alert } from 'react-native';
+import React, { useState } from 'react';
+import {
+  FlatList,
+  RefreshControl,
+  View,
+  Alert,
+  StyleSheet,
+} from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
@@ -13,51 +19,48 @@ import {
   CommentItem,
   Loading,
 } from '@components';
-import styles from './styles';
-import { getSingleBusiness } from '../../actions/business';
+import { getSingleBusiness } from '../../../actions/business';
+import { useBusiness } from '@screens/businesses/apis/queries';
 
-export default function Review(props) {
+export default function Review(props: any) {
   const { navigation, route } = props;
+  const {
+    isLoading,
+    data: { _id: businessId, reviews, reviewStats },
+  } = useBusiness(route?.params?.id);
+
   const { colors } = useTheme();
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const stateProps = useSelector(({ businesses, profile, auth }) => {
+  const stateProps = useSelector(({ profile, auth }: any) => {
     return {
-      singleBusiness: businesses.singleBusiness,
-      getSingleBusinessLoading: businesses.getSingleBusinessLoading,
       currentUserId: profile._id,
       isLogin: auth.isLogin,
     };
   });
 
-  useEffect(() => {
-    dispatch(getSingleBusiness(route?.params?.id));
-  }, [route.params.id, dispatch]);
+  const dateSortedReviews = reviews?.slice(0).sort((a: any, b: any) => {
+    const dateA: any = new Date(a.createdAt),
+      dateB: any = new Date(b.createdAt);
+    return dateB - dateA;
+  });
 
   const totalRating =
-    stateProps?.singleBusiness?.reviewStats?.fiveStarCount +
-    stateProps?.singleBusiness?.reviewStats?.fourStarCount +
-    stateProps?.singleBusiness?.reviewStats?.threeStarCount +
-    stateProps?.singleBusiness?.reviewStats?.twoStarCount +
-    stateProps?.singleBusiness?.reviewStats?.oneStarCount;
+    reviewStats?.fiveStarCount +
+    reviewStats?.fourStarCount +
+    reviewStats?.threeStarCount +
+    reviewStats?.twoStarCount +
+    reviewStats?.oneStarCount;
 
-  const fiveStarPercent =
-    (stateProps?.singleBusiness?.reviewStats?.fiveStarCount * 100) /
-    totalRating;
-  const fourStarPercent =
-    (stateProps?.singleBusiness?.reviewStats?.fourStarCount * 100) /
-    totalRating;
-  const threeStarPercent =
-    (stateProps?.singleBusiness?.reviewStats?.threeStarCount * 100) /
-    totalRating;
-  const twoStarPercent =
-    (stateProps?.singleBusiness?.reviewStats?.twoStarCount * 100) / totalRating;
-  const oneStarPercent =
-    (stateProps?.singleBusiness?.reviewStats?.oneStarCount * 100) / totalRating;
+  const fiveStarPercent = (reviewStats?.fiveStarCount * 100) / totalRating;
+  const fourStarPercent = (reviewStats?.fourStarCount * 100) / totalRating;
+  const threeStarPercent = (reviewStats?.threeStarCount * 100) / totalRating;
+  const twoStarPercent = (reviewStats?.twoStarCount * 100) / totalRating;
+  const oneStarPercent = (reviewStats?.oneStarCount * 100) / totalRating;
 
   const [refreshing] = useState(false);
   const rateDetail = {
-    point: stateProps?.singleBusiness?.reviewStats?.averageRatings,
+    point: reviewStats?.averageRatings,
     maxPoint: 5,
     totalRating: totalRating,
     data: [
@@ -69,18 +72,18 @@ export default function Review(props) {
     ],
   };
 
-  const navigateToWalktrhough = (lastRoute, id) => {
+  const navigateToWalktrhough = (lastRoute: any, id: any) => {
     navigation.navigate('Walkthrough', { lastRoute, id });
   };
 
-  const navigateToFeedback = (id) => {
+  const navigateToFeedback = (id: any) => {
     navigation.navigate('Feedback', { id });
   };
 
   const checkReviewAlreadyAdded = () => {
     let check = false;
-    if (stateProps.singleBusiness?.reviews?.length) {
-      stateProps.singleBusiness.reviews.forEach(({ owner }) => {
+    if (reviews?.length) {
+      reviews.forEach(({ owner }: any) => {
         if (owner._id === stateProps.currentUserId) {
           check = true;
           return false;
@@ -92,7 +95,7 @@ export default function Review(props) {
   const checkUserLogin = () => {
     if (stateProps.isLogin) {
       if (!checkReviewAlreadyAdded()) {
-        navigateToFeedback(stateProps.singleBusiness._id);
+        navigateToFeedback(businessId);
       } else {
         Alert.alert('Review Found', 'You have already added a Review.');
       }
@@ -116,7 +119,7 @@ export default function Review(props) {
   };
 
   return (
-    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
+    <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
         title={t('reviews')}
         renderLeft={() => {
@@ -151,9 +154,9 @@ export default function Review(props) {
         }}
         onPressRight={() => checkUserLogin()}
       />
-      {stateProps.getSingleBusinessLoading ? (
+      {isLoading ? (
         <Loading loading={true} />
-      ) : stateProps.singleBusiness.reviews?.length ? (
+      ) : reviews?.length ? (
         <FlatList
           contentContainerStyle={{ padding: 20 }}
           refreshControl={
@@ -166,7 +169,7 @@ export default function Review(props) {
               }}
             />
           }
-          data={stateProps.singleBusiness.reviews}
+          data={dateSortedReviews}
           keyExtractor={(item) => item.id}
           ListHeaderComponent={() => (
             <RateDetail
@@ -197,3 +200,23 @@ export default function Review(props) {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  noReviewsAvailable: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  addButton: {
+    padding: 5,
+    borderRadius: 5,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  addButtonText: {
+    fontSize: 15,
+    marginLeft: 5,
+  },
+});

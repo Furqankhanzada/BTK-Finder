@@ -8,6 +8,7 @@ import {
   Alert,
   Linking,
   Platform,
+  RefreshControl,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
@@ -22,13 +23,12 @@ import {
   PlaceItem,
 } from '@components';
 import { BaseColor, useTheme, BaseStyle } from '@config';
-import * as Utils from '@utils';
+
 import styles from './styles';
-import { HomeBannerData } from '@data';
 import FeaturedCategoryPlaceholderComponent from '../../components/Placeholders/featuredCategories';
 import SectionList from './sectionList';
 import { getCategories } from '../../actions/category';
-import { getBusinesses } from '../../actions/business';
+import { getBusinesses, getSingleBusiness } from '../../actions/business';
 import { getFavoriteBusinesses } from '../../actions/favorites';
 import { getProfile } from '../../actions/auth';
 import useLocation from '../../hooks/useLocation';
@@ -58,6 +58,7 @@ export default function Home({ navigation }) {
   const isLogin = useSelector((state) => state.auth.isLogin);
   const profileData = useSelector((state) => state.profile);
   const [loading, setLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const deltaY = new Animated.Value(0);
   const { colors } = useTheme();
   const { t } = useTranslation();
@@ -77,12 +78,6 @@ export default function Home({ navigation }) {
       },
     ],
   ];
-  const [banner] = useState(HomeBannerData);
-
-  const [heightHeader, setHeightHeader] = useState(Utils.heightHeader());
-
-  const heightImageBanner = Utils.scaleWithPixel(225);
-  const marginTopBanner = heightImageBanner - heightHeader + 10;
 
   useEffect(() => {
     checkNotifications().then(({ status }) => {
@@ -115,7 +110,7 @@ export default function Home({ navigation }) {
         setUser(profileData);
       }
     }
-  }, [isLogin, profileData?._id]);
+  }, [isLogin, profileData, profileData?._id]);
 
   useEffect(() => {
     if (isLogin) {
@@ -131,14 +126,14 @@ export default function Home({ navigation }) {
   }, [dispatch, isLogin]);
 
   useEffect(() => {
-    dispatch(getCategories({ limit: 7 }, null, true));
-  }, [dispatch]);
-
-  useEffect(() => {
     dispatch(
-      getCategories({}, () => {
-        setLoading(false);
-      }),
+      getCategories(
+        { limit: 7 },
+        () => {
+          setLoading(false);
+        },
+        true,
+      ),
     );
   }, [dispatch]);
 
@@ -161,8 +156,23 @@ export default function Home({ navigation }) {
     );
   }, [dispatch]);
 
+  useEffect(() => {
+    if (
+      !stateProps.getPopularBusinessesLoading &&
+      !stateProps.getRecentlyAddedBusinessesLoading &&
+      !loading
+    ) {
+      setIsRefreshing(false);
+      setLoading(false);
+    }
+  }, [
+    stateProps.getPopularBusinessesLoading,
+    stateProps.getRecentlyAddedBusinessesLoading,
+    loading,
+  ]);
+
   const navigateBusinessDetail = (id, name, type) => {
-    navigation.navigate('PlaceDetail', { id });
+    navigation.navigate('BusinessDetailTabNavigator', { id });
 
     const business = {
       id,
@@ -202,6 +212,36 @@ export default function Home({ navigation }) {
     });
   };
 
+  const onRefresh = () => {
+    setIsRefreshing(true);
+    setLoading(true);
+    dispatch(
+      getBusinesses({
+        limit: 15,
+        skip: 0,
+        popular: true,
+        fields: 'name, thumbnail, category, address, averageRatings',
+      }),
+    );
+    dispatch(
+      getBusinesses({
+        limit: 15,
+        skip: 0,
+        recent: true,
+        fields: 'name, thumbnail, category, averageRatings',
+      }),
+    );
+    dispatch(
+      getCategories(
+        { limit: 7 },
+        () => {
+          setLoading(false);
+        },
+        true,
+      ),
+    );
+  };
+
   return (
     <View style={{ flex: 1 }}>
       <SafeAreaView style={{ flex: 1 }} forceInset={{ top: 'always' }}>
@@ -222,6 +262,9 @@ export default function Home({ navigation }) {
           }}
         />
         <ScrollView
+          refreshControl={
+            <RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />
+          }
           onScroll={Animated.event([
             {
               nativeEvent: {
@@ -229,9 +272,6 @@ export default function Home({ navigation }) {
               },
             },
           ])}
-          onContentSizeChange={() => {
-            setHeightHeader(Utils.heightHeader());
-          }}
           scrollEventThrottle={8}>
           <View
             style={[

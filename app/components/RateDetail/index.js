@@ -18,7 +18,7 @@ export default function RateDetail(props) {
           value={point}
           displayType={'text'}
           decimalScale={1}
-          renderText={(value) => (
+          renderText={value => (
             <Text primaryColor style={{ fontSize: 48 }}>
               {value}
             </Text>
@@ -35,7 +35,7 @@ export default function RateDetail(props) {
               {[1, 2, 3, 4, 5].map((icon, index) => {
                 return (
                   <Icon
-                    key={`star5` + index}
+                    key={'star5' + index}
                     name="star"
                     color={BaseColor.grayColor}
                     solid
@@ -48,7 +48,7 @@ export default function RateDetail(props) {
               {[1, 2, 3, 4].map((icon, index) => {
                 return (
                   <Icon
-                    key={`star4` + index}
+                    key={'star4' + index}
                     name="star"
                     color={BaseColor.grayColor}
                     solid
@@ -61,7 +61,7 @@ export default function RateDetail(props) {
               {[1, 2, 3].map((icon, index) => {
                 return (
                   <Icon
-                    key={`star3` + index}
+                    key={'star3' + index}
                     name="star"
                     color={BaseColor.grayColor}
                     solid
@@ -74,7 +74,7 @@ export default function RateDetail(props) {
               {[1, 2].map((icon, index) => {
                 return (
                   <Icon
-                    key={`star2` + index}
+                    key={'star2' + index}
                     name="star"
                     color={BaseColor.grayColor}
                     solid

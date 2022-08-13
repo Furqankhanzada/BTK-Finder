@@ -14,6 +14,7 @@ import {
   Linking,
   Alert,
   Share,
+  StyleSheet,
 } from 'react-native';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import { useTranslation } from 'react-i18next';
@@ -38,12 +39,14 @@ import {
   StarRating,
 } from '@components';
 import * as Utils from '@utils';
-import styles from './styles';
-import PlaceItem from '../PlaceItem';
-import CardList from '../CardList';
-import { getRelatedBusinesses, getBusinesses } from '../../actions/business';
-import SectionList from '../../screens/Home/sectionList';
-import { trackEvent, EVENTS } from '../../userTracking';
+import PlaceItem from '../../../../components/PlaceItem';
+import CardList from '../../../../components/CardList';
+import {
+  getRelatedBusinesses,
+  getBusinesses,
+} from '../../../../actions/business';
+import SectionList from '../../../Home/sectionList';
+import { trackEvent, EVENTS } from '../../../../userTracking';
 
 let defaultDelta = {
   latitudeDelta: 0.003,
@@ -56,7 +59,7 @@ export default function PlaceDetailComponent(props) {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const dispatch = useDispatch();
-  const { navigation, business, preview } = props;
+  const { navigation, business, isLoading, preview } = props;
   const [isPreview] = useState(preview);
   const [collapseHour, setCollapseHour] = useState(true);
   const [heightHeader, setHeightHeader] = useState(Utils.heightHeader());
@@ -72,7 +75,6 @@ export default function PlaceDetailComponent(props) {
       getRelatedBusinessesLoading: businesses.getRelatedBusinessesLoading,
       favoriteBusinesses: favorites.getFavoriteBusinesses,
       isFavoriteLoading: favorites.isFavoriteLoading,
-      getSingleBusinessLoading: businesses.getSingleBusinessLoading,
     };
   });
 
@@ -98,24 +100,26 @@ export default function PlaceDetailComponent(props) {
   }, [business._id]);
 
   useEffect(() => {
-    dispatch(
-      getRelatedBusinesses({
-        limit: 5,
-        skip: 0,
-        fields: 'name, thumbnail, category, averageRatings',
-        category: business.category,
-      }),
-    );
-    dispatch(
-      getBusinesses({
-        placeDetail: true,
-        recent: true,
-        limit: 5,
-        skip: 0,
-        fields: 'name, thumbnail, category, address, averageRatings',
-      }),
-    );
-  }, [business.category, dispatch]);
+    if (business?.category) {
+      dispatch(
+        getRelatedBusinesses({
+          limit: 5,
+          skip: 0,
+          fields: 'name, thumbnail, category, averageRatings',
+          category: business.category,
+        }),
+      );
+      dispatch(
+        getBusinesses({
+          placeDetail: true,
+          recent: true,
+          limit: 5,
+          skip: 0,
+          fields: 'name, thumbnail, category, address, averageRatings',
+        }),
+      );
+    }
+  }, [business?.category, dispatch]);
 
   useEffect(() => {
     let loc =
@@ -281,10 +285,11 @@ export default function PlaceDetailComponent(props) {
   };
 
   const navigateBusinessDetail = (id) => {
-    navigation.replace('PlaceDetail', { id });
+    navigation.replace('BusinessDetailTabNavigator', { id });
   };
-  const navigateToReview = (id) => {
-    navigation.navigate('Review', { id });
+
+  const navigateToReview = () => {
+    navigation.navigate('Reviews');
   };
 
   const headerBackgroundColor = scrollY.interpolate({
@@ -480,7 +485,7 @@ export default function PlaceDetailComponent(props) {
   }, [business]);
 
   const renderBanner = () => {
-    if (stateProps?.getSingleBusinessLoading) {
+    if (isLoading) {
       return (
         <Placeholder Animation={Progressive}>
           <PlaceholderMedia style={{ width: '100%', height: '100%' }} />
@@ -492,7 +497,7 @@ export default function PlaceDetailComponent(props) {
   };
 
   const renderContent = () => {
-    if (stateProps?.getSingleBusinessLoading) {
+    if (isLoading) {
       return (
         <View style={{ paddingHorizontal: 20 }}>
           <PlaceDetailPlaceholder />
@@ -535,7 +540,7 @@ export default function PlaceDetailComponent(props) {
                 {isPreview ? (
                   <TouchableOpacity
                     style={styles.contentRate}
-                    onPress={() => navigateToReview(business._id)}>
+                    onPress={() => navigateToReview()}>
                     <View
                       style={{ flexDirection: 'row', alignItems: 'center' }}>
                       <Tag rate>
@@ -562,7 +567,7 @@ export default function PlaceDetailComponent(props) {
                 ) : (
                   <TouchableOpacity
                     style={styles.contentRate}
-                    onPress={() => navigateToReview(business._id)}>
+                    onPress={() => navigateToReview()}>
                     <View
                       style={{ flexDirection: 'row', alignItems: 'center' }}>
                       <Tag rate>
@@ -908,7 +913,7 @@ export default function PlaceDetailComponent(props) {
               data={stateProps.recentlyAddedBusinesses}
               horizontal={true}
               loading={stateProps.getRecentlyAddedBusinessesLoading}
-              renderItem={({ item, index }) => {
+              renderItem={({ item }) => {
                 return (
                   <PlaceItem
                     grid
@@ -1065,9 +1070,160 @@ export default function PlaceDetailComponent(props) {
 }
 
 PlaceDetailComponent.propTypes = {
+  isLoading: PropTypes.bool,
   business: PropTypes.object,
+  navigation: PropTypes.object,
 };
 
 PlaceDetailComponent.defaultProps = {
   business: {},
 };
+
+const styles = StyleSheet.create({
+  headerStyle: {
+    height: 'auto',
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerImageStyle: {
+    height: 250,
+    width: '100%',
+    top: 0,
+    alignSelf: 'center',
+    position: 'absolute',
+    paddingBottom: 20,
+  },
+  iconContent: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: BaseColor.dividerColor,
+  },
+  iconLike: {
+    position: 'absolute',
+    bottom: 0,
+    right: 3,
+  },
+  icon: {
+    width: 18,
+    height: 18,
+  },
+  content: {
+    paddingHorizontal: 20,
+  },
+  boxInfo: {
+    padding: 10,
+    minHeight: 120,
+    marginBottom: 20,
+    width: '100%',
+    borderRadius: 8,
+    borderWidth: 0.5,
+    shadowOffset: { width: 1.5, height: 1.5 },
+    shadowOpacity: 1.0,
+    elevation: 5,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  boxContentRight: {
+    alignItems: 'flex-end',
+    justifyContent: 'space-between',
+  },
+  contentStatus: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  dot: {
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: BaseColor.grayColor,
+    marginHorizontal: 10,
+  },
+  tagRate: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 4,
+  },
+  imgBanner: {
+    width: '100%',
+    height: 250,
+    position: 'absolute',
+  },
+  lineSpace: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  rateLine: {
+    marginTop: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  line: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  contentIcon: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  userIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: 'white',
+    marginRight: 5,
+  },
+  map: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  contentInforAction: {
+    marginLeft: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flex: 1,
+  },
+  lineWorkHours: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
+    justifyContent: 'space-between',
+    borderBottomWidth: 1,
+  },
+  wrapContent: {
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    paddingBottom: 20,
+  },
+  contentDescription: {
+    paddingTop: 20,
+    paddingBottom: 20,
+    borderBottomWidth: 0.5,
+  },
+  priceRangeSection: {
+    flex: 1,
+    alignItems: 'flex-end',
+  },
+  prices: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  promotionTag: {
+    borderRadius: 7,
+    height: 14,
+    paddingHorizontal: 7,
+  },
+});

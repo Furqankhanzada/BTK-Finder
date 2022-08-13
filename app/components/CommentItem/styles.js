@@ -5,8 +5,12 @@ import { BaseColor } from '@config';
 export default StyleSheet.create({
   contain: {
     borderRadius: 8,
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
     paddingVertical: 10,
+  },
+  contentHeader: {
+    flexDirection: 'row',
+    marginBottom: 10,
   },
   contentLeft: {
     flex: 8,
@@ -15,8 +19,8 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
   thumb: {
-    width: 40,
-    height: 40,
+    width: 30,
+    height: 30,
     borderRadius: 20,
     marginRight: 5,
   },

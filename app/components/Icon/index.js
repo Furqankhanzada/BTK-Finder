@@ -11,6 +11,9 @@ export default function Index(props) {
 }
 
 Index.propTypes = {
+  name: PropTypes.string,
+  size: PropTypes.number,
+  color: PropTypes.string,
   style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
   enableRTL: PropTypes.bool,
 };

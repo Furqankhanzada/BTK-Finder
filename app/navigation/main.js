@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { BaseColor, useTheme, useFont } from '@config';
 import { Icon } from '@components';
 import { setEditBusiness } from '../actions/business';
+import BusinessDetailNavigator from '@screens/businesses/BusinessDetailNavigator';
 
 /* Bottom Screen */
 import Home from '@screens/Home';
@@ -23,7 +24,7 @@ import Place from '@screens/Place';
 import SignUp from '@screens/SignUp';
 import SignIn from '@screens/SignIn';
 import VerifyCode from '@screens/VerifyCode';
-import Review from '@screens/Review';
+import Review from '@screens/businesses/reviews/BusinessReviewsScreen';
 import Feedback from '@screens/Feedback';
 import Messages from '@screens/Messages';
 import Walkthrough from '@screens/Walkthrough';
@@ -31,7 +32,7 @@ import ResetPassword from '@screens/ResetPassword';
 import ChangePassword from '@screens/ChangePassword';
 import ProfileEdit from '@screens/ProfileEdit';
 import ChangeLanguage from '@screens/ChangeLanguage';
-import PlaceDetail from '@screens/PlaceDetail';
+import PlaceDetail from '@screens/businesses/info/BusinessInfoScreen';
 import ContactUs from '@screens/ContactUs';
 import AboutUs from '@screens/AboutUs';
 import Address from '@screens/AddBusiness/address';
@@ -52,6 +53,10 @@ export default function Main() {
       <MainStack.Screen
         name="BottomTabNavigator"
         component={BottomTabNavigator}
+      />
+      <MainStack.Screen
+        name="BusinessDetailTabNavigator"
+        component={BusinessDetailNavigator}
       />
       <MainStack.Screen name="ThemeSetting" component={ThemeSetting} />
       <MainStack.Screen name="Setting" component={Setting} />
@@ -149,7 +154,7 @@ function BottomTabNavigator() {
           },
         }}
         listeners={() => ({
-          tabPress: (e) => {
+          tabPress: () => {
             dispatch(setEditBusiness(false));
           },
         })}
