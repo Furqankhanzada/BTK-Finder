@@ -110,13 +110,6 @@ export default function FavouriteIcon(props) {
   );
 }
 
-FavouriteIcon.propTypes = {
-  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-  isFavorite: PropTypes.bool,
-  favoriteId: PropTypes.string,
-  showText: PropTypes.bool,
-};
-
 FavouriteIcon.defaultProps = {
   style: {},
   isFavorite: false,
