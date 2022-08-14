@@ -170,7 +170,7 @@ export default function Review(props: any) {
             />
           }
           data={dateSortedReviews}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item._id}
           ListHeaderComponent={() => (
             <RateDetail
               point={rateDetail.point}

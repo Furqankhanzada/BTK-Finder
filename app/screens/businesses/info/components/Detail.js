@@ -880,7 +880,7 @@ export default function PlaceDetailComponent(props) {
               </Text>
               <View
                 style={[styles.wrapContent, { borderColor: colors.border }]}>
-                {business?.facilities?.map((item) => {
+                {business?.facilities?.map((item, index) => {
                   return (
                     <Tag
                       icon={
@@ -893,7 +893,7 @@ export default function PlaceDetailComponent(props) {
                         />
                       }
                       chip
-                      key={item.id}
+                      key={item.name + index}
                       style={{
                         marginTop: 8,
                         marginRight: 8,
