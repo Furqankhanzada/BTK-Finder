@@ -275,7 +275,7 @@ export default function Home({ navigation }: any) {
                 },
               },
             ],
-            { useNativeDriver: true },
+            { useNativeDriver: false },
           )}
           scrollEventThrottle={8}>
           <View

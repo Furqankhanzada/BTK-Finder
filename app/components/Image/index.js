@@ -33,11 +33,6 @@ export default function Image(props) {
   );
 }
 
-Image.propTypes = {
-  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-  source: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-};
-
 Image.defaultProps = {
   style: {},
   resizeMode: 'cover',

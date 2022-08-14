@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { StatusBar } from 'react-native';
+import { Platform, StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useDarkMode, ColorSchemeProvider } from 'react-native-dynamic';
@@ -47,9 +47,11 @@ export default function Navigator() {
       lng: storeLanguage ?? BaseSetting.defaultLanguage,
       fallbackLng: BaseSetting.defaultLanguage,
     });
-    SplashScreen.hide();
-    StatusBar.setBackgroundColor(colors.primary, true);
+    if (Platform.OS === 'android') {
+      StatusBar.setBackgroundColor(colors.primary, true);
+    }
     StatusBar.setBarStyle(isDarkMode ? 'light-content' : 'dark-content', true);
+    SplashScreen.hide();
   }, [colors.primary, isDarkMode, storeLanguage]);
 
   useEffect(() => {
