@@ -114,16 +114,4 @@ const styles = StyleSheet.create({
     height: 40,
     marginRight: 10,
   },
-  line: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  contentIcon: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
 });
