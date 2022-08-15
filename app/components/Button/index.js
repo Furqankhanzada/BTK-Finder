@@ -33,15 +33,17 @@ export default function Button(props) {
       ])}
       activeOpacity={0.9}>
       {icon ? icon : null}
-      <Text
-        style={StyleSheet.flatten([
-          styles.textDefault,
-          outline && { color: colors.primary },
-          styleText,
-        ])}
-        numberOfLines={1}>
-        {children || 'Button'}
-      </Text>
+      {children && (
+        <Text
+          style={StyleSheet.flatten([
+            styles.textDefault,
+            outline && { color: colors.primary },
+            styleText,
+          ])}
+          numberOfLines={1}>
+          {children}
+        </Text>
+      )}
       {loading ? (
         <ActivityIndicator
           size="small"

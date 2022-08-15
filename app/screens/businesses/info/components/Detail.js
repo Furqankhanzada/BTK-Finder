@@ -25,20 +25,19 @@ import { useSelector, useDispatch } from 'react-redux';
 import NumberFormat from 'react-number-format';
 import moment from 'moment';
 import { Placeholder, Progressive, PlaceholderMedia } from 'rn-placeholder';
+
 import { BaseColor, Images, useTheme, BaseStyle } from '@config';
 import {
   PlaceDetailPlaceholder,
-  ContactItems,
   Header,
   SafeAreaView,
   Icon,
   Text,
   Tag,
   Image,
-  FavouriteIcon,
-  StarRating,
 } from '@components';
 import * as Utils from '@utils';
+
 import PlaceItem from '../../../../components/PlaceItem';
 import CardList from '../../../../components/CardList';
 import {
@@ -48,6 +47,7 @@ import {
 import SectionList from '../../../Home/sectionList';
 import { trackEvent, EVENTS } from '../../../../userTracking';
 import OverviewCard from '@screens/businesses/info/components/OverviewCard';
+import ContactInfo from '@screens/businesses/info/components/ContactInfo';
 
 let defaultDelta = {
   latitudeDelta: 0.003,
@@ -183,42 +183,6 @@ export default function PlaceDetailComponent(props) {
     outputRange: [250, heightHeader],
     useNativeDriver: true,
   });
-  const information = [
-    {
-      id: '1',
-      icon: 'map-marker-alt',
-      title: t('address'),
-      type: 'map',
-      information: business?.address,
-      location: business?.location?.coordinates,
-      rightText: 'Get Directions',
-      name: business?.name,
-    },
-    {
-      id: '2',
-      icon: 'mobile-alt',
-      title: t('tel'),
-      type: 'phone',
-      information: business?.telephone,
-      rightText: 'Call Now',
-    },
-    {
-      id: '3',
-      icon: 'envelope',
-      title: t('email'),
-      type: 'email',
-      information: business?.email ? business.email : '',
-      rightText: 'Send Mail',
-    },
-    {
-      id: '4',
-      icon: 'globe',
-      title: t('website'),
-      type: 'web',
-      information: business?.website ? business.website : '',
-      rightText: 'Visit Website',
-    },
-  ];
 
   const openGps = (item) => {
     showLocation({
@@ -368,6 +332,24 @@ export default function PlaceDetailComponent(props) {
     return <Image source={getCoverImage()} style={{ flex: 1 }} />;
   };
 
+  const onPressWhatsApp = () => {
+    onOpen({
+      title: t('tel'),
+      type: 'whatsapp',
+      information: business?.telephone,
+      rightText: 'open WhatsApp',
+    });
+  };
+
+  const onPressPhone = () => {
+    onOpen({
+      title: t('tel'),
+      type: 'phone',
+      information: business?.telephone,
+      rightText: 'call',
+    });
+  };
+
   const renderContent = () => {
     if (isLoading) {
       return (
@@ -381,66 +363,13 @@ export default function PlaceDetailComponent(props) {
       <View>
         <View style={{ paddingHorizontal: 20 }}>
           <OverviewCard business={business} isPreview={isPreview} />
-          <ContactItems
-            data={business}
-            onPressWhatsApp={() =>
-              onOpen({
-                title: t('tel'),
-                type: 'whatsapp',
-                information: business?.telephone,
-                rightText: 'open WhatsApp',
-              })
-            }
-            onPressPhone={() =>
-              onOpen({
-                title: t('tel'),
-                type: 'phone',
-                information: business?.telephone,
-                rightText: 'call',
-              })
-            }
+          <ContactInfo
+            business={business}
+            onPressWhatsApp={onPressWhatsApp}
+            onPressPhone={onPressPhone}
+            onOpen={onOpen}
           />
           <View>
-            {information?.map((item) => {
-              if (item?.information) {
-                return (
-                  <TouchableOpacity
-                    style={styles.line}
-                    key={item.id}
-                    onPress={() => onOpen(item)}>
-                    <View
-                      style={[
-                        styles.contentIcon,
-                        { backgroundColor: colors.border },
-                      ]}>
-                      <Icon
-                        name={item.icon}
-                        size={16}
-                        color={BaseColor.whiteColor}
-                      />
-                    </View>
-                    <View
-                      style={{
-                        marginLeft: 10,
-                        flexDirection: 'column',
-                        flex: 1,
-                      }}>
-                      <Text caption2 grayColor>
-                        {item.title}
-                      </Text>
-                      <Text footnote semibold style={{ marginTop: 5 }}>
-                        {item.information}
-                      </Text>
-                    </View>
-                    <View>
-                      <Text caption1 semibold style={{ color: colors.primary }}>
-                        {item.rightText}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                );
-              }
-            })}
             {business?.openHours && business?.openHours?.length ? (
               <Fragment>
                 <TouchableOpacity style={styles.line} onPress={onCollapse}>
