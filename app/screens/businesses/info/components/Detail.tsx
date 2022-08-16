@@ -80,11 +80,11 @@ export default function PlaceDetailComponent(props: Props) {
       setBusinessLink(link);
     }
     businessUrl();
-  }, [business._id]);
+  }, [business?._id]);
 
   useEffect(() => {
     let loc =
-      business.location && business.location.coordinates
+      business?.location && business.location.coordinates
         ? business.location.coordinates
         : null;
     if (loc) {
@@ -97,7 +97,7 @@ export default function PlaceDetailComponent(props: Props) {
       setRegion(payload);
       reCenterMap(payload);
     }
-  }, [business.location]);
+  }, [business?.location]);
 
   const onShare = async () => {
     try {
