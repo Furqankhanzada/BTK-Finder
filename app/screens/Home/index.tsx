@@ -26,7 +26,7 @@ import { BaseColor, useTheme, BaseStyle } from '@config';
 
 import styles from './styles';
 import FeaturedCategoryPlaceholderComponent from '../../components/Placeholders/featuredCategories';
-import SectionList from './sectionList';
+import CustomSectionList from './CustomSectionList';
 import { getCategories } from '../../actions/category';
 import { getBusinesses } from '../../actions/business';
 import { getFavoriteBusinesses } from '../../actions/favorites';
@@ -367,7 +367,7 @@ export default function Home({ navigation }: any) {
             />
           )}
           {/* Popular Businesses Section */}
-          <SectionList
+          <CustomSectionList
             title="Popular Businesses"
             subTitle="Find the most interesting things"
             seeMoreFunc={() =>
@@ -411,7 +411,7 @@ export default function Home({ navigation }: any) {
             }}
           />
           {/* Recently Added Businesses Section */}
-          <SectionList
+          <CustomSectionList
             title="Recently Added Businesses"
             subTitle="Lets find out what's new"
             seeMoreFunc={() =>

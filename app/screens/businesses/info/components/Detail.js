@@ -1,16 +1,9 @@
-import React, {
-  Fragment,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   View,
   ScrollView,
   Animated,
-  TouchableOpacity,
   Linking,
   Alert,
   Share,
@@ -35,20 +28,21 @@ import {
   Text,
   Tag,
   Image,
+  PlaceItem,
+  CardList,
 } from '@components';
 import * as Utils from '@utils';
 
-import PlaceItem from '../../../../components/PlaceItem';
-import CardList from '../../../../components/CardList';
+import OverviewCard from '@screens/businesses/info/components/OverviewCard';
+import ContactInfo from '@screens/businesses/info/components/ContactInfo';
+import OpenHours from '@screens/businesses/info/components/OpenHours';
+import CustomSectionList from '@screens/Home/CustomSectionList';
+
 import {
   getRelatedBusinesses,
   getBusinesses,
 } from '../../../../actions/business';
-import SectionList from '../../../Home/sectionList';
 import { trackEvent, EVENTS } from '../../../../userTracking';
-import OverviewCard from '@screens/businesses/info/components/OverviewCard';
-import ContactInfo from '@screens/businesses/info/components/ContactInfo';
-import OpenHours from '@screens/businesses/info/components/OpenHours';
 
 let defaultDelta = {
   latitudeDelta: 0.003,
@@ -469,7 +463,7 @@ export default function PlaceDetailComponent(props) {
         </View>
         {isPreview ? null : (
           <View style={{ marginTop: 20 }}>
-            <SectionList
+            <CustomSectionList
               title="Recently Added"
               data={stateProps.recentlyAddedBusinesses}
               horizontal={true}
@@ -501,7 +495,7 @@ export default function PlaceDetailComponent(props) {
           </View>
         )}
         {isPreview ? null : (
-          <SectionList
+          <CustomSectionList
             title={t('related')}
             data={stateProps.relatedBusiness}
             loading={stateProps.getRelatedBusinessesLoading}
