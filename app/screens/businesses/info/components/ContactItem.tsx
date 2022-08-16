@@ -1,10 +1,16 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 
+import { ContactItem as ContactItemInterface } from '@screens/businesses/models/BusinessPresentable';
 import { Icon, Text } from '@components';
 import { BaseColor, useTheme } from '@config';
 
-export default function ContactItem({ item, onPress }: any) {
+interface Props {
+  item: ContactItemInterface;
+  onPress: (item: ContactItemInterface) => void;
+}
+
+export default function ContactItem({ item, onPress }: Props) {
   const { colors } = useTheme();
 
   return (

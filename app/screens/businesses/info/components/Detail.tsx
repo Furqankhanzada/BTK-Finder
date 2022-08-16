@@ -1,32 +1,29 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import PropTypes from 'prop-types';
 import {
-  View,
-  ScrollView,
+  Alert,
   Animated,
   Linking,
-  Alert,
+  ScrollView,
   Share,
   StyleSheet,
+  View,
 } from 'react-native';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import { useTranslation } from 'react-i18next';
 import Config from 'react-native-config';
-import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { showLocation } from 'react-native-map-link';
-import NumberFormat from 'react-number-format';
-import moment from 'moment';
-import { Placeholder, Progressive, PlaceholderMedia } from 'rn-placeholder';
+import { Placeholder, PlaceholderMedia, Progressive } from 'rn-placeholder';
 
-import { BaseColor, Images, useTheme, BaseStyle } from '@config';
+import { BaseColor, BaseStyle, Images, useTheme } from '@config';
 import {
-  PlaceDetailPlaceholder,
   Header,
-  SafeAreaView,
   Icon,
-  Text,
-  Tag,
   Image,
+  PlaceDetailPlaceholder,
+  SafeAreaView,
+  Tag,
+  Text,
 } from '@components';
 import * as Utils from '@utils';
 
@@ -35,15 +32,27 @@ import ContactInfo from '@screens/businesses/info/components/ContactInfo';
 import OpenHours from '@screens/businesses/info/components/OpenHours';
 import Recommendations from '@screens/businesses/info/components/Recommendations';
 
-import { trackEvent, EVENTS } from '../../../../userTracking';
+import { EVENTS, trackEvent } from '../../../../userTracking';
+import {
+  BusinessPresentable,
+  ContactItem,
+  ContactItemType,
+} from '@screens/businesses/models/BusinessPresentable';
 
 let defaultDelta = {
   latitudeDelta: 0.003,
   longitudeDelta: 0.003,
 };
 
-export default function PlaceDetailComponent(props) {
-  const mapRef = useRef();
+interface Props {
+  navigation: any;
+  business: BusinessPresentable;
+  isLoading: boolean;
+  preview: boolean;
+}
+
+export default function PlaceDetailComponent(props: Props) {
+  const mapRef = useRef<any>();
   const scrollY = useRef(new Animated.Value(0)).current;
   const { t } = useTranslation();
   const { colors } = useTheme();
@@ -96,47 +105,43 @@ export default function PlaceDetailComponent(props) {
         message: `${business.name}: ${businessLink} \n \nDownload Explore BTK: ${appLink}`,
         url: businessLink,
         title: business.name,
-        dialogTitle: business.name,
       });
       trackEvent(EVENTS.SHARE_BUTTON_CLICKED, {
         businessId: business._id,
         title: business.name,
         url: businessLink,
       });
-    } catch (error) {
+    } catch (error: any) {
       console.log('Error while sharing Business', error.message);
     }
   };
 
-  // const navigateBusinessDetail = (id) => {
-  //   navigation.replace('BusinessDetailTabNavigator', { id });
-  // };
-  //
-  // const navigateToReview = () => {
-  //   navigation.navigate('Reviews');
-  // };
+  const onNavigate = (route: string, id?: string) => {
+    const params: { id?: string } = {};
+    if (id) {
+      params.id = id;
+    }
+    navigation.navigate(route, params);
+  };
 
   const headerBackgroundColor = scrollY.interpolate({
     inputRange: [0, 140],
     outputRange: [BaseColor.whiteColor, colors.text],
     extrapolate: 'clamp',
-    useNativeDriver: true,
   });
 
   const headerImageOpacity = scrollY.interpolate({
     inputRange: [0, 250 - heightHeader - 20],
     outputRange: [1, 0],
     extrapolate: 'clamp',
-    useNativeDriver: true,
   });
 
   const heightViewImg = scrollY.interpolate({
     inputRange: [0, 250 - heightHeader],
     outputRange: [250, heightHeader],
-    useNativeDriver: true,
   });
 
-  const openGps = (item) => {
+  const openGps = (item: any) => {
     showLocation({
       latitude: item?.location[0],
       longitude: item?.location[1],
@@ -148,12 +153,11 @@ export default function PlaceDetailComponent(props) {
     });
   };
 
-  const businessDetails = {
-    id: business?._id,
-    name: business?.name,
-  };
-
-  const onOpen = (item) => {
+  const onOpen = (item: ContactItem) => {
+    const businessDetails = {
+      id: business._id,
+      name: business.name,
+    };
     Alert.alert(
       'Explore BTK',
       `${t('do_you_want_to')} ${item.rightText} ?`,
@@ -167,37 +171,38 @@ export default function PlaceDetailComponent(props) {
           text: t('yes'),
           onPress: () => {
             switch (item.type) {
-              case 'web':
-                Linking.openURL(item.information);
+              case ContactItemType.website:
+                Linking.openURL(item.information || '');
                 trackEvent(EVENTS.VISITED_BUSINESS_WEBSITE, {
                   ...businessDetails,
                   website: item.information,
                 });
                 break;
-              case 'phone':
+              case ContactItemType.phone:
                 Linking.openURL('tel://' + item.information);
                 trackEvent(EVENTS.CONTACTED_BUSINESS_VIA_PHONE_NUMBER, {
                   ...businessDetails,
                   phone: item.information,
                 });
                 break;
-              case 'email':
+              case ContactItemType.email:
                 Linking.openURL('mailto:' + item.information);
                 trackEvent(EVENTS.CONTACTED_BUSINESS_VIA_EMAIL, {
                   ...businessDetails,
                   email: item.information,
                 });
                 break;
-              case 'whatsapp':
+              case ContactItemType.whatsapp:
                 Linking.openURL(
-                  'whatsapp://send?phone=' + checkPhoneCode(item.information),
+                  'whatsapp://send?phone=' +
+                    checkPhoneCode(item.information || ''),
                 );
                 trackEvent(EVENTS.CONTACTED_BUSINESS_VIA_WHATSAPP, {
                   ...businessDetails,
                   whatsapp: item.information,
                 });
                 break;
-              case 'map':
+              case ContactItemType.map:
                 openGps(item);
                 trackEvent(EVENTS.CHECKED_BUSINESS_DIRECTION, {
                   ...businessDetails,
@@ -211,7 +216,7 @@ export default function PlaceDetailComponent(props) {
     );
   };
 
-  const checkPhoneCode = (phone) => {
+  const checkPhoneCode = (phone: string) => {
     if (business?.telephone?.includes('03')) {
       return `+92${phone.slice(1)}`;
     }
@@ -232,7 +237,7 @@ export default function PlaceDetailComponent(props) {
     longitudeDelta: 0.004,
   });
 
-  const reCenterMap = (currentLocation) => {
+  const reCenterMap = (currentLocation: any) => {
     mapRef?.current?.animateToRegion({
       latitude: currentLocation.latitude,
       longitude: currentLocation.longitude,
@@ -243,7 +248,7 @@ export default function PlaceDetailComponent(props) {
 
   const getCoverImage = useCallback(() => {
     if (business.gallery && business.gallery.length) {
-      return business.gallery.find((image) => image?.cover)?.image;
+      return business.gallery.find((image) => image.cover)?.image;
     } else {
       return Images.imagePlaceholder;
     }
@@ -263,22 +268,51 @@ export default function PlaceDetailComponent(props) {
 
   const onPressWhatsApp = () => {
     onOpen({
+      id: '6',
       title: t('tel'),
-      type: 'whatsapp',
-      information: business?.telephone,
+      type: ContactItemType.whatsapp,
+      information: business.telephone,
       rightText: 'open WhatsApp',
     });
   };
 
   const onPressPhone = () => {
     onOpen({
+      id: '5',
       title: t('tel'),
-      type: 'phone',
-      information: business?.telephone,
+      type: ContactItemType.phone,
+      information: business.telephone,
       rightText: 'call',
     });
   };
 
+  const onPressGallery = () => {
+    navigation.navigate('PreviewImage', {
+      title: business.name,
+      gallery: business.gallery,
+    });
+    trackEvent(EVENTS.SEE_MORE_IMAGES, { title: business.name });
+  };
+
+  const renderHeaderButton = (source: number, isInPreviewMode?: boolean) => {
+    if (isInPreviewMode) {
+      return null;
+    }
+    return (
+      <View style={styles.iconContent}>
+        <Animated.Image
+          resizeMode="contain"
+          style={[
+            styles.icon,
+            {
+              tintColor: headerBackgroundColor,
+            },
+          ]}
+          source={source}
+        />
+      </View>
+    );
+  };
   const renderContent = () => {
     if (isLoading) {
       return (
@@ -291,8 +325,13 @@ export default function PlaceDetailComponent(props) {
     return (
       <View>
         <View style={{ paddingHorizontal: 20 }}>
-          <OverviewCard business={business} isPreview={isPreview} />
+          <OverviewCard
+            business={business}
+            isPreview={isPreview}
+            onNavigate={onNavigate}
+          />
           <ContactInfo
+            onNavigate={onNavigate}
             business={business}
             onPressWhatsApp={onPressWhatsApp}
             onPressPhone={onPressPhone}
@@ -310,58 +349,7 @@ export default function PlaceDetailComponent(props) {
               style={{
                 paddingVertical: 20,
                 flexDirection: 'row',
-              }}>
-              {business.established ? (
-                <View style={{ flex: 1 }}>
-                  <Text caption1 grayColor>
-                    {t('date_established')}
-                  </Text>
-                  <Text headline style={{ marginTop: 5 }}>
-                    {moment(business.established).format('DD/MM/YYYY')}
-                  </Text>
-                </View>
-              ) : null}
-              {business.priceRange &&
-              (business.priceRange.from || business.priceRange.to) ? (
-                <View style={styles.priceRangeSection}>
-                  <Text caption1 grayColor>
-                    {t('price_range')}
-                  </Text>
-                  <View style={styles.prices}>
-                    <NumberFormat
-                      value={
-                        business.priceRange.from
-                          ? `${business.priceRange.from}`
-                          : ''
-                      }
-                      displayType={'text'}
-                      prefix={' RS '}
-                      thousandSeparator={true}
-                      renderText={(value) => (
-                        <Text headline style={{ marginTop: 5 }}>
-                          {value} -
-                        </Text>
-                      )}
-                    />
-                    <NumberFormat
-                      value={
-                        business.priceRange.to
-                          ? `${business.priceRange.to}`
-                          : ''
-                      }
-                      displayType={'text'}
-                      prefix={' RS '}
-                      thousandSeparator={true}
-                      renderText={(value) => (
-                        <Text headline style={{ marginTop: 5 }}>
-                          {value}
-                        </Text>
-                      )}
-                    />
-                  </View>
-                </View>
-              ) : null}
-            </View>
+              }}></View>
             <View
               style={{
                 height: 180,
@@ -393,7 +381,7 @@ export default function PlaceDetailComponent(props) {
               </Text>
               <View
                 style={[styles.wrapContent, { borderColor: colors.border }]}>
-                {business?.facilities?.map((item, index) => {
+                {business.facilities?.map((item, index) => {
                   return (
                     <Tag
                       icon={
@@ -419,14 +407,16 @@ export default function PlaceDetailComponent(props) {
             </View>
           ) : null}
         </View>
-        {!isPreview ? <Recommendations business={business} /> : null}
+        {!isPreview ? (
+          <Recommendations business={business} onNavigate={onNavigate} />
+        ) : null}
       </View>
     );
   };
 
   return (
     <View style={{ flex: 1 }}>
-      <SafeAreaView style={BaseStyle.safeAreaView} edges={['left', 'right']}>
+      <SafeAreaView style={BaseStyle.safeAreaView}>
         <Animated.View
           style={[
             styles.headerImageStyle,
@@ -454,53 +444,11 @@ export default function PlaceDetailComponent(props) {
                 />
               );
             }}
-            renderRightSecond={() => {
-              return (
-                <View style={styles.iconContent}>
-                  <Animated.Image
-                    resizeMode="contain"
-                    style={[
-                      styles.icon,
-                      {
-                        tintColor: headerBackgroundColor,
-                      },
-                    ]}
-                    source={Images.gallery}
-                  />
-                </View>
-              );
-            }}
-            renderRight={
-              isPreview
-                ? null
-                : () => {
-                    return (
-                      <View style={styles.iconContent}>
-                        <Animated.Image
-                          resizeMode="contain"
-                          style={[
-                            styles.icon,
-                            {
-                              tintColor: headerBackgroundColor,
-                            },
-                          ]}
-                          source={Images.share}
-                        />
-                      </View>
-                    );
-                  }
-            }
-            onPressLeft={() => {
-              navigation.goBack();
-            }}
-            onPressRight={() => onShare()}
-            onPressRightSecond={() => {
-              navigation.navigate('PreviewImage', {
-                title: business.name,
-                gallery: business.gallery,
-              });
-              trackEvent(EVENTS.SEE_MORE_IMAGES, { title: business.name });
-            }}
+            renderRightSecond={() => renderHeaderButton(Images.gallery)}
+            renderRight={() => renderHeaderButton(Images.share, isPreview)}
+            onPressLeft={navigation.goBack}
+            onPressRight={onShare}
+            onPressRightSecond={onPressGallery}
           />
         </Animated.View>
         <ScrollView
@@ -528,16 +476,6 @@ export default function PlaceDetailComponent(props) {
     </View>
   );
 }
-
-PlaceDetailComponent.propTypes = {
-  isLoading: PropTypes.bool,
-  business: PropTypes.object,
-  navigation: PropTypes.object,
-};
-
-PlaceDetailComponent.defaultProps = {
-  business: {},
-};
 
 const styles = StyleSheet.create({
   headerStyle: {
@@ -579,13 +517,5 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingBottom: 20,
     borderBottomWidth: 0.5,
-  },
-  priceRangeSection: {
-    flex: 1,
-    alignItems: 'flex-end',
-  },
-  prices: {
-    display: 'flex',
-    flexDirection: 'row',
   },
 });

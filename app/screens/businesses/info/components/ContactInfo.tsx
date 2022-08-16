@@ -2,54 +2,31 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 
 import { Icon, Button } from '@components';
-import { useTranslation } from 'react-i18next';
+import {
+  BusinessPresentable,
+  ContactItem as ContactItemInterface,
+  ShopStatus,
+} from '@screens/businesses/models/BusinessPresentable';
 import ContactItem from '@screens/businesses/info/components/ContactItem';
 
-export default function ContactInfo(props: any) {
-  const { t } = useTranslation();
+interface Props {
+  onNavigate: (route: string) => void;
+  onPressWhatsApp: () => void;
+  onPressPhone: () => void;
+  onOpen: (item: ContactItemInterface) => void;
+  business: BusinessPresentable;
+}
 
-  const { onPressWhatsApp, onPressPhone, onOpen, business } = props;
-
-  const information = [
-    {
-      id: '1',
-      icon: 'map-marker-alt',
-      title: t('address'),
-      type: 'map',
-      information: business?.address,
-      location: business?.location?.coordinates,
-      rightText: 'Get Directions',
-      name: business?.name,
-    },
-    {
-      id: '2',
-      icon: 'mobile-alt',
-      title: t('tel'),
-      type: 'phone',
-      information: business?.telephone,
-      rightText: 'Call Now',
-    },
-    {
-      id: '3',
-      icon: 'envelope',
-      title: t('email'),
-      type: 'email',
-      information: business?.email ? business.email : '',
-      rightText: 'Send Mail',
-    },
-    {
-      id: '4',
-      icon: 'globe',
-      title: t('website'),
-      type: 'web',
-      information: business?.website ? business.website : '',
-      rightText: 'Visit Website',
-    },
-  ];
-
+export default function ContactInfo({
+  onNavigate,
+  onPressWhatsApp,
+  onPressPhone,
+  onOpen,
+  business,
+}: Props) {
   const renderWhatsAppButton = () => {
     // if it's not mobile number than ignore whatsapp button
-    if (!business.telephone.includes('02')) {
+    if (!business.telephone?.includes('02')) {
       return (
         <Button
           onPress={onPressWhatsApp}
@@ -70,10 +47,21 @@ export default function ContactInfo(props: any) {
     <View>
       <View style={[styles.container, styles.directionRow]}>
         <View style={styles.directionRow}>
-          <Button round small outline style={styles.textButton}>
-            {business.type === 'restaurant' ? 'Menu' : 'Products'}
-          </Button>
-          <Button round outline style={styles.textButton}>
+          {business.shop && business.shop.status === ShopStatus.enabled ? (
+            <Button
+              round
+              small
+              outline
+              style={styles.textButton}
+              onPress={() => onNavigate('Products')}>
+              {business.type === 'restaurant' ? 'Menu' : 'Products'}
+            </Button>
+          ) : null}
+          <Button
+            round
+            outline
+            style={styles.textButton}
+            onPress={() => onNavigate('Reviews')}>
             Reviews
           </Button>
         </View>
@@ -87,9 +75,9 @@ export default function ContactInfo(props: any) {
           />
         </View>
       </View>
-      {information?.map((item) => {
-        if (item?.information) {
-          return <ContactItem item={item} onPress={onOpen} />;
+      {business.contactItems.map((item) => {
+        if (item.information) {
+          return <ContactItem key={item.id} item={item} onPress={onOpen} />;
         }
       })}
     </View>

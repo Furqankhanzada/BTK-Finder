@@ -6,8 +6,14 @@ import { useSelector } from 'react-redux';
 import { CardList, PlaceItem } from '@components';
 import CustomSectionList from '@screens/Home/CustomSectionList';
 import { useBusinesses } from '@screens/businesses/queries/queries';
+import { BusinessPresentable } from '@screens/businesses/models/BusinessPresentable';
 
-export default function Recommendations({ business }: any) {
+interface Props {
+  onNavigate: (route: string, id?: string) => void;
+  business: BusinessPresentable;
+}
+
+export default function Recommendations({ business, onNavigate }: Props) {
   const { t } = useTranslation();
   const user = useSelector((state: any) => state.profile);
   // Recent Businesses
@@ -59,9 +65,7 @@ export default function Recommendations({ business }: any) {
               // navigation={navigation}
               lastRoute="PlaceDetail"
               routeId={business?._id}
-              // status='Open Now'
-              // onPress={() => navigateBusinessDetail(item._id)}
-              // onPressTag={() => navigateToReview(item._id)}
+              onPress={() => onNavigate('BusinessDetailTabNavigator', item._id)}
               style={{ marginLeft: 15, width: 175 }}
             />
           );

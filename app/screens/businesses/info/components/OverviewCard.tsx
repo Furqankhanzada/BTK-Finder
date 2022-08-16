@@ -6,7 +6,22 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
-export default function OverviewCard({ business, isPreview }: any) {
+import {
+  BusinessPresentable,
+  BusinessStatus,
+} from '@screens/businesses/models/BusinessPresentable';
+
+interface Props {
+  onNavigate: (route: string) => void;
+  business: BusinessPresentable;
+  isPreview: boolean;
+}
+
+export default function OverviewCard({
+  business,
+  isPreview,
+  onNavigate,
+}: Props) {
   const user = useSelector((state: any) => state.profile);
   const { colors } = useTheme();
   const { t } = useTranslation();
@@ -64,9 +79,9 @@ export default function OverviewCard({ business, isPreview }: any) {
         dt.getFullYear(),
         dt.getMonth(),
         dt.getDate(),
-        parseInt(s[0]),
-        parseInt(s[1]),
-        parseInt(s[2]),
+        parseInt(s[0], 10),
+        parseInt(s[1], 10),
+        parseInt(s[2], 10),
       );
 
       let e = endTime.split(':');
@@ -74,9 +89,9 @@ export default function OverviewCard({ business, isPreview }: any) {
         dt.getFullYear(),
         dt.getMonth(),
         dt.getDate(),
-        parseInt(e[0]),
-        parseInt(e[1]),
-        parseInt(e[2]),
+        parseInt(e[0], 10),
+        parseInt(e[1], 10),
+        parseInt(e[2], 10),
       );
 
       if (dt >= dt1 && dt <= dt2) {
@@ -122,7 +137,7 @@ export default function OverviewCard({ business, isPreview }: any) {
           styles.promotionTag,
           {
             backgroundColor:
-              business?.status === 'VERIFIED'
+              business.status === BusinessStatus.VERIFIED
                 ? '#6acc58' + '4D'
                 : colors.border,
           },
@@ -131,7 +146,10 @@ export default function OverviewCard({ business, isPreview }: any) {
           overline
           medium
           style={{
-            color: business?.status === 'VERIFIED' ? '#6acc58' : colors.text,
+            color:
+              business?.status === BusinessStatus.VERIFIED
+                ? '#6acc58'
+                : colors.text,
           }}>
           {isVerified(business?.status)}
         </Text>
@@ -182,7 +200,7 @@ export default function OverviewCard({ business, isPreview }: any) {
                     disabled={true}
                     starSize={10}
                     maxStars={5}
-                    rating={business?.reviewStats?.averageRatings}
+                    rating={business.reviewStats?.averageRatings}
                     fullStarColor={BaseColor.yellowColor}
                     containerStyle={styles.containerStyle}
                   />
@@ -192,9 +210,7 @@ export default function OverviewCard({ business, isPreview }: any) {
           ) : (
             <TouchableOpacity
               style={styles.contentRate}
-              onPress={() =>
-                /* navigateToReview() */ console.log('navigateToReview')
-              }>
+              onPress={() => onNavigate('Reviews')}>
               <View style={styles.rateContainer}>
                 <Tag rate>
                   <Text caption2 whiteColor semibold style={styles.rateText}>
@@ -220,7 +236,7 @@ export default function OverviewCard({ business, isPreview }: any) {
                       whiteColor
                       semibold
                       style={{ color: colors.text }}>
-                      {ratingStatus(business?.reviewStats?.averageRatings)}
+                      {ratingStatus(business.reviewStats?.averageRatings)}
                     </Text>
                     <View style={styles.dot} />
                     <Text
@@ -256,7 +272,7 @@ export default function OverviewCard({ business, isPreview }: any) {
               lastRoute="PlaceDetail"
               routeId={business?._id}
               isFavorite={
-                !!business?.favorites.find(
+                !!business.favorites?.find(
                   (favorite: any) => favorite.ownerId === user._id,
                 )
               }

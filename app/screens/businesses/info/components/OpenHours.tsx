@@ -5,8 +5,13 @@ import { useTranslation } from 'react-i18next';
 import { Icon, Text } from '@components';
 import { BaseColor, useTheme } from '@config';
 import * as Utils from '@utils';
+import { BusinessPresentable } from '@screens/businesses/models/BusinessPresentable';
 
-export default function OpenHours({ business }: any) {
+interface Props {
+  business: BusinessPresentable;
+}
+
+export default function OpenHours({ business }: Props) {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const [collapseHour, setCollapseHour] = useState(true);
@@ -36,7 +41,7 @@ export default function OpenHours({ business }: any) {
 
   return (
     <View>
-      {business?.openHours && business?.openHours?.length ? (
+      {business.openHours && business.openHours?.length ? (
         <Fragment>
           <TouchableOpacity style={styles.line} onPress={onCollapse}>
             <View
