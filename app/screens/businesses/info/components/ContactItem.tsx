@@ -15,8 +15,7 @@ export default function ContactItem({ item, onPress }: any) {
       <View style={[styles.contentIcon, { backgroundColor: colors.border }]}>
         <Icon name={item.icon} size={16} color={BaseColor.whiteColor} />
       </View>
-      <View
-        style={styles.title}>
+      <View style={styles.title}>
         <Text caption2 grayColor>
           {item.title}
         </Text>
@@ -47,11 +46,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
-    marginLeft: 30,
+    marginLeft: 10,
     flexDirection: 'column',
     flex: 1,
   },
   info: {
     marginTop: 5,
-  }
+  },
 });
