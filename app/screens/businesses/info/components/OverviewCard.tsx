@@ -159,7 +159,7 @@ export default function OverviewCard({ business, isPreview }: any) {
               {business?.openHours && isBusinessOpened()}
             </Text>
             <View style={styles.dot} />
-            <Text caption2 grayColor style={{ flex: 1 }} numberOfLines={1}>
+            <Text caption2 grayColor style={styles.catagory} numberOfLines={1}>
               {business.category}
             </Text>
           </View>
@@ -171,20 +171,20 @@ export default function OverviewCard({ business, isPreview }: any) {
               onPress={() =>
                 /* navigateToReview() */ console.log('navigateToReview')
               }>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View style={styles.rateContainer}>
                 <Tag rate>
-                  <Text caption2 whiteColor semibold style={{ marginLeft: 4 }}>
+                  <Text caption2 whiteColor semibold style={styles.ratingText}>
                     0.0
                   </Text>
                 </Tag>
-                <View style={styles.example1}>
+                <View style={styles.ratingContainer}>
                   <StarRating
                     disabled={true}
                     starSize={10}
                     maxStars={5}
                     rating={business?.reviewStats?.averageRatings}
                     fullStarColor={BaseColor.yellowColor}
-                    containerStyle={{ marginRight: 5 }}
+                    containerStyle={styles.containerStyle}
                   />
                 </View>
               </View>
@@ -195,9 +195,9 @@ export default function OverviewCard({ business, isPreview }: any) {
               onPress={() =>
                 /* navigateToReview() */ console.log('navigateToReview')
               }>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View style={styles.rateContainer}>
                 <Tag rate>
-                  <Text caption2 whiteColor semibold style={{ marginLeft: 4 }}>
+                  <Text caption2 whiteColor semibold style={styles.rateText}>
                     <NumberFormat
                       value={
                         business?.reviewStats?.averageRatings
@@ -208,16 +208,13 @@ export default function OverviewCard({ business, isPreview }: any) {
                       decimalScale={1}
                       fixedDecimalScale={true}
                       renderText={(value) => (
-                        <Text style={styles.value}>
-                          {value}
-                        </Text>
+                        <Text style={styles.value}>{value}</Text>
                       )}
                     />
                   </Text>
                 </Tag>
-                <View style={{ marginLeft: 10 }}>
-                  <View
-                    style={styles.example2}>
+                <View style={styles.rateTitle}>
+                  <View style={styles.rateSubTitle}>
                     <Text
                       caption2
                       whiteColor
@@ -318,15 +315,34 @@ const styles = StyleSheet.create({
     right: 5,
   },
   contentRate: {},
-  example1: {
-    marginLeft: 10
+  ratingContainer: {
+    marginLeft: 10,
   },
   value: {
     fontSize: 10,
     color: 'white',
   },
-  example2: {
+  rateSubTitle: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  ratingText: {
+    marginLeft: 4,
+  },
+  containerStyle: {
+    marginRight: 5,
+  },
+  rateContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  rateText: {
+    marginLeft: 4,
+  },
+  rateTitle: {
+    marginLeft: 10,
+  },
+  catagory: {
+    flex: 1,
   },
 });
