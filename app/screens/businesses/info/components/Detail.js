@@ -14,7 +14,6 @@ import { useTranslation } from 'react-i18next';
 import Config from 'react-native-config';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import { showLocation } from 'react-native-map-link';
-import { useSelector, useDispatch } from 'react-redux';
 import NumberFormat from 'react-number-format';
 import moment from 'moment';
 import { Placeholder, Progressive, PlaceholderMedia } from 'rn-placeholder';
@@ -28,20 +27,14 @@ import {
   Text,
   Tag,
   Image,
-  PlaceItem,
-  CardList,
 } from '@components';
 import * as Utils from '@utils';
 
 import OverviewCard from '@screens/businesses/info/components/OverviewCard';
 import ContactInfo from '@screens/businesses/info/components/ContactInfo';
 import OpenHours from '@screens/businesses/info/components/OpenHours';
-import CustomSectionList from '@screens/Home/CustomSectionList';
+import Recommendations from '@screens/businesses/info/components/Recommendations';
 
-import {
-  getRelatedBusinesses,
-  getBusinesses,
-} from '../../../../actions/business';
 import { trackEvent, EVENTS } from '../../../../userTracking';
 
 let defaultDelta = {
@@ -54,23 +47,10 @@ export default function PlaceDetailComponent(props) {
   const scrollY = useRef(new Animated.Value(0)).current;
   const { t } = useTranslation();
   const { colors } = useTheme();
-  const dispatch = useDispatch();
   const { navigation, business, isLoading, preview: isPreview } = props;
   const [heightHeader, setHeightHeader] = useState(Utils.heightHeader());
   const [businessLink, setBusinessLink] = useState('');
   const appLink = 'http://onelink.to/xwhffr';
-
-  const stateProps = useSelector(({ businesses, favorites }) => {
-    return {
-      recentlyAddedBusinesses: businesses.placeDetailRecentlyAddedBusinesses,
-      getRecentlyAddedBusinessesLoading:
-        businesses.placeDetailRecentlyAddedBusinessesLoading,
-      relatedBusiness: businesses.relatedBusinesses,
-      getRelatedBusinessesLoading: businesses.getRelatedBusinessesLoading,
-      favoriteBusinesses: favorites.getFavoriteBusinesses,
-      isFavoriteLoading: favorites.isFavoriteLoading,
-    };
-  });
 
   useEffect(() => {
     async function businessUrl() {
@@ -92,28 +72,6 @@ export default function PlaceDetailComponent(props) {
     }
     businessUrl();
   }, [business._id]);
-
-  useEffect(() => {
-    if (business?.category) {
-      dispatch(
-        getRelatedBusinesses({
-          limit: 5,
-          skip: 0,
-          fields: 'name, thumbnail, category, averageRatings',
-          category: business.category,
-        }),
-      );
-      dispatch(
-        getBusinesses({
-          placeDetail: true,
-          recent: true,
-          limit: 5,
-          skip: 0,
-          fields: 'name, thumbnail, category, address, averageRatings',
-        }),
-      );
-    }
-  }, [business?.category, dispatch]);
 
   useEffect(() => {
     let loc =
@@ -150,13 +108,13 @@ export default function PlaceDetailComponent(props) {
     }
   };
 
-  const navigateBusinessDetail = (id) => {
-    navigation.replace('BusinessDetailTabNavigator', { id });
-  };
-
-  const navigateToReview = () => {
-    navigation.navigate('Reviews');
-  };
+  // const navigateBusinessDetail = (id) => {
+  //   navigation.replace('BusinessDetailTabNavigator', { id });
+  // };
+  //
+  // const navigateToReview = () => {
+  //   navigation.navigate('Reviews');
+  // };
 
   const headerBackgroundColor = scrollY.interpolate({
     inputRange: [0, 140],
@@ -461,60 +419,7 @@ export default function PlaceDetailComponent(props) {
             </View>
           ) : null}
         </View>
-        {isPreview ? null : (
-          <View style={{ marginTop: 20 }}>
-            <CustomSectionList
-              title="Recently Added"
-              data={stateProps.recentlyAddedBusinesses}
-              horizontal={true}
-              loading={stateProps.getRecentlyAddedBusinessesLoading}
-              renderItem={({ item }) => {
-                return (
-                  <PlaceItem
-                    grid
-                    image={item?.thumbnail}
-                    title={item.name}
-                    subtitle={item.category}
-                    location={item?.address}
-                    rate={item?.averageRatings || '0.0'}
-                    isFavorite={stateProps?.favoriteBusinesses?.some(
-                      (obj) => obj._id === item?._id,
-                    )}
-                    businessId={item?._id}
-                    navigation={navigation}
-                    lastRoute="PlaceDetail"
-                    routeId={business?._id}
-                    // status='Open Now'
-                    onPress={() => navigateBusinessDetail(item._id)}
-                    onPressTag={() => navigateToReview(item._id)}
-                    style={{ marginLeft: 15, width: 175 }}
-                  />
-                );
-              }}
-            />
-          </View>
-        )}
-        {isPreview ? null : (
-          <CustomSectionList
-            title={t('related')}
-            data={stateProps.relatedBusiness}
-            loading={stateProps.getRelatedBusinessesLoading}
-            renderItem={({ item, index }) => {
-              return (
-                <CardList
-                  key={index}
-                  image={item?.thumbnail}
-                  title={item.name}
-                  subtitle={item.category}
-                  rate={item?.averageRatings || '0.0'}
-                  style={{ marginBottom: 15 }}
-                  onPress={() => navigateBusinessDetail(item._id)}
-                  onPressTag={() => navigateToReview(item._id)}
-                />
-              );
-            }}
-          />
-        )}
+        {!isPreview ? <Recommendations business={business} /> : null}
       </View>
     );
   };

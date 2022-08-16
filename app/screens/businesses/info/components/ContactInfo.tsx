@@ -11,7 +11,7 @@ export default function ContactInfo(props: any) {
   const { onPressWhatsApp, onPressPhone, onOpen, business } = props;
 
   const information = [
-    {       
+    {
       id: '1',
       icon: 'map-marker-alt',
       title: t('address'),

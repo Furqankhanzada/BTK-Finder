@@ -20,7 +20,7 @@ import {
   Loading,
 } from '@components';
 import { getSingleBusiness } from '../../../actions/business';
-import { useBusiness } from '@screens/businesses/apis/queries';
+import { useBusiness } from '@screens/businesses/queries/queries';
 
 export default function Review(props: any) {
   const { navigation, route } = props;

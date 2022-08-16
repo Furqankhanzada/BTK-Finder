@@ -6,7 +6,7 @@ import { Icon } from '@components';
 import Review from './reviews/BusinessReviewsScreen';
 import BusinessInfoScreen from './info/BusinessInfoScreen';
 import BusinessProductsScreen from './products/BusinessProductsScreen';
-import { useBusiness } from '@screens/businesses/apis/queries';
+import { useBusiness } from '@screens/businesses/queries/queries';
 
 const BusinessDetailBottomTab = createBottomTabNavigator();
 
