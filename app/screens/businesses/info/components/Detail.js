@@ -48,6 +48,7 @@ import SectionList from '../../../Home/sectionList';
 import { trackEvent, EVENTS } from '../../../../userTracking';
 import OverviewCard from '@screens/businesses/info/components/OverviewCard';
 import ContactInfo from '@screens/businesses/info/components/ContactInfo';
+import OpenHours from '@screens/businesses/info/components/OpenHours';
 
 let defaultDelta = {
   latitudeDelta: 0.003,
@@ -61,7 +62,6 @@ export default function PlaceDetailComponent(props) {
   const { colors } = useTheme();
   const dispatch = useDispatch();
   const { navigation, business, isLoading, preview: isPreview } = props;
-  const [collapseHour, setCollapseHour] = useState(true);
   const [heightHeader, setHeightHeader] = useState(Utils.heightHeader());
   const [businessLink, setBusinessLink] = useState('');
   const appLink = 'http://onelink.to/xwhffr';
@@ -289,29 +289,6 @@ export default function PlaceDetailComponent(props) {
     });
   };
 
-  const onCollapse = () => {
-    Utils.enableExperimental();
-    setCollapseHour(!collapseHour);
-  };
-
-  const updateOpenHours = (data) => {
-    let array = [
-      { day: 'Monday' },
-      { day: 'Tuesday' },
-      { day: 'Wednesday' },
-      { day: 'Thursday' },
-      { day: 'Friday' },
-      { day: 'Saturday' },
-      { day: 'Sunday' },
-    ];
-    if (data?.length) {
-      array = data.concat(
-        array.filter(({ day }) => !data.find((f) => f.day === day)),
-      );
-    }
-    return array;
-  };
-
   const getCoverImage = useCallback(() => {
     if (business.gallery && business.gallery.length) {
       return business.gallery.find((image) => image?.cover)?.image;
@@ -369,83 +346,7 @@ export default function PlaceDetailComponent(props) {
             onPressPhone={onPressPhone}
             onOpen={onOpen}
           />
-          <View>
-            {business?.openHours && business?.openHours?.length ? (
-              <Fragment>
-                <TouchableOpacity style={styles.line} onPress={onCollapse}>
-                  <View
-                    style={[
-                      styles.contentIcon,
-                      { backgroundColor: colors.border },
-                    ]}>
-                    <Icon name="clock" size={16} color={BaseColor.whiteColor} />
-                  </View>
-                  <View style={styles.contentInforAction}>
-                    <View>
-                      <Text caption2 grayColor>
-                        {' '}
-                        {t('open_hour')}{' '}
-                      </Text>
-                      <Text footnote semibold style={{ marginTop: 5 }}>
-                        {business.openHours[0].from
-                          ? business.openHours[0].from.toLowerCase()
-                          : ''}
-                        {' - '}
-                        {business.openHours[0].to
-                          ? business.openHours[0].to.toLowerCase()
-                          : ''}
-                      </Text>
-                    </View>
-                    <Icon
-                      name={collapseHour ? 'angle-down' : 'angle-up'}
-                      size={24}
-                      color={BaseColor.grayColor}
-                    />
-                  </View>
-                </TouchableOpacity>
-                {business?.openHours?.length > 1 ? (
-                  <View
-                    style={{
-                      paddingLeft: 40,
-                      paddingRight: 20,
-                      marginTop: 5,
-                      height: collapseHour ? 0 : null,
-                      overflow: 'hidden',
-                    }}>
-                    {updateOpenHours(business.openHours).map((item) => {
-                      return (
-                        <View
-                          style={[
-                            styles.lineWorkHours,
-                            { borderColor: colors.border },
-                          ]}
-                          key={item.day}>
-                          <Text body2 grayColor>
-                            {item.day}
-                          </Text>
-                          {'isOpen' in item && !item.isOpen ? (
-                            <Text body2 accentColor semibold>
-                              {' '}
-                              Close{' '}
-                            </Text>
-                          ) : (
-                            <Text body2 accentColor semibold>
-                              {item.from ? item.from.toLowerCase() : ''}
-                              {!(item.isOpen || item.from || item.to)
-                                ? 'Close'
-                                : ''}
-                              {item.from && item.to ? ' - ' : ''}
-                              {item.to ? item.to.toLowerCase() : ''}
-                            </Text>
-                          )}
-                        </View>
-                      );
-                    })}
-                  </View>
-                ) : null}
-              </Fragment>
-            ) : null}
-          </View>
+          <OpenHours business={business} />
           <View
             style={[styles.contentDescription, { borderColor: colors.border }]}>
             {business.description ? (
