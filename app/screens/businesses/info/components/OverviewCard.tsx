@@ -6,7 +6,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
-export default function OverviewCard({ business, isPreview, navigation }: any) {
+export default function OverviewCard({ business, isPreview }: any) {
   const user = useSelector((state: any) => state.profile);
   const { colors } = useTheme();
   const { t } = useTranslation();
@@ -169,8 +169,7 @@ export default function OverviewCard({ business, isPreview, navigation }: any) {
             <TouchableOpacity
               style={styles.contentRate}
               onPress={() =>
-                // /* navigateToReview() */ console.log('navigateToReview')
-                navigation.navigate('BusinessReviewsScreen')
+                /* navigateToReview() */ console.log('navigateToReview')
               }>
               <View style={styles.rateContainer}>
                 <Tag rate>
@@ -194,8 +193,7 @@ export default function OverviewCard({ business, isPreview, navigation }: any) {
             <TouchableOpacity
               style={styles.contentRate}
               onPress={() =>
-                // /* navigateToReview() */ console.log('navigateToReview')
-                navigation.navigate('BusinessReviewsScreen')
+                /* navigateToReview() */ console.log('navigateToReview')
               }>
               <View style={styles.rateContainer}>
                 <Tag rate>
