@@ -16,15 +16,11 @@ export default function ContactItem({ item, onPress }: any) {
         <Icon name={item.icon} size={16} color={BaseColor.whiteColor} />
       </View>
       <View
-        style={{
-          marginLeft: 10,
-          flexDirection: 'column',
-          flex: 1,
-        }}>
+        style={styles.title}>
         <Text caption2 grayColor>
           {item.title}
         </Text>
-        <Text footnote semibold style={{ marginTop: 5 }}>
+        <Text footnote semibold style={styles.info}>
           {item.information}
         </Text>
       </View>
@@ -50,4 +46,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  title: {
+    marginLeft: 30,
+    flexDirection: 'column',
+    flex: 1,
+  },
+  info: {
+    marginTop: 5,
+  }
 });

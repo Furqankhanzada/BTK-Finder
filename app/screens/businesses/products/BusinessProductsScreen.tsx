@@ -128,19 +128,14 @@ export default function Menu(props: any) {
           sections={catalogItems}
           keyExtractor={(item: CatalogProduct) => item._id}
           renderSectionHeader={({ section }) => (
-            <View style={{ paddingBottom: 10 }}>
+            <View style={styles.displayTitle}>
+              {/* Here colors.text came from color? */}
               <Text
-                style={{
-                  color: colors.text,
-                  fontWeight: 'bold',
-                  fontSize: 16,
-                  paddingBottom: 10,
-                  paddingLeft: 20,
-                }}>
+                style={[styles.title, {color: colors.text}]}>
                 {section.tag.displayTitle}
               </Text>
               <FlatList
-                style={{ paddingLeft: 20 }}
+                style={styles.flatList}
                 horizontal
                 data={section.data}
                 renderItem={({ item }) => <Item item={item} />}
@@ -264,5 +259,17 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 10,
     borderTopWidth: 1,
+  },
+  flatList: {
+    paddingLeft: 20,
+  },
+  displayTitle: {
+    paddingBottom: 10, 
+  },
+  title: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    paddingBottom: 10,
+    paddingLeft: 20,
   },
 });

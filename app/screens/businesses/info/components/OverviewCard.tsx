@@ -177,7 +177,7 @@ export default function OverviewCard({ business, isPreview }: any) {
                     0.0
                   </Text>
                 </Tag>
-                <View style={{ marginLeft: 10 }}>
+                <View style={styles.example1}>
                   <StarRating
                     disabled={true}
                     starSize={10}
@@ -208,7 +208,7 @@ export default function OverviewCard({ business, isPreview }: any) {
                       decimalScale={1}
                       fixedDecimalScale={true}
                       renderText={(value) => (
-                        <Text style={{ fontSize: 10, color: 'white' }}>
+                        <Text style={styles.value}>
                           {value}
                         </Text>
                       )}
@@ -217,10 +217,7 @@ export default function OverviewCard({ business, isPreview }: any) {
                 </Tag>
                 <View style={{ marginLeft: 10 }}>
                   <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                    }}>
+                    style={styles.example2}>
                     <Text
                       caption2
                       whiteColor
@@ -321,4 +318,15 @@ const styles = StyleSheet.create({
     right: 5,
   },
   contentRate: {},
+  example1: {
+    marginLeft: 10
+  },
+  value: {
+    fontSize: 10,
+    color: 'white',
+  },
+  example2: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
 });
