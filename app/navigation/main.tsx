@@ -35,7 +35,6 @@ import ResetPassword from '@screens/ResetPassword';
 import ChangePassword from '@screens/ChangePassword';
 import ProfileEdit from '@screens/ProfileEdit';
 import ChangeLanguage from '@screens/ChangeLanguage';
-import PlaceDetail from '@screens/businesses/info/BusinessInfoScreen';
 import ContactUs from '@screens/ContactUs';
 import AboutUs from '@screens/AboutUs';
 import Address from '@screens/AddBusiness/address';
@@ -77,7 +76,6 @@ export default function Main() {
       <MainStack.Screen name="ChangePassword" component={ChangePassword} />
       <MainStack.Screen name="ProfileEdit" component={ProfileEdit} />
       <MainStack.Screen name="ChangeLanguage" component={ChangeLanguage} />
-      <MainStack.Screen name="PlaceDetail" component={PlaceDetail} />
       <MainStack.Screen name="ContactUs" component={ContactUs} />
       <MainStack.Screen name="AboutUs" component={AboutUs} />
       {/*<MainStack.Screen name="Business" component={Business} />*/}

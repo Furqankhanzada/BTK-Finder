@@ -17,7 +17,6 @@ import Loading from '@screens/Loading';
 import Filter from '@screens/Filter';
 import ChooseItems from '@screens/ChooseItems';
 import SearchHistory from '@screens/SearchHistory';
-import PreviewImage from '@screens/PreviewImage';
 import SelectDarkOption from '@screens/SelectDarkOption';
 import SelectFontOption from '@screens/SelectFontOption';
 import HelpLine from '@screens/HelpLine';
@@ -98,7 +97,6 @@ export default function Navigator() {
           <RootStack.Screen name="Filter" component={Filter} />
           <RootStack.Screen name="ChooseItems" component={ChooseItems} />
           <RootStack.Screen name="SearchHistory" component={SearchHistory} />
-          <RootStack.Screen name="PreviewImage" component={PreviewImage} />
           <RootStack.Screen
             name="SelectDarkOption"
             component={SelectDarkOption}

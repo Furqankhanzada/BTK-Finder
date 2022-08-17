@@ -6,6 +6,7 @@ import {
   ScrollView,
   Share,
   StyleSheet,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import { showLocation } from 'react-native-map-link';
@@ -14,6 +15,7 @@ import Config from 'react-native-config';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Placeholder, PlaceholderMedia, Progressive } from 'rn-placeholder';
+import ImageView from 'react-native-image-viewing';
 
 import {
   Header,
@@ -49,10 +51,11 @@ interface Props {
   preview: boolean;
 }
 
-export default function BusinessInfoScreen(props: Props) {
+export default function BusinessOverviewScreen(props: Props) {
   const { navigation, route, preview: isPreview } = props;
   const { isLoading, data: business } = useBusiness(route?.params?.id);
   const mapRef = useRef<any>();
+  const [openGallery, setOpenGallery] = useState<boolean>(false);
   const scrollY = useRef(new Animated.Value(0)).current;
   const { t } = useTranslation();
   const { colors } = useTheme();
@@ -290,10 +293,7 @@ export default function BusinessInfoScreen(props: Props) {
   };
 
   const onPressGallery = () => {
-    navigation.navigate('PreviewImage', {
-      title: business?.name,
-      gallery: business?.gallery,
-    });
+    setOpenGallery(true);
     trackEvent(EVENTS.SEE_MORE_IMAGES, { title: business?.name });
   };
 
@@ -416,10 +416,39 @@ export default function BusinessInfoScreen(props: Props) {
       </View>
     );
   };
+  const HIT_SLOP = { top: 16, left: 16, bottom: 16, right: 16 };
 
   return (
     <View style={styles.container}>
       <SafeAreaView style={BaseStyle.safeAreaView}>
+        <ImageView
+          backgroundColor={colors.background}
+          images={business?.gallery?.map((item) => ({ uri: item.image })) || []}
+          imageIndex={0}
+          visible={openGallery}
+          onRequestClose={() => setOpenGallery(false)}
+          HeaderComponent={() => (
+            <SafeAreaView style={styles.galleryHeader}>
+              <TouchableOpacity
+                style={[styles.closeButton, { backgroundColor: colors.card }]}
+                onPress={() => setOpenGallery(false)}
+                hitSlop={HIT_SLOP}>
+                <Text style={[styles.closeText, { color: colors.text }]}>
+                  ✕
+                </Text>
+              </TouchableOpacity>
+            </SafeAreaView>
+          )}
+          FooterComponent={({ imageIndex }) => (
+            <View
+              style={[styles.galleryFooter, { backgroundColor: colors.card }]}>
+              <Text
+                style={[styles.galleryFooterText, { colors: colors.text }]}>{`${
+                imageIndex + 1
+              } / ${business?.gallery?.length}`}</Text>
+            </View>
+          )}
+        />
         <Animated.View
           style={[
             styles.headerImageStyle,
@@ -524,5 +553,31 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingBottom: 20,
     borderBottomWidth: 0.5,
+  },
+  galleryFooter: {
+    height: 64,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  galleryFooterText: {
+    fontSize: 17,
+  },
+  galleryHeader: {
+    alignItems: 'flex-end',
+  },
+  closeButton: {
+    marginRight: 8,
+    marginTop: 8,
+    width: 44,
+    height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 22,
+  },
+  closeText: {
+    lineHeight: 22,
+    fontSize: 19,
+    textAlign: 'center',
+    includeFontPadding: false,
   },
 });

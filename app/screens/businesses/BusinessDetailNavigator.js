@@ -4,7 +4,7 @@ import { BaseColor, useTheme, useFont } from '@config';
 import { Icon } from '@components';
 
 import Review from './reviews/BusinessReviewsScreen';
-import BusinessInfoScreen from './info/BusinessInfoScreen';
+import BusinessOverviewScreen from './info/BusinessOverviewScreen';
 import BusinessProductsScreen from './products/BusinessProductsScreen';
 import { useBusiness } from '@screens/businesses/queries/queries';
 import {
@@ -44,7 +44,7 @@ export default function BusinessDetailNavigator({ route }) {
             return <Icon color={color} name="info-circle" size={25} solid />;
           },
         }}
-        component={BusinessInfoScreen}
+        component={BusinessOverviewScreen}
       />
       <BusinessDetailBottomTab.Screen
         name="Reviews"
