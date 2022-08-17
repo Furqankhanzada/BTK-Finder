@@ -54,7 +54,7 @@ export default function OpenHours({ business }: Props) {
                   {' '}
                   {t('open_hour')}{' '}
                 </Text>
-                <Text footnote semibold style={{ marginTop: 5 }}>
+                <Text footnote semibold style={styles.time}>
                   {business.openHours[0].from
                     ? business.openHours[0].from.toLowerCase()
                     : ''}
@@ -73,13 +73,10 @@ export default function OpenHours({ business }: Props) {
           </TouchableOpacity>
           {business?.openHours?.length > 1 ? (
             <View
-              style={{
-                paddingLeft: 40,
-                paddingRight: 20,
-                marginTop: 5,
-                height: collapseHour ? 0 : 'auto',
-                overflow: 'hidden',
-              }}>
+              style={[
+                styles.openHourContainer,
+                { height: collapseHour ? 0 : 'auto' },
+              ]}>
               {updateOpenHours(business.openHours).map((item: any) => {
                 return (
                   <View
@@ -141,5 +138,15 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     justifyContent: 'space-between',
     borderBottomWidth: 1,
+  },
+  time: {
+    marginTop: 5,
+    marginLeft: 2,
+  },
+  openHourContainer: {
+    paddingLeft: 40,
+    paddingRight: 20,
+    marginTop: 5,
+    overflow: 'hidden',
   },
 });
