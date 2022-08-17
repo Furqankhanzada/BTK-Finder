@@ -5,6 +5,7 @@ import NumberFormat from 'react-number-format';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome';
 
 import {
   BusinessPresentable,
@@ -142,6 +143,13 @@ export default function OverviewCard({
                 : colors.border,
           },
         ]}>
+        <FontAwesomeIcons
+          style={styles.verifyIcon}
+          name={
+            business.status === BusinessStatus.VERIFIED ? 'check-circle' : ''
+          }
+          size={12}
+        />
         <Text
           overline
           medium
@@ -329,9 +337,11 @@ const styles = StyleSheet.create({
   promotionTag: {
     borderRadius: 7,
     height: 16,
-    paddingHorizontal: 7,
+    paddingHorizontal: 4,
     display: 'flex',
     justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
   },
   iconGirdLike: {
     position: 'absolute',
@@ -371,5 +381,9 @@ const styles = StyleSheet.create({
   },
   containerDiv: {
     width: 50,
+  },
+  verifyIcon: {
+    color: '#fff',
+    paddingRight: 2,
   },
 });
