@@ -18,7 +18,7 @@ export default function Favourite({ navigation }) {
   });
 
   const navigateBusinessDetail = (id) => {
-    navigation.navigate('PlaceDetail', { id });
+    navigation.navigate('BusinessDetailTabNavigator', { id });
   };
 
   useEffect(() => {

@@ -283,7 +283,7 @@ export default function OverviewCard({
               name={business.name}
               style={styles.iconGirdLike}
               // navigation={navigation}
-              lastRoute="PlaceDetail"
+              lastRoute="BusinessDetailTabNavigator"
               routeId={business?._id}
               isFavorite={
                 !!business.favorites?.find(

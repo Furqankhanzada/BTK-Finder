@@ -63,7 +63,7 @@ export default function Recommendations({ business, onNavigate }: Props) {
               }
               businessId={item?._id}
               // navigation={navigation}
-              lastRoute="PlaceDetail"
+              lastRoute="BusinessDetailTabNavigator"
               routeId={business?._id}
               onPress={() => onNavigate('BusinessDetailTabNavigator', item._id)}
               style={{ marginLeft: 15, width: 175 }}

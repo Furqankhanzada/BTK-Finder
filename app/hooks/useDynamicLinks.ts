@@ -26,7 +26,7 @@ export default function useDynamicLinks() {
     const interval = setInterval(() => {
       if (NavigationService.isReadyRef.current) {
         clearInterval(interval);
-        NavigationService.navigate('PlaceDetail', { id });
+        NavigationService.navigate('BusinessDetailTabNavigator', { id });
       }
     }, 1000);
   };
