@@ -84,8 +84,7 @@ export default function Recommendations({ business, onNavigate }: Props) {
               subtitle={item.category}
               rate={item?.averageRatings || '0.0'}
               style={{ marginBottom: 15 }}
-              // onPress={() => navigateBusinessDetail(item._id)}
-              // onPressTag={() => navigateToReview(item._id)}
+              onPress={() => onNavigate('BusinessDetailTabNavigator', item._id)}
             />
           );
         }}

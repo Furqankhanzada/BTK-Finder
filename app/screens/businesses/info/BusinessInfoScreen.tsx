@@ -120,7 +120,11 @@ export default function BusinessInfoScreen(props: Props) {
     if (id) {
       params.id = id;
     }
-    navigation.navigate(routeName, params);
+    navigation.navigate({
+      name: routeName,
+      params,
+      key: params.id ? params.id : null,
+    });
   };
 
   const headerBackgroundColor = scrollY.interpolate({
