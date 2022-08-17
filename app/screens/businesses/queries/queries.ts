@@ -24,8 +24,6 @@ export const useBusiness = (id: string) =>
       select: (data) => {
         return { ...data, contactItems: buildContactItems(data) };
       },
-      cacheTime: Infinity,
-      staleTime: Infinity,
     },
   );
 
@@ -51,8 +49,6 @@ export const useBusinesses = (
         });
     },
     {
-      cacheTime: Infinity,
-      staleTime: Infinity,
       ...oprions,
     },
   );

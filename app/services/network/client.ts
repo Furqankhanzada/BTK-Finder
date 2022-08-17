@@ -12,7 +12,9 @@ export const apolloClient = new ApolloClient({
 export const reactQueryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      cacheTime: 1000 * 60 * 60 * 24, // 24 hours
+      // cacheTime: 1000 * 60 * 60 * 24, // 24 hours
+      cacheTime: Infinity,
+      staleTime: 1000 * 60 * 60,
     },
   },
 });
