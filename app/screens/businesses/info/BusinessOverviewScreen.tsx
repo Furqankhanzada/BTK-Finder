@@ -136,6 +136,12 @@ export default function BusinessOverviewScreen(props: Props) {
     extrapolate: 'clamp',
   });
 
+  const headerIconBackgroundColor = scrollY.interpolate({
+    inputRange: [0, 140],
+    outputRange: [colors.primary, BaseColor.whiteColor],
+    extrapolate: 'clamp',
+  });
+
   const headerImageOpacity = scrollY.interpolate({
     inputRange: [0, 250 - heightHeader - 20],
     outputRange: [1, 0],
@@ -302,7 +308,11 @@ export default function BusinessOverviewScreen(props: Props) {
       return null;
     }
     return (
-      <View style={styles.iconContent}>
+      <Animated.View
+        style={[
+          styles.iconContent,
+          { backgroundColor: headerIconBackgroundColor },
+        ]}>
         <Animated.Image
           resizeMode="contain"
           style={[
@@ -313,7 +323,7 @@ export default function BusinessOverviewScreen(props: Props) {
           ]}
           source={source}
         />
-      </View>
+      </Animated.View>
     );
   };
   const renderContent = () => {
@@ -328,11 +338,14 @@ export default function BusinessOverviewScreen(props: Props) {
     return (
       <View>
         <View style={{ paddingHorizontal: 20 }}>
-          <OverviewCard
-            business={business}
-            isPreview={isPreview}
-            onNavigate={onNavigate}
-          />
+          <Animated.View style={{ opacity: headerImageOpacity }}>
+            <OverviewCard
+              business={business}
+              isPreview={isPreview}
+              onNavigate={onNavigate}
+            />
+          </Animated.View>
+
           <ContactInfo
             onNavigate={onNavigate}
             business={business}
@@ -416,6 +429,7 @@ export default function BusinessOverviewScreen(props: Props) {
       </View>
     );
   };
+
   const HIT_SLOP = { top: 16, left: 16, bottom: 16, right: 16 };
 
   return (
@@ -534,7 +548,6 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: BaseColor.dividerColor,
   },
   icon: {
     width: 18,
