@@ -138,7 +138,7 @@ export default function OverviewCard({
           {
             backgroundColor:
               business.status === BusinessStatus.VERIFIED
-                ? '#6acc58' + '4D'
+                ? '#198201'
                 : colors.border,
           },
         ]}>
@@ -148,7 +148,7 @@ export default function OverviewCard({
           style={{
             color:
               business?.status === BusinessStatus.VERIFIED
-                ? '#6acc58'
+                ? '#fff'
                 : colors.text,
           }}>
           {isVerified(business?.status)}
@@ -156,6 +156,12 @@ export default function OverviewCard({
       </View>
     );
   };
+
+  const isFavorite = !!business.favorites?.find((favorite: any) => {
+    console.log('inside Favorite', favorite.ownerId);
+    return favorite.ownerId === user._id;
+  });
+  console.log('is Favorite  ?', isFavorite);
 
   return (
     <View
@@ -253,7 +259,7 @@ export default function OverviewCard({
                     maxStars={5}
                     rating={business?.reviewStats?.averageRatings}
                     fullStarColor={BaseColor.yellowColor}
-                    containerStyle={{ width: 50 }}
+                    containerStyle={styles.containerDiv}
                   />
                 </View>
               </View>
@@ -322,8 +328,10 @@ const styles = StyleSheet.create({
   },
   promotionTag: {
     borderRadius: 7,
-    height: 14,
+    height: 16,
     paddingHorizontal: 7,
+    display: 'flex',
+    justifyContent: 'center',
   },
   iconGirdLike: {
     position: 'absolute',
@@ -360,5 +368,8 @@ const styles = StyleSheet.create({
   },
   catagory: {
     flex: 1,
+  },
+  containerDiv: {
+    width: 50,
   },
 });
