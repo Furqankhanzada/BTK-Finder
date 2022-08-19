@@ -158,7 +158,7 @@ export default function Review(props: any) {
         <Loading loading={true} />
       ) : reviews?.length ? (
         <FlatList
-          contentContainerStyle={{ padding: 20 }}
+          contentContainerStyle={styles.flatListStyle}
           refreshControl={
             <RefreshControl
               colors={[colors.primary]}
@@ -181,7 +181,7 @@ export default function Review(props: any) {
           )}
           renderItem={({ item }) => (
             <CommentItem
-              style={{ marginTop: 10 }}
+              style={styles.commentItemStyle}
               image={item.owner.avatar}
               name={item.owner.name}
               rate={item.rating}
@@ -218,5 +218,11 @@ const styles = StyleSheet.create({
   addButtonText: {
     fontSize: 15,
     marginLeft: 5,
+  },
+  flatListStyle: {
+    padding: 20,
+  },
+  commentItemStyle: {
+    marginTop: 10,
   },
 });

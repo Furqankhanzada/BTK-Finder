@@ -117,7 +117,7 @@ export default function Menu(props: any) {
         }}
       />
       {loading ? (
-        <ActivityIndicator size={'large'} style={{ flex: 1 }} />
+        <ActivityIndicator size={'large'} style={styles.activity} />
       ) : (
         <SectionList
           refreshControl={
@@ -130,8 +130,7 @@ export default function Menu(props: any) {
           renderSectionHeader={({ section }) => (
             <View style={styles.displayTitle}>
               {/* Here colors.text came from color? */}
-              <Text
-                style={[styles.title, {color: colors.text}]}>
+              <Text style={[styles.title, { color: colors.text }]}>
                 {section.tag.displayTitle}
               </Text>
               <FlatList
@@ -178,7 +177,7 @@ export default function Menu(props: any) {
                 {selectedItem.description}
               </Text>
             ) : null}
-            <Text callout bold primaryColor style={{ paddingBottom: 10 }}>
+            <Text callout bold primaryColor style={styles.priceText}>
               {selectedItem?.pricing.map((p) => p?.displayPrice).join('')}
             </Text>
             <View style={styles.extraItemsSection}>
@@ -264,12 +263,18 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
   },
   displayTitle: {
-    paddingBottom: 10, 
+    paddingBottom: 10,
   },
   title: {
     fontWeight: 'bold',
     fontSize: 16,
     paddingBottom: 10,
     paddingLeft: 20,
+  },
+  activity: {
+    flex: 1,
+  },
+  priceText: {
+    paddingBottom: 10,
   },
 });

@@ -66,7 +66,7 @@ export default function Recommendations({ business, onNavigate }: Props) {
               lastRoute="BusinessDetailTabNavigator"
               routeId={business?._id}
               onPress={() => onNavigate('BusinessDetailTabNavigator', item._id)}
-              style={{ marginLeft: 15, width: 175 }}
+              style={styles.placeItemText}
             />
           );
         }}
@@ -83,7 +83,7 @@ export default function Recommendations({ business, onNavigate }: Props) {
               title={item.name}
               subtitle={item.category}
               rate={item?.averageRatings || '0.0'}
-              style={{ marginBottom: 15 }}
+              style={styles.cardList}
               onPress={() => onNavigate('BusinessDetailTabNavigator', item._id)}
             />
           );
@@ -96,5 +96,12 @@ export default function Recommendations({ business, onNavigate }: Props) {
 const styles = StyleSheet.create({
   container: {
     marginTop: 20,
+  },
+  cardList: {
+    marginBottom: 15,
+  },
+  placeItemText: {
+    marginLeft: 15,
+    width: 175,
   },
 });

@@ -270,12 +270,12 @@ export default function BusinessOverviewScreen(props: Props) {
     if (isLoading) {
       return (
         <Placeholder Animation={Progressive}>
-          <PlaceholderMedia style={{ width: '100%', height: '100%' }} />
+          <PlaceholderMedia style={styles.placeholderDiv} />
         </Placeholder>
       );
     }
 
-    return <Image source={getCoverImage()} style={{ flex: 1 }} />;
+    return <Image source={getCoverImage()} style={styles.coverImage} />;
   };
 
   const onPressWhatsApp = () => {
@@ -329,7 +329,7 @@ export default function BusinessOverviewScreen(props: Props) {
   const renderContent = () => {
     if (isLoading || !business) {
       return (
-        <View style={{ paddingHorizontal: 20 }}>
+        <View style={styles.renderContentDiv}>
           <PlaceDetailPlaceholder />
         </View>
       );
@@ -337,7 +337,7 @@ export default function BusinessOverviewScreen(props: Props) {
 
     return (
       <View>
-        <View style={{ paddingHorizontal: 20 }}>
+        <View style={styles.renderContentDiv}>
           <Animated.View style={{ opacity: headerImageOpacity }}>
             <OverviewCard
               business={business}
@@ -357,20 +357,12 @@ export default function BusinessOverviewScreen(props: Props) {
           <View
             style={[styles.contentDescription, { borderColor: colors.border }]}>
             {business.description ? (
-              <Text body2 numberOfLines={100} style={{ lineHeight: 20 }}>
+              <Text body2 numberOfLines={100} style={styles.contentInfo}>
                 {business.description}
               </Text>
             ) : null}
-            <View
-              style={{
-                paddingVertical: 20,
-                flexDirection: 'row',
-              }}></View>
-            <View
-              style={{
-                height: 180,
-                paddingVertical: 20,
-              }}>
+            <View style={styles.contentContainer}></View>
+            <View style={styles.contentSubContainer}>
               <MapView
                 ref={mapRef}
                 scrollEnabled={true}
@@ -386,13 +378,7 @@ export default function BusinessOverviewScreen(props: Props) {
           </View>
           {business?.facilities?.length ? (
             <View>
-              <Text
-                title3
-                semibold
-                style={{
-                  paddingBottom: 5,
-                  paddingTop: 15,
-                }}>
+              <Text title3 semibold style={styles.facilities}>
                 {t('facilities')}
               </Text>
               <View
@@ -406,15 +392,12 @@ export default function BusinessOverviewScreen(props: Props) {
                           size={12}
                           color={colors.accent}
                           solid
-                          style={{ marginRight: 5 }}
+                          style={styles.facilityIcon}
                         />
                       }
                       chip
                       key={item.name + index}
-                      style={{
-                        marginTop: 8,
-                        marginRight: 8,
-                      }}>
+                      style={styles.facilityText}>
                       {item?.name}
                     </Tag>
                   );
@@ -592,5 +575,37 @@ const styles = StyleSheet.create({
     fontSize: 19,
     textAlign: 'center',
     includeFontPadding: false,
+  },
+  placeholderDiv: {
+    width: '100%',
+    height: '100%',
+  },
+  coverImage: {
+    flex: 1,
+  },
+  renderContentDiv: {
+    paddingHorizontal: 20,
+  },
+  contentInfo: {
+    lineHeight: 20,
+  },
+  contentContainer: {
+    paddingVertical: 20,
+    flexDirection: 'row',
+  },
+  contentSubContainer: {
+    height: 180,
+    paddingVertical: 20,
+  },
+  facilities: {
+    paddingBottom: 5,
+    paddingTop: 15,
+  },
+  facilityIcon: {
+    marginRight: 5,
+  },
+  facilityText: {
+    marginTop: 8,
+    marginRight: 8,
   },
 });
