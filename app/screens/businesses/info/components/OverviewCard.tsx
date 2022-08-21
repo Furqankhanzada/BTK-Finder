@@ -96,11 +96,11 @@ export default function OverviewCard({
       );
 
       if (dt >= dt1 && dt <= dt2) {
-        return <Text style={styles.businessTimeOpen}>Opened</Text>;
+        return <Text style={{ color: BaseColor.greenColor }}>Opened</Text>;
       }
     }
 
-    return <Text style={styles.businessTimeClose}>Closed</Text>;
+    return <Text style={{ color: BaseColor.redColor }}>Closed</Text>;
   };
 
   const ratingStatus = (rating: number) => {
@@ -185,7 +185,7 @@ export default function OverviewCard({
               {business?.openHours && isBusinessOpened()}
             </Text>
             <View style={styles.dot} />
-            <Text caption2 grayColor style={styles.catagory} numberOfLines={1}>
+            <Text caption2 grayColor style={styles.category} numberOfLines={1}>
               {business.category}
             </Text>
           </View>
@@ -370,7 +370,7 @@ const styles = StyleSheet.create({
   rateTitle: {
     marginLeft: 10,
   },
-  catagory: {
+  category: {
     flex: 1,
   },
   containerDiv: {
@@ -382,11 +382,5 @@ const styles = StyleSheet.create({
   },
   subContainer: {
     flex: 1,
-  },
-  businessTimeOpen: {
-    color: '#198201',
-  },
-  businessTimeClose: {
-    color: '#f90404',
   },
 });
