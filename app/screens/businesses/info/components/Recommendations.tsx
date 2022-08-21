@@ -82,7 +82,7 @@ export default function Recommendations({ business, onNavigate }: Props) {
               image={item?.thumbnail}
               title={item.name}
               subtitle={item.category}
-              rate={item?.averageRatings || '0.0'}
+              rate={item?.averageRatings || 0.0}
               style={styles.cardList}
               onPress={() => onNavigate('BusinessDetailTabNavigator', item._id)}
             />
