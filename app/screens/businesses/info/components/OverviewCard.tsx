@@ -139,7 +139,7 @@ export default function OverviewCard({
           {
             backgroundColor:
               business.status === BusinessStatus.VERIFIED
-                ? '#198201'
+                ? BaseColor.greenColor
                 : colors.border,
           },
         ]}>
@@ -156,7 +156,7 @@ export default function OverviewCard({
           style={{
             color:
               business?.status === BusinessStatus.VERIFIED
-                ? '#fff'
+                ? BaseColor.whiteColor
                 : colors.text,
           }}>
           {isVerified(business?.status)}
@@ -164,12 +164,6 @@ export default function OverviewCard({
       </View>
     );
   };
-
-  const isFavorite = !!business.favorites?.find((favorite: any) => {
-    console.log('inside Favorite', favorite.ownerId);
-    return favorite.ownerId === user._id;
-  });
-  console.log('is Favorite  ?', isFavorite);
 
   return (
     <View

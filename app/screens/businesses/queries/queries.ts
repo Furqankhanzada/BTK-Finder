@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 
+import { buildContactItems } from '@screens/businesses/builders/contactItems';
 import { handleError } from '@utils';
 
 import axiosApiInstance from '../../../interceptor/axios-interceptor';
 import { BUSINESSES_API } from '../../../constants';
 import { BusinessPresentable } from '../models/BusinessPresentable';
-import { buildContactItems } from '@screens/businesses/builders/contactItems';
 
 export const useBusiness = (id: string) =>
   useQuery(
