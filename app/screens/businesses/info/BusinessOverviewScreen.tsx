@@ -131,19 +131,19 @@ export default function BusinessOverviewScreen(props: Props) {
   };
 
   const headerBackgroundColor = scrollY.interpolate({
-    inputRange: [0, 140],
+    inputRange: [0, 50],
     outputRange: [BaseColor.whiteColor, colors.text],
     extrapolate: 'clamp',
   });
 
   const headerIconBackgroundColor = scrollY.interpolate({
-    inputRange: [0, 140],
+    inputRange: [0, 50],
     outputRange: [colors.primary, BaseColor.whiteColor],
     extrapolate: 'clamp',
   });
 
   const headerImageOpacity = scrollY.interpolate({
-    inputRange: [0, 250 - heightHeader - 20],
+    inputRange: [0, 150 - heightHeader - 20],
     outputRange: [1, 0],
     extrapolate: 'clamp',
   });
@@ -338,14 +338,11 @@ export default function BusinessOverviewScreen(props: Props) {
     return (
       <View>
         <View style={styles.renderContentDiv}>
-          <Animated.View style={{ opacity: headerImageOpacity }}>
-            <OverviewCard
-              business={business}
-              isPreview={isPreview}
-              onNavigate={onNavigate}
-            />
-          </Animated.View>
-
+          <OverviewCard
+            business={business}
+            isPreview={isPreview}
+            onNavigate={onNavigate}
+          />
           <ContactInfo
             onNavigate={onNavigate}
             business={business}
@@ -361,7 +358,7 @@ export default function BusinessOverviewScreen(props: Props) {
                 {business.description}
               </Text>
             ) : null}
-            <View style={styles.contentContainer}></View>
+            <View style={styles.contentContainer} />
             <View style={styles.contentSubContainer}>
               <MapView
                 ref={mapRef}

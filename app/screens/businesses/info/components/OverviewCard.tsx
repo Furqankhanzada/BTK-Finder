@@ -194,9 +194,7 @@ export default function OverviewCard({
           {isPreview ? (
             <TouchableOpacity
               style={styles.contentRate}
-              onPress={() =>
-                /* navigateToReview() */ console.log('navigateToReview')
-              }>
+              onPress={() => onNavigate('Reviews')}>
               <View style={styles.rateContainer}>
                 <Tag rate>
                   <Text caption2 whiteColor semibold style={styles.ratingText}>
