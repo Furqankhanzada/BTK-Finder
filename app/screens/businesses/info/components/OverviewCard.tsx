@@ -143,13 +143,13 @@ export default function OverviewCard({
                 : colors.border,
           },
         ]}>
-        <FontAwesomeIcons
-          style={styles.verifyIcon}
-          name={
-            business.status === BusinessStatus.VERIFIED ? 'check-circle' : ''
-          }
-          size={12}
-        />
+        {business.status === BusinessStatus.VERIFIED ? (
+          <FontAwesomeIcons
+            style={styles.verifyIcon}
+            name="check-circle"
+            size={12}
+          />
+        ) : null}
         <Text
           overline
           medium
