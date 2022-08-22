@@ -99,6 +99,7 @@ const styles = StyleSheet.create({
   },
   cardList: {
     marginBottom: 15,
+    marginLeft: 20,
   },
   placeItemText: {
     marginLeft: 15,

@@ -1,13 +1,19 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  Fragment,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import {
   Alert,
   Animated,
   Linking,
-  ScrollView,
   Share,
   StyleSheet,
   TouchableOpacity,
   View,
+  FlatList,
 } from 'react-native';
 import { showLocation } from 'react-native-map-link';
 import { useTranslation } from 'react-i18next';
@@ -413,107 +419,98 @@ export default function BusinessOverviewScreen(props: Props) {
   const HIT_SLOP = { top: 16, left: 16, bottom: 16, right: 16 };
 
   return (
-    <View style={styles.container}>
-      <SafeAreaView style={BaseStyle.safeAreaView}>
-        <ImageView
-          backgroundColor={colors.background}
-          images={business?.gallery?.map((item) => ({ uri: item.image })) || []}
-          imageIndex={0}
-          visible={openGallery}
-          onRequestClose={() => setOpenGallery(false)}
-          HeaderComponent={() => (
-            <SafeAreaView style={styles.galleryHeader}>
-              <TouchableOpacity
-                style={[styles.closeButton, { backgroundColor: colors.card }]}
-                onPress={() => setOpenGallery(false)}
-                hitSlop={HIT_SLOP}>
-                <Text style={[styles.closeText, { color: colors.text }]}>
-                  ✕
-                </Text>
-              </TouchableOpacity>
-            </SafeAreaView>
-          )}
-          FooterComponent={({ imageIndex }) => (
-            <View
-              style={[styles.galleryFooter, { backgroundColor: colors.card }]}>
-              <Text
-                style={[styles.galleryFooterText, { colors: colors.text }]}>{`${
-                imageIndex + 1
-              } / ${business?.gallery?.length}`}</Text>
-            </View>
-          )}
-        />
-        <Animated.View
-          style={[
-            styles.headerImageStyle,
-            {
-              opacity: headerImageOpacity,
-              height: heightViewImg,
-            },
-          ]}>
-          {renderBanner()}
-        </Animated.View>
-        <Animated.View style={[styles.headerStyle]}>
-          <Header
-            title={isPreview ? 'Business Review' : ''}
-            renderLeft={() => {
-              return (
-                <Animated.Image
-                  resizeMode="contain"
-                  style={[
-                    styles.icon,
-                    {
-                      tintColor: headerBackgroundColor,
-                    },
-                  ]}
-                  source={Images.back}
-                />
-              );
-            }}
-            renderRightSecond={() => renderHeaderButton(Images.gallery)}
-            renderRight={() => renderHeaderButton(Images.share, isPreview)}
-            onPressLeft={navigation.goBack}
-            onPressRight={onShare}
-            onPressRightSecond={onPressGallery}
-          />
-        </Animated.View>
-        <ScrollView
-          onContentSizeChange={() => {
-            setHeightHeader(Utils.heightHeader());
-          }}
-          overScrollMode={'never'}
-          scrollEventThrottle={16}
-          onScroll={Animated.event(
-            [
-              {
-                nativeEvent: {
-                  contentOffset: { y: scrollY },
+    <SafeAreaView style={BaseStyle.safeAreaView}>
+      <Animated.View
+        style={[
+          styles.headerImageStyle,
+          {
+            opacity: headerImageOpacity,
+            height: heightViewImg,
+          },
+        ]}>
+        {renderBanner()}
+      </Animated.View>
+      <Header
+        title={isPreview ? 'Business Review' : ''}
+        renderLeft={() => {
+          return (
+            <Animated.Image
+              resizeMode="contain"
+              style={[
+                styles.icon,
+                {
+                  tintColor: headerBackgroundColor,
                 },
-              },
-            ],
+              ]}
+              source={Images.back}
+            />
+          );
+        }}
+        renderRightSecond={() => renderHeaderButton(Images.gallery)}
+        renderRight={() => renderHeaderButton(Images.share, isPreview)}
+        onPressLeft={navigation.goBack}
+        onPressRight={onShare}
+        onPressRightSecond={onPressGallery}
+      />
+      <ImageView
+        backgroundColor={colors.background}
+        images={business?.gallery?.map((item) => ({ uri: item.image })) || []}
+        imageIndex={0}
+        visible={openGallery}
+        onRequestClose={() => setOpenGallery(false)}
+        HeaderComponent={() => (
+          <SafeAreaView style={styles.galleryHeader}>
+            <TouchableOpacity
+              style={[styles.closeButton, { backgroundColor: colors.card }]}
+              onPress={() => setOpenGallery(false)}
+              hitSlop={HIT_SLOP}>
+              <Text style={[styles.closeText, { color: colors.text }]}>✕</Text>
+            </TouchableOpacity>
+          </SafeAreaView>
+        )}
+        FooterComponent={({ imageIndex }) => (
+          <View
+            style={[styles.galleryFooter, { backgroundColor: colors.card }]}>
+            <Text
+              style={[styles.galleryFooterText, { colors: colors.text }]}>{`${
+              imageIndex + 1
+            } / ${business?.gallery?.length}`}</Text>
+          </View>
+        )}
+      />
+      <FlatList
+        onContentSizeChange={() => {
+          setHeightHeader(Utils.heightHeader());
+        }}
+        overScrollMode={'never'}
+        scrollEventThrottle={16}
+        onScroll={Animated.event(
+          [
             {
-              useNativeDriver: false,
+              nativeEvent: {
+                contentOffset: { y: scrollY },
+              },
             },
-          )}>
-          <View style={{ height: 170 - heightHeader }} />
-          {renderContent()}
-        </ScrollView>
-      </SafeAreaView>
-    </View>
+          ],
+          {
+            useNativeDriver: false,
+          },
+        )}
+        data={[1]}
+        renderItem={() => {
+          return (
+            <Fragment>
+              <View style={{ height: 170 - heightHeader }} />
+              {renderContent()}
+            </Fragment>
+          );
+        }}
+      />
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    position: 'relative',
-  },
-  headerStyle: {
-    height: 'auto',
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   headerImageStyle: {
     height: 250,
     width: '100%',
