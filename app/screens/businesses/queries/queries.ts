@@ -287,8 +287,6 @@ export const useProductsByTag = (
     },
     {
       enabled: !!shopId && !!tagId,
-      cacheTime: 0,
-      staleTime: 0,
       select: (data) => {
         return buildProducts(data.catalogItems);
       },
