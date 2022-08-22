@@ -1,0 +1,13 @@
+diff --git a/node_modules/react-native-image-viewing/dist/components/ImageItem/ImageLoading.js b/node_modules/react-native-image-viewing/dist/components/ImageItem/ImageLoading.js
+index 9770f7d..eac4a55 100644
+--- a/node_modules/react-native-image-viewing/dist/components/ImageItem/ImageLoading.js
++++ b/node_modules/react-native-image-viewing/dist/components/ImageItem/ImageLoading.js
+@@ -11,7 +11,7 @@ const SCREEN = Dimensions.get("screen");
+ const SCREEN_WIDTH = SCREEN.width;
+ const SCREEN_HEIGHT = SCREEN.height;
+ export const ImageLoading = () => (<View style={styles.loading}>
+-    <ActivityIndicator size="small" color="#FFF"/>
++    <ActivityIndicator size="small" color="#ccc"/>
+   </View>);
+ const styles = StyleSheet.create({
+     listItem: {

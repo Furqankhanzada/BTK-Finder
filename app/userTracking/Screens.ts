@@ -72,13 +72,6 @@ const SCREENS: any = {
       screenName: 'SearchHistory',
     },
   },
-  PreviewImage: {
-    TRACKING_KEY: 'search',
-    ATTRIBUTES: {
-      category: 'search',
-      screenName: 'PreviewImage',
-    },
-  },
   // show all categories
   Place: {
     TRACKING_KEY: 'place',

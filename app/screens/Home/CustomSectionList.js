@@ -3,7 +3,7 @@ import { View, FlatList, TouchableOpacity } from 'react-native';
 import { Text, Loading, Icon } from '@components';
 import styles from './styles';
 
-function SectionList(props) {
+function CustomSectionList(props) {
   const {
     title,
     subTitle,
@@ -68,7 +68,7 @@ function SectionList(props) {
           showsHorizontalScrollIndicator={false}
           data={data}
           ListEmptyComponent={listEmptyComponent}
-          keyExtractor={(item, index) => item.id}
+          keyExtractor={(item, index) => item._id}
           renderItem={renderItem}
         />
       )}
@@ -76,4 +76,4 @@ function SectionList(props) {
   );
 }
 
-export default SectionList;
+export default CustomSectionList;

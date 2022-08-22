@@ -1,9 +1,11 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import dynamicLinks, {
   FirebaseDynamicLinksTypes,
 } from '@react-native-firebase/dynamic-links';
+import Config from 'react-native-config';
 
 import { getLastIndex } from '@utils';
+
 import * as NavigationService from '../services/NavigationService';
 
 export default function useDynamicLinks() {
@@ -26,8 +28,25 @@ export default function useDynamicLinks() {
     const interval = setInterval(() => {
       if (NavigationService.isReadyRef.current) {
         clearInterval(interval);
-        NavigationService.navigate('PlaceDetail', { id });
+        NavigationService.navigate('BusinessDetailTabNavigator', { id });
       }
     }, 1000);
   };
+
+  return useCallback(async (businessId) => {
+    const fallbackUrl = `${Config.ADMIN_URL}/businesses/${businessId}?publicView=true`;
+
+    return await dynamicLinks().buildShortLink({
+      link: fallbackUrl,
+      domainUriPrefix: Config.DYNAMIC_LINK_URL,
+      android: {
+        packageName: 'com.explore.btk',
+        fallbackUrl,
+      },
+      ios: {
+        bundleId: 'com.explore.btk',
+        fallbackUrl,
+      },
+    });
+  }, []);
 }

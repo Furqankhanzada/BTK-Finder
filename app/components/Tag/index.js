@@ -95,26 +95,6 @@ export default function Tag(props) {
   );
 }
 
-Tag.propTypes = {
-  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-  textStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-  icon: PropTypes.node,
-  primary: PropTypes.bool,
-  primaryIcon: PropTypes.bool,
-  outline: PropTypes.bool,
-  outlineIcon: PropTypes.bool,
-  outlineSecondary: PropTypes.bool,
-  outlineSecondaryIcon: PropTypes.bool,
-  small: PropTypes.bool,
-  light: PropTypes.bool,
-  gray: PropTypes.bool,
-  chip: PropTypes.bool,
-  rate: PropTypes.bool,
-  rateSmall: PropTypes.bool,
-  status: PropTypes.bool,
-  sale: PropTypes.bool,
-};
-
 Tag.defaultProps = {
   style: {},
   textStyle: {},

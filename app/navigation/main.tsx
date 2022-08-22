@@ -1,12 +1,15 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { BaseColor, useTheme, useFont } from '@config';
+
+import { BaseColor, useFont, useTheme } from '@config';
 import { Icon } from '@components';
-import { setEditBusiness } from '../actions/business';
 import BusinessDetailNavigator from '@screens/businesses/BusinessDetailNavigator';
+
+import { setEditBusiness } from '../actions/business';
+import { LastRoutes, withAuthRedirection } from './hoc/withAuthRedirection';
 
 /* Bottom Screen */
 import Home from '@screens/Home';
@@ -32,7 +35,6 @@ import ResetPassword from '@screens/ResetPassword';
 import ChangePassword from '@screens/ChangePassword';
 import ProfileEdit from '@screens/ProfileEdit';
 import ChangeLanguage from '@screens/ChangeLanguage';
-import PlaceDetail from '@screens/businesses/info/BusinessInfoScreen';
 import ContactUs from '@screens/ContactUs';
 import AboutUs from '@screens/AboutUs';
 import Address from '@screens/AddBusiness/address';
@@ -74,7 +76,6 @@ export default function Main() {
       <MainStack.Screen name="ChangePassword" component={ChangePassword} />
       <MainStack.Screen name="ProfileEdit" component={ProfileEdit} />
       <MainStack.Screen name="ChangeLanguage" component={ChangeLanguage} />
-      <MainStack.Screen name="PlaceDetail" component={PlaceDetail} />
       <MainStack.Screen name="ContactUs" component={ContactUs} />
       <MainStack.Screen name="AboutUs" component={AboutUs} />
       {/*<MainStack.Screen name="Business" component={Business} />*/}
@@ -95,13 +96,11 @@ function BottomTabNavigator() {
   const dispatch = useDispatch();
   const { colors } = useTheme();
   const font = useFont();
-  const isLogin = useSelector((state) => state.auth.isLogin);
+
   return (
     <BottomTab.Navigator
       initialRouteName="Home"
-      headerMode="none"
       tabBarOptions={{
-        showIcon: true,
         showLabel: true,
         activeTintColor: colors.primary,
         inactiveTintColor: BaseColor.grayColor,
@@ -124,13 +123,9 @@ function BottomTabNavigator() {
 
       <BottomTab.Screen
         name="Favourite"
-        component={(props) =>
-          isLogin ? (
-            <Favourite {...props} />
-          ) : (
-            <Walkthrough lastRoute={'Favourite'} {...props} />
-          )
-        }
+        component={withAuthRedirection(Favourite, {
+          lastRoute: LastRoutes.Favourite,
+        })}
         options={{
           title: 'Favorite',
           tabBarIcon: ({ color }) => {
@@ -140,13 +135,9 @@ function BottomTabNavigator() {
       />
       <BottomTab.Screen
         name="Business"
-        component={(props) =>
-          isLogin ? (
-            <Business {...props} />
-          ) : (
-            <Walkthrough lastRoute={'Business'} {...props} />
-          )
-        }
+        component={withAuthRedirection(Business, {
+          lastRoute: LastRoutes.Business,
+        })}
         options={{
           title: 'Add Business',
           tabBarIcon: ({ color }) => {
@@ -159,6 +150,7 @@ function BottomTabNavigator() {
           },
         })}
       />
+
       {/* <BottomTab.Screen
         name="Notification"
         component={Notification}

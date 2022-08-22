@@ -2,10 +2,9 @@ import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { Image, Text, StarRating, Tag, Icon, FavouriteIcon } from '@components';
 import { BaseColor, useTheme } from '@config';
-import PropTypes from 'prop-types';
 import styles from './styles';
 import { useTranslation } from 'react-i18next';
-import { Images } from '../../config';
+import { Images } from '@config';
 import NumberFormat from 'react-number-format';
 
 export default function PlaceItem(props) {
@@ -269,25 +268,6 @@ export default function PlaceItem(props) {
     return renderList();
   }
 }
-
-PlaceItem.propTypes = {
-  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-  image: PropTypes.node.isRequired,
-  list: PropTypes.bool,
-  block: PropTypes.bool,
-  grid: PropTypes.bool,
-  title: PropTypes.string,
-  subtitle: PropTypes.string,
-  location: PropTypes.string,
-  phone: PropTypes.string,
-  rate: PropTypes.number,
-  status: PropTypes.string,
-  rateStatus: PropTypes.string,
-  numReviews: PropTypes.number,
-  onPress: PropTypes.func,
-  onPressTag: PropTypes.func,
-  isFavorite: PropTypes.bool,
-};
 
 PlaceItem.defaultProps = {
   style: {},

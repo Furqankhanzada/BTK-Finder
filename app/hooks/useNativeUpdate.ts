@@ -121,24 +121,26 @@ export default function useNativeUpdate() {
             {
               text: 'Cancel',
               style: 'cancel',
+              onPress: async () => {
+                // we will skip showing the popup again for this new version
+                await setItem(
+                  LocalStorageKeys.NATIVE_UPDATE_VERSION,
+                  result.storeVersion,
+                );
+              },
             },
             {
               text: 'Update Now',
-              onPress: () => Linking.openURL(Config.APP_LINK),
+              onPress: () => {
+                Linking.openURL(Config.APP_LINK);
+                // we will skip showing any popup for the current session
+                alertShownForCurrentSession.current = true;
+              },
             },
           ],
           {
             cancelable: false,
           },
-        );
-
-        // we will skip showing any popup for the current session
-        alertShownForCurrentSession.current = true;
-      } else {
-        // we will skip showing the popup again for this new version
-        await setItem(
-          LocalStorageKeys.NATIVE_UPDATE_VERSION,
-          result.storeVersion,
         );
       }
     } catch {}

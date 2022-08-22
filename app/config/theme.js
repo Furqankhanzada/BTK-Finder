@@ -14,7 +14,8 @@ export const BaseColor = {
   orangeColor: '#E5634D',
   blueColor: '#5DADE2',
   pinkColor: '#A569BD',
-  greenColor: '#58D68D',
+  greenColor: '#198201',
+  redColor: '#f90404',
   yellowColor: '#FDC60A',
 };
 
@@ -219,14 +220,12 @@ export const DefaultFont = 'Raleway';
 export const useTheme = () => {
   const isDarkMode = useDarkMode();
   const forceDark = useSelector((state) => state.application.force_dark);
-  const themeStorage = useSelector((state) => state.application.theme);
-  const listTheme = ThemeSupport.filter((item) => item.theme == themeStorage);
   const theme = ThemeSupport[2];
 
   if (forceDark) {
     return { theme: theme.dark, colors: theme.dark.colors };
   }
-  if (forceDark == false) {
+  if (forceDark === false) {
     return { theme: theme.light, colors: theme.light.colors };
   }
   return isDarkMode

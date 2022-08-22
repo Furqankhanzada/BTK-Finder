@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { StatusBar } from 'react-native';
+import { Platform, StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useDarkMode, ColorSchemeProvider } from 'react-native-dynamic';
@@ -17,7 +17,6 @@ import Loading from '@screens/Loading';
 import Filter from '@screens/Filter';
 import ChooseItems from '@screens/ChooseItems';
 import SearchHistory from '@screens/SearchHistory';
-import PreviewImage from '@screens/PreviewImage';
 import SelectDarkOption from '@screens/SelectDarkOption';
 import SelectFontOption from '@screens/SelectFontOption';
 import HelpLine from '@screens/HelpLine';
@@ -47,9 +46,11 @@ export default function Navigator() {
       lng: storeLanguage ?? BaseSetting.defaultLanguage,
       fallbackLng: BaseSetting.defaultLanguage,
     });
-    SplashScreen.hide();
-    StatusBar.setBackgroundColor(colors.primary, true);
+    if (Platform.OS === 'android') {
+      StatusBar.setBackgroundColor(colors.primary, true);
+    }
     StatusBar.setBarStyle(isDarkMode ? 'light-content' : 'dark-content', true);
+    SplashScreen.hide();
   }, [colors.primary, isDarkMode, storeLanguage]);
 
   useEffect(() => {
@@ -96,7 +97,6 @@ export default function Navigator() {
           <RootStack.Screen name="Filter" component={Filter} />
           <RootStack.Screen name="ChooseItems" component={ChooseItems} />
           <RootStack.Screen name="SearchHistory" component={SearchHistory} />
-          <RootStack.Screen name="PreviewImage" component={PreviewImage} />
           <RootStack.Screen
             name="SelectDarkOption"
             component={SelectDarkOption}

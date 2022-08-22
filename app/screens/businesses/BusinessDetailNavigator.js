@@ -4,9 +4,13 @@ import { BaseColor, useTheme, useFont } from '@config';
 import { Icon } from '@components';
 
 import Review from './reviews/BusinessReviewsScreen';
-import BusinessInfoScreen from './info/BusinessInfoScreen';
+import BusinessOverviewScreen from './info/BusinessOverviewScreen';
 import BusinessProductsScreen from './products/BusinessProductsScreen';
-import { useBusiness } from '@screens/businesses/apis/queries';
+import { useBusiness } from '@screens/businesses/queries/queries';
+import {
+  BusinessType,
+  ShopStatus,
+} from '@screens/businesses/models/BusinessPresentable';
 
 const BusinessDetailBottomTab = createBottomTabNavigator();
 
@@ -40,7 +44,7 @@ export default function BusinessDetailNavigator({ route }) {
             return <Icon color={color} name="info-circle" size={25} solid />;
           },
         }}
-        component={BusinessInfoScreen}
+        component={BusinessOverviewScreen}
       />
       <BusinessDetailBottomTab.Screen
         name="Reviews"
@@ -53,13 +57,13 @@ export default function BusinessDetailNavigator({ route }) {
         }}
         component={Review}
       />
-      {!isLoading && data.shop && data.shop.status === 'enabled' ? (
+      {!isLoading && data.shop && data.shop.status === ShopStatus.enabled ? (
         <BusinessDetailBottomTab.Screen
           initialParams={{ shop: data.shop }}
           name="Products"
           component={BusinessProductsScreen}
           options={{
-            title: data.type === 'restaurant' ? 'Menu' : 'Products',
+            title: data.type === BusinessType.restaurant ? 'Menu' : 'Products',
             tabBarIcon: ({ color }) => {
               return <Icon solid color={color} name="elementor" size={25} />;
             },

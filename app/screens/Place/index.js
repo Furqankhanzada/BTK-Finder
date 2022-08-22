@@ -213,7 +213,7 @@ export default function Place(props) {
   };
 
   const navigateBusinessDetail = (id, name, category) => {
-    navigation.navigate('PlaceDetail', { id });
+    navigation.navigate('BusinessDetailTabNavigator', { id });
     trackEvent(EVENTS.VISITED_BUSINESS, {
       id,
       name,

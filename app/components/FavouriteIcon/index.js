@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ActivityIndicator, Alert, TouchableOpacity, View } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Icon2 from 'react-native-vector-icons/FontAwesome';
+
 import { BaseColor } from '@config';
 import { Icon, Text } from '@components';
-import PropTypes from 'prop-types';
-import styles from './styles';
 import {
-  addFavoriteBusiness,
-  removeFavoriteBusiness,
-} from '../../actions/favorites';
+  FavoriteType,
+  useToggleFavorite,
+} from '@screens/businesses/queries/mutations';
+
+import styles from './styles';
 import { trackEvent, EVENTS } from '../../userTracking';
 
 export default function FavouriteIcon(props) {
@@ -23,19 +24,8 @@ export default function FavouriteIcon(props) {
     routeId,
     showText,
   } = props;
-  const dispatch = useDispatch();
+  const { mutate, isLoading } = useToggleFavorite();
   const isLogin = useSelector((state) => state.auth.isLogin);
-  const [loading, setLoading] = useState(false);
-
-  const stateProps = useSelector(({ favorites }) => {
-    return {
-      favoriteBusinesses: favorites.getFavoriteBusinesses,
-    };
-  });
-
-  const afterResponse = () => {
-    setLoading(false);
-  };
 
   const navigateToWalktrhough = (lastRoute, id) => {
     navigation.navigate('Walkthrough', { lastRoute, id });
@@ -43,16 +33,11 @@ export default function FavouriteIcon(props) {
 
   const onPressFavorite = (id) => {
     if (isLogin) {
-      setLoading(true);
-      const allFavoriteBusinesses = stateProps.favoriteBusinesses;
-      const isFavoriteExist = allFavoriteBusinesses.some(
-        (obj) => obj._id === id,
-      );
-      if (isFavoriteExist) {
-        dispatch(removeFavoriteBusiness(id, afterResponse));
+      if (!isFavorite) {
+        mutate({ businessId: id, type: FavoriteType.favorite });
         trackEvent(EVENTS.UNFAVORITE_BUTTON_CLICKED, { id, name });
       } else {
-        dispatch(addFavoriteBusiness(id, afterResponse));
+        mutate({ businessId: id, type: FavoriteType.unFavorite });
         trackEvent(EVENTS.FAVORITE_BUTTON_CLICKED, { id, name });
       }
     } else {
@@ -76,7 +61,7 @@ export default function FavouriteIcon(props) {
 
   return (
     <TouchableOpacity style={style} onPress={() => onPressFavorite(favoriteId)}>
-      {loading ? (
+      {isLoading ? (
         <View style={styles.container}>
           <ActivityIndicator size="small" color={BaseColor.orangeColor} />
           {showText ? <Text style={styles.bottomText}>Loading...</Text> : null}
@@ -109,13 +94,6 @@ export default function FavouriteIcon(props) {
     </TouchableOpacity>
   );
 }
-
-FavouriteIcon.propTypes = {
-  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-  isFavorite: PropTypes.bool,
-  favoriteId: PropTypes.string,
-  showText: PropTypes.bool,
-};
 
 FavouriteIcon.defaultProps = {
   style: {},
