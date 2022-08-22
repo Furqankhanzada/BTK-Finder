@@ -9,13 +9,17 @@ import { BUSINESSES_API } from '../../../constants';
 import { BusinessPresentable } from '../models/BusinessPresentable';
 import Config from 'react-native-config';
 import {
+  CatalogItemConnection,
+  CatalogItemSortByField,
   Maybe,
+  QueryCatalogItemsArgs,
   QueryTagsArgs,
   SortOrder,
   TagConnection,
   TagSortByField,
 } from '../../../models/graphql';
 import { buildTags } from '@screens/businesses/builders/tags';
+import { buildProducts } from '@screens/businesses/builders/products';
 
 export const useBusiness = (id: string) =>
   useQuery(
@@ -92,7 +96,7 @@ export const useTags = (shopId: string | undefined) => {
       return request<GetTags, QueryTagsArgs>({
         url: Config.SHOPS_API_URL,
         variables: {
-          shopId: 'cmVhY3Rpb24vc2hvcDpGN2ZrM3plR3o4anpXaWZzQQ==',
+          shopId: shopId!,
           sortOrder: SortOrder.Asc,
           sortBy: TagSortByField.CreatedAt,
         },
@@ -154,6 +158,139 @@ export const useTags = (shopId: string | undefined) => {
       enabled: !!shopId,
       select: (data) => {
         return buildTags(data.tags);
+      },
+    },
+  );
+};
+
+type CatalogItems = {
+  catalogItems: Maybe<CatalogItemConnection>;
+};
+
+export const useProductsByTag = (
+  shopId: string | undefined,
+  tagId: string | undefined,
+) => {
+  return useQuery(
+    ['products', shopId, tagId],
+    (): Promise<CatalogItems> => {
+      return request<CatalogItems, QueryCatalogItemsArgs>({
+        url: Config.SHOPS_API_URL,
+        variables: {
+          shopIds: [shopId!],
+          tagIds: [tagId!],
+          sortOrder: SortOrder.Asc,
+          sortBy: CatalogItemSortByField.CreatedAt,
+        },
+        document: gql`
+          query catalogItemsQuery(
+            $shopIds: [ID!]!
+            $tagIds: [ID]
+            $first: ConnectionLimitInt
+            $last: ConnectionLimitInt
+            $before: ConnectionCursor
+            $after: ConnectionCursor
+            $sortBy: CatalogItemSortByField
+            $sortByPriceCurrencyCode: String
+            $sortOrder: SortOrder
+          ) {
+            catalogItems(
+              shopIds: $shopIds
+              tagIds: $tagIds
+              first: $first
+              last: $last
+              before: $before
+              after: $after
+              sortBy: $sortBy
+              sortByPriceCurrencyCode: $sortByPriceCurrencyCode
+              sortOrder: $sortOrder
+            ) {
+              totalCount
+              pageInfo {
+                endCursor
+                startCursor
+                hasNextPage
+                hasPreviousPage
+                __typename
+              }
+              edges {
+                cursor
+                node {
+                  _id
+                  ... on CatalogItemProduct {
+                    product {
+                      variants {
+                        title
+                        optionTitle
+                        pricing {
+                          displayPrice
+                        }
+                      }
+                      tagIds
+                      tags {
+                        nodes {
+                          _id
+                          displayTitle
+                          position
+                        }
+                      }
+                      _id
+                      title
+                      description
+                      isLowQuantity
+                      isSoldOut
+                      isBackorder
+                      shop {
+                        currency {
+                          code
+                          __typename
+                        }
+                        __typename
+                      }
+                      pricing {
+                        compareAtPrice {
+                          displayAmount
+                          __typename
+                        }
+                        currency {
+                          code
+                          __typename
+                        }
+                        displayPrice
+                        minPrice
+                        maxPrice
+                        __typename
+                      }
+                      primaryImage {
+                        URLs {
+                          thumbnail
+                          small
+                          medium
+                          large
+                          __typename
+                        }
+                        __typename
+                      }
+                      __typename
+                    }
+                    __typename
+                  }
+                  __typename
+                }
+                __typename
+              }
+              __typename
+            }
+          }
+        `,
+      });
+    },
+    {
+      enabled: !!shopId && !!tagId,
+      cacheTime: 0,
+      staleTime: 0,
+      select: (data) => {
+        return buildProducts(data.catalogItems);
       },
     },
   );

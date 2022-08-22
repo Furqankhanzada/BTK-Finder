@@ -358,7 +358,6 @@ export default function BusinessOverviewScreen(props: Props) {
             onOpen={onOpen}
           />
           <OpenHours business={business} />
-
           {business?.shop && business.shop.status === ShopStatus.enabled ? (
             <View>
               <Text title3 semibold style={styles.facilities}>
