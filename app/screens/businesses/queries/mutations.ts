@@ -8,6 +8,7 @@ import axiosApiInstance from '../../../interceptor/axios-interceptor';
 import { BUSINESSES_API } from '../../../constants';
 
 import { getFavoriteBusinesses } from '../../../actions/favorites';
+import { useDynamicLinks } from '@hooks';
 
 export enum FavoriteType {
   favorite = 'favorite',
@@ -71,4 +72,9 @@ export const useToggleFavorite = () => {
       },
     },
   );
+};
+
+export const useBuildBusinessURL = () => {
+  const buildBusinessURL = useDynamicLinks();
+  return useMutation((businessId: string) => buildBusinessURL(businessId), {});
 };

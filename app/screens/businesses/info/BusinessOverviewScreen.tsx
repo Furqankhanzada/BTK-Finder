@@ -14,11 +14,10 @@ import {
   TouchableOpacity,
   View,
   FlatList,
+  ActivityIndicator,
 } from 'react-native';
 import { showLocation } from 'react-native-map-link';
 import { useTranslation } from 'react-i18next';
-import Config from 'react-native-config';
-import dynamicLinks from '@react-native-firebase/dynamic-links';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Placeholder, PlaceholderMedia, Progressive } from 'rn-placeholder';
 import ImageView from 'react-native-image-viewing';
@@ -44,6 +43,7 @@ import OpenHours from '@screens/businesses/info/components/OpenHours';
 import Recommendations from '@screens/businesses/info/components/Recommendations';
 
 import { useBusiness } from '../queries/queries';
+import { useBuildBusinessURL } from '../queries/mutations';
 import { EVENTS, trackEvent } from '../../../userTracking';
 
 let defaultDelta = {
@@ -59,36 +59,22 @@ interface Props {
 
 export default function BusinessOverviewScreen(props: Props) {
   const { navigation, route, preview: isPreview } = props;
-  const { isLoading, data: business } = useBusiness(route?.params?.id);
+
   const mapRef = useRef<any>();
-  const [openGallery, setOpenGallery] = useState<boolean>(false);
   const scrollY = useRef(new Animated.Value(0)).current;
+  const [openGallery, setOpenGallery] = useState<boolean>(false);
+  const [heightHeader, setHeightHeader] = useState(Utils.heightHeader());
+
   const { t } = useTranslation();
   const { colors } = useTheme();
-  const [heightHeader, setHeightHeader] = useState(Utils.heightHeader());
-  const [businessLink, setBusinessLink] = useState('');
+
+  const { isLoading, data: business } = useBusiness(route?.params?.id);
+  const {
+    isLoading: businessLinkLoading,
+    mutateAsync: buildBusinessURLMutate,
+  } = useBuildBusinessURL();
+
   const appLink = 'http://onelink.to/xwhffr';
-
-  useEffect(() => {
-    async function businessUrl() {
-      const fallbackUrl = `${Config.ADMIN_URL}/businesses/${business?._id}?publicView=true`;
-
-      const link = await dynamicLinks().buildShortLink({
-        link: fallbackUrl,
-        domainUriPrefix: Config.DYNAMIC_LINK_URL,
-        android: {
-          packageName: 'com.explore.btk',
-          fallbackUrl,
-        },
-        ios: {
-          bundleId: 'com.explore.btk',
-          fallbackUrl,
-        },
-      });
-      setBusinessLink(link);
-    }
-    businessUrl();
-  }, [business?._id]);
 
   useEffect(() => {
     let loc =
@@ -108,6 +94,11 @@ export default function BusinessOverviewScreen(props: Props) {
   }, [business?.location]);
 
   const onShare = async () => {
+    if (!business?._id) {
+      Alert.alert('Wait a minute', 'Please wait for the business to load');
+      return;
+    }
+    const businessLink = await buildBusinessURLMutate(business?._id);
     try {
       await Share.share({
         message: `${business?.name}: ${businessLink} \n \nDownload Explore BTK: ${appLink}`,
@@ -144,7 +135,7 @@ export default function BusinessOverviewScreen(props: Props) {
 
   const headerIconBackgroundColor = scrollY.interpolate({
     inputRange: [0, 50],
-    outputRange: [colors.primary, BaseColor.whiteColor],
+    outputRange: [colors.primary, colors.background],
     extrapolate: 'clamp',
   });
 
@@ -309,7 +300,11 @@ export default function BusinessOverviewScreen(props: Props) {
     trackEvent(EVENTS.SEE_MORE_IMAGES, { title: business?.name });
   };
 
-  const renderHeaderButton = (source: number, isInPreviewMode?: boolean) => {
+  const renderHeaderButton = (
+    source: number,
+    isInPreviewMode: boolean = false,
+    loading: boolean = false,
+  ) => {
     if (isInPreviewMode) {
       return null;
     }
@@ -319,16 +314,20 @@ export default function BusinessOverviewScreen(props: Props) {
           styles.iconContent,
           { backgroundColor: headerIconBackgroundColor },
         ]}>
-        <Animated.Image
-          resizeMode="contain"
-          style={[
-            styles.icon,
-            {
-              tintColor: headerBackgroundColor,
-            },
-          ]}
-          source={source}
-        />
+        {loading ? (
+          <ActivityIndicator size="small" color={colors.text} />
+        ) : (
+          <Animated.Image
+            resizeMode="contain"
+            style={[
+              styles.icon,
+              {
+                tintColor: headerBackgroundColor,
+              },
+            ]}
+            source={source}
+          />
+        )}
       </Animated.View>
     );
   };
@@ -447,7 +446,9 @@ export default function BusinessOverviewScreen(props: Props) {
           );
         }}
         renderRightSecond={() => renderHeaderButton(Images.gallery)}
-        renderRight={() => renderHeaderButton(Images.share, isPreview)}
+        renderRight={() =>
+          renderHeaderButton(Images.share, isPreview, businessLinkLoading)
+        }
         onPressLeft={navigation.goBack}
         onPressRight={onShare}
         onPressRightSecond={onPressGallery}
