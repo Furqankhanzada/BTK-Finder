@@ -36,11 +36,13 @@ import * as Utils from '@utils';
 import {
   ContactItem,
   ContactItemType,
+  ShopStatus,
 } from '@screens/businesses/models/BusinessPresentable';
 import OverviewCard from '@screens/businesses/info/components/OverviewCard';
 import ContactInfo from '@screens/businesses/info/components/ContactInfo';
 import OpenHours from '@screens/businesses/info/components/OpenHours';
 import Recommendations from '@screens/businesses/info/components/Recommendations';
+import Products from '@screens/businesses/info/components/Products';
 
 import { useBusiness } from '../queries/queries';
 import { useBuildBusinessURL } from '../queries/mutations';
@@ -356,6 +358,18 @@ export default function BusinessOverviewScreen(props: Props) {
             onOpen={onOpen}
           />
           <OpenHours business={business} />
+
+          {business?.shop && business.shop.status === ShopStatus.enabled ? (
+            <View>
+              <Text title3 semibold style={styles.facilities}>
+                {business.type === 'restaurant' ? 'Menu' : 'Products'}
+              </Text>
+              <View
+                style={[styles.wrapContent, { borderColor: colors.border }]}>
+                <Products business={business} />
+              </View>
+            </View>
+          ) : null}
           <View
             style={[styles.contentDescription, { borderColor: colors.border }]}>
             {business.description ? (
