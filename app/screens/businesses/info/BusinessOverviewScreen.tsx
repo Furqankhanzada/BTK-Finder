@@ -472,7 +472,7 @@ export default function BusinessOverviewScreen(props: Props) {
           <View
             style={[styles.galleryFooter, { backgroundColor: colors.card }]}>
             <Text
-              style={[styles.galleryFooterText, { colors: colors.text }]}>{`${
+              style={[styles.galleryFooterText, { color: colors.text }]}>{`${
               imageIndex + 1
             } / ${business?.gallery?.length}`}</Text>
           </View>
