@@ -22,14 +22,14 @@ interface Props {
 
 export default function Products({ business, style }: Props) {
   const [selectedTag, setSelectedTag] = useState<TagType | undefined>();
+  const [isReFetching, setIsReFetching] = useState<boolean>(false);
   const { colors } = useTheme();
 
   const { data: tags, refetch: reFetchTags } = useTags(business?.shop?.shopId);
-  const {
-    isFetching,
-    refetch: reFetchProducts,
-    data: products,
-  } = useProductsByTag(business?.shop?.shopId, selectedTag?._id);
+  const { refetch: reFetchProducts, data: products } = useProductsByTag(
+    business?.shop?.shopId,
+    selectedTag?._id,
+  );
 
   useEffect(() => {
     if (tags && tags.length) {
@@ -42,15 +42,17 @@ export default function Products({ business, style }: Props) {
   };
 
   const onRefresh = async () => {
+    setIsReFetching(true);
     await reFetchTags();
     await reFetchProducts();
+    setIsReFetching(false);
   };
 
   return (
     <View style={styles.container}>
       <FlatList
         refreshControl={
-          <RefreshControl refreshing={isFetching} onRefresh={onRefresh} />
+          <RefreshControl refreshing={isReFetching} onRefresh={onRefresh} />
         }
         style={[styles.productsContainer]}
         data={products}
