@@ -59,7 +59,7 @@ export default function BusinessDetailNavigator({ route }) {
       />
       {!isLoading && data.shop && data.shop.status === ShopStatus.enabled ? (
         <BusinessDetailBottomTab.Screen
-          initialParams={{ shop: data.shop }}
+          initialParams={{ id: businessId }}
           name="Products"
           component={BusinessProductsScreen}
           options={{

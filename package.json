@@ -12,7 +12,6 @@
     "postinstall": "if [ $GITHUB_ACTION ]; then npx patch-package; else npx patch-package && npx jetify && npx pod-install; fi;"
   },
   "dependencies": {
-    "@apollo/client": "^3.6.9",
     "@react-native-async-storage/async-storage": "^1.16.1",
     "@react-native-community/datetimepicker": "^3.4.0",
     "@react-native-community/push-notification-ios": "^1.10.1",
@@ -32,6 +31,7 @@
     "axios": "^0.21.1",
     "formik": "^2.2.6",
     "graphql": "^16.5.0",
+    "graphql-request": "^4.3.0",
     "i18next": "^19.9.2",
     "moment": "^2.29.1",
     "patch-package": "^6.4.7",
