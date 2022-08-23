@@ -15,7 +15,7 @@ import { LastRoutes, withAuthRedirection } from './hoc/withAuthRedirection';
 import Home from '@screens/Home';
 // import Notification from '@screens/Notification';
 import Business from '@screens/AddBusiness';
-import Favourite from '@screens/Favourite';
+import FavouriteScreen from '@screens/favourite/FavouriteScreen';
 import Messenger from '@screens/Messenger';
 import Profile from '@screens/Profile';
 
@@ -122,9 +122,9 @@ function BottomTabNavigator() {
       />
 
       <BottomTab.Screen
-        name="Favourite"
-        component={withAuthRedirection(Favourite, {
-          lastRoute: LastRoutes.Favourite,
+        name="FavouriteScreen"
+        component={withAuthRedirection(FavouriteScreen, {
+          lastRoute: LastRoutes.FavouriteScreen,
         })}
         options={{
           title: 'Favorite',

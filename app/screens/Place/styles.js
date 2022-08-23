@@ -41,14 +41,6 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  sectionEmpty: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-  },
-  sectionEmptyText: {
-    textAlign: 'center',
-  },
   sectionListContainer: {
     paddingLeft: 5,
     paddingRight: 15,
