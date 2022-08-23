@@ -1,7 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, StyleSheet } from 'react-native';
 import { useTheme } from '@config';
-import PropTypes from 'prop-types';
 import Text from '@components/Text';
 import styles from './styles';
 
@@ -48,7 +47,7 @@ export default function Tag(props) {
         ],
         small && [styles.small, { backgroundColor: colors.primary }],
         light && [styles.light, { backgroundColor: colors.primary }],
-        gray && styles.gray,
+        gray && [styles.gray, { backgroundColor: colors.card }],
         chip && [
           styles.chip,
           { backgroundColor: colors.card, borderColor: colors.accent },
