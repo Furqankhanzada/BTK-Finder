@@ -1,19 +1,29 @@
-import React from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import React, { useState } from 'react';
+import { FlatList, StyleSheet, View, RefreshControl } from 'react-native';
 import { BaseStyle } from '@config';
 import { SafeAreaView, CardList, Text, Header } from '@components';
 import { useBusinesses } from '@screens/businesses/queries/queries';
 import FavouritePlaceHolder from '../favourite/components/FavouritePlaceholder';
+import { useTheme } from '@config';
 
-export default function FavouriteScreen({ navigation }: any) {
-  const { isLoading, data: favorites } = useBusinesses(
-    ['favourite-businesses'],
-    {
-      favorite: true,
-      skip: 0,
-      fields: 'name, thumbnail, category, averageRatings',
-    },
-  );
+interface Props {
+  navigation: any;
+}
+
+export default function FavouriteScreen(props: Props) {
+  const { navigation } = props;
+  const { colors } = useTheme();
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const {
+    isLoading,
+    data: favorites,
+    refetch,
+  } = useBusinesses(['favourite-businesses'], {
+    favorite: true,
+    skip: 0,
+    fields: 'name, thumbnail, category, averageRatings',
+  });
 
   if (isLoading) {
     return (
@@ -23,6 +33,12 @@ export default function FavouriteScreen({ navigation }: any) {
     );
   }
 
+  const onRefresh = async () => {
+    setIsRefreshing(true);
+    await refetch();
+    setIsRefreshing(false);
+  };
+
   const navigateBusinessDetail = (id: string) => {
     navigation.navigate('BusinessDetailTabNavigator', { id });
   };
@@ -31,6 +47,16 @@ export default function FavouriteScreen({ navigation }: any) {
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header title="Favorite Businesses" />
       <FlatList
+        refreshControl={
+          <RefreshControl
+            title="Pull to refresh"
+            titleColor={colors.text}
+            colors={[colors.primary]}
+            tintColor={colors.primary}
+            refreshing={isRefreshing}
+            onRefresh={onRefresh}
+          />
+        }
         style={styles.containerStyle}
         data={favorites}
         keyExtractor={(item) => item._id}
