@@ -1,5 +1,4 @@
 import React from 'react';
-import { useTheme } from '@config';
 import {
   Placeholder,
   PlaceholderLine,
@@ -8,36 +7,34 @@ import {
 } from 'rn-placeholder';
 import { View, StyleSheet } from 'react-native';
 
-export default function FavouritePlaceHolder() {
-  const { colors } = useTheme();
+const placeHolderData = [
+  {
+    id: 1,
+  },
+  {
+    id: 2,
+  },
+  {
+    id: 3,
+  },
+];
 
+export default function FavouritePlaceHolder() {
   return (
     <View style={styles.mainContainer}>
       <Placeholder Animation={Progressive}>
-        <View style={styles.container}>
-          <PlaceholderMedia style={styles.mediaPlaceholder} />
-          <View style={styles.innerContainer}>
-            <PlaceholderLine style={styles.topPlaceholderLine} />
-            <PlaceholderLine style={styles.middlePlaceholderLine} />
-            <PlaceholderLine style={styles.bottomPlaceholderLine} />
-          </View>
-        </View>
-        <View style={styles.subContainer}>
-          <PlaceholderMedia style={styles.mediaPlaceholder} />
-          <View style={styles.innerContainer}>
-            <PlaceholderLine style={styles.topPlaceholderLine} />
-            <PlaceholderLine style={styles.middlePlaceholderLine} />
-            <PlaceholderLine style={styles.bottomPlaceholderLine} />
-          </View>
-        </View>
-        <View style={styles.subContainer}>
-          <PlaceholderMedia style={styles.mediaPlaceholder} />
-          <View style={styles.innerContainer}>
-            <PlaceholderLine style={styles.topPlaceholderLine} />
-            <PlaceholderLine style={styles.middlePlaceholderLine} />
-            <PlaceholderLine style={styles.bottomPlaceholderLine} />
-          </View>
-        </View>
+        {placeHolderData.map((item, index) => {
+          return (
+            <View key={index} style={styles.subContainer}>
+              <PlaceholderMedia style={styles.mediaPlaceholder} />
+              <View style={styles.innerContainer}>
+                <PlaceholderLine style={styles.topPlaceholderLine} />
+                <PlaceholderLine style={styles.middlePlaceholderLine} />
+                <PlaceholderLine style={styles.bottomPlaceholderLine} />
+              </View>
+            </View>
+          );
+        })}
       </Placeholder>
     </View>
   );
@@ -72,7 +69,7 @@ const styles = StyleSheet.create({
   },
   subContainer: {
     flexDirection: 'row',
-    marginTop: 18,
+    marginBottom: 18,
   },
   innerContainer: {
     flexDirection: 'column',
