@@ -1,8 +1,9 @@
 import React from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { BaseStyle } from '@config';
-import { SafeAreaView, CardList, Text } from '@components';
+import { SafeAreaView, CardList, Text, Header } from '@components';
 import { useBusinesses } from '@screens/businesses/queries/queries';
+import FavouritePlaceHolder from '../favourite/components/FavouritePlaceholder';
 
 export default function FavouriteScreen({ navigation }: any) {
   const { isLoading, data: favorites } = useBusinesses(
@@ -15,7 +16,11 @@ export default function FavouriteScreen({ navigation }: any) {
   );
 
   if (isLoading) {
-    return <Text>Loading...</Text>;
+    return (
+      <View style={styles.renderContentDiv}>
+        <FavouritePlaceHolder />
+      </View>
+    );
   }
 
   const navigateBusinessDetail = (id: string) => {
@@ -24,10 +29,8 @@ export default function FavouriteScreen({ navigation }: any) {
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
+      <Header title="Favorite Businesses" />
       <FlatList
-        ListHeaderComponent={
-          <Text style={styles.headerText}>Favorite Businesses</Text>
-        }
         style={styles.containerStyle}
         data={favorites}
         keyExtractor={(item) => item._id}
@@ -75,14 +78,9 @@ const styles = StyleSheet.create({
   },
   containerStyle: {
     paddingHorizontal: 20,
-    paddingTop: 15,
+    paddingTop: 25,
   },
-  headerText: {
-    height: 45,
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    textAlign: 'center',
-    fontSize: 22,
+  renderContentDiv: {
+    paddingHorizontal: 20,
   },
 });
