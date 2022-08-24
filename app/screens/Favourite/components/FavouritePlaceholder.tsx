@@ -7,25 +7,15 @@ import {
 } from 'rn-placeholder';
 import { View, StyleSheet } from 'react-native';
 
-const placeHolderData = [
-  {
-    id: 1,
-  },
-  {
-    id: 2,
-  },
-  {
-    id: 3,
-  },
-];
+const reapeatTimes = [1, 2, 3];
 
 export default function FavouritePlaceHolder() {
   return (
     <View style={styles.mainContainer}>
       <Placeholder Animation={Progressive}>
-        {placeHolderData.map((item, index) => {
+        {reapeatTimes.map((item) => {
           return (
-            <View key={index} style={styles.subContainer}>
+            <View key={item} style={styles.subContainer}>
               <PlaceholderMedia style={styles.mediaPlaceholder} />
               <View style={styles.innerContainer}>
                 <PlaceholderLine style={styles.topPlaceholderLine} />

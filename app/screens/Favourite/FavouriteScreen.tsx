@@ -14,7 +14,7 @@ interface Props {
 export default function FavouriteScreen(props: Props) {
   const { navigation } = props;
   const { colors } = useTheme();
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
 
   const {
     isLoading,
@@ -28,7 +28,7 @@ export default function FavouriteScreen(props: Props) {
 
   if (isLoading) {
     return (
-      <View style={styles.renderContentDiv}>
+      <View style={styles.placeHolderContainer}>
         <FavouritePlaceHolder />
       </View>
     );
@@ -40,7 +40,7 @@ export default function FavouriteScreen(props: Props) {
     setIsRefreshing(false);
   };
 
-  const navigateBusinessDetail = (id: string) => {
+  const navigateToBusinessDetail = (id: string) => {
     navigation.navigate('BusinessDetailTabNavigator', { id });
   };
 
@@ -63,7 +63,7 @@ export default function FavouriteScreen(props: Props) {
         keyExtractor={(item) => item._id}
         ListEmptyComponent={
           <View style={styles.sectionEmpty}>
-            <Text semibold style={styles.sectionEmptyText}>
+            <Text semibold textAlign="center" headline>
               No Favorite Businesses Available
             </Text>
           </View>
@@ -76,7 +76,7 @@ export default function FavouriteScreen(props: Props) {
               subtitle={item?.category}
               rate={item?.averageRatings}
               style={styles.cardListMargin}
-              onPress={() => navigateBusinessDetail(item._id)}
+              onPress={() => navigateToBusinessDetail(item._id)}
             />
           );
         }}
@@ -93,10 +93,6 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     height: 100,
   },
-  sectionEmptyText: {
-    textAlign: 'center',
-    fontSize: 16,
-  },
   scrollViewDiv: {
     flex: 1,
   },
@@ -107,7 +103,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 25,
   },
-  renderContentDiv: {
+  placeHolderContainer: {
     paddingHorizontal: 20,
   },
 });
