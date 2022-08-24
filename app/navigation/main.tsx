@@ -122,12 +122,12 @@ function BottomTabNavigator() {
       />
 
       <BottomTab.Screen
-        name="FavouriteScreen"
+        name="Favourite"
         component={withAuthRedirection(FavouriteScreen, {
-          lastRoute: LastRoutes.FavouriteScreen,
+          lastRoute: LastRoutes.Favourite,
         })}
         options={{
-          title: 'Favorite',
+          title: 'Favourite',
           tabBarIcon: ({ color }) => {
             return <Icon color={color} name="heart" size={20} solid />;
           },

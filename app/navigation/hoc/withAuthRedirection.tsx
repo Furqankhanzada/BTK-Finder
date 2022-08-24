@@ -4,7 +4,7 @@ import Walkthrough from '@screens/Walkthrough';
 
 export enum LastRoutes {
   Business = 'Business',
-  FavouriteScreen = 'FavouriteScreen',
+  Favourite = 'Favourite',
 }
 
 interface Config {
