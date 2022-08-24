@@ -65,15 +65,22 @@ export interface ReviewUser {
 }
 
 export interface Review {
+  _id: string;
   title: string;
   description?: string;
   rating: number;
   disable?: boolean;
   owner: ReviewUser;
+  createdAt: Date;
 }
 
 export interface ReviewStats {
   averageRatings: number;
+  oneStarCount: number;
+  twoStarCount: number;
+  threeStarCount: number;
+  fourStarCount: number;
+  fiveStarCount: number;
 }
 
 export interface Favorite {
@@ -89,7 +96,7 @@ export interface BusinessPresentable {
   email?: string;
   website?: string;
   location?: Location;
-  contactItems: ContactItem[];
+  contactItems?: ContactItem[];
   type: BusinessType;
   shop?: Shop;
   gallery?: Gallery[];
