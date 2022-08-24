@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   FlatList,
   RefreshControl,
@@ -23,12 +23,8 @@ import { useBusiness } from '@screens/businesses/queries/queries';
 
 export default function Review(props: any) {
   const { navigation, route } = props;
-  const {
-    isLoading,
-    data: business,
-    refetch,
-    isRefetching,
-  } = useBusiness(route?.params?.id);
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+  const { isLoading, data: business, refetch } = useBusiness(route?.params?.id);
 
   const { colors } = useTheme();
   const { t } = useTranslation();
@@ -124,6 +120,12 @@ export default function Review(props: any) {
     }
   };
 
+  const onRefresh = async () => {
+    setIsRefreshing(true);
+    await refetch();
+    setIsRefreshing(false);
+  };
+
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
@@ -170,8 +172,9 @@ export default function Review(props: any) {
               title="Pull to refresh"
               colors={[colors.primary]}
               tintColor={colors.primary}
-              refreshing={isRefetching}
-              onRefresh={refetch}
+              titleColor={colors.text}
+              refreshing={isRefreshing}
+              onRefresh={onRefresh}
             />
           }
           data={dateSortedReviews}

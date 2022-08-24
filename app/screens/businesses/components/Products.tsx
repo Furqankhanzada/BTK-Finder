@@ -55,6 +55,7 @@ export default function Products({ business, style }: Props) {
         refreshControl={
           <RefreshControl
             title="Pull to refresh"
+            colors={[colors.primary]}
             tintColor={colors.primary}
             titleColor={colors.text}
             refreshing={isReFetching}
