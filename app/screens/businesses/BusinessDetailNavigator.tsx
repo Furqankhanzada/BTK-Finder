@@ -11,10 +11,16 @@ import {
   BusinessType,
   ShopStatus,
 } from '@screens/businesses/models/BusinessPresentable';
+import { BusinessDetailBottomTabParamList } from '../../navigation/models/BusinessDetailBottomTabParamList';
 
-const BusinessDetailBottomTab = createBottomTabNavigator();
+const BusinessDetailBottomTab =
+  createBottomTabNavigator<BusinessDetailBottomTabParamList>();
 
-export default function BusinessDetailNavigator({ route }) {
+interface Props {
+  route: any;
+}
+
+export default function BusinessDetailNavigator({ route }: Props) {
   const businessId = route?.params?.id;
   const { colors } = useTheme();
   const font = useFont();
@@ -23,14 +29,12 @@ export default function BusinessDetailNavigator({ route }) {
   return (
     <BusinessDetailBottomTab.Navigator
       initialRouteName="Overview"
-      headerMode="none"
-      tabBarOptions={{
-        showIcon: true,
-        showLabel: true,
-        activeTintColor: colors.primary,
-        inactiveTintColor: BaseColor.grayColor,
-        style: { borderTopWidth: 1 },
-        labelStyle: {
+      screenOptions={{
+        headerShown: false,
+        tabBarShowLabel: true,
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: BaseColor.grayColor,
+        tabBarLabelStyle: {
           fontSize: 12,
           fontFamily: font,
         },
@@ -57,7 +61,7 @@ export default function BusinessDetailNavigator({ route }) {
         }}
         component={Review}
       />
-      {!isLoading && data.shop && data.shop.status === ShopStatus.enabled ? (
+      {!isLoading && data?.shop && data.shop.status === ShopStatus.enabled ? (
         <BusinessDetailBottomTab.Screen
           initialParams={{ id: businessId }}
           name="Products"

@@ -21,6 +21,7 @@ import { useTranslation } from 'react-i18next';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Placeholder, PlaceholderMedia, Progressive } from 'rn-placeholder';
 import ImageView from 'react-native-image-viewing';
+import { StackScreenProps } from '@react-navigation/stack';
 
 import {
   Header,
@@ -42,25 +43,22 @@ import OverviewCard from '@screens/businesses/info/components/OverviewCard';
 import ContactInfo from '@screens/businesses/info/components/ContactInfo';
 import OpenHours from '@screens/businesses/info/components/OpenHours';
 import Recommendations from '@screens/businesses/info/components/Recommendations';
-import Products from '@screens/businesses/info/components/Products';
+import Products from '@screens/businesses/components/Products';
 
 import { useBusiness } from '../queries/queries';
 import { useBuildBusinessURL } from '../queries/mutations';
 import { EVENTS, trackEvent } from '../../../userTracking';
+import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 
 let defaultDelta = {
   latitudeDelta: 0.003,
   longitudeDelta: 0.003,
 };
 
-interface Props {
-  navigation: any;
-  route: any;
-  preview: boolean;
-}
-
-export default function BusinessOverviewScreen(props: Props) {
-  const { navigation, route, preview: isPreview } = props;
+export default function BusinessOverviewScreen(
+  props: StackScreenProps<GlobalParamList, 'Overview'>,
+) {
+  const { navigation, route } = props;
 
   const mapRef = useRef<any>();
   const scrollY = useRef(new Animated.Value(0)).current;
@@ -117,7 +115,7 @@ export default function BusinessOverviewScreen(props: Props) {
     }
   };
 
-  const onNavigate = (routeName: string, id?: string) => {
+  const onNavigate = (routeName: keyof GlobalParamList, id?: string) => {
     const params: { id?: string } = {};
     if (id) {
       params.id = id;
@@ -126,7 +124,7 @@ export default function BusinessOverviewScreen(props: Props) {
       name: routeName,
       params,
       key: params.id ? params.id : null,
-    });
+    } as any);
   };
 
   const headerBackgroundColor = scrollY.interpolate({
@@ -302,14 +300,7 @@ export default function BusinessOverviewScreen(props: Props) {
     trackEvent(EVENTS.SEE_MORE_IMAGES, { title: business?.name });
   };
 
-  const renderHeaderButton = (
-    source: number,
-    isInPreviewMode: boolean = false,
-    loading: boolean = false,
-  ) => {
-    if (isInPreviewMode) {
-      return null;
-    }
+  const renderHeaderButton = (source: number, loading: boolean = false) => {
     return (
       <Animated.View
         style={[
@@ -345,11 +336,7 @@ export default function BusinessOverviewScreen(props: Props) {
     return (
       <View>
         <View style={styles.renderContentDiv}>
-          <OverviewCard
-            business={business}
-            isPreview={isPreview}
-            onNavigate={onNavigate}
-          />
+          <OverviewCard business={business} onNavigate={onNavigate} />
           <ContactInfo
             onNavigate={onNavigate}
             business={business}
@@ -421,9 +408,7 @@ export default function BusinessOverviewScreen(props: Props) {
             </View>
           ) : null}
         </View>
-        {!isPreview ? (
-          <Recommendations business={business} onNavigate={onNavigate} />
-        ) : null}
+        <Recommendations business={business} onNavigate={onNavigate} />
       </View>
     );
   };
@@ -443,7 +428,7 @@ export default function BusinessOverviewScreen(props: Props) {
         {renderBanner()}
       </Animated.View>
       <Header
-        title={isPreview ? 'Business Review' : ''}
+        title={''}
         renderLeft={() => {
           return (
             <Animated.Image
@@ -460,7 +445,7 @@ export default function BusinessOverviewScreen(props: Props) {
         }}
         renderRightSecond={() => renderHeaderButton(Images.gallery)}
         renderRight={() =>
-          renderHeaderButton(Images.share, isPreview, businessLinkLoading)
+          renderHeaderButton(Images.share, businessLinkLoading)
         }
         onPressLeft={navigation.goBack}
         onPressRight={onShare}

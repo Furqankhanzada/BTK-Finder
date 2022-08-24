@@ -7,7 +7,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import moment from 'moment';
 import { BaseStyle, useTheme } from '@config';
 import {
@@ -19,19 +19,15 @@ import {
   CommentItem,
   Loading,
 } from '@components';
-import { getSingleBusiness } from '../../../actions/business';
 import { useBusiness } from '@screens/businesses/queries/queries';
 
 export default function Review(props: any) {
   const { navigation, route } = props;
-  const {
-    isLoading,
-    data: { _id: businessId, reviews, reviewStats },
-  } = useBusiness(route?.params?.id);
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+  const { isLoading, data: business, refetch } = useBusiness(route?.params?.id);
 
   const { colors } = useTheme();
   const { t } = useTranslation();
-  const dispatch = useDispatch();
   const stateProps = useSelector(({ profile, auth }: any) => {
     return {
       currentUserId: profile._id,
@@ -39,28 +35,34 @@ export default function Review(props: any) {
     };
   });
 
-  const dateSortedReviews = reviews?.slice(0).sort((a: any, b: any) => {
-    const dateA: any = new Date(a.createdAt),
-      dateB: any = new Date(b.createdAt);
-    return dateB - dateA;
-  });
+  const dateSortedReviews = business?.reviews
+    ?.slice(0)
+    .sort((a: any, b: any) => {
+      const dateA: any = new Date(a.createdAt),
+        dateB: any = new Date(b.createdAt);
+      return dateB - dateA;
+    });
 
   const totalRating =
-    reviewStats?.fiveStarCount +
-    reviewStats?.fourStarCount +
-    reviewStats?.threeStarCount +
-    reviewStats?.twoStarCount +
-    reviewStats?.oneStarCount;
+    business?.reviewStats?.fiveStarCount! +
+    business?.reviewStats?.fourStarCount! +
+    business?.reviewStats?.threeStarCount! +
+    business?.reviewStats?.twoStarCount! +
+    business?.reviewStats?.oneStarCount!;
 
-  const fiveStarPercent = (reviewStats?.fiveStarCount * 100) / totalRating;
-  const fourStarPercent = (reviewStats?.fourStarCount * 100) / totalRating;
-  const threeStarPercent = (reviewStats?.threeStarCount * 100) / totalRating;
-  const twoStarPercent = (reviewStats?.twoStarCount * 100) / totalRating;
-  const oneStarPercent = (reviewStats?.oneStarCount * 100) / totalRating;
+  const fiveStarPercent =
+    (business?.reviewStats?.fiveStarCount! * 100) / totalRating;
+  const fourStarPercent =
+    (business?.reviewStats?.fourStarCount! * 100) / totalRating;
+  const threeStarPercent =
+    (business?.reviewStats?.threeStarCount! * 100) / totalRating;
+  const twoStarPercent =
+    (business?.reviewStats?.twoStarCount! * 100) / totalRating;
+  const oneStarPercent =
+    (business?.reviewStats?.oneStarCount! * 100) / totalRating;
 
-  const [refreshing] = useState(false);
   const rateDetail = {
-    point: reviewStats?.averageRatings,
+    point: business?.reviewStats?.averageRatings,
     maxPoint: 5,
     totalRating: totalRating,
     data: [
@@ -82,8 +84,8 @@ export default function Review(props: any) {
 
   const checkReviewAlreadyAdded = () => {
     let check = false;
-    if (reviews?.length) {
-      reviews.forEach(({ owner }: any) => {
+    if (business?.reviews?.length) {
+      business?.reviews.forEach(({ owner }: any) => {
         if (owner._id === stateProps.currentUserId) {
           check = true;
           return false;
@@ -95,7 +97,7 @@ export default function Review(props: any) {
   const checkUserLogin = () => {
     if (stateProps.isLogin) {
       if (!checkReviewAlreadyAdded()) {
-        navigateToFeedback(businessId);
+        navigateToFeedback(business?._id);
       } else {
         Alert.alert('Review Found', 'You have already added a Review.');
       }
@@ -116,6 +118,12 @@ export default function Review(props: any) {
         { cancelable: false },
       );
     }
+  };
+
+  const onRefresh = async () => {
+    setIsRefreshing(true);
+    await refetch();
+    setIsRefreshing(false);
   };
 
   return (
@@ -156,17 +164,17 @@ export default function Review(props: any) {
       />
       {isLoading ? (
         <Loading loading={true} />
-      ) : reviews?.length ? (
+      ) : business?.reviews?.length ? (
         <FlatList
           contentContainerStyle={styles.flatListStyle}
           refreshControl={
             <RefreshControl
+              title="Pull to refresh"
               colors={[colors.primary]}
               tintColor={colors.primary}
-              refreshing={refreshing}
-              onRefresh={() => {
-                dispatch(getSingleBusiness(route?.params?.id));
-              }}
+              titleColor={colors.text}
+              refreshing={isRefreshing}
+              onRefresh={onRefresh}
             />
           }
           data={dateSortedReviews}

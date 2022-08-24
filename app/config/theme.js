@@ -36,6 +36,7 @@ export const ThemeSupport = [
         card: '#F5F5F5',
         text: '#212121',
         border: '#c7c7cc',
+        notification: '#272729',
       },
     },
     dark: {
@@ -49,6 +50,7 @@ export const ThemeSupport = [
         card: '#121212',
         text: '#e5e5e7',
         border: '#272729',
+        notification: '#272729',
       },
     },
   },
@@ -65,6 +67,7 @@ export const ThemeSupport = [
         card: '#F5F5F5',
         text: '#212121',
         border: '#c7c7cc',
+        notification: '#272729',
       },
     },
     dark: {
@@ -78,6 +81,7 @@ export const ThemeSupport = [
         card: '#121212',
         text: '#e5e5e7',
         border: '#272729',
+        notification: '#272729',
       },
     },
   },
@@ -94,6 +98,7 @@ export const ThemeSupport = [
         card: '#F5F5F5',
         text: '#212121',
         border: '#c7c7cc',
+        notification: '#272729',
       },
     },
     dark: {
@@ -107,6 +112,7 @@ export const ThemeSupport = [
         card: '#121212',
         text: '#e5e5e7',
         border: '#272729',
+        notification: '#272729',
       },
     },
   },
@@ -123,6 +129,7 @@ export const ThemeSupport = [
         card: '#F5F5F5',
         text: '#212121',
         border: '#c7c7cc',
+        notification: '#272729',
       },
     },
     dark: {
@@ -136,6 +143,7 @@ export const ThemeSupport = [
         card: '#121212',
         text: '#e5e5e7',
         border: '#272729',
+        notification: '#272729',
       },
     },
   },
@@ -152,6 +160,7 @@ export const ThemeSupport = [
         card: '#F5F5F5',
         text: '#212121',
         border: '#c7c7cc',
+        notification: '#272729',
       },
     },
     dark: {
@@ -165,6 +174,7 @@ export const ThemeSupport = [
         card: '#121212',
         text: '#e5e5e7',
         border: '#272729',
+        notification: '#272729',
       },
     },
   },
@@ -186,6 +196,7 @@ export const DefaultTheme = {
       card: '#F5F5F5',
       text: '#212121',
       border: '#c7c7cc',
+      notification: '#272729',
     },
   },
   dark: {
@@ -199,6 +210,7 @@ export const DefaultTheme = {
       card: '#121212',
       text: '#e5e5e7',
       border: '#272729',
+      notification: '#272729',
     },
   },
 };
@@ -220,6 +232,8 @@ export const DefaultFont = 'Raleway';
 export const useTheme = () => {
   const isDarkMode = useDarkMode();
   const forceDark = useSelector((state) => state.application.force_dark);
+  const themeStorage = useSelector((state) => state.application.theme);
+  const listTheme = ThemeSupport.filter((item) => item.theme === themeStorage);
   const theme = ThemeSupport[2];
 
   if (forceDark) {

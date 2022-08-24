@@ -51,10 +51,6 @@ export default function Home({ navigation }: any) {
     trackEvent(EVENTS.HELPLINE_SCREEN_VISITED);
   };
 
-  const navigateToReview = (id: string) => {
-    navigation.navigate('Review', { id });
-  };
-
   const isLogin = useSelector((state: any) => state.auth.isLogin);
   const profileData = useSelector((state: any) => state.profile);
   const [loading, setLoading] = useState(true);
@@ -404,7 +400,6 @@ export default function Home({ navigation }: any) {
                       'popularBusiness',
                     )
                   }
-                  onPressTag={() => navigateToReview(item._id)}
                   style={{ marginLeft: 15, width: 175 }}
                 />
               );
@@ -440,7 +435,6 @@ export default function Home({ navigation }: any) {
                       'recentBusiness',
                     )
                   }
-                  onPressTag={() => navigateToReview(item._id)}
                 />
               );
             }}

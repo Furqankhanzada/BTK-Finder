@@ -13,7 +13,7 @@ import { CardList, Tag } from '@components';
 import { useProductsByTag, useTags } from '@screens/businesses/queries/queries';
 import { useTheme } from '@config';
 
-import { Tag as TagType } from '../../../../models/graphql';
+import { Tag as TagType } from '../../../models/graphql';
 
 interface Props {
   business: BusinessPresentable | undefined;
@@ -53,7 +53,14 @@ export default function Products({ business, style }: Props) {
       <FlatList
         listKey="products"
         refreshControl={
-          <RefreshControl refreshing={isReFetching} onRefresh={onRefresh} />
+          <RefreshControl
+            title="Pull to refresh"
+            colors={[colors.primary]}
+            tintColor={colors.primary}
+            titleColor={colors.text}
+            refreshing={isReFetching}
+            onRefresh={onRefresh}
+          />
         }
         style={[styles.productsContainer]}
         data={products}

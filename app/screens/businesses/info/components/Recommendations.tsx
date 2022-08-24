@@ -7,9 +7,10 @@ import { CardList, PlaceItem } from '@components';
 import CustomSectionList from '@screens/Home/CustomSectionList';
 import { useBusinesses } from '@screens/businesses/queries/queries';
 import { BusinessPresentable } from '@screens/businesses/models/BusinessPresentable';
+import { GlobalParamList } from '../../../../navigation/models/GlobalParamList';
 
 interface Props {
-  onNavigate: (route: string, id?: string) => void;
+  onNavigate: (route: keyof GlobalParamList, id?: string) => void;
   business: BusinessPresentable;
 }
 

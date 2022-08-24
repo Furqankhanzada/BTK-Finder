@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Header, SafeAreaView, Icon } from '@components';
 import { BaseStyle, useTheme } from '@config';
 
-import Products from '@screens/businesses/info/components/Products';
+import Products from '@screens/businesses/components/Products';
 import { useBusiness } from '@screens/businesses/queries/queries';
 
 export default function BusinessProductsScreen(props: any) {

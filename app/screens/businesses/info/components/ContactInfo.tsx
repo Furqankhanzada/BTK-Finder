@@ -9,8 +9,10 @@ import {
 } from '@screens/businesses/models/BusinessPresentable';
 import ContactItem from '@screens/businesses/info/components/ContactItem';
 
+import { GlobalParamList } from '../../../../navigation/models/GlobalParamList';
+
 interface Props {
-  onNavigate: (route: string) => void;
+  onNavigate: (route: keyof GlobalParamList) => void;
   onPressWhatsApp: () => void;
   onPressPhone: () => void;
   onOpen: (item: ContactItemInterface) => void;
@@ -75,7 +77,7 @@ export default function ContactInfo({
           />
         </View>
       </View>
-      {business.contactItems.map((item) => {
+      {business.contactItems?.map((item) => {
         if (item.information) {
           return <ContactItem key={item.id} item={item} onPress={onOpen} />;
         }
