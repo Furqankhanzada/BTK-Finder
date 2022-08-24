@@ -13,7 +13,7 @@ import { CardList, Tag } from '@components';
 import { useProductsByTag, useTags } from '@screens/businesses/queries/queries';
 import { useTheme } from '@config';
 
-import { Tag as TagType } from '../../../../models/graphql';
+import { Tag as TagType } from '../../../models/graphql';
 
 interface Props {
   business: BusinessPresentable | undefined;

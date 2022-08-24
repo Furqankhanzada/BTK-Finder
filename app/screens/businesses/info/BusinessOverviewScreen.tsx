@@ -42,7 +42,7 @@ import OverviewCard from '@screens/businesses/info/components/OverviewCard';
 import ContactInfo from '@screens/businesses/info/components/ContactInfo';
 import OpenHours from '@screens/businesses/info/components/OpenHours';
 import Recommendations from '@screens/businesses/info/components/Recommendations';
-import Products from '@screens/businesses/info/components/Products';
+import Products from '@screens/businesses/components/Products';
 
 import { useBusiness } from '../queries/queries';
 import { useBuildBusinessURL } from '../queries/mutations';
