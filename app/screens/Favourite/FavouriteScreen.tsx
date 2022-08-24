@@ -1,7 +1,7 @@
 import React from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { BaseStyle } from '@config';
-import { Header, SafeAreaView, CardList, Text } from '@components';
+import { SafeAreaView, CardList, Text } from '@components';
 import { useBusinesses } from '@screens/businesses/queries/queries';
 
 export default function FavouriteScreen({ navigation }: any) {
@@ -24,44 +24,48 @@ export default function FavouriteScreen({ navigation }: any) {
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
-      <Header title="Favorite Businesses" />
-      {favorites.length ? (
-        <FlatList
-          style={styles.containerStyle}
-          data={favorites}
-          keyExtractor={(item) => item._id}
-          renderItem={({ item }) => {
-            return (
-              <CardList
-                image={item?.thumbnail}
-                title={item?.name}
-                subtitle={item?.category}
-                rate={item?.averageRatings}
-                style={styles.cardListMargin}
-                onPress={() => navigateBusinessDetail(item._id)}
-              />
-            );
-          }}
-        />
-      ) : (
-        <View style={styles.sectionEmpty}>
-          <Text semibold style={styles.sectionEmptyText}>
-            No Favorite Businesses Available
-          </Text>
-        </View>
-      )}
+      <FlatList
+        ListHeaderComponent={
+          <Text style={styles.headerText}>Favorite Businesses</Text>
+        }
+        style={styles.containerStyle}
+        data={favorites}
+        keyExtractor={(item) => item._id}
+        ListEmptyComponent={
+          <View style={styles.sectionEmpty}>
+            <Text semibold style={styles.sectionEmptyText}>
+              No Favorite Businesses Available
+            </Text>
+          </View>
+        }
+        renderItem={({ item }) => {
+          return (
+            <CardList
+              image={item?.thumbnail}
+              title={item?.name}
+              subtitle={item?.category}
+              rate={item?.averageRatings}
+              style={styles.cardListMargin}
+              onPress={() => navigateBusinessDetail(item._id)}
+            />
+          );
+        }}
+      />
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   sectionEmpty: {
-    alignItems: 'center',
-    justifyContent: 'center',
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignContent: 'center',
+    height: 100,
   },
   sectionEmptyText: {
     textAlign: 'center',
+    fontSize: 16,
   },
   scrollViewDiv: {
     flex: 1,
@@ -72,5 +76,13 @@ const styles = StyleSheet.create({
   containerStyle: {
     paddingHorizontal: 20,
     paddingTop: 15,
+  },
+  headerText: {
+    height: 45,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+    fontSize: 22,
   },
 });
