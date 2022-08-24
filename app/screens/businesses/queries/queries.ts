@@ -1,13 +1,19 @@
 import { useQuery } from '@tanstack/react-query';
-import { gql, request } from 'graphql-request';
+import { request } from 'graphql-request';
+import Config from 'react-native-config';
 
 import { buildContactItems } from '@screens/businesses/builders/contactItems';
 import { handleError } from '@utils';
+import { buildTags } from '@screens/businesses/builders/tags';
+import { buildProducts } from '@screens/businesses/builders/products';
+import {
+  GET_PRODUCTS,
+  GET_TAGS,
+} from '@screens/businesses/queries/gql/queries';
 
 import axiosApiInstance from '../../../interceptor/axios-interceptor';
 import { BUSINESSES_API } from '../../../constants';
 import { BusinessPresentable } from '../models/BusinessPresentable';
-import Config from 'react-native-config';
 import {
   CatalogItemConnection,
   CatalogItemSortByField,
@@ -18,8 +24,6 @@ import {
   TagConnection,
   TagSortByField,
 } from '../../../models/graphql';
-import { buildTags } from '@screens/businesses/builders/tags';
-import { buildProducts } from '@screens/businesses/builders/products';
 
 export const useBusiness = (id: string) =>
   useQuery(
@@ -100,58 +104,7 @@ export const useTags = (shopId: string | undefined) => {
           sortOrder: SortOrder.Asc,
           sortBy: TagSortByField.CreatedAt,
         },
-        document: gql`
-          query getTags(
-            $shopId: ID!
-            $filter: String
-            $first: ConnectionLimitInt
-            $last: ConnectionLimitInt
-            $before: ConnectionCursor
-            $after: ConnectionCursor
-            $sortBy: TagSortByField
-            $sortOrder: SortOrder
-          ) {
-            tags(
-              shopId: $shopId
-              filter: $filter
-              first: $first
-              last: $last
-              before: $before
-              after: $after
-              shouldIncludeInvisible: true
-              sortBy: $sortBy
-              sortOrder: $sortOrder
-            ) {
-              pageInfo {
-                endCursor
-                startCursor
-                hasNextPage
-                hasPreviousPage
-                __typename
-              }
-              nodes {
-                _id
-                displayTitle
-                position
-                name
-                slug
-                isVisible
-                heroMediaUrl
-                metafields {
-                  description
-                  key
-                  namespace
-                  scope
-                  value
-                  valueType
-                  __typename
-                }
-                __typename
-              }
-              __typename
-            }
-          }
-        `,
+        document: GET_TAGS,
       });
     },
     {
@@ -182,107 +135,7 @@ export const useProductsByTag = (
           sortOrder: SortOrder.Asc,
           sortBy: CatalogItemSortByField.CreatedAt,
         },
-        document: gql`
-          query catalogItemsQuery(
-            $shopIds: [ID!]!
-            $tagIds: [ID]
-            $first: ConnectionLimitInt
-            $last: ConnectionLimitInt
-            $before: ConnectionCursor
-            $after: ConnectionCursor
-            $sortBy: CatalogItemSortByField
-            $sortByPriceCurrencyCode: String
-            $sortOrder: SortOrder
-          ) {
-            catalogItems(
-              shopIds: $shopIds
-              tagIds: $tagIds
-              first: $first
-              last: $last
-              before: $before
-              after: $after
-              sortBy: $sortBy
-              sortByPriceCurrencyCode: $sortByPriceCurrencyCode
-              sortOrder: $sortOrder
-            ) {
-              totalCount
-              pageInfo {
-                endCursor
-                startCursor
-                hasNextPage
-                hasPreviousPage
-                __typename
-              }
-              edges {
-                cursor
-                node {
-                  _id
-                  ... on CatalogItemProduct {
-                    product {
-                      variants {
-                        title
-                        optionTitle
-                        pricing {
-                          displayPrice
-                        }
-                      }
-                      tagIds
-                      tags {
-                        nodes {
-                          _id
-                          displayTitle
-                          position
-                        }
-                      }
-                      _id
-                      title
-                      description
-                      isLowQuantity
-                      isSoldOut
-                      isBackorder
-                      shop {
-                        currency {
-                          code
-                          __typename
-                        }
-                        __typename
-                      }
-                      pricing {
-                        compareAtPrice {
-                          displayAmount
-                          __typename
-                        }
-                        currency {
-                          code
-                          __typename
-                        }
-                        displayPrice
-                        minPrice
-                        maxPrice
-                        __typename
-                      }
-                      primaryImage {
-                        URLs {
-                          thumbnail
-                          small
-                          medium
-                          large
-                          __typename
-                        }
-                        __typename
-                      }
-                      __typename
-                    }
-                    __typename
-                  }
-                  __typename
-                }
-                __typename
-              }
-              __typename
-            }
-          }
-        `,
+        document: GET_PRODUCTS,
       });
     },
     {
