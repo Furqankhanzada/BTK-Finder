@@ -12,15 +12,17 @@ import {
   BusinessStatus,
 } from '@screens/businesses/models/BusinessPresentable';
 
+import { GlobalParamList } from '../../../../navigation/models/GlobalParamList';
+
 interface Props {
-  onNavigate: (route: string) => void;
+  onNavigate: (route: keyof GlobalParamList) => void;
   business: BusinessPresentable;
-  isPreview: boolean;
+  isPreview?: boolean;
 }
 
 export default function OverviewCard({
   business,
-  isPreview,
+  isPreview = false,
   onNavigate,
 }: Props) {
   const user = useSelector((state: any) => state.profile);
