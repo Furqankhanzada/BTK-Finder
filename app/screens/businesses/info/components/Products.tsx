@@ -51,6 +51,7 @@ export default function Products({ business, style }: Props) {
   return (
     <View style={styles.container}>
       <FlatList
+        listKey="products"
         refreshControl={
           <RefreshControl refreshing={isReFetching} onRefresh={onRefresh} />
         }

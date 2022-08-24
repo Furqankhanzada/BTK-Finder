@@ -59,8 +59,12 @@ export default function CardList(props) {
         )}
         {options && options.length ? (
           <View style={{ flexDirection: 'row', marginTop: 5 }}>
-            {options.map((option) => (
-              <Tag onPress={onPressTag} gray style={{ marginRight: 4 }}>
+            {options.map((option, index) => (
+              <Tag
+                key={index}
+                onPress={onPressTag}
+                gray
+                style={{ marginRight: 4 }}>
                 {option}
               </Tag>
             ))}
@@ -96,7 +100,7 @@ CardList.defaultProps = {
   image: Images.imagePlaceholder,
   title: '',
   subtitle: '',
-  options: '',
+  options: [],
   rate: 0,
   onPress: () => {},
   onPressTag: () => {},
