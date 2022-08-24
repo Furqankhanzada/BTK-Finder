@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { FlatList, StyleSheet, View, RefreshControl } from 'react-native';
-import { BaseStyle } from '@config';
+
+import { BaseStyle, useTheme } from '@config';
 import { SafeAreaView, CardList, Text, Header } from '@components';
 import { useBusinesses } from '@screens/businesses/queries/queries';
+
 import FavouritePlaceHolder from '../favourite/components/FavouritePlaceholder';
-import { useTheme } from '@config';
 
 interface Props {
   navigation: any;
