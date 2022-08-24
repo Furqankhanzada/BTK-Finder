@@ -27,7 +27,6 @@ import Place from '@screens/Place';
 import SignUp from '@screens/SignUp';
 import SignIn from '@screens/SignIn';
 import VerifyCode from '@screens/VerifyCode';
-import Review from '@screens/businesses/reviews/BusinessReviewsScreen';
 import Feedback from '@screens/Feedback';
 import Messages from '@screens/Messages';
 import Walkthrough from '@screens/Walkthrough';
@@ -44,17 +43,20 @@ import FinalReview from '@screens/AddBusiness/review';
 import Gallery from '@screens/AddBusiness/gallery';
 import MyBusinesses from '@screens/MyBusinesses';
 
-const MainStack = createStackNavigator();
-const BottomTab = createBottomTabNavigator();
+import { MainStackParamList } from './models/MainStackParamList';
+import { MainBottomTabParamList } from './models/MainBottomTabParamList';
+
+const MainStack = createStackNavigator<MainStackParamList>();
+const MainBottomTab = createBottomTabNavigator<MainBottomTabParamList>();
 
 export default function Main() {
   return (
     <MainStack.Navigator
-      headerMode="none"
-      initialRouteName="BottomTabNavigator">
+      screenOptions={{ headerShown: false }}
+      initialRouteName="MainBottomTabNavigator">
       <MainStack.Screen
-        name="BottomTabNavigator"
-        component={BottomTabNavigator}
+        name="MainBottomTabNavigator"
+        component={MainBottomTabNavigator}
       />
       <MainStack.Screen
         name="BusinessDetailTabNavigator"
@@ -68,7 +70,6 @@ export default function Main() {
       <MainStack.Screen name="SignUp" component={SignUp} />
       <MainStack.Screen name="SignIn" component={SignIn} />
       <MainStack.Screen name="Messenger" component={Messenger} />
-      <MainStack.Screen name="Review" component={Review} />
       <MainStack.Screen name="Feedback" component={Feedback} />
       <MainStack.Screen name="Messages" component={Messages} />
       {/* <MainStack.Screen name="Notification" component={Notification} /> */}
@@ -91,26 +92,26 @@ export default function Main() {
   );
 }
 
-function BottomTabNavigator() {
+function MainBottomTabNavigator() {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { colors } = useTheme();
   const font = useFont();
 
   return (
-    <BottomTab.Navigator
+    <MainBottomTab.Navigator
       initialRouteName="Home"
-      tabBarOptions={{
-        showLabel: true,
-        activeTintColor: colors.primary,
-        inactiveTintColor: BaseColor.grayColor,
-        style: { borderTopWidth: 1 },
-        labelStyle: {
+      screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: BaseColor.grayColor,
+        // style: { borderTopWidth: 1 },
+        tabBarLabelStyle: {
           fontSize: 12,
           fontFamily: font,
         },
       }}>
-      <BottomTab.Screen
+      <MainBottomTab.Screen
         name="Home"
         component={Home}
         options={{
@@ -120,8 +121,7 @@ function BottomTabNavigator() {
           },
         }}
       />
-
-      <BottomTab.Screen
+      <MainBottomTab.Screen
         name="Favourite"
         component={withAuthRedirection(Favourite, {
           lastRoute: LastRoutes.Favourite,
@@ -133,7 +133,7 @@ function BottomTabNavigator() {
           },
         }}
       />
-      <BottomTab.Screen
+      <MainBottomTab.Screen
         name="Business"
         component={withAuthRedirection(Business, {
           lastRoute: LastRoutes.Business,
@@ -161,7 +161,7 @@ function BottomTabNavigator() {
           },
         }}
       /> */}
-      <BottomTab.Screen
+      <MainBottomTab.Screen
         name="Profile"
         component={Profile}
         options={{
@@ -171,6 +171,6 @@ function BottomTabNavigator() {
           },
         }}
       />
-    </BottomTab.Navigator>
+    </MainBottomTab.Navigator>
   );
 }
