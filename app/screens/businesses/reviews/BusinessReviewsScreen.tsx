@@ -20,11 +20,16 @@ import {
   Loading,
 } from '@components';
 import { useBusiness } from '@screens/businesses/queries/queries';
+import { StackScreenProps } from '@react-navigation/stack';
 
-export default function Review(props: any) {
+import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
+
+export default function Review(
+  props: StackScreenProps<GlobalParamList, 'Reviews'>,
+) {
   const { navigation, route } = props;
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
-  const { isLoading, data: business, refetch } = useBusiness(route?.params?.id);
+  const { isLoading, data: business, refetch } = useBusiness(route.params.id);
 
   const { colors } = useTheme();
   const { t } = useTranslation();
@@ -74,7 +79,7 @@ export default function Review(props: any) {
     ],
   };
 
-  const navigateToWalktrhough = (lastRoute: any, id: any) => {
+  const navigateToWalktrhough = (lastRoute: keyof GlobalParamList, id: any) => {
     navigation.navigate('Walkthrough', { lastRoute, id });
   };
 
@@ -108,7 +113,7 @@ export default function Review(props: any) {
         [
           {
             text: 'Login',
-            onPress: () => navigateToWalktrhough('Review', route?.params?.id),
+            onPress: () => navigateToWalktrhough('Reviews', route.params.id),
           },
           {
             text: 'Cancel',
