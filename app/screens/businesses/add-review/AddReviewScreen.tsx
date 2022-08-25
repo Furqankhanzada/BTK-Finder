@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { View, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
-import { BaseStyle, BaseColor, Images, useTheme } from '@config';
+import { BaseStyle, BaseColor, useTheme } from '@config';
+import { useDispatch, useSelector } from 'react-redux';
+import { StackScreenProps } from '@react-navigation/stack';
+import { useTranslation } from 'react-i18next';
+
 import {
   Image,
   Header,
@@ -12,18 +16,19 @@ import {
   Loading,
   Button,
 } from '@components';
-import { useTranslation } from 'react-i18next';
-// import styles from './styles';
-import { addReview } from '../../actions/business';
-import { useDispatch, useSelector } from 'react-redux';
 
-export default function Feedback(props) {
+import { addReview } from '../../../actions/business';
+import { ReviewStackParamList } from '../../../navigation/models/BusinessDetailBottomTabParamList';
+
+export default function AddReviewScreen(
+  props: StackScreenProps<ReviewStackParamList>,
+) {
   const { navigation, route } = props;
   const { colors } = useTheme();
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const profileData = useSelector((state) => state.profile);
-  const stateProps = useSelector(({ businesses }) => businesses);
+  const profileData = useSelector((state: any) => state.profile);
+  const stateProps = useSelector(({ businesses }: any) => businesses);
   const { createReviewLoading } = stateProps;
 
   const [rate, setRate] = useState(4.5);
@@ -50,10 +55,10 @@ export default function Feedback(props) {
   });
 
   return (
-    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
+    <SafeAreaView style={BaseStyle.safeAreaView}>
       <Loading loading={createReviewLoading} />
       <Header
-        title={t('feedback')}
+        title={t('add_review')}
         renderLeft={() => {
           return (
             <Icon
@@ -69,7 +74,7 @@ export default function Feedback(props) {
         }}
       />
       <KeyboardAvoidingView
-        behavior={Platform.OS == 'android' ? 'height' : 'padding'}
+        behavior={Platform.OS === 'android' ? 'height' : 'padding'}
         keyboardVerticalOffset={offsetKeyboard}
         style={{ flex: 1 }}>
         <ScrollView
@@ -103,13 +108,17 @@ export default function Feedback(props) {
           </View>
           <TextInput
             style={{ marginTop: 10 }}
-            onChangeText={(text) => setTitle(text)}
+            onChangeText={(text: React.SetStateAction<string>) =>
+              setTitle(text)
+            }
             placeholder="Title"
             value={title}
           />
           <TextInput
             style={{ marginTop: 20, height: 150 }}
-            onChangeText={(text) => setReview(text)}
+            onChangeText={(text: React.SetStateAction<string>) =>
+              setReview(text)
+            }
             textAlignVertical="top"
             multiline={true}
             placeholder="Review"

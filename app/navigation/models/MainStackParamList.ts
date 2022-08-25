@@ -16,7 +16,6 @@ export type MainStackParamList = {
   SignIn: undefined;
   Messenger: undefined;
   Messages: undefined;
-  Feedback: { id: string };
   ResetPassword: undefined;
   ChangePassword: undefined;
   ProfileEdit: undefined;

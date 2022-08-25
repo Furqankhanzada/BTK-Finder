@@ -63,7 +63,7 @@ export default function ContactInfo({
             round
             outline
             style={styles.textButton}
-            onPress={() => onNavigate('Reviews')}>
+            onPress={() => onNavigate('ReviewStack')}>
             Reviews
           </Button>
         </View>

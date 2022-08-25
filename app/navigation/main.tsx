@@ -27,7 +27,6 @@ import Place from '@screens/Place';
 import SignUp from '@screens/SignUp';
 import SignIn from '@screens/SignIn';
 import VerifyCode from '@screens/VerifyCode';
-import Feedback from '@screens/Feedback';
 import Messages from '@screens/Messages';
 import Walkthrough from '@screens/Walkthrough';
 import ResetPassword from '@screens/ResetPassword';
@@ -70,7 +69,6 @@ export default function Main() {
       <MainStack.Screen name="SignUp" component={SignUp} />
       <MainStack.Screen name="SignIn" component={SignIn} />
       <MainStack.Screen name="Messenger" component={Messenger} />
-      <MainStack.Screen name="Feedback" component={Feedback} />
       <MainStack.Screen name="Messages" component={Messages} />
       {/* <MainStack.Screen name="Notification" component={Notification} /> */}
       <MainStack.Screen name="ResetPassword" component={ResetPassword} />
