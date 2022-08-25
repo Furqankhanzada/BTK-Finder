@@ -29,6 +29,7 @@ export default function FavouriteScreen(props: Props) {
   if (isLoading) {
     return (
       <View style={styles.placeHolderContainer}>
+        <Header title="Favorite Businesses" />
         <FavouritePlaceHolder />
       </View>
     );
