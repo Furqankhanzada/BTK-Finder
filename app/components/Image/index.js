@@ -1,6 +1,5 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import PropTypes from 'prop-types';
 import FastImage from 'react-native-fast-image';
 
 export default function Image(props) {
@@ -32,11 +31,6 @@ export default function Image(props) {
     />
   );
 }
-
-Image.propTypes = {
-  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-  source: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-};
 
 Image.defaultProps = {
   style: {},

@@ -1,6 +1,20 @@
-import { Platform, Dimensions, Linking, PixelRatio } from 'react-native';
+import {
+  Platform,
+  Dimensions,
+  Linking,
+  PixelRatio,
+  UIManager,
+  LayoutAnimation,
+} from 'react-native';
 import Toast from 'react-native-toast-message';
 import { Image } from 'react-native-image-crop-picker';
+
+export const enableExperimental = () => {
+  if (Platform.OS === 'android') {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+  }
+  LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+};
 
 const scaleValue = PixelRatio.get() / 2;
 

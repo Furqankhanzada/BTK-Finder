@@ -1,7 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, StyleSheet } from 'react-native';
 import { useTheme } from '@config';
-import PropTypes from 'prop-types';
 import Text from '@components/Text';
 import styles from './styles';
 
@@ -48,7 +47,7 @@ export default function Tag(props) {
         ],
         small && [styles.small, { backgroundColor: colors.primary }],
         light && [styles.light, { backgroundColor: colors.primary }],
-        gray && styles.gray,
+        gray && [styles.gray, { backgroundColor: colors.card }],
         chip && [
           styles.chip,
           { backgroundColor: colors.card, borderColor: colors.accent },
@@ -94,26 +93,6 @@ export default function Tag(props) {
     </TouchableOpacity>
   );
 }
-
-Tag.propTypes = {
-  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-  textStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-  icon: PropTypes.node,
-  primary: PropTypes.bool,
-  primaryIcon: PropTypes.bool,
-  outline: PropTypes.bool,
-  outlineIcon: PropTypes.bool,
-  outlineSecondary: PropTypes.bool,
-  outlineSecondaryIcon: PropTypes.bool,
-  small: PropTypes.bool,
-  light: PropTypes.bool,
-  gray: PropTypes.bool,
-  chip: PropTypes.bool,
-  rate: PropTypes.bool,
-  rateSmall: PropTypes.bool,
-  status: PropTypes.bool,
-  sale: PropTypes.bool,
-};
 
 Tag.defaultProps = {
   style: {},

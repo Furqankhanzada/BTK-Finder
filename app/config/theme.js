@@ -14,7 +14,8 @@ export const BaseColor = {
   orangeColor: '#E5634D',
   blueColor: '#5DADE2',
   pinkColor: '#A569BD',
-  greenColor: '#58D68D',
+  greenColor: '#198201',
+  redColor: '#f90404',
   yellowColor: '#FDC60A',
 };
 
@@ -35,6 +36,7 @@ export const ThemeSupport = [
         card: '#F5F5F5',
         text: '#212121',
         border: '#c7c7cc',
+        notification: '#272729',
       },
     },
     dark: {
@@ -48,6 +50,7 @@ export const ThemeSupport = [
         card: '#121212',
         text: '#e5e5e7',
         border: '#272729',
+        notification: '#272729',
       },
     },
   },
@@ -64,6 +67,7 @@ export const ThemeSupport = [
         card: '#F5F5F5',
         text: '#212121',
         border: '#c7c7cc',
+        notification: '#272729',
       },
     },
     dark: {
@@ -77,6 +81,7 @@ export const ThemeSupport = [
         card: '#121212',
         text: '#e5e5e7',
         border: '#272729',
+        notification: '#272729',
       },
     },
   },
@@ -93,6 +98,7 @@ export const ThemeSupport = [
         card: '#F5F5F5',
         text: '#212121',
         border: '#c7c7cc',
+        notification: '#272729',
       },
     },
     dark: {
@@ -106,6 +112,7 @@ export const ThemeSupport = [
         card: '#121212',
         text: '#e5e5e7',
         border: '#272729',
+        notification: '#272729',
       },
     },
   },
@@ -122,6 +129,7 @@ export const ThemeSupport = [
         card: '#F5F5F5',
         text: '#212121',
         border: '#c7c7cc',
+        notification: '#272729',
       },
     },
     dark: {
@@ -135,6 +143,7 @@ export const ThemeSupport = [
         card: '#121212',
         text: '#e5e5e7',
         border: '#272729',
+        notification: '#272729',
       },
     },
   },
@@ -151,6 +160,7 @@ export const ThemeSupport = [
         card: '#F5F5F5',
         text: '#212121',
         border: '#c7c7cc',
+        notification: '#272729',
       },
     },
     dark: {
@@ -164,6 +174,7 @@ export const ThemeSupport = [
         card: '#121212',
         text: '#e5e5e7',
         border: '#272729',
+        notification: '#272729',
       },
     },
   },
@@ -185,6 +196,7 @@ export const DefaultTheme = {
       card: '#F5F5F5',
       text: '#212121',
       border: '#c7c7cc',
+      notification: '#272729',
     },
   },
   dark: {
@@ -198,6 +210,7 @@ export const DefaultTheme = {
       card: '#121212',
       text: '#e5e5e7',
       border: '#272729',
+      notification: '#272729',
     },
   },
 };
@@ -220,13 +233,13 @@ export const useTheme = () => {
   const isDarkMode = useDarkMode();
   const forceDark = useSelector((state) => state.application.force_dark);
   const themeStorage = useSelector((state) => state.application.theme);
-  const listTheme = ThemeSupport.filter((item) => item.theme == themeStorage);
+  const listTheme = ThemeSupport.filter((item) => item.theme === themeStorage);
   const theme = ThemeSupport[2];
 
   if (forceDark) {
     return { theme: theme.dark, colors: theme.dark.colors };
   }
-  if (forceDark == false) {
+  if (forceDark === false) {
     return { theme: theme.light, colors: theme.light.colors };
   }
   return isDarkMode

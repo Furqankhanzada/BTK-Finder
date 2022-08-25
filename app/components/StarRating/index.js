@@ -45,7 +45,7 @@ const propTypes = {
   icoMoonJson: PropTypes.object,
   iconSet: PropTypes.string,
   maxStars: PropTypes.number,
-  rating: PropTypes.number,
+  rating: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   reversed: PropTypes.bool,
   starSize: PropTypes.number,
   starStyle: ViewPropTypes.style,
@@ -93,12 +93,13 @@ function StarRating(props) {
     icoMoonJson,
     iconSet,
     maxStars,
-    rating,
     reversed,
     starSize,
     starStyle,
     selectedStar,
   } = props;
+
+  const rating = Number(props.rating);
 
   const onStarButtonPress = (rating) => {
     selectedStar(rating);

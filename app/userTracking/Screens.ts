@@ -72,13 +72,6 @@ const SCREENS: any = {
       screenName: 'SearchHistory',
     },
   },
-  PreviewImage: {
-    TRACKING_KEY: 'search',
-    ATTRIBUTES: {
-      category: 'search',
-      screenName: 'PreviewImage',
-    },
-  },
   // show all categories
   Place: {
     TRACKING_KEY: 'place',
@@ -204,10 +197,10 @@ const SCREENS: any = {
     },
   },
   Feedback: {
-    TRACKING_KEY: 'feedback',
+    TRACKING_KEY: 'addReview',
     ATTRIBUTES: {
       category: 'businesses',
-      screenName: 'Feedback',
+      screenName: 'AddReview',
     },
   },
   Messages: {

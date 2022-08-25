@@ -1,17 +1,15 @@
 import React, { useEffect } from 'react';
 import { Provider } from 'react-redux';
-import { ApolloProvider } from '@apollo/client';
 import remoteConfig from '@react-native-firebase/remote-config';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { ColorSchemeProvider } from 'react-native-dynamic';
+import Toast from 'react-native-toast-message';
 
 import { usePushNotifications, useDynamicLinks, useNativeUpdate } from '@hooks';
 
+import { reactQueryClient } from './services/network/client';
 import Navigator from './navigation';
 import { store } from './store';
-import { client } from './services/network/client';
-
-// Create a client
-const queryClient = new QueryClient();
 
 export default function App() {
   // Firebase Dynamic links handling
@@ -38,12 +36,13 @@ export default function App() {
   }, []);
 
   return (
-    <ApolloProvider client={client}>
-      <QueryClientProvider client={queryClient}>
-        <Provider store={store}>
+    <QueryClientProvider client={reactQueryClient}>
+      <Provider store={store}>
+        <ColorSchemeProvider>
           <Navigator />
-        </Provider>
-      </QueryClientProvider>
-    </ApolloProvider>
+          <Toast ref={(ref) => Toast.setRef(ref)} />
+        </ColorSchemeProvider>
+      </Provider>
+    </QueryClientProvider>
   );
 }
