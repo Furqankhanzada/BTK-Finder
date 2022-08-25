@@ -197,10 +197,10 @@ const SCREENS: any = {
     },
   },
   Feedback: {
-    TRACKING_KEY: 'feedback',
+    TRACKING_KEY: 'addReview',
     ATTRIBUTES: {
       category: 'businesses',
-      screenName: 'Feedback',
+      screenName: 'AddReview',
     },
   },
   Messages: {

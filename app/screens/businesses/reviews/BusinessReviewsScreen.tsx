@@ -84,7 +84,7 @@ export default function Review(
   };
 
   const navigateToFeedback = (id: any) => {
-    navigation.navigate('Feedback', { id });
+    navigation.navigate('AddReview', { id });
   };
 
   const checkReviewAlreadyAdded = () => {
@@ -113,7 +113,8 @@ export default function Review(
         [
           {
             text: 'Login',
-            onPress: () => navigateToWalktrhough('Reviews', route.params.id),
+            onPress: () =>
+              navigateToWalktrhough('ReviewStack', route.params.id),
           },
           {
             text: 'Cancel',

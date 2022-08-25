@@ -3,23 +3,55 @@ import {
   BottomTabScreenProps,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
+import {
+  createStackNavigator,
+  StackScreenProps,
+} from '@react-navigation/stack';
+
 import { BaseColor, useTheme, useFont } from '@config';
 import { Icon } from '@components';
-
-import Review from './reviews/BusinessReviewsScreen';
-import BusinessOverviewScreen from './info/BusinessOverviewScreen';
-import BusinessProductsScreen from './products/BusinessProductsScreen';
 import { useBusiness } from '@screens/businesses/queries/queries';
 import {
   BusinessType,
   ShopStatus,
 } from '@screens/businesses/models/BusinessPresentable';
 
-import { BusinessDetailBottomTabParamList } from '../../navigation/models/BusinessDetailBottomTabParamList';
+import BusinessReviewsScreen from './reviews/BusinessReviewsScreen';
+import BusinessOverviewScreen from './info/BusinessOverviewScreen';
+import BusinessProductsScreen from './products/BusinessProductsScreen';
+import AddReviewScreen from './add-review/AddReviewScreen';
+
+import {
+  BusinessDetailBottomTabParamList,
+  ReviewStackParamList,
+} from '../../navigation/models/BusinessDetailBottomTabParamList';
 import { MainStackParamList } from '../../navigation/models/MainStackParamList';
 
 const BusinessDetailBottomTab =
   createBottomTabNavigator<BusinessDetailBottomTabParamList>();
+
+const ReviewStack = createStackNavigator<ReviewStackParamList>();
+
+function ReviewStackNavigator({
+  route,
+}: StackScreenProps<BusinessDetailBottomTabParamList, 'ReviewStack'>) {
+  const businessId = route.params.id;
+
+  return (
+    <ReviewStack.Navigator screenOptions={{ headerShown: false }}>
+      <ReviewStack.Screen
+        initialParams={{ id: businessId }}
+        name="Reviews"
+        component={BusinessReviewsScreen}
+      />
+      <ReviewStack.Screen
+        initialParams={{ id: businessId }}
+        name="AddReview"
+        component={AddReviewScreen}
+      />
+    </ReviewStack.Navigator>
+  );
+}
 
 export default function BusinessDetailNavigator({
   route,
@@ -54,7 +86,7 @@ export default function BusinessDetailNavigator({
         component={BusinessOverviewScreen}
       />
       <BusinessDetailBottomTab.Screen
-        name="Reviews"
+        name="ReviewStack"
         initialParams={{ id: businessId }}
         options={{
           title: 'Reviews',
@@ -62,7 +94,7 @@ export default function BusinessDetailNavigator({
             return <Icon solid color={color} name="star" size={25} />;
           },
         }}
-        component={Review}
+        component={ReviewStackNavigator}
       />
       {!isLoading && data?.shop && data.shop.status === ShopStatus.enabled ? (
         <BusinessDetailBottomTab.Screen
