@@ -32,20 +32,19 @@ export default function FavouritePlaceHolder() {
 
 const styles = StyleSheet.create({
   mediaPlaceholder: {
-    width: 70,
-    height: 70,
+    width: 75,
+    height: 75,
     borderRadius: 0,
   },
   topPlaceholderLine: {
     width: '60%',
     height: 12,
-    marginTop: 3,
+    marginTop: 8,
     marginLeft: 10,
   },
   middlePlaceholderLine: {
     width: '20%',
     height: 8,
-    marginTop: -3,
     marginLeft: 10,
   },
   bottomPlaceholderLine: {
@@ -66,6 +65,6 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   mainContainer: {
-    marginTop: 75,
+    marginTop: 28,
   },
 });
