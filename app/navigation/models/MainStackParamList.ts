@@ -1,18 +1,22 @@
-import { BusinessDetailBottomTabParamList } from './BusinessDetailBottomTabParamList';
+import { NavigatorScreenParams } from '@react-navigation/native';
+
+import { MainBottomTabParamList } from './MainBottomTabParamList';
+import { GlobalParamList } from './GlobalParamList';
 
 export type MainStackParamList = {
-  MainBottomTabNavigator: MainStackParamList;
-  BusinessDetailTabNavigator: BusinessDetailBottomTabParamList;
+  MainBottomTabNavigator: NavigatorScreenParams<MainBottomTabParamList>;
+  // BusinessDetailTabNavigator: NavigatorScreenParams<BusinessDetailBottomTabParamList>;
+  BusinessDetailTabNavigator: { id: string };
   ThemeSetting: undefined;
   Setting: undefined;
   Category: undefined;
   Place: undefined;
-  Walkthrough: undefined;
+  Walkthrough: { lastRoute: keyof GlobalParamList; id: string };
   SignUp: undefined;
   SignIn: undefined;
   Messenger: undefined;
   Messages: undefined;
-  Feedback: undefined;
+  Feedback: { id: string };
   ResetPassword: undefined;
   ChangePassword: undefined;
   ProfileEdit: undefined;

@@ -1,5 +1,8 @@
 import React from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {
+  BottomTabScreenProps,
+  createBottomTabNavigator,
+} from '@react-navigation/bottom-tabs';
 import { BaseColor, useTheme, useFont } from '@config';
 import { Icon } from '@components';
 
@@ -11,20 +14,20 @@ import {
   BusinessType,
   ShopStatus,
 } from '@screens/businesses/models/BusinessPresentable';
+
 import { BusinessDetailBottomTabParamList } from '../../navigation/models/BusinessDetailBottomTabParamList';
+import { MainStackParamList } from '../../navigation/models/MainStackParamList';
 
 const BusinessDetailBottomTab =
   createBottomTabNavigator<BusinessDetailBottomTabParamList>();
 
-interface Props {
-  route: any;
-}
-
-export default function BusinessDetailNavigator({ route }: Props) {
-  const businessId = route?.params?.id;
+export default function BusinessDetailNavigator({
+  route,
+}: BottomTabScreenProps<MainStackParamList, 'BusinessDetailTabNavigator'>) {
+  const businessId = route.params.id;
   const { colors } = useTheme();
   const font = useFont();
-  const { isLoading, data } = useBusiness(route?.params?.id);
+  const { isLoading, data } = useBusiness(route.params.id);
 
   return (
     <BusinessDetailBottomTab.Navigator

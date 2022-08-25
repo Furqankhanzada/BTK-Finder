@@ -1,7 +1,9 @@
+import { NavigatorScreenParams } from '@react-navigation/native';
+
 import { MainStackParamList } from './MainStackParamList';
 
 export type RootStackParamList = {
-  Main: MainStackParamList;
+  Main: NavigatorScreenParams<MainStackParamList>;
   Loading: undefined;
   HelpLine: undefined;
   Category: undefined;
