@@ -51,7 +51,7 @@ export default function CategoryScreen(props: Props) {
     isLoading,
     data: catagory,
     refetch,
-  } = useQuery(['business-catagory'], fetchBusinessCatagory, {});
+  } = useQuery(['business-catagories'], fetchBusinessCatagory);
 
   const onChangeView = () => {
     Utils.enableExperimental();
@@ -144,7 +144,7 @@ export default function CategoryScreen(props: Props) {
         }}
         onPressRight={onChangeView}
       />
-      <View style={{ paddingHorizontal: 20, paddingVertical: 15 }}>
+      <View style={styles.viewContainer}>
         <TextInput
           onChangeText={(text) => setSearch(text)}
           placeholder={t('search')}
@@ -179,13 +179,8 @@ export default function CategoryScreen(props: Props) {
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => renderItem(item)}
           ListEmptyComponent={
-            <View
-              style={{
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <Text body2 style={{ textAlign: 'center' }}>
+            <View style={styles.viewSubContainer}>
+              <Text body2 style={styles.subConatinerText}>
                 {t('data_not_found')}
               </Text>
             </View>
@@ -197,25 +192,6 @@ export default function CategoryScreen(props: Props) {
 }
 
 const styles = StyleSheet.create({
-  contain: {
-    flexDirection: 'row',
-    height: Utils.scaleWithPixel(115),
-    borderRadius: 8,
-  },
-  contentIcon: {
-    position: 'absolute',
-    padding: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  iconCircle: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
   itemFull: {
     marginBottom: 15,
     backgroundColor: '#e1e4e8',
@@ -224,5 +200,17 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderBottomWidth: 0.5,
     paddingBottom: 10,
+  },
+  viewContainer: {
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+  },
+  viewSubContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  subConatinerText: {
+    textAlign: 'center',
   },
 });
