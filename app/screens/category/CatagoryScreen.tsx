@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   FlatList,
   RefreshControl,
   View,
   TouchableOpacity,
   ActivityIndicator,
+  StyleSheet,
 } from 'react-native';
+import * as Utils from '@utils';
+import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
-import { BaseStyle, BaseColor, useTheme, Images } from '@config';
+
+import { BaseStyle, BaseColor, useTheme } from '@config';
 import {
   Header,
   SafeAreaView,
@@ -18,34 +21,38 @@ import {
   TextInput,
   Text,
 } from '@components';
-import * as Utils from '@utils';
-import styles from './styles';
-import { getCategories } from '../../actions/category';
 
-export default function Category(props) {
+import axiosApiInstance from '../../../app/interceptor/axios-interceptor';
+import Config from 'react-native-config';
+
+interface Props {
+  navigation: any;
+  route: any;
+}
+
+export default function CategoryScreen(props: Props) {
   const { navigation, route } = props;
+
   const { t } = useTranslation();
   const { colors } = useTheme();
 
-  const dispatch = useDispatch();
-  const categories = useSelector((state) => state.categories.all);
-
-  const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [search, setSearch] = useState('');
   const [modeView, setModeView] = useState('icon');
 
-  useEffect(() => {
-    dispatch(
-      getCategories({}, () => {
-        setLoading(false);
-      }),
-    );
-  }, [dispatch]);
+  const fetchBusinessCatagory = () => {
+    return axiosApiInstance({
+      method: 'GET',
+      url: `${Config.API_URL}/categories`,
+    });
+  };
 
-  /**
-   * call when change mode view
-   */
+  const {
+    isLoading,
+    data: catagory,
+    refetch,
+  } = useQuery(['business-catagory'], fetchBusinessCatagory, {});
+
   const onChangeView = () => {
     Utils.enableExperimental();
     switch (modeView) {
@@ -58,40 +65,28 @@ export default function Category(props) {
     }
   };
 
-  /**
-   * call when search category
-   */
-  const onSearch = (close) => {
-    setLoading(true);
+  const onSearch = (close: String) => {
+    isLoading;
     if (search === '' || close === 'close') {
-      dispatch(
-        getCategories({}, () => {
-          setLoading(false);
-        }),
-      );
+      return catagory?.data.name;
     } else {
-      dispatch(
-        getCategories({ search }, () => {
-          setLoading(false);
-        }),
-      );
+      return '';
     }
   };
 
-  /**
-   * render Item category
-   * @param {*} item
-   * @param {*} index
-   * @returns
-   */
-  const renderItem = (item, index) => {
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  };
+
+  const renderItem = (item: any) => {
     switch (modeView) {
       case 'icon':
         return (
           <CategoryIcon
             icon={item.icon}
             title={item.name}
-            // subtitle={200}
             onPress={() =>
               navigation.navigate('Place', {
                 title: item.name,
@@ -113,7 +108,6 @@ export default function Category(props) {
             }}
             icon={item.icon}
             title={item.name}
-            // subtitle={300}
             onPress={() =>
               navigation.navigate('Place', {
                 title: item.name,
@@ -125,12 +119,12 @@ export default function Category(props) {
           />
         );
       default:
-        break;
+        return null;
     }
   };
 
   return (
-    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
+    <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
         title={t('categories')}
         renderLeft={() => {
@@ -155,8 +149,6 @@ export default function Category(props) {
           onChangeText={(text) => setSearch(text)}
           placeholder={t('search')}
           value={search}
-          onSubmitEditing={onSearch}
-          autoCapitalize="characters"
           icon={
             <TouchableOpacity
               onPress={() => {
@@ -168,7 +160,7 @@ export default function Category(props) {
           }
         />
       </View>
-      {loading ? (
+      {isLoading ? (
         <ActivityIndicator size="large" color={colors.primary} />
       ) : (
         <FlatList
@@ -180,19 +172,12 @@ export default function Category(props) {
               colors={[colors.primary]}
               tintColor={colors.primary}
               refreshing={refreshing}
-              onRefresh={() => {
-                setRefreshing(true);
-                dispatch(
-                  getCategories({}, () => {
-                    setRefreshing(false);
-                  }),
-                );
-              }}
+              onRefresh={onRefresh}
             />
           }
-          data={categories}
-          keyExtractor={(item, index) => item.id}
-          renderItem={({ item, index }) => renderItem(item, index)}
+          data={catagory?.data}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => renderItem(item)}
           ListEmptyComponent={
             <View
               style={{
@@ -210,3 +195,34 @@ export default function Category(props) {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  contain: {
+    flexDirection: 'row',
+    height: Utils.scaleWithPixel(115),
+    borderRadius: 8,
+  },
+  contentIcon: {
+    position: 'absolute',
+    padding: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  iconCircle: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  itemFull: {
+    marginBottom: 15,
+    backgroundColor: '#e1e4e8',
+  },
+  itemIcon: {
+    marginBottom: 10,
+    borderBottomWidth: 0.5,
+    paddingBottom: 10,
+  },
+});
