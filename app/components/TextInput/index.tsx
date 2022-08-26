@@ -44,7 +44,7 @@ export default React.forwardRef<TextInput, Props>((props, ref) => {
     success = true,
     secureTextEntry = false,
     keyboardType = 'default',
-    multiline = true,
+    multiline = false,
     textAlignVertical = 'center',
     icon,
     onSubmitEditing,
