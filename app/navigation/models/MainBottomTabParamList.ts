@@ -1,5 +1,5 @@
 export type MainBottomTabParamList = {
-  Home: undefined;
+  DashboardStack: undefined;
   Favourite: undefined;
   Business: undefined;
   Profile: undefined;

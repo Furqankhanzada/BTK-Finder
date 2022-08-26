@@ -12,7 +12,6 @@ import { setEditBusiness } from '../actions/business';
 import { LastRoutes, withAuthRedirection } from './hoc/withAuthRedirection';
 
 /* Bottom Screen */
-import Home from '@screens/Home';
 // import Notification from '@screens/Notification';
 import Business from '@screens/AddBusiness';
 import FavouriteScreen from '@screens/favourite/FavouriteScreen';
@@ -41,6 +40,7 @@ import PriceRange from '@screens/AddBusiness/priceRange';
 import FinalReview from '@screens/AddBusiness/review';
 import Gallery from '@screens/AddBusiness/gallery';
 import MyBusinesses from '@screens/MyBusinesses';
+import { DashboardStackNavigator } from '@screens/dashboard/navigation/DashboardStack';
 
 import { MainStackParamList } from './models/MainStackParamList';
 import { MainBottomTabParamList } from './models/MainBottomTabParamList';
@@ -98,7 +98,7 @@ function MainBottomTabNavigator() {
 
   return (
     <MainBottomTab.Navigator
-      initialRouteName="Home"
+      initialRouteName="DashboardStack"
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: colors.primary,
@@ -110,8 +110,8 @@ function MainBottomTabNavigator() {
         },
       }}>
       <MainBottomTab.Screen
-        name="Home"
-        component={Home}
+        name="DashboardStack"
+        component={DashboardStackNavigator}
         options={{
           title: t('home'),
           tabBarIcon: ({ color }) => {

@@ -22,7 +22,6 @@ import CategoryIcon from './CategoryIcon';
 import CategoryFull from './CategoryFull';
 import PlaceItem from './PlaceItem';
 import ProfileDescription from './ProfileDescription';
-import HelpLineItem from './HelpLineItem';
 import FeaturedCategoryPlaceholderComponent from './Placeholders/featuredCategories';
 import CustomStepIndicator from './StepIndicator';
 import HoursCheckbox from './HoursCheckbox';
@@ -58,7 +57,6 @@ export {
   Card,
   FilterSort,
   ProfileDescription,
-  HelpLineItem,
   FeaturedCategoryPlaceholderComponent,
   CustomStepIndicator,
   HoursCheckbox,

@@ -16,7 +16,6 @@ import ChooseItems from '@screens/ChooseItems';
 import SearchHistory from '@screens/SearchHistory';
 import SelectDarkOption from '@screens/SelectDarkOption';
 import SelectFontOption from '@screens/SelectFontOption';
-import HelpLine from '@screens/HelpLine';
 import Category from '@screens/Category';
 
 import { navigationRef, isReadyRef } from '../services/NavigationService';
@@ -87,11 +86,6 @@ export default function Navigator() {
         initialRouteName="Loading">
         <RootStack.Screen name="Loading" component={Loading} />
         <RootStack.Screen name="Main" component={Main} />
-        <RootStack.Screen
-          options={{ presentation: 'modal' }}
-          name="HelpLine"
-          component={HelpLine}
-        />
         <RootStack.Screen name="Category" component={Category} />
         <RootStack.Screen name="Filter" component={Filter} />
         <RootStack.Screen name="ChooseItems" component={ChooseItems} />

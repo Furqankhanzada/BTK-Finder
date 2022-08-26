@@ -5,9 +5,11 @@ import {
   BusinessDetailBottomTabParamList,
   ReviewStackParamList,
 } from './BusinessDetailBottomTabParamList';
+import { DashboardParamList } from './DashboardParamList';
 
 export type GlobalParamList = RootStackParamList &
   MainStackParamList &
   MainBottomTabParamList &
   BusinessDetailBottomTabParamList &
-  ReviewStackParamList;
+  ReviewStackParamList &
+  DashboardParamList;
