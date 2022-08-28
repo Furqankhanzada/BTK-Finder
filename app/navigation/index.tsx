@@ -17,7 +17,7 @@ import SearchHistory from '@screens/SearchHistory';
 import SelectDarkOption from '@screens/SelectDarkOption';
 import SelectFontOption from '@screens/SelectFontOption';
 import HelpLine from '@screens/HelpLine';
-import Category from '@screens/category/CatagoryScreen';
+import Category from '@screens/category/CategoryScreen';
 
 import { navigationRef, isReadyRef } from '../services/NavigationService';
 import { trackScreenView } from '../userTracking';

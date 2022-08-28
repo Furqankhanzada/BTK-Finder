@@ -7,8 +7,7 @@ import {
   ActivityIndicator,
   StyleSheet,
 } from 'react-native';
-import * as Utils from '@utils';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 
 import { BaseStyle, BaseColor, useTheme } from '@config';
@@ -21,16 +20,16 @@ import {
   TextInput,
   Text,
 } from '@components';
+import * as Utils from '@utils';
 
-import axiosApiInstance from '../../../app/interceptor/axios-interceptor';
-import Config from 'react-native-config';
+import { fetchBusinessCatagory } from './queries/queries';
+import { GlobalParamList } from 'navigation/models/GlobalParamList';
+import { StackScreenProps } from '@react-navigation/stack/lib/typescript/src/types';
+import CategoryPlaceHolder from './components/categoryPlaceholder';
 
-interface Props {
-  navigation: any;
-  route: any;
-}
-
-export default function CategoryScreen(props: Props) {
+export default function CategoryScreen(
+  props: StackScreenProps<GlobalParamList, 'Category'>,
+) {
   const { navigation, route } = props;
 
   const { t } = useTranslation();
@@ -39,19 +38,22 @@ export default function CategoryScreen(props: Props) {
   const [refreshing, setRefreshing] = useState(false);
   const [search, setSearch] = useState('');
   const [modeView, setModeView] = useState('icon');
-
-  const fetchBusinessCatagory = () => {
-    return axiosApiInstance({
-      method: 'GET',
-      url: `${Config.API_URL}/categories`,
-    });
-  };
+  const [filterCategories, setFilterCategories] = useState();
 
   const {
     isLoading,
     data: catagory,
     refetch,
   } = useQuery(['business-catagories'], fetchBusinessCatagory);
+
+  if (isLoading) {
+    return (
+      <View style={styles.placeHolderContainer}>
+        <Header title={t('categories')} />
+        <CategoryPlaceHolder />
+      </View>
+    );
+  }
 
   const onChangeView = () => {
     Utils.enableExperimental();
@@ -65,13 +67,20 @@ export default function CategoryScreen(props: Props) {
     }
   };
 
-  const onSearch = (close: String) => {
-    isLoading;
-    if (search === '' || close === 'close') {
-      return catagory?.data.name;
-    } else {
-      return '';
-    }
+  const queryClient = useQueryClient();
+
+  const onSearch = (text: any) => {
+    setSearch(text);
+    const getCacheCategories: any = queryClient.getQueryData([
+      'business-catagories',
+    ]);
+
+    const filterCacheCatagory = getCacheCategories.data.filter(
+      (catagory: any) => {
+        return catagory.name.includes(text);
+      },
+    );
+    setFilterCategories(filterCacheCatagory);
   };
 
   const onRefresh = async () => {
@@ -146,47 +155,44 @@ export default function CategoryScreen(props: Props) {
       />
       <View style={styles.viewContainer}>
         <TextInput
-          onChangeText={(text) => setSearch(text)}
+          onChangeText={onSearch}
           placeholder={t('search')}
           value={search}
           icon={
             <TouchableOpacity
               onPress={() => {
                 setSearch('');
-                onSearch('close');
+                onSearch;
               }}>
               <Icon name="times" size={16} color={BaseColor.grayColor} />
             </TouchableOpacity>
           }
         />
       </View>
-      {isLoading ? (
-        <ActivityIndicator size="large" color={colors.primary} />
-      ) : (
-        <FlatList
-          contentContainerStyle={{
-            paddingHorizontal: 20,
-          }}
-          refreshControl={
-            <RefreshControl
-              colors={[colors.primary]}
-              tintColor={colors.primary}
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-            />
-          }
-          data={catagory?.data}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => renderItem(item)}
-          ListEmptyComponent={
-            <View style={styles.viewSubContainer}>
-              <Text body2 style={styles.subConatinerText}>
-                {t('data_not_found')}
-              </Text>
-            </View>
-          }
-        />
-      )}
+
+      <FlatList
+        contentContainerStyle={{
+          paddingHorizontal: 20,
+        }}
+        refreshControl={
+          <RefreshControl
+            colors={[colors.primary]}
+            tintColor={colors.primary}
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
+        data={filterCategories ? filterCategories : catagory?.data}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => renderItem(item)}
+        ListEmptyComponent={
+          <View style={styles.viewSubContainer}>
+            <Text body2 style={styles.subConatinerText}>
+              {t('data_not_found')}
+            </Text>
+          </View>
+        }
+      />
     </SafeAreaView>
   );
 }
@@ -212,5 +218,8 @@ const styles = StyleSheet.create({
   },
   subConatinerText: {
     textAlign: 'center',
+  },
+  placeHolderContainer: {
+    paddingHorizontal: 20,
   },
 });
