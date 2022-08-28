@@ -10,7 +10,7 @@ export type MainStackParamList = {
   ThemeSetting: undefined;
   Setting: undefined;
   Category: undefined;
-  Place: undefined;
+  Place: undefined | any;
   Walkthrough: { lastRoute: keyof GlobalParamList; id: string };
   SignUp: undefined;
   SignIn: undefined;
@@ -30,4 +30,6 @@ export type MainStackParamList = {
   MyBusinesses: undefined;
   EditBusiness: undefined;
   VerifyCode: undefined;
+  Latitude: Number[];
+  Longtitude: Number[];
 };
