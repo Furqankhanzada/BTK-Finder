@@ -10,6 +10,7 @@ import {
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 
+import { useCatagoryQuery } from './queries/queries';
 import { BaseStyle, BaseColor, useTheme } from '@config';
 import {
   Header,
@@ -22,7 +23,6 @@ import {
 } from '@components';
 import * as Utils from '@utils';
 
-import { fetchBusinessCatagory } from './queries/queries';
 import { GlobalParamList } from 'navigation/models/GlobalParamList';
 import { StackScreenProps } from '@react-navigation/stack/lib/typescript/src/types';
 import CategoryPlaceHolder from './components/categoryPlaceholder';
@@ -40,11 +40,7 @@ export default function CategoryScreen(
   const [modeView, setModeView] = useState('icon');
   const [filterCategories, setFilterCategories] = useState();
 
-  const {
-    isLoading,
-    data: catagory,
-    refetch,
-  } = useQuery(['business-catagories'], fetchBusinessCatagory);
+  const { isLoading, data: catagory, refetch } = useCatagoryQuery();
 
   if (isLoading) {
     return (
