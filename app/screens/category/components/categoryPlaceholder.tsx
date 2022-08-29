@@ -9,7 +9,7 @@ import { View, StyleSheet } from 'react-native';
 
 const reapeatTimes = [1, 2, 3, 4];
 
-export default function CategoryPlaceHolder() {
+export default function CategoryPlaceholder() {
   return (
     <View style={styles.mainContainer}>
       <Placeholder Animation={Progressive}>
