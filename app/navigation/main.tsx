@@ -41,6 +41,7 @@ import FinalReview from '@screens/AddBusiness/review';
 import Gallery from '@screens/AddBusiness/gallery';
 import MyBusinesses from '@screens/MyBusinesses';
 import { DashboardStackNavigator } from '@screens/dashboard/navigation/DashboardStack';
+import BusinessesScreen from '@screens/businesses/list/BusinessesScreen';
 
 import { MainStackParamList } from './models/MainStackParamList';
 import { MainBottomTabParamList } from './models/MainBottomTabParamList';
@@ -64,6 +65,7 @@ export default function Main() {
       <MainStack.Screen name="ThemeSetting" component={ThemeSetting} />
       <MainStack.Screen name="Setting" component={Setting} />
       <MainStack.Screen name="Category" component={Category} />
+      <MainStack.Screen name="Businesses" component={BusinessesScreen} />
       <MainStack.Screen name="Place" component={Place} />
       <MainStack.Screen name="Walkthrough" component={Walkthrough} />
       <MainStack.Screen name="SignUp" component={SignUp} />

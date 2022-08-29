@@ -48,18 +48,15 @@ export const useBusiness = (id: string) =>
 export const useBusinesses = (
   key: Array<string | number>,
   payload?: any,
-  oprions: any = { enabled: true },
+  options: any = { enabled: true },
 ) => {
-  let queryParams = '';
-  if (payload && encodeQueryData(payload)) {
-    queryParams = `?${encodeQueryData(payload)}`;
-  }
   return useQuery(
     key,
-    () => {
+    (): Promise<BusinessPresentable[]> => {
       return axiosApiInstance({
         method: 'GET',
-        url: `${BUSINESSES_API}${queryParams}`,
+        url: `${BUSINESSES_API}`,
+        params: payload,
       })
         .then((response) => response.data)
         .catch(({ response }) => {
@@ -67,27 +64,10 @@ export const useBusinesses = (
         });
     },
     {
-      ...oprions,
+      ...options,
     },
   );
 };
-
-function encodeQueryData(obj: any, prefix?: any): any {
-  let str = [],
-    p;
-  for (p in obj) {
-    if (obj.hasOwnProperty(p)) {
-      let k = prefix ? prefix + '[' + p + ']' : p,
-        v = obj[p];
-      str.push(
-        v !== null && typeof v === 'object'
-          ? encodeQueryData(v, k)
-          : encodeURIComponent(k) + '=' + encodeURIComponent(v),
-      );
-    }
-  }
-  return str.join('&');
-}
 
 interface GetTags {
   tags: Maybe<TagConnection>;
