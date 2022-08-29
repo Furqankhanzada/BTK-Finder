@@ -25,6 +25,7 @@ import * as Utils from '@utils';
 import { GlobalParamList } from 'navigation/models/GlobalParamList';
 import { StackScreenProps } from '@react-navigation/stack/lib/typescript/src/types';
 import CategoryPlaceHolder from './components/categoryPlaceholder';
+import { CategoryPresentable } from './modals/CategoryPresentables';
 
 export default function CategoryScreen(
   props: StackScreenProps<GlobalParamList, 'Category'>,
@@ -36,9 +37,10 @@ export default function CategoryScreen(
   const { colors } = useTheme();
 
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  const [search, setSearch] = useState<String>('');
-  const [modeView, setModeView] = useState<String>('icon');
-  const [filteredCategories, setFilteredCategories] = useState();
+  const [search, setSearch] = useState<string>('');
+  const [modeView, setModeView] = useState<string>('icon');
+  const [filteredCategories, setFilteredCategories] =
+    useState<CategoryPresentable[]>();
 
   const { isLoading, data: catagory, refetch } = useCatagoryQuery();
 
@@ -54,17 +56,16 @@ export default function CategoryScreen(
     }
   };
 
-  const onSearch = (text: String) => {
+  const onSearch = (text: string) => {
     setSearch(text);
     const getCacheCategories: any = queryClient.getQueryData([
       'business-catagories',
     ]);
 
     const filterCacheCatagory = getCacheCategories.data.filter(
-      (catagory: Object) => {
+      (catagory: object) => {
         return catagory.name.includes(text);
       },
-      console.log('What is inside of category', catagory),
     );
     setFilteredCategories(filterCacheCatagory);
   };
