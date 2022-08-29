@@ -26,15 +26,6 @@ export default function FavouriteScreen(props: Props) {
     fields: 'name, thumbnail, category, averageRatings',
   });
 
-  if (isLoading) {
-    return (
-      <View style={styles.placeHolderContainer}>
-        <Header title="Favorite Businesses" />
-        <FavouritePlaceHolder />
-      </View>
-    );
-  }
-
   const onRefresh = async () => {
     setIsRefreshing(true);
     await refetch();
@@ -48,40 +39,46 @@ export default function FavouriteScreen(props: Props) {
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header title="Favorite Businesses" />
-      <FlatList
-        refreshControl={
-          <RefreshControl
-            title="Pull to refresh"
-            titleColor={colors.text}
-            colors={[colors.primary]}
-            tintColor={colors.primary}
-            refreshing={isRefreshing}
-            onRefresh={onRefresh}
-          />
-        }
-        style={styles.containerStyle}
-        data={favorites}
-        keyExtractor={(item) => item._id}
-        ListEmptyComponent={
-          <View style={styles.sectionEmpty}>
-            <Text semibold textAlign="center" headline>
-              No Favorite Businesses Available
-            </Text>
-          </View>
-        }
-        renderItem={({ item }) => {
-          return (
-            <CardList
-              image={item?.thumbnail}
-              title={item?.name}
-              subtitle={item?.category}
-              rate={item?.averageRatings}
-              style={styles.cardListMargin}
-              onPress={() => navigateToBusinessDetail(item._id)}
+      {isLoading ? (
+        <View style={styles.placeHolderContainer}>
+          <FavouritePlaceHolder />
+        </View>
+      ) : (
+        <FlatList
+          refreshControl={
+            <RefreshControl
+              title="Pull to refresh"
+              titleColor={colors.text}
+              colors={[colors.primary]}
+              tintColor={colors.primary}
+              refreshing={isRefreshing}
+              onRefresh={onRefresh}
             />
-          );
-        }}
-      />
+          }
+          style={styles.containerStyle}
+          data={favorites}
+          keyExtractor={(item) => item._id}
+          ListEmptyComponent={
+            <View style={styles.sectionEmpty}>
+              <Text semibold textAlign="center" headline>
+                No Favorite Businesses Available
+              </Text>
+            </View>
+          }
+          renderItem={({ item }) => {
+            return (
+              <CardList
+                image={item?.thumbnail}
+                title={item?.name}
+                subtitle={item?.category}
+                rate={item?.averageRatings}
+                style={styles.cardListMargin}
+                onPress={() => navigateToBusinessDetail(item._id)}
+              />
+            );
+          }}
+        />
+      )}
     </SafeAreaView>
   );
 }
