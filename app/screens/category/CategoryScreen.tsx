@@ -4,10 +4,9 @@ import {
   RefreshControl,
   View,
   TouchableOpacity,
-  ActivityIndicator,
   StyleSheet,
 } from 'react-native';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 
 import { useCatagoryQuery } from './queries/queries';
@@ -30,26 +29,18 @@ import CategoryPlaceHolder from './components/categoryPlaceholder';
 export default function CategoryScreen(
   props: StackScreenProps<GlobalParamList, 'Category'>,
 ) {
+  const queryClient = useQueryClient();
   const { navigation, route } = props;
 
   const { t } = useTranslation();
   const { colors } = useTheme();
 
-  const [refreshing, setRefreshing] = useState(false);
-  const [search, setSearch] = useState('');
-  const [modeView, setModeView] = useState('icon');
-  const [filterCategories, setFilterCategories] = useState();
+  const [refreshing, setRefreshing] = useState<boolean>(false);
+  const [search, setSearch] = useState<String>('');
+  const [modeView, setModeView] = useState<String>('icon');
+  const [filteredCategories, setFilteredCategories] = useState();
 
   const { isLoading, data: catagory, refetch } = useCatagoryQuery();
-
-  if (isLoading) {
-    return (
-      <View style={styles.placeHolderContainer}>
-        <Header title={t('categories')} />
-        <CategoryPlaceHolder />
-      </View>
-    );
-  }
 
   const onChangeView = () => {
     Utils.enableExperimental();
@@ -63,20 +54,19 @@ export default function CategoryScreen(
     }
   };
 
-  const queryClient = useQueryClient();
-
-  const onSearch = (text: any) => {
+  const onSearch = (text: String) => {
     setSearch(text);
     const getCacheCategories: any = queryClient.getQueryData([
       'business-catagories',
     ]);
 
     const filterCacheCatagory = getCacheCategories.data.filter(
-      (catagory: any) => {
+      (catagory: Object) => {
         return catagory.name.includes(text);
       },
+      console.log('What is inside of category', catagory),
     );
-    setFilterCategories(filterCacheCatagory);
+    setFilteredCategories(filterCacheCatagory);
   };
 
   const onRefresh = async () => {
@@ -165,30 +155,35 @@ export default function CategoryScreen(
           }
         />
       </View>
-
-      <FlatList
-        contentContainerStyle={{
-          paddingHorizontal: 20,
-        }}
-        refreshControl={
-          <RefreshControl
-            colors={[colors.primary]}
-            tintColor={colors.primary}
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-          />
-        }
-        data={filterCategories ? filterCategories : catagory?.data}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => renderItem(item)}
-        ListEmptyComponent={
-          <View style={styles.viewSubContainer}>
-            <Text body2 style={styles.subConatinerText}>
-              {t('data_not_found')}
-            </Text>
-          </View>
-        }
-      />
+      {isLoading ? (
+        <View style={styles.placeHolderContainer}>
+          <CategoryPlaceHolder />
+        </View>
+      ) : (
+        <FlatList
+          contentContainerStyle={{
+            paddingHorizontal: 20,
+          }}
+          refreshControl={
+            <RefreshControl
+              colors={[colors.primary]}
+              tintColor={colors.primary}
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+            />
+          }
+          data={filteredCategories ? filteredCategories : catagory?.data}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => renderItem(item)}
+          ListEmptyComponent={
+            <View style={styles.viewSubContainer}>
+              <Text body2 style={styles.subConatinerText}>
+                {t('data_not_found')}
+              </Text>
+            </View>
+          }
+        />
+      )}
     </SafeAreaView>
   );
 }
