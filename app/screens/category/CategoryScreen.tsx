@@ -24,7 +24,7 @@ import { BaseStyle, BaseColor, useTheme } from '@config';
 import { useCategories } from './queries/queries';
 import { GlobalParamList } from 'navigation/models/GlobalParamList';
 import { StackScreenProps } from '@react-navigation/stack/lib/typescript/src/types';
-import CategoryPlaceHolder from './components/CategoryPlaceholder';
+import CategoryPlaceHolder from './components/categoryPlaceholder';
 import { CategoryPresentable } from './modals/CategoryPresentables';
 
 export default function CategoryScreen(
