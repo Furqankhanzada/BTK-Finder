@@ -21,7 +21,7 @@ import Profile from '@screens/Profile';
 /* Stack Screen */
 import ThemeSetting from '@screens/ThemeSetting';
 import Setting from '@screens/Setting';
-import Category from '@screens/Category';
+import Category from '@screens/category/CategoryScreen';
 import Place from '@screens/Place';
 import SignUp from '@screens/SignUp';
 import SignIn from '@screens/SignIn';
