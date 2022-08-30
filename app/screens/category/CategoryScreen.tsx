@@ -8,9 +8,9 @@ import {
 } from 'react-native';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
+import { BaseStyle, BaseColor, useTheme } from '@config';
 
 import { useCategories } from './queries/queries';
-import { BaseStyle, BaseColor, useTheme } from '@config';
 import {
   Header,
   SafeAreaView,
@@ -24,7 +24,7 @@ import * as Utils from '@utils';
 
 import { GlobalParamList } from 'navigation/models/GlobalParamList';
 import { StackScreenProps } from '@react-navigation/stack/lib/typescript/src/types';
-import CategoryPlaceHolder from './components/categoryPlaceholder';
+import CategoryPlaceHolder from './components/CategoryPlaceholder';
 import { CategoryPresentable } from './modals/CategoryPresentables';
 
 export default function CategoryScreen(
@@ -66,7 +66,7 @@ export default function CategoryScreen(
       queryClient.getQueryData(['business-catagories']);
     const filterCacheCatagory = cachedCategories?.filter(
       (category: CategoryPresentable) => {
-        return category.name.includes(text);
+        return category.name.toLowerCase().includes(text.toLowerCase());
       },
     );
     setFilteredCategories(filterCacheCatagory);
@@ -151,7 +151,7 @@ export default function CategoryScreen(
             <TouchableOpacity
               onPress={() => {
                 setSearch('');
-                onSearch;
+                onSearch('');
               }}>
               <Icon name="times" size={16} color={BaseColor.grayColor} />
             </TouchableOpacity>
