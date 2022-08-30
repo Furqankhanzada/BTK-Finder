@@ -31,7 +31,7 @@ export default function CategoryScreen(
   props: StackScreenProps<GlobalParamList, 'Category'>,
 ) {
   const queryClient = useQueryClient();
-  const { navigation, route } = props;
+  const { navigation } = props;
 
   const { t } = useTranslation();
   const { colors } = useTheme();
