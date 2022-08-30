@@ -9,7 +9,7 @@ import {
 import { useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 
-import { useCatagoryQuery } from './queries/queries';
+import { useCategories } from './queries/queries';
 import { BaseStyle, BaseColor, useTheme } from '@config';
 import {
   Header,
@@ -42,7 +42,11 @@ export default function CategoryScreen(
   const [filteredCategories, setFilteredCategories] =
     useState<CategoryPresentable[]>();
 
-  const { isLoading, data: catagory, refetch } = useCatagoryQuery();
+  const {
+    isLoading,
+    data: categries,
+    refetch,
+  } = useCategories(['business-catagories']);
 
   const onChangeView = () => {
     Utils.enableExperimental();
@@ -58,13 +62,11 @@ export default function CategoryScreen(
 
   const onSearch = (text: string) => {
     setSearch(text);
-    const getCacheCategories: any = queryClient.getQueryData([
-      'business-catagories',
-    ]);
-
-    const filterCacheCatagory = getCacheCategories.data.filter(
-      (catagory: object) => {
-        return catagory.name.includes(text);
+    const cachedCategories: CategoryPresentable[] | undefined =
+      queryClient.getQueryData(['business-catagories']);
+    const filterCacheCatagory = cachedCategories?.filter(
+      (category: CategoryPresentable) => {
+        return category.name.includes(text);
       },
     );
     setFilteredCategories(filterCacheCatagory);
@@ -76,7 +78,7 @@ export default function CategoryScreen(
     setRefreshing(false);
   };
 
-  const renderItem = (item: any) => {
+  const renderItem = (item: CategoryPresentable) => {
     switch (modeView) {
       case 'icon':
         return (
@@ -88,9 +90,9 @@ export default function CategoryScreen(
                 title: item.name,
                 category: item.name,
                 categoryIcon: item.icon,
-                route: item.route,
-                latitude: route?.params?.latitude ?? null,
-                longitude: route?.params?.longitude ?? null,
+                // route: item.route,
+                // latitude: route?.params?. latitude ?? null,
+                // longitude: route?.params?.longitude ?? null,
               })
             }
             style={[styles.itemIcon, { borderColor: colors.border }]}
@@ -108,7 +110,7 @@ export default function CategoryScreen(
               navigation.navigate('Place', {
                 title: item.name,
                 category: item.name,
-                route: item.route,
+                // route: item.route,
               })
             }
             style={styles.itemFull}
@@ -173,8 +175,8 @@ export default function CategoryScreen(
               onRefresh={onRefresh}
             />
           }
-          data={filteredCategories ? filteredCategories : catagory?.data}
-          keyExtractor={(item) => item.id}
+          data={filteredCategories ? filteredCategories : categries}
+          keyExtractor={(item) => item._id}
           renderItem={({ item }) => renderItem(item)}
           ListEmptyComponent={
             <View style={styles.viewSubContainer}>

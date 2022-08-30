@@ -7,13 +7,12 @@ import {
 } from 'rn-placeholder';
 import { View, StyleSheet } from 'react-native';
 
-const reapeatTimes = [1, 2, 3, 4];
+const reapeatTimes = [1, 2, 3, 4, 5];
 
 export default function CategoryPlaceholder() {
   return (
     <View style={styles.mainContainer}>
       <Placeholder Animation={Progressive}>
-        <PlaceholderLine style={styles.searchLine} />
         {reapeatTimes.map((item) => {
           return (
             <View key={item} style={styles.subContainer}>
@@ -42,12 +41,6 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginLeft: 10,
   },
-  searchLine: {
-    width: '100%',
-    height: 45,
-    marginBottom: 18,
-    marginTop: -12,
-  },
   middlePlaceholderLine: {
     width: '20%',
     height: 8,
@@ -71,6 +64,6 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   mainContainer: {
-    marginTop: 28,
+    marginTop: 0,
   },
 });
