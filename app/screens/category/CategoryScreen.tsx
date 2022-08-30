@@ -150,7 +150,6 @@ export default function CategoryScreen(
           icon={
             <TouchableOpacity
               onPress={() => {
-                setSearch('');
                 onSearch('');
               }}>
               <Icon name="times" size={16} color={BaseColor.grayColor} />
