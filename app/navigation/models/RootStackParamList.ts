@@ -6,7 +6,6 @@ export type RootStackParamList = {
   Main: NavigatorScreenParams<MainStackParamList>;
   Loading: undefined;
   HelpLine: undefined;
-  Category: undefined;
   Filter: undefined;
   ChooseItems: undefined;
   SearchHistory: undefined;
