@@ -17,7 +17,6 @@ import SearchHistory from '@screens/SearchHistory';
 import SelectDarkOption from '@screens/SelectDarkOption';
 import SelectFontOption from '@screens/SelectFontOption';
 import HelpLine from '@screens/HelpLine';
-import Category from '@screens/Category';
 
 import { navigationRef, isReadyRef } from '../services/NavigationService';
 import { trackScreenView } from '../userTracking';
@@ -92,7 +91,6 @@ export default function Navigator() {
           name="HelpLine"
           component={HelpLine}
         />
-        <RootStack.Screen name="Category" component={Category} />
         <RootStack.Screen name="Filter" component={Filter} />
         <RootStack.Screen name="ChooseItems" component={ChooseItems} />
         <RootStack.Screen name="SearchHistory" component={SearchHistory} />
