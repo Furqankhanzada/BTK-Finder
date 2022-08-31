@@ -10,14 +10,14 @@ import {
 import { BaseColor, useTheme } from '@config';
 import { Text, Icon } from '@components';
 
-export interface CategoryComponents {
+export interface Props {
   style?: StyleProp<ViewStyle>;
   title: string;
   onPress: () => void;
   icon: string;
 }
 
-export default function CategoryIcon(props: CategoryComponents) {
+export default function CategoryIcon(props: Props) {
   const { colors } = useTheme();
   const { style, icon, title, onPress } = props;
   return (

@@ -11,15 +11,15 @@ import { BaseColor, useTheme } from '@config';
 import { Text, Icon, Image } from '@components';
 import * as Utils from '@utils';
 
-export interface CategoryComponents {
+export interface Props {
   style?: StyleProp<ViewStyle>;
   title: string;
   onPress: () => void;
   icon: string;
-  image: object;
+  image: string;
 }
 
-export default function CategoryFull(props: CategoryComponents) {
+export default function CategoryFull(props: Props) {
   const { colors } = useTheme();
   const { style, icon, title, onPress, image } = props;
   return (
@@ -27,7 +27,7 @@ export default function CategoryFull(props: CategoryComponents) {
       style={[styles.contain, style]}
       onPress={onPress}
       activeOpacity={0.9}>
-      <Image source={image} style={styles.imageLoadStyle} />
+      <Image source={{ uri: image }} style={styles.imageLoadStyle} />
 
       <View style={styles.contentIcon}>
         <View

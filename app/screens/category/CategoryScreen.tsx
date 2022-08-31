@@ -95,9 +95,7 @@ export default function CategoryScreen(
       case 'full':
         return (
           <CategoryFull
-            image={{
-              uri: item.image || 'https://i.ibb.co/VpvP0X5/empty-image.jpg',
-            }}
+            image={item.image || 'https://i.ibb.co/VpvP0X5/empty-image.jpg',}
             icon={item.icon}
             title={item.name}
             onPress={() =>
