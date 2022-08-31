@@ -21,6 +21,7 @@ import { CategoryPresentable } from './modals/CategoryPresentables';
 import CategoryIcon from './components/CategoryIcon';
 import CategoryFull from './components/CategoryFull';
 
+
 export default function CategoryScreen(
   props: StackScreenProps<GlobalParamList, 'Category'>,
 ) {
