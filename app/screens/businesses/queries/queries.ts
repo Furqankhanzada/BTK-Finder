@@ -10,6 +10,7 @@ import {
   GET_PRODUCTS,
   GET_TAGS,
 } from '@screens/businesses/queries/gql/queries';
+import { BusinessParams } from '@screens/businesses/models/BusinessParams';
 
 import axiosApiInstance from '../../../interceptor/axios-interceptor';
 import { BUSINESSES_API } from '../../../constants';
@@ -47,8 +48,8 @@ export const useBusiness = (id: string) =>
 
 export const useBusinesses = (
   key: Array<string | number>,
-  payload?: any,
-  options: any = { enabled: true },
+  params?: BusinessParams,
+  options = { enabled: true },
 ) => {
   return useQuery(
     key,
@@ -56,7 +57,7 @@ export const useBusinesses = (
       return axiosApiInstance({
         method: 'GET',
         url: `${BUSINESSES_API}`,
-        params: payload,
+        params: params,
       })
         .then((response) => response.data)
         .catch(({ response }) => {

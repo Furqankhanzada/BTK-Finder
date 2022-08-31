@@ -1,23 +1,26 @@
 import React from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { FlatList, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { StackScreenProps } from '@react-navigation/stack';
 
-import { Header, SafeAreaView, Icon, Button, Tag } from '@components';
-import { BaseColor, BaseStyle, useTheme } from '@config';
-import { useCategories } from '@screens/dashboard/queries/queries';
+import { Header, SafeAreaView, Icon, Button, Text } from '@components';
+import { BaseStyle, useTheme } from '@config';
+
+import Section from '@screens/dashboard/components/Section';
+import { CategoryPresentable } from '@screens/category/modals/CategoryPresentables';
+import HorizontalCategories from '@screens/dashboard/components/HorizontalCategories';
 
 import { EVENTS, trackEvent } from '../../userTracking';
 import { GlobalParamList } from '../../navigation/models/GlobalParamList';
-import Section from '@screens/dashboard/components/Section';
-import { CategoryPresentable } from '@screens/dashboard/models/CategoryPresentable';
+import HorizontalBusinesses from '@screens/dashboard/components/HorizontalBusinesses';
+import { BusinessPresentable } from '@screens/businesses/models/BusinessPresentable';
+import { MainStackParamList } from '../../navigation/models/MainStackParamList';
 
 export default function DashboardScreen({
   navigation,
 }: StackScreenProps<GlobalParamList, 'Dashboard'>) {
-  const { colors } = useTheme();
   const { t } = useTranslation();
-  const { data: categories } = useCategories(['categories']);
+  const { colors } = useTheme();
 
   const onPressHelpLine = () => {
     navigation.navigate('HelpLine');
@@ -30,18 +33,26 @@ export default function DashboardScreen({
   };
 
   const onCategoryPress = ({ name }: CategoryPresentable) => {
+    trackEvent(EVENTS.CATEGORIES_SCREEN_VISITED);
+
     navigation.navigate('Businesses', {
       category: name,
       title: name,
     });
-    // navigation.navigate('Place', {
-    //   title: category.name,
-    //   category: category.name,
-    //   categoryIcon: category.icon,
-    //   // route: item.route,
-    //   // latitude: getLocation?.latitude ?? null,
-    //   // longitude: getLocation?.longitude ?? null,
-    // });
+  };
+
+  const onBusinessesViewAllPress = (
+    params: MainStackParamList['Businesses'],
+  ) => {
+    navigation.navigate('Businesses', params);
+    trackEvent(EVENTS.VISITED_BUSINESS);
+  };
+
+  const onBusinessPress = (business: BusinessPresentable) => {
+    trackEvent(EVENTS.VISITED_BUSINESS);
+    navigation.navigate('BusinessDetailTabNavigator', {
+      id: business._id,
+    });
   };
 
   return (
@@ -67,37 +78,168 @@ export default function DashboardScreen({
         renderItem={() => (
           <View>
             <Section
+              title="Upcoming Features"
+              subTitle="These features are under development"
+              onViewAll={() =>
+                onBusinessesViewAllPress({
+                  title: 'Restaurants with Menu Online',
+                  tags: ['Menu'],
+                })
+              }
+              isLoading={false}>
+              <View
+                style={[
+                  {
+                    flexDirection: 'row',
+                    paddingHorizontal: 20,
+                  },
+                ]}>
+                <TouchableOpacity
+                  style={[
+                    styles.newFeature,
+                    {
+                      backgroundColor: colors.card,
+                      marginRight: 5,
+                    },
+                  ]}>
+                  <Text headline semibold darkPrimaryColor textAlign="center">
+                    Car Pooling
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[
+                    styles.newFeature,
+                    {
+                      backgroundColor: colors.card,
+                      marginRight: 5,
+                    },
+                  ]}>
+                  <Text headline semibold darkPrimaryColor textAlign="center">
+                    Deals
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </Section>
+            <Section
               title="Browse by categories"
               onViewAll={onCategoriesViewAllPress}
               isLoading={false}>
-              <FlatList
-                contentContainerStyle={{ paddingLeft: 20 }}
-                data={categories}
-                horizontal={true}
-                keyExtractor={(item) => item._id}
-                renderItem={({ item }) => {
-                  return (
-                    <Tag
-                      onPress={() => onCategoryPress(item)}
-                      status
-                      style={{
-                        marginRight: 5,
-                        borderColor: item.color,
-                        backgroundColor: item.color,
-                      }}
-                      textStyle={{ color: '#fff', marginLeft: 5 }}
-                      icon={
-                        <Icon
-                          name={item.icon}
-                          size={20}
-                          color={BaseColor.whiteColor}
-                          solid
-                        />
-                      }>
-                      {item.name}
-                    </Tag>
-                  );
+              <HorizontalCategories onPress={onCategoryPress} />
+            </Section>
+            <Section
+              title="Restaurant with Menus (New)"
+              subTitle="Find Restaurant with Menus, Now you can see the prices and available food items"
+              onViewAll={() =>
+                onBusinessesViewAllPress({
+                  title: 'Restaurants with Menu Online',
+                  tags: ['Menu'],
+                })
+              }
+              isLoading={false}>
+              <HorizontalBusinesses
+                onPress={onBusinessPress}
+                queryKey={['restaurants-with-menu']}
+                params={{
+                  tags: ['Menu'],
+                  fields: ['_id', 'name', 'thumbnail'],
                 }}
+              />
+            </Section>
+
+            <Section
+              title="Restaurants"
+              subTitle="Find Fast Food, Cakes, Pizza, Fries etc..."
+              onViewAll={() =>
+                onBusinessesViewAllPress({
+                  title: 'Restaurants',
+                  tags: ['Cakes', 'Fast Food', 'Cafe'],
+                })
+              }
+              isLoading={false}>
+              <HorizontalBusinesses
+                onPress={onBusinessPress}
+                queryKey={['restaurants']}
+                params={{ tags: ['Cakes', 'Fast Food', 'Cafe'] }}
+              />
+            </Section>
+            <Section
+              title="Transport"
+              subTitle="Find Courier Service, Shuttle Service, CAB Service, Van Service and Internation Flight Services"
+              onViewAll={() =>
+                onBusinessesViewAllPress({
+                  title: 'Transport',
+                  category: 'Transport',
+                })
+              }
+              isLoading={false}>
+              <HorizontalBusinesses
+                onPress={onBusinessPress}
+                queryKey={['Transport']}
+                params={{ category: 'Transport' }}
+              />
+            </Section>
+            <Section
+              title="Education"
+              subTitle="Find Schools, Book Shops, Quran Teachers, Home Tuitions"
+              onViewAll={() =>
+                onBusinessesViewAllPress({
+                  title: 'Education',
+                  category: 'Education',
+                })
+              }
+              isLoading={false}>
+              <HorizontalBusinesses
+                onPress={onBusinessPress}
+                queryKey={['Education']}
+                params={{ category: 'Education' }}
+              />
+            </Section>
+            <Section
+              title="Health & Fitness"
+              subTitle="Find GYMs, Hospitals, Pharmacies"
+              onViewAll={() =>
+                onBusinessesViewAllPress({
+                  title: 'Health & Fitness',
+                  category: 'Education',
+                })
+              }
+              isLoading={false}>
+              <HorizontalBusinesses
+                onPress={onBusinessPress}
+                queryKey={['Health & Fitness']}
+                params={{ category: 'Health & Fitness' }}
+              />
+            </Section>
+            <Section
+              title="Entertainment"
+              subTitle="Find DanZoo, Adventure Land (Theme Park), Dancing Fountain, Chirpy Part"
+              onViewAll={() =>
+                onBusinessesViewAllPress({
+                  title: 'Entertainment',
+                  category: 'Entertainment',
+                })
+              }
+              isLoading={false}>
+              <HorizontalBusinesses
+                onPress={onBusinessPress}
+                queryKey={['Entertainment']}
+                params={{ category: 'Entertainment' }}
+              />
+            </Section>
+            <Section
+              title="Maintenance and Services"
+              subTitle="Find services related repairing, fixing, "
+              onViewAll={() =>
+                onBusinessesViewAllPress({
+                  title: 'Maintenance and Services',
+                  category: 'Maintenance and Services',
+                })
+              }
+              isLoading={false}>
+              <HorizontalBusinesses
+                onPress={onBusinessPress}
+                queryKey={['Maintenance and Services']}
+                params={{ category: 'Maintenance and Services' }}
               />
             </Section>
           </View>
@@ -129,5 +271,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 18,
     marginBottom: 5,
+  },
+  newFeature: {
+    borderRadius: 15,
+    paddingHorizontal: 15,
+    height: 45,
+    justifyContent: 'center', //Centered horizontally
+    alignItems: 'center', //Centered vertically
+    flex: 1,
   },
 });
