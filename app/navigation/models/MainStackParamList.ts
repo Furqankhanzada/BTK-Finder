@@ -14,7 +14,8 @@ export type MainStackParamList = {
     title: string;
     popular?: boolean;
     recent?: boolean;
-    category?: string;
+    tags?: string | string[];
+    category?: string | string[];
     latitude?: number;
     longitude?: number;
   };
