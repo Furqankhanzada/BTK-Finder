@@ -36,7 +36,11 @@ export default function CategoryScreen(
   const [filteredCategories, setFilteredCategories] =
     useState<CategoryPresentable[]>();
 
-  const { isLoading, data: categries, refetch } = useCategories(['categories']);
+  const {
+    isLoading,
+    data: categories,
+    refetch,
+  } = useCategories(['categories']);
 
   const onChangeView = () => {
     Utils.enableExperimental();
@@ -53,13 +57,13 @@ export default function CategoryScreen(
   const onSearch = (text: string) => {
     setSearch(text);
     const cachedCategories: CategoryPresentable[] | undefined =
-      queryClient.getQueryData(['business-catagories']);
-    const filterCacheCatagory = cachedCategories?.filter(
+      queryClient.getQueryData(['categories']);
+    const filterCacheCategory = cachedCategories?.filter(
       (category: CategoryPresentable) => {
         return category.name.toLowerCase().includes(text.toLowerCase());
       },
     );
-    setFilteredCategories(filterCacheCatagory);
+    setFilteredCategories(filterCacheCategory);
   };
 
   const onRefresh = async () => {
@@ -157,7 +161,7 @@ export default function CategoryScreen(
               onRefresh={onRefresh}
             />
           }
-          data={filteredCategories ? filteredCategories : categries}
+          data={filteredCategories ? filteredCategories : categories}
           keyExtractor={(item) => item._id}
           renderItem={({ item }) => renderItem(item)}
           ListEmptyComponent={
