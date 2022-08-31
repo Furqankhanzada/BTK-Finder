@@ -34,8 +34,6 @@ import PlaceDetailPlaceholder from './Placeholders/placeDetail';
 export {
   TextInput,
   PlaceItem,
-  CategoryFull,
-  CategoryIcon,
   CardList,
   BookingTime,
   Image,

@@ -9,15 +9,7 @@ import {
 import { useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 
-import {
-  Header,
-  SafeAreaView,
-  Icon,
-  CategoryFull,
-  CategoryIcon,
-  TextInput,
-  Text,
-} from '@components';
+import { Header, SafeAreaView, Icon, TextInput, Text } from '@components';
 import * as Utils from '@utils';
 import { BaseStyle, BaseColor, useTheme } from '@config';
 
@@ -26,6 +18,8 @@ import { GlobalParamList } from 'navigation/models/GlobalParamList';
 import { StackScreenProps } from '@react-navigation/stack/lib/typescript/src/types';
 import CategoryPlaceHolder from './components/CategoryPlaceholder';
 import { CategoryPresentable } from './modals/CategoryPresentables';
+import CategoryIcon from './components/CategoryIcon';
+import CategoryFull from './components/CategoryFull';
 
 export default function CategoryScreen(
   props: StackScreenProps<GlobalParamList, 'Category'>,

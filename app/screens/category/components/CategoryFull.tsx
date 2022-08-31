@@ -14,9 +14,9 @@ import * as Utils from '@utils';
 export interface CategoryComponents {
   style?: StyleProp<ViewStyle>;
   title: string;
-  onPress: any;
+  onPress: () => void;
   icon: string;
-  image: any;
+  image: object;
 }
 
 export default function CategoryFull(props: CategoryComponents) {

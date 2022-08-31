@@ -13,9 +13,8 @@ import { Text, Icon } from '@components';
 export interface CategoryComponents {
   style?: StyleProp<ViewStyle>;
   title: string;
-  onPress: any;
+  onPress: () => void;
   icon: string;
-  image: any;
 }
 
 export default function CategoryIcon(props: CategoryComponents) {
