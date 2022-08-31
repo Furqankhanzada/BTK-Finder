@@ -18,8 +18,6 @@ import FilterSort from './FilterSort';
 import Image from './Image';
 import BookingTime from './BookingTime';
 import CardList from './CardList';
-import CategoryIcon from './CategoryIcon';
-import CategoryFull from './CategoryFull';
 import PlaceItem from './PlaceItem';
 import ProfileDescription from './ProfileDescription';
 import FeaturedCategoryPlaceholderComponent from './Placeholders/featuredCategories';
@@ -35,8 +33,6 @@ import PlaceDetailPlaceholder from './Placeholders/placeDetail';
 export {
   TextInput,
   PlaceItem,
-  CategoryFull,
-  CategoryIcon,
   CardList,
   BookingTime,
   Image,
