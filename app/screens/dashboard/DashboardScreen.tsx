@@ -15,6 +15,7 @@ import { GlobalParamList } from '../../navigation/models/GlobalParamList';
 import HorizontalBusinesses from '@screens/dashboard/components/HorizontalBusinesses';
 import { BusinessPresentable } from '@screens/businesses/models/BusinessPresentable';
 import { MainStackParamList } from '../../navigation/models/MainStackParamList';
+import VerticalBusinesses from '@screens/dashboard/components/VerticalBusinesses';
 
 export default function DashboardScreen({
   navigation,
@@ -240,6 +241,118 @@ export default function DashboardScreen({
                 onPress={onBusinessPress}
                 queryKey={['Maintenance and Services']}
                 params={{ category: 'Maintenance and Services' }}
+              />
+            </Section>
+            <Section
+              title="Real Estate"
+              subTitle="Find services related Real Estate and Builders"
+              onViewAll={() =>
+                onBusinessesViewAllPress({
+                  title: 'Real Estate',
+                  category: 'Real Estate',
+                })
+              }
+              isLoading={false}>
+              <HorizontalBusinesses
+                onPress={onBusinessPress}
+                queryKey={['Real Estate']}
+                params={{ category: 'Real Estate' }}
+              />
+            </Section>
+            <Section
+              title="Salons"
+              subTitle="Find Beauty Parlour and Salons"
+              onViewAll={() =>
+                onBusinessesViewAllPress({
+                  title: 'Salons',
+                  category: 'Salons',
+                })
+              }
+              isLoading={false}>
+              <HorizontalBusinesses
+                onPress={onBusinessPress}
+                queryKey={['Salons']}
+                params={{ category: 'Salons' }}
+              />
+            </Section>
+            <Section
+              title="Hardware Store"
+              subTitle="Find Hardware Stores"
+              onViewAll={() =>
+                onBusinessesViewAllPress({
+                  title: 'Hardware Store',
+                  category: 'Hardware Store',
+                })
+              }
+              isLoading={false}>
+              <HorizontalBusinesses
+                onPress={onBusinessPress}
+                queryKey={['Hardware Store']}
+                params={{ category: 'Hardware Store' }}
+              />
+            </Section>
+            <Section
+              title="Sewing & Alterations / Fabric Store"
+              subTitle="Find Sewing & Alterations / Fabric Store"
+              onViewAll={() =>
+                onBusinessesViewAllPress({
+                  title: 'Sewing & Alterations / Fabric Store',
+                  category: 'Sewing & Alterations / Fabric Store',
+                })
+              }
+              isLoading={false}>
+              <HorizontalBusinesses
+                onPress={onBusinessPress}
+                queryKey={['Sewing & Alterations / Fabric Store']}
+                params={{ category: 'Sewing & Alterations / Fabric Store' }}
+              />
+            </Section>
+            <Section
+              title="Supermarkets/Shopping"
+              subTitle="Find Supermarkets and Grocery Stores"
+              onViewAll={() =>
+                onBusinessesViewAllPress({
+                  title: 'Supermarkets/Shopping',
+                  category: 'Supermarkets/Shopping',
+                })
+              }
+              isLoading={false}>
+              <HorizontalBusinesses
+                onPress={onBusinessPress}
+                queryKey={['Supermarkets/Shopping']}
+                params={{ category: 'Supermarkets/Shopping' }}
+              />
+            </Section>
+            <Section
+              title="Recently Added Businesses"
+              subTitle="Lets find out what's new"
+              onViewAll={() =>
+                onBusinessesViewAllPress({
+                  title: 'Recently Added Businesses',
+                  recent: true,
+                })
+              }
+              isLoading={false}>
+              <VerticalBusinesses
+                onPress={onBusinessPress}
+                queryKey={['recent-businesses']}
+                params={{ recent: true }}
+              />
+            </Section>
+            <Section
+              title="Popular Businesses"
+              subTitle="Lets find out in which business people taking interest."
+              onViewAll={() =>
+                onBusinessesViewAllPress({
+                  title: 'Popular Businesses',
+                  popular: true,
+                })
+              }
+              isLoading={false}>
+              <VerticalBusinesses
+                onPress={onBusinessPress}
+                queryKey={['popular-businesses']}
+                params={{ popular: true }}
               />
             </Section>
           </View>
