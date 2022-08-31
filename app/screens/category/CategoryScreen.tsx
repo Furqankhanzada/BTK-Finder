@@ -36,11 +36,7 @@ export default function CategoryScreen(
   const [filteredCategories, setFilteredCategories] =
     useState<CategoryPresentable[]>();
 
-  const {
-    isLoading,
-    data: categries,
-    refetch,
-  } = useCategories(['business-catagories']);
+  const { isLoading, data: categries, refetch } = useCategories(['categories']);
 
   const onChangeView = () => {
     Utils.enableExperimental();
@@ -80,13 +76,9 @@ export default function CategoryScreen(
             icon={item.icon}
             title={item.name}
             onPress={() =>
-              navigation.navigate('Place', {
+              navigation.navigate('Businesses', {
                 title: item.name,
                 category: item.name,
-                categoryIcon: item.icon,
-                // route: item.route,
-                // latitude: route?.params?. latitude ?? null,
-                // longitude: route?.params?.longitude ?? null,
               })
             }
             style={[styles.itemIcon, { borderColor: colors.border }]}
@@ -99,10 +91,9 @@ export default function CategoryScreen(
             icon={item.icon}
             title={item.name}
             onPress={() =>
-              navigation.navigate('Place', {
+              navigation.navigate('Businesses', {
                 title: item.name,
                 category: item.name,
-                // route: item.route,
               })
             }
             style={styles.itemFull}

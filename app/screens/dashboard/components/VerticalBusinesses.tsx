@@ -21,6 +21,7 @@ export default function VerticalBusinesses({
 
   return (
     <FlatList
+      listKey={queryKey[0] as string}
       contentContainerStyle={styles.contentContainerStyle}
       data={businesses}
       keyExtractor={(item) => item._id}
