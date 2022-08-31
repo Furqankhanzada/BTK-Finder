@@ -2,23 +2,23 @@ import React from 'react';
 import {
   View,
   TouchableOpacity,
+  StyleSheet,
   StyleProp,
   ViewStyle,
-  StyleSheet,
 } from 'react-native';
 
 import { BaseColor, useTheme } from '@config';
 import { Text, Icon } from '@components';
 
-interface props {
+export interface CategoryComponents {
   style?: StyleProp<ViewStyle>;
-  icon: string;
   title: string;
-  subTitle?: string;
   onPress: any;
+  icon: string;
+  image: any;
 }
 
-export default function CategoryIcon(props: props) {
+export default function CategoryIcon(props: CategoryComponents) {
   const { colors } = useTheme();
   const { style, icon, title, onPress } = props;
   return (

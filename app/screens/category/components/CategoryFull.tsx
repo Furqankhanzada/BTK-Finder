@@ -2,32 +2,33 @@ import React from 'react';
 import {
   View,
   TouchableOpacity,
+  StyleSheet,
   StyleProp,
   ViewStyle,
-  StyleSheet,
 } from 'react-native';
 
 import { BaseColor, useTheme } from '@config';
-import { Text, Icon } from '@components';
+import { Text, Icon, Image } from '@components';
 import * as Utils from '@utils';
 
-interface props {
+export interface CategoryComponents {
   style?: StyleProp<ViewStyle>;
-  icon: any;
   title: string;
-  subTitle?: string;
   onPress: any;
-  image: object;
+  icon: string;
+  image: any;
 }
 
-export default function CategoryFull(props: props) {
+export default function CategoryFull(props: CategoryComponents) {
   const { colors } = useTheme();
-  const { style, icon, title, onPress } = props;
+  const { style, icon, title, onPress, image } = props;
   return (
     <TouchableOpacity
       style={[styles.contain, style]}
       onPress={onPress}
       activeOpacity={0.9}>
+      <Image source={image} style={styles.imageLoadStyle} />
+
       <View style={styles.contentIcon}>
         <View
           style={[styles.iconCircle, { backgroundColor: colors.primaryLight }]}>
