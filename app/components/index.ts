@@ -18,8 +18,6 @@ import FilterSort from './FilterSort';
 import Image from './Image';
 import BookingTime from './BookingTime';
 import CardList from './CardList';
-import CategoryIcon from '../screens/category/components/CategoryIcon';
-import CategoryFull from '../screens/category/components/CategoryFull';
 import PlaceItem from './PlaceItem';
 import ProfileDescription from './ProfileDescription';
 import HelpLineItem from './HelpLineItem';
