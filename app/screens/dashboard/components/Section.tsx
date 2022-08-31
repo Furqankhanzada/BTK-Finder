@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import { Text } from '@components';
+import { BaseColor } from '@config';
 
 interface Props {
   title: string;
@@ -22,9 +23,13 @@ export default function Section({
     <View style={styles.section}>
       <View style={styles.sectionHeader}>
         <View style={styles.sectionHeaderContent}>
-          {title ? <Text headline>{title}</Text> : null}
+          {title ? (
+            <Text headline semibold>
+              {title}
+            </Text>
+          ) : null}
           {subTitle ? (
-            <Text subhead grayColor>
+            <Text caption1 grayColor>
               {subTitle}
             </Text>
           ) : null}
@@ -44,7 +49,9 @@ export default function Section({
 
 const styles = StyleSheet.create({
   section: {
-    marginBottom: 25,
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderColor: BaseColor.fieldColor,
   },
   sectionHeader: {
     marginHorizontal: 20,
