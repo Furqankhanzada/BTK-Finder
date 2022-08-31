@@ -21,7 +21,6 @@ import { CategoryPresentable } from './modals/CategoryPresentables';
 import CategoryIcon from './components/CategoryIcon';
 import CategoryFull from './components/CategoryFull';
 
-
 export default function CategoryScreen(
   props: StackScreenProps<GlobalParamList, 'Category'>,
 ) {
@@ -96,7 +95,7 @@ export default function CategoryScreen(
       case 'full':
         return (
           <CategoryFull
-            image={item.image || 'https://i.ibb.co/VpvP0X5/empty-image.jpg',}
+            image={item.image || 'https://i.ibb.co/VpvP0X5/empty-image.jpg'}
             icon={item.icon}
             title={item.name}
             onPress={() =>
