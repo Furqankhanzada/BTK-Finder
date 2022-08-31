@@ -58,9 +58,10 @@ export default function BusinessesScreen(
   const [isSortLocation, setSortLocation] = useState(false);
 
   const user = useSelector((state: any) => state.profile);
+  const { title, ...restParams } = route.params;
   const { isLoading, data: businesses } = useBusinesses(
-    ['businesses2', route.params.category!],
-    { category: route.params.category },
+    ['businesses', title],
+    restParams,
   );
 
   const defaultRegion = {
@@ -638,7 +639,7 @@ export default function BusinessesScreen(
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
-        title={route.params.title || t('place')}
+        title={title || t('place')}
         renderLeft={() => {
           return (
             <Icon
