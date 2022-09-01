@@ -12,5 +12,5 @@ export interface BusinessParams {
   favorite?: boolean;
   popular?: boolean;
   recent?: boolean;
-  fields?: string[];
+  fields?: string;
 }

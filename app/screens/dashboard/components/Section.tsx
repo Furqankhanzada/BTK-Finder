@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import { Text } from '@components';
-import { BaseColor } from '@config';
+import { useTheme } from '@config';
 
 interface Props {
   title: string;
@@ -19,8 +19,9 @@ export default function Section({
   onViewAll,
   children,
 }: Props) {
+  const { colors } = useTheme();
   return (
-    <View style={styles.section}>
+    <View style={[styles.section, { borderColor: colors.card }]}>
       <View style={styles.sectionHeader}>
         <View style={styles.sectionHeaderContent}>
           {title ? (
@@ -51,7 +52,6 @@ const styles = StyleSheet.create({
   section: {
     paddingVertical: 15,
     borderBottomWidth: 1,
-    borderColor: BaseColor.fieldColor,
   },
   sectionHeader: {
     marginHorizontal: 20,

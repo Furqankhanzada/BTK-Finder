@@ -1,27 +1,46 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FlatList, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { StackScreenProps } from '@react-navigation/stack';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Header, SafeAreaView, Icon, Button, Text } from '@components';
 import { BaseStyle, useTheme } from '@config';
-
 import Section from '@screens/dashboard/components/Section';
 import { CategoryPresentable } from '@screens/category/modals/CategoryPresentables';
 import HorizontalCategories from '@screens/dashboard/components/HorizontalCategories';
-
-import { EVENTS, trackEvent } from '../../userTracking';
-import { GlobalParamList } from '../../navigation/models/GlobalParamList';
+import VerticalBusinesses from '@screens/dashboard/components/VerticalBusinesses';
 import HorizontalBusinesses from '@screens/dashboard/components/HorizontalBusinesses';
 import { BusinessPresentable } from '@screens/businesses/models/BusinessPresentable';
+
+import { EVENTS, setUser, trackEvent } from '../../userTracking';
+import { GlobalParamList } from '../../navigation/models/GlobalParamList';
 import { MainStackParamList } from '../../navigation/models/MainStackParamList';
-import VerticalBusinesses from '@screens/dashboard/components/VerticalBusinesses';
+import { getProfile } from '../../actions/auth';
 
 export default function DashboardScreen({
   navigation,
 }: StackScreenProps<GlobalParamList, 'Dashboard'>) {
   const { t } = useTranslation();
   const { colors } = useTheme();
+
+  const dispatch = useDispatch();
+  const isLogin = useSelector((state: any) => state.auth.isLogin);
+  const profileData = useSelector((state: any) => state.profile);
+
+  useEffect(() => {
+    if (isLogin) {
+      if (profileData?._id) {
+        setUser(profileData);
+      }
+    }
+  }, [isLogin, profileData, profileData?._id]);
+
+  useEffect(() => {
+    if (isLogin) {
+      dispatch(getProfile());
+    }
+  }, [dispatch, isLogin]);
 
   const onPressHelpLine = () => {
     navigation.navigate('HelpLine');
@@ -142,7 +161,7 @@ export default function DashboardScreen({
                 queryKey={['restaurants-with-menu']}
                 params={{
                   tags: ['Menu'],
-                  fields: ['_id', 'name', 'thumbnail'],
+                  fields: ['_id', 'name', 'thumbnail', 'favorites'].join(','),
                 }}
               />
             </Section>

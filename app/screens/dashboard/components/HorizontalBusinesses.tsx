@@ -3,8 +3,12 @@ import { StyleSheet, FlatList } from 'react-native';
 
 import { PlaceItem } from '@components';
 import { useBusinesses } from '@screens/businesses/queries/queries';
-import { BusinessPresentable } from '@screens/businesses/models/BusinessPresentable';
+import {
+  BusinessPresentable,
+  Favorite,
+} from '@screens/businesses/models/BusinessPresentable';
 import { BusinessParams } from '@screens/businesses/models/BusinessParams';
+import { useSelector } from 'react-redux';
 
 interface Props {
   queryKey: Array<string | number>;
@@ -17,6 +21,7 @@ export default function HorizontalBusinesses({
   params,
   onPress,
 }: Props) {
+  const user = useSelector((state: any) => state.profile);
   const { data: businesses } = useBusinesses(queryKey, params);
 
   return (
@@ -26,6 +31,7 @@ export default function HorizontalBusinesses({
       horizontal={true}
       keyExtractor={(item) => item._id}
       renderItem={({ item }) => {
+        console.log('item?.favorites ###', item?.favorites);
         return (
           <PlaceItem
             grid
@@ -34,9 +40,11 @@ export default function HorizontalBusinesses({
             // subtitle={item.category}
             // location={item?.address}
             rate={item?.averageRatings || 0.0}
-            // isFavorite={stateProps?.favoriteBusinesses?.some(
-            //   (obj: any) => obj._id === item?._id,
-            // )}
+            isFavorite={
+              !!item?.favorites?.find(
+                (favorite: Favorite) => favorite.ownerId === user._id,
+              )
+            }
             businessId={item?._id}
             // navigation={navigation}
             // lastRoute="Home"
