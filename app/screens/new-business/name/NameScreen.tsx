@@ -12,24 +12,23 @@ import { Header, Text, TextInput, Button } from '@components';
 import { BaseStyle } from '@config';
 
 import { StackScreenProps } from '@react-navigation/stack';
-import { GlobalParamList } from '../../navigation/models/GlobalParamList';
-import { MainStackParamList } from '../../navigation/models/MainStackParamList';
-
+import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
+import { MainStackParamList } from '../../../navigation/models/MainStackParamList';
 
 interface Props {
   navigation: any;
 }
 
-export const NameScreen = ({navigation}: StackScreenProps<GlobalParamList>) => {
-
-  const [inputValue, setInputValue] = useState<any>()
+export const NameScreen = ({
+  navigation,
+}: StackScreenProps<GlobalParamList>) => {
+  const [inputValue, setInputValue] = useState<any>();
 
   const scrollY = useRef(new Animated.Value(0)).current;
 
   const navigateToNewBusiness = () => {
     navigation.navigate('Discription');
   };
-
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
@@ -74,16 +73,17 @@ export const NameScreen = ({navigation}: StackScreenProps<GlobalParamList>) => {
                         // onChangeText={event => setInputValue(event.target.value)}
                       />
                     </View>
-                    
                   );
                 }}
               />
-              {
-                inputValue?.length >= 3 ? <View style={styles.stickyFooter}>
-                <Button>{'Back'}</Button>
-                <Button onPress={() => navigateToNewBusiness()}>{'Next'}</Button>
-              </View> : null
-              }
+              {inputValue?.length >= 3 ? (
+                <View style={styles.stickyFooter}>
+                  <Button>{'Back'}</Button>
+                  <Button onPress={() => navigateToNewBusiness()}>
+                    {'Next'}
+                  </Button>
+                </View>
+              ) : null}
             </>
           );
         }}
