@@ -14,7 +14,7 @@ import { LastRoutes, withAuthRedirection } from './hoc/withAuthRedirection';
 /* Bottom Screen */
 import Home from '@screens/Home';
 // import Notification from '@screens/Notification';
-import Business from '@screens/AddBusiness';
+import { NewBusinessStackNavigator } from '@screens/new-business/navigation/NewBusinessStack';
 import FavouriteScreen from '@screens/favourite/FavouriteScreen';
 import Messenger from '@screens/Messenger';
 import Profile from '@screens/Profile';
@@ -84,7 +84,7 @@ export default function Main() {
       <MainStack.Screen name="FinalReview" component={FinalReview} />
       <MainStack.Screen name="Gallery" component={Gallery} />
       <MainStack.Screen name="MyBusinesses" component={MyBusinesses} />
-      <MainStack.Screen name="EditBusiness" component={Business} />
+      {/* <MainStack.Screen name="EditBusiness" component={Business} /> */}
       <MainStack.Screen name="VerifyCode" component={VerifyCode} />
     </MainStack.Navigator>
   );
@@ -132,9 +132,9 @@ function MainBottomTabNavigator() {
         }}
       />
       <MainBottomTab.Screen
-        name="Business"
-        component={withAuthRedirection(Business, {
-          lastRoute: LastRoutes.Business,
+        name="NewBusinessStack"
+        component={withAuthRedirection(NewBusinessStackNavigator, {
+          lastRoute: LastRoutes.NewBusinessStack,
         })}
         options={{
           title: 'Add Business',

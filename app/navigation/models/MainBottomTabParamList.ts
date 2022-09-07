@@ -3,4 +3,5 @@ export type MainBottomTabParamList = {
   Favourite: undefined;
   Business: undefined;
   Profile: undefined;
+  NewBusinessStack: undefined;
 };
