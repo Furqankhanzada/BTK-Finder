@@ -1,12 +1,14 @@
 import React from 'react';
-import { NewBusinessContext } from './NewBusinessContext';
+import { NewBusinessContext } from '../context/NewBusinessContext';
 
-const NewBusinessContextState = (props) => {
+export const NewBusinessContextState = (props: any) => {
+  let dumy = {
+    name: 'Shahmir',
+    class: 'React-Native',
+  };
   return (
-    <NewBusinessContextState.provider>
+    <NewBusinessContext.Provider value={dumy}>
       {props.children}
-    </NewBusinessContextState.provider>
+    </NewBusinessContext.Provider>
   );
 };
-
-export default NewBusinessContextState;

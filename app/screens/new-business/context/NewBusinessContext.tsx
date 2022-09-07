@@ -4,8 +4,7 @@ interface contextInterface {
   name: string;
   author: string;
   url: string;
+  value: any;
 }
 
-const NewBusinessContext = createContext<contextInterface | null>(null);
-
-export default NewBusinessContext;
+export const NewBusinessContext = createContext<contextInterface | null>(null);

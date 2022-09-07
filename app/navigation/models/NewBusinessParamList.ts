@@ -8,4 +8,6 @@ export type NewBusinessParamList = {
   Email: undefined;
   Website: undefined;
   Established: undefined;
+  NewBusinessStack: undefined;
+  Business: undefined;
 };
