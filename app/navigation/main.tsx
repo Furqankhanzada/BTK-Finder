@@ -133,20 +133,18 @@ function MainBottomTabNavigator() {
       />
       <MainBottomTab.Screen
         name="NewBusinessStack"
-        component={withAuthRedirection(NewBusinessStackNavigator, {
-          lastRoute: LastRoutes.NewBusinessStack,
-        })}
+        component={NewBusinessStackNavigator}
         options={{
           title: 'Add Business',
           tabBarIcon: ({ color }) => {
             return <Icon color={color} name="business-time" size={20} solid />;
           },
         }}
-        listeners={() => ({
-          tabPress: () => {
-            dispatch(setEditBusiness(false));
-          },
-        })}
+        // listeners={() => ({
+        //   tabPress: () => {
+        //     dispatch(setEditBusiness(false));
+        //   },
+        // })}
       />
 
       {/* <BottomTab.Screen

@@ -17,27 +17,22 @@ const NewBusinessStack = createStackNavigator<NewBusinessParamList>();
 
 export function NewBusinessStackNavigator() {
   return (
-    <NewBusinessContextState>
-      <NewBusinessStack.Navigator>
-        <NewBusinessStack.Screen name="Name" component={NameScreen} />
-        <NewBusinessStack.Screen
-          name="Discription"
-          component={DiscriptionScreen}
-        />
-        <NewBusinessStack.Screen name="Category" component={CategoryScreen} />
-        <NewBusinessStack.Screen
-          name="Facilities"
-          component={FacilitiesScreen}
-        />
-        <NewBusinessStack.Screen name="Tags" component={TagsScreen} />
-        <NewBusinessStack.Screen name="Telephone" component={TelephoneScreen} />
-        <NewBusinessStack.Screen name="Email" component={EmailScreen} />
-        <NewBusinessStack.Screen name="Website" component={WebsiteScreen} />
-        <NewBusinessStack.Screen
-          name="Established"
-          component={EstablishedScreen}
-        />
-      </NewBusinessStack.Navigator>
-    </NewBusinessContextState>
+    <NewBusinessStack.Navigator>
+      <NewBusinessStack.Screen name="Name" component={NameScreen} />
+      <NewBusinessStack.Screen
+        name="Discription"
+        component={DiscriptionScreen}
+      />
+      <NewBusinessStack.Screen name="Category" component={CategoryScreen} />
+      <NewBusinessStack.Screen name="Facilities" component={FacilitiesScreen} />
+      <NewBusinessStack.Screen name="Tags" component={TagsScreen} />
+      <NewBusinessStack.Screen name="Telephone" component={TelephoneScreen} />
+      <NewBusinessStack.Screen name="Email" component={EmailScreen} />
+      <NewBusinessStack.Screen name="Website" component={WebsiteScreen} />
+      <NewBusinessStack.Screen
+        name="Established"
+        component={EstablishedScreen}
+      />
+    </NewBusinessStack.Navigator>
   );
 }

@@ -31,7 +31,7 @@ export const DiscriptionScreen = ({
         {({ values, handleChange }) => {
           return (
             <>
-              <ScrollView>
+              <ScrollView style={styles.container}>
                 <View>
                   <Text title1 bold>
                     Write Discription of your Business
