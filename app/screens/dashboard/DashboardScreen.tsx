@@ -12,6 +12,7 @@ import HorizontalCategories from '@screens/dashboard/components/HorizontalCatego
 import VerticalBusinesses from '@screens/dashboard/components/VerticalBusinesses';
 import HorizontalBusinesses from '@screens/dashboard/components/HorizontalBusinesses';
 import { BusinessPresentable } from '@screens/businesses/models/BusinessPresentable';
+import { BusinessesQueryKeysWithFav } from '@screens/businesses/models/BusinessesQueryKeys';
 
 import { EVENTS, setUser, trackEvent } from '../../userTracking';
 import { GlobalParamList } from '../../navigation/models/GlobalParamList';
@@ -158,7 +159,7 @@ export default function DashboardScreen({
               isLoading={false}>
               <HorizontalBusinesses
                 onPress={onBusinessPress}
-                queryKey={['restaurants-with-menu']}
+                queryKey={[BusinessesQueryKeysWithFav.restaurantsWithMenu]}
                 params={{
                   tags: ['Menu'],
                   fields: ['_id', 'name', 'thumbnail', 'favorites'].join(','),
@@ -178,7 +179,7 @@ export default function DashboardScreen({
               isLoading={false}>
               <HorizontalBusinesses
                 onPress={onBusinessPress}
-                queryKey={['restaurants']}
+                queryKey={[BusinessesQueryKeysWithFav.restaurants]}
                 params={{ tags: ['Cakes', 'Fast Food', 'Cafe'] }}
               />
             </Section>
@@ -194,7 +195,7 @@ export default function DashboardScreen({
               isLoading={false}>
               <HorizontalBusinesses
                 onPress={onBusinessPress}
-                queryKey={['Transport']}
+                queryKey={[BusinessesQueryKeysWithFav.transport]}
                 params={{ category: 'Transport' }}
               />
             </Section>
@@ -210,7 +211,7 @@ export default function DashboardScreen({
               isLoading={false}>
               <HorizontalBusinesses
                 onPress={onBusinessPress}
-                queryKey={['Education']}
+                queryKey={[BusinessesQueryKeysWithFav.education]}
                 params={{ category: 'Education' }}
               />
             </Section>
@@ -226,7 +227,7 @@ export default function DashboardScreen({
               isLoading={false}>
               <HorizontalBusinesses
                 onPress={onBusinessPress}
-                queryKey={['Health & Fitness']}
+                queryKey={[BusinessesQueryKeysWithFav.healthFitness]}
                 params={{ category: 'Health & Fitness' }}
               />
             </Section>
@@ -242,7 +243,7 @@ export default function DashboardScreen({
               isLoading={false}>
               <HorizontalBusinesses
                 onPress={onBusinessPress}
-                queryKey={['Entertainment']}
+                queryKey={[BusinessesQueryKeysWithFav.entertainment]}
                 params={{ category: 'Entertainment' }}
               />
             </Section>
@@ -258,7 +259,7 @@ export default function DashboardScreen({
               isLoading={false}>
               <HorizontalBusinesses
                 onPress={onBusinessPress}
-                queryKey={['Maintenance and Services']}
+                queryKey={[BusinessesQueryKeysWithFav.maintenanceAndServices]}
                 params={{ category: 'Maintenance and Services' }}
               />
             </Section>
@@ -274,7 +275,7 @@ export default function DashboardScreen({
               isLoading={false}>
               <HorizontalBusinesses
                 onPress={onBusinessPress}
-                queryKey={['Real Estate']}
+                queryKey={[BusinessesQueryKeysWithFav.realEstate]}
                 params={{ category: 'Real Estate' }}
               />
             </Section>
@@ -290,7 +291,7 @@ export default function DashboardScreen({
               isLoading={false}>
               <HorizontalBusinesses
                 onPress={onBusinessPress}
-                queryKey={['Salons']}
+                queryKey={[BusinessesQueryKeysWithFav.salons]}
                 params={{ category: 'Salons' }}
               />
             </Section>
@@ -306,7 +307,7 @@ export default function DashboardScreen({
               isLoading={false}>
               <HorizontalBusinesses
                 onPress={onBusinessPress}
-                queryKey={['Hardware Store']}
+                queryKey={[BusinessesQueryKeysWithFav.hardwareStore]}
                 params={{ category: 'Hardware Store' }}
               />
             </Section>
@@ -322,7 +323,9 @@ export default function DashboardScreen({
               isLoading={false}>
               <HorizontalBusinesses
                 onPress={onBusinessPress}
-                queryKey={['Sewing & Alterations / Fabric Store']}
+                queryKey={[
+                  BusinessesQueryKeysWithFav.sewingAlterationsAndFabricStore,
+                ]}
                 params={{ category: 'Sewing & Alterations / Fabric Store' }}
               />
             </Section>
@@ -338,7 +341,7 @@ export default function DashboardScreen({
               isLoading={false}>
               <HorizontalBusinesses
                 onPress={onBusinessPress}
-                queryKey={['Supermarkets/Shopping']}
+                queryKey={[BusinessesQueryKeysWithFav.supermarketsShopping]}
                 params={{ category: 'Supermarkets/Shopping' }}
               />
             </Section>

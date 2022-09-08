@@ -8,6 +8,7 @@ import CustomSectionList from '@screens/Home/CustomSectionList';
 import { useBusinesses } from '@screens/businesses/queries/queries';
 import { BusinessPresentable } from '@screens/businesses/models/BusinessPresentable';
 import { GlobalParamList } from '../../../../navigation/models/GlobalParamList';
+import { BusinessesQueryKeysWithFav } from '@screens/businesses/models/BusinessesQueryKeys';
 
 interface Props {
   onNavigate: (route: keyof GlobalParamList, id?: string) => void;
@@ -19,7 +20,7 @@ export default function Recommendations({ business, onNavigate }: Props) {
   const user = useSelector((state: any) => state.profile);
   // Recent Businesses
   const { isLoading: isRecentLoading, data: recentBusinesses } = useBusinesses(
-    ['recent-businesses'],
+    [BusinessesQueryKeysWithFav.recentBusinesses],
     {
       recent: true,
       limit: 5,

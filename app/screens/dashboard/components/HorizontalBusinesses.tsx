@@ -31,7 +31,6 @@ export default function HorizontalBusinesses({
       horizontal={true}
       keyExtractor={(item) => item._id}
       renderItem={({ item }) => {
-        console.log('item?.favorites ###', item?.favorites);
         return (
           <PlaceItem
             grid
