@@ -10,7 +10,14 @@ import {
 import { Formik } from 'formik';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { Header, Text, TextInput, Button, Icon } from '@components';
+import {
+  Header,
+  Text,
+  TextInput,
+  Button,
+  Icon,
+  ListThumbCircle,
+} from '@components';
 import { BaseColor, BaseStyle, useTheme } from '@config';
 
 import { useCategories } from '../../category/queries/queries';
@@ -18,6 +25,7 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { ScrollView } from 'react-native-gesture-handler';
 import { CategoryPresentable } from '@screens/category/modals/CategoryPresentables';
+import CategoryIcon from '@screens/category/components/CategoryIcon';
 
 export const CategoryScreen = ({
   navigation,
@@ -29,6 +37,7 @@ export const CategoryScreen = ({
   const [search, setSearch] = useState<string>('');
   const [filteredCategories, setFilteredCategories] =
     useState<CategoryPresentable[]>();
+  const [active, setActive] = useState<boolean>(false);
 
   const {
     isLoading,
@@ -42,7 +51,7 @@ export const CategoryScreen = ({
   };
 
   const navigateToBack = () => {
-    navigation.navigate('Discription');
+    navigation.goBack();
   };
 
   const onRefresh = async () => {
@@ -66,17 +75,10 @@ export const CategoryScreen = ({
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header title="Select Category" />
-      {/* <Formik
-        initialValues={{ category: '' }}
-        onSubmit={(values) => {
-          console.log('Formik Values', values);
-        }}>
-        {({ values, handleChange }) => {
-          return ( */}
       <View style={styles.viewContainer}>
         <TextInput
           onChangeText={onSearch}
-          placeholder={'search'}
+          placeholder={'Search category'}
           value={search}
           icon={
             <TouchableOpacity
@@ -102,14 +104,42 @@ export const CategoryScreen = ({
           data={filteredCategories ? filteredCategories : categries}
           renderItem={({ item }) => {
             return (
-              <Text
-                style={[
-                  styles.renderItemList,
-                  { borderBottomColor: colors.primary },
-                ]}>
-                {item.name}
-              </Text>
+              <CategoryIcon
+                icon={item.icon}
+                title={item.name}
+                onPress={
+                  () => {
+                    {
+                      // console.log('OnPress :', item._id);
+                      setActive(true);
+                    }
+                  }
+
+                  // navigation.navigate('', {
+                  //   title: item.name,
+                  //   category: item.name,
+                  //   categoryIcon: item.icon,
+                  //   // route: item.route,
+                  //   // latitude: route?.params?. latitude ?? null,
+                  //   // longitude: route?.params?.longitude ?? null,
+                  // })
+                }
+                style={
+                  active
+                    ? [styles.itemIcon, { borderColor: colors.border }]
+                    : [styles.itemIcon, { borderColor: 'blue' }]
+                }
+              />
             );
+            // return (
+            //   <Text
+            //     style={[
+            //       styles.renderItemList,
+            //       { borderBottomColor: colors.primary },
+            //     ]}>
+            //     {item.name}
+            //   </Text>
+            // );
           }}
           ListEmptyComponent={
             <View>
@@ -132,6 +162,7 @@ const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
     flex: 1,
+    paddingVertical: 20,
   },
   input: {
     marginTop: 15,
@@ -150,5 +181,16 @@ const styles = StyleSheet.create({
   viewContainer: {
     paddingHorizontal: 20,
     paddingVertical: 15,
+  },
+  itemIcon: {
+    marginBottom: 10,
+    borderBottomWidth: 0.5,
+    paddingBottom: 10,
+  },
+  activeItem: {
+    marginBottom: 10,
+    borderBottomWidth: 0.5,
+    paddingBottom: 10,
+    borderBottomColor: 'blue',
   },
 });

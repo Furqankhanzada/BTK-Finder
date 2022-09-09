@@ -17,7 +17,7 @@ const NewBusinessStack = createStackNavigator<NewBusinessParamList>();
 
 export function NewBusinessStackNavigator() {
   return (
-    <NewBusinessStack.Navigator>
+    <NewBusinessStack.Navigator screenOptions={{ headerShown: false }}>
       <NewBusinessStack.Screen name="Name" component={NameScreen} />
       <NewBusinessStack.Screen
         name="Discription"

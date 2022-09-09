@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, StyleSheet, View } from 'react-native';
+import { FlatList, SafeAreaView, StyleSheet, View } from 'react-native';
 import { Formik } from 'formik';
 
 import { Header, Text, TextInput, Button } from '@components';
@@ -17,7 +17,7 @@ export const FacilitiesScreen = ({
   };
 
   const navigateToBack = () => {
-    navigation.navigate('Category');
+    navigation.goBack();
   };
 
   return (
@@ -31,25 +31,33 @@ export const FacilitiesScreen = ({
         {({ values, handleChange }) => {
           return (
             <>
-              <ScrollView style={styles.container}>
-                <View>
-                  <Text title1 bold>
-                    Select facilities about your Business
-                  </Text>
-                  <TextInput
-                    style={styles.input}
-                    placeholder="Select facilities"
-                    value={values.facilities}
-                    onChangeText={handleChange('facilities')}
-                  />
+              <FlatList
+                style={styles.container}
+                overScrollMode={'never'}
+                scrollEventThrottle={16}
+                data={[1]}
+                renderItem={() => {
+                  return (
+                    <View>
+                      <Text title1 bold>
+                        Select facilities about your Business
+                      </Text>
+                      <TextInput
+                        style={styles.input}
+                        placeholder="Add Discription"
+                        value={values.facilities}
+                        onChangeText={handleChange('facilities')}
+                      />
+                    </View>
+                  );
+                }}
+              />
+              {values.facilities?.length >= 3 ? (
+                <View style={styles.stickyFooter}>
+                  <Button onPress={() => navigateToBack()}>{'Back'}</Button>
+                  <Button onPress={() => navigateToNext()}>{'Next'}</Button>
                 </View>
-                {values.facilities?.length >= 3 ? (
-                  <View style={styles.stickyFooter}>
-                    <Button onPress={() => navigateToBack()}>{'Back'}</Button>
-                    <Button onPress={() => navigateToNext()}>{'Next'}</Button>
-                  </View>
-                ) : null}
-              </ScrollView>
+              ) : null}
             </>
           );
         }}

@@ -32,25 +32,33 @@ export const NameScreen = ({
         {({ values, handleChange }) => {
           return (
             <>
-              <ScrollView style={styles.container}>
-                <View>
-                  <Text title1 bold>
-                    What is your Business name ?
-                  </Text>
-                  <TextInput
-                    style={styles.input}
-                    placeholder="Business name ?"
-                    value={values.title}
-                    onChangeText={handleChange('title')}
-                  />
+              <FlatList
+                style={styles.container}
+                overScrollMode={'never'}
+                scrollEventThrottle={16}
+                data={[1]}
+                renderItem={() => {
+                  return (
+                    <View>
+                      <Text title1 bold>
+                        What is your Business name ?
+                      </Text>
+                      <TextInput
+                        style={styles.input}
+                        placeholder="Business name ?"
+                        value={values.title}
+                        onChangeText={handleChange('title')}
+                      />
+                    </View>
+                  );
+                }}
+              />
+              {values.title?.length >= 3 ? (
+                <View style={styles.stickyFooter}>
+                  <Button>{'Back'}</Button>
+                  <Button onPress={() => navigateToNext()}>{'Next'}</Button>
                 </View>
-                {values.title?.length >= 3 ? (
-                  <View style={styles.stickyFooter}>
-                    <Button>{'Back'}</Button>
-                    <Button onPress={() => navigateToNext()}>{'Next'}</Button>
-                  </View>
-                ) : null}
-              </ScrollView>
+              ) : null}
             </>
           );
         }}
@@ -71,6 +79,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
+    // paddingTop: 200,
     marginBottom: 15,
   },
 });
