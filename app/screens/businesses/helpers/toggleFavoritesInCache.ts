@@ -1,7 +1,9 @@
+import { QueryClient } from '@tanstack/react-query';
+
 import { BusinessPresentable } from '@screens/businesses/models/BusinessPresentable';
 import { BusinessesQueryKeysWithFav } from '@screens/businesses/models/BusinessesQueryKeys';
 import { FavoritesMutationVar } from '@screens/businesses/queries/mutations';
-import { QueryClient } from '@tanstack/react-query';
+import { handleError } from '@utils';
 
 export const toggleFavoritesInCache = (
   queryClient: QueryClient,
@@ -9,6 +11,7 @@ export const toggleFavoritesInCache = (
   currentUserId: string,
   updatedBusiness: BusinessPresentable,
 ) => {
+  queryClient.invalidateQueries(['favourite-businesses']).catch(handleError);
   queryClient
     .getQueryCache()
     .getAll()
