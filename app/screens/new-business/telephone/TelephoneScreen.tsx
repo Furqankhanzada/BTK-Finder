@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, SafeAreaView, StyleSheet, View } from 'react-native';
+import { FlatList, SafeAreaView, View } from 'react-native';
 import { Formik } from 'formik';
 
 import { Header, Text, TextInput, Button } from '@components';
@@ -7,7 +7,7 @@ import { BaseStyle } from '@config';
 
 import { StackScreenProps } from '@react-navigation/stack';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
-import { ScrollView } from 'react-native-gesture-handler';
+import { styles } from '../styles/styles';
 
 export const TelephoneScreen = ({
   navigation,
@@ -65,19 +65,3 @@ export const TelephoneScreen = ({
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 20,
-    flex: 1,
-  },
-  input: {
-    marginTop: 15,
-  },
-  stickyFooter: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    marginBottom: 15,
-  },
-});

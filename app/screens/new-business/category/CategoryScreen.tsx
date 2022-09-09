@@ -3,27 +3,18 @@ import {
   FlatList,
   RefreshControl,
   SafeAreaView,
-  StyleSheet,
   TouchableOpacity,
   View,
 } from 'react-native';
-import { Formik } from 'formik';
 import { useQueryClient } from '@tanstack/react-query';
 
-import {
-  Header,
-  Text,
-  TextInput,
-  Button,
-  Icon,
-  ListThumbCircle,
-} from '@components';
+import { Header, Text, TextInput, Button, Icon } from '@components';
 import { BaseColor, BaseStyle, useTheme } from '@config';
 
 import { useCategories } from '../../category/queries/queries';
 import { StackScreenProps } from '@react-navigation/stack';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
-import { ScrollView } from 'react-native-gesture-handler';
+import { styles } from '../styles/styles';
 import { CategoryPresentable } from '@screens/category/modals/CategoryPresentables';
 import CategoryIcon from '@screens/category/components/CategoryIcon';
 
@@ -102,44 +93,22 @@ export const CategoryScreen = ({
             />
           }
           data={filteredCategories ? filteredCategories : categries}
-          renderItem={({ item }) => {
+          renderItem={({ item, index }) => {
             return (
               <CategoryIcon
                 icon={item.icon}
                 title={item.name}
-                onPress={
-                  () => {
-                    {
-                      // console.log('OnPress :', item._id);
-                      setActive(true);
-                    }
+                onPress={() => {
+                  {
                   }
-
-                  // navigation.navigate('', {
-                  //   title: item.name,
-                  //   category: item.name,
-                  //   categoryIcon: item.icon,
-                  //   // route: item.route,
-                  //   // latitude: route?.params?. latitude ?? null,
-                  //   // longitude: route?.params?.longitude ?? null,
-                  // })
-                }
+                }}
                 style={
-                  active
+                  !active
                     ? [styles.itemIcon, { borderColor: colors.border }]
                     : [styles.itemIcon, { borderColor: 'blue' }]
                 }
               />
             );
-            // return (
-            //   <Text
-            //     style={[
-            //       styles.renderItemList,
-            //       { borderBottomColor: colors.primary },
-            //     ]}>
-            //     {item.name}
-            //   </Text>
-            // );
           }}
           ListEmptyComponent={
             <View>
@@ -151,46 +120,6 @@ export const CategoryScreen = ({
           <Button onPress={() => navigateToNext()}>{'Next'}</Button>
         </View>
       </>
-      {/* );
-        }}
-      </Formik> */}
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 20,
-    flex: 1,
-    paddingVertical: 20,
-  },
-  input: {
-    marginTop: 15,
-  },
-  stickyFooter: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    marginBottom: 15,
-  },
-  renderItemList: {
-    fontSize: 18,
-    lineHeight: 45,
-    borderBottomWidth: 2,
-  },
-  viewContainer: {
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-  },
-  itemIcon: {
-    marginBottom: 10,
-    borderBottomWidth: 0.5,
-    paddingBottom: 10,
-  },
-  activeItem: {
-    marginBottom: 10,
-    borderBottomWidth: 0.5,
-    paddingBottom: 10,
-    borderBottomColor: 'blue',
-  },
-});
