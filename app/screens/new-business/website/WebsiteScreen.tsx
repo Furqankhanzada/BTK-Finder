@@ -1,6 +1,7 @@
 import React from 'react';
 import { FlatList, SafeAreaView, View } from 'react-native';
 import { Formik } from 'formik';
+import * as Yup from 'yup';
 
 import { Header, Text, TextInput, Button } from '@components';
 import { BaseStyle } from '@config';
@@ -9,13 +10,16 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
 
+const webRejex =
+  /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/;
+
+const webSchema = Yup.object({
+  website: Yup.string().matches(webRejex, 'Please enter website'),
+});
+
 export const WebsiteScreen = ({
   navigation,
 }: StackScreenProps<GlobalParamList>) => {
-  const navigateToNext = () => {
-    navigation.navigate('Established');
-  };
-
   const navigateToBack = () => {
     navigation.goBack();
   };
@@ -25,10 +29,11 @@ export const WebsiteScreen = ({
       <Header title="Business Website" />
       <Formik
         initialValues={{ website: '' }}
+        validationSchema={webSchema}
         onSubmit={(values) => {
-          console.log('Formik Values', values);
+          navigation.navigate('Established');
         }}>
-        {({ values, handleChange }) => {
+        {({ values, handleChange, handleSubmit }) => {
           return (
             <>
               <FlatList
@@ -55,7 +60,9 @@ export const WebsiteScreen = ({
               {values.website?.length >= 3 ? (
                 <View style={styles.stickyFooter}>
                   <Button onPress={() => navigateToBack()}>{'Back'}</Button>
-                  <Button onPress={() => navigateToNext()}>{'Next'}</Button>
+                  <Button title="submit" onPress={handleSubmit}>
+                    {'Next'}
+                  </Button>
                 </View>
               ) : null}
             </>

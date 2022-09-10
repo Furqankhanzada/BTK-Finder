@@ -1,6 +1,7 @@
 import React from 'react';
-import { FlatList, SafeAreaView, StyleSheet, View } from 'react-native';
+import { FlatList, SafeAreaView, View } from 'react-native';
 import { Formik } from 'formik';
+import * as Yup from 'yup';
 
 import { Header, Text, TextInput, Button } from '@components';
 import { BaseStyle } from '@config';
@@ -9,13 +10,13 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
 
+const discriptionSchema = Yup.object({
+  discription: Yup.string().required().min(10),
+});
+
 export const DiscriptionScreen = ({
   navigation,
 }: StackScreenProps<GlobalParamList>) => {
-  const navigateToNext = () => {
-    navigation.navigate('Category');
-  };
-
   const navigateToBack = () => {
     navigation.goBack();
   };
@@ -25,10 +26,11 @@ export const DiscriptionScreen = ({
       <Header title="Add Discription" />
       <Formik
         initialValues={{ discription: '' }}
+        validationSchema={discriptionSchema}
         onSubmit={(values) => {
-          console.log('Formik Values', values);
+          navigation.navigate('Category');
         }}>
-        {({ values, handleChange }) => {
+        {({ values, handleChange, handleSubmit }) => {
           return (
             <>
               <FlatList
@@ -55,7 +57,9 @@ export const DiscriptionScreen = ({
               {values.discription?.length >= 3 ? (
                 <View style={styles.stickyFooter}>
                   <Button onPress={() => navigateToBack()}>{'Back'}</Button>
-                  <Button onPress={() => navigateToNext()}>{'Next'}</Button>
+                  <Button title="submit" onPress={handleSubmit}>
+                    {'Next'}
+                  </Button>
                 </View>
               ) : null}
             </>

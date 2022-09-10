@@ -1,6 +1,7 @@
 import React from 'react';
 import { FlatList, SafeAreaView, View } from 'react-native';
 import { Formik } from 'formik';
+import * as Yup from 'yup';
 
 import { Header, Text, TextInput, Button } from '@components';
 import { BaseStyle } from '@config';
@@ -9,23 +10,24 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
 
+const nameSchema = Yup.object({
+  title: Yup.string().required().min(6),
+});
+
 export const NameScreen = ({
   navigation,
 }: StackScreenProps<GlobalParamList>) => {
-  const navigateToNext = () => {
-    navigation.navigate('Discription');
-  };
-
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header title="Add Business" />
 
       <Formik
         initialValues={{ title: '' }}
+        validationSchema={nameSchema}
         onSubmit={(values) => {
-          console.log('Formik Values', values);
+          navigation.navigate('Discription');
         }}>
-        {({ values, handleChange }) => {
+        {({ values, handleChange, handleSubmit }) => {
           return (
             <>
               <FlatList
@@ -52,7 +54,9 @@ export const NameScreen = ({
               {values.title?.length >= 3 ? (
                 <View style={styles.stickyFooter}>
                   <Button>{'Back'}</Button>
-                  <Button onPress={() => navigateToNext()}>{'Next'}</Button>
+                  <Button title="submit" onPress={handleSubmit}>
+                    {'Next'}
+                  </Button>
                 </View>
               ) : null}
             </>

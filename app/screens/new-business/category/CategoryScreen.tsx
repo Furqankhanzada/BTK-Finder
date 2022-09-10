@@ -36,7 +36,6 @@ export const CategoryScreen = ({
     refetch,
   } = useCategories(['select-category']);
 
-  console.log('new business categpries :', categries);
   const navigateToNext = () => {
     navigation.navigate('Facilities');
   };
