@@ -52,12 +52,13 @@ export const FacilitiesScreen = ({
                   );
                 }}
               />
-              {values.facilities?.length >= 3 ? (
-                <View style={styles.stickyFooter}>
-                  <Button onPress={() => navigateToBack()}>{'Back'}</Button>
+
+              <View style={styles.stickyFooter}>
+                <Button onPress={() => navigateToBack()}>{'Back'}</Button>
+                {values.facilities?.length >= 3 ? (
                   <Button onPress={() => navigateToNext()}>{'Next'}</Button>
-                </View>
-              ) : null}
+                ) : null}
+              </View>
             </>
           );
         }}

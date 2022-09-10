@@ -11,7 +11,7 @@ import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
 
 const nameSchema = Yup.object({
-  title: Yup.string().required().min(6),
+  title: Yup.string().required().min(3),
 });
 
 export const NameScreen = ({

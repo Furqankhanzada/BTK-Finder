@@ -54,14 +54,15 @@ export const DiscriptionScreen = ({
                   );
                 }}
               />
-              {values.discription?.length >= 3 ? (
-                <View style={styles.stickyFooter}>
-                  <Button onPress={() => navigateToBack()}>{'Back'}</Button>
+
+              <View style={styles.stickyFooter}>
+                <Button onPress={() => navigateToBack()}>{'Back'}</Button>
+                {values.discription?.length >= 6 ? (
                   <Button title="submit" onPress={handleSubmit}>
                     {'Next'}
                   </Button>
-                </View>
-              ) : null}
+                ) : null}
+              </View>
             </>
           );
         }}

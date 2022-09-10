@@ -64,14 +64,15 @@ export const TelephoneScreen = ({
                   );
                 }}
               />
-              {values.telephone?.length >= 3 ? (
-                <View style={styles.stickyFooter}>
-                  <Button onPress={() => navigateToBack()}>{'Back'}</Button>
+
+              <View style={styles.stickyFooter}>
+                <Button onPress={() => navigateToBack()}>{'Back'}</Button>
+                {values.telephone?.length >= 3 ? (
                   <Button title="submit" onPress={handleSubmit}>
                     {'Next'}
                   </Button>
-                </View>
-              ) : null}
+                ) : null}
+              </View>
             </>
           );
         }}

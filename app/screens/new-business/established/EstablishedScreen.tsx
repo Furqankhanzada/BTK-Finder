@@ -1,17 +1,10 @@
-import React, { Fragment, useState } from 'react';
-import {
-  FlatList,
-  Platform,
-  SafeAreaView,
-  ScrollView,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React, { useState } from 'react';
+import { SafeAreaView, ScrollView, TouchableOpacity, View } from 'react-native';
 import { Formik } from 'formik';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
-import { Header, Text, TextInput, Button } from '@components';
-import { BaseColor, BaseStyle, useTheme } from '@config';
+import { Header, Text, Button } from '@components';
+import { BaseStyle, useTheme } from '@config';
 
 import { StackScreenProps } from '@react-navigation/stack';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
@@ -44,10 +37,6 @@ export const EstablishedScreen = ({
   const { colors } = useTheme();
   const cardColor = colors.card;
 
-  const offsetKeyboard = Platform.select({
-    ios: 0,
-    android: 20,
-  });
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header title="Bhsiness Established" />
@@ -56,62 +45,44 @@ export const EstablishedScreen = ({
         onSubmit={(values) => {
           console.log('Formik Values', values);
         }}>
-        {({ values, handleChange, errors, setFieldValue }) => {
+        {({ values, setFieldValue }) => {
           return (
-            <Fragment>
-              <ScrollView
-                behavior={Platform.OS === 'android' ? 'height' : 'padding'}
-                keyboardVerticalOffset={offsetKeyboard}
-                style={styles.container}>
+            <ScrollView style={styles.container}>
+              <View>
                 <View>
-                  <View>
-                    <Text title1 bold>
-                      When you have established your Business in BTK?
-                    </Text>
-                  </View>
-
-                  <View style={GlobalStyle.inputContainer}>
-                    <TouchableOpacity
-                      onPress={() => toggleDatePicker()}
-                      style={[
-                        GlobalStyle.datePickerContainer,
-                        { backgroundColor: cardColor },
-                      ]}>
-                      <Text
-                        style={[
-                          GlobalStyle.datePickerContainerText,
-                          {
-                            color: values.establish
-                              ? colors.text
-                              : BaseColor.grayColor,
-                          },
-                        ]}>
-                        {values.establish
-                          ? moment(values.establish).format('DD/MM/YYYY')
-                          : 'Established Date [YYYY/MM/DD]'}
-                      </Text>
-                    </TouchableOpacity>
-                    {errors.establish ? (
-                      <Text style={GlobalStyle.errorText}>
-                        {errors.establish}
-                      </Text>
-                    ) : null}
-                  </View>
+                  <Text title1 bold>
+                    When you have established your Business in BTK?
+                  </Text>
                 </View>
-              </ScrollView>
-              <DateTimePickerModal
-                isVisible={isDatePickerVisible}
-                mode="date"
-                onConfirm={(date) => handleConfirm(date, setFieldValue)}
-                onCancel={toggleDatePicker}
-              />
+
+                <View style={GlobalStyle.inputContainer}>
+                  <TouchableOpacity
+                    onPress={() => toggleDatePicker()}
+                    style={[
+                      GlobalStyle.datePickerContainer,
+                      { backgroundColor: cardColor },
+                    ]}>
+                    <Text>
+                      {values.establish
+                        ? moment(values.establish).format('DD/MM/YYYY')
+                        : 'Established Date [YYYY/MM/DD]'}
+                    </Text>
+                    <DateTimePickerModal
+                      isVisible={isDatePickerVisible}
+                      mode="date"
+                      onConfirm={(date) => handleConfirm(date, setFieldValue)}
+                      onCancel={toggleDatePicker}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
               {values.establish?.length >= 3 ? (
                 <View style={styles.stickyFooter}>
                   <Button onPress={() => navigateToBack()}>{'Back'}</Button>
                   <Button>{'Next'}</Button>
                 </View>
               ) : null}
-            </Fragment>
+            </ScrollView>
           );
         }}
       </Formik>
