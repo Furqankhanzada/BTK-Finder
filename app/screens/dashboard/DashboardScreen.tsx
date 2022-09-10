@@ -221,7 +221,7 @@ export default function DashboardScreen({
               onViewAll={() =>
                 onBusinessesViewAllPress({
                   title: 'Health & Fitness',
-                  category: 'Education',
+                  category: 'Health & Fitness',
                 })
               }
               isLoading={false}>

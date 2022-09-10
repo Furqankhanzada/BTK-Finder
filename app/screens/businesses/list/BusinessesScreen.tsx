@@ -1,6 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   RefreshControl,
+  ActivityIndicator,
   View,
   Animated,
   Alert,
@@ -9,10 +10,12 @@ import {
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import Carousel from 'react-native-snap-carousel';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { StackScreenProps } from '@react-navigation/stack';
 
 import { BaseStyle, BaseColor, useTheme } from '@config';
+import { useBusinessesInfinite } from '@screens/businesses/queries/queries';
+import { BusinessPresentable } from '@screens/businesses/models/BusinessPresentable';
 import * as Utils from '@utils';
 import {
   Header,
@@ -27,8 +30,6 @@ import {
 
 import { EVENTS, trackEvent } from '../../../userTracking';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
-import { useBusinesses } from '@screens/businesses/queries/queries';
-import { BusinessPresentable } from '@screens/businesses/models/BusinessPresentable';
 
 // interface Coordinates {
 //   latitude: number;
@@ -53,16 +54,25 @@ export default function BusinessesScreen(
   props: StackScreenProps<GlobalParamList, 'Businesses'>,
 ) {
   const { navigation, route } = props;
-  const dispatch = useDispatch();
-  const [skip, setSkip] = useState(0);
   const [isSortLocation, setSortLocation] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
 
   const user = useSelector((state: any) => state.profile);
   const { title, ...restParams } = route.params;
-  const { isLoading, data: businesses } = useBusinesses(
-    ['businesses', title],
-    restParams,
-  );
+
+  const {
+    isLoading,
+    data,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    refetch,
+  } = useBusinessesInfinite(['businesses', title], {
+    ...restParams,
+    limit: 20,
+  });
+
+  const allBusinesses = data?.pages.map((businesses) => businesses).flat();
 
   const defaultRegion = {
     latitude: 37.763844,
@@ -104,24 +114,6 @@ export default function BusinessesScreen(
   //   }
   //   // dispatch(getAllBusinesses(payload));
   // };
-
-  useEffect(() => {
-    return () => {
-      // dispatch({ type: 'CLEAR_ALL_BUSINESSES_API' });
-      // dispatch(setFilteredData({}));
-    };
-  }, [dispatch]);
-
-  // const stateProps = useSelector(({ businesses, favorites }) => {
-  //   return {
-  //     loading: businesses.getAllBusinessesLoading,
-  //     data: businesses.allBusinesses,
-  //     loadMoreLoading: businesses.getAllBusinessesLoadMoreLoading,
-  //     isLoadMore: businesses.isLoadMore,
-  //     favoriteBusinesses: favorites.getFavoriteBusinesses,
-  //     filteredData: businesses.filteredData,
-  //   };
-  // });
 
   const { t } = useTranslation();
   const { colors } = useTheme();
@@ -211,7 +203,6 @@ export default function BusinessesScreen(
 
   const onSortLocation = () => {
     if (route?.params?.latitude && route?.params?.longitude) {
-      setSkip(0);
       setSortLocation(!isSortLocation);
     } else {
       Alert.alert(
@@ -256,19 +247,25 @@ export default function BusinessesScreen(
     //   return;
     // }
     // setSkip(stateProps.data.length);
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
   };
-  const onRefreshHandler = () => {
-    setSkip(0);
+
+  const onRefresh = async () => {
+    setIsRefreshing(true);
+    await refetch();
+    setIsRefreshing(false);
   };
 
   const renderFooter = () => {
-    // if (businesses?.length && stateProps.loadMoreLoading) {
-    //   return (
-    //     <View style={styles.listFooter}>
-    //       <ActivityIndicator size="large" color={BaseColor.blueColor} />
-    //     </View>
-    //   );
-    // }
+    if (isFetchingNextPage) {
+      return (
+        <View style={styles.listFooter}>
+          <ActivityIndicator size="large" color={BaseColor.blueColor} />
+        </View>
+      );
+    }
     return null;
   };
 
@@ -303,19 +300,19 @@ export default function BusinessesScreen(
             <Animated.FlatList
               contentContainerStyle={{
                 paddingTop: 50,
-                flex: businesses?.length ? 0 : 1,
+                flex: allBusinesses?.length ? 0 : 1,
               }}
               refreshControl={
                 <RefreshControl
                   colors={[colors.primary]}
                   tintColor={colors.primary}
-                  refreshing={false}
+                  refreshing={isRefreshing}
                   progressViewOffset={80}
-                  onRefresh={() => onRefreshHandler()}
+                  onRefresh={() => onRefresh()}
                 />
               }
               onEndReached={onScrollHandler}
-              // onEndThreshold={0.1}
+              onEndReachedThreshold={0.3}
               scrollEventThrottle={1}
               onScroll={Animated.event(
                 [
@@ -329,7 +326,7 @@ export default function BusinessesScreen(
                 ],
                 { useNativeDriver: true },
               )}
-              data={businesses}
+              data={allBusinesses}
               key={'block'}
               keyExtractor={(item) => item._id}
               ListEmptyComponent={listEmptyComponent}
@@ -380,19 +377,19 @@ export default function BusinessesScreen(
               contentContainerStyle={{
                 paddingTop: 50,
                 paddingHorizontal: 20,
-                flex: businesses?.length ? 0 : 1,
+                flex: allBusinesses?.length ? 0 : 1,
               }}
               refreshControl={
                 <RefreshControl
                   colors={[colors.primary]}
                   tintColor={colors.primary}
-                  refreshing={false}
+                  refreshing={isRefreshing}
                   progressViewOffset={80}
-                  onRefresh={() => onRefreshHandler()}
+                  onRefresh={() => onRefresh()}
                 />
               }
               onEndReached={onScrollHandler}
-              // onEndThreshold={0.1}
+              onEndReachedThreshold={0.3}
               scrollEventThrottle={1}
               onScroll={Animated.event(
                 [
@@ -406,7 +403,7 @@ export default function BusinessesScreen(
                 ],
                 { useNativeDriver: true },
               )}
-              data={businesses}
+              data={allBusinesses}
               key={'list'}
               keyExtractor={(item) => item._id}
               ListFooterComponent={renderFooter}
@@ -461,7 +458,7 @@ export default function BusinessesScreen(
             <Animated.FlatList
               contentContainerStyle={{
                 paddingTop: 50,
-                flex: businesses?.length ? 0 : 1,
+                flex: allBusinesses?.length ? 0 : 1,
               }}
               columnWrapperStyle={{
                 paddingLeft: 5,
@@ -471,13 +468,13 @@ export default function BusinessesScreen(
                 <RefreshControl
                   colors={[colors.primary]}
                   tintColor={colors.primary}
-                  refreshing={false}
+                  refreshing={isRefreshing}
                   progressViewOffset={80}
-                  onRefresh={() => onRefreshHandler()}
+                  onRefresh={() => onRefresh()}
                 />
               }
               onEndReached={onScrollHandler}
-              // onEndThreshold={0.1}
+              onEndReachedThreshold={0.3}
               scrollEventThrottle={1}
               onScroll={Animated.event(
                 [
@@ -493,7 +490,7 @@ export default function BusinessesScreen(
               )}
               showsVerticalScrollIndicator={false}
               numColumns={2}
-              data={businesses}
+              data={allBusinesses}
               key={'grid'}
               keyExtractor={(item) => item._id}
               ListFooterComponent={renderFooter}
@@ -550,7 +547,7 @@ export default function BusinessesScreen(
     return (
       <View style={{ flex: 1 }}>
         <MapView provider={PROVIDER_GOOGLE} style={styles.map} region={region}>
-          {businesses?.map((item, index) => {
+          {allBusinesses?.map((item, index) => {
             return (
               <Marker
                 // onPress={(e) => onSelectLocation(e.nativeEvent.coordinate)}
@@ -583,7 +580,7 @@ export default function BusinessesScreen(
         <View style={{ position: 'absolute', bottom: 0 }}>
           <Carousel
             ref={sliderRef}
-            data={businesses || []}
+            data={allBusinesses || []}
             renderItem={({ item }) => (
               <CardList
                 image={item?.thumbnail}
@@ -618,8 +615,8 @@ export default function BusinessesScreen(
             autoplay={false}
             onSnapToItem={(index) => {
               setActive(index);
-              if (businesses && businesses[index]) {
-                const currentBusiness = businesses[index];
+              if (allBusinesses && allBusinesses[index]) {
+                const currentBusiness = allBusinesses[index];
                 if (currentBusiness.location) {
                   setRegion({
                     latitudeDelta: 0.009,

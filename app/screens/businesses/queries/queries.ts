@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { request } from 'graphql-request';
 import Config from 'react-native-config';
 
@@ -66,6 +66,38 @@ export const useBusinesses = (
     },
     {
       ...options,
+    },
+  );
+};
+
+export const useBusinessesInfinite = (
+  key: Array<string | number>,
+  params: BusinessParams,
+) => {
+  return useInfiniteQuery(
+    key,
+    ({ pageParam = 1 }): Promise<BusinessPresentable[]> => {
+      return axiosApiInstance({
+        method: 'GET',
+        url: `${BUSINESSES_API}`,
+        params: {
+          ...params,
+          skip: (pageParam - 1) * params.limit!,
+        },
+      })
+        .then((response) => response.data)
+        .catch(({ response }) => {
+          handleError(response.data);
+        });
+    },
+    {
+      getNextPageParam: (lastPageBusinesses, allPages) => {
+        allPages = allPages.filter((page) => page?.length);
+
+        if (lastPageBusinesses.length) {
+          return allPages.length + 1;
+        }
+      },
     },
   );
 };
