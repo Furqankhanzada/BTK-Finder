@@ -34,4 +34,8 @@ export const styles = StyleSheet.create({
     paddingBottom: 10,
     borderBottomColor: 'blue',
   },
+  textPadding: {
+    paddingHorizontal: 20,
+    paddingVertical: 5,
+  },
 });

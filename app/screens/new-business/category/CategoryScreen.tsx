@@ -92,20 +92,17 @@ export const CategoryScreen = ({
             />
           }
           data={filteredCategories ? filteredCategories : categries}
-          renderItem={({ item, index }) => {
+          renderItem={({ item }) => {
             return (
               <CategoryIcon
                 icon={item.icon}
                 title={item.name}
                 onPress={() => {
                   {
+                    setActive(true);
                   }
                 }}
-                style={
-                  !active
-                    ? [styles.itemIcon, { borderColor: colors.border }]
-                    : [styles.itemIcon, { borderColor: 'blue' }]
-                }
+                style={styles.itemIcon}
               />
             );
           }}
@@ -116,7 +113,9 @@ export const CategoryScreen = ({
           }></FlatList>
         <View style={styles.stickyFooter}>
           <Button onPress={() => navigateToBack()}>{'Back'}</Button>
-          <Button onPress={() => navigateToNext()}>{'Next'}</Button>
+          {active === true ? (
+            <Button onPress={() => navigateToNext()}>{'Next'}</Button>
+          ) : null}
         </View>
       </>
     </SafeAreaView>

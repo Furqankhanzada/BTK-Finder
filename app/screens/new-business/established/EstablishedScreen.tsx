@@ -76,12 +76,13 @@ export const EstablishedScreen = ({
                   </TouchableOpacity>
                 </View>
               </View>
-              {values.establish?.length >= 3 ? (
-                <View style={styles.stickyFooter}>
-                  <Button onPress={() => navigateToBack()}>{'Back'}</Button>
+
+              <View style={styles.stickyFooter}>
+                <Button onPress={() => navigateToBack()}>{'Back'}</Button>
+                {values.establish?.length >= 3 ? (
                   <Button>{'Next'}</Button>
-                </View>
-              ) : null}
+                ) : null}
+              </View>
             </ScrollView>
           );
         }}

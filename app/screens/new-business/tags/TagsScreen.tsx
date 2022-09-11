@@ -1,17 +1,43 @@
-import React from 'react';
-import { FlatList, SafeAreaView, View } from 'react-native';
-import { Formik } from 'formik';
+import React, { useState } from 'react';
+import { FlatList, SafeAreaView, TouchableOpacity, View } from 'react-native';
 
-import { Header, Text, TextInput, Button } from '@components';
-import { BaseStyle } from '@config';
+import { Header, Text, TextInput, Button, Icon } from '@components';
+import { BaseColor, BaseStyle } from '@config';
 
 import { StackScreenProps } from '@react-navigation/stack';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
+import CategoryIcon from '@screens/category/components/CategoryIcon';
 
 export const TagsScreen = ({
   navigation,
 }: StackScreenProps<GlobalParamList>) => {
+  const [active, setActive] = useState<boolean>(false);
+  const [search, setSearch] = useState<any>();
+
+  const tags = [
+    {
+      name: 'ATM',
+      icon: 'X',
+    },
+    {
+      name: 'BBQ',
+      icon: 'X',
+    },
+    {
+      name: 'Beauty Salon',
+      icon: 'X',
+    },
+    {
+      name: 'CNG Station',
+      icon: 'X',
+    },
+    {
+      name: 'Cafe',
+      icon: 'X',
+    },
+  ];
+
   const navigateToNext = () => {
     navigation.navigate('Telephone');
   };
@@ -22,47 +48,52 @@ export const TagsScreen = ({
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
-      <Header title="Select Tags" />
-      <Formik
-        initialValues={{ tags: '' }}
-        onSubmit={(values) => {
-          console.log('Formik Values', values);
-        }}>
-        {({ values, handleChange }) => {
+      <Header title="Select Facilities" />
+      <Text title1 bold style={styles.textPadding}>
+        Select Tags related to your Business
+      </Text>
+      <View style={styles.viewContainer}>
+        <TextInput
+          onChangeText={search}
+          placeholder={'Search Tags'}
+          value={search}
+          icon={
+            <TouchableOpacity onPress={() => {}}>
+              <Icon name="times" size={16} color={BaseColor.grayColor} />
+            </TouchableOpacity>
+          }
+        />
+      </View>
+
+      <FlatList
+        style={styles.container}
+        overScrollMode={'never'}
+        scrollEventThrottle={16}
+        data={tags}
+        renderItem={({ item }) => {
           return (
-            <>
-              <FlatList
-                style={styles.container}
-                overScrollMode={'never'}
-                scrollEventThrottle={16}
-                data={[1]}
-                renderItem={() => {
-                  return (
-                    <View>
-                      <Text title1 bold>
-                        Select tags about your Business
-                      </Text>
-                      <TextInput
-                        style={styles.input}
-                        placeholder="Select tags"
-                        value={values.tags}
-                        onChangeText={handleChange('tags')}
-                      />
-                    </View>
-                  );
+            <View>
+              <CategoryIcon
+                icon={item.icon}
+                title={item.name}
+                style={styles.itemIcon}
+                onPress={() => {
+                  {
+                    setActive(true);
+                  }
                 }}
               />
-
-              <View style={styles.stickyFooter}>
-                <Button onPress={() => navigateToBack()}>{'Back'}</Button>
-                {values.tags?.length >= 3 ? (
-                  <Button onPress={() => navigateToNext()}>{'Next'}</Button>
-                ) : null}
-              </View>
-            </>
+            </View>
           );
         }}
-      </Formik>
+      />
+
+      <View style={styles.stickyFooter}>
+        <Button onPress={() => navigateToBack()}>{'Back'}</Button>
+        {active === true ? (
+          <Button onPress={() => navigateToNext()}>{'Next'}</Button>
+        ) : null}
+      </View>
     </SafeAreaView>
   );
 };
