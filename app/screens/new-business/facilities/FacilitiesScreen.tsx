@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FlatList, SafeAreaView, TouchableOpacity, View } from 'react-native';
 
 import { Header, Text, TextInput, Button, Icon } from '@components';
-import { BaseColor, BaseStyle } from '@config';
+import { BaseColor, BaseStyle, useTheme } from '@config';
 
 import { StackScreenProps } from '@react-navigation/stack';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
@@ -14,6 +14,9 @@ export const FacilitiesScreen = ({
 }: StackScreenProps<GlobalParamList>) => {
   const [active, setActive] = useState<boolean>(false);
   const [search, setSearch] = useState<any>();
+  const [text, setText] = useState('');
+
+  const { colors } = useTheme();
 
   const facilities = [
     {
@@ -48,7 +51,13 @@ export const FacilitiesScreen = ({
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
-      <Header title="Select Facilities" />
+      <Header
+        title="Select Facilities"
+        renderRight={() => {
+          return <Text>Skip</Text>;
+        }}
+        onPressRight={navigateToNext}
+      />
       <Text title1 bold style={styles.textPadding}>
         Select Facility which available
       </Text>
@@ -59,7 +68,7 @@ export const FacilitiesScreen = ({
           value={search}
           icon={
             <TouchableOpacity onPress={() => {}}>
-              <Icon name="times" size={16} color={BaseColor.grayColor} />
+              <Icon name="times" size={16} color={BaseColor.primary} />
             </TouchableOpacity>
           }
         />
@@ -89,9 +98,13 @@ export const FacilitiesScreen = ({
       />
 
       <View style={styles.stickyFooter}>
-        <Button onPress={() => navigateToBack()}>{'Back'}</Button>
+        <Button style={styles.fotterButtons} onPress={() => navigateToBack()}>
+          {'Back'}
+        </Button>
         {active === true ? (
-          <Button onPress={() => navigateToNext()}>{'Next'}</Button>
+          <Button style={styles.fotterButtons} onPress={() => navigateToNext()}>
+            {'Next'}
+          </Button>
         ) : null}
       </View>
     </SafeAreaView>

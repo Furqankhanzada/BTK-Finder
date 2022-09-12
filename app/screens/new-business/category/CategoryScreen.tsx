@@ -75,7 +75,7 @@ export const CategoryScreen = ({
               onPress={() => {
                 onSearch('');
               }}>
-              <Icon name="times" size={16} color={BaseColor.grayColor} />
+              <Icon size={16} color={BaseColor.grayColor} />
             </TouchableOpacity>
           }
         />
@@ -112,9 +112,15 @@ export const CategoryScreen = ({
             </View>
           }></FlatList>
         <View style={styles.stickyFooter}>
-          <Button onPress={() => navigateToBack()}>{'Back'}</Button>
+          <Button style={styles.fotterButtons} onPress={() => navigateToBack()}>
+            {'Back'}
+          </Button>
           {active === true ? (
-            <Button onPress={() => navigateToNext()}>{'Next'}</Button>
+            <Button
+              style={styles.fotterButtons}
+              onPress={() => navigateToNext()}>
+              {'Next'}
+            </Button>
           ) : null}
         </View>
       </>

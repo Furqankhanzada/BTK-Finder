@@ -4,26 +4,36 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 
 import { Header, Text, TextInput, Button } from '@components';
-import { BaseStyle } from '@config';
+import { BaseColor, BaseStyle, useTheme } from '@config';
 
 import { StackScreenProps } from '@react-navigation/stack';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
 
 const discriptionSchema = Yup.object({
-  discription: Yup.string().required().min(10),
+  discription: Yup.string().required('for brief about your business').min(10),
 });
 
 export const DiscriptionScreen = ({
   navigation,
 }: StackScreenProps<GlobalParamList>) => {
+  const { colors } = useTheme();
   const navigateToBack = () => {
     navigation.goBack();
+  };
+  const navigateToNext = () => {
+    navigation.navigate('Category');
   };
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
-      <Header title="Add Discription" />
+      <Header
+        title="Add Discription"
+        renderRight={() => {
+          return <Text>Skip</Text>;
+        }}
+        onPressRight={navigateToNext}
+      />
       <Formik
         initialValues={{ discription: '' }}
         validationSchema={discriptionSchema}
@@ -56,12 +66,23 @@ export const DiscriptionScreen = ({
               />
 
               <View style={styles.stickyFooter}>
-                <Button onPress={() => navigateToBack()}>{'Back'}</Button>
-                {values.discription?.length >= 6 ? (
-                  <Button title="submit" onPress={handleSubmit}>
-                    {'Next'}
-                  </Button>
-                ) : null}
+                <Button
+                  style={styles.fotterButtons}
+                  onPress={() => navigateToBack()}>
+                  {'Back'}
+                </Button>
+
+                <Button
+                  style={[
+                    styles.fotterButtons,
+                    values.discription.length < 10
+                      ? { backgroundColor: BaseColor.grayColor }
+                      : null,
+                  ]}
+                  title="submit"
+                  onPress={handleSubmit}>
+                  {'Next'}
+                </Button>
               </View>
             </>
           );

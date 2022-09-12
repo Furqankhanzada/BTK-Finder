@@ -4,7 +4,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 
 import { Header, Text, TextInput, Button } from '@components';
-import { BaseStyle } from '@config';
+import { BaseColor, BaseStyle } from '@config';
 
 import { StackScreenProps } from '@react-navigation/stack';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
@@ -17,7 +17,7 @@ const phoneSchema = Yup.object({
   telephone: Yup.string()
     .min(11)
     .matches(phoneRegExp, 'Phone number is not valid')
-    .required(),
+    .required('Valid Phone Number ex: 03001000100'),
 });
 
 export const TelephoneScreen = ({
@@ -33,14 +33,20 @@ export const TelephoneScreen = ({
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
-      <Header title="Telephone Number" />
+      <Header
+        title="Telephone Number"
+        renderRight={() => {
+          return <Text>Skip</Text>;
+        }}
+        onPressRight={navigateToNext}
+      />
       <Formik
         initialValues={{ telephone: '' }}
         validationSchema={phoneSchema}
         onSubmit={(values) => {
           navigation.navigate('Email');
         }}>
-        {({ values, handleChange, handleSubmit }) => {
+        {({ values, handleChange, handleSubmit, errors }) => {
           return (
             <>
               <FlatList
@@ -60,18 +66,32 @@ export const TelephoneScreen = ({
                         value={values.telephone}
                         onChangeText={handleChange('telephone')}
                       />
+                      <Text style={{ color: BaseColor.redColor }}>
+                        {errors.telephone}
+                      </Text>
                     </View>
                   );
                 }}
               />
 
               <View style={styles.stickyFooter}>
-                <Button onPress={() => navigateToBack()}>{'Back'}</Button>
-                {values.telephone?.length >= 3 ? (
-                  <Button title="submit" onPress={handleSubmit}>
-                    {'Next'}
-                  </Button>
-                ) : null}
+                <Button
+                  style={styles.fotterButtons}
+                  onPress={() => navigateToBack()}>
+                  {'Back'}
+                </Button>
+
+                <Button
+                  style={[
+                    styles.fotterButtons,
+                    values.telephone.length < 3
+                      ? { backgroundColor: BaseColor.grayColor }
+                      : null,
+                  ]}
+                  title="submit"
+                  onPress={handleSubmit}>
+                  {'Next'}
+                </Button>
               </View>
             </>
           );

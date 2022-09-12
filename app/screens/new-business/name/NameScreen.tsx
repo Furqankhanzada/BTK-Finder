@@ -4,30 +4,33 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 
 import { Header, Text, TextInput, Button } from '@components';
-import { BaseStyle } from '@config';
+import { BaseColor, BaseStyle } from '@config';
 
 import { StackScreenProps } from '@react-navigation/stack';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
 
 const nameSchema = Yup.object({
-  title: Yup.string().required().min(3),
+  name: Yup.string().required('name must be atleats 3 words').min(3),
 });
 
 export const NameScreen = ({
   navigation,
 }: StackScreenProps<GlobalParamList>) => {
+  const navigateToBack = () => {
+    navigation.goBack();
+  };
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header title="Add Business" />
 
       <Formik
-        initialValues={{ title: '' }}
+        initialValues={{ name: '' }}
         validationSchema={nameSchema}
         onSubmit={(values) => {
           navigation.navigate('Discription');
         }}>
-        {({ values, handleChange, handleSubmit }) => {
+        {({ values, handleChange, handleSubmit, errors }) => {
           return (
             <>
               <FlatList
@@ -44,21 +47,34 @@ export const NameScreen = ({
                       <TextInput
                         style={styles.input}
                         placeholder="Business name ?"
-                        value={values.title}
-                        onChangeText={handleChange('title')}
+                        value={values.name}
+                        onChangeText={handleChange('name')}
                       />
+                      <Text style={{ color: BaseColor.redColor }}>
+                        {errors.name}
+                      </Text>
                     </View>
                   );
                 }}
               />
-              {values.title?.length >= 3 ? (
-                <View style={styles.stickyFooter}>
-                  <Button>{'Back'}</Button>
-                  <Button title="submit" onPress={handleSubmit}>
-                    {'Next'}
-                  </Button>
-                </View>
-              ) : null}
+
+              <View style={styles.stickyFooter}>
+                <Button style={styles.fotterButtons} onPress={navigateToBack}>
+                  {'Back'}
+                </Button>
+
+                <Button
+                  style={[
+                    styles.fotterButtons,
+                    values.name.length < 3
+                      ? { backgroundColor: BaseColor.grayColor }
+                      : null,
+                  ]}
+                  title="submit"
+                  onPress={handleSubmit}>
+                  {'Next'}
+                </Button>
+              </View>
             </>
           );
         }}

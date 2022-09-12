@@ -4,26 +4,38 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 
 import { Header, Text, TextInput, Button } from '@components';
-import { BaseStyle } from '@config';
+import { BaseColor, BaseStyle, useTheme } from '@config';
 
 import { StackScreenProps } from '@react-navigation/stack';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
 
 const emailSchema = Yup.object({
-  email: Yup.string().email(),
+  email: Yup.string().email().required('ex: abc@gmail.com'),
 });
 
 export const EmailScreen = ({
   navigation,
 }: StackScreenProps<GlobalParamList>) => {
+  const { colors } = useTheme();
+
+  const navigateToNext = () => {
+    navigation.navigate('Website');
+  };
+
   const navigateToBack = () => {
     navigation.goBack();
   };
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
-      <Header title="Email Address" />
+      <Header
+        title="Email Address"
+        renderRight={() => {
+          return <Text>Skip</Text>;
+        }}
+        onPressRight={navigateToNext}
+      />
       <Formik
         initialValues={{ email: '' }}
         validationSchema={emailSchema}
@@ -56,12 +68,23 @@ export const EmailScreen = ({
               />
 
               <View style={styles.stickyFooter}>
-                <Button onPress={() => navigateToBack()}>{'Back'}</Button>
-                {values.email?.length >= 3 ? (
-                  <Button title="submit" onPress={handleSubmit}>
-                    {'Next'}
-                  </Button>
-                ) : null}
+                <Button
+                  style={styles.fotterButtons}
+                  onPress={() => navigateToBack()}>
+                  {'Back'}
+                </Button>
+
+                <Button
+                  style={[
+                    styles.fotterButtons,
+                    values.email.length < 6
+                      ? { backgroundColor: BaseColor.grayColor }
+                      : null,
+                  ]}
+                  title="submit"
+                  onPress={handleSubmit}>
+                  {'Next'}
+                </Button>
               </View>
             </>
           );
