@@ -1,9 +1,9 @@
-import React from 'react';
-import { FlatList, SafeAreaView, View } from 'react-native';
+import React, { useState } from 'react';
+import { FlatList, SafeAreaView, TouchableOpacity, View } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
-import { Header, Text, TextInput, Button } from '@components';
+import { Header, Text, TextInput, Button, Icon } from '@components';
 import { BaseColor, BaseStyle } from '@config';
 
 import { StackScreenProps } from '@react-navigation/stack';
@@ -16,6 +16,7 @@ const phoneRegExp =
 const phoneSchema = Yup.object({
   telephone: Yup.string()
     .min(11)
+    .max(18)
     .matches(phoneRegExp, 'Phone number is not valid')
     .required('Valid Phone Number ex: 03001000100'),
 });
@@ -23,6 +24,23 @@ const phoneSchema = Yup.object({
 export const TelephoneScreen = ({
   navigation,
 }: StackScreenProps<GlobalParamList>) => {
+  const [addNumber, setAddNumber] = useState([{ id: '1' }]);
+
+  const increment = (index: any) => {
+    let addedNumber = [...addNumber];
+    if (addedNumber.length < 3) {
+      addedNumber.length++;
+    }
+    setAddNumber(addedNumber);
+  };
+  const decrement = () => {
+    let addedNumber = [...addNumber];
+    if (addedNumber.length > 1) {
+      addedNumber.length--;
+    }
+    setAddNumber(addedNumber);
+  };
+
   const navigateToNext = () => {
     navigation.navigate('Email');
   };
@@ -40,6 +58,9 @@ export const TelephoneScreen = ({
         }}
         onPressRight={navigateToNext}
       />
+      <Text title1 bold style={styles.textPadding}>
+        What is the Telephone number of your Business ?
+      </Text>
       <Formik
         initialValues={{ telephone: '' }}
         validationSchema={phoneSchema}
@@ -53,19 +74,31 @@ export const TelephoneScreen = ({
                 style={styles.container}
                 overScrollMode={'never'}
                 scrollEventThrottle={16}
-                data={[1]}
-                renderItem={() => {
+                data={addNumber}
+                ListFooterComponent={
+                  <TouchableOpacity style={styles.addMore} onPress={increment}>
+                    <Text style={styles.addMoreText}>Add more +</Text>
+                  </TouchableOpacity>
+                }
+                renderItem={(index) => {
                   return (
                     <View>
-                      <Text title1 bold>
-                        What is the Telephone number of your Business ?
-                      </Text>
-                      <TextInput
-                        style={styles.input}
-                        placeholder="telephone"
-                        value={values.telephone}
-                        onChangeText={handleChange('telephone')}
-                      />
+                      <View style={styles.phoneInputView}>
+                        <TextInput
+                          key={index.index}
+                          style={styles.phoneInput}
+                          placeholder="Telephone number"
+                          value={values.telephone}
+                          keyboardType="numeric"
+                          onChangeText={handleChange('telephone')}
+                        />
+                        <Icon
+                          name="trash"
+                          size={21}
+                          style={styles.phoneIcon}
+                          onPress={decrement}
+                        />
+                      </View>
                       <Text style={{ color: BaseColor.redColor }}>
                         {errors.telephone}
                       </Text>
@@ -84,7 +117,7 @@ export const TelephoneScreen = ({
                 <Button
                   style={[
                     styles.fotterButtons,
-                    values.telephone.length < 3
+                    values.telephone.length < 11 || values.telephone.length > 18
                       ? { backgroundColor: BaseColor.grayColor }
                       : null,
                   ]}
