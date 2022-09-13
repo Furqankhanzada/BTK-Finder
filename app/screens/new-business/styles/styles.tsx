@@ -41,4 +41,35 @@ export const styles = StyleSheet.create({
   fotterButtons: {
     height: 40,
   },
+  textArea: {
+    height: 80,
+    padding: 10,
+    marginTop: 10,
+  },
+  phoneInputView: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+  },
+  phoneInput: {
+    marginTop: 5,
+    width: '95%',
+    paddingHorizontal: 20,
+  },
+  phoneIcon: {
+    marginTop: 2,
+    width: '20%',
+    textAlign: 'center',
+    paddingLeft: 10,
+  },
+  addMore: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: 10,
+  },
+  addMoreText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
 });

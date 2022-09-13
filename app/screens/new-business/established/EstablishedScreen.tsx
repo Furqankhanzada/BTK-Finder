@@ -16,7 +16,7 @@ export const EstablishedScreen = ({
   navigation,
 }: StackScreenProps<GlobalParamList>) => {
   const navigateToNext = () => {
-    navigation.navigate('Name');
+    navigation.navigate('Address');
   };
 
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -100,7 +100,11 @@ export const EstablishedScreen = ({
                   {'Back'}
                 </Button>
                 {active === true ? (
-                  <Button style={styles.fotterButtons}>{'Next'}</Button>
+                  <Button
+                    onPress={() => navigateToNext()}
+                    style={styles.fotterButtons}>
+                    {'Next'}
+                  </Button>
                 ) : null}
               </View>
             </>

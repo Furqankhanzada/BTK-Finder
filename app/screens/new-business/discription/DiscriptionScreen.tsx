@@ -11,7 +11,9 @@ import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
 
 const discriptionSchema = Yup.object({
-  discription: Yup.string().required('for brief about your business').min(10),
+  discription: Yup.string()
+    .required('Discribe  your business atleast 10 words')
+    .min(10),
 });
 
 export const DiscriptionScreen = ({
@@ -40,7 +42,7 @@ export const DiscriptionScreen = ({
         onSubmit={(values) => {
           navigation.navigate('Category');
         }}>
-        {({ values, handleChange, handleSubmit }) => {
+        {({ values, handleChange, handleSubmit, errors }) => {
           return (
             <>
               <FlatList
@@ -60,6 +62,9 @@ export const DiscriptionScreen = ({
                         value={values.discription}
                         onChangeText={handleChange('discription')}
                       />
+                      <Text style={{ color: BaseColor.redColor }}>
+                        {errors.discription}
+                      </Text>
                     </View>
                   );
                 }}
