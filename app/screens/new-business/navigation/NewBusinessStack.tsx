@@ -13,6 +13,7 @@ import { WebsiteScreen } from '../website/WebsiteScreen';
 import { EstablishedScreen } from '../established/EstablishedScreen';
 import { AddressScreen } from '../address/AddressScreen';
 import { Hours } from '../hours/Hours';
+import { PriceRange } from '../price/PriceRange';
 import { NewBusinessContextState } from '../context/NewBusinessContextState';
 
 const NewBusinessStack = createStackNavigator<NewBusinessParamList>();
@@ -37,6 +38,7 @@ export function NewBusinessStackNavigator() {
       />
       <NewBusinessStack.Screen name="Address" component={AddressScreen} />
       <NewBusinessStack.Screen name="Hours" component={Hours} />
+      <NewBusinessStack.Screen name="Price" component={PriceRange} />
     </NewBusinessStack.Navigator>
   );
 }

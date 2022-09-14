@@ -92,4 +92,18 @@ export const styles = StyleSheet.create({
   sectionEmptyText: {
     textAlign: 'center',
   },
+  title: {
+    marginBottom: 15,
+  },
+  contentResultRange: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
+  },
+  rangeSlider: {
+    paddingVertical: 10,
+  },
+  fontSize: {
+    fontSize: 18,
+  },
 });

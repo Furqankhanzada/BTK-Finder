@@ -30,6 +30,7 @@ import DropDownMultiSelect from './DropDownMultiSelect';
 import FloatingButton from './FloatingButton';
 import FavouriteIcon from './FavouriteIcon';
 import PlaceDetailPlaceholder from './Placeholders/placeDetail';
+import RangeSlider from './RangeSlider';
 
 export {
   TextInput,
@@ -64,4 +65,5 @@ export {
   FloatingButton,
   FavouriteIcon,
   PlaceDetailPlaceholder,
+  RangeSlider,
 };
