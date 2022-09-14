@@ -10,7 +10,10 @@ import {
   GET_PRODUCTS,
   GET_TAGS,
 } from '@screens/businesses/queries/gql/queries';
-import { BusinessParams } from '@screens/businesses/models/BusinessParams';
+import {
+  BusinessParams,
+  BusinessParamsWithSearch,
+} from '@screens/businesses/models/BusinessParams';
 
 import axiosApiInstance from '../../../interceptor/axios-interceptor';
 import { BUSINESSES_API } from '../../../constants';
@@ -72,8 +75,9 @@ export const useBusinesses = (
 
 export const useBusinessesInfinite = (
   key: Array<string | number>,
-  params: BusinessParams,
+  params: BusinessParamsWithSearch,
 ) => {
+  const { isFiltering, ...restParams } = params;
   return useInfiniteQuery(
     key,
     ({ pageParam = 1 }): Promise<BusinessPresentable[]> => {
@@ -81,7 +85,7 @@ export const useBusinessesInfinite = (
         method: 'GET',
         url: `${BUSINESSES_API}`,
         params: {
-          ...params,
+          ...restParams,
           skip: (pageParam - 1) * params.limit!,
         },
       })
@@ -98,6 +102,7 @@ export const useBusinessesInfinite = (
           return allPages.length + 1;
         }
       },
+      ...(isFiltering ? { staleTime: 0, cacheTime: 0 } : {}),
     },
   );
 };

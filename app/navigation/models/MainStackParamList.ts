@@ -12,6 +12,8 @@ export type MainStackParamList = {
   Category: undefined;
   Businesses: {
     title: string;
+    search?: string;
+    isFiltering?: boolean;
     popular?: boolean;
     recent?: boolean;
     tags?: string | string[];
@@ -23,6 +25,7 @@ export type MainStackParamList = {
   Walkthrough: { lastRoute: keyof GlobalParamList; id: string };
   SignUp: undefined;
   SignIn: undefined;
+  Notification: undefined;
   Messenger: undefined;
   Messages: undefined;
   ResetPassword: undefined;

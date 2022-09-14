@@ -1,11 +1,18 @@
-import React, { useEffect } from 'react';
-import { FlatList, StyleSheet, View, TouchableOpacity } from 'react-native';
-import { useTranslation } from 'react-i18next';
+import React, { memo, useEffect, useState } from 'react';
+import {
+  FlatList,
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  RefreshControl,
+} from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useDispatch, useSelector } from 'react-redux';
+import { firebase } from '@react-native-firebase/database';
 
-import { Header, SafeAreaView, Icon, Button, Text } from '@components';
+import { SafeAreaView, Icon, Text, Tag, Image, Header } from '@components';
 import { BaseStyle, useTheme } from '@config';
+import * as Utils from '@utils';
 import Section from '@screens/dashboard/components/Section';
 import { CategoryPresentable } from '@screens/category/modals/CategoryPresentables';
 import HorizontalCategories from '@screens/dashboard/components/HorizontalCategories';
@@ -13,21 +20,52 @@ import VerticalBusinesses from '@screens/dashboard/components/VerticalBusinesses
 import HorizontalBusinesses from '@screens/dashboard/components/HorizontalBusinesses';
 import { BusinessPresentable } from '@screens/businesses/models/BusinessPresentable';
 import { BusinessesQueryKeysWithFav } from '@screens/businesses/models/BusinessesQueryKeys';
+import {
+  BannerPresentable,
+  BannersPresentable,
+} from '@screens/dashboard/models/BannersPresentable';
+import { LocationPresentable } from '@screens/dashboard/models/LocationPresentable';
 
 import { EVENTS, setUser, trackEvent } from '../../userTracking';
 import { GlobalParamList } from '../../navigation/models/GlobalParamList';
 import { MainStackParamList } from '../../navigation/models/MainStackParamList';
 import { getProfile } from '../../actions/auth';
 
-export default function DashboardScreen({
+const database = firebase
+  .app()
+  .database(
+    'https://explore-btk-default-rtdb.asia-southeast1.firebasedatabase.app/',
+  );
+
+function DashboardScreen({
   navigation,
 }: StackScreenProps<GlobalParamList, 'Dashboard'>) {
-  const { t } = useTranslation();
   const { colors } = useTheme();
-
   const dispatch = useDispatch();
   const isLogin = useSelector((state: any) => state.auth.isLogin);
   const profileData = useSelector((state: any) => state.profile);
+
+  const [banners, setBanners] = useState<BannersPresentable>();
+  const [locations, setLocations] = useState<Array<LocationPresentable>>();
+  const [refreshing, setRefreshing] = useState(false);
+
+  useEffect(() => {
+    const onValueChange = database.ref('/home').on('value', (snapshot) => {
+      const home = snapshot.val();
+      console.log('home ###', home);
+      setBanners(home.banners);
+      setLocations(
+        home.locations.map((location: string) => ({
+          text: location,
+          value: location,
+          checked: false,
+        })),
+      );
+    });
+
+    // Stop listening for updates when no longer required
+    return () => database.ref('/home').off('value', onValueChange);
+  }, []);
 
   useEffect(() => {
     if (isLogin) {
@@ -46,6 +84,16 @@ export default function DashboardScreen({
   const onPressHelpLine = () => {
     navigation.navigate('HelpLine');
     trackEvent(EVENTS.HELPLINE_SCREEN_VISITED);
+  };
+
+  /**
+   * on Refresh category
+   */
+  const onRefresh = () => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 200);
   };
 
   const onCategoriesViewAllPress = () => {
@@ -76,71 +124,104 @@ export default function DashboardScreen({
     });
   };
 
+  /**
+   * render content banner
+   * @returns
+   */
+  const renderBanner = (banner?: BannerPresentable) => {
+    if (!banner) {
+      return;
+    }
+    return (
+      <View style={{ paddingHorizontal: 20, paddingTop: 20 }}>
+        <View style={styles.banner}>
+          <Image
+            style={{ width: '100%', height: '100%', borderRadius: 10 }}
+            source={banner.image}
+          />
+          <View style={styles.contentBannerTopLeft}>
+            <Text style={[banner.titleStyle]} headline semibold whiteColor>
+              {banner.title}
+            </Text>
+            <Text
+              style={[banner.titleStyle, { marginTop: 5 }]}
+              footnote
+              medium
+              whiteColor>
+              {banner.description}
+            </Text>
+          </View>
+          <Tag
+            style={styles.bannerButton}
+            primary
+            onPress={() => {
+              navigation.navigate('BusinessDetailTabNavigator', {
+                id: banner.businessId,
+              });
+            }}>
+            {banner.buttonText}
+          </Tag>
+        </View>
+      </View>
+    );
+  };
+
+  console.log('locations###', locations);
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
         title={'Explore BTK'}
         renderRight={() => {
           return (
-            <Button
-              styleText={styles.helplineButtonText}
-              style={styles.helplineButton}
-              icon={<Icon name={'phone'} size={10} color={'white'} solid />}
-              full
-              round
-              onPress={onPressHelpLine}>
-              {t('help_line')}
-            </Button>
+            <View style={styles.notificationContent}>
+              <Icon name="phone" size={18} color={colors.primaryDark} solid />
+              {/*<View*/}
+              {/*  style={[*/}
+              {/*    styles.doc,*/}
+              {/*    {*/}
+              {/*      backgroundColor: colors.primaryLight,*/}
+              {/*      borderColor: colors.card,*/}
+              {/*    },*/}
+              {/*  ]}*/}
+              {/*/>*/}
+            </View>
           );
         }}
+        onPressRight={onPressHelpLine}
       />
+      <TouchableOpacity
+        onPress={() => navigation.navigate('Filter', {})}
+        style={styles.contentSearch}>
+        <View style={[BaseStyle.textInput, { backgroundColor: colors.card }]}>
+          <Text body1 grayColor style={{ flex: 1 }}>
+            Search everything near you
+          </Text>
+          <View style={{ paddingVertical: 8 }}>
+            <View
+              style={[styles.lineForm, { backgroundColor: colors.border }]}
+            />
+          </View>
+          <Icon
+            name="location-arrow"
+            size={18}
+            color={colors.primaryLight}
+            solid
+          />
+        </View>
+      </TouchableOpacity>
       <FlatList
         data={[1]}
+        refreshControl={
+          <RefreshControl
+            colors={[colors.primary]}
+            tintColor={colors.primary}
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
         renderItem={() => (
           <View>
-            <Section
-              title="Upcoming Features"
-              subTitle="These features are under development"
-              onViewAll={() =>
-                onBusinessesViewAllPress({
-                  title: 'Restaurants with Menu Online',
-                  tags: ['Menu'],
-                })
-              }
-              isLoading={false}>
-              <View
-                style={[
-                  {
-                    flexDirection: 'row',
-                    paddingHorizontal: 20,
-                  },
-                ]}>
-                <TouchableOpacity
-                  style={[
-                    styles.newFeature,
-                    {
-                      backgroundColor: colors.card,
-                      marginRight: 5,
-                    },
-                  ]}>
-                  <Text headline semibold darkPrimaryColor textAlign="center">
-                    Car Pooling
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[
-                    styles.newFeature,
-                    {
-                      backgroundColor: colors.card,
-                      marginRight: 5,
-                    },
-                  ]}>
-                  <Text headline semibold darkPrimaryColor textAlign="center">
-                    Deals
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </Section>
+            {renderBanner(banners?.one)}
             <Section
               title="Browse by categories"
               onViewAll={onCategoriesViewAllPress}
@@ -183,6 +264,7 @@ export default function DashboardScreen({
                 params={{ tags: ['Cakes', 'Fast Food', 'Cafe'] }}
               />
             </Section>
+            {renderBanner(banners?.two)}
             <Section
               title="Transport"
               subTitle="Find Courier Service, Shuttle Service, CAB Service, Van Service and Internation Flight Services"
@@ -215,6 +297,7 @@ export default function DashboardScreen({
                 params={{ category: 'Education' }}
               />
             </Section>
+            {renderBanner(banners?.three)}
             <Section
               title="Health & Fitness"
               subTitle="Find GYMs, Hospitals, Pharmacies"
@@ -247,6 +330,7 @@ export default function DashboardScreen({
                 params={{ category: 'Entertainment' }}
               />
             </Section>
+            {renderBanner(banners?.four)}
             <Section
               title="Maintenance and Services"
               subTitle="Find services related repairing, fixing, "
@@ -384,6 +468,8 @@ export default function DashboardScreen({
   );
 }
 
+export default memo(DashboardScreen);
+
 const styles = StyleSheet.create({
   helplineButton: {
     width: 80,
@@ -414,5 +500,52 @@ const styles = StyleSheet.create({
     justifyContent: 'center', //Centered horizontally
     alignItems: 'center', //Centered vertically
     flex: 1,
+  },
+  contentHeader: {
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  doc: {
+    width: 10,
+    height: 10,
+    borderRadius: 8,
+    borderWidth: 1,
+    position: 'absolute',
+    top: 0,
+    right: 0,
+  },
+  notificationContent: {
+    width: 20,
+    height: 20,
+  },
+  contentSearch: {
+    marginTop: 10,
+    paddingHorizontal: 20,
+  },
+  lineForm: {
+    width: 1,
+    height: '100%',
+    margin: 10,
+  },
+  banner: {
+    height: Utils.scaleWithPixel(110),
+    width: '100%',
+    borderRadius: 10,
+  },
+  contentBannerTopLeft: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+  },
+  bannerButton: {
+    position: 'absolute',
+    bottom: 10,
+    right: 10,
+  },
+  contentActionModalBottom: {
+    flexDirection: 'row',
+    paddingVertical: 10,
   },
 });

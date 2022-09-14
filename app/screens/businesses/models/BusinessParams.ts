@@ -14,3 +14,7 @@ export interface BusinessParams {
   recent?: boolean;
   fields?: string;
 }
+
+export interface BusinessParamsWithSearch extends BusinessParams {
+  isFiltering?: boolean;
+}

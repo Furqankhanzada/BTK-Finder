@@ -132,7 +132,7 @@ export default function BusinessesScreen(
     40,
   );
 
-  const sliderRef = useRef(null);
+  const sliderRef = useRef<any>(null);
 
   const viewportWidth = Utils.getWidthDevice();
   const [active, setActive] = useState(0);
@@ -188,18 +188,9 @@ export default function BusinessesScreen(
     setMapView(!mapView);
   };
 
-  // const onSelectLocation = () => {
-  //   // for (let index = 0; index < list.length; index++) {
-  //   //   const element = list[index];
-  //   //   if (
-  //   //     element.region.latitude == location.latitude &&
-  //   //     element.region.longitude == location.longitude
-  //   //   ) {
-  //   //     sliderRef.current.snapToItem(index);
-  //   //     return;
-  //   //   }
-  //   // }
-  // };
+  const onSelectLocation = (index: number) => {
+    sliderRef.current?.snapToItem(index);
+  };
 
   const onSortLocation = () => {
     if (route?.params?.latitude && route?.params?.longitude) {
@@ -213,20 +204,12 @@ export default function BusinessesScreen(
   };
 
   const navigateToSearchPage = () => {
-    // let params = {
-    //   popular: route?.params?.popular,
-    //   recent: route?.params?.recent,
-    //   category: route?.params?.category,
-    //   categoryIcon: route?.params?.categoryIcon,
-    // };
-    // if (isSortLocation) {
-    //   params.coordinates = {
-    //     latitude: route?.params?.latitude,
-    //     longitude: route?.params?.longitude,
-    //   };
-    //   params.locationSort = true;
-    // }
-    // navigation.navigate('Filter', { ...params });
+    navigation.navigate('Filter', {
+      popular: route.params.popular,
+      recent: route.params?.recent,
+      category: route.params?.category,
+      tags: route.params?.tags,
+    });
   };
 
   const navigateBusinessDetail = ({
@@ -242,11 +225,7 @@ export default function BusinessesScreen(
     });
   };
 
-  const onScrollHandler = () => {
-    // if (stateProps.loading || stateProps.isLoadMore) {
-    //   return;
-    // }
-    // setSkip(stateProps.data.length);
+  const onEndReached = () => {
     if (hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
@@ -293,6 +272,7 @@ export default function BusinessesScreen(
       outputRange: [0, -40],
       extrapolate: 'clamp',
     });
+
     switch (modeView) {
       case 'block':
         return (
@@ -311,7 +291,7 @@ export default function BusinessesScreen(
                   onRefresh={() => onRefresh()}
                 />
               }
-              onEndReached={onScrollHandler}
+              onEndReached={onEndReached}
               onEndReachedThreshold={0.3}
               scrollEventThrottle={1}
               onScroll={Animated.event(
@@ -388,7 +368,7 @@ export default function BusinessesScreen(
                   onRefresh={() => onRefresh()}
                 />
               }
-              onEndReached={onScrollHandler}
+              onEndReached={onEndReached}
               onEndReachedThreshold={0.3}
               scrollEventThrottle={1}
               onScroll={Animated.event(
@@ -473,7 +453,7 @@ export default function BusinessesScreen(
                   onRefresh={() => onRefresh()}
                 />
               }
-              onEndReached={onScrollHandler}
+              onEndReached={onEndReached}
               onEndReachedThreshold={0.3}
               scrollEventThrottle={1}
               onScroll={Animated.event(
@@ -550,7 +530,7 @@ export default function BusinessesScreen(
           {allBusinesses?.map((item, index) => {
             return (
               <Marker
-                // onPress={(e) => onSelectLocation(e.nativeEvent.coordinate)}
+                onPress={() => onSelectLocation(index)}
                 key={item._id}
                 coordinate={{
                   latitude: item.location ? item.location.coordinates[0] : 0,
@@ -561,7 +541,9 @@ export default function BusinessesScreen(
                     styles.iconLocation,
                     {
                       backgroundColor:
-                        index == active ? colors.primary : BaseColor.whiteColor,
+                        index === active
+                          ? colors.primary
+                          : BaseColor.whiteColor,
                       borderColor: colors.primary,
                     },
                   ]}>
@@ -569,7 +551,7 @@ export default function BusinessesScreen(
                     name="star"
                     size={16}
                     color={
-                      index === -active ? BaseColor.whiteColor : colors.primary
+                      index === active ? BaseColor.whiteColor : colors.primary
                     }
                   />
                 </View>

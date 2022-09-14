@@ -86,7 +86,11 @@ export default function Navigator() {
         <RootStack.Screen name="Loading" component={Loading} />
         <RootStack.Screen name="Main" component={Main} />
         <RootStack.Screen name="Filter" component={Filter} />
-        <RootStack.Screen name="ChooseItems" component={ChooseItems} />
+        <RootStack.Screen
+          options={{ presentation: 'modal' }}
+          name="ChooseItems"
+          component={ChooseItems}
+        />
         <RootStack.Screen name="SearchHistory" component={SearchHistory} />
         <RootStack.Screen
           name="SelectDarkOption"
