@@ -12,7 +12,7 @@ import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
 
 const addressSchema = Yup.object({
-  name: Yup.string().required('name must be atleats 3 words').min(10),
+  address: Yup.string().required('address atleast 10 words or more').min(10),
 });
 
 // let defaultDelta = {
