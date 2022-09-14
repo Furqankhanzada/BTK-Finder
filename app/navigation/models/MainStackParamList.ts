@@ -21,7 +21,6 @@ export type MainStackParamList = {
     latitude?: number;
     longitude?: number;
   };
-  Place: undefined;
   Walkthrough: { lastRoute: keyof GlobalParamList; id: string };
   SignUp: undefined;
   SignIn: undefined;

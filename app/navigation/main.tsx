@@ -22,7 +22,6 @@ import Profile from '@screens/Profile';
 import ThemeSetting from '@screens/ThemeSetting';
 import Setting from '@screens/Setting';
 import Category from '@screens/category/CategoryScreen';
-import Place from '@screens/Place';
 import SignUp from '@screens/SignUp';
 import SignIn from '@screens/SignIn';
 import VerifyCode from '@screens/VerifyCode';
@@ -66,7 +65,6 @@ export default function Main() {
       <MainStack.Screen name="Setting" component={Setting} />
       <MainStack.Screen name="Category" component={Category} />
       <MainStack.Screen name="Businesses" component={BusinessesScreen} />
-      <MainStack.Screen name="Place" component={Place} />
       <MainStack.Screen name="Walkthrough" component={Walkthrough} />
       <MainStack.Screen name="SignUp" component={SignUp} />
       <MainStack.Screen name="SignIn" component={SignIn} />
