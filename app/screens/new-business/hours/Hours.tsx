@@ -1,20 +1,45 @@
 import React, { useState } from 'react';
 import { FlatList, SafeAreaView, View } from 'react-native';
 import { Formik } from 'formik';
-import * as Yup from 'yup';
 
-import { Header, Text, TextInput, Button } from '@components';
+import { Header, Text, Button, HoursCheckbox } from '@components';
 import { BaseColor, BaseStyle } from '@config';
 
 import { StackScreenProps } from '@react-navigation/stack';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
 
-const hoursSchema = Yup.object({
-  name: Yup.string().required('name must be atleats 3 words').min(3),
-});
-
 export const Hours = ({ navigation }: StackScreenProps<GlobalParamList>) => {
+  let array = [
+    { day: 'Monday', from: '09:00 am', to: '10:00 pm', isOpen: false },
+    { day: 'Tuesday', from: '09:00 am', to: '10:00 pm', isOpen: false },
+    { day: 'Wednesday', from: '09:00 am', to: '10:00 pm', isOpen: false },
+    { day: 'Thursday', from: '09:00 am', to: '10:00 pm', isOpen: false },
+    { day: 'Friday', from: '09:00 am', to: '10:00 pm', isOpen: false },
+    { day: 'Saturday', from: '09:00 am', to: '10:00 pm', isOpen: false },
+    { day: 'Sunday', from: '09:00 am', to: '10:00 pm', isOpen: false },
+  ];
+
+  const [selectedDays, setSelectedDays] = useState(array);
+  const [active, setActive] = useState<boolean>(false);
+
+  const updateSelectedDays = (payload: any) => {
+    let array = [...selectedDays];
+    array.map((el) => {
+      if (el.day === payload.day) {
+        el.isOpen = payload.isOpen;
+        setActive(true);
+        if (payload.to) {
+          el.to = payload.to;
+        }
+        if (payload.from) {
+          el.from = payload.from;
+        }
+      }
+    });
+    setSelectedDays(array);
+  };
+
   const navigateToBack = () => {
     navigation.goBack();
   };
@@ -25,11 +50,10 @@ export const Hours = ({ navigation }: StackScreenProps<GlobalParamList>) => {
 
       <Formik
         initialValues={{ hours: '' }}
-        validationSchema={hoursSchema}
         onSubmit={(values) => {
-          navigation.navigate('Home');
+          navigation.navigate('Price');
         }}>
-        {({ values, handleChange, handleSubmit, errors }) => {
+        {({ values, handleSubmit }) => {
           return (
             <>
               <FlatList
@@ -37,23 +61,22 @@ export const Hours = ({ navigation }: StackScreenProps<GlobalParamList>) => {
                 overScrollMode={'never'}
                 scrollEventThrottle={16}
                 data={[1]}
-                renderItem={() => {
+                renderItem={(item) => {
                   return (
                     <View>
-                      <Text title1 bold>
-                        What is your Business address ?
+                      <Text style={{ paddingBottom: 20 }} title1 bold>
+                        Set Timings of your Business
                       </Text>
-                      <TextInput
-                        style={styles.textArea}
-                        placeholder="Open Hours ?"
-                        value={values.hours}
-                        multiline={true}
-                        textAlignVertical="top"
-                        onChangeText={handleChange('address')}
-                      />
-                      <Text style={{ color: BaseColor.redColor }}>
-                        {errors.hours}
-                      </Text>
+
+                      {selectedDays.map((day, index) => {
+                        return (
+                          <HoursCheckbox
+                            key={index}
+                            day={day}
+                            getObject={updateSelectedDays}
+                          />
+                        );
+                      })}
                     </View>
                   );
                 }}
@@ -67,9 +90,7 @@ export const Hours = ({ navigation }: StackScreenProps<GlobalParamList>) => {
                 <Button
                   style={[
                     styles.fotterButtons,
-                    values.hours.length < 10
-                      ? { backgroundColor: BaseColor.grayColor }
-                      : null,
+                    !active ? { backgroundColor: BaseColor.grayColor } : null,
                   ]}
                   title="submit"
                   onPress={handleSubmit}>
