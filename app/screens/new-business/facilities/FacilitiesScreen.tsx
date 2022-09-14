@@ -1,45 +1,47 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatList, SafeAreaView, TouchableOpacity, View } from 'react-native';
+import remoteConfig from '@react-native-firebase/remote-config';
 
-import { Header, Text, TextInput, Button, Icon } from '@components';
-import { BaseColor, BaseStyle, useTheme } from '@config';
+import { Header, Text, Button, Icon } from '@components';
+import { BaseStyle, useTheme } from '@config';
 
 import { StackScreenProps } from '@react-navigation/stack';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
-import CategoryIcon from '@screens/category/components/CategoryIcon';
+import { useTranslation } from 'react-i18next';
 
 export const FacilitiesScreen = ({
   navigation,
 }: StackScreenProps<GlobalParamList>) => {
   const [active, setActive] = useState<boolean>(false);
   const [search, setSearch] = useState<any>();
-  const [text, setText] = useState('');
+  const [tags, setTags] = useState([]);
+  const [selected, setSelected] = useState<any>([]);
+  const [items, setItems] = useState(tags);
+  const [facilities, setFacilities] = useState([]);
 
   const { colors } = useTheme();
+  const { t } = useTranslation();
 
-  const facilities = [
-    {
-      name: 'Free Wifi',
-      icon: 'X',
-    },
-    {
-      name: 'Open 24/7',
-      icon: 'X',
-    },
-    {
-      name: 'Pet Allowed',
-      icon: 'X',
-    },
-    {
-      name: 'Shower',
-      icon: 'X',
-    },
-    {
-      name: 'Shuttle Bus',
-      icon: 'X',
-    },
-  ];
+  useEffect(() => {
+    const getFacilities = remoteConfig().getValue('facilities');
+    getFacilities._value
+      ? setFacilities(JSON.parse(getFacilities._value))
+      : null;
+  }, []);
+
+  const onChange = (select: any) => {
+    const isItemSelected = selected.some(
+      (obj: any) => obj.name === select.name,
+      setActive(true),
+    );
+    if (!isItemSelected) {
+      setSelected([...selected, select]);
+    } else {
+      const arr = selected.filter((item: any) => item.name != select.name);
+      setSelected(arr);
+    }
+  };
 
   const navigateToNext = () => {
     navigation.navigate('Tags');
@@ -58,44 +60,45 @@ export const FacilitiesScreen = ({
         }}
         onPressRight={navigateToNext}
       />
-      <Text title1 bold style={styles.textPadding}>
-        Select Facility which available
-      </Text>
-      <View style={styles.viewContainer}>
-        <TextInput
-          onChangeText={search}
-          placeholder={'Search facility'}
-          value={search}
-          icon={
-            <TouchableOpacity onPress={() => {}}>
-              <Icon name="times" size={16} color={BaseColor.primary} />
-            </TouchableOpacity>
-          }
+
+      <View style={styles.contain}>
+        <FlatList
+          contentContainerStyle={{ paddingVertical: 10 }}
+          data={facilities}
+          keyExtractor={(item: any, index) => item.id}
+          renderItem={({ item }) => {
+            const checked = selected.some((obj: any) => obj.name === item.name);
+            return (
+              <TouchableOpacity
+                style={[styles.item, { backgroundColor: colors.card }]}
+                onPress={() => onChange(item)}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Icon
+                    name={item.icon}
+                    color={item?.checked ? colors.primary : colors.text}
+                    style={{ marginRight: 10 }}
+                    size={15}
+                  />
+                  <Text
+                    body1
+                    style={
+                      checked
+                        ? {
+                            color: colors.primary,
+                          }
+                        : {}
+                    }>
+                    {item.name}
+                  </Text>
+                </View>
+                {checked && (
+                  <Icon name="check" size={14} color={colors.primary} />
+                )}
+              </TouchableOpacity>
+            );
+          }}
         />
       </View>
-
-      <FlatList
-        style={styles.container}
-        overScrollMode={'never'}
-        scrollEventThrottle={16}
-        data={facilities}
-        renderItem={({ item }) => {
-          return (
-            <View>
-              <CategoryIcon
-                icon={item.icon}
-                title={item.name}
-                style={styles.itemIcon}
-                onPress={() => {
-                  {
-                    setActive(true);
-                  }
-                }}
-              />
-            </View>
-          );
-        }}
-      />
 
       <View style={styles.stickyFooter}>
         <Button style={styles.fotterButtons} onPress={() => navigateToBack()}>

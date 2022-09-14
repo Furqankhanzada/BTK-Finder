@@ -1,4 +1,6 @@
 export interface CategoryPresentable {
+  checked: any;
+  id: string;
   order: number;
   _id: string;
   name: string;

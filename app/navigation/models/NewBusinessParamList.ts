@@ -11,4 +11,5 @@ export type NewBusinessParamList = {
   NewBusinessStack: undefined;
   Business: undefined;
   Address: undefined;
+  Hours: undefined;
 };

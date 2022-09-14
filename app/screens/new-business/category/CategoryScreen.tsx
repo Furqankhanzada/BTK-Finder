@@ -6,35 +6,61 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { useQueryClient } from '@tanstack/react-query';
 
 import { Header, Text, TextInput, Button, Icon } from '@components';
-import { BaseColor, BaseStyle, useTheme } from '@config';
+import { BaseStyle, useTheme } from '@config';
 
 import { useCategories } from '../../category/queries/queries';
 import { StackScreenProps } from '@react-navigation/stack';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
-import { CategoryPresentable } from '@screens/category/modals/CategoryPresentables';
-import CategoryIcon from '@screens/category/components/CategoryIcon';
+import { useTranslation } from 'react-i18next';
 
 export const CategoryScreen = ({
   navigation,
+  route,
 }: StackScreenProps<GlobalParamList>) => {
-  const { colors } = useTheme();
-  const queryClient = useQueryClient();
-
-  const [refresh, setRefres] = useState<boolean>(false);
-  const [search, setSearch] = useState<string>('');
-  const [filteredCategories, setFilteredCategories] =
-    useState<CategoryPresentable[]>();
-  const [active, setActive] = useState<boolean>(false);
-
   const {
     isLoading,
     data: categries,
     refetch,
   } = useCategories(['select-category']);
+
+  const { colors } = useTheme();
+  const { t } = useTranslation();
+
+  const [refresh, setRefres] = useState<boolean>(false);
+  const [search, setSearch] = useState<string>('');
+
+  const [active, setActive] = useState<boolean>(false);
+  const [items, setItems] = useState(categries);
+  const [selected, setSelected] = useState<any>([]);
+
+  const onChange = (select: any) => {
+    const isItemSelected = selected.some(
+      (obj: any) => obj.name === select.name,
+      setActive(true),
+    );
+    if (!isItemSelected) {
+      setSelected([...selected, select]);
+    } else {
+      const arr = selected.filter((item: any) => item.name != select.name);
+      setSelected(arr);
+    }
+  };
+
+  const onSearch = (keyword: any) => {
+    setSearch(keyword);
+    if (!keyword) {
+      setItems(categries ?? []);
+    } else {
+      setItems(
+        items?.filter((item: any) => {
+          return item.name.toUpperCase().includes(search.toUpperCase());
+        }),
+      );
+    }
+  };
 
   const navigateToNext = () => {
     navigation.navigate('Facilities');
@@ -50,67 +76,63 @@ export const CategoryScreen = ({
     setRefres(false);
   };
 
-  const onSearch = (text: string) => {
-    setSearch(text);
-    const cachedCategories: CategoryPresentable[] | undefined =
-      queryClient.getQueryData(['select-category']);
-    const filterCacheCatagory = cachedCategories?.filter(
-      (category: CategoryPresentable) => {
-        return category.name.toLowerCase().includes(text.toLowerCase());
-      },
-    );
-    setFilteredCategories(filterCacheCatagory);
-  };
-
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header title="Select Category" />
-      <View style={styles.viewContainer}>
-        <TextInput
-          onChangeText={onSearch}
-          placeholder={'Search category'}
-          value={search}
-          icon={
-            <TouchableOpacity
-              onPress={() => {
-                onSearch('');
-              }}>
-              <Icon size={16} color={BaseColor.grayColor} />
-            </TouchableOpacity>
-          }
-        />
-      </View>
       <>
-        <FlatList
-          style={styles.container}
-          refreshControl={
-            <RefreshControl
-              colors={[colors.primary]}
-              tintColor={colors.primary}
-              refreshing={refresh}
-              onRefresh={onRefresh}
+        <View style={styles.contain}>
+          {categries ? (
+            <TextInput
+              onChangeText={(text) => onSearch(text)}
+              placeholder={t('search')}
+              value={search}
+              icon={
+                <TouchableOpacity onPress={() => onSearch('')}>
+                  <Icon name="times" size={16} color={colors.primaryLight} />
+                </TouchableOpacity>
+              }
             />
-          }
-          data={filteredCategories ? filteredCategories : categries}
-          renderItem={({ item }) => {
-            return (
-              <CategoryIcon
-                icon={item.icon}
-                title={item.name}
-                onPress={() => {
-                  {
-                    setActive(true);
-                  }
-                }}
-                style={styles.itemIcon}
-              />
-            );
-          }}
-          ListEmptyComponent={
-            <View>
-              <Text body2>{'data_not_found'}</Text>
-            </View>
-          }></FlatList>
+          ) : null}
+          <FlatList
+            contentContainerStyle={{ paddingVertical: 10 }}
+            data={items}
+            keyExtractor={(item, index) => item.id}
+            renderItem={({ item }) => {
+              const checked = selected.some(
+                (obj: any) => obj.name === item.name,
+              );
+              return (
+                <TouchableOpacity
+                  style={[styles.item, { backgroundColor: colors.card }]}
+                  onPress={() => onChange(item)}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Icon
+                      name={item.icon}
+                      color={item?.checked ? colors.primary : colors.text}
+                      style={{ marginRight: 10 }}
+                      size={15}
+                    />
+                    <Text
+                      body1
+                      style={
+                        checked
+                          ? {
+                              color: colors.primary,
+                            }
+                          : {}
+                      }>
+                      {item.name}
+                    </Text>
+                  </View>
+                  {checked && (
+                    <Icon name="check" size={14} color={colors.primary} />
+                  )}
+                </TouchableOpacity>
+              );
+            }}
+          />
+        </View>
+
         <View style={styles.stickyFooter}>
           <Button style={styles.fotterButtons} onPress={() => navigateToBack()}>
             {'Back'}
