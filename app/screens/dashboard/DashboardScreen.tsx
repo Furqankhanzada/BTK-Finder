@@ -1,11 +1,5 @@
 import React, { memo, useEffect, useState } from 'react';
-import {
-  FlatList,
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  RefreshControl,
-} from 'react-native';
+import { FlatList, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useDispatch, useSelector } from 'react-redux';
 import { firebase } from '@react-native-firebase/database';
@@ -24,7 +18,6 @@ import {
   BannerPresentable,
   BannersPresentable,
 } from '@screens/dashboard/models/BannersPresentable';
-import { LocationPresentable } from '@screens/dashboard/models/LocationPresentable';
 
 import { EVENTS, setUser, trackEvent } from '../../userTracking';
 import { GlobalParamList } from '../../navigation/models/GlobalParamList';
@@ -46,25 +39,17 @@ function DashboardScreen({
   const profileData = useSelector((state: any) => state.profile);
 
   const [banners, setBanners] = useState<BannersPresentable>();
-  const [locations, setLocations] = useState<Array<LocationPresentable>>();
-  const [refreshing, setRefreshing] = useState(false);
+  // const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    const onValueChange = database.ref('/home').on('value', (snapshot) => {
-      const home = snapshot.val();
-      console.log('home ###', home);
-      setBanners(home.banners);
-      setLocations(
-        home.locations.map((location: string) => ({
-          text: location,
-          value: location,
-          checked: false,
-        })),
-      );
-    });
+    const onValueChange = database
+      .ref('/home/banners')
+      .on('value', (snapshot) => {
+        setBanners(snapshot.val());
+      });
 
     // Stop listening for updates when no longer required
-    return () => database.ref('/home').off('value', onValueChange);
+    return () => database.ref('/home/banners').off('value', onValueChange);
   }, []);
 
   useEffect(() => {
@@ -89,12 +74,9 @@ function DashboardScreen({
   /**
    * on Refresh category
    */
-  const onRefresh = () => {
-    setRefreshing(true);
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 200);
-  };
+  // const onRefresh = async () => {
+  //   setRefreshing(true);
+  // };
 
   const onCategoriesViewAllPress = () => {
     navigation.navigate('Category');
@@ -166,7 +148,6 @@ function DashboardScreen({
     );
   };
 
-  console.log('locations###', locations);
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
@@ -211,14 +192,14 @@ function DashboardScreen({
       </TouchableOpacity>
       <FlatList
         data={[1]}
-        refreshControl={
-          <RefreshControl
-            colors={[colors.primary]}
-            tintColor={colors.primary}
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-          />
-        }
+        // refreshControl={
+        //   <RefreshControl
+        //     colors={[colors.primary]}
+        //     tintColor={colors.primary}
+        //     refreshing={refreshing}
+        //     onRefresh={onRefresh}
+        //   />
+        // }
         renderItem={() => (
           <View>
             {renderBanner(banners?.one)}
