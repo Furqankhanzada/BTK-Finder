@@ -26,7 +26,6 @@ export default function useRemoteConfig(): RemoteConfig {
             );
             const allValues: Record<string, any> = remoteConfig().getAll();
             for (const [key, value] of Object.entries(allValues)) {
-              console.log('key, value###', key, value);
               if (key === 'helplines') {
                 setConfig({ ...config, helplines: JSON.parse(value._value) });
               }

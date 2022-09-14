@@ -4,6 +4,7 @@ import useNativeUpdate from './useNativeUpdate';
 import usLocation from './useLocation';
 import useLocalStorage from './useLocalStorage';
 import useRemoteConfig from './useRemoteConfig';
+import { useAlerts } from './useAlerts';
 
 export {
   usePushNotifications,
@@ -12,4 +13,5 @@ export {
   usLocation,
   useLocalStorage,
   useRemoteConfig,
+  useAlerts,
 };
