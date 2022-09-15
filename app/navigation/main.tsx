@@ -82,7 +82,7 @@ export default function Main() {
       <MainStack.Screen name="Hours" component={Hours} />
       <MainStack.Screen name="PriceRange" component={PriceRange} />
       <MainStack.Screen name="FinalReview" component={FinalReview} />
-      <MainStack.Screen name="Gallery" component={Gallery} />
+      {/* <MainStack.Screen name="Gallery" component={Gallery} /> */}
       <MainStack.Screen name="MyBusinesses" component={MyBusinesses} />
       {/* <MainStack.Screen name="EditBusiness" component={Business} /> */}
       <MainStack.Screen name="VerifyCode" component={VerifyCode} />

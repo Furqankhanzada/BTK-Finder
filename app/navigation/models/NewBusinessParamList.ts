@@ -13,4 +13,5 @@ export type NewBusinessParamList = {
   Address: undefined;
   Hours: undefined;
   Price: undefined;
+  Gallery: undefined;
 };

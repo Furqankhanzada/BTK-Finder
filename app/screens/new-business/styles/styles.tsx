@@ -1,3 +1,4 @@
+import { BaseColor } from '@config';
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
@@ -93,7 +94,8 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
   },
   title: {
-    marginBottom: 15,
+    paddingTop: 15,
+    paddingBottom: 8,
   },
   contentResultRange: {
     flexDirection: 'row',
@@ -105,5 +107,85 @@ export const styles = StyleSheet.create({
   },
   fontSize: {
     fontSize: 18,
+  },
+  thumbnailContainer: {
+    marginHorizontal: 25,
+    backgroundColor: BaseColor.grayColor,
+    height: 250,
+    position: 'relative',
+    borderRadius: 5,
+  },
+  thumbnailAddOverlay: {
+    height: 80,
+    borderRadius: 5,
+    backgroundColor: BaseColor.grayColor,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  thumbnailAddOverlayText: {
+    fontSize: 20,
+    textAlign: 'center',
+    color: BaseColor.whiteColor,
+  },
+  galleryImageContainer: {
+    width: '100%',
+    height: 100,
+    borderRadius: 5,
+    backgroundColor: BaseColor.grayColor,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+  },
+  gallerySection: {
+    marginBottom: 5,
+  },
+  galleryImageAddIconContainer: {
+    width: 52,
+    height: 52,
+    borderRadius: 52 / 2,
+    backgroundColor: BaseColor.whiteColor,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  galleryImageAddIcon: {
+    color: BaseColor.blueColor,
+    fontSize: 22,
+  },
+  galleryActionButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 32,
+    backgroundColor: 'red',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    zIndex: 1,
+    right: -10,
+    top: -10,
+  },
+  galleryActionButtonIcon: {
+    color: BaseColor.whiteColor,
+  },
+  galleryImageButton: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 5,
+    overflow: 'hidden',
+  },
+  galleryImageBadge: {
+    backgroundColor: BaseColor.blueColor,
+    color: BaseColor.whiteColor,
+    paddingVertical: 5,
+    paddingHorizontal: 15,
+    position: 'absolute',
+    zIndex: 1,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    textAlign: 'center',
+  },
+  galleryImage: {
+    width: '100%',
+    height: '100%',
   },
 });

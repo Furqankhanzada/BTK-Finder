@@ -8,7 +8,6 @@ import { BaseColor, BaseStyle, useTheme } from '@config';
 import { Button, Header, Text, RangeSlider } from '@components';
 
 import { styles } from '../styles/styles';
-import TextInputMask from 'react-native-text-input-mask';
 import { useTranslation } from 'react-i18next';
 
 export const PriceRange = ({
@@ -16,8 +15,6 @@ export const PriceRange = ({
 }: StackScreenProps<GlobalParamList>) => {
   const [priceBegin, setPriceBegin] = useState(0);
   const [priceEnd, setPriceEnd] = useState(100);
-  const [priceTo, setPriceTo] = useState('');
-  const [priceFrom, setPriceFrom] = useState('');
 
   const { t } = useTranslation();
   const { colors } = useTheme();
@@ -42,7 +39,7 @@ export const PriceRange = ({
       <Formik
         initialValues={{ price: '' }}
         onSubmit={(values) => {
-          navigation.navigate('Category');
+          navigation.navigate('Gallery');
         }}>
         {({ values, handleSubmit }) => {
           return (
@@ -70,40 +67,11 @@ export const PriceRange = ({
                         }}
                       />
                       <View style={styles.contentResultRange}>
-                        <Text style={styles.fontSize}>Rs:{priceBegin} </Text>
-                        <Text style={styles.fontSize}>Rs:{priceEnd}</Text>
+                        <Text style={styles.fontSize}>
+                          min - Rs.{priceBegin}{' '}
+                        </Text>
+                        <Text style={styles.fontSize}>max - Rs.{priceEnd}</Text>
                       </View>
-
-                      {/* <TextInputMask
-                        style={[
-                          BaseStyle.textInput,
-                          { backgroundColor: cardColor, color: colors.text },
-                        ]}
-                        onChangeText={(text) => setPriceFrom(text)}
-                        placeholder="From"
-                        placeholderTextColor={BaseColor.grayColor}
-                        keyboardType="numeric"
-                        value={priceFrom}
-                        autoCapitalize="none"
-                        mask={'RS [0000000000]'}
-                      />
-                      <TextInputMask
-                        style={[
-                          BaseStyle.textInput,
-                          {
-                            backgroundColor: cardColor,
-                            color: colors.text,
-                            marginTop: 10,
-                          },
-                        ]}
-                        onChangeText={(text) => setPriceTo(text)}
-                        placeholder="To"
-                        placeholderTextColor={BaseColor.grayColor}
-                        keyboardType="numeric"
-                        value={priceTo}
-                        autoCapitalize="none"
-                        mask={'RS [0000000000]'}
-                      /> */}
                     </View>
                   );
                 }}
