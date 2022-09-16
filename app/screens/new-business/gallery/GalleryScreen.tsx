@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { FlatList, SafeAreaView, TouchableOpacity, View } from 'react-native';
+import {
+  FlatList,
+  Platform,
+  SafeAreaView,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -10,6 +16,8 @@ import { BaseColor, BaseStyle } from '@config';
 import { StackScreenProps } from '@react-navigation/stack';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
+import axios from 'axios';
+import Config from 'react-native-config';
 
 const gallerySchema = Yup.object({
   gallery: Yup.string().required(),
@@ -25,6 +33,27 @@ export const GalleryScreen = ({
 
   const navigateToBack = () => {
     navigation.goBack();
+  };
+
+  const uploadSingleImage = (imagePath: any) => {
+    const imageData = new FormData();
+    imageData.append('file', {
+      uri: imagePath,
+      name: 'image.png',
+      fileName: 'image',
+      type: 'image/png',
+    });
+    axios({
+      method: 'post',
+      url: `${Config.API_URL}/files/upload?folder=users`,
+      data: imageData,
+    })
+      .then(function (response) {
+        console.log('Response of API:', response);
+      })
+      .then((error) => {
+        console.log('Error of API:', error);
+      });
   };
 
   const pickSingle = () => {
@@ -44,8 +73,12 @@ export const GalleryScreen = ({
       cropperActiveWidgetColor: 'white',
       cropperToolbarWidgetColor: '#3498DB',
       multiple: false,
+    }).then((image) => {
+      console.log('Single Image Selected: ', image);
+      uploadSingleImage(image.path);
     });
   };
+
   const pickMultiple = () => {
     setActive(true);
     ImagePicker.openPicker({
@@ -55,6 +88,8 @@ export const GalleryScreen = ({
       compressVideoPreset: 'MediumQuality',
       includeExif: true,
       multiple: true,
+    }).then((image) => {
+      console.log('Multiple Image', image);
     });
   };
 
@@ -83,18 +118,18 @@ export const GalleryScreen = ({
                 data={[1]}
                 renderItem={() => {
                   return (
-                    <View style={{ flex: 1 }}>
+                    <View style={styles.galleryContainer}>
                       <Text title1 bold>
                         Can you add Images of your business to attract users?
                       </Text>
                       <View>
                         <View style={styles.title}>
-                          <Text title3 semibold style={{ textAlign: 'center' }}>
+                          <Text title3 semibold style={styles.thumbnailText}>
                             Thumbnail
                           </Text>
                         </View>
                         <View>
-                          <Text style={{ textAlign: 'center' }}>
+                          <Text style={styles.thumbnailText}>
                             Thumbnail size must be 300x300
                           </Text>
                         </View>
@@ -109,12 +144,12 @@ export const GalleryScreen = ({
 
                       <View style={styles.gallerySection}>
                         <View style={styles.title}>
-                          <Text title3 semibold style={{ textAlign: 'center' }}>
+                          <Text title3 semibold style={styles.thumbnailText}>
                             Gallery
                           </Text>
                         </View>
                         <View>
-                          <Text style={{ textAlign: 'center' }}>
+                          <Text style={styles.thumbnailText}>
                             Gallery Images size must be 600x400
                           </Text>
                         </View>
