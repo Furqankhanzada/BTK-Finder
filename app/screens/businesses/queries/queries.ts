@@ -81,12 +81,14 @@ export const useBusinessesInfinite = (
   return useInfiniteQuery(
     key,
     ({ pageParam = 1 }): Promise<BusinessPresentable[]> => {
+      const skip = (pageParam - 1) * params.limit!;
+
       return axiosApiInstance({
         method: 'GET',
         url: `${BUSINESSES_API}`,
         params: {
           ...restParams,
-          skip: (pageParam - 1) * params.limit!,
+          skip: skip >= 0 ? skip : 0,
         },
       })
         .then((response) => response.data)
