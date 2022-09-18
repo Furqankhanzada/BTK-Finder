@@ -99,12 +99,14 @@ export interface BusinessPresentable {
   contactItems?: ContactItem[];
   type: BusinessType;
   shop?: Shop;
+  thumbnail?: string;
   gallery?: Gallery[];
   facilities?: Facility[];
   openHours?: OpenHours[];
   status: BusinessStatus;
   category: string;
   reviews: Review[];
+  averageRatings?: number;
   reviewStats: ReviewStats;
   favorites?: Favorite[];
 }

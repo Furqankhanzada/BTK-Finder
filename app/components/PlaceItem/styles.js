@@ -61,7 +61,7 @@ export default StyleSheet.create({
   //gird css
   girdImage: {
     borderRadius: 8,
-    height: Utils.scaleWithPixel(120),
+    height: Utils.scaleWithPixel(80),
     width: '100%',
   },
   girdContent: {

@@ -12,8 +12,7 @@ import { setEditBusiness } from '../actions/business';
 import { LastRoutes, withAuthRedirection } from './hoc/withAuthRedirection';
 
 /* Bottom Screen */
-import Home from '@screens/Home';
-// import Notification from '@screens/Notification';
+import Notification from '@screens/Notification';
 import Business from '@screens/AddBusiness';
 import FavouriteScreen from '@screens/favourite/FavouriteScreen';
 import Messenger from '@screens/Messenger';
@@ -23,7 +22,6 @@ import Profile from '@screens/Profile';
 import ThemeSetting from '@screens/ThemeSetting';
 import Setting from '@screens/Setting';
 import Category from '@screens/category/CategoryScreen';
-import Place from '@screens/Place';
 import SignUp from '@screens/SignUp';
 import SignIn from '@screens/SignIn';
 import VerifyCode from '@screens/VerifyCode';
@@ -41,6 +39,8 @@ import PriceRange from '@screens/AddBusiness/priceRange';
 import FinalReview from '@screens/AddBusiness/review';
 import Gallery from '@screens/AddBusiness/gallery';
 import MyBusinesses from '@screens/MyBusinesses';
+import { DashboardStackNavigator } from '@screens/dashboard/navigation/DashboardStack';
+import BusinessesScreen from '@screens/businesses/list/BusinessesScreen';
 
 import { MainStackParamList } from './models/MainStackParamList';
 import { MainBottomTabParamList } from './models/MainBottomTabParamList';
@@ -64,13 +64,13 @@ export default function Main() {
       <MainStack.Screen name="ThemeSetting" component={ThemeSetting} />
       <MainStack.Screen name="Setting" component={Setting} />
       <MainStack.Screen name="Category" component={Category} />
-      <MainStack.Screen name="Place" component={Place} />
+      <MainStack.Screen name="Businesses" component={BusinessesScreen} />
       <MainStack.Screen name="Walkthrough" component={Walkthrough} />
       <MainStack.Screen name="SignUp" component={SignUp} />
       <MainStack.Screen name="SignIn" component={SignIn} />
       <MainStack.Screen name="Messenger" component={Messenger} />
       <MainStack.Screen name="Messages" component={Messages} />
-      {/* <MainStack.Screen name="Notification" component={Notification} /> */}
+      <MainStack.Screen name="Notification" component={Notification} />
       <MainStack.Screen name="ResetPassword" component={ResetPassword} />
       <MainStack.Screen name="ChangePassword" component={ChangePassword} />
       <MainStack.Screen name="ProfileEdit" component={ProfileEdit} />
@@ -98,7 +98,7 @@ function MainBottomTabNavigator() {
 
   return (
     <MainBottomTab.Navigator
-      initialRouteName="Home"
+      initialRouteName="DashboardStack"
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: colors.primary,
@@ -110,8 +110,8 @@ function MainBottomTabNavigator() {
         },
       }}>
       <MainBottomTab.Screen
-        name="Home"
-        component={Home}
+        name="DashboardStack"
+        component={DashboardStackNavigator}
         options={{
           title: t('home'),
           tabBarIcon: ({ color }) => {

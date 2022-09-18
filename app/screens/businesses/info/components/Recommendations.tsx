@@ -8,6 +8,7 @@ import CustomSectionList from '@screens/Home/CustomSectionList';
 import { useBusinesses } from '@screens/businesses/queries/queries';
 import { BusinessPresentable } from '@screens/businesses/models/BusinessPresentable';
 import { GlobalParamList } from '../../../../navigation/models/GlobalParamList';
+import { BusinessesQueryKeysWithFav } from '@screens/businesses/models/BusinessesQueryKeys';
 
 interface Props {
   onNavigate: (route: keyof GlobalParamList, id?: string) => void;
@@ -19,13 +20,19 @@ export default function Recommendations({ business, onNavigate }: Props) {
   const user = useSelector((state: any) => state.profile);
   // Recent Businesses
   const { isLoading: isRecentLoading, data: recentBusinesses } = useBusinesses(
-    ['recent-businesses'],
+    [BusinessesQueryKeysWithFav.recentBusinesses],
     {
-      placeDetail: true,
       recent: true,
       limit: 5,
       skip: 0,
-      fields: 'name, thumbnail, category, address, averageRatings',
+      fields: [
+        'name',
+        'thumbnail',
+        'category',
+        'address',
+        'averageRatings',
+        'favorites',
+      ].join(','),
     },
   );
   // Related Businesses
@@ -35,7 +42,13 @@ export default function Recommendations({ business, onNavigate }: Props) {
       {
         limit: 5,
         skip: 0,
-        fields: 'name, thumbnail, category, averageRatings',
+        fields: [
+          'name',
+          'thumbnail',
+          'category',
+          'averageRatings',
+          'favorites',
+        ].join(','),
         category: business.category,
       },
       { enabled: !!business.category },
@@ -63,7 +76,6 @@ export default function Recommendations({ business, onNavigate }: Props) {
                 )
               }
               businessId={item?._id}
-              // navigation={navigation}
               lastRoute="BusinessDetailTabNavigator"
               routeId={business?._id}
               onPress={() => onNavigate('BusinessDetailTabNavigator', item._id)}

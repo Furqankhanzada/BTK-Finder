@@ -38,9 +38,9 @@ export default function CategoryScreen(
 
   const {
     isLoading,
-    data: categries,
+    data: categories,
     refetch,
-  } = useCategories(['business-catagories']);
+  } = useCategories(['categories']);
 
   const onChangeView = () => {
     Utils.enableExperimental();
@@ -57,13 +57,13 @@ export default function CategoryScreen(
   const onSearch = (text: string) => {
     setSearch(text);
     const cachedCategories: CategoryPresentable[] | undefined =
-      queryClient.getQueryData(['business-catagories']);
-    const filterCacheCatagory = cachedCategories?.filter(
+      queryClient.getQueryData(['categories']);
+    const filterCacheCategory = cachedCategories?.filter(
       (category: CategoryPresentable) => {
         return category.name.toLowerCase().includes(text.toLowerCase());
       },
     );
-    setFilteredCategories(filterCacheCatagory);
+    setFilteredCategories(filterCacheCategory);
   };
 
   const onRefresh = async () => {
@@ -80,13 +80,9 @@ export default function CategoryScreen(
             icon={item.icon}
             title={item.name}
             onPress={() =>
-              navigation.navigate('Place', {
+              navigation.navigate('Businesses', {
                 title: item.name,
                 category: item.name,
-                categoryIcon: item.icon,
-                // route: item.route,
-                // latitude: route?.params?. latitude ?? null,
-                // longitude: route?.params?.longitude ?? null,
               })
             }
             style={[styles.itemIcon, { borderColor: colors.border }]}
@@ -99,10 +95,9 @@ export default function CategoryScreen(
             icon={item.icon}
             title={item.name}
             onPress={() =>
-              navigation.navigate('Place', {
+              navigation.navigate('Businesses', {
                 title: item.name,
                 category: item.name,
-                // route: item.route,
               })
             }
             style={styles.itemFull}
@@ -166,7 +161,7 @@ export default function CategoryScreen(
               onRefresh={onRefresh}
             />
           }
-          data={filteredCategories ? filteredCategories : categries}
+          data={filteredCategories ? filteredCategories : categories}
           keyExtractor={(item) => item._id}
           renderItem={({ item }) => renderItem(item)}
           ListEmptyComponent={

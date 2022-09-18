@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { request } from 'graphql-request';
 import Config from 'react-native-config';
 
@@ -10,6 +10,10 @@ import {
   GET_PRODUCTS,
   GET_TAGS,
 } from '@screens/businesses/queries/gql/queries';
+import {
+  BusinessParams,
+  BusinessParamsWithSearch,
+} from '@screens/businesses/models/BusinessParams';
 
 import axiosApiInstance from '../../../interceptor/axios-interceptor';
 import { BUSINESSES_API } from '../../../constants';
@@ -47,19 +51,16 @@ export const useBusiness = (id: string) =>
 
 export const useBusinesses = (
   key: Array<string | number>,
-  payload?: any,
-  oprions: any = { enabled: true },
+  params?: BusinessParams,
+  options = { enabled: true },
 ) => {
-  let queryParams = '';
-  if (payload && encodeQueryData(payload)) {
-    queryParams = `?${encodeQueryData(payload)}`;
-  }
   return useQuery(
     key,
-    () => {
+    (): Promise<BusinessPresentable[]> => {
       return axiosApiInstance({
         method: 'GET',
-        url: `${BUSINESSES_API}${queryParams}`,
+        url: `${BUSINESSES_API}`,
+        params: params,
       })
         .then((response) => response.data)
         .catch(({ response }) => {
@@ -67,27 +68,46 @@ export const useBusinesses = (
         });
     },
     {
-      ...oprions,
+      ...options,
     },
   );
 };
 
-function encodeQueryData(obj: any, prefix?: any): any {
-  let str = [],
-    p;
-  for (p in obj) {
-    if (obj.hasOwnProperty(p)) {
-      let k = prefix ? prefix + '[' + p + ']' : p,
-        v = obj[p];
-      str.push(
-        v !== null && typeof v === 'object'
-          ? encodeQueryData(v, k)
-          : encodeURIComponent(k) + '=' + encodeURIComponent(v),
-      );
-    }
-  }
-  return str.join('&');
-}
+export const useBusinessesInfinite = (
+  key: Array<string | number>,
+  params: BusinessParamsWithSearch,
+) => {
+  const { isFiltering, ...restParams } = params;
+  return useInfiniteQuery(
+    key,
+    ({ pageParam = 1 }): Promise<BusinessPresentable[]> => {
+      const skip = (pageParam - 1) * params.limit!;
+
+      return axiosApiInstance({
+        method: 'GET',
+        url: `${BUSINESSES_API}`,
+        params: {
+          ...restParams,
+          skip: skip >= 0 ? skip : 0,
+        },
+      })
+        .then((response) => response.data)
+        .catch(({ response }) => {
+          handleError(response.data);
+        });
+    },
+    {
+      getNextPageParam: (lastPageBusinesses, allPages) => {
+        allPages = allPages.filter((page) => page?.length);
+
+        if (lastPageBusinesses.length) {
+          return allPages.length + 1;
+        }
+      },
+      ...(isFiltering ? { staleTime: 0, cacheTime: 0 } : {}),
+    },
+  );
+};
 
 interface GetTags {
   tags: Maybe<TagConnection>;

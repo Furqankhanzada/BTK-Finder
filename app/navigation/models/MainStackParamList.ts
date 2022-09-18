@@ -10,10 +10,21 @@ export type MainStackParamList = {
   ThemeSetting: undefined;
   Setting: undefined;
   Category: undefined;
-  Place: undefined;
+  Businesses: {
+    title: string;
+    search?: string;
+    isFiltering?: boolean;
+    popular?: boolean;
+    recent?: boolean;
+    tags?: string | string[];
+    category?: string | string[];
+    latitude?: number;
+    longitude?: number;
+  };
   Walkthrough: { lastRoute: keyof GlobalParamList; id: string };
   SignUp: undefined;
   SignIn: undefined;
+  Notification: undefined;
   Messenger: undefined;
   Messages: undefined;
   ResetPassword: undefined;
