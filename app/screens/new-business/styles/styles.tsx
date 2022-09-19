@@ -184,6 +184,21 @@ export const styles = StyleSheet.create({
     right: 0,
     textAlign: 'center',
   },
+  thumbnailSection: {
+    marginTop: 20,
+    marginBottom: 30,
+  },
+  thumbnailContainerImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 5,
+  },
+  gallerySectionImagesContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingHorizontal: 15,
+  },
+
   galleryImage: {
     width: '100%',
     height: '100%',
