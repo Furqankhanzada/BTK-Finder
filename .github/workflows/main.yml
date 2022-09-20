@@ -79,6 +79,8 @@ jobs:
           cat keystore.jks.b64
           echo "app/keystore.jks"
           cat app/keystore.jks
+          echo "keystore.properties"
+          cat keystore.properties
         env:
           ANDROID_KEYSTORE_FILE: ${{ secrets.ANDROID_KEYSTORE_FILE }}
           KEYSTORE_KEY_ALIAS: ${{ secrets.KEYSTORE_KEY_ALIAS }}
