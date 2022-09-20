@@ -4,7 +4,7 @@ interface contextInterface {
   name: string;
   author: string;
   url: string;
-  value: any;
+  value?: string;
 }
 
 export const NewBusinessContext = createContext<contextInterface | null>(null);
