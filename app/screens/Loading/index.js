@@ -1,11 +1,11 @@
-import React, {useEffect} from 'react';
-import {ActivityIndicator, View} from 'react-native';
-import {Images, useTheme} from '@config';
-import {Image, Text} from '@components';
+import React, { useEffect } from 'react';
+import { ActivityIndicator, View } from 'react-native';
+import { Images, useTheme } from '@config';
+import { Image, Text } from '@components';
 import styles from './styles';
 
-export default function Loading({navigation}) {
-  const {colors} = useTheme();
+export default function Loading({ navigation }) {
+  const { colors } = useTheme();
 
   const onProcess = () => {
     setTimeout(() => {
@@ -18,12 +18,12 @@ export default function Loading({navigation}) {
 
   return (
     <View style={styles.container}>
-      <View style={{alignItems: 'center'}}>
+      <View style={{ alignItems: 'center' }}>
         <Image source={Images.logo} style={styles.logo} resizeMode="contain" />
-        <Text title1 style={{marginTop: 10}}>
+        <Text title1 style={{ marginTop: 10 }}>
           Explore BTK
         </Text>
-        <Text headline primaryColor style={{marginTop: 10}}>
+        <Text headline primaryColor style={{ marginTop: 10 }}>
           All in one place
         </Text>
       </View>

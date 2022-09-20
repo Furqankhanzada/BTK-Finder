@@ -12,7 +12,7 @@ on:
         description: 'version fragment: Possible options are [ major | feature | bug | alpha | beta | rc ]'
         required: true
       version_code:
-        description: 'version code'
+        description: 'version code/build number'
         required: true
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -26,7 +26,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@v2
         with:
-          node-version: '15.x'
+          node-version: '14.17.0'
       - run: yarn install
 
       - uses: actions/setup-ruby@v1
@@ -118,7 +118,6 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          prerelease: true
           tag_name: ${{ steps.bump_version.outputs.next-version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

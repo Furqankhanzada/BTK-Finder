@@ -1,16 +1,47 @@
-import React, {useState} from 'react';
-import {View, KeyboardAvoidingView, Platform, ScrollView} from 'react-native';
-import {BaseStyle, useTheme} from '@config';
-import {useTranslation} from 'react-i18next';
-import {Header, SafeAreaView, Icon, Text, Button, TextInput} from '@components';
+import React, { useRef, useState } from 'react';
+import { View, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { BaseStyle, useTheme } from '@config';
+import { useTranslation } from 'react-i18next';
+import {
+  Header,
+  SafeAreaView,
+  Icon,
+  Text,
+  Button,
+  TextInput,
+} from '@components';
 import styles from './styles';
+import { changePassword } from '../../actions/auth';
+import { useDispatch, useSelector } from 'react-redux';
+import Toast from 'react-native-toast-message';
 
-export default function ChangePassword({navigation}) {
-  const {t} = useTranslation();
-  const [loading, setLoading] = useState(false);
-  const [password, setPassword] = useState('');
-  const [repassword, setRepassword] = useState('');
-  const {colors} = useTheme();
+export default function ChangePassword({ navigation }) {
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const { colors } = useTheme();
+  const confirmPasswordRef = useRef(null);
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const changePasswordLoading = useSelector(
+    state => state.auth.changePasswordLoading,
+  );
+
+  const onConfirm = () => {
+    if (newPassword === confirmPassword) {
+      dispatch(
+        changePassword({ password: newPassword }, () =>
+          navigation.navigate('Profile'),
+        ),
+      );
+    } else {
+      Toast.show({
+        type: 'error',
+        topOffset: 55,
+        text1: 'Error',
+        text2: 'Password does not match',
+      });
+    }
+  };
 
   const offsetKeyboard = Platform.select({
     ios: 0,
@@ -18,7 +49,7 @@ export default function ChangePassword({navigation}) {
   });
 
   return (
-    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{top: 'always'}}>
+    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
       <Header
         title={t('change_password')}
         renderLeft={() => {
@@ -37,7 +68,7 @@ export default function ChangePassword({navigation}) {
       />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'android' ? 'height' : 'padding'}
-        style={{flex: 1, justifyContent: 'center'}}
+        style={{ flex: 1, justifyContent: 'center' }}
         keyboardVerticalOffset={offsetKeyboard}>
         <ScrollView
           contentContainerStyle={{
@@ -47,35 +78,33 @@ export default function ChangePassword({navigation}) {
           }}>
           <View style={styles.contentTitle}>
             <Text headline semibold>
-              {t('password')}
+              Enter New Password
             </Text>
           </View>
           <TextInput
-            onChangeText={text => setPassword(text)}
+            onChangeText={text => setNewPassword(text)}
             secureTextEntry={true}
-            placeholder="Password"
-            value={password}
+            placeholder="New Password"
+            value={newPassword}
+            onSubmitEditing={() => confirmPasswordRef.current.focus()}
           />
-          <View style={styles.contentTitle}>
-            <Text headline semibold>
-              {t('re_password')}
-            </Text>
-          </View>
           <TextInput
-            onChangeText={text => setRepassword(text)}
+            ref={confirmPasswordRef}
+            onChangeText={text => setConfirmPassword(text)}
             secureTextEntry={true}
-            placeholder={t('password_confirm')}
-            value={repassword}
+            placeholder="Confirm Password"
+            value={confirmPassword}
+            onSubmitEditing={() => onConfirm()}
+            blurOnSubmit={true}
+            returnKeyType="done"
+            style={{ marginTop: 10 }}
           />
-          <View style={{paddingVertical: 15}}>
+          <View style={{ paddingVertical: 15 }}>
             <Button
-              loading={loading}
+              loading={changePasswordLoading}
               full
               onPress={() => {
-                setLoading(true);
-                setTimeout(() => {
-                  navigation.goBack();
-                }, 500);
+                onConfirm();
               }}>
               {t('confirm')}
             </Button>

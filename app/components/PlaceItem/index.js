@@ -2,10 +2,9 @@ import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { Image, Text, StarRating, Tag, Icon, FavouriteIcon } from '@components';
 import { BaseColor, useTheme } from '@config';
-import PropTypes from 'prop-types';
 import styles from './styles';
 import { useTranslation } from 'react-i18next';
-import { Images } from '../../config';
+import { Images } from '@config';
 import NumberFormat from 'react-number-format';
 
 export default function PlaceItem(props) {
@@ -53,46 +52,51 @@ export default function PlaceItem(props) {
             isFavorite={isFavorite}
             favoriteId={businessId}
           />
-
-          <View style={styles.blockContentRate}>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}>
-              <Tag rate onPress={onPressTag}>
-                <NumberFormat
-                  value={rate ? rate : '0.0'}
-                  displayType={'text'}
-                  decimalScale={1}
-                  fixedDecimalScale={true}
-                  renderText={(value) => (
-                    <Text style={{ fontSize: 10, color: 'white' }}>
-                      {value}
-                    </Text>
-                  )}
-                />
-              </Tag>
-              <View style={{ marginLeft: 10 }}>
-                <Text caption1 whiteColor semibold style={{ marginBottom: 5 }}>
-                  {rateStatus ? t(rateStatus) : ''}
-                </Text>
-                <StarRating
-                  disabled={true}
-                  starSize={10}
-                  maxStars={5}
-                  rating={rate}
-                  selectedStar={(rating) => {}}
-                  fullStarColor={BaseColor.yellowColor}
-                />
+          {rate ? (
+            <View style={styles.blockContentRate}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                <Tag rate onPress={onPressTag}>
+                  <NumberFormat
+                    value={rate ? rate : '0.0'}
+                    displayType={'text'}
+                    decimalScale={1}
+                    fixedDecimalScale={true}
+                    renderText={(value) => (
+                      <Text style={{ fontSize: 10, color: 'white' }}>
+                        {value}
+                      </Text>
+                    )}
+                  />
+                </Tag>
+                <View style={{ marginLeft: 10 }}>
+                  <Text
+                    caption1
+                    whiteColor
+                    semibold
+                    style={{ marginBottom: 5 }}>
+                    {rateStatus ? t(rateStatus) : ''}
+                  </Text>
+                  <StarRating
+                    disabled={true}
+                    starSize={10}
+                    maxStars={5}
+                    rating={rate}
+                    selectedStar={(rating) => {}}
+                    fullStarColor={BaseColor.yellowColor}
+                  />
+                </View>
               </View>
+              {numReviews ? (
+                <Text caption1 semibold whiteColor style={{ marginTop: 5 }}>
+                  {numReviews ? `${numReviews} ${t('reviews')}` : null}
+                </Text>
+              ) : null}
             </View>
-            {numReviews ? (
-              <Text caption1 semibold whiteColor style={{ marginTop: 5 }}>
-                {numReviews ? `${numReviews} ${t('reviews')}` : null}
-              </Text>
-            ) : null}
-          </View>
+          ) : null}
         </TouchableOpacity>
         <TouchableOpacity onPress={onPress} activeOpacity={0.6}>
           <View
@@ -160,35 +164,42 @@ export default function PlaceItem(props) {
             <Text title2 semibold numberOfLines={1} style={{ marginTop: 5 }}>
               {title}
             </Text>
-            <View style={styles.lineRate}>
-              <Tag onPress={onPressTag} rateSmall style={{ marginRight: 5 }}>
-                <NumberFormat
-                  value={rate ? rate : '0.0'}
-                  displayType={'text'}
-                  decimalScale={1}
-                  fixedDecimalScale={true}
-                  renderText={(value) => (
-                    <Text style={{ fontSize: 10, color: 'white' }}>
-                      {value}
-                    </Text>
-                  )}
+            {rate ? (
+              <View style={styles.lineRate}>
+                <Tag onPress={onPressTag} rateSmall style={{ marginRight: 5 }}>
+                  <NumberFormat
+                    value={rate ? rate : '0.0'}
+                    displayType={'text'}
+                    decimalScale={1}
+                    fixedDecimalScale={true}
+                    renderText={(value) => (
+                      <Text style={{ fontSize: 10, color: 'white' }}>
+                        {value}
+                      </Text>
+                    )}
+                  />
+                </Tag>
+                <StarRating
+                  disabled={true}
+                  starSize={10}
+                  maxStars={5}
+                  rating={rate}
+                  selectedStar={(rating) => {}}
+                  fullStarColor={BaseColor.yellowColor}
                 />
-              </Tag>
-              <StarRating
-                disabled={true}
-                starSize={10}
-                maxStars={5}
-                rating={rate}
-                selectedStar={(rating) => {}}
-                fullStarColor={BaseColor.yellowColor}
-              />
-            </View>
-            <Text caption1 grayColor style={{ marginTop: 10 }}>
-              {location}
-            </Text>
-            <Text caption1 grayColor style={{ marginTop: 5 }}>
-              {phone}
-            </Text>
+              </View>
+            ) : null}
+
+            {location ? (
+              <Text caption1 grayColor style={{ marginTop: 10 }}>
+                {location}
+              </Text>
+            ) : null}
+            {phone ? (
+              <Text caption1 grayColor style={{ marginTop: 5 }}>
+                {phone}
+              </Text>
+            ) : null}
           </View>
         </TouchableOpacity>
       </View>
@@ -216,46 +227,60 @@ export default function PlaceItem(props) {
           />
         </TouchableOpacity>
         <TouchableOpacity onPress={onPress} activeOpacity={0.6}>
-          <Text
-            footnote
-            semibold
-            grayColor
-            numberOfLines={1}
-            style={{ marginTop: 5 }}>
-            {subtitle}
-          </Text>
+          {subtitle ? (
+            <Text
+              footnote
+              semibold
+              grayColor
+              numberOfLines={1}
+              style={{ marginTop: 5 }}>
+              {subtitle}
+            </Text>
+          ) : null}
+
           <Text subhead semibold numberOfLines={1} style={{ marginTop: 5 }}>
             {title}
           </Text>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginTop: 5,
-            }}>
-            <Tag onPress={onPressTag} rateSmall style={{ marginRight: 5 }}>
-              <NumberFormat
-                value={rate ? rate : '0.0'}
-                displayType={'text'}
-                decimalScale={1}
-                fixedDecimalScale={true}
-                renderText={(value) => (
-                  <Text style={{ fontSize: 10, color: 'white' }}>{value}</Text>
-                )}
+          {rate ? (
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginTop: 5,
+              }}>
+              <Tag onPress={onPressTag} rateSmall style={{ marginRight: 5 }}>
+                <NumberFormat
+                  value={rate ? rate : '0.0'}
+                  displayType={'text'}
+                  decimalScale={1}
+                  fixedDecimalScale={true}
+                  renderText={(value) => (
+                    <Text style={{ fontSize: 10, color: 'white' }}>
+                      {value}
+                    </Text>
+                  )}
+                />
+              </Tag>
+              <StarRating
+                disabled={true}
+                starSize={10}
+                maxStars={5}
+                rating={rate}
+                selectedStar={(rating) => {}}
+                fullStarColor={BaseColor.yellowColor}
               />
-            </Tag>
-            <StarRating
-              disabled={true}
-              starSize={10}
-              maxStars={5}
-              rating={rate}
-              selectedStar={(rating) => {}}
-              fullStarColor={BaseColor.yellowColor}
-            />
-          </View>
-          <Text caption2 grayColor style={{ marginTop: 10 }} numberOfLines={1}>
-            {location}
-          </Text>
+            </View>
+          ) : null}
+
+          {location ? (
+            <Text
+              caption2
+              grayColor
+              style={{ marginTop: 10 }}
+              numberOfLines={1}>
+              {location}
+            </Text>
+          ) : null}
         </TouchableOpacity>
       </View>
     );
@@ -270,25 +295,6 @@ export default function PlaceItem(props) {
   }
 }
 
-PlaceItem.propTypes = {
-  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-  image: PropTypes.node.isRequired,
-  list: PropTypes.bool,
-  block: PropTypes.bool,
-  grid: PropTypes.bool,
-  title: PropTypes.string,
-  subtitle: PropTypes.string,
-  location: PropTypes.string,
-  phone: PropTypes.string,
-  rate: PropTypes.number,
-  status: PropTypes.string,
-  rateStatus: PropTypes.string,
-  numReviews: PropTypes.number,
-  onPress: PropTypes.func,
-  onPressTag: PropTypes.func,
-  isFavorite: PropTypes.bool,
-};
-
 PlaceItem.defaultProps = {
   style: {},
   image: Images.imagePlaceholder,
@@ -299,7 +305,7 @@ PlaceItem.defaultProps = {
   subtitle: '',
   location: '',
   phone: '',
-  rate: '0.0',
+  rate: undefined,
   status: '',
   rateStatus: '',
   numReviews: 0,

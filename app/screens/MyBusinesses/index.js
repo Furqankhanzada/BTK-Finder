@@ -80,7 +80,7 @@ export default function MyBusinesses(props) {
   };
 
   const navigateBusinessDetail = (id) => {
-    navigation.navigate('PlaceDetail', { id });
+    navigation.navigate('BusinessDetailTabNavigator', { id });
   };
   const navigateToReview = (id) => {
     navigation.navigate('Review', { id });

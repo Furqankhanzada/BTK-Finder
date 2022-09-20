@@ -1,7 +1,7 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
-  imageBanner: {flex: 1, borderRadius: 8},
+  imageBanner: { flex: 1, borderRadius: 8 },
   card: {
     width: '100%',
     height: '100%',

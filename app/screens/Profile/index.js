@@ -13,7 +13,6 @@ import {
 } from '@components';
 import styles from './styles';
 import { useTranslation } from 'react-i18next';
-import { showBetaModal } from '../../popup/betaPopup';
 import { clearFavoriteBusiness } from '../../actions/favorites';
 
 export default function Profile(props) {
@@ -21,12 +20,12 @@ export default function Profile(props) {
   const { colors } = useTheme();
   const { t } = useTranslation();
 
-  const isLogin = useSelector((state) => state.auth.isLogin);
-  const signOutLoading = useSelector((state) => state.auth.signOutLoading);
-  const profileData = useSelector((state) => state.profile);
+  const isLogin = useSelector(state => state.auth.isLogin);
+  const signOutLoading = useSelector(state => state.auth.signOutLoading);
+  const profileData = useSelector(state => state.profile);
   const dispatch = useDispatch();
 
-  const navigateToMyBusinesses = (id) => {
+  const navigateToMyBusinesses = id => {
     navigation.navigate('MyBusinesses', { id });
   };
 
@@ -36,7 +35,7 @@ export default function Profile(props) {
    * @date 2019-08-03
    */
   const onLogOut = () => {
-    dispatch(AuthActions.authentication(false, (response) => {}));
+    dispatch(AuthActions.authentication(false, response => {}));
     dispatch(clearFavoriteBusiness());
   };
 
@@ -90,10 +89,9 @@ export default function Profile(props) {
                   styles.profileItem,
                   { borderBottomColor: colors.border, borderBottomWidth: 1 },
                 ]}
-                // onPress={() => {
-                //   navigation.navigate('ChangePassword');
-                // }}
-                onPress={showBetaModal}>
+                onPress={() => {
+                  navigation.navigate('ChangePassword');
+                }}>
                 <Text body1>{t('change_password')}</Text>
                 <Icon
                   name="angle-right"

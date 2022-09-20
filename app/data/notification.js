@@ -1,4 +1,4 @@
-import {Images} from '@config';
+import { Images } from '@config';
 
 const NotificationData = [
   {
@@ -31,4 +31,4 @@ const NotificationData = [
   },
 ];
 
-export {NotificationData};
+export { NotificationData };

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   FlatList,
@@ -6,14 +6,21 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import {BaseStyle, Images, useTheme} from '@config';
-import {Header, SafeAreaView, Icon, Image, Text, TextInput} from '@components';
+import { BaseStyle, Images, useTheme } from '@config';
+import {
+  Header,
+  SafeAreaView,
+  Icon,
+  Image,
+  Text,
+  TextInput,
+} from '@components';
 import styles from './styles';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
-export default function Messages({navigation}) {
-  const {t} = useTranslation();
-  const {colors} = useTheme();
+export default function Messages({ navigation }) {
+  const { t } = useTranslation();
+  const { colors } = useTheme();
 
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([
@@ -44,20 +51,20 @@ export default function Messages({navigation}) {
     },
   ]);
 
-  const renderItem = item => {
+  const renderItem = (item) => {
     if (item.user) {
       return (
         <View style={styles.userContent}>
           <Image
             source={Images.profile2}
-            style={[styles.avatar, {borderColor: colors.border}]}
+            style={[styles.avatar, { borderColor: colors.border }]}
           />
-          <View style={{paddingHorizontal: 8, flex: 7}}>
+          <View style={{ paddingHorizontal: 8, flex: 7 }}>
             <Text caption1>{item.user.name}</Text>
             <View
               style={[
                 styles.userContentMessage,
-                {backgroundColor: colors.primaryLight},
+                { backgroundColor: colors.primaryLight },
               ]}>
               <Text body2 whiteColor>
                 {item.message}
@@ -80,9 +87,9 @@ export default function Messages({navigation}) {
             {item.created}
           </Text>
         </View>
-        <View style={{paddingLeft: 8, flex: 7}}>
+        <View style={{ paddingLeft: 8, flex: 7 }}>
           <View
-            style={[styles.meContentMessage, {backgroundColor: colors.card}]}>
+            style={[styles.meContentMessage, { backgroundColor: colors.card }]}>
             <Text body2>{item.message}</Text>
           </View>
         </View>
@@ -108,7 +115,7 @@ export default function Messages({navigation}) {
   });
 
   return (
-    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{top: 'always'}}>
+    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
       <Header
         title={t('messages')}
         renderLeft={() => {
@@ -126,26 +133,26 @@ export default function Messages({navigation}) {
         }}
       />
       <KeyboardAvoidingView
-        style={{flex: 1, justifyContent: 'flex-end'}}
+        style={{ flex: 1, justifyContent: 'flex-end' }}
         behavior={Platform.OS === 'android' ? 'height' : 'padding'}
         keyboardVerticalOffset={offsetKeyboard}
         enabled>
         <FlatList
           data={messages}
           keyExtractor={(item, index) => item.id.toString()}
-          renderItem={({item}) => renderItem(item)}
+          renderItem={({ item }) => renderItem(item)}
         />
         <View style={styles.inputContent}>
-          <View style={{flex: 1}}>
+          <View style={{ flex: 1 }}>
             <TextInput
-              onChangeText={text => setInput(text)}
+              onChangeText={(text) => setInput(text)}
               onSubmitEditing={() => sendMessage()}
               placeholder={t('type_message')}
               value={input}
             />
           </View>
           <TouchableOpacity
-            style={[styles.sendIcon, {backgroundColor: colors.primary}]}
+            style={[styles.sendIcon, { backgroundColor: colors.primary }]}
             onPress={sendMessage}>
             <Icon name="paper-plane" size={20} color="white" enableRTL={true} />
           </TouchableOpacity>

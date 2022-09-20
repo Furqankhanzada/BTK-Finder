@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
   inputContent: {
@@ -35,7 +35,7 @@ export default StyleSheet.create({
     borderBottomLeftRadius: 16,
     flex: 1,
   },
-  userContentDate: {flex: 3, justifyContent: 'center'},
+  userContentDate: { flex: 3, justifyContent: 'center' },
   meContent: {
     paddingVertical: 8,
     paddingHorizontal: 16,

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { View, TouchableOpacity, StatusBar } from 'react-native';
-import { useDarkMode } from 'react-native-dark-mode';
+import { useDarkMode } from 'react-native-dynamic';
 import { Text } from '@components';
 import styles from './styles';
 import PropTypes from 'prop-types';

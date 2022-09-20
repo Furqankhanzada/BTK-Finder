@@ -1,12 +1,12 @@
 import React from 'react';
-import {View} from 'react-native';
-import {Text} from '@components';
+import { View } from 'react-native';
+import { Text } from '@components';
 import styles from './styles';
 import PropTypes from 'prop-types';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 export default function ProfilePerformance(props) {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const renderValue = (type, value) => {
     switch (type) {
       case 'primary':
@@ -95,7 +95,7 @@ export default function ProfilePerformance(props) {
       );
     case 'column':
       return (
-        <View style={[{justifyContent: 'space-between', flex: 1}, style]}>
+        <View style={[{ justifyContent: 'space-between', flex: 1 }, style]}>
           {data.map((item, index) => (
             <View style={styles.itemInfor} key={index}>
               {renderTitle(type, item.title)}

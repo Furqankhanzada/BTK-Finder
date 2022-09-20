@@ -1,20 +1,20 @@
-import React from "react";
-import { View, ViewPropTypes, StyleSheet } from "react-native";
-import PropTypes from "prop-types";
-import { View as AnimatableView } from "react-native-animatable";
-import StarButton from "./StarButton";
+import React from 'react';
+import { View, ViewPropTypes, StyleSheet } from 'react-native';
+import PropTypes from 'prop-types';
+import { View as AnimatableView } from 'react-native-animatable';
+import StarButton from './StarButton';
 
 const ANIMATION_TYPES = [
-  "bounce",
-  "flash",
-  "jello",
-  "pulse",
-  "rotate",
-  "rubberBand",
-  "shake",
-  "swing",
-  "tada",
-  "wobble"
+  'bounce',
+  'flash',
+  'jello',
+  'pulse',
+  'rotate',
+  'rubberBand',
+  'shake',
+  'swing',
+  'tada',
+  'wobble',
 ];
 
 const propTypes = {
@@ -26,30 +26,30 @@ const propTypes = {
   emptyStar: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.object,
-    PropTypes.number
+    PropTypes.number,
   ]),
   emptyStarColor: PropTypes.string,
   fullStar: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.object,
-    PropTypes.number
+    PropTypes.number,
   ]),
   fullStarColor: PropTypes.string,
   halfStar: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.object,
-    PropTypes.number
+    PropTypes.number,
   ]),
   halfStarColor: PropTypes.string,
   halfStarEnabled: PropTypes.bool,
   icoMoonJson: PropTypes.object,
   iconSet: PropTypes.string,
   maxStars: PropTypes.number,
-  rating: PropTypes.number,
+  rating: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   reversed: PropTypes.bool,
   starSize: PropTypes.number,
   starStyle: ViewPropTypes.style,
-  selectedStar: PropTypes.func
+  selectedStar: PropTypes.func,
 };
 
 const defaultProps = {
@@ -58,21 +58,21 @@ const defaultProps = {
   buttonStyle: {},
   containerStyle: {},
   disabled: false,
-  emptyStar: "star-o",
-  emptyStarColor: "gray",
-  fullStar: "star",
-  fullStarColor: "black",
-  halfStar: "star-half-o",
+  emptyStar: 'star-o',
+  emptyStarColor: 'gray',
+  fullStar: 'star',
+  fullStarColor: 'black',
+  halfStar: 'star-half-o',
   halfStarColor: undefined,
   halfStarEnabled: false,
   icoMoonJson: undefined,
-  iconSet: "FontAwesome",
+  iconSet: 'FontAwesome',
   maxStars: 5,
   rating: 0,
   reversed: false,
   starSize: 40,
   starStyle: {},
-  selectedStar: () => {}
+  selectedStar: () => {},
 };
 
 function StarRating(props) {
@@ -93,21 +93,22 @@ function StarRating(props) {
     icoMoonJson,
     iconSet,
     maxStars,
-    rating,
     reversed,
     starSize,
     starStyle,
-    selectedStar
+    selectedStar,
   } = props;
 
-  const onStarButtonPress = rating => {
+  const rating = Number(props.rating);
+
+  const onStarButtonPress = (rating) => {
     selectedStar(rating);
   };
 
   const newContainerStyle = {
-    flexDirection: reversed ? "row-reverse" : "row",
-    justifyContent: "space-between",
-    ...StyleSheet.flatten(containerStyle)
+    flexDirection: reversed ? 'row-reverse' : 'row',
+    justifyContent: 'space-between',
+    ...StyleSheet.flatten(containerStyle),
   };
 
   // Round rating down to nearest .5 star
@@ -133,10 +134,9 @@ function StarRating(props) {
     const starButtonElement = (
       <AnimatableView
         key={i}
-        ref={node => {
+        ref={(node) => {
           starRef.push(node);
-        }}
-      >
+        }}>
         <StarButton
           activeOpacity={activeOpacity}
           buttonStyle={buttonStyle}
@@ -144,7 +144,7 @@ function StarRating(props) {
           halfStarEnabled={halfStarEnabled}
           icoMoonJson={icoMoonJson}
           iconSet={iconSet}
-          onStarButtonPress={event => {
+          onStarButtonPress={(event) => {
             if (animation && ANIMATION_TYPES.includes(animation)) {
               for (let s = 0; s <= i; s++) {
                 starRef[s][animation](1000 + s * 200);
@@ -167,7 +167,7 @@ function StarRating(props) {
   }
 
   return (
-    <View style={newContainerStyle} pointerEvents={disabled ? "none" : "auto"}>
+    <View style={newContainerStyle} pointerEvents={disabled ? 'none' : 'auto'}>
       {starButtons}
     </View>
   );
