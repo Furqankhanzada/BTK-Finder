@@ -1,11 +1,5 @@
 import React, { useState } from 'react';
-import {
-  FlatList,
-  Platform,
-  SafeAreaView,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { FlatList, SafeAreaView, TouchableOpacity, View } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -16,8 +10,7 @@ import { BaseColor, BaseStyle } from '@config';
 import { StackScreenProps } from '@react-navigation/stack';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
-import axios from 'axios';
-import Config from 'react-native-config';
+import { useAddNewImages } from '../queries/mutations';
 
 const gallerySchema = Yup.object({
   gallery: Yup.string().required(),
@@ -26,6 +19,8 @@ const gallerySchema = Yup.object({
 export const GalleryScreen = ({
   navigation,
 }: StackScreenProps<GlobalParamList>) => {
+  const { mutate: uploadImage } = useAddNewImages();
+
   const [active, setActive] = useState(false);
   const navigateToNext = () => {
     navigation.navigate('Home');
@@ -33,27 +28,6 @@ export const GalleryScreen = ({
 
   const navigateToBack = () => {
     navigation.goBack();
-  };
-
-  const uploadSingleImage = (imagePath: any) => {
-    const imageData = new FormData();
-    imageData.append('file', {
-      uri: imagePath,
-      name: 'image.png',
-      fileName: 'image',
-      type: 'image/png',
-    });
-    axios({
-      method: 'post',
-      url: `${Config.API_URL}/files/upload?folder=users`,
-      data: imageData,
-    })
-      .then(function (response) {
-        console.log('Response of API:', response);
-      })
-      .then((error) => {
-        console.log('Error of API:', error);
-      });
   };
 
   const pickSingle = () => {
@@ -75,12 +49,11 @@ export const GalleryScreen = ({
       multiple: false,
     }).then((image) => {
       console.log('Single Image Selected: ', image);
-      uploadSingleImage(image.path);
+      uploadImage(image.path);
     });
   };
 
   const pickMultiple = () => {
-    setActive(true);
     ImagePicker.openPicker({
       compressImageMaxWidth: 1000,
       compressImageMaxHeight: 1000,
@@ -88,11 +61,16 @@ export const GalleryScreen = ({
       compressVideoPreset: 'MediumQuality',
       includeExif: true,
       multiple: true,
-    }).then((image) => {
-      console.log('Multiple Image', image);
-    });
+    })
+      .then((images) => {
+        if (images.length) {
+          uploadImage(images);
+        }
+      })
+      .catch((e) => {
+        console.log('IMAGE_PICKER_ERROR', e);
+      });
   };
-
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
