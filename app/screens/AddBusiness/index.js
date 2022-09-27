@@ -1,11 +1,12 @@
 import React, { Fragment, useState, useRef, useEffect } from 'react';
 import { View, Platform, TouchableOpacity } from 'react-native';
-import { BaseStyle, useTheme, BaseColor } from '@config';
 import remoteConfig from '@react-native-firebase/remote-config';
 import { useDispatch, useSelector } from 'react-redux';
 import { ScrollView } from 'react-native-gesture-handler';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
+import { Formik } from 'formik';
+
 import {
   Header,
   SafeAreaView,
@@ -15,15 +16,17 @@ import {
   CustomStepIndicator,
   FloatingButton,
 } from '@components';
-import styles from './styles';
-import GlobalStyle from '../../assets/styling/GlobalStyle';
-import { MultiselectDropdown, Dropdown } from 'sharingan-rn-modal-dropdown';
-import { generalFormValidation } from './Validations';
-import { Formik } from 'formik';
+import { useCategories } from '@screens/category/queries/queries';
+import { BaseStyle, useTheme, BaseColor } from '@config';
+
 import {
   updateEditBusinessData,
   setBusinessFormData,
 } from '../../actions/business';
+import styles from './styles';
+import GlobalStyle from '../../assets/styling/GlobalStyle';
+import { MultiselectDropdown, Dropdown } from 'sharingan-rn-modal-dropdown';
+import { generalFormValidation } from './Validations';
 
 export default function Business({ navigation }) {
   const description = useRef(null);
@@ -33,9 +36,9 @@ export default function Business({ navigation }) {
 
   const formRef = useRef();
   const dispatch = useDispatch();
-  const stateProps = useSelector(({ categories, businesses }) => {
+  const { data: categories } = useCategories(['categories']);
+  const stateProps = useSelector(({ businesses }) => {
     return {
-      categories: categories.all,
       editBusiness: businesses.editBusiness,
       editBusinessData: businesses.editBusinessData,
       businessFormData: businesses.businessFormData,
@@ -60,7 +63,7 @@ export default function Business({ navigation }) {
     toggleDatePicker();
   };
 
-  const getCategories = stateProps.categories.map(({ name }) => {
+  const getCategories = categories.map(({ name }) => {
     return { label: name, value: name };
   });
 
@@ -99,10 +102,8 @@ export default function Business({ navigation }) {
 
   const getSelectedCategory = (selected) => {
     let foundCategory = null;
-    if (stateProps.categories && stateProps.categories.length) {
-      foundCategory = stateProps.categories.find(
-        (obj) => obj.name === selected,
-      );
+    if (categories && categories.length) {
+      foundCategory = categories.find((obj) => obj.name === selected);
     }
     return foundCategory ? foundCategory.name : '';
   };
