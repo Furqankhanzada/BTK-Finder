@@ -14,6 +14,7 @@ import { useProductsByTag, useTags } from '@screens/businesses/queries/queries';
 import { useTheme } from '@config';
 
 import { Tag as TagType } from '../../../models/graphql';
+import MenuTabPlaceholder from './MenuTabPlaceholder';
 
 interface Props {
   business: BusinessPresentable | undefined;
@@ -25,7 +26,11 @@ export default function Products({ business, style }: Props) {
   const [isReFetching, setIsReFetching] = useState<boolean>(false);
   const { colors } = useTheme();
 
-  const { data: tags, refetch: reFetchTags } = useTags(business?.shop?.shopId);
+  const {
+    data: tags,
+    refetch: reFetchTags,
+    isLoading,
+  } = useTags(business?.shop?.shopId);
   const { refetch: reFetchProducts, data: products } = useProductsByTag(
     business?.shop?.shopId,
     selectedTag?._id,
@@ -72,22 +77,26 @@ export default function Products({ business, style }: Props) {
             horizontal={true}
             data={tags}
             keyExtractor={(item) => item._id}
-            renderItem={({ item }) => (
-              <Tag
-                key={item._id}
-                rate
-                onPress={() => onTagPress(item)}
-                style={[
-                  styles.item,
-                  selectedTag?._id === item._id
-                    ? {
-                        backgroundColor: colors.primaryDark,
-                      }
-                    : { backgroundColor: colors.primary },
-                ]}>
-                {item.displayTitle}
-              </Tag>
-            )}
+            renderItem={({ item }) =>
+              isLoading ? (
+                <MenuTabPlaceholder />
+              ) : (
+                <Tag
+                  key={item._id}
+                  rate
+                  onPress={() => onTagPress(item)}
+                  style={[
+                    styles.item,
+                    selectedTag?._id === item._id
+                      ? {
+                          backgroundColor: colors.primaryDark,
+                        }
+                      : { backgroundColor: colors.primary },
+                  ]}>
+                  {item.displayTitle}
+                </Tag>
+              )
+            }
           />
         }
         renderItem={({ item }) => (
