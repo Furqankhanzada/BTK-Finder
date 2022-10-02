@@ -15,6 +15,7 @@ import { useTheme } from '@config';
 
 import { Tag as TagType } from '../../../models/graphql';
 import MenuTabPlaceholder from './MenuTabPlaceholder';
+import MenuItemsPlaceholder from './MenuItemsPlaceholder';
 
 interface Props {
   business: BusinessPresentable | undefined;
@@ -99,16 +100,22 @@ export default function Products({ business, style }: Props) {
             }
           />
         }
-        renderItem={({ item }) => (
-          <CardList
-            key={item._id}
-            image={item.primaryImage?.URLs?.thumbnail!}
-            title={item.title}
-            subtitle={item.pricing[0]?.displayPrice}
-            style={[styles.productList, style]}
-            options={item.variants?.map((variant) => variant?.optionTitle)}
-          />
-        )}
+        renderItem={({ item }) =>
+          !isLoading ? (
+            <CardList
+              key={item._id}
+              image={item.primaryImage?.URLs?.thumbnail!}
+              title={item.title}
+              subtitle={item.pricing[0]?.displayPrice}
+              style={[styles.productList, style]}
+              options={item.variants?.map((variant) => variant?.optionTitle)}
+            />
+          ) : (
+            <View style={{ marginLeft: 20 }}>
+              <MenuItemsPlaceholder />
+            </View>
+          )
+        }
       />
     </View>
   );

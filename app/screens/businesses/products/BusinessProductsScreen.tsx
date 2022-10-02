@@ -21,7 +21,7 @@ export default function BusinessProductsScreen(
   const { t } = useTranslation();
 
   return (
-    <SafeAreaView style={BaseStyle.safeAreaView}>
+    <SafeAreaView style={[BaseStyle.safeAreaView, { marginTop: 0 }]}>
       <Header
         title={t('menu')}
         renderLeft={() => {
@@ -49,6 +49,5 @@ export default function BusinessProductsScreen(
 const styles = StyleSheet.create({
   products: {
     paddingLeft: 20,
-    paddingBottom: 10,
   },
 });

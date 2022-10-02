@@ -335,16 +335,19 @@ export default function BusinessOverviewScreen(
 
     return (
       <View>
-        <View style={styles.renderContentDiv}>
-          <OverviewCard business={business} onNavigate={onNavigate} />
-          <ContactInfo
-            onNavigate={onNavigate}
-            business={business}
-            onPressWhatsApp={onPressWhatsApp}
-            onPressPhone={onPressPhone}
-            onOpen={onOpen}
-          />
-          <OpenHours business={business} />
+        <View>
+          <View style={styles.renderContentDiv}>
+            <OverviewCard business={business} onNavigate={onNavigate} />
+            <ContactInfo
+              onNavigate={onNavigate}
+              business={business}
+              onPressWhatsApp={onPressWhatsApp}
+              onPressPhone={onPressPhone}
+              onOpen={onOpen}
+            />
+            <OpenHours business={business} />
+          </View>
+
           {business?.shop && business.shop.status === ShopStatus.enabled ? (
             <View>
               <Text title3 semibold style={styles.facilities}>
@@ -384,7 +387,7 @@ export default function BusinessOverviewScreen(
                 {t('facilities')}
               </Text>
               <View
-                style={[styles.wrapContent, { borderColor: colors.border }]}>
+                style={[styles.wrapContentB, { borderColor: colors.border }]}>
                 {business.facilities?.map((item, index) => {
                   return (
                     <Tag
@@ -537,11 +540,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderBottomWidth: 1,
     paddingBottom: 20,
+    paddingLeft: 20,
+  },
+  wrapContentB: {
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    paddingBottom: 20,
+    paddingHorizontal: 20,
   },
   contentDescription: {
     paddingTop: 20,
     paddingBottom: 20,
     borderBottomWidth: 0.5,
+    paddingHorizontal: 20,
   },
   galleryFooter: {
     height: 64,
@@ -593,6 +605,7 @@ const styles = StyleSheet.create({
   facilities: {
     paddingBottom: 5,
     paddingTop: 15,
+    paddingHorizontal: 20,
   },
   facilityIcon: {
     marginRight: 5,
