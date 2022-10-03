@@ -12,6 +12,7 @@ import {
   getMyBusinesses,
   updateBusiness,
 } from '../../actions/business';
+import { BaseStyle } from '@config';
 
 export default function FinalReview({ navigation }) {
   const dispatch = useDispatch();
@@ -33,7 +34,16 @@ export default function FinalReview({ navigation }) {
   const profileData = useSelector((state) => state.profile);
 
   const addCallback = () => {
-    navigation.navigate('Home');
+    dispatch(
+      getMyBusinesses({
+        skip: 0,
+        limit: 10,
+        recent: true,
+        fields: 'name, thumbnail, category, averageRatings',
+        ownerId: profileData?._id,
+      }),
+    );
+    navigation.navigate('MyBusinesses');
   };
 
   const editBusinessCallback = () => {
@@ -89,17 +99,15 @@ export default function FinalReview({ navigation }) {
   };
 
   return (
-    <View style={{ flex: 1, position: 'relative' }}>
+    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
       <Loading loading={stateProps.createBusinessLoading} />
       <Loading loading={stateProps.editBusinessLoading} />
-      <SafeAreaView style={{ flex: 1 }} forceInset={{ top: 'always' }}>
-        <PlaceDetailComponent
-          business={businessFormData}
-          preview={true}
-          navigation={navigation}
-        />
-        <FloatingButton iconName="check" onPress={() => add()} />
-      </SafeAreaView>
-    </View>
+      <PlaceDetailComponent
+        business={businessFormData}
+        preview={true}
+        navigation={navigation}
+      />
+      <FloatingButton iconName="check" onPress={() => add()} />
+    </SafeAreaView>
   );
 }
