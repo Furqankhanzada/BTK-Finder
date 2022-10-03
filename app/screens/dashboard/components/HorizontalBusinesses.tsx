@@ -9,6 +9,7 @@ import {
 } from '@screens/businesses/models/BusinessPresentable';
 import { BusinessParams } from '@screens/businesses/models/BusinessParams';
 import { useSelector } from 'react-redux';
+import { HorizentalBusinessPlaceholder } from './DashboardCategoriesPlaceholder';
 
 interface Props {
   queryKey: Array<string | number>;
@@ -22,7 +23,7 @@ export default function HorizontalBusinesses({
   onPress,
 }: Props) {
   const user = useSelector((state: any) => state.profile);
-  const { data: businesses } = useBusinesses(queryKey, params);
+  const { data: businesses, isLoading } = useBusinesses(queryKey, params);
 
   return (
     <FlatList
@@ -31,7 +32,7 @@ export default function HorizontalBusinesses({
       horizontal={true}
       keyExtractor={(item) => item._id}
       renderItem={({ item }) => {
-        return (
+        return !isLoading ? (
           <PlaceItem
             grid
             image={item?.thumbnail}
@@ -51,6 +52,8 @@ export default function HorizontalBusinesses({
             onPress={() => onPress(item)}
             style={styles.item}
           />
+        ) : (
+          <HorizentalBusinessPlaceholder />
         );
       }}
     />
