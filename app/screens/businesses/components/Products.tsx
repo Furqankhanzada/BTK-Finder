@@ -14,6 +14,8 @@ import { useProductsByTag, useTags } from '@screens/businesses/queries/queries';
 import { useTheme } from '@config';
 
 import { Tag as TagType } from '../../../models/graphql';
+import MenuTabPlaceholder from './MenuTabPlaceholder';
+import MenuItemsPlaceholder from './MenuItemsPlaceholder';
 
 interface Props {
   business: BusinessPresentable | undefined;
@@ -25,7 +27,11 @@ export default function Products({ business, style }: Props) {
   const [isReFetching, setIsReFetching] = useState<boolean>(false);
   const { colors } = useTheme();
 
-  const { data: tags, refetch: reFetchTags } = useTags(business?.shop?.shopId);
+  const {
+    data: tags,
+    refetch: reFetchTags,
+    isLoading,
+  } = useTags(business?.shop?.shopId);
   const { refetch: reFetchProducts, data: products } = useProductsByTag(
     business?.shop?.shopId,
     selectedTag?._id,
@@ -72,34 +78,44 @@ export default function Products({ business, style }: Props) {
             horizontal={true}
             data={tags}
             keyExtractor={(item) => item._id}
-            renderItem={({ item }) => (
-              <Tag
-                key={item._id}
-                rate
-                onPress={() => onTagPress(item)}
-                style={[
-                  styles.item,
-                  selectedTag?._id === item._id
-                    ? {
-                        backgroundColor: colors.primaryDark,
-                      }
-                    : { backgroundColor: colors.primary },
-                ]}>
-                {item.displayTitle}
-              </Tag>
-            )}
+            renderItem={({ item }) =>
+              isLoading ? (
+                <MenuTabPlaceholder />
+              ) : (
+                <Tag
+                  key={item._id}
+                  rate
+                  onPress={() => onTagPress(item)}
+                  style={[
+                    styles.item,
+                    selectedTag?._id === item._id
+                      ? {
+                          backgroundColor: colors.primaryDark,
+                        }
+                      : { backgroundColor: colors.primary },
+                  ]}>
+                  {item.displayTitle}
+                </Tag>
+              )
+            }
           />
         }
-        renderItem={({ item }) => (
-          <CardList
-            key={item._id}
-            image={item.primaryImage?.URLs?.thumbnail!}
-            title={item.title}
-            subtitle={item.pricing[0]?.displayPrice}
-            style={[styles.productList, style]}
-            options={item.variants?.map((variant) => variant?.optionTitle)}
-          />
-        )}
+        renderItem={({ item }) =>
+          !isLoading ? (
+            <CardList
+              key={item._id}
+              image={item.primaryImage?.URLs?.thumbnail!}
+              title={item.title}
+              subtitle={item.pricing[0]?.displayPrice}
+              style={[styles.productList, style]}
+              options={item.variants?.map((variant) => variant?.optionTitle)}
+            />
+          ) : (
+            <View>
+              <MenuItemsPlaceholder />
+            </View>
+          )
+        }
       />
     </View>
   );
@@ -108,6 +124,7 @@ export default function Products({ business, style }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingLeft: 20,
   },
   tagsContainer: {
     marginBottom: 10,
