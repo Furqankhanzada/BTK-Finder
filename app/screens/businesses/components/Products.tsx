@@ -111,7 +111,7 @@ export default function Products({ business, style }: Props) {
               options={item.variants?.map((variant) => variant?.optionTitle)}
             />
           ) : (
-            <View style={{ marginLeft: 20 }}>
+            <View>
               <MenuItemsPlaceholder />
             </View>
           )
@@ -124,6 +124,7 @@ export default function Products({ business, style }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingLeft: 20,
   },
   tagsContainer: {
     marginBottom: 10,
