@@ -335,82 +335,79 @@ export default function BusinessOverviewScreen(
 
     return (
       <View>
-        <View>
-          <View style={styles.renderContentDiv}>
-            <OverviewCard business={business} onNavigate={onNavigate} />
-            <ContactInfo
-              onNavigate={onNavigate}
-              business={business}
-              onPressWhatsApp={onPressWhatsApp}
-              onPressPhone={onPressPhone}
-              onOpen={onOpen}
-            />
-            <OpenHours business={business} />
-          </View>
-
-          {business?.shop && business.shop.status === ShopStatus.enabled ? (
-            <View>
-              <Text title3 semibold style={styles.facilities}>
-                {business.type === 'restaurant' ? 'Menu' : 'Products'}
-              </Text>
-              <View
-                style={[styles.wrapContent, { borderColor: colors.border }]}>
-                <Products business={business} />
-              </View>
-            </View>
-          ) : null}
-          <View
-            style={[styles.contentDescription, { borderColor: colors.border }]}>
-            {business.description ? (
-              <Text body2 numberOfLines={100} style={styles.contentInfo}>
-                {business.description}
-              </Text>
-            ) : null}
-            <View style={styles.contentContainer} />
-            <View style={styles.contentSubContainer}>
-              <MapView
-                ref={mapRef}
-                scrollEnabled={true}
-                pitchEnabled={false}
-                zoomEnabled={true}
-                provider={PROVIDER_GOOGLE}
-                style={styles.map}
-                region={region}
-                onRegionChange={() => {}}>
-                <Marker coordinate={location} />
-              </MapView>
-            </View>
-          </View>
-          {business?.facilities?.length ? (
-            <View>
-              <Text title3 semibold style={styles.facilities}>
-                {t('facilities')}
-              </Text>
-              <View
-                style={[styles.wrapContentB, { borderColor: colors.border }]}>
-                {business.facilities?.map((item, index) => {
-                  return (
-                    <Tag
-                      icon={
-                        <Icon
-                          name={item.icon}
-                          size={12}
-                          color={colors.accent}
-                          solid
-                          style={styles.facilityIcon}
-                        />
-                      }
-                      chip
-                      key={item.name + index}
-                      style={styles.facilityText}>
-                      {item?.name}
-                    </Tag>
-                  );
-                })}
-              </View>
-            </View>
-          ) : null}
+        <View style={styles.renderContentDiv}>
+          <OverviewCard business={business} onNavigate={onNavigate} />
+          <ContactInfo
+            onNavigate={onNavigate}
+            business={business}
+            onPressWhatsApp={onPressWhatsApp}
+            onPressPhone={onPressPhone}
+            onOpen={onOpen}
+          />
+          <OpenHours business={business} />
         </View>
+
+        {business?.shop && business.shop.status === ShopStatus.enabled ? (
+          <View>
+            <Text title3 semibold style={styles.facilities}>
+              {business.type === 'restaurant' ? 'Menu' : 'Products'}
+            </Text>
+            <View style={[styles.wrapContent, { borderColor: colors.border }]}>
+              <Products business={business} />
+            </View>
+          </View>
+        ) : null}
+        <View
+          style={[styles.contentDescription, { borderColor: colors.border }]}>
+          {business.description ? (
+            <Text body2 numberOfLines={100} style={styles.contentInfo}>
+              {business.description}
+            </Text>
+          ) : null}
+          <View style={styles.contentContainer} />
+          <View style={styles.contentSubContainer}>
+            <MapView
+              ref={mapRef}
+              scrollEnabled={true}
+              pitchEnabled={false}
+              zoomEnabled={true}
+              provider={PROVIDER_GOOGLE}
+              style={styles.map}
+              region={region}
+              onRegionChange={() => {}}>
+              <Marker coordinate={location} />
+            </MapView>
+          </View>
+        </View>
+        {business?.facilities?.length ? (
+          <View>
+            <Text title3 semibold style={styles.facilities}>
+              {t('facilities')}
+            </Text>
+            <View style={[styles.wrapFacility, { borderColor: colors.border }]}>
+              {business.facilities?.map((item, index) => {
+                return (
+                  <Tag
+                    icon={
+                      <Icon
+                        name={item.icon}
+                        size={12}
+                        color={colors.accent}
+                        solid
+                        style={styles.facilityIcon}
+                      />
+                    }
+                    chip
+                    key={item.name + index}
+                    style={styles.facilityText}>
+                    {item?.name}
+                  </Tag>
+                );
+              })}
+            </View>
+          </View>
+        ) : null}
+
         <Recommendations business={business} onNavigate={onNavigate} />
       </View>
     );
@@ -540,9 +537,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderBottomWidth: 1,
     paddingBottom: 20,
-    paddingLeft: 20,
   },
-  wrapContentB: {
+  wrapFacility: {
     flexWrap: 'wrap',
     flexDirection: 'row',
     borderBottomWidth: 1,
