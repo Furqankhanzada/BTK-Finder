@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Animated, View } from 'react-native';
+import React, { useState } from 'react';
+import { Animated, View, StyleSheet } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { BaseStyle, useTheme } from '@config';
+import { BaseStyle } from '@config';
 import {
   Header,
   SafeAreaView,
@@ -11,44 +11,33 @@ import {
   Loading,
   Text,
 } from '@components';
-import styles from './styles';
-import { getMyBusinesses, getSingleBusiness } from '../../actions/business';
+import { useBusinesses } from '../businesses/queries/queries';
 
-export default function MyBusinesses(props) {
+import { getSingleBusiness } from '../../actions/business';
+
+export default function MyBusinesses(props: any) {
   const { navigation, route } = props;
   const scrollAnim = new Animated.Value(0);
   const dispatch = useDispatch();
-  const { colors } = useTheme();
   const { t } = useTranslation();
   const [skip, setSkip] = useState(0);
   const [limit] = useState(10);
 
+  const user = useSelector((state: any) => state.profile);
+
+  const { data: myBusinesses, isLoading } = useBusinesses(['my-business'], {
+    skip: skip,
+    limit: limit,
+    recent: true,
+    fields: 'name, thumbnail, category, averageRatings',
+    ownerId: user._id,
+  });
+
   const stateProps = useSelector(({ businesses }) => {
     return {
-      myBusinesses: businesses.myBusinesses,
-      getMyBusinessesLoading: businesses.getMyBusinessesLoading,
-      getLoadMoreLoading: businesses.getMyBusinessesLoadMoreLoading,
       getEditLoading: businesses.getSingleBusinessLoading,
     };
   });
-
-  useEffect(() => {
-    let payload = {
-      skip: skip,
-      limit: limit,
-      recent: true,
-      fields: 'name, thumbnail, category, averageRatings',
-      ownerId: route?.params?.id,
-    };
-    dispatch(getMyBusinesses(payload));
-  }, [skip]);
-
-  const onScrollHandler = () => {
-    if (stateProps.getMyBusinessesLoading || stateProps.getLoadMoreLoading) {
-      return;
-    }
-    setSkip(stateProps.myBusinesses.length);
-  };
 
   const listEmptyComponent = () => {
     return (
@@ -61,17 +50,10 @@ export default function MyBusinesses(props) {
   };
 
   const renderFooter = () => {
-    if (stateProps.myBusinesses.length && stateProps.getLoadMoreLoading) {
-      return (
-        <View style={styles.listFooter}>
-          <ActivityIndicator size="large" color={colors.primary} />
-        </View>
-      );
-    }
     return null;
   };
 
-  const onEdit = (id) => {
+  const onEdit = (id: any) => {
     dispatch(
       getSingleBusiness(id, true, () =>
         navigation.navigate('EditBusiness', { id }),
@@ -79,15 +61,16 @@ export default function MyBusinesses(props) {
     );
   };
 
-  const navigateBusinessDetail = (id) => {
+  const navigateBusinessDetail = (id: any) => {
     navigation.navigate('BusinessDetailTabNavigator', { id });
   };
-  const navigateToReview = (id) => {
+
+  const navigateToReview = (id: any) => {
     navigation.navigate('Review', { id });
   };
 
   return (
-    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
+    <SafeAreaView style={BaseStyle.safeAreaView}>
       <Loading loading={stateProps.getEditLoading} />
       <Header
         title={t('my_businesses')}
@@ -105,17 +88,15 @@ export default function MyBusinesses(props) {
           navigation.goBack();
         }}
       />
-      {stateProps.getMyBusinessesLoading ? (
-        <Loading loading={stateProps.getMyBusinessesLoading} />
+      {isLoading ? (
+        <Loading loading={isLoading} />
       ) : (
         <View style={{ flex: 1 }}>
           <Animated.FlatList
             contentContainerStyle={{
               padding: 20,
-              flex: stateProps?.myBusinesses?.length ? 0 : 1,
+              flex: myBusinesses?.length ? 0 : 1,
             }}
-            onEndReached={onScrollHandler}
-            onEndThreshold={0.1}
             scrollEventThrottle={1}
             onScroll={Animated.event(
               [
@@ -129,7 +110,7 @@ export default function MyBusinesses(props) {
               ],
               { useNativeDriver: true },
             )}
-            data={stateProps.myBusinesses}
+            data={myBusinesses}
             key={'block'}
             keyExtractor={(item, index) => item._id}
             ListEmptyComponent={listEmptyComponent}
@@ -156,3 +137,19 @@ export default function MyBusinesses(props) {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  sectionEmpty: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+  },
+  sectionEmptyText: {
+    textAlign: 'center',
+  },
+  listFooter: {
+    padding: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
