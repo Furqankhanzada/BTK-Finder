@@ -15,7 +15,7 @@ import { useBusinessesInfinite } from '../businesses/queries/queries';
 
 import { getSingleBusiness } from '../../actions/business';
 
-export default function MyBusinesses(props: any) {
+export default function MyBusinessesScreen(props: any) {
   const { navigation, route } = props;
   const scrollAnim = new Animated.Value(0);
   const dispatch = useDispatch();

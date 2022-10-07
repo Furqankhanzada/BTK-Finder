@@ -38,7 +38,7 @@ import Hours from '@screens/AddBusiness/hours';
 import PriceRange from '@screens/AddBusiness/priceRange';
 import FinalReview from '@screens/AddBusiness/review';
 import Gallery from '@screens/AddBusiness/gallery';
-import MyBusinesses from '@screens/my-businesses/MyBusinessScreen';
+import MyBusinessesScreen from '@screens/my-businesses/MyBusinessScreen';
 import { DashboardStackNavigator } from '@screens/dashboard/navigation/DashboardStack';
 import BusinessesScreen from '@screens/businesses/list/BusinessesScreen';
 
@@ -83,7 +83,7 @@ export default function Main() {
       <MainStack.Screen name="PriceRange" component={PriceRange} />
       <MainStack.Screen name="FinalReview" component={FinalReview} />
       <MainStack.Screen name="Gallery" component={Gallery} />
-      <MainStack.Screen name="MyBusinesses" component={MyBusinesses} />
+      <MainStack.Screen name="MyBusinesses" component={MyBusinessesScreen} />
       <MainStack.Screen name="EditBusiness" component={Business} />
       <MainStack.Screen name="VerifyCode" component={VerifyCode} />
     </MainStack.Navigator>
