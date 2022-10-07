@@ -1,6 +1,7 @@
 import React from 'react';
-import { View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import { useFocusEffect } from '@react-navigation/native';
+import { useQueryClient } from '@tanstack/react-query';
 import {
   SafeAreaView,
   PlaceDetailComponent,
@@ -17,6 +18,8 @@ import { BaseStyle } from '@config';
 export default function FinalReview({ navigation }) {
   const dispatch = useDispatch();
 
+  const queryClient = useQueryClient();
+
   const stateProps = useSelector(({ businesses }) => {
     return {
       createBusinessLoading: businesses.createBusinessLoading,
@@ -28,21 +31,24 @@ export default function FinalReview({ navigation }) {
       businessFormData: businesses.businessFormData,
     };
   });
+
   const businessFormData = stateProps?.editBusiness
     ? stateProps?.editBusinessData
     : stateProps?.businessFormData;
   const profileData = useSelector((state) => state.profile);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      if (!businessFormData || !Object.keys(businessFormData).length) {
+        navigation.navigate('Dashboard');
+      }
+    }, [stateProps?.editBusinessData, stateProps?.businessFormData]),
+  );
+
   const addCallback = () => {
-    dispatch(
-      getMyBusinesses({
-        skip: 0,
-        limit: 10,
-        recent: true,
-        fields: 'name, thumbnail, category, averageRatings',
-        ownerId: profileData?._id,
-      }),
-    );
+    queryClient.invalidateQueries(['my-business']);
+    queryClient.invalidateQueries(['recent-businesses']);
+
     navigation.navigate('MyBusinesses');
   };
 
