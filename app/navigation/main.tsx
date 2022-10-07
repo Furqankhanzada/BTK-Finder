@@ -38,7 +38,7 @@ import Hours from '@screens/AddBusiness/hours';
 import PriceRange from '@screens/AddBusiness/priceRange';
 import FinalReview from '@screens/AddBusiness/review';
 import Gallery from '@screens/AddBusiness/gallery';
-import MyBusinesses from '@screens/my-business/MyBusinessScreen';
+import MyBusinesses from '@screens/my-businesses/MyBusinessScreen';
 import { DashboardStackNavigator } from '@screens/dashboard/navigation/DashboardStack';
 import BusinessesScreen from '@screens/businesses/list/BusinessesScreen';
 
