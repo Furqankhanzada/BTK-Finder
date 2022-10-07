@@ -20,10 +20,8 @@ export default function MyBusinesses(props: any) {
   const scrollAnim = new Animated.Value(0);
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  const [skip, setSkip] = useState(0);
 
   const user = useSelector((state: any) => state.profile);
-  const { title, ...restParams } = route.params;
 
   const {
     data,
@@ -32,10 +30,9 @@ export default function MyBusinesses(props: any) {
     fetchNextPage,
     isFetchingNextPage,
     refetch,
-  } = useBusinessesInfinite(['my-business', title], {
-    ...restParams,
+  } = useBusinessesInfinite(['my-business'], {
     limit: 10,
-    skip: skip,
+    skip: 0,
     recent: true,
     fields: 'name, thumbnail, category, averageRatings',
     ownerId: user._id,
