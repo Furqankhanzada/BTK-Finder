@@ -27,7 +27,6 @@ export default function MyBusinesses(props: any) {
 
   const { data: myBusinesses, isLoading } = useBusinesses(['my-business'], {
     skip: skip,
-    limit: limit,
     recent: true,
     fields: 'name, thumbnail, category, averageRatings',
     ownerId: user._id,
@@ -53,7 +52,7 @@ export default function MyBusinesses(props: any) {
     return null;
   };
 
-  const onEdit = (id: any) => {
+  const onEdit = (id: string) => {
     dispatch(
       getSingleBusiness(id, true, () =>
         navigation.navigate('EditBusiness', { id }),
@@ -61,11 +60,11 @@ export default function MyBusinesses(props: any) {
     );
   };
 
-  const navigateBusinessDetail = (id: any) => {
+  const navigateBusinessDetail = (id: string) => {
     navigation.navigate('BusinessDetailTabNavigator', { id });
   };
 
-  const navigateToReview = (id: any) => {
+  const navigateToReview = (id: string) => {
     navigation.navigate('Review', { id });
   };
 
