@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Animated, View, StyleSheet } from 'react-native';
+import { Animated, View, StyleSheet, ActivityIndicator } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { BaseStyle } from '@config';
@@ -11,7 +11,7 @@ import {
   Loading,
   Text,
 } from '@components';
-import { useBusinesses } from '../businesses/queries/queries';
+import { useBusinessesInfinite } from '../businesses/queries/queries';
 
 import { getSingleBusiness } from '../../actions/business';
 
@@ -21,22 +21,39 @@ export default function MyBusinesses(props: any) {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const [skip, setSkip] = useState(0);
-  const [limit] = useState(10);
 
   const user = useSelector((state: any) => state.profile);
+  const { title, ...restParams } = route.params;
 
-  const { data: myBusinesses, isLoading } = useBusinesses(['my-business'], {
+  const {
+    data,
+    isLoading,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    refetch,
+  } = useBusinessesInfinite(['my-business', title], {
+    ...restParams,
+    limit: 10,
     skip: skip,
     recent: true,
     fields: 'name, thumbnail, category, averageRatings',
     ownerId: user._id,
   });
 
+  const myBusinesses = data?.pages.map((businesses) => businesses).flat();
+
   const stateProps = useSelector(({ businesses }) => {
     return {
       getEditLoading: businesses.getSingleBusinessLoading,
     };
   });
+
+  const onEndReached = () => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  };
 
   const listEmptyComponent = () => {
     return (
@@ -49,6 +66,13 @@ export default function MyBusinesses(props: any) {
   };
 
   const renderFooter = () => {
+    if (isFetchingNextPage) {
+      return (
+        <View style={styles.listFooter}>
+          <ActivityIndicator size="large" />
+        </View>
+      );
+    }
     return null;
   };
 
@@ -96,6 +120,8 @@ export default function MyBusinesses(props: any) {
               padding: 20,
               flex: myBusinesses?.length ? 0 : 1,
             }}
+            onEndReached={onEndReached}
+            onEndReachedThreshold={0.3}
             scrollEventThrottle={1}
             onScroll={Animated.event(
               [
