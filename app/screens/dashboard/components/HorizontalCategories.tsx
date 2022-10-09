@@ -5,7 +5,7 @@ import { BaseColor } from '@config';
 import { useCategories } from '@screens/category/queries/queries';
 import { CategoryPresentable } from '@screens/category/modals/CategoryPresentables';
 import { useTranslation } from 'react-i18next';
-import { HorizentalCategoriesPlaceholder } from './DashboardPlaceholders';
+import { HorizontalCategoriesPlaceholder } from './DashboardPlaceholders';
 
 interface Props {
   onPress: (item: CategoryPresentable) => void;
@@ -47,7 +47,7 @@ export default function HorizontalCategories({ onPress }: Props) {
             </Text>
           </TouchableOpacity>
         ) : (
-          <HorizentalCategoriesPlaceholder />
+          <HorizontalCategoriesPlaceholder />
         );
       }}
     />

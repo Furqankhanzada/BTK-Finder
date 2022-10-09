@@ -9,7 +9,7 @@ import {
 } from '@screens/businesses/models/BusinessPresentable';
 import { BusinessParams } from '@screens/businesses/models/BusinessParams';
 import { useSelector } from 'react-redux';
-import { HorizentalBusinessPlaceholder } from './DashboardPlaceholders';
+import { HorizontalBusinessPlaceholder } from './DashboardPlaceholders';
 
 interface Props {
   queryKey: Array<string | number>;
@@ -53,7 +53,7 @@ export default function HorizontalBusinesses({
             style={styles.item}
           />
         ) : (
-          <HorizentalBusinessPlaceholder />
+          <HorizontalBusinessPlaceholder />
         );
       }}
     />

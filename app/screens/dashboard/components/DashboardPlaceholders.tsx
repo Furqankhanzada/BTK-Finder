@@ -2,7 +2,7 @@ import React from 'react';
 import { Placeholder, PlaceholderLine, Progressive } from 'rn-placeholder';
 import { View, StyleSheet } from 'react-native';
 
-export function HorizentalCategoriesPlaceholder() {
+export function HorizontalCategoriesPlaceholder() {
   return (
     <View style={styles.mainContainer}>
       <Placeholder Animation={Progressive}>
@@ -15,7 +15,7 @@ export function HorizentalCategoriesPlaceholder() {
   );
 }
 
-export function HorizentalBusinessPlaceholder() {
+export function HorizontalBusinessPlaceholder() {
   return (
     <View>
       <Placeholder Animation={Progressive}>
