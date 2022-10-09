@@ -12,10 +12,12 @@ import { BusinessPresentable } from '@screens/businesses/models/BusinessPresenta
 import { CardList, Tag } from '@components';
 import { useProductsByTag, useTags } from '@screens/businesses/queries/queries';
 import { useTheme } from '@config';
+import { useAlerts } from '@hooks';
 
-import { Tag as TagType } from '../../../models/graphql';
+import { CatalogProduct, Tag as TagType } from '../../../models/graphql';
 import MenuTabPlaceholder from './MenuTabPlaceholder';
 import MenuItemsPlaceholder from './MenuItemsPlaceholder';
+import { IconName } from '../../../contexts/alerts-v2/models/Icon';
 
 interface Props {
   business: BusinessPresentable | undefined;
@@ -26,12 +28,14 @@ export default function Products({ business, style }: Props) {
   const [selectedTag, setSelectedTag] = useState<TagType | undefined>();
   const [isReFetching, setIsReFetching] = useState<boolean>(false);
   const { colors } = useTheme();
-
+  const { showNotification } = useAlerts();
+  //Tags
   const {
     data: tags,
     refetch: reFetchTags,
     isLoading,
   } = useTags(business?.shop?.shopId);
+  // Products
   const { refetch: reFetchProducts, data: products } = useProductsByTag(
     business?.shop?.shopId,
     selectedTag?._id,
@@ -45,6 +49,17 @@ export default function Products({ business, style }: Props) {
 
   const onTagPress = (tag: TagType) => {
     setSelectedTag(tag);
+  };
+
+  const onProductPress = async (product: CatalogProduct) => {
+    await showNotification({
+      icon: {
+        size: 70,
+        name: IconName.ConstructOutline,
+        color: colors.primary,
+      },
+      message: 'This feature is under development, will be available soon!',
+    });
   };
 
   const onRefresh = async () => {
@@ -108,6 +123,7 @@ export default function Products({ business, style }: Props) {
               title={item.title}
               subtitle={item.pricing[0]?.displayPrice}
               style={[styles.productList, style]}
+              onPress={() => onProductPress(item)}
               options={item.variants?.map((variant) => variant?.optionTitle)}
             />
           ) : (
