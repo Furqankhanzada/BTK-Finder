@@ -15,7 +15,7 @@ export default function HorizontalCategories({ onPress }: Props) {
   const { t } = useTranslation();
   const { data: categories, isLoading } = useCategories(['categories']);
 
-  return !isLoading ? (
+  return isLoading ? (
     <HorizontalCategoriesPlaceholder />
   ) : (
     <FlatList
