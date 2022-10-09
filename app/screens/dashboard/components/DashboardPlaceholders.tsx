@@ -6,7 +6,7 @@ export function HorizontalCategoriesPlaceholder() {
   return (
     <View style={styles.mainContainer}>
       <Placeholder Animation={Progressive}>
-        <View style={{ display: 'flex', flexDirection: 'row' }}>
+        <View style={styles.containerPosition}>
           <View style={styles.container}>
             <PlaceholderLine style={styles.placeholderLine} />
             <PlaceholderLine style={styles.text} />
@@ -37,7 +37,7 @@ export function HorizontalBusinessPlaceholder() {
   return (
     <View>
       <Placeholder Animation={Progressive}>
-        <View style={{ display: 'flex', flexDirection: 'row' }}>
+        <View style={styles.containerPosition}>
           <View>
             <PlaceholderLine style={styles.image} />
             <PlaceholderLine style={styles.name} />
@@ -92,6 +92,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'column',
     paddingLeft: 40,
+  },
+  containerPosition: {
+    display: 'flex',
+    flexDirection: 'row',
   },
   text: {
     width: 36,
