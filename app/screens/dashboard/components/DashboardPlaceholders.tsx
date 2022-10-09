@@ -19,12 +19,30 @@ export function HorizontalBusinessPlaceholder() {
   return (
     <View>
       <Placeholder Animation={Progressive}>
-        <View>
-          <PlaceholderLine style={styles.image} />
-          <PlaceholderLine style={styles.name} />
-          <View style={styles.innerContainer}>
-            <PlaceholderLine style={styles.ratingFigure} />
-            <PlaceholderLine style={styles.ratingStars} />
+        <View style={{ display: 'flex', flexDirection: 'row' }}>
+          <View>
+            <PlaceholderLine style={styles.image} />
+            <PlaceholderLine style={styles.name} />
+            <View style={styles.innerContainer}>
+              <PlaceholderLine style={styles.ratingFigure} />
+              <PlaceholderLine style={styles.ratingStars} />
+            </View>
+          </View>
+          <View>
+            <PlaceholderLine style={styles.image} />
+            <PlaceholderLine style={styles.name} />
+            <View style={styles.innerContainer}>
+              <PlaceholderLine style={styles.ratingFigure} />
+              <PlaceholderLine style={styles.ratingStars} />
+            </View>
+          </View>
+          <View>
+            <PlaceholderLine style={styles.image} />
+            <PlaceholderLine style={styles.name} />
+            <View style={styles.innerContainer}>
+              <PlaceholderLine style={styles.ratingFigure} />
+              <PlaceholderLine style={styles.ratingStars} />
+            </View>
           </View>
         </View>
       </Placeholder>

@@ -25,14 +25,16 @@ export default function HorizontalBusinesses({
   const user = useSelector((state: any) => state.profile);
   const { data: businesses, isLoading } = useBusinesses(queryKey, params);
 
-  return (
+  return isLoading ? (
+    <HorizontalBusinessPlaceholder />
+  ) : (
     <FlatList
       contentContainerStyle={styles.contentContainerStyle}
       data={businesses}
       horizontal={true}
       keyExtractor={(item) => item._id}
       renderItem={({ item }) => {
-        return !isLoading ? (
+        return (
           <PlaceItem
             grid
             image={item?.thumbnail}
@@ -52,8 +54,6 @@ export default function HorizontalBusinesses({
             onPress={() => onPress(item)}
             style={styles.item}
           />
-        ) : (
-          <HorizontalBusinessPlaceholder />
         );
       }}
     />
