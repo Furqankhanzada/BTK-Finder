@@ -9,7 +9,7 @@ import {
 } from '@screens/businesses/models/BusinessPresentable';
 import { BusinessParams } from '@screens/businesses/models/BusinessParams';
 import { useSelector } from 'react-redux';
-import { HorizentalBusinessPlaceholder } from './DashboardPlaceholders';
+import { HorizontalBusinessPlaceholder } from './DashboardPlaceholders';
 
 interface Props {
   queryKey: Array<string | number>;
@@ -25,14 +25,16 @@ export default function HorizontalBusinesses({
   const user = useSelector((state: any) => state.profile);
   const { data: businesses, isLoading } = useBusinesses(queryKey, params);
 
-  return (
+  return isLoading ? (
+    <HorizontalBusinessPlaceholder />
+  ) : (
     <FlatList
       contentContainerStyle={styles.contentContainerStyle}
       data={businesses}
       horizontal={true}
       keyExtractor={(item) => item._id}
       renderItem={({ item }) => {
-        return !isLoading ? (
+        return (
           <PlaceItem
             grid
             image={item?.thumbnail}
@@ -52,8 +54,6 @@ export default function HorizontalBusinesses({
             onPress={() => onPress(item)}
             style={styles.item}
           />
-        ) : (
-          <HorizentalBusinessPlaceholder />
         );
       }}
     />

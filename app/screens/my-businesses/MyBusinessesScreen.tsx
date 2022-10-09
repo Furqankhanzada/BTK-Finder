@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
-import { Animated, View, StyleSheet, ActivityIndicator } from 'react-native';
+import {
+  Animated,
+  View,
+  StyleSheet,
+  ActivityIndicator,
+  RefreshControl,
+} from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { BaseStyle } from '@config';
+import { BaseStyle, useTheme } from '@config';
 import {
   Header,
   SafeAreaView,
@@ -20,7 +26,9 @@ export default function MyBusinessesScreen(props: any) {
   const scrollAnim = new Animated.Value(0);
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const { colors } = useTheme();
 
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const user = useSelector((state: any) => state.profile);
 
   const {
@@ -39,6 +47,12 @@ export default function MyBusinessesScreen(props: any) {
   });
 
   const myBusinesses = data?.pages.map((businesses) => businesses).flat();
+
+  const onRefresh = async () => {
+    setIsRefreshing(true);
+    await refetch();
+    setIsRefreshing(false);
+  };
 
   const stateProps = useSelector(({ businesses }) => {
     return {
@@ -117,6 +131,15 @@ export default function MyBusinessesScreen(props: any) {
               padding: 20,
               flex: myBusinesses?.length ? 0 : 1,
             }}
+            refreshControl={
+              <RefreshControl
+                colors={[colors.primary]}
+                tintColor={colors.primary}
+                refreshing={isRefreshing}
+                progressViewOffset={80}
+                onRefresh={() => onRefresh()}
+              />
+            }
             onEndReached={onEndReached}
             onEndReachedThreshold={0.3}
             scrollEventThrottle={1}

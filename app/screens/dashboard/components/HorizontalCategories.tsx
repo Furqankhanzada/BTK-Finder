@@ -5,7 +5,7 @@ import { BaseColor } from '@config';
 import { useCategories } from '@screens/category/queries/queries';
 import { CategoryPresentable } from '@screens/category/modals/CategoryPresentables';
 import { useTranslation } from 'react-i18next';
-import { HorizentalCategoriesPlaceholder } from './DashboardPlaceholders';
+import { HorizontalCategoriesPlaceholder } from './DashboardPlaceholders';
 
 interface Props {
   onPress: (item: CategoryPresentable) => void;
@@ -15,14 +15,16 @@ export default function HorizontalCategories({ onPress }: Props) {
   const { t } = useTranslation();
   const { data: categories, isLoading } = useCategories(['categories']);
 
-  return (
+  return isLoading ? (
+    <HorizontalCategoriesPlaceholder />
+  ) : (
     <FlatList
       contentContainerStyle={styles.contentContainerStyle}
       data={categories}
       horizontal={true}
       keyExtractor={(item) => item._id}
       renderItem={({ item }) => {
-        return !isLoading ? (
+        return (
           <TouchableOpacity
             style={styles.serviceItem}
             onPress={() => onPress(item)}>
@@ -46,8 +48,6 @@ export default function HorizontalCategories({ onPress }: Props) {
               {t(item.name)}
             </Text>
           </TouchableOpacity>
-        ) : (
-          <HorizentalCategoriesPlaceholder />
         );
       }}
     />

@@ -2,29 +2,65 @@ import React from 'react';
 import { Placeholder, PlaceholderLine, Progressive } from 'rn-placeholder';
 import { View, StyleSheet } from 'react-native';
 
-export function HorizentalCategoriesPlaceholder() {
+export function HorizontalCategoriesPlaceholder() {
   return (
     <View style={styles.mainContainer}>
       <Placeholder Animation={Progressive}>
-        <View style={styles.container}>
-          <PlaceholderLine style={styles.placeholderLine} />
-          <PlaceholderLine style={styles.text} />
+        <View style={styles.containerPosition}>
+          <View style={styles.container}>
+            <PlaceholderLine style={styles.placeholderLine} />
+            <PlaceholderLine style={styles.text} />
+          </View>
+          <View style={styles.subContainer}>
+            <PlaceholderLine style={styles.placeholderLine} />
+            <PlaceholderLine style={styles.text} />
+          </View>
+          <View style={styles.subContainer}>
+            <PlaceholderLine style={styles.placeholderLine} />
+            <PlaceholderLine style={styles.text} />
+          </View>
+          <View style={styles.subContainer}>
+            <PlaceholderLine style={styles.placeholderLine} />
+            <PlaceholderLine style={styles.text} />
+          </View>
+          <View style={styles.subContainer}>
+            <PlaceholderLine style={styles.placeholderLine} />
+            <PlaceholderLine style={styles.text} />
+          </View>
         </View>
       </Placeholder>
     </View>
   );
 }
 
-export function HorizentalBusinessPlaceholder() {
+export function HorizontalBusinessPlaceholder() {
   return (
     <View>
       <Placeholder Animation={Progressive}>
-        <View>
-          <PlaceholderLine style={styles.image} />
-          <PlaceholderLine style={styles.name} />
-          <View style={styles.innerContainer}>
-            <PlaceholderLine style={styles.ratingFigure} />
-            <PlaceholderLine style={styles.ratingStars} />
+        <View style={styles.containerPosition}>
+          <View>
+            <PlaceholderLine style={styles.image} />
+            <PlaceholderLine style={styles.name} />
+            <View style={styles.innerContainer}>
+              <PlaceholderLine style={styles.ratingFigure} />
+              <PlaceholderLine style={styles.ratingStars} />
+            </View>
+          </View>
+          <View>
+            <PlaceholderLine style={styles.image} />
+            <PlaceholderLine style={styles.name} />
+            <View style={styles.innerContainer}>
+              <PlaceholderLine style={styles.ratingFigure} />
+              <PlaceholderLine style={styles.ratingStars} />
+            </View>
+          </View>
+          <View>
+            <PlaceholderLine style={styles.image} />
+            <PlaceholderLine style={styles.name} />
+            <View style={styles.innerContainer}>
+              <PlaceholderLine style={styles.ratingFigure} />
+              <PlaceholderLine style={styles.ratingStars} />
+            </View>
           </View>
         </View>
       </Placeholder>
@@ -50,6 +86,16 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     alignItems: 'center',
     flexDirection: 'column',
+  },
+  subContainer: {
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    flexDirection: 'column',
+    paddingLeft: 40,
+  },
+  containerPosition: {
+    display: 'flex',
+    flexDirection: 'row',
   },
   text: {
     width: 36,
