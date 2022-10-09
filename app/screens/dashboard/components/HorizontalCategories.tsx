@@ -15,14 +15,16 @@ export default function HorizontalCategories({ onPress }: Props) {
   const { t } = useTranslation();
   const { data: categories, isLoading } = useCategories(['categories']);
 
-  return (
+  return !isLoading ? (
+    <HorizontalCategoriesPlaceholder />
+  ) : (
     <FlatList
       contentContainerStyle={styles.contentContainerStyle}
       data={categories}
       horizontal={true}
       keyExtractor={(item) => item._id}
       renderItem={({ item }) => {
-        return !isLoading ? (
+        return (
           <TouchableOpacity
             style={styles.serviceItem}
             onPress={() => onPress(item)}>
@@ -46,8 +48,6 @@ export default function HorizontalCategories({ onPress }: Props) {
               {t(item.name)}
             </Text>
           </TouchableOpacity>
-        ) : (
-          <HorizontalCategoriesPlaceholder />
         );
       }}
     />

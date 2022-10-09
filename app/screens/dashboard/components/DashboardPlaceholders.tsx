@@ -6,9 +6,27 @@ export function HorizontalCategoriesPlaceholder() {
   return (
     <View style={styles.mainContainer}>
       <Placeholder Animation={Progressive}>
-        <View style={styles.container}>
-          <PlaceholderLine style={styles.placeholderLine} />
-          <PlaceholderLine style={styles.text} />
+        <View style={{ display: 'flex', flexDirection: 'row' }}>
+          <View style={styles.container}>
+            <PlaceholderLine style={styles.placeholderLine} />
+            <PlaceholderLine style={styles.text} />
+          </View>
+          <View style={styles.subContainer}>
+            <PlaceholderLine style={styles.placeholderLine} />
+            <PlaceholderLine style={styles.text} />
+          </View>
+          <View style={styles.subContainer}>
+            <PlaceholderLine style={styles.placeholderLine} />
+            <PlaceholderLine style={styles.text} />
+          </View>
+          <View style={styles.subContainer}>
+            <PlaceholderLine style={styles.placeholderLine} />
+            <PlaceholderLine style={styles.text} />
+          </View>
+          <View style={styles.subContainer}>
+            <PlaceholderLine style={styles.placeholderLine} />
+            <PlaceholderLine style={styles.text} />
+          </View>
         </View>
       </Placeholder>
     </View>
@@ -68,6 +86,12 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     alignItems: 'center',
     flexDirection: 'column',
+  },
+  subContainer: {
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    flexDirection: 'column',
+    paddingLeft: 40,
   },
   text: {
     width: 36,
