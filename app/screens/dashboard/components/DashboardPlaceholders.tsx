@@ -35,7 +35,7 @@ export function HorizontalCategoriesPlaceholder() {
 
 export function HorizontalBusinessPlaceholder() {
   return (
-    <View style={styles.horizontalBusinessesSec}>
+    <View style={styles.horizontalBusinessesSection}>
       <Placeholder Animation={Progressive}>
         <View style={styles.containerPosition}>
           <View>
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     paddingLeft: 40,
   },
-  horizontalBusinessesSec: {
+  horizontalBusinessesSection: {
     paddingLeft: 20,
   },
   containerPosition: {
