@@ -37,10 +37,11 @@ export default function Products({ business, style }: Props) {
     isLoading,
   } = useTags(business?.shop?.shopId);
   // Products
-  const { refetch: reFetchProducts, data: products } = useProductsByTag(
-    business?.shop?.shopId,
-    selectedTag?._id,
-  );
+  const {
+    refetch: reFetchProducts,
+    data: products,
+    isLoading: isProductsLoading,
+  } = useProductsByTag(business?.shop?.shopId, selectedTag?._id);
 
   useEffect(() => {
     if (tags && tags.length) {
@@ -116,7 +117,13 @@ export default function Products({ business, style }: Props) {
             />
           )
         }
-        ListEmptyComponent={<MenuItemsPlaceholder />}
+        ListEmptyComponent={
+          isProductsLoading && !products ? (
+            <MenuItemsPlaceholder />
+          ) : (
+            <Text>No Products</Text>
+          )
+        }
         renderItem={({ item }) => (
           <CardList
             key={item._id}
