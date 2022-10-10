@@ -116,9 +116,7 @@ export default function Products({ business, style }: Props) {
             />
           )
         }
-        ListEmptyComponent={
-          isLoading ? <MenuItemsPlaceholder /> : <Text>No Products</Text>
-        }
+        ListEmptyComponent={<MenuItemsPlaceholder />}
         renderItem={({ item }) => (
           <CardList
             key={item._id}
