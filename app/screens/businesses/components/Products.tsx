@@ -121,7 +121,7 @@ export default function Products({ business, style }: Props) {
           isProductsLoading && !products ? (
             <MenuItemsPlaceholder />
           ) : (
-            <Text>No Products</Text>
+            <Text style={styles.listEmptyText}>No Products</Text>
           )
         }
         renderItem={({ item }) => (
@@ -156,5 +156,10 @@ const styles = StyleSheet.create({
   },
   item: {
     marginRight: 5,
+  },
+  listEmptyText: {
+    textAlign: 'center',
+    color: '#000',
+    paddingVertical: 20,
   },
 });
