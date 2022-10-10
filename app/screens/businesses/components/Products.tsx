@@ -6,6 +6,7 @@ import {
   StyleProp,
   ViewStyle,
   RefreshControl,
+  Text,
 } from 'react-native';
 
 import { BusinessPresentable } from '@screens/businesses/models/BusinessPresentable';
@@ -115,23 +116,20 @@ export default function Products({ business, style }: Props) {
             />
           )
         }
-        renderItem={({ item }) =>
-          !isLoading ? (
-            <CardList
-              key={item._id}
-              image={item.primaryImage?.URLs?.thumbnail!}
-              title={item.title}
-              subtitle={item.pricing[0]?.displayPrice}
-              style={[styles.productList, style]}
-              onPress={() => onProductPress(item)}
-              options={item.variants?.map((variant) => variant?.optionTitle)}
-            />
-          ) : (
-            <View>
-              <MenuItemsPlaceholder />
-            </View>
-          )
+        ListEmptyComponent={
+          isLoading ? <MenuItemsPlaceholder /> : <Text>No Products</Text>
         }
+        renderItem={({ item }) => (
+          <CardList
+            key={item._id}
+            image={item.primaryImage?.URLs?.thumbnail!}
+            title={item.title}
+            subtitle={item.pricing[0]?.displayPrice}
+            style={[styles.productList, style]}
+            onPress={() => onProductPress(item)}
+            options={item.variants?.map((variant) => variant?.optionTitle)}
+          />
+        )}
       />
     </View>
   );
