@@ -15,7 +15,10 @@ import { StackScreenProps } from '@react-navigation/stack';
 
 import { BaseStyle, BaseColor, useTheme } from '@config';
 import { useBusinessesInfinite } from '@screens/businesses/queries/queries';
-import { BusinessPresentable } from '@screens/businesses/models/BusinessPresentable';
+import {
+  BusinessPresentable,
+  Favorite,
+} from '@screens/businesses/models/BusinessPresentable';
 import * as Utils from '@utils';
 import {
   Header,
@@ -324,7 +327,7 @@ export default function BusinessesScreen(
                   numReviews={item?.reviews?.length}
                   isFavorite={
                     !!item?.favorites?.find(
-                      (favorite: any) => favorite.ownerId === user._id,
+                      (favorite: Favorite) => favorite.ownerId === user._id,
                     )
                   }
                   businessId={item?._id}
@@ -402,7 +405,7 @@ export default function BusinessesScreen(
                   numReviews={item?.reviews?.length}
                   isFavorite={
                     !!item?.favorites?.find(
-                      (favorite: any) => favorite.ownerId === user._id,
+                      (favorite: Favorite) => favorite.ownerId === user._id,
                     )
                   }
                   businessId={item?._id}
@@ -489,7 +492,7 @@ export default function BusinessesScreen(
                   numReviews={item?.reviews.length}
                   isFavorite={
                     !!item?.favorites?.find(
-                      (favorite: any) => favorite.ownerId === user._id,
+                      (favorite: Favorite) => favorite.ownerId === user._id,
                     )
                   }
                   businessId={item?._id}

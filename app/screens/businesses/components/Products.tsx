@@ -6,6 +6,7 @@ import {
   StyleProp,
   ViewStyle,
   RefreshControl,
+  Text,
 } from 'react-native';
 
 import { BusinessPresentable } from '@screens/businesses/models/BusinessPresentable';
@@ -36,10 +37,11 @@ export default function Products({ business, style }: Props) {
     isLoading,
   } = useTags(business?.shop?.shopId);
   // Products
-  const { refetch: reFetchProducts, data: products } = useProductsByTag(
-    business?.shop?.shopId,
-    selectedTag?._id,
-  );
+  const {
+    refetch: reFetchProducts,
+    data: products,
+    isLoading: isProductsLoading,
+  } = useProductsByTag(business?.shop?.shopId, selectedTag?._id);
 
   useEffect(() => {
     if (tags && tags.length) {
@@ -88,15 +90,15 @@ export default function Products({ business, style }: Props) {
         keyExtractor={(item) => item._id}
         stickyHeaderIndices={[0]}
         ListHeaderComponent={
-          <FlatList
-            contentContainerStyle={[styles.tagsContainer, style]}
-            horizontal={true}
-            data={tags}
-            keyExtractor={(item) => item._id}
-            renderItem={({ item }) =>
-              isLoading ? (
-                <MenuTabPlaceholder />
-              ) : (
+          isLoading ? (
+            <MenuTabPlaceholder />
+          ) : (
+            <FlatList
+              contentContainerStyle={[styles.tagsContainer, style]}
+              horizontal={true}
+              data={tags}
+              keyExtractor={(item) => item._id}
+              renderItem={({ item }) => (
                 <Tag
                   key={item._id}
                   rate
@@ -111,27 +113,30 @@ export default function Products({ business, style }: Props) {
                   ]}>
                   {item.displayTitle}
                 </Tag>
-              )
-            }
-          />
-        }
-        renderItem={({ item }) =>
-          !isLoading ? (
-            <CardList
-              key={item._id}
-              image={item.primaryImage?.URLs?.thumbnail!}
-              title={item.title}
-              subtitle={item.pricing[0]?.displayPrice}
-              style={[styles.productList, style]}
-              onPress={() => onProductPress(item)}
-              options={item.variants?.map((variant) => variant?.optionTitle)}
+              )}
             />
-          ) : (
-            <View>
-              <MenuItemsPlaceholder />
-            </View>
           )
         }
+        ListEmptyComponent={
+          isProductsLoading && !products ? (
+            <MenuItemsPlaceholder />
+          ) : (
+            <Text style={[styles.listEmptyText, { color: colors.text }]}>
+              No Products
+            </Text>
+          )
+        }
+        renderItem={({ item }) => (
+          <CardList
+            key={item._id}
+            image={item.primaryImage?.URLs?.thumbnail!}
+            title={item.title}
+            subtitle={item.pricing[0]?.displayPrice}
+            style={[styles.productList, style]}
+            onPress={() => onProductPress(item)}
+            options={item.variants?.map((variant) => variant?.optionTitle)}
+          />
+        )}
       />
     </View>
   );
@@ -153,5 +158,9 @@ const styles = StyleSheet.create({
   },
   item: {
     marginRight: 5,
+  },
+  listEmptyText: {
+    textAlign: 'center',
+    paddingVertical: 20,
   },
 });

@@ -13,15 +13,41 @@ export default function CategoryPlaceholder() {
   return (
     <View style={styles.mainContainer}>
       <Placeholder Animation={Progressive}>
-        <View style={styles.subContainer}>
-          <PlaceholderMedia style={styles.mediaPlaceholder} />
-          <View style={styles.innerContainer}>
-            <PlaceholderLine style={styles.topPlaceholderLine} />
-            <PlaceholderLine style={styles.bottomPlaceholderLine} />
-            <View style={{ display: 'flex', flexDirection: 'row' }}>
-              <PlaceholderLine style={styles.sizePlaceholderLine} />
-              <PlaceholderLine style={styles.sizePlaceholderLine} />
-              <PlaceholderLine style={styles.sizePlaceholderLine} />
+        <View>
+          <View style={styles.subContainer}>
+            <PlaceholderMedia style={styles.mediaPlaceholder} />
+            <View style={styles.innerContainer}>
+              <PlaceholderLine style={styles.topPlaceholderLine} />
+              <PlaceholderLine style={styles.bottomPlaceholderLine} />
+              <View style={{ display: 'flex', flexDirection: 'row' }}>
+                <PlaceholderLine style={styles.sizePlaceholderLine} />
+                <PlaceholderLine style={styles.sizePlaceholderLine} />
+                <PlaceholderLine style={styles.sizePlaceholderLine} />
+              </View>
+            </View>
+          </View>
+          <View style={styles.subContainer}>
+            <PlaceholderMedia style={styles.mediaPlaceholder} />
+            <View style={styles.innerContainer}>
+              <PlaceholderLine style={styles.topPlaceholderLine} />
+              <PlaceholderLine style={styles.bottomPlaceholderLine} />
+              <View style={{ display: 'flex', flexDirection: 'row' }}>
+                <PlaceholderLine style={styles.sizePlaceholderLine} />
+                <PlaceholderLine style={styles.sizePlaceholderLine} />
+                <PlaceholderLine style={styles.sizePlaceholderLine} />
+              </View>
+            </View>
+          </View>
+          <View style={styles.subContainer}>
+            <PlaceholderMedia style={styles.mediaPlaceholder} />
+            <View style={styles.innerContainer}>
+              <PlaceholderLine style={styles.topPlaceholderLine} />
+              <PlaceholderLine style={styles.bottomPlaceholderLine} />
+              <View style={{ display: 'flex', flexDirection: 'row' }}>
+                <PlaceholderLine style={styles.sizePlaceholderLine} />
+                <PlaceholderLine style={styles.sizePlaceholderLine} />
+                <PlaceholderLine style={styles.sizePlaceholderLine} />
+              </View>
             </View>
           </View>
         </View>
@@ -59,7 +85,7 @@ const styles = StyleSheet.create({
   },
   subContainer: {
     flexDirection: 'row',
-    marginBottom: 0,
+    marginBottom: 10,
   },
   innerContainer: {
     flexDirection: 'column',

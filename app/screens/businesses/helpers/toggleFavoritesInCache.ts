@@ -36,6 +36,20 @@ export const toggleFavoritesInCache = (
                 : oldBusiness;
             });
             queryClient.setQueryData(query.queryKey, newBusinesses);
+            // @ts-ignore
+          } else if (oldBusinessOrBusinesses.pages) {
+            // @ts-ignore
+            const newBusinesses = oldBusinessOrBusinesses.pages.map((page) => {
+              return page.map((oldBusiness: BusinessPresentable) => {
+                return updatedBusiness._id === oldBusiness._id
+                  ? { ...oldBusiness, favorites: updatedBusiness.favorites }
+                  : oldBusiness;
+              });
+            });
+            queryClient.setQueryData(query.queryKey, {
+              ...oldBusinessOrBusinesses,
+              pages: newBusinesses,
+            });
           } else {
             if (oldBusinessOrBusinesses) {
               let newBusiness: BusinessPresentable = {
