@@ -7,7 +7,18 @@ export default function CategoryPlaceholder() {
     <View>
       <Placeholder Animation={Progressive}>
         <View style={styles.container}>
-          <PlaceholderLine style={styles.placeholderLine} />
+          <View>
+            <PlaceholderLine style={styles.placeholderLine} />
+          </View>
+          <View>
+            <PlaceholderLine style={styles.placeholderLine} />
+          </View>
+          <View>
+            <PlaceholderLine style={styles.placeholderLine} />
+          </View>
+          <View>
+            <PlaceholderLine style={styles.placeholderLine} />
+          </View>
         </View>
       </Placeholder>
     </View>
@@ -18,11 +29,10 @@ const styles = StyleSheet.create({
   placeholderLine: {
     width: 80,
     height: 32,
-    marginRight: 5,
-    marginBottom: 0,
+    marginRight: 18,
+    marginBottom: 10,
   },
   container: {
-    flexWrap: 'wrap',
     alignItems: 'flex-start',
     flexDirection: 'row',
   },

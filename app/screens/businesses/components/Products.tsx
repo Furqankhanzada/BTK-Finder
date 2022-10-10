@@ -88,15 +88,15 @@ export default function Products({ business, style }: Props) {
         keyExtractor={(item) => item._id}
         stickyHeaderIndices={[0]}
         ListHeaderComponent={
-          <FlatList
-            contentContainerStyle={[styles.tagsContainer, style]}
-            horizontal={true}
-            data={tags}
-            keyExtractor={(item) => item._id}
-            renderItem={({ item }) =>
-              isLoading ? (
-                <MenuTabPlaceholder />
-              ) : (
+          isLoading ? (
+            <MenuTabPlaceholder />
+          ) : (
+            <FlatList
+              contentContainerStyle={[styles.tagsContainer, style]}
+              horizontal={true}
+              data={tags}
+              keyExtractor={(item) => item._id}
+              renderItem={({ item }) => (
                 <Tag
                   key={item._id}
                   rate
@@ -111,9 +111,9 @@ export default function Products({ business, style }: Props) {
                   ]}>
                   {item.displayTitle}
                 </Tag>
-              )
-            }
-          />
+              )}
+            />
+          )
         }
         renderItem={({ item }) =>
           !isLoading ? (
