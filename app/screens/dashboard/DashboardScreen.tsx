@@ -115,18 +115,15 @@ function DashboardScreen({
       return;
     }
     return (
-      <View style={{ paddingHorizontal: 20, paddingTop: 20 }}>
+      <View style={styles.bannerContainer}>
         <View style={styles.banner}>
-          <Image
-            style={{ width: '100%', height: '100%', borderRadius: 10 }}
-            source={banner.image}
-          />
+          <Image style={styles.bannerImage} source={banner.image} />
           <View style={styles.contentBannerTopLeft}>
             <Text style={[banner.titleStyle]} headline semibold whiteColor>
               {banner.title}
             </Text>
             <Text
-              style={[banner.titleStyle, { marginTop: 5 }]}
+              style={[styles.bannerText, banner.titleStyle]}
               footnote
               medium
               whiteColor>
@@ -528,5 +525,17 @@ const styles = StyleSheet.create({
   contentActionModalBottom: {
     flexDirection: 'row',
     paddingVertical: 10,
+  },
+  bannerContainer: {
+    paddingHorizontal: 20,
+    paddingTop: 20,
+  },
+  bannerImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 10,
+  },
+  bannerText: {
+    marginTop: 5,
   },
 });

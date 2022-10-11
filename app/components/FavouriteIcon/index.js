@@ -2,6 +2,7 @@ import React from 'react';
 import { ActivityIndicator, Alert, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import Icon2 from 'react-native-vector-icons/FontAwesome';
+import { useNavigation } from '@react-navigation/native';
 
 import { BaseColor } from '@config';
 import { Icon, Text } from '@components';
@@ -14,16 +15,9 @@ import styles from './styles';
 import { trackEvent, EVENTS } from '../../userTracking';
 
 export default function FavouriteIcon(props) {
-  const {
-    style,
-    name,
-    isFavorite,
-    favoriteId,
-    navigation,
-    lastRoute,
-    routeId,
-    showText,
-  } = props;
+  const { style, name, isFavorite, favoriteId, lastRoute, routeId, showText } =
+    props;
+  const navigation = useNavigation();
   const { mutate, isLoading } = useToggleFavorite();
   const isLogin = useSelector((state) => state.auth.isLogin);
 

@@ -1,5 +1,4 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { StackScreenProps } from '@react-navigation/stack';
 
@@ -40,15 +39,8 @@ export default function BusinessProductsScreen(
       />
       <Products
         business={business}
-        style={[styles.products, { backgroundColor: colors.background }]}
+        style={{ backgroundColor: colors.background }}
       />
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  products: {
-    paddingLeft: 20,
-    paddingBottom: 10,
-  },
-});

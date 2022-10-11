@@ -276,7 +276,6 @@ export default function OverviewCard({
             <FavouriteIcon
               name={business.name}
               style={styles.iconGirdLike}
-              // navigation={navigation}
               lastRoute="BusinessDetailTabNavigator"
               routeId={business?._id}
               isFavorite={

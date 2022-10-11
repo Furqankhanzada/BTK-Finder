@@ -69,6 +69,15 @@ export const useBusinesses = (
     },
     {
       ...options,
+      select: (businesses) => {
+        return businesses.map((business) => {
+          if (business.favorites && business.favorites.length) {
+            return business;
+          } else {
+            return { ...business, favorites: [] };
+          }
+        });
+      },
     },
   );
 };
@@ -91,7 +100,15 @@ export const useBusinessesInfinite = (
           skip: skip >= 0 ? skip : 0,
         },
       })
-        .then((response) => response.data)
+        .then((response) => {
+          return response.data.map((business: BusinessPresentable) => {
+            if (business.favorites && business.favorites.length) {
+              return business;
+            } else {
+              return { ...business, favorites: [] };
+            }
+          });
+        })
         .catch(({ response }) => {
           handleError(response.data);
         });

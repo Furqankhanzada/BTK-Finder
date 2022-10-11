@@ -345,69 +345,69 @@ export default function BusinessOverviewScreen(
             onOpen={onOpen}
           />
           <OpenHours business={business} />
-          {business?.shop && business.shop.status === ShopStatus.enabled ? (
-            <View>
-              <Text title3 semibold style={styles.facilities}>
-                {business.type === 'restaurant' ? 'Menu' : 'Products'}
-              </Text>
-              <View
-                style={[styles.wrapContent, { borderColor: colors.border }]}>
-                <Products business={business} />
-              </View>
-            </View>
-          ) : null}
-          <View
-            style={[styles.contentDescription, { borderColor: colors.border }]}>
-            {business.description ? (
-              <Text body2 numberOfLines={100} style={styles.contentInfo}>
-                {business.description}
-              </Text>
-            ) : null}
-            <View style={styles.contentContainer} />
-            <View style={styles.contentSubContainer}>
-              <MapView
-                ref={mapRef}
-                scrollEnabled={true}
-                pitchEnabled={false}
-                zoomEnabled={true}
-                provider={PROVIDER_GOOGLE}
-                style={styles.map}
-                region={region}
-                onRegionChange={() => {}}>
-                <Marker coordinate={location} />
-              </MapView>
+        </View>
+
+        {business?.shop && business.shop.status === ShopStatus.enabled ? (
+          <View>
+            <Text title3 semibold style={styles.facilities}>
+              {business.type === 'restaurant' ? 'Menu' : 'Products'}
+            </Text>
+            <View style={[styles.wrapContent, { borderColor: colors.border }]}>
+              <Products business={business} />
             </View>
           </View>
-          {business?.facilities?.length ? (
-            <View>
-              <Text title3 semibold style={styles.facilities}>
-                {t('facilities')}
-              </Text>
-              <View
-                style={[styles.wrapContent, { borderColor: colors.border }]}>
-                {business.facilities?.map((item, index) => {
-                  return (
-                    <Tag
-                      icon={
-                        <Icon
-                          name={item.icon}
-                          size={12}
-                          color={colors.accent}
-                          solid
-                          style={styles.facilityIcon}
-                        />
-                      }
-                      chip
-                      key={item.name + index}
-                      style={styles.facilityText}>
-                      {item?.name}
-                    </Tag>
-                  );
-                })}
-              </View>
-            </View>
+        ) : null}
+        <View
+          style={[styles.contentDescription, { borderColor: colors.border }]}>
+          {business.description ? (
+            <Text body2 numberOfLines={100} style={styles.contentInfo}>
+              {business.description}
+            </Text>
           ) : null}
+          <View style={styles.contentContainer} />
+          <View style={styles.contentSubContainer}>
+            <MapView
+              ref={mapRef}
+              scrollEnabled={true}
+              pitchEnabled={false}
+              zoomEnabled={true}
+              provider={PROVIDER_GOOGLE}
+              style={styles.map}
+              region={region}
+              onRegionChange={() => {}}>
+              <Marker coordinate={location} />
+            </MapView>
+          </View>
         </View>
+        {business?.facilities?.length ? (
+          <View>
+            <Text title3 semibold style={styles.facilities}>
+              {t('facilities')}
+            </Text>
+            <View style={[styles.wrapFacility, { borderColor: colors.border }]}>
+              {business.facilities?.map((item, index) => {
+                return (
+                  <Tag
+                    icon={
+                      <Icon
+                        name={item.icon}
+                        size={12}
+                        color={colors.accent}
+                        solid
+                        style={styles.facilityIcon}
+                      />
+                    }
+                    chip
+                    key={item.name + index}
+                    style={styles.facilityText}>
+                    {item?.name}
+                  </Tag>
+                );
+              })}
+            </View>
+          </View>
+        ) : null}
+
         <Recommendations business={business} onNavigate={onNavigate} />
       </View>
     );
@@ -538,10 +538,18 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     paddingBottom: 20,
   },
+  wrapFacility: {
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    paddingBottom: 20,
+    paddingHorizontal: 20,
+  },
   contentDescription: {
     paddingTop: 20,
     paddingBottom: 20,
     borderBottomWidth: 0.5,
+    paddingHorizontal: 20,
   },
   galleryFooter: {
     height: 64,
@@ -593,6 +601,7 @@ const styles = StyleSheet.create({
   facilities: {
     paddingBottom: 5,
     paddingTop: 15,
+    paddingHorizontal: 20,
   },
   facilityIcon: {
     marginRight: 5,

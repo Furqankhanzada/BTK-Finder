@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 
-import { Icon, Text } from '@components';
+import { Text } from '@components';
 import { NotificationOptions } from '../models/types';
 
 interface Props extends NotificationOptions {
