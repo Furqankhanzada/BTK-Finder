@@ -8,9 +8,9 @@ const ProductCurt = () => {
     <View style={styles.mainContainer}>
       <Button>
         <View style={styles.innerContainer}>
-          <View>
+          <View style={styles.width}>
             <Text style={[styles.cartAmount, { color: BaseColor.whiteColor }]}>
-              $15
+              Rs.1000
             </Text>
           </View>
           <View style={styles.subContainer}>
@@ -18,7 +18,7 @@ const ProductCurt = () => {
               Add to cart
             </Text>
           </View>
-          <View>
+          <View style={styles.width}>
             <Text
               style={[
                 styles.cartQuantity,
@@ -36,11 +36,22 @@ const ProductCurt = () => {
 export default ProductCurt;
 
 const styles = StyleSheet.create({
+  width: {
+    width: 80,
+    display: 'flex',
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+  },
   mainContainer: {
     paddingHorizontal: 20,
   },
   subContainer: {
-    width: 200,
+    width: 150,
+    display: 'flex',
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
   },
   innerContainer: {
     display: 'flex',
@@ -59,7 +70,8 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   cartAmount: {
-    fontSize: 20,
+    fontSize: 18,
     textAlign: 'center',
+    fontWeight: 'bold',
   },
 });
