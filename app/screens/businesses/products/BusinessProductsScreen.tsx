@@ -10,6 +10,7 @@ import { useBusiness } from '@screens/businesses/queries/queries';
 
 import { BusinessDetailBottomTabParamList } from '../../../navigation/models/BusinessDetailBottomTabParamList';
 import ProductAddToCart from './components/Product-Add-To-Cart';
+import ProductAddRemove from './components/Product-Add-Remove';
 
 export default function BusinessProductsScreen(
   props: StackScreenProps<BusinessDetailBottomTabParamList, 'Products'>,
@@ -42,6 +43,7 @@ export default function BusinessProductsScreen(
         business={business}
         style={{ backgroundColor: colors.background }}
       />
+      <ProductAddRemove />
       <ProductAddToCart />
     </SafeAreaView>
   );
