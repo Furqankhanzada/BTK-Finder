@@ -9,7 +9,7 @@ import Products from '@screens/businesses/components/Products';
 import { useBusiness } from '@screens/businesses/queries/queries';
 
 import { BusinessDetailBottomTabParamList } from '../../../navigation/models/BusinessDetailBottomTabParamList';
-import ProductAddToCart from './components/Product-cart';
+import ProductAddToCart from './components/Product-Add-To-Cart';
 
 export default function BusinessProductsScreen(
   props: StackScreenProps<BusinessDetailBottomTabParamList, 'Products'>,
