@@ -3,7 +3,7 @@ import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { BaseColor } from '@config';
 
-const ProductAddToCart = () => {
+const ProductViewCart = () => {
   return (
     <View style={styles.mainContainer}>
       <Button>
@@ -33,7 +33,7 @@ const ProductAddToCart = () => {
   );
 };
 
-export default ProductAddToCart;
+export default ProductViewCart;
 
 const styles = StyleSheet.create({
   width: {
