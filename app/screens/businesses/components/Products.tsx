@@ -18,7 +18,7 @@ import { useAlerts } from '@hooks';
 import { CatalogProduct, Tag as TagType } from '../../../models/graphql';
 import MenuTabPlaceholder from './MenuTabPlaceholder';
 import MenuItemsPlaceholder from './MenuItemsPlaceholder';
-import { IconName } from '../../../contexts/alerts-v2/models/Icon';
+import Product from '@screens/businesses/components/Product';
 
 interface Props {
   business: BusinessPresentable | undefined;
@@ -29,7 +29,7 @@ export default function Products({ business, style }: Props) {
   const [selectedTag, setSelectedTag] = useState<TagType | undefined>();
   const [isReFetching, setIsReFetching] = useState<boolean>(false);
   const { colors } = useTheme();
-  const { showNotification } = useAlerts();
+  const { showModal } = useAlerts();
   //Tags
   const {
     data: tags,
@@ -54,13 +54,10 @@ export default function Products({ business, style }: Props) {
   };
 
   const onProductPress = async (product: CatalogProduct) => {
-    await showNotification({
-      icon: {
-        size: 70,
-        name: IconName.ConstructOutline,
-        color: colors.primary,
-      },
-      message: 'This feature is under development, will be available soon!',
+    await showModal({
+      showCloseBtn: true,
+      type: 'Custom',
+      content: () => <Product item={product} />,
     });
   };
 
