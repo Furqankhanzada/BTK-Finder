@@ -96,6 +96,7 @@ export const GET_PRODUCTS = gql`
                 optionTitle
                 pricing {
                   displayPrice
+                  price
                 }
               }
               tagIds

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, StyleSheet } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import { Tag, Text } from '@components';
 import { BaseColor, useTheme } from '@config';
 
@@ -8,17 +8,19 @@ interface Props {
   title: string;
   rightText: string | number;
   onPress: () => void;
+  onCartCountPress: () => void;
 }
 export default function EcommerceButton({
   leftText,
   rightText,
   title,
   onPress,
+  onCartCountPress,
 }: Props) {
   const { colors } = useTheme();
 
   return (
-    <Pressable
+    <TouchableOpacity
       onPress={onPress}
       style={[
         styles.container,
@@ -32,8 +34,10 @@ export default function EcommerceButton({
       <Text title3 style={{ color: BaseColor.whiteColor }}>
         {title}
       </Text>
-      <Tag rate>{rightText}</Tag>
-    </Pressable>
+      <Tag rate onPress={onCartCountPress}>
+        {rightText}
+      </Tag>
+    </TouchableOpacity>
   );
 }
 
