@@ -5,11 +5,13 @@ import { Text, Tag } from '@components';
 import { CatalogProduct, CatalogProductVariant } from '../../../models/graphql';
 import EcommerceButton from '@screens/businesses/components/EcommerceButton';
 import { useTheme } from '@config';
+import QuantityButton from '@screens/businesses/components/QuantityButton';
 
 export default function Product({ item }: { item: CatalogProduct }) {
   const { colors } = useTheme();
   const [selectedVariant, setSelectedVariant] =
     useState<CatalogProductVariant | null>();
+  const [quantity, setQuantity] = useState<number>(0);
 
   useEffect(() => {
     if (item.variants && item.variants.length) {
@@ -27,8 +29,9 @@ export default function Product({ item }: { item: CatalogProduct }) {
         {item.title}
       </Text>
       <Text caption1>{item.pricing[0]?.displayPrice}</Text>
-      <Text>{item.description}</Text>
-      <Text headline>Select Size:</Text>
+      <Text headline style={{ marginTop: 10 }}>
+        Select Size:
+      </Text>
       <View style={[styles.variantsContainer]}>
         {item.variants?.map((variant) => (
           <Tag
@@ -46,9 +49,29 @@ export default function Product({ item }: { item: CatalogProduct }) {
           </Tag>
         ))}
       </View>
-      <Text heavy headline style={{ marginBottom: 10 }}>
-        {selectedVariant?.pricing.map((price) => price?.displayPrice)}
+      <Text body1 style={{ paddingVertical: 10 }}>
+        Special Sauce-Aghani-Cheese: Mushroom-Jalapeño
       </Text>
+
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          marginBottom: 10,
+        }}>
+        <Text heavy headline style={{ width: '40%' }}>
+          {selectedVariant?.pricing.map((price) => price?.displayPrice)}
+        </Text>
+        <QuantityButton
+          onPressAdd={() => setQuantity((oldQuantity) => oldQuantity + 1)}
+          onPressRemove={() =>
+            setQuantity((oldQuantity) =>
+              oldQuantity !== 0 ? oldQuantity - 1 : oldQuantity,
+            )
+          }
+          quantity={quantity}
+        />
+      </View>
       <EcommerceButton
         leftText="Rs.20"
         title="Add to cart"
@@ -66,7 +89,6 @@ const styles = StyleSheet.create({
   variantsContainer: {
     flexDirection: 'row',
     marginTop: 5,
-    marginBottom: 10,
   },
   variant: {
     marginRight: 5,
