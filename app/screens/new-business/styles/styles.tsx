@@ -209,4 +209,49 @@ export const styles = StyleSheet.create({
   thumbnailText: {
     textAlign: 'center',
   },
+  mapFabButtonContainer: {
+    alignItems: 'flex-end',
+  },
+  mapFabButton: {
+    width: 52,
+    height: 52,
+    borderRadius: 52 / 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: BaseColor.whiteColor,
+    shadowColor: BaseColor.kashmir,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 3,
+    marginBottom: 20,
+  },
+  activeMapFabButton: {
+    backgroundColor: BaseColor.blueColor,
+  },
+  mapFabButtonIcon: {
+    fontSize: 22,
+    color: BaseColor.blueColor,
+  },
+  activeMapFabButtonIcon: {
+    color: BaseColor.whiteColor,
+  },
+  mapContainer: {
+    flex: 1,
+    paddingTop: 15,
+    paddingVertical: 15,
+    paddingHorizontal: 15,
+  },
+  titleCenter: {
+    textAlign: 'center',
+  },
+  map: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  bottomSection: {
+    position: 'absolute',
+    bottom: 60,
+    right: 10,
+    left: 15,
+  },
 });
