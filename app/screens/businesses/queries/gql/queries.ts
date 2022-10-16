@@ -92,6 +92,7 @@ export const GET_PRODUCTS = gql`
             product {
               _id
               variants {
+                _id
                 title
                 optionTitle
                 pricing {

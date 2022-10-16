@@ -39,7 +39,7 @@ export default function Product({ item }: { item: CatalogProduct }) {
       <Text title1 heavy>
         {item.title}
       </Text>
-      <Text caption1>{item.pricing[0]?.displayPrice}</Text>
+      <Text caption1>{item.description}</Text>
       <Text headline style={{ marginTop: 10 }}>
         Select Size:
       </Text>
@@ -61,9 +61,6 @@ export default function Product({ item }: { item: CatalogProduct }) {
           </Tag>
         ))}
       </View>
-      <Text body1 style={{ paddingVertical: 10 }}>
-        Special Sauce-Aghani-Cheese: Mushroom-Jalapeño
-      </Text>
 
       <View style={styles.priceQuantity}>
         <Text heavy headline style={{ width: '40%' }}>
@@ -116,6 +113,7 @@ const styles = StyleSheet.create({
   priceQuantity: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginTop: 15,
     marginBottom: 10,
   },
 });
