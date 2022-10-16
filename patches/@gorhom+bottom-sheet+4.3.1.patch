@@ -1,0 +1,50 @@
+diff --git a/node_modules/@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types.d.ts b/node_modules/@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types.d.ts
+index 75268ee..b39c5ef 100644
+--- a/node_modules/@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types.d.ts
++++ b/node_modules/@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types.d.ts
+@@ -44,4 +44,7 @@ export interface BottomSheetDefaultBackdropProps
+    * Child component that will be rendered on backdrop.
+    */
+   children?: ReactNode | ReactNode[];
++
++  backgroundColor: string
++
+ }
+diff --git a/node_modules/@gorhom/bottom-sheet/src/components/bottomSheetBackdrop/BottomSheetBackdrop.tsx b/node_modules/@gorhom/bottom-sheet/src/components/bottomSheetBackdrop/BottomSheetBackdrop.tsx
+index 2446c1d..8cf9bb6 100644
+--- a/node_modules/@gorhom/bottom-sheet/src/components/bottomSheetBackdrop/BottomSheetBackdrop.tsx
++++ b/node_modules/@gorhom/bottom-sheet/src/components/bottomSheetBackdrop/BottomSheetBackdrop.tsx
+@@ -29,11 +29,13 @@ const BottomSheetBackdropComponent = ({
+   disappearsOnIndex: _providedDisappearsOnIndex,
+   enableTouchThrough: _providedEnableTouchThrough,
+   pressBehavior = DEFAULT_PRESS_BEHAVIOR,
++  backgroundColor,
+   style,
+   children,
+ }: BottomSheetDefaultBackdropProps) => {
+   //#region hooks
+   const { snapToIndex, close } = useBottomSheet();
++
+   //#endregion
+ 
+   //#region defaults
+@@ -97,7 +99,7 @@ const BottomSheetBackdropComponent = ({
+     flex: 1,
+   }));
+   const containerStyle = useMemo(
+-    () => [styles.container, style, containerAnimatedStyle],
++    () => [{ ...styles.container, backgroundColor}, style, containerAnimatedStyle],
+     [style, containerAnimatedStyle]
+   );
+   //#endregion
+diff --git a/node_modules/@gorhom/bottom-sheet/src/components/bottomSheetBackdrop/types.d.ts b/node_modules/@gorhom/bottom-sheet/src/components/bottomSheetBackdrop/types.d.ts
+index 75268ee..55694c0 100644
+--- a/node_modules/@gorhom/bottom-sheet/src/components/bottomSheetBackdrop/types.d.ts
++++ b/node_modules/@gorhom/bottom-sheet/src/components/bottomSheetBackdrop/types.d.ts
+@@ -44,4 +44,6 @@ export interface BottomSheetDefaultBackdropProps
+    * Child component that will be rendered on backdrop.
+    */
+   children?: ReactNode | ReactNode[];
++
++  backgroundColor: string
+ }
