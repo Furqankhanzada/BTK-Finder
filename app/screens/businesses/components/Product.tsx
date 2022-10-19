@@ -82,9 +82,9 @@ export default function Product({ item }: { item: CatalogProduct }) {
         />
       </View>
       <EcommerceButton
-        leftText="Rs.20"
+        leftText="Rs.0"
         title="Add to cart"
-        rightText={3}
+        rightText={'0'}
         onPress={() => {}}
         onCartCountPress={() => {}}
       />
