@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 
-import { Button, Icon, Text } from '@components';
+import { Button, Text } from '@components';
 import { AlertBtnResult, AlertOptions } from '../models/types';
 
 type Props = AlertOptions & {

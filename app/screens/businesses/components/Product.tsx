@@ -7,9 +7,18 @@ import EcommerceButton from '@screens/businesses/components/EcommerceButton';
 import { useTheme, Images } from '@config';
 import QuantityButton from '@screens/businesses/components/QuantityButton';
 import * as Utils from '@utils';
+import { useAlerts } from '@hooks';
+import { IconName } from '../../../contexts/alerts-v2/models/Icon';
 
-export default function Product({ item }: { item: CatalogProduct }) {
+export default function Product({
+  item,
+  onDismiss,
+}: {
+  item: CatalogProduct;
+  onDismiss: (arg?: any) => void;
+}) {
   const { colors } = useTheme();
+  const { showAlert } = useAlerts();
   const [selectedVariant, setSelectedVariant] =
     useState<CatalogProductVariant | null>();
   const [quantity, setQuantity] = useState<number>(1);
@@ -22,6 +31,23 @@ export default function Product({ item }: { item: CatalogProduct }) {
 
   const onVariantPress = (variant: CatalogProductVariant | null) => {
     setSelectedVariant(variant);
+  };
+
+  const onAddToCartPress = async () => {
+    onDismiss();
+    await showAlert({
+      icon: {
+        size: 70,
+        name: IconName.ConstructOutline,
+        color: colors.primary,
+      },
+      title: 'Under Development',
+      message: 'This feature is under development, will be available soon!',
+      btn: {
+        confirmBtnTitle: 'Ok',
+      },
+      type: 'Standard',
+    });
   };
 
   return (
@@ -85,8 +111,8 @@ export default function Product({ item }: { item: CatalogProduct }) {
         leftText="Rs.0"
         title="Add to cart"
         rightText={'0'}
-        onPress={() => {}}
-        onCartCountPress={() => {}}
+        onPress={onAddToCartPress}
+        onCartCountPress={onAddToCartPress}
       />
     </View>
   );

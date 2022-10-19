@@ -55,9 +55,10 @@ export default function Products({ business, style }: Props) {
 
   const onProductPress = async (product: CatalogProduct) => {
     await showModal({
-      showCloseBtn: true,
       type: 'Custom',
-      content: () => <Product item={product} />,
+      content: ({ onDismiss }) => (
+        <Product onDismiss={onDismiss} item={product} />
+      ),
     });
   };
 
