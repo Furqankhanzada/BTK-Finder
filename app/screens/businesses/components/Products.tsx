@@ -14,11 +14,11 @@ import { CardList, Tag } from '@components';
 import { useProductsByTag, useTags } from '@screens/businesses/queries/queries';
 import { useTheme } from '@config';
 import { useAlerts } from '@hooks';
+import Product from '@screens/businesses/components/Product';
 
 import { CatalogProduct, Tag as TagType } from '../../../models/graphql';
 import MenuTabPlaceholder from './MenuTabPlaceholder';
 import MenuItemsPlaceholder from './MenuItemsPlaceholder';
-import Product from '@screens/businesses/components/Product';
 
 interface Props {
   business: BusinessPresentable | undefined;
