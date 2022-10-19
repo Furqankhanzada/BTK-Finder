@@ -27,11 +27,21 @@ export default function CardList(props) {
       onPress={onPress}
       activeOpacity={0.9}>
       <Image source={image} style={styles.image} />
-      <View style={{ paddingHorizontal: 10, justifyContent: 'center' }}>
-        <Text headline semibold numberOfLines={1}>
+      <View
+        style={{
+          paddingHorizontal: 10,
+          justifyContent: 'center',
+          flexShrink: 1,
+        }}>
+        <Text headline semibold numberOfLines={2}>
           {title}
         </Text>
-        <Text footnote semibold grayColor style={{ marginTop: 4 }}>
+        <Text
+          footnote
+          semibold
+          grayColor
+          style={{ marginTop: 4 }}
+          numberOfLines={3}>
           {subtitle}
         </Text>
         {options && options.length ? null : (

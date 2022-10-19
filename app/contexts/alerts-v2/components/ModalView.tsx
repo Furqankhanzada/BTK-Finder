@@ -1,14 +1,18 @@
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 
-import { Button, Icon, Text } from '@components';
+import { Button, Text } from '@components';
 import { AlertBtnResult, ModalOptions } from '../models/types';
+import { useTheme } from '@config';
 
 type Props = ModalOptions & {
   onDismiss: (result: AlertBtnResult) => void;
 };
 
 export const ModalView: React.FC<Props> = (props: Props) => {
+  const { colors } = useTheme();
+
   const btnLayoutStyle =
     props.btn?.layout === 'row' ? styles.btnRowStyle : styles.btnColumnStyle;
 
@@ -49,7 +53,8 @@ export const ModalView: React.FC<Props> = (props: Props) => {
           onPress={onCancel}
           style={styles.closeBtn}
           size={24}
-          name="times"
+          color={colors.text}
+          name="close"
         />
       )}
       <View style={styles.content}>

@@ -19,7 +19,7 @@ import {
   NotificationOptions,
 } from './models/types';
 import { AlertsV2ContextType } from './models/AlertsV2ContextType';
-import { BaseColor } from '@config';
+import { BaseColor, useTheme } from '@config';
 
 export const AlertsV2Context = React.createContext<AlertsV2ContextType | null>(
   null,
@@ -31,6 +31,7 @@ export const AlertsV2Provider: React.FC = (props) => {
   //#region Variables
   const { bottom } = useSafeAreaInsets();
   const bottomInset = bottom + 16;
+  const { colors } = useTheme();
 
   const [currentContent, setCurrentContent] =
     React.useState<React.ReactNode>(null);
@@ -242,7 +243,11 @@ export const AlertsV2Provider: React.FC = (props) => {
           handleComponent={null}
           backdropComponent={Backdrop}
           detached={sheetMode.detached}
-          style={[styles.sheetContainer, sheetMode.style]}>
+          style={[
+            styles.sheetContainer,
+            sheetMode.style,
+            { backgroundColor: colors.background },
+          ]}>
           <View
             style={styles.contentContainerStyle}
             onLayout={handleContentLayout}>
@@ -255,10 +260,11 @@ export const AlertsV2Provider: React.FC = (props) => {
 };
 
 function Backdrop(backdropProps: BottomSheetBackdropProps) {
+  const { colors } = useTheme();
   return (
     <BottomSheetBackdrop
+      backgroundColor={colors.text}
       {...backdropProps}
-      pressBehavior="none"
       disappearsOnIndex={-1}
       appearsOnIndex={0}
       opacity={0.75}
@@ -278,7 +284,6 @@ const styles = StyleSheet.create({
   sheetContainer: {
     marginHorizontal: 16,
     borderRadius: 16,
-    backgroundColor: BaseColor.whiteColor,
     shadowColor: BaseColor.grayColor,
     shadowOffset: {
       width: 0,
