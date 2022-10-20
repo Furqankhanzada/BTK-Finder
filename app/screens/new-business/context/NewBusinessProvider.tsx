@@ -3,7 +3,7 @@ import { NewBusinessContext } from '../context/NewBusinessContext';
 
 export const NewBusinessProvider = ({ children }: any) => {
   return (
-    <NewBusinessContext.Provider value="shahmir">
+    <NewBusinessContext.Provider value="abcd">
       {children}
     </NewBusinessContext.Provider>
   );

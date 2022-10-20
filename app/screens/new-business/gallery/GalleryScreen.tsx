@@ -13,7 +13,7 @@ import { styles } from '../styles/styles';
 import { useAddNewImages } from '../queries/mutations';
 
 const gallerySchema = Yup.object({
-  gallery: Yup.string().required(),
+  gallery: Yup.string(),
 });
 
 export const GalleryScreen = ({
@@ -84,7 +84,7 @@ export const GalleryScreen = ({
         initialValues={{ gallery: '' }}
         validationSchema={gallerySchema}
         onSubmit={(values) => {
-          navigation.navigate('Home');
+          navigation.navigate('Review');
         }}>
         {({ values, handleSubmit }) => {
           return (
@@ -159,7 +159,7 @@ export const GalleryScreen = ({
                 <Button
                   style={[
                     styles.fotterButtons,
-                    !active === true
+                    active === true
                       ? { backgroundColor: BaseColor.grayColor }
                       : null,
                   ]}
