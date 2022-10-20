@@ -9,6 +9,7 @@ import {
 
 import { Header, Text, TextInput, Button, Icon } from '@components';
 import { BaseStyle, useTheme } from '@config';
+import useAddBusinessStore from '../store/Store';
 
 import { useCategories } from '../../category/queries/queries';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -22,9 +23,11 @@ export const CategoryScreen = ({
 }: StackScreenProps<GlobalParamList>) => {
   const {
     isLoading,
-    data: categries,
+    data: categories,
     refetch,
   } = useCategories(['select-category']);
+
+  const setCategory = useAddBusinessStore((state: any) => state.setCategory);
 
   const { colors } = useTheme();
   const { t } = useTranslation();
@@ -33,7 +36,7 @@ export const CategoryScreen = ({
   const [search, setSearch] = useState<string>('');
 
   const [active, setActive] = useState<boolean>(false);
-  const [items, setItems] = useState(categries);
+  const [items, setItems] = useState(categories);
   const [selected, setSelected] = useState<any>([]);
 
   const onChange = (select: any) => {
@@ -41,18 +44,21 @@ export const CategoryScreen = ({
       (obj: any) => obj.name === select.name,
       setActive(true),
     );
+
     if (!isItemSelected) {
       setSelected([...selected, select]);
     } else {
       const arr = selected.filter((item: any) => item.name != select.name);
+
       setSelected(arr);
+      setCategory(arr[0].name);
     }
   };
 
   const onSearch = (keyword: any) => {
     setSearch(keyword);
     if (!keyword) {
-      setItems(categries ?? []);
+      setItems(categories ?? []);
     } else {
       setItems(
         items?.filter((item: any) => {
@@ -81,7 +87,7 @@ export const CategoryScreen = ({
       <Header title="Select Category" />
       <>
         <View style={styles.contain}>
-          {categries ? (
+          {categories ? (
             <TextInput
               onChangeText={(text) => onSearch(text)}
               placeholder={t('search')}
@@ -134,12 +140,12 @@ export const CategoryScreen = ({
         </View>
 
         <View style={styles.stickyFooter}>
-          <Button style={styles.fotterButtons} onPress={() => navigateToBack()}>
+          <Button style={styles.footerButtons} onPress={() => navigateToBack()}>
             {'Back'}
           </Button>
           {active === true ? (
             <Button
-              style={styles.fotterButtons}
+              style={styles.footerButtons}
               onPress={() => navigateToNext()}>
               {'Next'}
             </Button>
