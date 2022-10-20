@@ -5,6 +5,7 @@ import * as Yup from 'yup';
 
 import { Header, Text, TextInput, Button } from '@components';
 import { BaseColor, BaseStyle, useTheme } from '@config';
+import useAddBusinessStore from '../store/Store';
 
 import { StackScreenProps } from '@react-navigation/stack';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
@@ -23,6 +24,15 @@ export const DiscriptionScreen = ({
   const navigateToBack = () => {
     navigation.goBack();
   };
+
+  // const sotre = useAddBusinessStore((state: any) => state);
+  const description = useAddBusinessStore((state: any) => state.description);
+  const setDescription = useAddBusinessStore(
+    (state: any) => state.setDescription,
+  );
+
+  // console.log('UPDATED STORE NAME Store?', sotre);
+
   const navigateToNext = () => {
     navigation.navigate('Category');
   };
@@ -37,10 +47,11 @@ export const DiscriptionScreen = ({
         onPressRight={navigateToNext}
       />
       <Formik
-        initialValues={{ discription: '' }}
+        initialValues={{ discription: description }}
         validationSchema={discriptionSchema}
         onSubmit={(values) => {
           navigation.navigate('Category');
+          setDescription(values.discription);
         }}>
         {({ values, handleChange, handleSubmit, errors }) => {
           return (
