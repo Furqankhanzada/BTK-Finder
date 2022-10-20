@@ -4,6 +4,7 @@ import { FlatList, SafeAreaView, TouchableOpacity, View } from 'react-native';
 import { Header, Text, TextInput, Button, Icon } from '@components';
 import { BaseStyle, useTheme } from '@config';
 import remoteConfig from '@react-native-firebase/remote-config';
+import useAddBusinessStore from '../store/Store';
 
 import { StackScreenProps } from '@react-navigation/stack';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
@@ -18,6 +19,11 @@ export const TagsScreen = ({
   const [tags, setTags] = useState([]);
   const [selected, setSelected] = useState<any>([]);
   const [items, setItems] = useState(tags);
+
+  const sotre = useAddBusinessStore((state: any) => state);
+  const setTag = useAddBusinessStore((state: any) => state.setTags);
+
+  console.log('UPDATED STORE IN TAGS SCREEN', sotre);
 
   const { colors } = useTheme();
   const { t } = useTranslation();
@@ -34,6 +40,7 @@ export const TagsScreen = ({
     );
     if (!isItemSelected) {
       setSelected([...selected, select]);
+      setTag(selected);
     } else {
       const arr = selected.filter((item: any) => item.name != select.name);
       setSelected(arr);
@@ -121,11 +128,11 @@ export const TagsScreen = ({
         />
       </View>
       <View style={styles.stickyFooter}>
-        <Button style={styles.fotterButtons} onPress={() => navigateToBack()}>
+        <Button style={styles.footerButtons} onPress={() => navigateToBack()}>
           {'Back'}
         </Button>
         {active === true ? (
-          <Button style={styles.fotterButtons} onPress={() => navigateToNext()}>
+          <Button style={styles.footerButtons} onPress={() => navigateToNext()}>
             {'Next'}
           </Button>
         ) : null}

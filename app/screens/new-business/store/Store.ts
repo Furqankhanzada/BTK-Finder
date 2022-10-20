@@ -5,11 +5,13 @@ const useAddBusinessStore = create((set) => ({
     description: '',
     category: [],
     facilities: [],
+    tags: [],
 
     setName: (name: string) => set((state: any) => ({name})),
     setDescription: (description: string) => set((state: any) => ({description})),
-    setCategory: (category: array) => set((state: any) => ({category})),
-    setFacilities: (facilities: string) => set((state: any) => ({facilities}))
+    setCategory: (category: any) => set((state: any) => ({category})),
+    setFacilities: (facilities: string) => set((state: any) => ({facilities})),
+    setTags: (tags: any) => set((state: any) => ({tags}))
     
 
 }));

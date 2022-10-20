@@ -108,11 +108,11 @@ export const FacilitiesScreen = ({
       </View>
 
       <View style={styles.stickyFooter}>
-        <Button style={styles.fotterButtons} onPress={() => navigateToBack()}>
+        <Button style={styles.footerButtons} onPress={() => navigateToBack()}>
           {'Back'}
         </Button>
         {active === true ? (
-          <Button style={styles.fotterButtons} onPress={() => navigateToNext()}>
+          <Button style={styles.footerButtons} onPress={() => navigateToNext()}>
             {'Next'}
           </Button>
         ) : null}
