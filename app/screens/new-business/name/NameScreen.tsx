@@ -9,6 +9,7 @@ import { BaseColor, BaseStyle } from '@config';
 import { StackScreenProps } from '@react-navigation/stack';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
+import useAddBusinessStore from '../store/Store';
 
 const nameSchema = Yup.object({
   name: Yup.string().required('name must be atleats 3 words').min(3),
@@ -20,15 +21,19 @@ export const NameScreen = ({
   const navigateToBack = () => {
     navigation.goBack();
   };
+  const name = useAddBusinessStore((state: any) => state.name);
+  const setName = useAddBusinessStore((state: any) => state.setName);
+
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header title="Add Business" />
 
       <Formik
-        initialValues={{ name: '' }}
+        initialValues={{ name: name }}
         validationSchema={nameSchema}
         onSubmit={(values) => {
           navigation.navigate('Discription');
+          setName(values.name);
         }}>
         {({ values, handleChange, handleSubmit, errors }) => {
           return (
