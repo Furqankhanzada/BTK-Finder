@@ -4,6 +4,7 @@ import remoteConfig from '@react-native-firebase/remote-config';
 
 import { Header, Text, Button, Icon } from '@components';
 import { BaseStyle, useTheme } from '@config';
+import useAddBusinessStore from '../store/Store';
 
 import { StackScreenProps } from '@react-navigation/stack';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
@@ -19,6 +20,11 @@ export const FacilitiesScreen = ({
   const [selected, setSelected] = useState<any>([]);
   const [items, setItems] = useState(tags);
   const [facilities, setFacilities] = useState([]);
+
+  // const sotre = useAddBusinessStore((state: any) => state);
+  const setFacility = useAddBusinessStore((state: any) => state.setFacilities);
+
+  // console.log('UPDATED STORE IN FACILITY SCREEN', sotre);
 
   const { colors } = useTheme();
   const { t } = useTranslation();
@@ -37,6 +43,7 @@ export const FacilitiesScreen = ({
     );
     if (!isItemSelected) {
       setSelected([...selected, select]);
+      setFacility(selected);
     } else {
       const arr = selected.filter((item: any) => item.name != select.name);
       setSelected(arr);

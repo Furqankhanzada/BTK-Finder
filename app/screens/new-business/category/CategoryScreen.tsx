@@ -27,7 +27,10 @@ export const CategoryScreen = ({
     refetch,
   } = useCategories(['select-category']);
 
+  // const sotre = useAddBusinessStore((state: any) => state);
   const setCategory = useAddBusinessStore((state: any) => state.setCategory);
+
+  // console.log('UPDATED STORE IN CATEGORY SCREEN', sotre);
 
   const { colors } = useTheme();
   const { t } = useTranslation();
@@ -47,11 +50,11 @@ export const CategoryScreen = ({
 
     if (!isItemSelected) {
       setSelected([...selected, select]);
+      setCategory(selected);
     } else {
       const arr = selected.filter((item: any) => item.name != select.name);
 
       setSelected(arr);
-      setCategory(arr[0].name);
     }
   };
 
