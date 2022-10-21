@@ -83,14 +83,14 @@ export const DiscriptionScreen = ({
 
               <View style={styles.stickyFooter}>
                 <Button
-                  style={styles.fotterButtons}
+                  style={styles.footerButtons}
                   onPress={() => navigateToBack()}>
                   {'Back'}
                 </Button>
 
                 <Button
                   style={[
-                    styles.fotterButtons,
+                    styles.footerButtons,
                     values.discription.length < 10
                       ? { backgroundColor: BaseColor.grayColor }
                       : null,

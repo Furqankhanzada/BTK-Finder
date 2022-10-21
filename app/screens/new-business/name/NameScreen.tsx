@@ -64,13 +64,13 @@ export const NameScreen = ({
               />
 
               <View style={styles.stickyFooter}>
-                <Button style={styles.fotterButtons} onPress={navigateToBack}>
+                <Button style={styles.footerButtons} onPress={navigateToBack}>
                   {'Back'}
                 </Button>
 
                 <Button
                   style={[
-                    styles.fotterButtons,
+                    styles.footerButtons,
                     values.name.length < 3
                       ? { backgroundColor: BaseColor.grayColor }
                       : null,
