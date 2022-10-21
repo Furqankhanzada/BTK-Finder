@@ -20,10 +20,7 @@ export const TagsScreen = ({
   const [selected, setSelected] = useState<any>([]);
   const [items, setItems] = useState(tags);
 
-  const sotre = useAddBusinessStore((state: any) => state);
   const setTag = useAddBusinessStore((state: any) => state.setTags);
-
-  console.log('UPDATED STORE IN TAGS SCREEN', sotre);
 
   const { colors } = useTheme();
   const { t } = useTranslation();
@@ -40,10 +37,11 @@ export const TagsScreen = ({
     );
     if (!isItemSelected) {
       setSelected([...selected, select]);
-      setTag(selected);
+      setTag([...selected, select]);
     } else {
       const arr = selected.filter((item: any) => item.name != select.name);
       setSelected(arr);
+      setTag(arr);
     }
   };
 
