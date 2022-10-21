@@ -9,7 +9,6 @@ import useAddBusinessStore from '../store/Store';
 import { StackScreenProps } from '@react-navigation/stack';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
-import { useTranslation } from 'react-i18next';
 
 export const FacilitiesScreen = ({
   navigation,
@@ -17,17 +16,16 @@ export const FacilitiesScreen = ({
   const [active, setActive] = useState<boolean>(false);
   const [search, setSearch] = useState<any>();
   const [tags, setTags] = useState([]);
-  const [selected, setSelected] = useState<any>([]);
+  const [selectedFacilities, setSelectedFacilities] = useState<any>([]);
   const [items, setItems] = useState(tags);
   const [facilities, setFacilities] = useState([]);
 
-  // const sotre = useAddBusinessStore((state: any) => state);
+  const sotre = useAddBusinessStore((state: any) => state);
   const setFacility = useAddBusinessStore((state: any) => state.setFacilities);
 
-  // console.log('UPDATED STORE IN FACILITY SCREEN', sotre);
+  console.log('UPDATED STORE IN FACILITY SCREEN', sotre);
 
   const { colors } = useTheme();
-  const { t } = useTranslation();
 
   useEffect(() => {
     const getFacilities = remoteConfig().getValue('facilities');
@@ -36,17 +34,23 @@ export const FacilitiesScreen = ({
       : null;
   }, []);
 
-  const onChange = (select: any) => {
-    const isItemSelected = selected.some(
-      (obj: any) => obj.name === select.name,
+  const onChange = (facility: any) => {
+    console.log('is OnChange Work ?', onChange);
+
+    const isItemSelected = selectedFacilities.some(
+      (obj: any) => obj.name === facility.name,
       setActive(true),
     );
+
     if (!isItemSelected) {
-      setSelected([...selected, select]);
-      setFacility(selected);
+      setSelectedFacilities([...selectedFacilities, facility]);
+      setFacility([...selectedFacilities, facility]);
     } else {
-      const arr = selected.filter((item: any) => item.name != select.name);
-      setSelected(arr);
+      const arr = selectedFacilities.filter(
+        (item: any) => item.name === facility.name,
+      );
+      setSelectedFacilities(arr);
+      setFacility(arr);
     }
   };
 
@@ -74,7 +78,9 @@ export const FacilitiesScreen = ({
           data={facilities}
           keyExtractor={(item: any, index) => item.id}
           renderItem={({ item }) => {
-            const checked = selected.some((obj: any) => obj.name === item.name);
+            const checked = selectedFacilities.some(
+              (obj: any) => obj.name === item.name,
+            );
             return (
               <TouchableOpacity
                 style={[styles.item, { backgroundColor: colors.card }]}
