@@ -5,6 +5,7 @@ import * as Yup from 'yup';
 
 import { Header, Text, TextInput, Button } from '@components';
 import { BaseColor, BaseStyle, useTheme } from '@config';
+import useAddBusinessStore from '../store/Store';
 
 import { StackScreenProps } from '@react-navigation/stack';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
@@ -18,6 +19,9 @@ export const EmailScreen = ({
   navigation,
 }: StackScreenProps<GlobalParamList>) => {
   const { colors } = useTheme();
+
+  const email = useAddBusinessStore((state: any) => state.email);
+  const setEmail = useAddBusinessStore((state: any) => state.setEmail);
 
   const navigateToNext = () => {
     navigation.navigate('Website');
@@ -37,10 +41,11 @@ export const EmailScreen = ({
         onPressRight={navigateToNext}
       />
       <Formik
-        initialValues={{ email: '' }}
+        initialValues={{ email: email }}
         validationSchema={emailSchema}
         onSubmit={(values) => {
           navigation.navigate('Website');
+          setEmail(values.email);
         }}>
         {({ values, handleChange, handleSubmit }) => {
           return (
@@ -69,14 +74,14 @@ export const EmailScreen = ({
 
               <View style={styles.stickyFooter}>
                 <Button
-                  style={styles.fotterButtons}
+                  style={styles.footerButtons}
                   onPress={() => navigateToBack()}>
                   {'Back'}
                 </Button>
 
                 <Button
                   style={[
-                    styles.fotterButtons,
+                    styles.footerButtons,
                     values.email.length < 6
                       ? { backgroundColor: BaseColor.grayColor }
                       : null,
