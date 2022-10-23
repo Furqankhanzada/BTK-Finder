@@ -5,6 +5,7 @@ import * as Yup from 'yup';
 
 import { Header, Text, TextInput, Button } from '@components';
 import { BaseColor, BaseStyle, useTheme } from '@config';
+import useAddBusinessStore from '../store/Store';
 
 import { StackScreenProps } from '@react-navigation/stack';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
@@ -24,6 +25,9 @@ export const WebsiteScreen = ({
 }: StackScreenProps<GlobalParamList>) => {
   const { colors } = useTheme();
 
+  const website = useAddBusinessStore((state: any) => state.website);
+  const setWebsite = useAddBusinessStore((state: any) => state.setWebsite);
+
   const navigateToNext = () => {
     navigation.navigate('Established');
   };
@@ -42,10 +46,11 @@ export const WebsiteScreen = ({
         onPressRight={navigateToNext}
       />
       <Formik
-        initialValues={{ website: '' }}
+        initialValues={{ website: website }}
         validationSchema={webSchema}
         onSubmit={(values) => {
           navigation.navigate('Established');
+          setWebsite(values.website);
         }}>
         {({ values, handleChange, handleSubmit }) => {
           return (
@@ -74,14 +79,14 @@ export const WebsiteScreen = ({
 
               <View style={styles.stickyFooter}>
                 <Button
-                  style={styles.fotterButtons}
+                  style={styles.footerButtons}
                   onPress={() => navigateToBack()}>
                   {'Back'}
                 </Button>
 
                 <Button
                   style={[
-                    styles.fotterButtons,
+                    styles.footerButtons,
                     values.website.length < 3
                       ? { backgroundColor: BaseColor.grayColor }
                       : null,
