@@ -5,6 +5,7 @@ import * as Yup from 'yup';
 
 import { Header, Text, TextInput, Button, Icon } from '@components';
 import { BaseColor, BaseStyle } from '@config';
+import useAddBusinessStore from '../store/Store';
 
 import { StackScreenProps } from '@react-navigation/stack';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
@@ -24,13 +25,22 @@ const phoneSchema = Yup.object({
 export const TelephoneScreen = ({
   navigation,
 }: StackScreenProps<GlobalParamList>) => {
-  const [addNumber, setAddNumber] = useState([{ id: '1' }]);
+  const [addNumber, setAddNumber] = useState([0]);
+
+  // const store = useAddBusinessStore((state: any) => state);
+  const telephone = useAddBusinessStore((state: any) => state.telephone);
+  const setTelephone = useAddBusinessStore((state: any) => state.setTelephone);
+
+  // console.log('UPDATED STORE IN TELEPHONE SCREEN', store);
 
   const increment = (index: any) => {
     let addedNumber = [...addNumber];
-    if (addedNumber.length < 3) {
-      addedNumber.length++;
-    }
+    let newArr = addedNumber.map((one) => {
+      return console.log('ONE', one);
+    });
+    // if (addedNumber.length < 3) {
+    //   addedNumber.length++;
+    // }
     setAddNumber(addedNumber);
   };
   const decrement = () => {
@@ -62,10 +72,11 @@ export const TelephoneScreen = ({
         What is the Telephone number of your Business ?
       </Text>
       <Formik
-        initialValues={{ telephone: '' }}
+        initialValues={{ telephone: telephone }}
         validationSchema={phoneSchema}
         onSubmit={(values) => {
           navigation.navigate('Email');
+          setTelephone(values.telephone);
         }}>
         {({ values, handleChange, handleSubmit, errors }) => {
           return (
@@ -109,14 +120,14 @@ export const TelephoneScreen = ({
 
               <View style={styles.stickyFooter}>
                 <Button
-                  style={styles.fotterButtons}
+                  style={styles.footerButtons}
                   onPress={() => navigateToBack()}>
                   {'Back'}
                 </Button>
 
                 <Button
                   style={[
-                    styles.fotterButtons,
+                    styles.footerButtons,
                     values.telephone.length < 11 || values.telephone.length > 18
                       ? { backgroundColor: BaseColor.grayColor }
                       : null,
