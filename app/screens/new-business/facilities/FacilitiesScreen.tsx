@@ -20,10 +20,7 @@ export const FacilitiesScreen = ({
   const [items, setItems] = useState(tags);
   const [facilities, setFacilities] = useState([]);
 
-  const sotre = useAddBusinessStore((state: any) => state);
   const setFacility = useAddBusinessStore((state: any) => state.setFacilities);
-
-  console.log('UPDATED STORE IN FACILITY SCREEN', sotre);
 
   const { colors } = useTheme();
 
