@@ -9,6 +9,7 @@ const useAddBusinessStore = create((set) => ({
     telephone: [],
     email: '',
     website: '',
+    established: '',
 
     setName: (name: string) => set((state: any) => ({name})),
     setDescription: (description: string) => set((state: any) => ({description})),
@@ -18,6 +19,7 @@ const useAddBusinessStore = create((set) => ({
     setTelephone: (telephone: any) => set((state: any) => ({telephone})),
     setEmail: (email: string) => set((state: any) => ({email})),
     setWebsite: (website: string) => set((state: any) => ({website})),
+    setEstablished: (established: Date) => set((state: any) => ({established}))
 
 }));
 

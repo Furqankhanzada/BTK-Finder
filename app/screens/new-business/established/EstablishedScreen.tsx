@@ -5,6 +5,7 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 import { Header, Text, Button, TextInput } from '@components';
 import { BaseStyle, useTheme } from '@config';
+import useAddBusinessStore from '../store/Store';
 
 import { StackScreenProps } from '@react-navigation/stack';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
@@ -18,6 +19,15 @@ export const EstablishedScreen = ({
   const navigateToNext = () => {
     navigation.navigate('Address');
   };
+
+  const store = useAddBusinessStore((state: any) => state);
+
+  const established = useAddBusinessStore((state: any) => state.established);
+  const setEstablished = useAddBusinessStore(
+    (state: any) => state.setEstablished,
+  );
+
+  console.log('UPDATED STORE IN ESTABLISHED SCREEN', store);
 
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [active, setActive] = useState<boolean>(false);
@@ -49,11 +59,16 @@ export const EstablishedScreen = ({
         onPressRight={navigateToNext}
       />
       <Formik
-        initialValues={{ establish: '' }}
+        initialValues={{ established: established }}
         onSubmit={(values) => {
-          console.log('Formik Values', values);
+          navigation.navigate('Address');
+          setEstablished(moment(values.established).format('DD/MM/YYYY'));
+          console.log(
+            'What is Established ?',
+            moment(values.established).format('DD/MM/YYYY'),
+          );
         }}>
-        {({ values, setFieldValue }) => {
+        {({ values, setFieldValue, handleSubmit }) => {
           return (
             <>
               <FlatList
@@ -75,8 +90,8 @@ export const EstablishedScreen = ({
                             { backgroundColor: cardColor },
                           ]}>
                           <Text>
-                            {values.establish
-                              ? moment(values.establish).format('DD/MM/YYYY')
+                            {values.established
+                              ? moment(values.established).format('DD/MM/YYYY')
                               : 'Established Date [YYYY/MM/DD]'}
                           </Text>
                           <DateTimePickerModal
@@ -95,14 +110,14 @@ export const EstablishedScreen = ({
               />
               <View style={styles.stickyFooter}>
                 <Button
-                  style={styles.fotterButtons}
-                  onPress={() => navigateToBack()}>
+                  style={styles.footerButtons}
+                  onPress={() => {
+                    navigateToBack();
+                  }}>
                   {'Back'}
                 </Button>
                 {active === true ? (
-                  <Button
-                    onPress={() => navigateToNext()}
-                    style={styles.fotterButtons}>
+                  <Button onPress={handleSubmit} style={styles.footerButtons}>
                     {'Next'}
                   </Button>
                 ) : null}
