@@ -6,9 +6,9 @@ import { FlatList, SafeAreaView, View } from 'react-native';
 
 import { BaseColor, BaseStyle, useTheme } from '@config';
 import { Button, Header, Text, RangeSlider } from '@components';
+import useAddBusinessStore from '../store/Store';
 
 import { styles } from '../styles/styles';
-import { useTranslation } from 'react-i18next';
 
 export const PriceRange = ({
   navigation,
@@ -16,9 +16,16 @@ export const PriceRange = ({
   const [priceBegin, setPriceBegin] = useState(0);
   const [priceEnd, setPriceEnd] = useState(100);
 
-  const { t } = useTranslation();
+  const store = useAddBusinessStore((state: any) => state);
+
+  const priceRange = useAddBusinessStore((state: any) => state.priceRange);
+  const setPriceRange = useAddBusinessStore(
+    (state: any) => state.setPriceRange,
+  );
+
+  console.log('UPDATED STORE IN PRICE RANGE SCREEN', store);
+
   const { colors } = useTheme();
-  const cardColor = colors.card;
 
   const navigateToBack = () => {
     navigation.goBack();
@@ -37,9 +44,10 @@ export const PriceRange = ({
         onPressRight={navigateToNext}
       />
       <Formik
-        initialValues={{ price: '' }}
+        initialValues={{ price: priceRange }}
         onSubmit={(values) => {
           navigation.navigate('Gallery');
+          setPriceRange({ priceBegin, priceEnd });
         }}>
         {({ values, handleSubmit }) => {
           return (
@@ -68,7 +76,7 @@ export const PriceRange = ({
                       />
                       <View style={styles.contentResultRange}>
                         <Text style={styles.fontSize}>
-                          min - Rs.{priceBegin}{' '}
+                          min - Rs. {priceBegin}
                         </Text>
                         <Text style={styles.fontSize}>max - Rs.{priceEnd}</Text>
                       </View>
@@ -79,14 +87,14 @@ export const PriceRange = ({
 
               <View style={styles.stickyFooter}>
                 <Button
-                  style={styles.fotterButtons}
+                  style={styles.footerButtons}
                   onPress={() => navigateToBack()}>
                   {'Back'}
                 </Button>
 
                 <Button
                   style={[
-                    styles.fotterButtons,
+                    styles.footerButtons,
                     priceBegin <= 200
                       ? { backgroundColor: BaseColor.grayColor }
                       : null,
