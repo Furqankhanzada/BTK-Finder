@@ -9,27 +9,25 @@ import {
   Text,
 } from 'react-native';
 
-import { BusinessPresentable } from '@screens/businesses/models/BusinessPresentable';
 import { CardList, Tag } from '@components';
-import { useProductsByTag, useTags } from '@screens/businesses/queries/queries';
 import { useTheme } from '@config';
-import { useAlerts } from '@hooks';
-import Product from '@screens/businesses/components/Product';
+import { BusinessPresentable } from '@screens/businesses/models/BusinessPresentable';
+import { useProductsByTag, useTags } from '@screens/businesses/queries/queries';
 
 import { CatalogProduct, Tag as TagType } from '../../../models/graphql';
 import MenuTabPlaceholder from './MenuTabPlaceholder';
 import MenuItemsPlaceholder from './MenuItemsPlaceholder';
 
 interface Props {
+  onProductPress: (item: CatalogProduct) => void;
   business: BusinessPresentable | undefined;
   style?: StyleProp<ViewStyle>;
 }
 
-export default function Products({ business, style }: Props) {
+export default function Products({ onProductPress, business, style }: Props) {
   const [selectedTag, setSelectedTag] = useState<TagType | undefined>();
   const [isReFetching, setIsReFetching] = useState<boolean>(false);
   const { colors } = useTheme();
-  const { showModal } = useAlerts();
   //Tags
   const {
     data: tags,
@@ -51,15 +49,6 @@ export default function Products({ business, style }: Props) {
 
   const onTagPress = (tag: TagType) => {
     setSelectedTag(tag);
-  };
-
-  const onProductPress = async (product: CatalogProduct) => {
-    await showModal({
-      type: 'Custom',
-      content: ({ onDismiss }) => (
-        <Product onDismiss={onDismiss} item={product} />
-      ),
-    });
   };
 
   const onRefresh = async () => {

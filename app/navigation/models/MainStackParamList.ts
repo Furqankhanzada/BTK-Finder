@@ -5,7 +5,6 @@ import { GlobalParamList } from './GlobalParamList';
 
 export type MainStackParamList = {
   MainBottomTabNavigator: NavigatorScreenParams<MainBottomTabParamList>;
-  // BusinessDetailTabNavigator: NavigatorScreenParams<BusinessDetailBottomTabParamList>;
   BusinessDetailTabNavigator: { id: string };
   ThemeSetting: undefined;
   Setting: undefined;

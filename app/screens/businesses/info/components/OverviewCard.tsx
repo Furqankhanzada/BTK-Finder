@@ -12,10 +12,8 @@ import {
   BusinessStatus,
 } from '@screens/businesses/models/BusinessPresentable';
 
-import { GlobalParamList } from '../../../../navigation/models/GlobalParamList';
-
 interface Props {
-  onNavigate: (route: keyof GlobalParamList) => void;
+  onReviewsPress: (id: string) => void;
   business: BusinessPresentable;
   isPreview?: boolean;
 }
@@ -23,7 +21,7 @@ interface Props {
 export default function OverviewCard({
   business,
   isPreview = false,
-  onNavigate,
+  onReviewsPress,
 }: Props) {
   const user = useSelector((state: any) => state.profile);
   const { colors } = useTheme();
@@ -196,7 +194,7 @@ export default function OverviewCard({
           {isPreview ? (
             <TouchableOpacity
               style={styles.contentRate}
-              onPress={() => onNavigate('ReviewStack')}>
+              onPress={() => onReviewsPress(business._id)}>
               <View style={styles.rateContainer}>
                 <Tag rate>
                   <Text caption2 whiteColor semibold style={styles.ratingText}>
@@ -218,7 +216,7 @@ export default function OverviewCard({
           ) : (
             <TouchableOpacity
               style={styles.contentRate}
-              onPress={() => onNavigate('ReviewStack')}>
+              onPress={() => onReviewsPress(business._id)}>
               <View style={styles.rateContainer}>
                 <Tag rate>
                   <Text caption2 whiteColor semibold style={styles.rateText}>

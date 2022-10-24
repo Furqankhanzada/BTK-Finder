@@ -22,6 +22,7 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Placeholder, PlaceholderMedia, Progressive } from 'rn-placeholder';
 import ImageView from 'react-native-image-viewing';
 import { StackScreenProps } from '@react-navigation/stack';
+import { CompositeScreenProps } from '@react-navigation/native';
 
 import {
   Header,
@@ -48,16 +49,21 @@ import Products from '@screens/businesses/components/Products';
 import { useBusiness } from '../queries/queries';
 import { useBuildBusinessURL } from '../queries/mutations';
 import { EVENTS, trackEvent } from '../../../userTracking';
-import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
+import {
+  BusinessDetailBottomTabParamList,
+  ProductStackParamList,
+} from '../../../navigation/models/BusinessDetailBottomTabParamList';
 
 let defaultDelta = {
   latitudeDelta: 0.003,
   longitudeDelta: 0.003,
 };
 
-export default function BusinessOverviewScreen(
-  props: StackScreenProps<GlobalParamList, 'Overview'>,
-) {
+type Props = CompositeScreenProps<
+  StackScreenProps<ProductStackParamList, 'Overview'>,
+  StackScreenProps<BusinessDetailBottomTabParamList>
+>;
+export default function BusinessOverviewScreen(props: Props) {
   const { navigation, route } = props;
 
   const mapRef = useRef<any>();
@@ -115,16 +121,16 @@ export default function BusinessOverviewScreen(
     }
   };
 
-  const onNavigate = (routeName: keyof GlobalParamList, id?: string) => {
-    const params: { id?: string } = {};
-    if (id) {
-      params.id = id;
-    }
-    navigation.navigate({
-      name: routeName,
-      params,
-      key: params.id ? params.id : null,
-    } as any);
+  const onMenuOrProductsPress = (id: string) => {
+    navigation.navigate('Products', { id: id });
+  };
+
+  const onReviewsPress = (id: string) => {
+    navigation.navigate('ReviewStack', { screen: 'Reviews', params: { id } });
+  };
+
+  const onBusinessPress = (id: string) => {
+    navigation.navigate('DetailStack', { screen: 'Overview', params: { id } });
   };
 
   const headerBackgroundColor = scrollY.interpolate({
@@ -336,9 +342,10 @@ export default function BusinessOverviewScreen(
     return (
       <View>
         <View style={styles.renderContentDiv}>
-          <OverviewCard business={business} onNavigate={onNavigate} />
+          <OverviewCard business={business} onReviewsPress={onReviewsPress} />
           <ContactInfo
-            onNavigate={onNavigate}
+            onProductsPress={onMenuOrProductsPress}
+            onReviewsPress={onReviewsPress}
             business={business}
             onPressWhatsApp={onPressWhatsApp}
             onPressPhone={onPressPhone}
@@ -353,7 +360,15 @@ export default function BusinessOverviewScreen(
               {business.type === 'restaurant' ? 'Menu' : 'Products'}
             </Text>
             <View style={[styles.wrapContent, { borderColor: colors.border }]}>
-              <Products business={business} />
+              <Products
+                onProductPress={(item) =>
+                  navigation.navigate('Product', {
+                    businessId: business._id,
+                    productSlug: item.slug,
+                  })
+                }
+                business={business}
+              />
             </View>
           </View>
         ) : null}
@@ -408,7 +423,7 @@ export default function BusinessOverviewScreen(
           </View>
         ) : null}
 
-        <Recommendations business={business} onNavigate={onNavigate} />
+        <Recommendations business={business} onPress={onBusinessPress} />
       </View>
     );
   };
