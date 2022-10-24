@@ -53,12 +53,8 @@ export const AddressScreen = ({
   const formRef = useRef();
   const dispatch = useDispatch();
 
-  const store = useAddBusinessStore((state: any) => state);
-
   const address = useAddBusinessStore((state: any) => state.address);
   const setAddress = useAddBusinessStore((state: any) => state.setAddress);
-
-  console.log('UPDATED STORE IN ADDRESS SCREEN', store);
 
   const stateProps = useSelector(({ businesses }) => {
     return {
@@ -72,8 +68,8 @@ export const AddressScreen = ({
     ? stateProps?.editBusinessData
     : stateProps?.businessFormData;
 
-  console.log('Business Form Data ?', businessFormData);
-  console.log('State Props ?', stateProps);
+  // console.log('Business Form Data ?', businessFormData);
+  // console.log('State Props ?', stateProps);
 
   const onNext = () => {
     navigation.navigate('Hours');
@@ -103,7 +99,7 @@ export const AddressScreen = ({
     ...defaultLocation,
     ...defaultDelta,
   });
-  console.log('Location State ?', location);
+
   const [region, setRegion] = useState({
     ...defaultLocation,
     ...defaultDelta,

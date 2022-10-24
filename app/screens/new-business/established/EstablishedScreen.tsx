@@ -20,14 +20,10 @@ export const EstablishedScreen = ({
     navigation.navigate('Address');
   };
 
-  const store = useAddBusinessStore((state: any) => state);
-
   const established = useAddBusinessStore((state: any) => state.established);
   const setEstablished = useAddBusinessStore(
     (state: any) => state.setEstablished,
   );
-
-  console.log('UPDATED STORE IN ESTABLISHED SCREEN', store);
 
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [active, setActive] = useState<boolean>(false);

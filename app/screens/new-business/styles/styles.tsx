@@ -10,6 +10,11 @@ export const styles = StyleSheet.create({
   input: {
     marginTop: 15,
   },
+  inputDiscrip: {
+    marginTop: 15,
+    height: 100,
+    padding: 10,
+  },
   stickyFooter: {
     flexDirection: 'row',
     justifyContent: 'space-between',

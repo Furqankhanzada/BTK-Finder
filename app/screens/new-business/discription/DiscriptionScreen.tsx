@@ -25,13 +25,10 @@ export const DiscriptionScreen = ({
     navigation.goBack();
   };
 
-  // const sotre = useAddBusinessStore((state: any) => state);
   const description = useAddBusinessStore((state: any) => state.description);
   const setDescription = useAddBusinessStore(
     (state: any) => state.setDescription,
   );
-
-  // console.log('UPDATED STORE NAME Store?', sotre);
 
   const navigateToNext = () => {
     navigation.navigate('Category');
@@ -68,14 +65,13 @@ export const DiscriptionScreen = ({
                         Write Discription of your Business
                       </Text>
                       <TextInput
-                        style={styles.input}
+                        style={styles.inputDiscrip}
                         placeholder="Add Discription"
                         value={values.discription}
+                        multiline={true}
+                        textAlignVertical="top"
                         onChangeText={handleChange('discription')}
                       />
-                      <Text style={{ color: BaseColor.redColor }}>
-                        {errors.discription}
-                      </Text>
                     </View>
                   );
                 }}

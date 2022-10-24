@@ -11,12 +11,8 @@ import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
 
 export const Hours = ({ navigation }: StackScreenProps<GlobalParamList>) => {
-  const store = useAddBusinessStore((state: any) => state);
-
   const openHours = useAddBusinessStore((state: any) => state.openHours);
   const setOpenHours = useAddBusinessStore((state: any) => state.setOpenHours);
-
-  console.log('UPDATED STORE IN OPEN HOURS SCREEN', store);
 
   const [active, setActive] = useState<boolean>(false);
 

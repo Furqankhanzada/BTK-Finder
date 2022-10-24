@@ -32,8 +32,6 @@ export const FacilitiesScreen = ({
   }, []);
 
   const onChange = (facility: any) => {
-    console.log('is OnChange Work ?', onChange);
-
     const isItemSelected = selectedFacilities.some(
       (obj: any) => obj.name === facility.name,
       setActive(true),
