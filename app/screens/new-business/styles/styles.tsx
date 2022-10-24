@@ -5,6 +5,7 @@ export const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
     flex: 1,
+    marginTop: 10,
   },
   input: {
     marginTop: 15,

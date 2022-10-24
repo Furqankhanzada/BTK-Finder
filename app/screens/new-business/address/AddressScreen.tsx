@@ -35,6 +35,7 @@ import {
 import { ScrollView } from 'react-native-gesture-handler';
 import { GlobalParamList } from 'navigation/models/GlobalParamList';
 import { StackScreenProps } from '@react-navigation/stack';
+import useAddBusinessStore from '../store/Store';
 
 let defaultDelta = {
   latitudeDelta: 0.005,
@@ -51,6 +52,14 @@ export const AddressScreen = ({
   const mapRef = useRef();
   const formRef = useRef();
   const dispatch = useDispatch();
+
+  const store = useAddBusinessStore((state: any) => state);
+
+  const address = useAddBusinessStore((state: any) => state.address);
+  const setAddress = useAddBusinessStore((state: any) => state.setAddress);
+
+  console.log('UPDATED STORE IN ADDRESS SCREEN', store);
+
   const stateProps = useSelector(({ businesses }) => {
     return {
       editBusiness: businesses.editBusiness,
@@ -58,9 +67,13 @@ export const AddressScreen = ({
       businessFormData: businesses.businessFormData,
     };
   });
+
   const businessFormData = stateProps?.editBusiness
     ? stateProps?.editBusinessData
     : stateProps?.businessFormData;
+
+  console.log('Business Form Data ?', businessFormData);
+  console.log('State Props ?', stateProps);
 
   const onNext = () => {
     navigation.navigate('Hours');
@@ -90,6 +103,7 @@ export const AddressScreen = ({
     ...defaultLocation,
     ...defaultDelta,
   });
+  console.log('Location State ?', location);
   const [region, setRegion] = useState({
     ...defaultLocation,
     ...defaultDelta,
@@ -195,6 +209,7 @@ export const AddressScreen = ({
     setLocation(location);
     setRegion({ ...location, ...defaultDelta });
     reCenterMap({ ...location, ...defaultDelta });
+    console.log('Business Form Data ?', businessFormData.address);
   };
 
   const submit = (values: any) => {
@@ -226,19 +241,16 @@ export const AddressScreen = ({
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
-      <Header
-        title={
-          stateProps?.editBusiness ? 'Edit Your Business' : 'Add Your Business'
-        }
-      />
+      <Header title={'Add Your Business'} />
 
       <Formik
         ref={formRef}
+        initialValues={{
+          address: address,
+        }}
         onSubmit={(values) => {
           navigation.navigate('Hours');
-        }}
-        initialValues={{
-          address: businessFormData.address ? businessFormData.address : '',
+          setAddress(values.address);
         }}
         validationSchema={addressSFormValidation}>
         {({ handleChange, values, handleSubmit, errors, setFieldValue }) => {
@@ -291,14 +303,14 @@ export const AddressScreen = ({
               </ScrollView>
               <View style={styles.stickyFooter}>
                 <Button
-                  style={styles.fotterButtons}
+                  style={styles.footerButtons}
                   onPress={() => navigateToBack()}>
                   {'Back'}
                 </Button>
 
                 <Button
                   style={[
-                    styles.fotterButtons,
+                    styles.footerButtons,
                     !values.address
                       ? { backgroundColor: BaseColor.grayColor }
                       : null,
