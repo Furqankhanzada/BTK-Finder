@@ -23,6 +23,7 @@ const useAddBusinessStore = create((set) => ({
     address: '',
     openHours: array,
     priceRange: [],
+    gallery: [],
 
     setName: (name: string) => set((state: any) => ({name})),
     setDescription: (description: string) => set((state: any) => ({description})),
@@ -36,7 +37,7 @@ const useAddBusinessStore = create((set) => ({
     setAddress: (address: any) => set((state: any) => ({address})),
     setOpenHours: (openHours: any) => set((state: any) => ({openHours})),
     setPriceRange: (priceRange: any) => set((state: any) => ({priceRange})),
-
+    setGallery: (gallery: []) => set((state: any) => ({gallery})),
 }));
 
 export default useAddBusinessStore;
