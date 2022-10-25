@@ -106,6 +106,7 @@ export default function ProductDetailScreen(
             />
           );
         }}
+        onPressRight={onAddToCartPress}
         onPressLeft={() => {
           navigation.goBack();
         }}
