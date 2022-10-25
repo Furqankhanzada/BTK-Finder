@@ -9,6 +9,16 @@ export default function useRemoteConfig(): RemoteConfig {
   const [config, setConfig] = useState<RemoteConfig>({
     helplines: [],
   });
+
+  const updateStates = () => {
+    const allValues: Record<string, any> = remoteConfig().getAll();
+    for (const [key, value] of Object.entries(allValues)) {
+      if (key === 'helplines') {
+        setConfig({ ...config, helplines: JSON.parse(value._value) });
+      }
+    }
+  };
+
   useEffect(() => {
     async function fetchAndActivate() {
       // Only for development
@@ -19,22 +29,8 @@ export default function useRemoteConfig(): RemoteConfig {
       // }
       remoteConfig()
         .fetchAndActivate()
-        .then((fetchedRemotely) => {
-          if (fetchedRemotely) {
-            console.log(
-              'Configs were retrieved from the backend and activated.',
-            );
-            const allValues: Record<string, any> = remoteConfig().getAll();
-            for (const [key, value] of Object.entries(allValues)) {
-              if (key === 'helplines') {
-                setConfig({ ...config, helplines: JSON.parse(value._value) });
-              }
-            }
-          } else {
-            console.log(
-              'No configs were fetched from the backend, and the local configs were already activated',
-            );
-          }
+        .then(() => {
+          updateStates();
         });
     }
     fetchAndActivate().catch(handleError);

@@ -7,15 +7,14 @@ import { CardList, PlaceItem } from '@components';
 import CustomSectionList from '@screens/Home/CustomSectionList';
 import { useBusinesses } from '@screens/businesses/queries/queries';
 import { BusinessPresentable } from '@screens/businesses/models/BusinessPresentable';
-import { GlobalParamList } from '../../../../navigation/models/GlobalParamList';
 import { BusinessesQueryKeysWithFav } from '@screens/businesses/models/BusinessesQueryKeys';
 
 interface Props {
-  onNavigate: (route: keyof GlobalParamList, id?: string) => void;
+  onPress: (id: string) => void;
   business: BusinessPresentable;
 }
 
-export default function Recommendations({ business, onNavigate }: Props) {
+export default function Recommendations({ business, onPress }: Props) {
   const { t } = useTranslation();
   const user = useSelector((state: any) => state.profile);
   // Recent Businesses
@@ -78,7 +77,7 @@ export default function Recommendations({ business, onNavigate }: Props) {
               businessId={item?._id}
               lastRoute="BusinessDetailTabNavigator"
               routeId={business?._id}
-              onPress={() => onNavigate('BusinessDetailTabNavigator', item._id)}
+              onPress={() => onPress(item._id)}
               style={styles.placeItemText}
             />
           );
@@ -97,7 +96,7 @@ export default function Recommendations({ business, onNavigate }: Props) {
               subtitle={item.category}
               rate={item?.averageRatings || 0.0}
               style={styles.cardList}
-              onPress={() => onNavigate('BusinessDetailTabNavigator', item._id)}
+              onPress={() => onPress(item._id)}
             />
           );
         }}

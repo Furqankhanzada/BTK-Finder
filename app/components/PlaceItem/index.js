@@ -153,12 +153,15 @@ export default function PlaceItem(props) {
           {/*  {t(status)}*/}
           {/*</Tag>*/}
         </TouchableOpacity>
-        <TouchableOpacity onPress={onPress} activeOpacity={0.6}>
+        <TouchableOpacity
+          onPress={onPress}
+          activeOpacity={0.6}
+          style={{ flex: 1 }}>
           <View style={styles.listContentRight}>
             <Text headline semibold grayColor>
               {subtitle}
             </Text>
-            <Text title2 semibold numberOfLines={1} style={{ marginTop: 5 }}>
+            <Text title2 semibold numberOfLines={3} style={{ marginTop: 5 }}>
               {title}
             </Text>
             {rate ? (

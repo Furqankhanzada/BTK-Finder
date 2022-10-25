@@ -91,11 +91,14 @@ export const GET_PRODUCTS = gql`
           ... on CatalogItemProduct {
             product {
               _id
+              slug
               variants {
+                _id
                 title
                 optionTitle
                 pricing {
                   displayPrice
+                  price
                 }
               }
               tagIds
@@ -152,6 +155,36 @@ export const GET_PRODUCTS = gql`
         __typename
       }
       __typename
+    }
+  }
+`;
+
+export const GET_PRODUCT = gql`
+  query catalogItemProduct($shopId: ID!, $slugOrId: String!) {
+    catalogItemProduct(shopId: $shopId, slugOrId: $slugOrId) {
+      product {
+        title
+        description
+        variants {
+          _id
+          title
+          attributeLabel
+          optionTitle
+          pricing {
+            displayPrice
+            price
+            currency {
+              code
+            }
+          }
+        }
+        primaryImage {
+          URLs {
+            medium
+            original
+          }
+        }
+      }
     }
   }
 `;

@@ -9,10 +9,9 @@ import {
 } from '@screens/businesses/models/BusinessPresentable';
 import ContactItem from '@screens/businesses/info/components/ContactItem';
 
-import { GlobalParamList } from '../../../../navigation/models/GlobalParamList';
-
 interface Props {
-  onNavigate: (route: keyof GlobalParamList) => void;
+  onReviewsPress: (id: string) => void;
+  onProductsPress: (id: string) => void;
   onPressWhatsApp: () => void;
   onPressPhone: () => void;
   onOpen: (item: ContactItemInterface) => void;
@@ -20,7 +19,8 @@ interface Props {
 }
 
 export default function ContactInfo({
-  onNavigate,
+  onProductsPress,
+  onReviewsPress,
   onPressWhatsApp,
   onPressPhone,
   onOpen,
@@ -55,7 +55,7 @@ export default function ContactInfo({
               small
               outline
               style={styles.textButton}
-              onPress={() => onNavigate('Products')}>
+              onPress={() => onProductsPress(business._id)}>
               {business.type === 'restaurant' ? 'Menu' : 'Products'}
             </Button>
           ) : null}
@@ -63,7 +63,7 @@ export default function ContactInfo({
             round
             outline
             style={styles.textButton}
-            onPress={() => onNavigate('ReviewStack')}>
+            onPress={() => onReviewsPress(business._id)}>
             Reviews
           </Button>
         </View>

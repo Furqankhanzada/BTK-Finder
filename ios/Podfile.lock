@@ -582,7 +582,7 @@ PODS:
     - Firebase/Analytics (= 8.15.0)
     - React-Core
     - RNFBApp
-  - RNFBApp (14.11.1):
+  - RNFBApp (14.12.0):
     - Firebase/CoreOnly (= 8.15.0)
     - React-Core
   - RNFBCrashlytics (14.11.1):
@@ -606,7 +606,7 @@ PODS:
     - Firebase/Messaging (= 8.15.0)
     - React-Core
     - RNFBApp
-  - RNFBRemoteConfig (14.11.1):
+  - RNFBRemoteConfig (14.12.0):
     - Firebase/RemoteConfig (= 8.15.0)
     - React-Core
     - RNFBApp
@@ -1012,13 +1012,13 @@ SPEC CHECKSUMS:
   RNDeviceInfo: aad3c663b25752a52bf8fce93f2354001dd185aa
   RNFastImage: 1f2cab428712a4baaf78d6169eaec7f622556dd7
   RNFBAnalytics: e332a2d0b4c28884dbeacbe21fe68688abdf34b9
-  RNFBApp: 9646e09d041ea159b84584865212e4cf33acd179
+  RNFBApp: e4439717c23252458da2b41b81b4b475c86f90c4
   RNFBCrashlytics: f2b5e456c4969bdec60482e83d973d873ff17f1d
   RNFBDatabase: c3ed90d8a7c7fedcc13db1daa06ac5be46049930
   RNFBDynamicLinks: 2434510762fc77614d2f4044427c0b0ea38db413
   RNFBInAppMessaging: 6d1e6b6b6d9b5f18ed36cab56bd2e2b4c2401f05
   RNFBMessaging: 3e2682ea5e15fe86da24d16d16019395a881f33c
-  RNFBRemoteConfig: 6942909a1232c22cadfe8a7061b5bea5273bb02b
+  RNFBRemoteConfig: 92fbb75ceb69fec44ae727b70d23c5d1798f7648
   RNGestureHandler: bad495418bcbd3ab47017a38d93d290ebd406f50
   RNImageCropPicker: 73891a709e6fd8a47d32104d942757971f220aee
   RNPermissions: dcdb7b99796bbeda6975a6e79ad519c41b251b1c
