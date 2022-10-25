@@ -10,6 +10,7 @@ import {
 
 import { BaseColor, useTheme, useFont } from '@config';
 import { Icon } from '@components';
+import ProductDetailScreen from '@screens/businesses/product-detail/ProductDetailScreen';
 import { useBusiness } from '@screens/businesses/queries/queries';
 import {
   BusinessType,
@@ -20,9 +21,9 @@ import BusinessReviewsScreen from './reviews/BusinessReviewsScreen';
 import BusinessOverviewScreen from './info/BusinessOverviewScreen';
 import BusinessProductsScreen from './products/BusinessProductsScreen';
 import AddReviewScreen from './add-review/AddReviewScreen';
-
 import {
   BusinessDetailBottomTabParamList,
+  ProductStackParamList,
   ReviewStackParamList,
 } from '../../navigation/models/BusinessDetailBottomTabParamList';
 import { MainStackParamList } from '../../navigation/models/MainStackParamList';
@@ -32,24 +33,26 @@ const BusinessDetailBottomTab =
 
 const ReviewStack = createStackNavigator<ReviewStackParamList>();
 
-function ReviewStackNavigator({
-  route,
-}: StackScreenProps<BusinessDetailBottomTabParamList, 'ReviewStack'>) {
-  const businessId = route.params.id;
-
+function ReviewStackNavigator({}: StackScreenProps<
+  BusinessDetailBottomTabParamList,
+  'ReviewStack'
+>) {
   return (
     <ReviewStack.Navigator screenOptions={{ headerShown: false }}>
-      <ReviewStack.Screen
-        initialParams={{ id: businessId }}
-        name="Reviews"
-        component={BusinessReviewsScreen}
-      />
-      <ReviewStack.Screen
-        initialParams={{ id: businessId }}
-        name="AddReview"
-        component={AddReviewScreen}
-      />
+      <ReviewStack.Screen name="Reviews" component={BusinessReviewsScreen} />
+      <ReviewStack.Screen name="AddReview" component={AddReviewScreen} />
     </ReviewStack.Navigator>
+  );
+}
+
+const ProductStack = createStackNavigator<ProductStackParamList>();
+
+function ProductStackNavigator() {
+  return (
+    <ProductStack.Navigator screenOptions={{ headerShown: false }}>
+      <ProductStack.Screen name="Overview" component={BusinessOverviewScreen} />
+      <ProductStack.Screen name="Product" component={ProductDetailScreen} />
+    </ProductStack.Navigator>
   );
 }
 
@@ -59,11 +62,11 @@ export default function BusinessDetailNavigator({
   const businessId = route.params.id;
   const { colors } = useTheme();
   const font = useFont();
-  const { isLoading, data } = useBusiness(route.params.id);
+  const { isLoading, data } = useBusiness(businessId);
 
   return (
     <BusinessDetailBottomTab.Navigator
-      initialRouteName="Overview"
+      initialRouteName="DetailStack"
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: true,
@@ -75,19 +78,19 @@ export default function BusinessDetailNavigator({
         },
       }}>
       <BusinessDetailBottomTab.Screen
-        name="Overview"
-        initialParams={{ id: businessId }}
+        name="DetailStack"
+        initialParams={{ screen: 'Overview', params: { id: businessId } }}
         options={{
           title: 'Overview',
           tabBarIcon: ({ color }) => {
             return <Icon color={color} name="info-circle" size={25} solid />;
           },
         }}
-        component={BusinessOverviewScreen}
+        component={ProductStackNavigator}
       />
       <BusinessDetailBottomTab.Screen
         name="ReviewStack"
-        initialParams={{ id: businessId }}
+        initialParams={{ screen: 'Reviews', params: { id: businessId } }}
         options={{
           title: 'Reviews',
           tabBarIcon: ({ color }) => {

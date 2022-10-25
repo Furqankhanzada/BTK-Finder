@@ -7,6 +7,7 @@ import { handleError } from '@utils';
 import { buildTags } from '@screens/businesses/builders/tags';
 import { buildProducts } from '@screens/businesses/builders/products';
 import {
+  GET_PRODUCT,
   GET_PRODUCTS,
   GET_TAGS,
 } from '@screens/businesses/queries/gql/queries';
@@ -20,8 +21,10 @@ import { BUSINESSES_API } from '../../../constants';
 import { BusinessPresentable } from '../models/BusinessPresentable';
 import {
   CatalogItemConnection,
+  CatalogItemProduct,
   CatalogItemSortByField,
   Maybe,
+  QueryCatalogItemProductArgs,
   QueryCatalogItemsArgs,
   QueryTagsArgs,
   SortOrder,
@@ -43,6 +46,7 @@ export const useBusiness = (id: string) =>
         });
     },
     {
+      enabled: !!id,
       select: (data) => {
         return { ...data, contactItems: buildContactItems(data) };
       },
@@ -157,6 +161,10 @@ type CatalogItems = {
   catalogItems: Maybe<CatalogItemConnection>;
 };
 
+type CatalogItem = {
+  catalogItemProduct: CatalogItemProduct;
+};
+
 export const useProductsByTag = (
   shopId: string | undefined,
   tagId: string | undefined,
@@ -179,6 +187,31 @@ export const useProductsByTag = (
       enabled: !!shopId && !!tagId,
       select: (data) => {
         return buildProducts(data.catalogItems);
+      },
+    },
+  );
+};
+
+export const useProductBySlug = (
+  shopId: string | undefined,
+  slug: string | undefined,
+) => {
+  return useQuery(
+    ['product', shopId, slug],
+    (): Promise<CatalogItem> => {
+      return request<CatalogItem, QueryCatalogItemProductArgs>({
+        url: Config.SHOPS_API_URL,
+        variables: {
+          shopId: shopId,
+          slugOrId: slug,
+        },
+        document: GET_PRODUCT,
+      });
+    },
+    {
+      enabled: !!shopId,
+      select: (data) => {
+        return data.catalogItemProduct.product;
       },
     },
   );

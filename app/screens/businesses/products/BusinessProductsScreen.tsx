@@ -8,11 +8,18 @@ import { BaseStyle, useTheme } from '@config';
 import Products from '@screens/businesses/components/Products';
 import { useBusiness } from '@screens/businesses/queries/queries';
 
-import { BusinessDetailBottomTabParamList } from '../../../navigation/models/BusinessDetailBottomTabParamList';
+import {
+  BusinessDetailBottomTabParamList,
+  ProductStackParamList,
+} from '../../../navigation/models/BusinessDetailBottomTabParamList';
+import { CompositeScreenProps } from '@react-navigation/native';
 
-export default function BusinessProductsScreen(
-  props: StackScreenProps<BusinessDetailBottomTabParamList, 'Products'>,
-) {
+type Props = CompositeScreenProps<
+  StackScreenProps<BusinessDetailBottomTabParamList, 'Products'>,
+  StackScreenProps<ProductStackParamList>
+>;
+
+export default function BusinessProductsScreen(props: Props) {
   const { navigation, route } = props;
   const { data: business } = useBusiness(route.params.id);
 
@@ -38,6 +45,12 @@ export default function BusinessProductsScreen(
         }}
       />
       <Products
+        onProductPress={(item) =>
+          navigation.navigate('Product', {
+            productSlug: item.slug,
+            businessId: business?._id,
+          })
+        }
         business={business}
         style={{ backgroundColor: colors.background }}
       />
