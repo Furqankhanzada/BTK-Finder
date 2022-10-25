@@ -117,12 +117,12 @@ export const styles = StyleSheet.create({
   thumbnailContainer: {
     marginHorizontal: 25,
     backgroundColor: BaseColor.grayColor,
-    height: 250,
+    height: 150,
     position: 'relative',
     borderRadius: 5,
   },
   thumbnailAddOverlay: {
-    height: 80,
+    height: 150,
     borderRadius: 5,
     backgroundColor: BaseColor.grayColor,
     justifyContent: 'center',

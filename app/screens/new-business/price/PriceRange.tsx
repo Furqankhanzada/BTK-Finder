@@ -16,14 +16,14 @@ export const PriceRange = ({
   const [priceBegin, setPriceBegin] = useState(0);
   const [priceEnd, setPriceEnd] = useState(100);
 
-  const store = useAddBusinessStore((state: any) => state);
+  // const store = useAddBusinessStore((state: any) => state);
 
   const priceRange = useAddBusinessStore((state: any) => state.priceRange);
   const setPriceRange = useAddBusinessStore(
     (state: any) => state.setPriceRange,
   );
 
-  console.log('UPDATED STORE IN PRICE RANGE SCREEN', store);
+  // console.log('UPDATED STORE IN PRICE RANGE SCREEN', store);
 
   const { colors } = useTheme();
 
@@ -47,7 +47,7 @@ export const PriceRange = ({
         initialValues={{ price: priceRange }}
         onSubmit={(values) => {
           navigation.navigate('Gallery');
-          setPriceRange({ priceBegin, priceEnd });
+          // setPriceRange({ priceBegin, priceEnd });
         }}>
         {({ values, handleSubmit }) => {
           return (

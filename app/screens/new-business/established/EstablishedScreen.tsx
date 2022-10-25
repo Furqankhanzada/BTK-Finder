@@ -48,7 +48,7 @@ export const EstablishedScreen = ({
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
-        title="Bhsiness Established"
+        title="Established Date"
         renderRight={() => {
           return <Text>Skip</Text>;
         }}

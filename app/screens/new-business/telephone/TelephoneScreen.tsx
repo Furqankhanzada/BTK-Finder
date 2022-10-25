@@ -110,9 +110,9 @@ export const TelephoneScreen = ({
                           onPress={decrement}
                         />
                       </View>
-                      <Text style={{ color: BaseColor.redColor }}>
+                      {/* <Text style={{ color: BaseColor.redColor }}>
                         {errors.telephone}
-                      </Text>
+                      </Text> */}
                     </View>
                   );
                 }}
