@@ -29,8 +29,8 @@ export const GalleryScreen = ({
   const setGallery = useAddBusinessStore((state: any) => state.setGallery);
 
   console.log('UPDATED STORE IN GALLERY SCREEN', store);
-  // console.log('What is Mutation ?', uploadImage);
-  // console.log('INSIDE GALLER STATE', gallery);
+  console.log('What is Mutatate Upload Image ?', uploadImage);
+  console.log('INSIDE GALLER STATE', gallery);
   // console.log('INSIDE GALLER SET STATE', setGallery);
 
   const [active, setActive] = useState(false);
@@ -105,7 +105,7 @@ export const GalleryScreen = ({
     }).then((image) => {
       console.log('Pick Single: ', image);
       uploadImage(image.path);
-      setGallery(image);
+      // setGallery(image.path);
     });
   };
 
@@ -122,7 +122,7 @@ export const GalleryScreen = ({
         console.log('Multiple Image Selected: ', images);
         if (images.length) {
           uploadImage(images);
-          setGallery(images);
+          // setGallery(images);
         }
       })
       .catch((e) => {
@@ -169,11 +169,11 @@ export const GalleryScreen = ({
                           <Text>Thumbnail size must be 300x300</Text>
                         </View>
                         <View style={styles.thumbnailContainer}>
-                          <Loading
+                          {/* <Loading
                             loading={gallery.thumbnailLoading}
                             style={{ borderRadius: 5 }}
-                          />
-                          {values.gallery.length ? (
+                          /> */}
+                          {/* {values?.gallery.length ? (
                             <Fragment>
                               <TouchableOpacity
                                 style={styles.galleryActionButton}
@@ -188,17 +188,17 @@ export const GalleryScreen = ({
                                 source={{ uri: values.gallery }}
                               />
                             </Fragment>
-                          ) : (
-                            <TouchableOpacity
-                              style={styles.thumbnailAddOverlay}
-                              onPress={() => pickSingle()}>
-                              <Text
-                                semibold
-                                style={styles.thumbnailAddOverlayText}>
-                                Tap To Add Thumbnail
-                              </Text>
-                            </TouchableOpacity>
-                          )}
+                          ) : ( */}
+                          <TouchableOpacity
+                            style={styles.thumbnailAddOverlay}
+                            onPress={() => pickSingle()}>
+                            <Text
+                              semibold
+                              style={styles.thumbnailAddOverlayText}>
+                              Tap To Add Thumbnail
+                            </Text>
+                          </TouchableOpacity>
+                          {/* )} */}
                         </View>
                       </View>
                       <View style={styles.gallerySection}>
@@ -211,10 +211,10 @@ export const GalleryScreen = ({
                           <Text>Gallery Images size must be 600x400</Text>
                         </View>
                         <View style={styles.gallerySectionImagesContainer}>
-                          <Loading
+                          {/* <Loading
                             loading={gallery.galleryLoading}
                             style={{ borderRadius: 5 }}
-                          />
+                          /> */}
                           {renderGalleryImages(values.gallery)}
                           <TouchableOpacity
                             style={[styles.galleryImageContainer]}
