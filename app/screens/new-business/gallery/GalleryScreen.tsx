@@ -11,56 +11,70 @@ import useAddBusinessStore from '../store/Store';
 import { StackScreenProps } from '@react-navigation/stack';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
-import { useAddNewImages } from '../queries/mutations';
+import { useAddNewBusiness, useAddNewImages } from '../queries/mutations';
 import { ScrollView } from 'react-native-gesture-handler';
 import { updateImagesIntoRedux } from '../../../actions/business';
+import {
+  REMOVE_GALLERY_IMAGES,
+  REMOVE_THUMBNAIL_IMAGES,
+} from '../../../constants/business';
 
-const gallerySchema = Yup.object({
-  gallery: Yup.string(),
-});
+// const gallerySchema = Yup.object({
+//   gallery: Yup.string(),
+// });
 
 export const GalleryScreen = ({
   navigation,
 }: StackScreenProps<GlobalParamList>) => {
-  const { mutate: uploadImage } = useAddNewImages();
+  const { mutate: uploadImage, isLoading } = useAddNewImages();
+
+  const { mutate: addNewBusiness } = useAddNewBusiness();
 
   const store = useAddBusinessStore((state: any) => state);
   const gallery = useAddBusinessStore((state: any) => state.gallery);
   const setGallery = useAddBusinessStore((state: any) => state.setGallery);
 
   console.log('UPDATED STORE IN GALLERY SCREEN', store);
-  console.log('What is Mutatate Upload Image ?', uploadImage);
-  console.log('INSIDE GALLER STATE', gallery);
-  // console.log('INSIDE GALLER SET STATE', setGallery);
+  // console.log('What is Mutatate Upload Image ?', uploadImage);
+  // console.log('INSIDE GALLER STATE', gallery);
+  // console.log('INSIDE GALLERY SET STATE', setGallery);
 
   const [active, setActive] = useState(false);
   const navigateToNext = () => {
-    navigation.navigate('MyBusinesses');
+    navigation.navigate('Home');
+    addNewBusiness(store);
   };
 
   const navigateToBack = () => {
     navigation.goBack();
   };
 
+  const updateImagesIntoStore =
+    (type: any, payload: any) => (dispatch: any) => {
+      let dispatchType =
+        type === 'thumbnail' ? REMOVE_THUMBNAIL_IMAGES : REMOVE_GALLERY_IMAGES;
+      dispatch({ type: dispatchType, gallery: payload, thumbnail: payload });
+    };
+
   //for thumbnail function
   const removeThumbnail = () => {
-    uploadImage(updateImagesIntoRedux('thumbnail', ''));
+    setGallery(updateImagesIntoStore('thumbnail', ''));
   };
 
   const onChangeCover = (item: any) => {
     let data = [...gallery];
     data.map((el) => (el.cover = el.image === item.image));
-    uploadImage(updateImagesIntoRedux('gallery', data));
+    setGallery(data);
   };
 
   //for gallery function
   const removeSingleGalleryImage = (item: any) => {
-    let data = gallery.filter((el: any) => el.image !== item.image);
-    uploadImage(updateImagesIntoRedux('gallery', data));
+    let data = gallery.filter((el: any) => el.image === item.image);
+    setGallery(data);
   };
 
   const renderGalleryImages = (data: any) => {
-    if (data?.length) {
+    if (data?.length === 1) {
       console.log('What is Data ?', data);
       return data?.map((el: any, i: any) => (
         <View key={i} style={styles.galleryImageContainer}>
@@ -102,11 +116,15 @@ export const GalleryScreen = ({
       cropperActiveWidgetColor: 'white',
       cropperToolbarWidgetColor: '#3498DB',
       multiple: false,
-    }).then((image) => {
-      console.log('Pick Single: ', image);
-      uploadImage(image.path);
-      // setGallery(image.path);
-    });
+    })
+      .then((image) => {
+        console.log('Pick Single: ', image);
+        uploadImage(image.path);
+        setGallery([image]);
+      })
+      .catch((e) => {
+        console.log('IMAGE_PICKER_ERROR', e);
+      });
   };
 
   const pickMultiple = () => {
@@ -122,7 +140,7 @@ export const GalleryScreen = ({
         console.log('Multiple Image Selected: ', images);
         if (images.length) {
           uploadImage(images);
-          // setGallery(images);
+          setGallery(images);
         }
       })
       .catch((e) => {
@@ -141,11 +159,11 @@ export const GalleryScreen = ({
       />
       <Formik
         initialValues={{ gallery: gallery }}
-        validationSchema={gallerySchema}
+        // validationSchema={gallerySchema}
         onSubmit={(values) => {
-          navigation.navigate('MyBusinesses');
+          navigation.navigate('Home');
           setGallery(values.gallery);
-          console.log('Inside FORMIK = ?', values.gallery);
+          addNewBusiness(store);
         }}>
         {({ values, handleSubmit }) => {
           return (
@@ -169,11 +187,7 @@ export const GalleryScreen = ({
                           <Text>Thumbnail size must be 300x300</Text>
                         </View>
                         <View style={styles.thumbnailContainer}>
-                          {/* <Loading
-                            loading={gallery.thumbnailLoading}
-                            style={{ borderRadius: 5 }}
-                          /> */}
-                          {/* {values?.gallery.length ? (
+                          {gallery.length === 2 ? (
                             <Fragment>
                               <TouchableOpacity
                                 style={styles.galleryActionButton}
@@ -185,20 +199,20 @@ export const GalleryScreen = ({
                               </TouchableOpacity>
                               <Image
                                 style={styles.thumbnailContainerImage}
-                                source={{ uri: values.gallery }}
+                                source={{ uri: values.gallery.path }}
                               />
                             </Fragment>
-                          ) : ( */}
-                          <TouchableOpacity
-                            style={styles.thumbnailAddOverlay}
-                            onPress={() => pickSingle()}>
-                            <Text
-                              semibold
-                              style={styles.thumbnailAddOverlayText}>
-                              Tap To Add Thumbnail
-                            </Text>
-                          </TouchableOpacity>
-                          {/* )} */}
+                          ) : (
+                            <TouchableOpacity
+                              style={styles.thumbnailAddOverlay}
+                              onPress={() => pickSingle()}>
+                              <Text
+                                semibold
+                                style={styles.thumbnailAddOverlayText}>
+                                Tap To Add Thumbnail
+                              </Text>
+                            </TouchableOpacity>
+                          )}
                         </View>
                       </View>
                       <View style={styles.gallerySection}>
@@ -211,21 +225,20 @@ export const GalleryScreen = ({
                           <Text>Gallery Images size must be 600x400</Text>
                         </View>
                         <View style={styles.gallerySectionImagesContainer}>
-                          {/* <Loading
-                            loading={gallery.galleryLoading}
-                            style={{ borderRadius: 5 }}
-                          /> */}
-                          {renderGalleryImages(values.gallery)}
-                          <TouchableOpacity
-                            style={[styles.galleryImageContainer]}
-                            onPress={() => pickMultiple()}>
-                            <View style={styles.galleryImageAddIconContainer}>
-                              <Icon
-                                name="plus"
-                                style={styles.galleryImageAddIcon}
-                              />
-                            </View>
-                          </TouchableOpacity>
+                          {gallery.length > 1 ? (
+                            renderGalleryImages(gallery)
+                          ) : (
+                            <TouchableOpacity
+                              style={[styles.galleryImageContainer]}
+                              onPress={() => pickMultiple()}>
+                              <View style={styles.galleryImageAddIconContainer}>
+                                <Icon
+                                  name="plus"
+                                  style={styles.galleryImageAddIcon}
+                                />
+                              </View>
+                            </TouchableOpacity>
+                          )}
                         </View>
                       </View>
                     </ScrollView>

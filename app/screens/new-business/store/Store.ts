@@ -13,7 +13,7 @@ let array = [
 const useAddBusinessStore = create((set) => ({
     name: '',
     description: '',
-    category: [],
+    category: '',
     facilities: [],
     tags: [],
     telephone: [],
@@ -24,20 +24,22 @@ const useAddBusinessStore = create((set) => ({
     openHours: array,
     priceRange: [],
     gallery: [],
+    location: {},
 
     setName: (name: string) => set((state: any) => ({name})),
     setDescription: (description: string) => set((state: any) => ({description})),
-    setCategory: (category: any) => set((state: any) => ({category})),
+    setCategory: (category: string) => set((state: any) => ({category})),
     setFacilities: (facilities: any) => set((state: any) => ({facilities})),
     setTags: (tags: any) => set((state: any) => ({tags})),
     setTelephone: (telephone: any) => set((state: any) => ({telephone})),
     setEmail: (email: string) => set((state: any) => ({email})),
-    setWebsite: (website: string) => set((state: any) => ({website})),
+    setWebsite: (website: any) => set((state: any) => ({website})),
     setEstablished: (established: Date) => set((state: any) => ({established})),
     setAddress: (address: any) => set((state: any) => ({address})),
     setOpenHours: (openHours: any) => set((state: any) => ({openHours})),
     setPriceRange: (priceRange: any) => set((state: any) => ({priceRange})),
     setGallery: (gallery: any) => set((state: any) => ({gallery})),
+    setLocation: (location: any) => set((state: any) => ({location})),
 }));
 
 export default useAddBusinessStore;

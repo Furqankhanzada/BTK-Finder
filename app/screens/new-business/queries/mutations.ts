@@ -5,6 +5,7 @@ import { handleError } from '@utils';
 import { useSelector } from 'react-redux';
 
 import axiosApiInstance from '../../../interceptor/axios-interceptor';
+import { Platform } from 'react-native';
 
 export const useAddNewImages = () => {
   const user = useSelector((state: any) => state.profile);
@@ -30,3 +31,22 @@ export const useAddNewImages = () => {
       });
   });
 };
+
+const addNewBusiness = (NewBusiness: any) => {
+
+  return axiosApiInstance
+      .post(
+        `${Config.API_URL}/businesses`, NewBusiness,
+      )
+      .catch(({ response }) => {
+        handleError(response.data);
+      });
+
+}
+
+
+export const useAddNewBusiness = () => {
+
+  return useMutation(addNewBusiness);
+
+}

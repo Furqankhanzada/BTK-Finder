@@ -6,32 +6,21 @@ import {
   PlaceDetailComponent,
   Loading,
   FloatingButton,
-} from '@components';
+} from '../../../components';
 
 import {
   createBusiness,
   getMyBusinesses,
   updateBusiness,
 } from '../../../actions/business';
+import useAddBusinessStore from '../store/Store';
 
 export default function Review({ navigation }) {
   const dispatch = useDispatch();
 
-  const stateProps = useSelector(({ businesses }) => {
-    return {
-      createBusinessLoading: businesses.createBusinessLoading,
-      thumbnail: businesses.thumbnail,
-      gallery: businesses.gallery,
-      editBusinessLoading: businesses.editBusinessLoading,
-      editBusiness: businesses.editBusiness,
-      editBusinessData: businesses.editBusinessData,
-      businessFormData: businesses.businessFormData,
-    };
-  });
-  const businessFormData = stateProps?.editBusiness
-    ? stateProps?.editBusinessData
-    : stateProps?.businessFormData;
-  const profileData = useSelector((state: any) => state.profile);
+  const businessStore = useAddBusinessStore((state: any) => state);
+
+  console.log('UPDATED STORE IN REVIEW SCREEN', businessStore);
 
   const addCallback = () => {
     navigation.navigate('Home');
@@ -51,7 +40,7 @@ export default function Review({ navigation }) {
   };
 
   const add = () => {
-    let payload = { ...businessFormData };
+    let payload = { ...businessStore };
     let openHours: { day: any; to: any; from: any }[] = [];
     if (payload.openHours) {
       payload.openHours.forEach((obj: any) => {
@@ -74,15 +63,15 @@ export default function Review({ navigation }) {
       delete payload.website;
     }
     payload.openHours = openHours;
-    if (stateProps.thumbnail) {
-      payload.thumbnail = stateProps.thumbnail;
+    if (businessStore.thumbnail) {
+      payload.thumbnail = businessStore.thumbnail;
     }
-    if (stateProps.gallery) {
-      payload.gallery = stateProps.gallery;
+    if (businessStore.gallery) {
+      payload.gallery = businessStore.gallery;
     }
-    if (stateProps.editBusiness) {
+    if (businessStore.editBusiness) {
       dispatch(
-        updateBusiness(payload, businessFormData._id, editBusinessCallback),
+        updateBusiness(payload, businessStore._id, editBusinessCallback),
       );
     } else {
       dispatch(createBusiness(payload, addCallback));
@@ -91,15 +80,13 @@ export default function Review({ navigation }) {
 
   return (
     <View style={{ flex: 1, position: 'relative' }}>
-      <Loading loading={stateProps.createBusinessLoading} />
-      <Loading loading={stateProps.editBusinessLoading} />
-      <SafeAreaView style={{ flex: 1 }} forceInset={{ top: 'always' }}>
+      <SafeAreaView style={{ flex: 1 }}>
         <PlaceDetailComponent
-          business={businessFormData}
+          business={businessStore}
           preview={true}
           navigation={navigation}
         />
-        <FloatingButton iconName="check" onPress={() => add()} />
+        <FloatingButton iconName="check" />
       </SafeAreaView>
     </View>
   );
