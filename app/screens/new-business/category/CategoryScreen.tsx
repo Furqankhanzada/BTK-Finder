@@ -50,12 +50,13 @@ export const CategoryScreen = ({
 
     if (!isItemSelected) {
       setSelected([...selected, select]);
-      setCategory([...selected, select]);
+      setCategory(select.name);
+      // console.log('What is Select', select.name);
     } else {
       const arr = selected.filter((item: any) => item.name != select.name);
-
       setSelected(arr);
-      setCategory(arr);
+      // console.log('What is arr', arr[0].name);
+      setCategory(arr[0].name);
     }
   };
 
