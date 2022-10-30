@@ -31,6 +31,7 @@ import FavouriteIcon from './FavouriteIcon';
 import PlaceDetailPlaceholder from './Placeholders/placeDetail';
 import PlaceDetailComponent from './PlaceDetail';
 import ContactItems from './ContactItems';
+import RangeSlider from './RangeSlider';
 
 export {
   TextInput,
@@ -66,4 +67,5 @@ export {
   PlaceDetailPlaceholder,
   PlaceDetailComponent,
   ContactItems,
+  RangeSlider,
 };

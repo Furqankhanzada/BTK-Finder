@@ -83,6 +83,7 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
     "rn-placeholder": "^3.0.3",
+    "rn-range-slider": "^2.2.2",
     "sharingan-rn-modal-dropdown": "^1.4.0",
     "slugify": "^1.5.0",
     "sp-react-native-in-app-updates": "^1.1.7",
