@@ -8,15 +8,16 @@ import { BaseColor, useFont, useTheme } from '@config';
 import { Icon } from '@components';
 import BusinessDetailNavigator from '@screens/businesses/BusinessDetailNavigator';
 
-import { setEditBusiness } from '../actions/business';
+// import { setEditBusiness } from '../actions/business';
 import { LastRoutes, withAuthRedirection } from './hoc/withAuthRedirection';
 
 /* Bottom Screen */
 import Notification from '@screens/Notification';
-import Business from '@screens/AddBusiness';
+// import Business from '@screens/AddBusiness';
 import FavouriteScreen from '@screens/favourite/FavouriteScreen';
 import Messenger from '@screens/Messenger';
 import Profile from '@screens/Profile';
+import { NewBusinessStackNavigator } from '@screens/new-business/navigation/NewBusinessStack';
 
 /* Stack Screen */
 import ThemeSetting from '@screens/ThemeSetting';
@@ -33,11 +34,11 @@ import ProfileEdit from '@screens/ProfileEdit';
 import ChangeLanguage from '@screens/ChangeLanguage';
 import ContactUs from '@screens/ContactUs';
 import AboutUs from '@screens/AboutUs';
-import Address from '@screens/AddBusiness/address';
-import Hours from '@screens/AddBusiness/hours';
-import PriceRange from '@screens/AddBusiness/priceRange';
-import FinalReview from '@screens/AddBusiness/review';
-import Gallery from '@screens/AddBusiness/gallery';
+// import Address from '@screens/AddBusiness/address';
+// import Hours from '@screens/AddBusiness/hours';
+// import PriceRange from '@screens/AddBusiness/priceRange';
+// import FinalReview from '@screens/AddBusiness/review';
+// import Gallery from '@screens/AddBusiness/gallery';
 import MyBusinessesScreen from '@screens/my-businesses/MyBusinessesScreen';
 import { DashboardStackNavigator } from '@screens/dashboard/navigation/DashboardStack';
 import BusinessesScreen from '@screens/businesses/list/BusinessesScreen';
@@ -78,13 +79,13 @@ export default function Main() {
       <MainStack.Screen name="ContactUs" component={ContactUs} />
       <MainStack.Screen name="AboutUs" component={AboutUs} />
       {/*<MainStack.Screen name="Business" component={Business} />*/}
-      <MainStack.Screen name="Address" component={Address} />
-      <MainStack.Screen name="Hours" component={Hours} />
-      <MainStack.Screen name="PriceRange" component={PriceRange} />
-      <MainStack.Screen name="FinalReview" component={FinalReview} />
-      <MainStack.Screen name="Gallery" component={Gallery} />
+      {/* <MainStack.Screen name="Address" component={Address} /> */}
+      {/* <MainStack.Screen name="Hours" component={Hours} /> */}
+      {/* <MainStack.Screen name="PriceRange" component={PriceRange} /> */}
+      {/* <MainStack.Screen name="FinalReview" component={FinalReview} /> */}
+      {/* <MainStack.Screen name="Gallery" component={Gallery} /> */}
       <MainStack.Screen name="MyBusinesses" component={MyBusinessesScreen} />
-      <MainStack.Screen name="EditBusiness" component={Business} />
+      {/* <MainStack.Screen name="EditBusiness" component={Business} /> */}
       <MainStack.Screen name="VerifyCode" component={VerifyCode} />
     </MainStack.Navigator>
   );
@@ -132,21 +133,22 @@ function MainBottomTabNavigator() {
         }}
       />
       <MainBottomTab.Screen
-        name="Business"
-        component={withAuthRedirection(Business, {
-          lastRoute: LastRoutes.Business,
-        })}
+        name="NewBusinessStack"
+        // component={withAuthRedirection(NewBusinessStackNavigator, {
+        //   lastRoute: LastRoutes.NewBusinessStack,
+        // })}
+        component={NewBusinessStackNavigator}
         options={{
           title: 'Add Business',
           tabBarIcon: ({ color }) => {
             return <Icon color={color} name="business-time" size={20} solid />;
           },
         }}
-        listeners={() => ({
-          tabPress: () => {
-            dispatch(setEditBusiness(false));
-          },
-        })}
+        // listeners={() => ({
+        //   tabPress: () => {
+        //     dispatch(setEditBusiness(false));
+        //   },
+        // })}
       />
 
       {/* <BottomTab.Screen
