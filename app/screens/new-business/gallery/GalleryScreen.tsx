@@ -41,7 +41,7 @@ export const GalleryScreen = ({
 
   const [active, setActive] = useState(false);
   const navigateToNext = () => {
-    navigation.navigate('Home');
+    navigation.navigate('Dashboard');
     addNewBusiness(store);
   };
 
@@ -161,7 +161,7 @@ export const GalleryScreen = ({
         initialValues={{ gallery: gallery }}
         // validationSchema={gallerySchema}
         onSubmit={(values) => {
-          navigation.navigate('Home');
+          navigation.navigate('Dashboard');
           setGallery(values.gallery);
           addNewBusiness(store);
         }}>
