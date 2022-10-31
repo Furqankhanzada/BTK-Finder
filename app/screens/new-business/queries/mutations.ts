@@ -32,21 +32,15 @@ export const useAddNewImages = () => {
   });
 };
 
-const addNewBusiness = (NewBusiness: any) => {
-
-  return axiosApiInstance
-      .post(
-        `${Config.API_URL}/businesses`, NewBusiness,
-      )
-      .catch(({ response }) => {
-        handleError(response.data);
-      });
-
-}
-
 
 export const useAddNewBusiness = () => {
-
-  return useMutation(addNewBusiness);
-
+  return useMutation((payload) => {
+    return axiosApiInstance
+    .post(
+      `${Config.API_URL}/businesses`, payload,
+    )
+    .catch(({ response }) => {
+      handleError(response.data);
+    });
+  });
 }
