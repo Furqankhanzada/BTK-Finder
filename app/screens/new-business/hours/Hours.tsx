@@ -30,7 +30,11 @@ export const Hours = ({ navigation }: StackScreenProps<GlobalParamList>) => {
         }
       }
     });
-    setOpenHours(array);
+  };
+
+  const selectedHours = () => {
+    let newArray = openHours.filter((obj: any) => obj.isOpen);
+    setOpenHours(newArray);
   };
 
   const navigateToBack = () => {
@@ -45,7 +49,7 @@ export const Hours = ({ navigation }: StackScreenProps<GlobalParamList>) => {
         initialValues={{ hours: openHours }}
         onSubmit={(values) => {
           navigation.navigate('Price');
-          setOpenHours(values.hours);
+          selectedHours();
         }}>
         {({ values, handleSubmit }) => {
           return (
