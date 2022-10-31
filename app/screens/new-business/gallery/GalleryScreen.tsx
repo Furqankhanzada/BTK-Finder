@@ -41,7 +41,7 @@ export const GalleryScreen = ({
 
   const [active, setActive] = useState(false);
   const navigateToNext = () => {
-    navigation.navigate('Dashboard');
+    navigation.replace('Dashboard');
     addNewBusiness(store);
   };
 

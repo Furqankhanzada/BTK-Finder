@@ -1,6 +1,6 @@
 import create from "zustand";
 
-let array = [
+let hoursArray = [
     { day: 'Monday', from: '09:00 am', to: '10:00 pm', isOpen: false },
     { day: 'Tuesday', from: '09:00 am', to: '10:00 pm', isOpen: false },
     { day: 'Wednesday', from: '09:00 am', to: '10:00 pm', isOpen: false },
@@ -9,6 +9,11 @@ let array = [
     { day: 'Saturday', from: '09:00 am', to: '10:00 pm', isOpen: false },
     { day: 'Sunday', from: '09:00 am', to: '10:00 pm', isOpen: false },
   ];
+
+  let defaultDelta = {
+    type: "Point",
+    coordinates: [25.0096158, 67.1151583],
+  };
 
 const useAddBusinessStore = create((set) => ({
     name: '',
@@ -21,10 +26,10 @@ const useAddBusinessStore = create((set) => ({
     website: '',
     established: '',
     address: '',
-    openHours: array,
+    openHours: hoursArray,
     priceRange: [],
     gallery: [],
-    location: {},
+    location: defaultDelta,
 
     setName: (name: string) => set((state: any) => ({name})),
     setDescription: (description: string) => set((state: any) => ({description})),
@@ -39,7 +44,7 @@ const useAddBusinessStore = create((set) => ({
     setOpenHours: (openHours: any) => set((state: any) => ({openHours})),
     setPriceRange: (priceRange: any) => set((state: any) => ({priceRange})),
     setGallery: (gallery: any) => set((state: any) => ({gallery})),
-    setLocation: (location: any) => set((state: any) => ({location})),
+    setLocation: (location: object) => set((state: any) => ({location})),
 }));
 
 export default useAddBusinessStore;
