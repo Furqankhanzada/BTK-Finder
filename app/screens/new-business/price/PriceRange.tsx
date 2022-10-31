@@ -13,8 +13,8 @@ import { styles } from '../styles/styles';
 export const PriceRange = ({
   navigation,
 }: StackScreenProps<GlobalParamList>) => {
-  const [priceBegin, setPriceBegin] = useState(0);
-  const [priceEnd, setPriceEnd] = useState(100);
+  const [from, setFrom] = useState(0);
+  const [to, setTo] = useState(100);
 
   // const store = useAddBusinessStore((state: any) => state);
 
@@ -47,7 +47,7 @@ export const PriceRange = ({
         initialValues={{ price: priceRange }}
         onSubmit={(values) => {
           navigation.navigate('Gallery');
-          // setPriceRange({ priceBegin, priceEnd });
+          setPriceRange({ from, to });
         }}>
         {({ values, handleSubmit }) => {
           return (
@@ -70,15 +70,13 @@ export const PriceRange = ({
                         style={styles.rangeSlider}
                         selectionColor={colors.primary}
                         onValueChanged={(low, high) => {
-                          setPriceBegin(low);
-                          setPriceEnd(high);
+                          setFrom(low);
+                          setTo(high);
                         }}
                       />
                       <View style={styles.contentResultRange}>
-                        <Text style={styles.fontSize}>
-                          min - Rs. {priceBegin}
-                        </Text>
-                        <Text style={styles.fontSize}>max - Rs.{priceEnd}</Text>
+                        <Text style={styles.fontSize}>min - Rs. {from}</Text>
+                        <Text style={styles.fontSize}>max - Rs.{to}</Text>
                       </View>
                     </View>
                   );
@@ -95,7 +93,7 @@ export const PriceRange = ({
                 <Button
                   style={[
                     styles.footerButtons,
-                    priceBegin <= 200
+                    from <= 200
                       ? { backgroundColor: BaseColor.grayColor }
                       : null,
                   ]}
