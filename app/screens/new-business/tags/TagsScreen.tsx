@@ -37,11 +37,22 @@ export const TagsScreen = ({
     );
     if (!isItemSelected) {
       setSelected([...selected, select]);
-      setTag([...selected, select]);
+      const selectedArray = [...selected, select];
+
+      const selectedTags = [];
+      const tagsName = selectedArray.map((tagName: any) => {
+        return selectedTags.push(tagName.name);
+      });
+      setTag(selectedTags);
     } else {
       const arr = selected.filter((item: any) => item.name != select.name);
       setSelected(arr);
-      setTag(arr);
+
+      const unSelectedTags = [];
+      const tagsName = arr.map((tagName: any) => {
+        return unSelectedTags.push(tagName.name);
+      });
+      setTag(unSelectedTags);
     }
   };
 
