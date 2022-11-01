@@ -42,7 +42,10 @@ allprojects {
             }
         }
         google()
+        mavenLocal()
         jcenter()
         maven { url 'https://www.jitpack.io' }
     }
 }
+
+

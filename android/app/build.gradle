@@ -142,6 +142,7 @@ android {
     defaultConfig {
         applicationId "com.explore.btk"
         minSdkVersion rootProject.ext.minSdkVersion
+        vectorDrawables.useSupportLibrary = true
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 35
         versionName "0.2.0"
