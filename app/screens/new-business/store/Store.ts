@@ -29,6 +29,7 @@ const useAddBusinessStore = create((set) => ({
     openHours: hoursArray,
     priceRange: [],
     gallery: [],
+    thumbnail: '',
     location: defaultDelta,
 
     setName: (name: string) => set((state: any) => ({name})),
@@ -44,6 +45,7 @@ const useAddBusinessStore = create((set) => ({
     setOpenHours: (openHours: any) => set((state: any) => ({openHours})),
     setPriceRange: (priceRange: any) => set((state: any) => ({priceRange})),
     setGallery: (gallery: any) => set((state: any) => ({gallery})),
+    setThumbnail: (thumbnail: string) => set((state: any) => ({thumbnail})),
     setLocation: (location: object) => set((state: any) => ({location})),
 }));
 
