@@ -240,7 +240,6 @@ export const AddressScreen = ({
       <Header title={'Add Your Business'} />
 
       <Formik
-        ref={formRef}
         initialValues={{
           address: address,
         }}
@@ -253,8 +252,8 @@ export const AddressScreen = ({
           return (
             <Fragment>
               <ScrollView
-                behavior={Platform.OS === 'android' ? 'height' : 'padding'}
-                keyboardVerticalOffset={offsetKeyboard}
+                // behavior={Platform.OS === 'android' ? 'height' : 'padding'}
+                // keyboardVerticalOffset={offsetKeyboard}
                 contentContainerStyle={{ flexGrow: 1 }}
                 style={{ flex: 1 }}>
                 <View style={[styles.mapContainer]}>
@@ -270,7 +269,7 @@ export const AddressScreen = ({
                       onChangeText={handleChange('address')}
                       value={values.address}
                       multiline={true}
-                      numberOfLines={10}
+                      // numberOfLines={10}
                       textAlignVertical="top"
                     />
                     {errors.address ? (

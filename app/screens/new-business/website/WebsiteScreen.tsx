@@ -69,7 +69,7 @@ export const WebsiteScreen = ({
                       <TextInput
                         style={styles.input}
                         placeholder="Website"
-                        value={values.website}
+                        value={String(values.website)}
                         onChangeText={handleChange('website')}
                       />
                     </View>

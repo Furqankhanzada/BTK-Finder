@@ -102,11 +102,14 @@ export const TagsScreen = ({
         <FlatList
           contentContainerStyle={{ paddingVertical: 10 }}
           data={tags}
-          keyExtractor={(item: any, index) => item.id}
-          renderItem={({ item }) => {
+          keyExtractor={(item: any, index: any) => {
+            return index;
+          }}
+          renderItem={({ item, index }) => {
             const checked = selected.some((obj: any) => obj.name === item.name);
             return (
               <TouchableOpacity
+                key={index}
                 style={[styles.item, { backgroundColor: colors.card }]}
                 onPress={() => onChange(item)}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>

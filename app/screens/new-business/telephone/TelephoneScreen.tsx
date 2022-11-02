@@ -99,7 +99,7 @@ export const TelephoneScreen = ({
                           key={index.index}
                           style={styles.phoneInput}
                           placeholder="Telephone number"
-                          value={values.telephone}
+                          value={String(values.telephone)}
                           keyboardType="numeric"
                           onChangeText={handleChange('telephone')}
                         />

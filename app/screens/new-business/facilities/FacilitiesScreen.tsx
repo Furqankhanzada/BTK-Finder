@@ -19,9 +19,7 @@ export const FacilitiesScreen = ({
   const [selectedFacilities, setSelectedFacilities] = useState<any>([]);
   const [items, setItems] = useState(tags);
   const [facilities, setFacilities] = useState([]);
-
   const setFacility = useAddBusinessStore((state: any) => state.setFacilities);
-
   const { colors } = useTheme();
 
   useEffect(() => {
@@ -71,13 +69,17 @@ export const FacilitiesScreen = ({
         <FlatList
           contentContainerStyle={{ paddingVertical: 10 }}
           data={facilities}
-          keyExtractor={(item: any, index) => item.id}
-          renderItem={({ item }) => {
+          keyExtractor={(item: any, index: any) => {
+            return index;
+          }}
+          renderItem={({ item, index }) => {
             const checked = selectedFacilities.some(
               (obj: any) => obj.name === item.name,
             );
+
             return (
               <TouchableOpacity
+                key={index}
                 style={[styles.item, { backgroundColor: colors.card }]}
                 onPress={() => onChange(item)}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
