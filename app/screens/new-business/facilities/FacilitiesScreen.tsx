@@ -14,11 +14,10 @@ export const FacilitiesScreen = ({
   navigation,
 }: StackScreenProps<GlobalParamList>) => {
   const [active, setActive] = useState<boolean>(false);
-  const [search, setSearch] = useState<any>();
-  const [tags, setTags] = useState([]);
-  const [selectedFacilities, setSelectedFacilities] = useState<any>([]);
-  const [items, setItems] = useState(tags);
-  const [facilities, setFacilities] = useState([]);
+  const [tags, setTags] = useState<Array<any>>([]);
+  const [selectedFacilities, setSelectedFacilities] = useState<Array<any>>([]);
+  const [items, setItems] = useState<Array<object>>(tags);
+  const [facilities, setFacilities] = useState<Array<any>>([]);
   const setFacility = useAddBusinessStore((state: any) => state.setFacilities);
   const { colors } = useTheme();
 
@@ -29,9 +28,9 @@ export const FacilitiesScreen = ({
       : null;
   }, []);
 
-  const onChange = (facility: any) => {
+  const onChange = (facility: { name: string }) => {
     const isItemSelected = selectedFacilities.some(
-      (obj: any) => obj.name === facility.name,
+      (obj: { name: string }) => obj.name === facility.name,
       setActive(true),
     );
 
@@ -40,7 +39,7 @@ export const FacilitiesScreen = ({
       setFacility([...selectedFacilities, facility]);
     } else {
       const arr = selectedFacilities.filter(
-        (item: any) => item.name === facility.name,
+        (item: { name: string }) => item.name === facility.name,
       );
       setSelectedFacilities(arr);
       setFacility(arr);
@@ -69,12 +68,12 @@ export const FacilitiesScreen = ({
         <FlatList
           contentContainerStyle={{ paddingVertical: 10 }}
           data={facilities}
-          keyExtractor={(item: any, index: any) => {
+          keyExtractor={(item: object, index: any) => {
             return index;
           }}
-          renderItem={({ item, index }) => {
+          renderItem={({ item, index }: any) => {
             const checked = selectedFacilities.some(
-              (obj: any) => obj.name === item.name,
+              (obj: { name: string }) => obj.name === item.name,
             );
 
             return (
