@@ -15,9 +15,9 @@ export const TagsScreen = ({
   navigation,
 }: StackScreenProps<GlobalParamList>) => {
   const [active, setActive] = useState<boolean>(false);
-  const [search, setSearch] = useState<any>();
-  const [tags, setTags] = useState([]);
-  const [selected, setSelected] = useState<any>([]);
+  const [search, setSearch] = useState<string>();
+  const [tags, setTags] = useState<Array<object>>([]);
+  const [selected, setSelected] = useState<Array<any>>([]);
   const [items, setItems] = useState(tags);
 
   const setTag = useAddBusinessStore((state: any) => state.setTags);
@@ -30,39 +30,41 @@ export const TagsScreen = ({
     getTags ? setTags(JSON.parse(getTags._value)) : null;
   }, []);
 
-  const onChange = (select: any) => {
+  const onChange = (select: { name: string }) => {
     const isItemSelected = selected.some(
-      (obj: any) => obj.name === select.name,
+      (obj: { name: string }) => obj.name === select.name,
       setActive(true),
     );
     if (!isItemSelected) {
       setSelected([...selected, select]);
       const selectedArray = [...selected, select];
 
-      const selectedTags = [];
-      const tagsName = selectedArray.map((tagName: any) => {
+      const selectedTags = [{}];
+      const tagsName = selectedArray.map((tagName: { name: string }) => {
         return selectedTags.push(tagName.name);
       });
       setTag(selectedTags);
     } else {
-      const arr = selected.filter((item: any) => item.name != select.name);
+      const arr = selected.filter(
+        (item: { name: string }) => item.name != select.name,
+      );
       setSelected(arr);
 
-      const unSelectedTags = [];
-      const tagsName = arr.map((tagName: any) => {
+      const unSelectedTags: string[] = [];
+      const tagsName = arr.map((tagName: { name: string }) => {
         return unSelectedTags.push(tagName.name);
       });
       setTag(unSelectedTags);
     }
   };
 
-  const onSearch = (keyword: any) => {
+  const onSearch = (keyword: string) => {
     setSearch(keyword);
     if (!keyword) {
       setItems(tags ?? []);
     } else {
       setItems(
-        items?.filter((item: any) => {
+        items?.filter((item: object) => {
           return item.name.toUpperCase().includes(search.toUpperCase());
         }),
       );
@@ -102,11 +104,13 @@ export const TagsScreen = ({
         <FlatList
           contentContainerStyle={{ paddingVertical: 10 }}
           data={tags}
-          keyExtractor={(item: any, index: any) => {
+          keyExtractor={(item: object, index: any) => {
             return index;
           }}
-          renderItem={({ item, index }) => {
-            const checked = selected.some((obj: any) => obj.name === item.name);
+          renderItem={({ item, index }: any) => {
+            const checked = selected.some(
+              (obj: { name: string }) => obj.name === item.name,
+            );
             return (
               <TouchableOpacity
                 key={index}
