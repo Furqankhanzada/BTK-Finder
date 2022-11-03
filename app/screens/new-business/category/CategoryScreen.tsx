@@ -1,11 +1,5 @@
 import React, { useState } from 'react';
-import {
-  FlatList,
-  RefreshControl,
-  SafeAreaView,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { FlatList, SafeAreaView, TouchableOpacity, View } from 'react-native';
 
 import { Header, Text, TextInput, Button, Icon } from '@components';
 import { BaseStyle, useTheme } from '@config';
@@ -19,7 +13,6 @@ import { useTranslation } from 'react-i18next';
 
 export const CategoryScreen = ({
   navigation,
-  route,
 }: StackScreenProps<GlobalParamList>) => {
   const {
     isLoading,
@@ -27,10 +20,7 @@ export const CategoryScreen = ({
     refetch,
   } = useCategories(['select-category']);
 
-  // const sotre = useAddBusinessStore((state: any) => state);
   const setCategory = useAddBusinessStore((state: any) => state.setCategory);
-
-  // console.log('UPDATED STORE IN CATEGORY SCREEN', sotre);
 
   const { colors } = useTheme();
   const { t } = useTranslation();
@@ -40,33 +30,33 @@ export const CategoryScreen = ({
 
   const [active, setActive] = useState<boolean>(false);
   const [items, setItems] = useState(categories);
-  const [selected, setSelected] = useState<any>([]);
+  const [selected, setSelected] = useState<Array<any>>([]);
 
-  const onChange = (select: any) => {
+  const onChange = (select: { name: string }) => {
     const isItemSelected = selected.some(
-      (obj: any) => obj.name === select.name,
+      (obj: { name: string }) => obj.name === select.name,
       setActive(true),
     );
 
     if (!isItemSelected) {
       setSelected([...selected, select]);
       setCategory(select.name);
-      // console.log('What is Select', select.name);
     } else {
-      const arr = selected.filter((item: any) => item.name != select.name);
+      const arr = selected.filter(
+        (item: { name: string }) => item.name != select.name,
+      );
       setSelected(arr);
-      // console.log('What is arr', arr[0].name);
       setCategory(arr[0].name);
     }
   };
 
-  const onSearch = (keyword: any) => {
+  const onSearch = (keyword: string) => {
     setSearch(keyword);
     if (!keyword) {
       setItems(categories ?? []);
     } else {
       setItems(
-        items?.filter((item: any) => {
+        items?.filter((item: { name: string }) => {
           return item.name.toUpperCase().includes(search.toUpperCase());
         }),
       );
@@ -107,12 +97,12 @@ export const CategoryScreen = ({
           <FlatList
             contentContainerStyle={{ paddingVertical: 10 }}
             data={items}
-            keyExtractor={(item: any, index: any) => {
+            keyExtractor={(item: object, index: any) => {
               return index;
             }}
             renderItem={({ item, index }) => {
               const checked = selected.some(
-                (obj: any) => obj.name === item.name,
+                (obj: { name: string }) => obj.name === item.name,
               );
               return (
                 <TouchableOpacity
