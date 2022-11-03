@@ -22,17 +22,17 @@ export const GalleryScreen = ({
 }: StackScreenProps<GlobalParamList>) => {
   const { mutate: uploadThumbnail } = useAddNewThumbnail();
   const { mutate: uploadGallery } = useAddGalleryImages();
-  const { mutate: addNewBusiness } = useAddNewBusiness();
+  const { mutate: addNewBusiness, isLoading } = useAddNewBusiness();
 
   const payload = useAddBusinessStore((state: any) => state);
   const gallery = useAddBusinessStore((state: any) => state.gallery);
   const setGallery = useAddBusinessStore((state: any) => state.setGallery);
 
-  // console.log('UPDATED STORE IN GALLERY SCREEN', payload);
+  console.log('UPDATED STORE IN GALLERY SCREEN', payload);
 
   const [active, setActive] = useState(false);
   const navigateToNext = () => {
-    navigation.replace('Dashboard');
+    navigation.navigate('Dashboard');
     addNewBusiness(payload);
   };
 
@@ -147,7 +147,7 @@ export const GalleryScreen = ({
       <Formik
         initialValues={{ gallery: gallery }}
         onSubmit={(values) => {
-          navigation.replace('Dashboard');
+          navigation.navigate('Dashboard');
           addNewBusiness(payload);
         }}>
         {({ values, handleSubmit }) => {
