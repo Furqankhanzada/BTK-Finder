@@ -1,4 +1,5 @@
 export interface CategoryPresentable {
+  checked: boolean;
   order: number;
   _id: string;
   name: string;
@@ -10,3 +11,4 @@ export interface CategoryPresentable {
   text: string;
   category: object;
 }
+

@@ -10,6 +10,7 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
 import { useTranslation } from 'react-i18next';
+import { NewAddBusinessPresentable } from '../models/AddNewBusinessPresentable';
 
 export const CategoryScreen = ({
   navigation,
@@ -27,25 +28,26 @@ export const CategoryScreen = ({
 
   const [refresh, setRefres] = useState<boolean>(false);
   const [search, setSearch] = useState<string>('');
-
   const [active, setActive] = useState<boolean>(false);
   const [items, setItems] = useState(categories);
-  const [selected, setSelected] = useState<Array<any>>([]);
+  const [selectedCategory, setSelectedCategory] = useState<
+    Array<NewAddBusinessPresentable>
+  >([]);
 
-  const onChange = (select: { name: string }) => {
-    const isItemSelected = selected.some(
-      (obj: { name: string }) => obj.name === select.name,
+  const onChange = (select: NewAddBusinessPresentable) => {
+    const isItemSelected = selectedCategory.some(
+      (obj: NewAddBusinessPresentable) => obj.name === select.name,
       setActive(true),
     );
 
     if (!isItemSelected) {
-      setSelected([...selected, select]);
+      setSelectedCategory([...selectedCategory, select]);
       setCategory(select.name);
     } else {
-      const arr = selected.filter(
-        (item: { name: string }) => item.name != select.name,
+      const arr = selectedCategory.filter(
+        (item: NewAddBusinessPresentable) => item.name != select.name,
       );
-      setSelected(arr);
+      setSelectedCategory(arr);
       setCategory(arr[0].name);
     }
   };
@@ -101,8 +103,8 @@ export const CategoryScreen = ({
               return index;
             }}
             renderItem={({ item, index }) => {
-              const checked = selected.some(
-                (obj: { name: string }) => obj.name === item.name,
+              const checked = selectedCategory.some(
+                (obj: NewAddBusinessPresentable) => obj.name === item.name,
               );
               return (
                 <TouchableOpacity
