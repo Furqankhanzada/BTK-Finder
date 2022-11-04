@@ -9,15 +9,19 @@ import useAddBusinessStore from '../store/Store';
 import { StackScreenProps } from '@react-navigation/stack';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
+import { NewAddBusinessPresentable } from '../models/AddNewBusinessPresentable';
 
 export const FacilitiesScreen = ({
   navigation,
 }: StackScreenProps<GlobalParamList>) => {
   const [active, setActive] = useState<boolean>(false);
   const [tags, setTags] = useState<Array<any>>([]);
-  const [selectedFacilities, setSelectedFacilities] = useState<Array<any>>([]);
-  const [items, setItems] = useState<Array<object>>(tags);
-  const [facilities, setFacilities] = useState<Array<any>>([]);
+  const [selectedFacilities, setSelectedFacilities] = useState<
+    Array<NewAddBusinessPresentable>
+  >([]);
+  const [facilities, setFacilities] = useState<
+    Array<NewAddBusinessPresentable>
+  >([]);
   const setFacility = useAddBusinessStore((state: any) => state.setFacilities);
   const { colors } = useTheme();
 
@@ -28,9 +32,9 @@ export const FacilitiesScreen = ({
       : null;
   }, []);
 
-  const onChange = (facility: { name: string }) => {
+  const onChange = (facility: NewAddBusinessPresentable) => {
     const isItemSelected = selectedFacilities.some(
-      (obj: { name: string }) => obj.name === facility.name,
+      (obj: NewAddBusinessPresentable) => obj.name === facility.name,
       setActive(true),
     );
 
@@ -39,7 +43,7 @@ export const FacilitiesScreen = ({
       setFacility([...selectedFacilities, facility]);
     } else {
       const arr = selectedFacilities.filter(
-        (item: { name: string }) => item.name === facility.name,
+        (item: NewAddBusinessPresentable) => item.name === facility.name,
       );
       setSelectedFacilities(arr);
       setFacility(arr);
@@ -73,7 +77,7 @@ export const FacilitiesScreen = ({
           }}
           renderItem={({ item, index }: any) => {
             const checked = selectedFacilities.some(
-              (obj: { name: string }) => obj.name === item.name,
+              (obj: NewAddBusinessPresentable) => obj.name === item.name,
             );
 
             return (
