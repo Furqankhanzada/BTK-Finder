@@ -10,14 +10,17 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
 import { useTranslation } from 'react-i18next';
+import { NewAddBusinessPresentable } from '../models/AddNewBusinessPresentable';
 
 export const TagsScreen = ({
   navigation,
 }: StackScreenProps<GlobalParamList>) => {
   const [active, setActive] = useState<boolean>(false);
   const [search, setSearch] = useState<string>();
-  const [tags, setTags] = useState<Array<object>>([]);
-  const [selected, setSelected] = useState<Array<any>>([]);
+  const [tags, setTags] = useState<Array<NewAddBusinessPresentable>>([]);
+  const [selected, setSelected] = useState<Array<NewAddBusinessPresentable>>(
+    [],
+  );
   const [items, setItems] = useState(tags);
 
   const setTag = useAddBusinessStore((state: any) => state.setTags);
@@ -30,28 +33,30 @@ export const TagsScreen = ({
     getTags ? setTags(JSON.parse(getTags._value)) : null;
   }, []);
 
-  const onChange = (select: { name: string }) => {
+  const onChange = (select: NewAddBusinessPresentable) => {
     const isItemSelected = selected.some(
-      (obj: { name: string }) => obj.name === select.name,
+      (obj: NewAddBusinessPresentable) => obj.name === select.name,
       setActive(true),
     );
     if (!isItemSelected) {
       setSelected([...selected, select]);
       const selectedArray = [...selected, select];
 
-      const selectedTags = [{}];
-      const tagsName = selectedArray.map((tagName: { name: string }) => {
-        return selectedTags.push(tagName.name);
-      });
+      const selectedTags: (string | undefined)[] = [];
+      const tagsName = selectedArray.map(
+        (tagName: NewAddBusinessPresentable) => {
+          return selectedTags.push(tagName.name);
+        },
+      );
       setTag(selectedTags);
     } else {
       const arr = selected.filter(
-        (item: { name: string }) => item.name != select.name,
+        (item: NewAddBusinessPresentable) => item.name != select.name,
       );
       setSelected(arr);
 
-      const unSelectedTags: string[] = [];
-      const tagsName = arr.map((tagName: { name: string }) => {
+      const unSelectedTags: (string | undefined)[] = [];
+      const tagsName = arr.map((tagName: NewAddBusinessPresentable) => {
         return unSelectedTags.push(tagName.name);
       });
       setTag(unSelectedTags);
@@ -109,7 +114,7 @@ export const TagsScreen = ({
           }}
           renderItem={({ item, index }: any) => {
             const checked = selected.some(
-              (obj: { name: string }) => obj.name === item.name,
+              (obj: NewAddBusinessPresentable) => obj.name === item.name,
             );
             return (
               <TouchableOpacity
