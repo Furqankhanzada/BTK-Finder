@@ -25,7 +25,7 @@ const phoneSchema = Yup.object({
 export const TelephoneScreen = ({
   navigation,
 }: StackScreenProps<GlobalParamList>) => {
-  const [addNumber, setAddNumber] = useState([0]);
+  const [addNumber, setAddNumber] = useState<Array<number>>([0]);
 
   // const store = useAddBusinessStore((state: any) => state);
   const telephone = useAddBusinessStore((state: any) => state.telephone);
@@ -33,7 +33,7 @@ export const TelephoneScreen = ({
 
   // console.log('UPDATED STORE IN TELEPHONE SCREEN', store);
 
-  const increment = (index: any) => {
+  const increment = (index: number) => {
     let addedNumber = [...addNumber];
     let newArr = addedNumber.map((one) => {
       return console.log('ONE', one);
