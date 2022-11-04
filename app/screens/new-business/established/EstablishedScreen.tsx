@@ -12,6 +12,7 @@ import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
 import GlobalStyle from '../../../assets/styling/GlobalStyle';
 import moment from 'moment';
+import { NewAddBusinessPresentable } from '../models/AddNewBusinessPresentable';
 
 export const EstablishedScreen = ({
   navigation,
@@ -25,14 +26,18 @@ export const EstablishedScreen = ({
     (state: any) => state.setEstablished,
   );
 
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [isDatePickerVisible, setDatePickerVisibility] =
+    useState<boolean>(false);
   const [active, setActive] = useState<boolean>(false);
 
   const toggleDatePicker = () => {
     setDatePickerVisibility(!isDatePickerVisible);
   };
 
-  const handleConfirm = (date: any, setFieldValue: any) => {
+  const handleConfirm = (
+    date: NewAddBusinessPresentable,
+    setFieldValue: NewAddBusinessPresentable,
+  ) => {
     setFieldValue('established', date);
     toggleDatePicker();
     setActive(true);

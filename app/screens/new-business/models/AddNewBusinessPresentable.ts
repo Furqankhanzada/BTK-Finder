@@ -8,4 +8,6 @@ export interface NewAddBusinessPresentable {
     item?: object,
     keyword?: string,
     selectedTags: [],
+    date: object
+    setFieldValue: () =>  {date: object, callback: () => {}};
   }
