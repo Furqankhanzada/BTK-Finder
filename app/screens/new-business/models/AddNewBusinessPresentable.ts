@@ -9,5 +9,25 @@ export interface NewAddBusinessPresentable {
     keyword?: string,
     selectedTags: [],
     date: object
-    setFieldValue: () =>  {date: object, callback: () => {}};
+    setFieldValue: any,
+    latitude?: number,
+    longitude?: number,
+    animateToRegion: string,
+    defaultDelta: defaultDelta,
+    payload: payload,
+    e: object,
+    nativeEvent: object,
+    coordinate: number | string,
   }
+  
+  interface defaultDelta {
+    latitudeDelta: number,
+    longitudeDelta: number,
+  }
+
+  interface payload {
+    latitudeDelta: number;
+    longitudeDelta: number;
+    latitude: any;
+    longitude: any;
+}
