@@ -18,6 +18,10 @@ export interface NewAddBusinessPresentable {
     e: object,
     nativeEvent: object,
     coordinate: number | string,
+    day: string,
+    to: string,
+    from: string,
+    isOpen: string
   }
   
   interface defaultDelta {

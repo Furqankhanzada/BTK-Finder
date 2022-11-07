@@ -9,6 +9,7 @@ import useAddBusinessStore from '../store/Store';
 import { StackScreenProps } from '@react-navigation/stack';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
+import { NewAddBusinessPresentable } from '../models/AddNewBusinessPresentable';
 
 export const Hours = ({ navigation }: StackScreenProps<GlobalParamList>) => {
   const openHours = useAddBusinessStore((state: any) => state.openHours);
@@ -16,7 +17,7 @@ export const Hours = ({ navigation }: StackScreenProps<GlobalParamList>) => {
 
   const [active, setActive] = useState<boolean>(false);
 
-  const updateSelectedDays = (payload: any) => {
+  const updateSelectedDays = (payload: NewAddBusinessPresentable) => {
     let array = [...openHours];
     array.map((el) => {
       if (el.day === payload.day) {
@@ -33,7 +34,9 @@ export const Hours = ({ navigation }: StackScreenProps<GlobalParamList>) => {
   };
 
   const selectedHours = () => {
-    let newArray = openHours.filter((obj: any) => obj.isOpen);
+    let newArray = openHours.filter(
+      (obj: NewAddBusinessPresentable) => obj.isOpen,
+    );
     setOpenHours(newArray);
   };
 
@@ -66,15 +69,17 @@ export const Hours = ({ navigation }: StackScreenProps<GlobalParamList>) => {
                         Set Timings of your Business
                       </Text>
 
-                      {openHours.map((day: any, index: any) => {
-                        return (
-                          <HoursCheckbox
-                            key={index}
-                            day={day}
-                            getObject={updateSelectedDays}
-                          />
-                        );
-                      })}
+                      {openHours.map(
+                        (day: NewAddBusinessPresentable, index: number) => {
+                          return (
+                            <HoursCheckbox
+                              key={index}
+                              day={day}
+                              getObject={updateSelectedDays}
+                            />
+                          );
+                        },
+                      )}
                     </View>
                   );
                 }}
