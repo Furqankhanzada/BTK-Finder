@@ -16,8 +16,8 @@ const webRejex =
 
 const webSchema = Yup.object({
   website: Yup.string()
-    .matches(webRejex, 'Please enter website')
-    .required('ex: www.xyz.com'),
+    .matches(webRejex, 'Please enter url ex: https://abc.com')
+    .required('ex: https://abc.com'),
 });
 
 export const WebsiteScreen = ({
