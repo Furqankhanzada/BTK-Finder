@@ -16,6 +16,7 @@ import {
   useAddGalleryImages,
 } from '../queries/mutations';
 import { ScrollView } from 'react-native-gesture-handler';
+import { NewAddBusinessPresentable } from '../models/AddNewBusinessPresentable';
 
 export const GalleryScreen = ({
   navigation,
@@ -30,7 +31,7 @@ export const GalleryScreen = ({
 
   console.log('UPDATED STORE IN GALLERY SCREEN', payload);
 
-  const [active, setActive] = useState(false);
+  const [active, setActive] = useState<boolean>(false);
   const navigateToNext = () => {
     navigation.navigate('Dashboard');
     addNewBusiness(payload);
@@ -47,24 +48,22 @@ export const GalleryScreen = ({
     } else {
       null;
     }
-    console.log('payload Thumbnail', payload);
   };
 
-  const onChangeCover = (item: any) => {
+  const onChangeCover = (item: NewAddBusinessPresentable) => {
     let data = [...gallery];
     data.map((el) => (el.cover = el.image === item.image));
-    console.log('On Change Cover', data);
     setGallery(data);
   };
 
-  const removeSingleGalleryImage = (item: any) => {
+  const removeSingleGalleryImage = (item: NewAddBusinessPresentable) => {
     const newPayload = { ...payload };
     let data = newPayload.gallery.filter((el: any) => el.image !== item.image);
     console.log('Remove Gallery data', data);
     setGallery(data);
   };
 
-  const renderGalleryImages = (data: any) => {
+  const renderGalleryImages = (data: Array<NewAddBusinessPresentable>) => {
     if (data?.length) {
       return data?.map((el: any, i: any) => (
         <View key={i} style={styles.galleryImageSubContainer}>
