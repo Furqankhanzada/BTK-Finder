@@ -13,8 +13,8 @@ import { styles } from '../styles/styles';
 export const PriceRange = ({
   navigation,
 }: StackScreenProps<GlobalParamList>) => {
-  const [from, setFrom] = useState(String(0));
-  const [to, setTo] = useState(String(100));
+  const [from, setFrom] = useState<string>(String(0));
+  const [to, setTo] = useState<string>(String(100));
 
   // const store = useAddBusinessStore((state: any) => state);
 
