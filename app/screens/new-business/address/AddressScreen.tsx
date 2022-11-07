@@ -36,6 +36,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { GlobalParamList } from 'navigation/models/GlobalParamList';
 import { StackScreenProps } from '@react-navigation/stack';
 import useAddBusinessStore from '../store/Store';
+import { NewAddBusinessPresentable } from '../models/AddNewBusinessPresentable';
 
 let defaultDelta = {
   latitudeDelta: 0.005,
@@ -94,8 +95,8 @@ export const AddressScreen = ({
     }
   }, [businessFormData.location, getUserLocation]);
 
-  const [mapType, setMapType] = useState('standard');
-  const [location, setLocation] = useState({
+  const [mapType, setMapType] = useState<string>('standard');
+  const [location, setLocation] = useState<object>({
     ...defaultLocation,
     ...defaultDelta,
   });
@@ -105,7 +106,7 @@ export const AddressScreen = ({
     ...defaultDelta,
   });
 
-  const reCenterMap = (currentLocation: any) => {
+  const reCenterMap = (currentLocation: NewAddBusinessPresentable) => {
     mapRef?.current?.animateToRegion({
       latitude: currentLocation.latitude,
       longitude: currentLocation.longitude,
@@ -201,14 +202,14 @@ export const AddressScreen = ({
     );
   };
 
-  const onDragEnd = (location: any) => {
+  const onDragEnd = (location: NewAddBusinessPresentable) => {
     setLocation(location);
     setRegion({ ...location, ...defaultDelta });
     reCenterMap({ ...location, ...defaultDelta });
     console.log('Business Form Data ?', businessFormData.address);
   };
 
-  const submit = (values: any) => {
+  const submit = (values: NewAddBusinessPresentable) => {
     let payload = {
       ...values,
     };
@@ -286,7 +287,7 @@ export const AddressScreen = ({
                       <MapView.Marker
                         coordinate={location}
                         title={'My current location'}
-                        onDragEnd={(e: any) =>
+                        onDragEnd={(e: NewAddBusinessPresentable) =>
                           onDragEnd(e.nativeEvent.coordinate)
                         }
                         draggable
