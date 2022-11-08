@@ -23,15 +23,11 @@ import {
   Text,
   Button,
 } from '@components';
-// import styles from '../../AddBusiness/styles';
+
 import { styles } from '../styles/styles';
 import GlobalStyle from '../../../assets/styling/GlobalStyle';
 import { Formik } from 'formik';
 import { addressSFormValidation } from '../../AddBusiness/Validations';
-import {
-  updateEditBusinessData,
-  setBusinessFormData,
-} from '../../../actions/business';
 import { ScrollView } from 'react-native-gesture-handler';
 import { GlobalParamList } from 'navigation/models/GlobalParamList';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -51,11 +47,12 @@ export const AddressScreen = ({
   navigation,
 }: StackScreenProps<GlobalParamList>) => {
   const mapRef = useRef();
-  const formRef = useRef();
-  const dispatch = useDispatch();
 
   const address = useAddBusinessStore((state: any) => state.address);
   const setAddress = useAddBusinessStore((state: any) => state.setAddress);
+  const setStoreLocation = useAddBusinessStore(
+    (state: any) => state.setLocation,
+  );
 
   const stateProps = useSelector(({ businesses }) => {
     return {
@@ -68,10 +65,6 @@ export const AddressScreen = ({
   const businessFormData = stateProps?.editBusiness
     ? stateProps?.editBusinessData
     : stateProps?.businessFormData;
-
-  // console.log('Business Form Data ?', businessFormData);
-  // console.log('State Props ?', stateProps);
-
   const onNext = () => {
     navigation.navigate('Hours');
   };
@@ -100,6 +93,7 @@ export const AddressScreen = ({
     ...defaultLocation,
     ...defaultDelta,
   });
+  const [fullScreen, setFullScreen] = useState<boolean>(false);
 
   const [region, setRegion] = useState({
     ...defaultLocation,
@@ -179,7 +173,7 @@ export const AddressScreen = ({
   const bottomButtons = () => {
     return (
       <View style={styles.mapFabButtonContainer}>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={[
             styles.mapFabButton,
             mapType === 'satellite' && styles.activeMapFabButton,
@@ -192,11 +186,16 @@ export const AddressScreen = ({
               mapType === 'satellite' && styles.activeMapFabButtonIcon,
             ]}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TouchableOpacity
           style={styles.mapFabButton}
           onPress={() => getUserLocation()}>
           <Icon name="location-arrow" style={styles.mapFabButtonIcon} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.mapFabButton}
+          onPress={() => setFullScreen(!fullScreen)}>
+          <Icon name="expand" style={styles.mapFabButtonIcon} />
         </TouchableOpacity>
       </View>
     );
@@ -206,7 +205,14 @@ export const AddressScreen = ({
     setLocation(location);
     setRegion({ ...location, ...defaultDelta });
     reCenterMap({ ...location, ...defaultDelta });
-    console.log('Business Form Data ?', businessFormData.address);
+    setLocation({ ...location, ...defaultDelta });
+
+    const defaultMap = {
+      type: 'Point',
+      coordinates: [],
+    };
+    defaultMap.coordinates.push(location.latitude, location.longitude);
+    setStoreLocation(defaultMap);
   };
 
   const submit = (values: NewAddBusinessPresentable) => {
@@ -219,22 +225,12 @@ export const AddressScreen = ({
         coordinates: [location.latitude, location.longitude],
       };
     }
-    if (stateProps.editBusiness) {
-      dispatch(updateEditBusinessData(payload));
-    } else {
-      dispatch(setBusinessFormData(payload));
-    }
     onNext();
   };
 
   const navigateToBack = () => {
     navigation.goBack();
   };
-
-  const offsetKeyboard = Platform.select({
-    ios: 0,
-    android: 20,
-  });
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
@@ -246,6 +242,7 @@ export const AddressScreen = ({
         }}
         onSubmit={(values) => {
           navigation.navigate('Hours');
+          console.log('What is Value of addess ?', values.address);
           setAddress(values.address);
         }}
         validationSchema={addressSFormValidation}>
@@ -253,31 +250,31 @@ export const AddressScreen = ({
           return (
             <Fragment>
               <ScrollView
-                // behavior={Platform.OS === 'android' ? 'height' : 'padding'}
-                // keyboardVerticalOffset={offsetKeyboard}
                 contentContainerStyle={{ flexGrow: 1 }}
                 style={{ flex: 1 }}>
                 <View style={[styles.mapContainer]}>
-                  <View style={styles.title}>
-                    <Text title3 semibold style={styles.titleCenter}>
-                      Address
-                    </Text>
-                  </View>
-                  <View style={GlobalStyle.inputContainer}>
-                    <TextInput
-                      style={styles.textArea}
-                      placeholder="Address"
-                      onChangeText={handleChange('address')}
-                      value={values.address}
-                      multiline={true}
-                      // numberOfLines={10}
-                      textAlignVertical="top"
-                    />
-                    {errors.address ? (
-                      <Text style={GlobalStyle.errorText}>
-                        {errors.address}
+                  <View style={fullScreen ? styles.show : styles.hide}>
+                    <View style={styles.title}>
+                      <Text title3 semibold style={styles.titleCenter}>
+                        Address
                       </Text>
-                    ) : null}
+                    </View>
+                    <View style={GlobalStyle.inputContainer}>
+                      <TextInput
+                        style={styles.textArea}
+                        placeholder="Address"
+                        onChangeText={handleChange('address')}
+                        value={values.address}
+                        multiline={true}
+                        // numberOfLines={10}
+                        textAlignVertical="top"
+                      />
+                      {errors.address ? (
+                        <Text style={GlobalStyle.errorText}>
+                          {errors.address}
+                        </Text>
+                      ) : null}
+                    </View>
                   </View>
                   <View style={styles.container}>
                     <MapView

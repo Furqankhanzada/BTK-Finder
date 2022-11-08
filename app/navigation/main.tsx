@@ -8,12 +8,12 @@ import { BaseColor, useFont, useTheme } from '@config';
 import { Icon } from '@components';
 import BusinessDetailNavigator from '@screens/businesses/BusinessDetailNavigator';
 
-// import { setEditBusiness } from '../actions/business';
+import { setEditBusiness } from '../actions/business';
 import { LastRoutes, withAuthRedirection } from './hoc/withAuthRedirection';
 
 /* Bottom Screen */
 import Notification from '@screens/Notification';
-// import Business from '@screens/AddBusiness';
+import Business from '@screens/AddBusiness';
 import FavouriteScreen from '@screens/favourite/FavouriteScreen';
 import Messenger from '@screens/Messenger';
 import Profile from '@screens/Profile';
@@ -85,7 +85,7 @@ export default function Main() {
       {/* <MainStack.Screen name="FinalReview" component={FinalReview} /> */}
       {/* <MainStack.Screen name="Gallery" component={Gallery} /> */}
       <MainStack.Screen name="MyBusinesses" component={MyBusinessesScreen} />
-      {/* <MainStack.Screen name="EditBusiness" component={Business} /> */}
+      <MainStack.Screen name="EditBusiness" component={Business} />
       <MainStack.Screen name="VerifyCode" component={VerifyCode} />
     </MainStack.Navigator>
   );
@@ -139,16 +139,16 @@ function MainBottomTabNavigator() {
         // })}
         component={NewBusinessStackNavigator}
         options={{
-          title: 'Add Business',
+          title: 'New Business',
           tabBarIcon: ({ color }) => {
             return <Icon color={color} name="business-time" size={20} solid />;
           },
         }}
-        // listeners={() => ({
-        //   tabPress: () => {
-        //     dispatch(setEditBusiness(false));
-        //   },
-        // })}
+        listeners={() => ({
+          tabPress: () => {
+            dispatch(setEditBusiness(false));
+          },
+        })}
       />
 
       {/* <BottomTab.Screen
