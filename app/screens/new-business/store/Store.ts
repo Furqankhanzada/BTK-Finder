@@ -1,3 +1,4 @@
+import { object } from "yup";
 import create from "zustand";
 
 let hoursArray = [
@@ -9,11 +10,6 @@ let hoursArray = [
     { day: 'Saturday', from: '09:00 am', to: '10:00 pm', isOpen: false },
     { day: 'Sunday', from: '09:00 am', to: '10:00 pm', isOpen: false },
   ];
-
-  let defaultDelta = {
-    type: "Point",
-    coordinates: [25.0096158, 67.1151583],
-  };
 
 const useAddBusinessStore = create((set) => ({
     name: '',
@@ -30,7 +26,7 @@ const useAddBusinessStore = create((set) => ({
     priceRange: [],
     gallery: [],
     thumbnail: '',
-    location: defaultDelta,
+    location: object,
 
     setName: (name: string) => set((state: any) => ({name})),
     setDescription: (description: string) => set((state: any) => ({description})),
