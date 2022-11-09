@@ -271,4 +271,10 @@ export const styles = StyleSheet.create({
     right: 10,
     left: 15,
   },
+  show: {
+    display: 'flex',
+  },
+  hide: {
+    display: 'none',
+  },
 });

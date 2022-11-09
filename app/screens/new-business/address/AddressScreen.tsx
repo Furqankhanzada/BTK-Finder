@@ -11,7 +11,7 @@ import {
   TouchableOpacity,
   PermissionsAndroid,
 } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import { BaseColor, BaseStyle } from '@config';
@@ -173,20 +173,6 @@ export const AddressScreen = ({
   const bottomButtons = () => {
     return (
       <View style={styles.mapFabButtonContainer}>
-        {/* <TouchableOpacity
-          style={[
-            styles.mapFabButton,
-            mapType === 'satellite' && styles.activeMapFabButton,
-          ]}
-          onPress={() => switchMapType()}>
-          <Icon
-            name="globe"
-            style={[
-              styles.mapFabButtonIcon,
-              mapType === 'satellite' && styles.activeMapFabButtonIcon,
-            ]}
-          />
-        </TouchableOpacity> */}
         <TouchableOpacity
           style={styles.mapFabButton}
           onPress={() => getUserLocation()}>
