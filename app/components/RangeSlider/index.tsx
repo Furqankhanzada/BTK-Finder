@@ -33,7 +33,7 @@ export default function RangeSlider(props: any) {
     <Slider
       style={[styles.slider, props.style]}
       min={0}
-      max={10000}
+      max={5000}
       step={1}
       disableRange={false}
       floatingLabel={true}
@@ -61,6 +61,6 @@ RangeSlider.defaultProps = {
   color: '#7f7f7f',
   selectionColor: '#4499ff',
   min: 0,
-  max: 10000,
+  max: 5000,
   onValueChanged: (low: any, hight: any) => {},
 };

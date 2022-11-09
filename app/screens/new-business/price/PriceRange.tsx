@@ -16,14 +16,10 @@ export const PriceRange = ({
   const [from, setFrom] = useState<string>(String(0));
   const [to, setTo] = useState<string>(String(100));
 
-  // const store = useAddBusinessStore((state: any) => state);
-
   const priceRange = useAddBusinessStore((state: any) => state.priceRange);
   const setPriceRange = useAddBusinessStore(
     (state: any) => state.setPriceRange,
   );
-
-  // console.log('UPDATED STORE IN PRICE RANGE SCREEN', store);
 
   const { colors } = useTheme();
 
