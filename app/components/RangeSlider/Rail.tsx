@@ -1,7 +1,11 @@
 import React, { memo } from 'react';
 import { View, StyleSheet } from 'react-native';
 
-const Rail = (props: any) => {
+interface Props {
+  color: string;
+}
+
+const Rail = (props: Props) => {
   return <View style={[styles.root, { backgroundColor: props.color }]} />;
 };
 

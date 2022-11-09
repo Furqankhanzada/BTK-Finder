@@ -1,7 +1,11 @@
 import React, { memo } from 'react';
 import { View, StyleSheet } from 'react-native';
 
-const Notch = (props: any) => {
+interface Props {
+  color: string;
+}
+
+const Notch = (props: Props) => {
   return (
     <View style={[styles.root, { borderTopColor: props.color }]} {...props} />
   );

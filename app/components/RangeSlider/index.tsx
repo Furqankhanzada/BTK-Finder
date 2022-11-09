@@ -7,10 +7,17 @@ import Rail from './Rail';
 import RailSelected from './RailSelected';
 import Notch from './Notch';
 import Label from './Label';
-
 import styles from './styles';
 
-export default function RangeSlider(props: any) {
+interface Props {
+  color: string;
+  text: string;
+  selectionColor: string;
+  style: string;
+  onValueChanged?: (low: number, hight: number) => {};
+}
+
+export default function RangeSlider(props: Props) {
   const renderThumb = useCallback(() => <Thumb />, []);
   const renderRail = useCallback(
     () => <Rail color={props.color} />,
@@ -62,5 +69,5 @@ RangeSlider.defaultProps = {
   selectionColor: '#4499ff',
   min: 0,
   max: 5000,
-  onValueChanged: (low: any, hight: any) => {},
+  onValueChanged: (low: number, hight: number) => {},
 };
