@@ -73,16 +73,25 @@ export default function ProfileEdit({ navigation }) {
         cancelBtnTitle: 'Cancel',
       },
       type: 'Standard',
-      onDismiss: (result) => {
-        if (result == 'confirm') {
-          Alert.alert('DELETE');
-        }
-        if (result == 'cancel') {
-          Alert.alert('CANCEL');
-        }
-        if (!result) {
-          Alert.alert('NOTHING');
-        }
+    }).then((respose) => {
+      if (respose === 'confirm') {
+        dispatch(editProfile({
+          name, email, phone: phone.replace(/\s+/g, ''), _id: profileData._id
+        }, async () => {
+          await showAlert({
+            icon: {
+              size: 70,
+              name: IconName.CheckMark,
+              color: colors.primary,
+            },
+            title: 'Account Deleted Successfully',
+            message: 'You have successfully deleted your account permanently.',
+            btn: {
+              confirmBtnTitle: 'Ok'
+            },
+            type: 'Standard',
+          })
+        }));
       }
     });
   };
@@ -228,7 +237,7 @@ export default function ProfileEdit({ navigation }) {
             {t('confirm')}
           </Button>
           <Button
-            loading={false}
+            loading={editProfileLoading}
             full
             onPress={() => onPressDelete()}
             style={{ marginTop: 15, backgroundColor: BaseColor.redColor }}
