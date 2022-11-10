@@ -50,6 +50,7 @@ export const AlertView: React.FC<Props> = (props: Props) => {
         <View style={[styles.btnContainer, btnLayoutStyle]}>
           {props.btn.cancelBtnTitle ? (
             <Button
+              full
               onPress={onCancel}
               isEmpty={!props.btn.cancelDestructive}
               destructive={props.btn.cancelDestructive}>

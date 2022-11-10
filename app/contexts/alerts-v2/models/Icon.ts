@@ -2,6 +2,7 @@ import { ReactElement } from 'react';
 
 export enum IconName {
   Bell = 'bell',
+  Warning = 'warning',
 
   // Ionic Icons
   ConstructOutline = 'construct',

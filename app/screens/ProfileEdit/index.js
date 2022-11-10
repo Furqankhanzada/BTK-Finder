@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import {
+  Alert,
   View,
   ScrollView,
   KeyboardAvoidingView,
@@ -23,10 +24,13 @@ import TextInputMask from 'react-native-text-input-mask';
 import { useTranslation } from 'react-i18next';
 import { editProfile, uploadProfileImage } from '../../actions/auth';
 import ImagePicker from 'react-native-image-crop-picker';
+import { IconName } from '../../contexts/alerts-v2/models/Icon';
+import { useAlerts } from '@hooks';
 
 export default function ProfileEdit({ navigation }) {
   const { colors } = useTheme();
   const { t } = useTranslation();
+  const { showAlert } = useAlerts();
 
   const profileData = useSelector((state) => state.profile);
   const editProfileLoading = useSelector(
@@ -55,9 +59,37 @@ export default function ProfileEdit({ navigation }) {
     );
   };
 
+  const onPressDelete = async () => {
+    await showAlert({
+      icon: {
+        size: 70,
+        name: IconName.Warning,
+        color: BaseColor.redColor,
+      },
+      title: 'Account Deletion',
+      message: 'Are you sure you want to delete your account permanently?',
+      btn: {
+        confirmBtnTitle: 'Yes',
+        cancelBtnTitle: 'Cancel',
+      },
+      type: 'Standard',
+      onDismiss: (result) => {
+        if (result == 'confirm') {
+          Alert.alert('DELETE');
+        }
+        if (result == 'cancel') {
+          Alert.alert('CANCEL');
+        }
+        if (!result) {
+          Alert.alert('NOTHING');
+        }
+      }
+    });
+  };
+
   const [imageUri, setImageUri] = useState('');
 
-  const uploadProfileImageCallBack = () => {};
+  const uploadProfileImageCallBack = () => { };
 
   const nameRef = useRef(null);
   const emailRef = useRef(null);
@@ -118,7 +150,7 @@ export default function ProfileEdit({ navigation }) {
         onPressLeft={() => {
           navigation.goBack();
         }}
-        onPressRight={() => {}}
+        onPressRight={() => { }}
       />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'android' ? 'height' : 'padding'}
@@ -194,6 +226,14 @@ export default function ProfileEdit({ navigation }) {
         <View style={{ paddingVertical: 15, paddingHorizontal: 20 }}>
           <Button loading={editProfileLoading} full onPress={() => onSubmit()}>
             {t('confirm')}
+          </Button>
+          <Button
+            loading={false}
+            full
+            onPress={() => onPressDelete()}
+            style={{ marginTop: 15, backgroundColor: BaseColor.redColor }}
+          >
+            {t('delete')}
           </Button>
         </View>
       </KeyboardAvoidingView>
