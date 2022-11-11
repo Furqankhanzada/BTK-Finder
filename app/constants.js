@@ -11,6 +11,7 @@ export const GET_CATEGORIES = `${Config.API_URL}/categories`;
 export const GET_PROFILE = `${Config.API_URL}/auth/profile`;
 
 export const EDIT_PROFILE = `${Config.API_URL}/users/`;
+export const DELETE_PROFILE = `${Config.API_URL}/users`;
 
 export const BUSINESSES_API = `${Config.API_URL}/businesses`;
 

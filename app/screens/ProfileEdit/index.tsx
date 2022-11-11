@@ -1,11 +1,11 @@
 import React, { useRef, useState } from 'react';
 import {
-  Alert,
   View,
   ScrollView,
   KeyboardAvoidingView,
   Platform,
   TouchableOpacity,
+  StyleSheet,
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { BaseStyle, BaseColor, useTheme } from '@config';
@@ -19,29 +19,27 @@ import {
   TextInput,
   Loading,
 } from '@components';
-import styles from './styles';
 import TextInputMask from 'react-native-text-input-mask';
 import { useTranslation } from 'react-i18next';
 import { editProfile, uploadProfileImage } from '../../actions/auth';
 import ImagePicker from 'react-native-image-crop-picker';
-import { IconName } from '../../contexts/alerts-v2/models/Icon';
-import { useAlerts } from '@hooks';
+import { useDeleteUserAccount } from './queries/mutations';
 
-export default function ProfileEdit({ navigation }) {
+export default function ProfileEdit(props: any) {
+  const { navigation } = props;
   const { colors } = useTheme();
   const { t } = useTranslation();
-  const { showAlert } = useAlerts();
+  const { mutate, isLoading } = useDeleteUserAccount();
 
-  const profileData = useSelector((state) => state.profile);
+  const profileData = useSelector((state: any) => state.profile);
   const editProfileLoading = useSelector(
-    (state) => state.auth.editProfileLoading,
+    (state: any) => state.auth.editProfileLoading,
   );
   const dispatch = useDispatch();
 
-  const [name, setName] = useState(profileData.name);
-  const [email, setEmail] = useState(profileData.email);
-  const [phone, setPhone] = useState(profileData.phone);
-  const [loading, setLoading] = useState(false);
+  const [name, setName] = useState<string>(profileData.name);
+  const [email, setEmail] = useState<string>(profileData.email);
+  const [phone, setPhone] = useState<string>(profileData.phone);
 
   const offsetKeyboard = Platform.select({
     ios: 0,
@@ -60,48 +58,15 @@ export default function ProfileEdit({ navigation }) {
   };
 
   const onPressDelete = async () => {
-    await showAlert({
-      icon: {
-        size: 70,
-        name: IconName.Warning,
-        color: BaseColor.redColor,
-      },
-      title: 'Account Deletion',
-      message: 'Are you sure you want to delete your account permanently?',
-      btn: {
-        confirmBtnTitle: 'Yes',
-        cancelBtnTitle: 'Cancel',
-      },
-      type: 'Standard',
-    }).then((respose) => {
-      if (respose === 'confirm') {
-        dispatch(editProfile({
-          name, email, phone: phone.replace(/\s+/g, ''), _id: profileData._id
-        }, async () => {
-          await showAlert({
-            icon: {
-              size: 70,
-              name: IconName.CheckMark,
-              color: colors.primary,
-            },
-            title: 'Account Deleted Successfully',
-            message: 'You have successfully deleted your account permanently.',
-            btn: {
-              confirmBtnTitle: 'Ok'
-            },
-            type: 'Standard',
-          })
-        }));
-      }
-    });
+    mutate({ type: false });
   };
 
   const [imageUri, setImageUri] = useState('');
 
-  const uploadProfileImageCallBack = () => { };
+  const uploadProfileImageCallBack = () => {};
 
-  const nameRef = useRef(null);
-  const emailRef = useRef(null);
+  const nameRef = useRef<any>(null);
+  const emailRef = useRef<any>(null);
 
   const pickSingle = () => {
     ImagePicker.openPicker({
@@ -122,7 +87,7 @@ export default function ProfileEdit({ navigation }) {
     })
       .then((image) => {
         setImageUri(image.path);
-        const filename = image.path.replace(/^.*[\\\/]/, '');
+        const filename = image.path.replace(/^.*[\\/]/, '');
         let file = {
           uri:
             Platform.OS === 'android'
@@ -143,7 +108,7 @@ export default function ProfileEdit({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
+    <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
         title={t('edit_profile')}
         renderLeft={() => {
@@ -159,12 +124,12 @@ export default function ProfileEdit({ navigation }) {
         onPressLeft={() => {
           navigation.goBack();
         }}
-        onPressRight={() => { }}
+        onPressRight={() => {}}
       />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'android' ? 'height' : 'padding'}
         keyboardVerticalOffset={offsetKeyboard}
-        style={{ flex: 1 }}>
+        style={styles.KeyboardAvoidingView}>
         <ScrollView contentContainerStyle={styles.contain}>
           <TouchableOpacity
             disabled={profileData.profileImageLoading}
@@ -225,23 +190,24 @@ export default function ProfileEdit({ navigation }) {
             placeholder={t('input_email')}
             value={email}
             keyboardType="email-address"
-            autoCorrect={false}
             autoCapitalize="none"
             returnKeyType="done"
             onSubmitEditing={() => onSubmit()}
             blurOnSubmit={true}
           />
         </ScrollView>
-        <View style={{ paddingVertical: 15, paddingHorizontal: 20 }}>
+        <View style={styles.buttonsContainer}>
           <Button loading={editProfileLoading} full onPress={() => onSubmit()}>
             {t('confirm')}
           </Button>
           <Button
-            loading={editProfileLoading}
+            loading={isLoading}
             full
             onPress={() => onPressDelete()}
-            style={{ marginTop: 15, backgroundColor: BaseColor.redColor }}
-          >
+            style={[
+              styles.deleteButton,
+              { backgroundColor: BaseColor.redColor },
+            ]}>
             {t('delete')}
           </Button>
         </View>
@@ -249,3 +215,48 @@ export default function ProfileEdit({ navigation }) {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  KeyboardAvoidingView: {
+    flex: 1,
+  },
+  contentTitle: {
+    alignItems: 'flex-start',
+    width: '100%',
+    height: 32,
+    justifyContent: 'center',
+  },
+  contain: {
+    alignItems: 'center',
+    padding: 20,
+  },
+  textInput: {
+    height: 46,
+    backgroundColor: BaseColor.fieldColor,
+    borderRadius: 5,
+    padding: 10,
+    width: '100%',
+    color: BaseColor.grayColor,
+  },
+  thumb: {
+    width: '100%',
+    height: '100%',
+  },
+  thumbContainer: {
+    flexDirection: 'row',
+    position: 'relative',
+    borderRadius: 50,
+    borderWidth: 1,
+    overflow: 'hidden',
+    width: 100,
+    height: 100,
+    marginBottom: 15,
+  },
+  buttonsContainer: {
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+  },
+  deleteButton: {
+    marginTop: 15,
+  },
+});
