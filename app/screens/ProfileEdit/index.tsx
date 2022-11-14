@@ -9,7 +9,10 @@ import {
   TextInput as TextInputOriginal,
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import { BaseStyle, BaseColor, useTheme } from '@config';
+import { useTranslation } from 'react-i18next';
+import TextInputMask from 'react-native-text-input-mask';
+import ImagePicker from 'react-native-image-crop-picker';
+
 import {
   Image,
   Header,
@@ -20,13 +23,14 @@ import {
   TextInput,
   Loading,
 } from '@components';
-import TextInputMask from 'react-native-text-input-mask';
-import { useTranslation } from 'react-i18next';
-import { editProfile, uploadProfileImage } from '../../actions/auth';
-import ImagePicker from 'react-native-image-crop-picker';
-import { useDeleteUserAccount } from './queries/mutations';
+import { BaseStyle, BaseColor, useTheme } from '@config';
+import { useAlerts } from '@hooks';
 import { StackScreenProps } from '@react-navigation/stack';
 import { MainStackParamList } from 'navigation/models/MainStackParamList';
+
+import { editProfile, uploadProfileImage } from '../../actions/auth';
+import { IconName } from '../../contexts/alerts-v2/models/Icon';
+import { useDeleteUserAccount } from './queries/mutations';
 
 export default function ProfileEdit(
   props: StackScreenProps<MainStackParamList, 'ProfileEdit'>,
@@ -34,6 +38,7 @@ export default function ProfileEdit(
   const { navigation } = props;
   const { colors } = useTheme();
   const { t } = useTranslation();
+  const { showAlert } = useAlerts();
   const { mutate, isLoading } = useDeleteUserAccount();
 
   const profileData = useSelector((state: any) => state.profile);
@@ -49,7 +54,24 @@ export default function ProfileEdit(
   const [phone, setPhone] = useState<string>(profileData.phone);
 
   const onPressDelete = async () => {
-    mutate({ type: false });
+    await showAlert({
+      icon: {
+        size: 70,
+        name: IconName.Warning,
+        color: BaseColor.redColor,
+      },
+      title: 'Account Deletion Confirmation',
+      message: 'Are you sure you want to delete your account?',
+      btn: {
+        confirmBtnTitle: 'Delete',
+        cancelBtnTitle: 'Cancel',
+      },
+      type: 'Standard',
+    }).then((type) => {
+      if (type === 'confirm') {
+        mutate({ type: false });
+      }
+    });
   };
 
   const offsetKeyboard = Platform.select({

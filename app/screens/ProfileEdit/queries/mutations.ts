@@ -15,7 +15,7 @@ export interface DeleteMutationVar {
 }
 
 export const useDeleteUserAccount = () => {
-  const { showAlert } = useAlerts();
+  const { showAlert, showNotification } = useAlerts();
   const { colors } = useTheme();
   const dispatch = useDispatch();
 
@@ -26,27 +26,42 @@ export const useDeleteUserAccount = () => {
     });
   };
 
-  const displayAlert = (obj: any, warning: boolean) => {
+  const displayAlert = (obj: any) => {
     return showAlert({
       icon: {
         size: 70,
-        name: warning ? IconName.Warning : IconName.CheckMark,
-        color: warning ? BaseColor.redColor : colors.primary,
+        name: IconName.Warning,
+        color: BaseColor.redColor,
       },
-      title: warning ? 'Account Deletion' : 'Account Deleted Successfully',
-      message: warning
-        ? `If you choose to delete your account, Your ${obj.businessesCount} businesses and ${obj.reviewsCount} Reviews along with your account will be deleted permanently.`
-        : 'You have successfully deleted your account permanently.',
-      btn: warning
-        ? {
-            confirmBtnTitle: 'Delete',
-            cancelBtnTitle: 'Cancel',
-          }
-        : {
-            confirmBtnTitle: 'Ok',
-          },
+      title: 'Account Deletion',
+      message: `If you choose to delete your account, Your ${obj.businessesCount} businesses and ${obj.reviewsCount} Reviews along with your account will be deleted permanently.`,
+      btn: {
+        confirmBtnTitle: 'Delete',
+        cancelBtnTitle: 'Cancel',
+      },
       type: 'Standard',
     });
+  };
+
+  const DeleteUserAccount = () => {
+    fetchDeleteUserAPI(true)
+      .then(async () => {
+        //TODO: Will fix once we remove the redux from project.
+        dispatch(AuthActions.authentication(false));
+        showNotification({
+          icon: {
+            size: 70,
+            name: IconName.CheckMark,
+            color: colors.primary,
+          },
+          message:
+            'You have successfully deleted your account permanently, Returning you to dashboard.',
+          dismissAfterMs: 2000,
+        });
+      })
+      .catch(({ e }) => {
+        handleError(e.data);
+      });
   };
 
   return useMutation<{ type: any }, Error, DeleteMutationVar>(
@@ -59,19 +74,15 @@ export const useDeleteUserAccount = () => {
     },
     {
       onSuccess: async (response: any) => {
-        await displayAlert(response, true).then((type) => {
-          if (type === 'confirm') {
-            fetchDeleteUserAPI(true)
-              .then(async () => {
-                //TODO: Will fix once we remove the redux from project.
-                dispatch(AuthActions.authentication(false));
-                await displayAlert({}, false);
-              })
-              .catch(({ e }) => {
-                handleError(e.data);
-              });
-          }
-        });
+        if (response.businessesCount === 0 && response.reviewsCount === 0) {
+          DeleteUserAccount();
+        } else {
+          await displayAlert(response).then((type) => {
+            if (type === 'confirm') {
+              DeleteUserAccount();
+            }
+          });
+        }
       },
     },
   );
