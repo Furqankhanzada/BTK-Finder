@@ -6,6 +6,7 @@ import {
   Platform,
   TouchableOpacity,
   StyleSheet,
+  TextInput as TextInputOriginal,
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { BaseStyle, BaseColor, useTheme } from '@config';
@@ -24,8 +25,12 @@ import { useTranslation } from 'react-i18next';
 import { editProfile, uploadProfileImage } from '../../actions/auth';
 import ImagePicker from 'react-native-image-crop-picker';
 import { useDeleteUserAccount } from './queries/mutations';
+import { StackScreenProps } from '@react-navigation/stack';
+import { MainStackParamList } from 'navigation/models/MainStackParamList';
 
-export default function ProfileEdit(props: any) {
+export default function ProfileEdit(
+  props: StackScreenProps<MainStackParamList, 'ProfileEdit'>,
+) {
   const { navigation } = props;
   const { colors } = useTheme();
   const { t } = useTranslation();
@@ -37,9 +42,15 @@ export default function ProfileEdit(props: any) {
   );
   const dispatch = useDispatch();
 
+  const nameRef = useRef<TextInputOriginal>(null);
+  const emailRef = useRef<TextInputOriginal>(null);
   const [name, setName] = useState<string>(profileData.name);
   const [email, setEmail] = useState<string>(profileData.email);
   const [phone, setPhone] = useState<string>(profileData.phone);
+
+  const onPressDelete = async () => {
+    mutate({ type: false });
+  };
 
   const offsetKeyboard = Platform.select({
     ios: 0,
@@ -57,16 +68,9 @@ export default function ProfileEdit(props: any) {
     );
   };
 
-  const onPressDelete = async () => {
-    mutate({ type: false });
-  };
-
   const [imageUri, setImageUri] = useState('');
 
   const uploadProfileImageCallBack = () => {};
-
-  const nameRef = useRef<any>(null);
-  const emailRef = useRef<any>(null);
 
   const pickSingle = () => {
     ImagePicker.openPicker({
@@ -164,7 +168,7 @@ export default function ProfileEdit(props: any) {
             autoCapitalize="none"
             mask={'+92 [000] [0000] [000]'}
             returnKeyType="next"
-            onSubmitEditing={() => nameRef.current.focus()}
+            onSubmitEditing={() => nameRef.current?.focus()}
             blurOnSubmit={false}
           />
           <View style={styles.contentTitle}>
@@ -177,7 +181,7 @@ export default function ProfileEdit(props: any) {
             onChangeText={(text) => setName(text)}
             placeholder={t('input_name')}
             value={name}
-            onSubmitEditing={() => emailRef.current.focus()}
+            onSubmitEditing={() => emailRef.current?.focus()}
           />
           <View style={styles.contentTitle}>
             <Text headline semibold>
