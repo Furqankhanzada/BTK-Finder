@@ -52,9 +52,10 @@ export default function ProfileEdit(
   const [name, setName] = useState<string>(profileData.name);
   const [email, setEmail] = useState<string>(profileData.email);
   const [phone, setPhone] = useState<string>(profileData.phone);
+  const [imageUri, setImageUri] = useState('');
 
   const onPressDelete = async () => {
-    await showAlert({
+    const buttonPressed = await showAlert({
       icon: {
         size: 70,
         name: IconName.Warning,
@@ -67,11 +68,11 @@ export default function ProfileEdit(
         cancelBtnTitle: 'Cancel',
       },
       type: 'Standard',
-    }).then((type) => {
-      if (type === 'confirm') {
-        mutate({ type: false });
-      }
     });
+
+    if (buttonPressed === 'confirm') {
+      mutate({ confirm: false });
+    }
   };
 
   const offsetKeyboard = Platform.select({
@@ -89,8 +90,6 @@ export default function ProfileEdit(
       ),
     );
   };
-
-  const [imageUri, setImageUri] = useState('');
 
   const uploadProfileImageCallBack = () => {};
 
@@ -229,11 +228,9 @@ export default function ProfileEdit(
           <Button
             loading={isLoading}
             full
+            destructive
             onPress={() => onPressDelete()}
-            style={[
-              styles.deleteButton,
-              { backgroundColor: BaseColor.redColor },
-            ]}>
+            style={styles.deleteButton}>
             {t('delete')}
           </Button>
         </View>

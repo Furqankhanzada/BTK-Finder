@@ -11,7 +11,13 @@ import { DELETE_PROFILE } from '../../../constants';
 import { IconName } from '../../../contexts/alerts-v2/models/Icon';
 
 export interface DeleteMutationVar {
-  type: boolean;
+  confirm: boolean;
+}
+
+export interface DeleteUserAccountResponse {
+  businessesCount?: number;
+  reviewsCount?: number;
+  success?: boolean;
 }
 
 export const useDeleteUserAccount = () => {
@@ -19,32 +25,15 @@ export const useDeleteUserAccount = () => {
   const { colors } = useTheme();
   const dispatch = useDispatch();
 
-  const fetchDeleteUserAPI = (type: boolean) => {
+  const deleteUserAccount = (confirm: boolean) => {
     return axiosApiInstance({
       method: 'DELETE',
-      url: `${DELETE_PROFILE}?confirm=${type}`,
+      url: `${DELETE_PROFILE}?confirm=${confirm}`,
     });
   };
 
-  const displayAlert = (obj: any) => {
-    return showAlert({
-      icon: {
-        size: 70,
-        name: IconName.Warning,
-        color: BaseColor.redColor,
-      },
-      title: 'Account Deletion',
-      message: `If you choose to delete your account, Your ${obj.businessesCount} businesses and ${obj.reviewsCount} Reviews along with your account will be deleted permanently.`,
-      btn: {
-        confirmBtnTitle: 'Delete',
-        cancelBtnTitle: 'Cancel',
-      },
-      type: 'Standard',
-    });
-  };
-
-  const DeleteUserAccount = () => {
-    fetchDeleteUserAPI(true)
+  const deleteUser = () => {
+    deleteUserAccount(true)
       .then(async () => {
         //TODO: Will fix once we remove the redux from project.
         dispatch(AuthActions.authentication(false));
@@ -64,24 +53,37 @@ export const useDeleteUserAccount = () => {
       });
   };
 
-  return useMutation<{ type: any }, Error, DeleteMutationVar>(
-    ({ type }) => {
-      return fetchDeleteUserAPI(type)
+  return useMutation<DeleteUserAccountResponse, Error, DeleteMutationVar>(
+    ({ confirm }) => {
+      return deleteUserAccount(confirm)
         .then((response) => response.data)
         .catch(({ response }) => {
           handleError(response.data);
         });
     },
     {
-      onSuccess: async (response: any) => {
+      onSuccess: async (response) => {
         if (response.businessesCount === 0 && response.reviewsCount === 0) {
-          DeleteUserAccount();
+          deleteUser();
         } else {
-          await displayAlert(response).then((type) => {
-            if (type === 'confirm') {
-              DeleteUserAccount();
-            }
+          const buttonPressed = await showAlert({
+            icon: {
+              size: 70,
+              name: IconName.Warning,
+              color: BaseColor.redColor,
+            },
+            title: 'Account Deletion',
+            message: `If you choose to delete your account, Your ${response.businessesCount} businesses and ${response.reviewsCount} Reviews along with your account will be deleted permanently.`,
+            btn: {
+              confirmBtnTitle: 'Delete',
+              cancelBtnTitle: 'Cancel',
+            },
+            type: 'Standard',
           });
+
+          if (buttonPressed === 'confirm') {
+            deleteUser();
+          }
         }
       },
     },
