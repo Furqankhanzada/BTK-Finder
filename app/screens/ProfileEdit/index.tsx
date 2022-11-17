@@ -64,6 +64,7 @@ export default function ProfileEdit(
       title: 'Account Deletion Confirmation',
       message: 'Are you sure you want to delete your account?',
       btn: {
+        confirmDestructive: true,
         confirmBtnTitle: 'Delete',
         cancelBtnTitle: 'Cancel',
       },

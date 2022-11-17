@@ -58,7 +58,10 @@ export const AlertView: React.FC<Props> = (props: Props) => {
             </Button>
           ) : null}
           <View style={styles.space} />
-          <Button full onPress={onConfirm}>
+          <Button
+            full
+            onPress={onConfirm}
+            destructive={props.btn.confirmDestructive}>
             {props.btn.confirmBtnTitle}
           </Button>
         </View>

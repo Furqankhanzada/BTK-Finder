@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { useDispatch } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 
 import { handleError } from '@utils';
 import { useAlerts } from '@hooks';
@@ -24,6 +25,7 @@ export const useDeleteUserAccount = () => {
   const { showAlert, showNotification } = useAlerts();
   const { colors } = useTheme();
   const dispatch = useDispatch();
+  const navigation = useNavigation();
 
   const deleteUserAccount = (confirm: boolean) => {
     return axiosApiInstance({
@@ -34,19 +36,24 @@ export const useDeleteUserAccount = () => {
 
   const deleteUser = () => {
     deleteUserAccount(true)
-      .then(async () => {
-        //TODO: Will fix once we remove the redux from project.
-        dispatch(AuthActions.authentication(false));
-        showNotification({
-          icon: {
-            size: 70,
-            name: IconName.CheckMark,
-            color: colors.primary,
-          },
-          message:
-            'You have successfully deleted your account permanently, Returning you to dashboard.',
-          dismissAfterMs: 2000,
-        });
+      .then(async (response) => {
+        if (response.data.success) {
+          showNotification({
+            icon: {
+              size: 70,
+              name: IconName.CheckMark,
+              color: colors.primary,
+            },
+            message:
+              'You have successfully deleted your account permanently, Returning you to dashboard.',
+            dismissAfterMs: 2000,
+          });
+
+          navigation.goBack();
+
+          //TODO: Will fix once we remove the redux from project.
+          dispatch(AuthActions.authentication(false));
+        }
       })
       .catch(({ e }) => {
         handleError(e.data);
@@ -75,6 +82,7 @@ export const useDeleteUserAccount = () => {
             title: 'Account Deletion',
             message: `If you choose to delete your account, Your ${response.businessesCount} businesses and ${response.reviewsCount} Reviews along with your account will be deleted permanently.`,
             btn: {
+              confirmDestructive: true,
               confirmBtnTitle: 'Delete',
               cancelBtnTitle: 'Cancel',
             },
