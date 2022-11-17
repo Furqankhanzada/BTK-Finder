@@ -20,7 +20,7 @@ export default function ContactUs({ navigation }) {
   const contactData = [
     {
       name: 'WhatsApp',
-      information: '+923122052950',
+      information: '+923001264820',
       type: 'whatsapp',
       icon: 'whatsapp-square',
       iconColor: '#25D366',
