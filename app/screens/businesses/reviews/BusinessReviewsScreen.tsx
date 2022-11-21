@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   FlatList,
   RefreshControl,
@@ -23,13 +23,25 @@ import { useBusiness } from '@screens/businesses/queries/queries';
 import { StackScreenProps } from '@react-navigation/stack';
 
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function Review(
   props: StackScreenProps<GlobalParamList, 'Reviews'>,
 ) {
   const { navigation, route } = props;
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+  const queryClient = useQueryClient();
   const { isLoading, data: business, refetch } = useBusiness(route.params.id);
+
+  const InvalidateReviews = (id: string) => {
+    queryClient.invalidateQueries({
+      queryKey: ['business', id],
+    });
+  };
+
+  useEffect(() => {
+    InvalidateReviews(route.params.id);
+  }, [business]);
 
   const { colors } = useTheme();
   const { t } = useTranslation();
@@ -207,7 +219,7 @@ export default function Review(
         />
       ) : (
         <View style={styles.noReviewsAvailable}>
-          <Text subhead>There are no Reviews in this business yet</Text>
+          <Text subhead>No Reviews Found for this business</Text>
         </View>
       )}
       {/*Users Review List */}
