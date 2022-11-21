@@ -35,7 +35,11 @@ export const AlertView: React.FC<Props> = (props: Props) => {
             ]}>
             {props.title}
           </Text>
-          <Text body1 style={styles.message}>
+          <Text
+            body1
+            style={styles.message}
+            numberOfLines={20}
+            textAlign="center">
             {props.message}
           </Text>
         </>

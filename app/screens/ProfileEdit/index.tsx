@@ -61,8 +61,9 @@ export default function ProfileEdit(
         name: IconName.Warning,
         color: BaseColor.redColor,
       },
-      title: 'Account Deletion Confirmation',
-      message: 'Are you sure you want to delete your account?',
+      title: 'Are you sure?',
+      message:
+        "This will delete your account permanently and you won't be able to recover it again.",
       btn: {
         confirmDestructive: true,
         confirmBtnTitle: 'Delete',
