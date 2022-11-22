@@ -138,6 +138,7 @@
   "call_now": "Call Now",
   "menu": "Menu",
   "delete": "Delete",
+  "update": "Update",
   "ownerOfBusinessesCount_one": "You are the owner of {{count}} business.",
   "ownerOfBusinessesCount_other": "You are the owner of {{count}} businesses.",
   "reviewsOnYourBusinessesCount_one": "Your businesses have {{count}} review.",

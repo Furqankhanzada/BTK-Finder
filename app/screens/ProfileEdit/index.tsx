@@ -288,7 +288,7 @@ export default function ProfileEdit(
         </ScrollView>
         <View style={styles.buttonsContainer}>
           <Button loading={editProfileLoading} full onPress={() => onSubmit()}>
-            {t('confirm')}
+            {t('update')}
           </Button>
           <Button
             loading={isLoading}
