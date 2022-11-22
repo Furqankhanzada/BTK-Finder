@@ -26,26 +26,32 @@ import {
 import { BaseStyle, BaseColor, useTheme } from '@config';
 import { useAlerts } from '@hooks';
 import { StackScreenProps } from '@react-navigation/stack';
+import { AuthActions } from '@actions';
 import { MainStackParamList } from 'navigation/models/MainStackParamList';
 
 import { editProfile, uploadProfileImage } from '../../actions/auth';
 import { IconName } from '../../contexts/alerts-v2/models/Icon';
 import { useDeleteUserAccount } from './queries/mutations';
+import AccountInfoAlertContent from './components/AccountInfoAlertContent';
 
 export default function ProfileEdit(
   props: StackScreenProps<MainStackParamList, 'ProfileEdit'>,
 ) {
   const { navigation } = props;
+  const dispatch = useDispatch();
   const { colors } = useTheme();
   const { t } = useTranslation();
-  const { showAlert } = useAlerts();
-  const { mutate, isLoading } = useDeleteUserAccount();
+  const { showAlert, showNotification } = useAlerts();
+  const {
+    mutate,
+    mutateAsync: deleteUserAccountMutate,
+    isLoading,
+  } = useDeleteUserAccount();
 
   const profileData = useSelector((state: any) => state.profile);
   const editProfileLoading = useSelector(
     (state: any) => state.auth.editProfileLoading,
   );
-  const dispatch = useDispatch();
 
   const nameRef = useRef<TextInputOriginal>(null);
   const emailRef = useRef<TextInputOriginal>(null);
@@ -53,6 +59,28 @@ export default function ProfileEdit(
   const [email, setEmail] = useState<string>(profileData.email);
   const [phone, setPhone] = useState<string>(profileData.phone);
   const [imageUri, setImageUri] = useState('');
+
+  const deleteUser = async () => {
+    const response = await deleteUserAccountMutate({ confirm: true });
+
+    if (response?.success) {
+      showNotification({
+        icon: {
+          size: 70,
+          name: IconName.CheckMarkCircle,
+          color: BaseColor.greenColor,
+        },
+        message:
+          'Your account and all data related to it were deleted permanently.\n\nYou can still use the application and benefit from it. Redirecting to the dashboard.',
+        dismissAfterMs: 4000,
+      });
+
+      navigation.navigate('Dashboard');
+
+      //TODO: Will fix once we remove the redux from project.
+      dispatch(AuthActions.authentication(false));
+    }
+  };
 
   const onPressDelete = async () => {
     const buttonPressed = await showAlert({
@@ -73,7 +101,42 @@ export default function ProfileEdit(
     });
 
     if (buttonPressed === 'confirm') {
-      mutate({ confirm: false });
+      mutate(
+        { confirm: false },
+        {
+          onSuccess: async (response) => {
+            if (
+              response.ownerOfBusinessesCount === 0 &&
+              response.reviewsOnYourBusinessesCount === 0 &&
+              response.businessesWhereGaveReviewsCount === 0
+            ) {
+              deleteUser();
+            } else {
+              const confirmDelete = await showAlert({
+                content: () => (
+                  <AccountInfoAlertContent
+                    ownedBusinesses={response.ownerOfBusinessesCount}
+                    reviewsOnOwnedBusinesses={
+                      response.reviewsOnYourBusinessesCount
+                    }
+                    givenReviews={response.businessesWhereGaveReviewsCount}
+                  />
+                ),
+                btn: {
+                  confirmDestructive: true,
+                  confirmBtnTitle: 'Delete',
+                  cancelBtnTitle: 'Cancel',
+                },
+                type: 'Custom',
+              });
+
+              if (confirmDelete === 'confirm') {
+                deleteUser();
+              }
+            }
+          },
+        },
+      );
     }
   };
 

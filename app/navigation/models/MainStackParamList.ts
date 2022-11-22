@@ -40,4 +40,5 @@ export type MainStackParamList = {
   MyBusinesses: undefined;
   EditBusiness: undefined;
   VerifyCode: undefined;
+  Dashboard: undefined;
 };
