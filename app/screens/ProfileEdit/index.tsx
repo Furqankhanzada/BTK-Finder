@@ -42,11 +42,7 @@ export default function ProfileEdit(
   const { colors } = useTheme();
   const { t } = useTranslation();
   const { showAlert, showNotification } = useAlerts();
-  const {
-    mutate,
-    mutateAsync: deleteUserAccountMutate,
-    isLoading,
-  } = useDeleteUserAccount();
+  const { mutateAsync: deleteUserAccount, isLoading } = useDeleteUserAccount();
 
   const profileData = useSelector((state: any) => state.profile);
   const editProfileLoading = useSelector(
@@ -61,24 +57,27 @@ export default function ProfileEdit(
   const [imageUri, setImageUri] = useState('');
 
   const deleteUser = async () => {
-    const response = await deleteUserAccountMutate({ confirm: true });
+    const response = await deleteUserAccount({ confirm: true });
 
     if (response?.success) {
+      //TODO: Will fix once we remove the redux from project.
+      dispatch(AuthActions.authentication(false));
+
+      navigation.navigate('MainBottomTabNavigator', {
+        screen: 'DashboardStack',
+      });
+
       showNotification({
         icon: {
           size: 70,
           name: IconName.CheckMarkCircle,
           color: BaseColor.greenColor,
         },
-        message:
-          'Your account and all data related to it were deleted permanently.\n\nYou can still use the application and benefit from it. Redirecting to the dashboard.',
+        message: `Your account and all data related to it were deleted permanently. 
+ 
+ You can still use the application and benefit from it`,
         dismissAfterMs: 4000,
       });
-
-      navigation.navigate('Dashboard');
-
-      //TODO: Will fix once we remove the redux from project.
-      dispatch(AuthActions.authentication(false));
     }
   };
 
@@ -101,42 +100,34 @@ export default function ProfileEdit(
     });
 
     if (buttonPressed === 'confirm') {
-      mutate(
-        { confirm: false },
-        {
-          onSuccess: async (response) => {
-            if (
-              response.ownerOfBusinessesCount === 0 &&
-              response.reviewsOnYourBusinessesCount === 0 &&
-              response.businessesWhereGaveReviewsCount === 0
-            ) {
-              deleteUser();
-            } else {
-              const confirmDelete = await showAlert({
-                content: () => (
-                  <AccountInfoAlertContent
-                    ownedBusinesses={response.ownerOfBusinessesCount}
-                    reviewsOnOwnedBusinesses={
-                      response.reviewsOnYourBusinessesCount
-                    }
-                    givenReviews={response.businessesWhereGaveReviewsCount}
-                  />
-                ),
-                btn: {
-                  confirmDestructive: true,
-                  confirmBtnTitle: 'Delete',
-                  cancelBtnTitle: 'Cancel',
-                },
-                type: 'Custom',
-              });
-
-              if (confirmDelete === 'confirm') {
-                deleteUser();
-              }
-            }
+      const response = await deleteUserAccount({ confirm: false });
+      if (
+        response.ownerOfBusinessesCount === 0 &&
+        response.reviewsOnYourBusinessesCount === 0 &&
+        response.businessesWhereGaveReviewsCount === 0
+      ) {
+        await deleteUser();
+      } else {
+        const confirmDelete = await showAlert({
+          content: () => (
+            <AccountInfoAlertContent
+              ownedBusinesses={response.ownerOfBusinessesCount}
+              reviewsOnOwnedBusinesses={response.reviewsOnYourBusinessesCount}
+              givenReviews={response.businessesWhereGaveReviewsCount}
+            />
+          ),
+          btn: {
+            confirmDestructive: true,
+            confirmBtnTitle: 'Delete',
+            cancelBtnTitle: 'Cancel',
           },
-        },
-      );
+          type: 'Custom',
+        });
+
+        if (confirmDelete === 'confirm') {
+          await deleteUser();
+        }
+      }
     }
   };
 
