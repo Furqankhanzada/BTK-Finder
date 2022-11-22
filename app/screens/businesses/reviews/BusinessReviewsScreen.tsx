@@ -33,16 +33,6 @@ export default function Review(
   const queryClient = useQueryClient();
   const { isLoading, data: business, refetch } = useBusiness(route.params.id);
 
-  const InvalidateReviews = (id: string) => {
-    queryClient.invalidateQueries({
-      queryKey: ['business', id],
-    });
-  };
-
-  useEffect(() => {
-    InvalidateReviews(route.params.id);
-  }, [business]);
-
   const { colors } = useTheme();
   const { t } = useTranslation();
   const stateProps = useSelector(({ profile, auth }: any) => {
@@ -219,7 +209,7 @@ export default function Review(
         />
       ) : (
         <View style={styles.noReviewsAvailable}>
-          <Text subhead>No Reviews Found for this business</Text>
+          <Text subhead>No reviews found</Text>
         </View>
       )}
       {/*Users Review List */}

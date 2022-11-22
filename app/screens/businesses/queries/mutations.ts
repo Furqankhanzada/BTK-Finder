@@ -9,6 +9,7 @@ import { BUSINESSES_API } from '../../../constants';
 
 import { useDynamicLinks } from '@hooks';
 import { toggleFavoritesInCache } from '@screens/businesses/helpers/toggleFavoritesInCache';
+import Toast from 'react-native-toast-message';
 
 export enum FavoriteType {
   favorite = 'favorite',
@@ -46,4 +47,37 @@ export const useToggleFavorite = () => {
 export const useBuildBusinessURL = () => {
   const buildBusinessURL = useDynamicLinks();
   return useMutation((businessId: string) => buildBusinessURL(businessId), {});
+};
+
+// Reviews Mutate
+export const useReviews = (id: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    (payload: object) => {
+      return axiosApiInstance({
+        method: 'POST',
+        url: `${BUSINESSES_API}/${id}/review`,
+        data: payload,
+      })
+        .then((response) => {
+          Toast.show({
+            type: 'success',
+            topOffset: 55,
+            text1: 'Review Added',
+            text2: 'Your Review has been added successfully.',
+          });
+        })
+        .catch(({ response }) => {
+          handleError(response.data);
+        });
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: ['business', id],
+        });
+      },
+    },
+  );
 };

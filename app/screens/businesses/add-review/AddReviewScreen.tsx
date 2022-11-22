@@ -19,6 +19,7 @@ import {
 
 import { addReview } from '../../../actions/business';
 import { ReviewStackParamList } from '../../../navigation/models/BusinessDetailBottomTabParamList';
+import { useReviews } from '../queries/mutations';
 
 export default function AddReviewScreen(
   props: StackScreenProps<ReviewStackParamList>,
@@ -40,13 +41,18 @@ export default function AddReviewScreen(
     description: review,
     rating: rate,
   };
+  const { mutate: mutateReview } = useReviews(route.params.id);
 
   const addCallback = () => {
     navigation.goBack();
   };
 
   const onSubmit = () => {
-    dispatch(addReview(payload, addCallback, route?.params?.id));
+    console.log('What is payload ?', payload);
+    mutateReview(payload);
+    setTimeout(() => {
+      addCallback();
+    }, 1500);
   };
 
   const offsetKeyboard = Platform.select({
