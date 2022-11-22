@@ -1,3 +1,5 @@
+import * as React from 'react';
+import { StyleSheet } from 'react-native';
 import {
   BottomSheetBackdrop,
   BottomSheetBackdropProps,
@@ -5,9 +7,12 @@ import {
   BottomSheetModalProvider,
   useBottomSheetDynamicSnapPoints,
 } from '@gorhom/bottom-sheet';
-import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { BackdropPressBehavior } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+} from 'react-native-reanimated';
 
 import { AlertView } from './components/AlertView';
 import { ModalView } from './components/ModalView';
@@ -31,14 +36,23 @@ export const AlertsV2Provider: React.FC = (props) => {
   //#region Variables
   const { bottom } = useSafeAreaInsets();
   const bottomInset = bottom + 16;
-  const { colors } = useTheme();
 
   const [currentContent, setCurrentContent] =
     React.useState<React.ReactNode>(null);
-  const [sheetMode, setSheetMode] = React.useState({
-    detached: true,
-    bottomInset,
-    style: styles.detachedStyle,
+
+  const detached = useSharedValue(true);
+  const backdropPressBehavior = useSharedValue<BackdropPressBehavior>('none');
+  const floatBottomDistance = useSharedValue<number>(bottomInset);
+  const sheetStyle = useAnimatedStyle(() => {
+    if (detached.value) {
+      return {
+        marginHorizontal: 16,
+      };
+    } else {
+      return {
+        marginHorizontal: 0,
+      };
+    }
   });
 
   const sheet = React.useRef<BottomSheetModal>(null);
@@ -77,13 +91,13 @@ export const AlertsV2Provider: React.FC = (props) => {
     }
   }
 
-  function present() {
-    const Content = entryList.current[0].content;
-    setCurrentContent(<Content />);
-    sheet.current?.present();
-  }
-
   const shouldPresent = React.useCallback(() => {
+    const present = () => {
+      const Content = entryList.current[0].content;
+      setCurrentContent(<Content />);
+      sheet.current?.present();
+    };
+
     const isFirstEntry =
       entryList.current.length === 1 && prevEntryLength.current === 0;
     const hasQueuedEntry =
@@ -91,36 +105,36 @@ export const AlertsV2Provider: React.FC = (props) => {
       prevEntryLength.current > entryList.current.length;
 
     if (isFirstEntry || hasQueuedEntry) {
-      present();
+      requestAnimationFrame(() => {
+        present();
+      });
     }
 
     prevEntryLength.current = entryList.current.length;
   }, []);
 
   const configureSheet = React.useCallback(
-    (mode: 'detached' | 'modal') => {
+    (mode: 'detached' | 'modal', behavior?: BackdropPressBehavior) => {
+      const behaviorValue = behavior ?? 'none';
+
       switch (mode) {
         case 'detached':
-          if (!sheetMode.detached) {
-            setSheetMode({
-              detached: true,
-              bottomInset,
-              style: styles.detachedStyle,
-            });
+          if (!detached.value) {
+            detached.value = true;
+            backdropPressBehavior.value = behaviorValue;
+            floatBottomDistance.value = bottomInset;
           }
           return;
         case 'modal':
-          if (sheetMode.detached) {
-            setSheetMode({
-              detached: false,
-              bottomInset: 0,
-              style: styles.modalStyle,
-            });
+          if (detached.value) {
+            detached.value = false;
+            backdropPressBehavior.value = behaviorValue;
+            floatBottomDistance.value = 0;
           }
           return;
       }
     },
-    [bottomInset, sheetMode.detached],
+    [bottomInset, backdropPressBehavior, floatBottomDistance, detached],
   );
   //#endregion Internal methods
 
@@ -154,7 +168,7 @@ export const AlertsV2Provider: React.FC = (props) => {
 
   const showModal = React.useCallback(
     (options: AlertOptions) => {
-      configureSheet('modal');
+      configureSheet('detached');
 
       const { promise, resolve } = getPromiseResolve<AlertBtnResult>();
 
@@ -237,22 +251,18 @@ export const AlertsV2Provider: React.FC = (props) => {
           snapPoints={animatedSnapPoints}
           handleHeight={animatedHandleHeight}
           contentHeight={animatedContentHeight}
-          bottomInset={sheetMode.bottomInset}
+          bottomInset={floatBottomDistance.value}
           enablePanDownToClose={false}
           backgroundComponent={null}
           handleComponent={null}
           backdropComponent={Backdrop}
-          detached={sheetMode.detached}
-          style={[
-            styles.sheetContainer,
-            sheetMode.style,
-            { backgroundColor: colors.background },
-          ]}>
-          <View
+          detached={detached.value}
+          style={[styles.sheetContainer, sheetStyle]}>
+          <Animated.View
             style={styles.contentContainerStyle}
             onLayout={handleContentLayout}>
             {currentContent}
-          </View>
+          </Animated.View>
         </BottomSheetModal>
       </BottomSheetModalProvider>
     </AlertsV2Context.Provider>
@@ -284,6 +294,7 @@ const styles = StyleSheet.create({
   sheetContainer: {
     marginHorizontal: 16,
     borderRadius: 16,
+    backgroundColor: BaseColor.whiteColor,
     shadowColor: BaseColor.grayColor,
     shadowOffset: {
       width: 0,
@@ -292,12 +303,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 16.0,
     elevation: 24,
-  },
-  detachedStyle: {
-    marginHorizontal: 16,
-  },
-  modalStyle: {
-    marginHorizontal: 0,
   },
   contentContainerStyle: {
     justifyContent: 'center',
