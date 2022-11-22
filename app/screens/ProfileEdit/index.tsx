@@ -108,12 +108,16 @@ export default function ProfileEdit(
       ) {
         await deleteUser();
       } else {
-        const confirmDelete = await showAlert({
+        const alertButtonPressed = await showAlert({
           content: () => (
             <AccountInfoAlertContent
-              ownedBusinesses={response.ownerOfBusinessesCount}
-              reviewsOnOwnedBusinesses={response.reviewsOnYourBusinessesCount}
-              givenReviews={response.businessesWhereGaveReviewsCount}
+              businessesWhereGaveReviewsCount={
+                response.businessesWhereGaveReviewsCount
+              }
+              ownerOfBusinessesCount={response.ownerOfBusinessesCount}
+              reviewsOnYourBusinessesCount={
+                response.reviewsOnYourBusinessesCount
+              }
             />
           ),
           btn: {
@@ -124,7 +128,7 @@ export default function ProfileEdit(
           type: 'Custom',
         });
 
-        if (confirmDelete === 'confirm') {
+        if (alertButtonPressed === 'confirm') {
           await deleteUser();
         }
       }
