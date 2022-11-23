@@ -36,6 +36,7 @@ export const AlertsV2Provider: React.FC = (props) => {
   //#region Variables
   const { bottom } = useSafeAreaInsets();
   const bottomInset = bottom + 16;
+  const { colors } = useTheme();
 
   const [currentContent, setCurrentContent] =
     React.useState<React.ReactNode>(null);
@@ -257,7 +258,11 @@ export const AlertsV2Provider: React.FC = (props) => {
           handleComponent={null}
           backdropComponent={Backdrop}
           detached={detached.value}
-          style={[styles.sheetContainer, sheetStyle]}>
+          style={[
+            styles.sheetContainer,
+            sheetStyle,
+            { backgroundColor: colors.background },
+          ]}>
           <Animated.View
             style={styles.contentContainerStyle}
             onLayout={handleContentLayout}>
