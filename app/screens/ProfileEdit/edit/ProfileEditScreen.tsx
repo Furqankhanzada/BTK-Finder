@@ -29,10 +29,10 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { AuthActions } from '@actions';
 import { MainStackParamList } from 'navigation/models/MainStackParamList';
 
-import { uploadProfileImage } from '../../actions/auth';
-import { IconName } from '../../contexts/alerts-v2/models/Icon';
-import { useDeleteUserAccount, useEditProfile } from './queries/mutations';
-import AccountInfoAlertContent from './components/AccountInfoAlertContent';
+import { uploadProfileImage } from '../../../actions/auth';
+import { IconName } from '../../../contexts/alerts-v2/models/Icon';
+import { useDeleteUserAccount, useEditProfile } from '../queries/mutations';
+import AccountInfoAlertContent from '../components/AccountInfoAlertContent';
 
 export default function ProfileEdit(
   props: StackScreenProps<MainStackParamList, 'ProfileEdit'>,
