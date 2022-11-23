@@ -23,14 +23,12 @@ import { useBusiness } from '@screens/businesses/queries/queries';
 import { StackScreenProps } from '@react-navigation/stack';
 
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
-import { useQueryClient } from '@tanstack/react-query';
 
 export default function Review(
   props: StackScreenProps<GlobalParamList, 'Reviews'>,
 ) {
   const { navigation, route } = props;
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
-  const queryClient = useQueryClient();
   const { isLoading, data: business, refetch } = useBusiness(route.params.id);
 
   const { colors } = useTheme();

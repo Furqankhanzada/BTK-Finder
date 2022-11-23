@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { BaseStyle, BaseColor, useTheme } from '@config';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useTranslation } from 'react-i18next';
 
@@ -17,7 +17,6 @@ import {
   Button,
 } from '@components';
 
-import { addReview } from '../../../actions/business';
 import { ReviewStackParamList } from '../../../navigation/models/BusinessDetailBottomTabParamList';
 import { useReviews } from '../queries/mutations';
 
@@ -27,14 +26,13 @@ export default function AddReviewScreen(
   const { navigation, route } = props;
   const { colors } = useTheme();
   const { t } = useTranslation();
-  const dispatch = useDispatch();
   const profileData = useSelector((state: any) => state.profile);
   const stateProps = useSelector(({ businesses }: any) => businesses);
   const { createReviewLoading } = stateProps;
 
-  const [rate, setRate] = useState(4.5);
-  const [title, setTitle] = useState('');
-  const [review, setReview] = useState('');
+  const [rate, setRate] = useState<number>(4.5);
+  const [title, setTitle] = useState<string>('');
+  const [review, setReview] = useState<string>('');
 
   let payload = {
     title: title,
@@ -48,7 +46,6 @@ export default function AddReviewScreen(
   };
 
   const onSubmit = () => {
-    console.log('What is payload ?', payload);
     mutateReview(payload);
     setTimeout(() => {
       addCallback();

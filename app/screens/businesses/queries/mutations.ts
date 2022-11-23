@@ -21,6 +21,12 @@ export interface FavoritesMutationVar {
   type: FavoriteType;
 }
 
+export interface ReviewsPayload {
+  title: string;
+  description: string;
+  rating: number;
+}
+
 export const useToggleFavorite = () => {
   const queryClient = useQueryClient();
   const user = useSelector((state: any) => state.profile);
@@ -53,21 +59,15 @@ export const useBuildBusinessURL = () => {
 export const useReviews = (id: string) => {
   const queryClient = useQueryClient();
 
-  return useMutation(
-    (payload: object) => {
+  //TODO: we need to fix response (BusinessPresentable) in the backend
+  return useMutation<BusinessPresentable, Error, ReviewsPayload>(
+    (payload) => {
       return axiosApiInstance({
         method: 'POST',
         url: `${BUSINESSES_API}/${id}/review`,
         data: payload,
       })
-        .then((response) => {
-          Toast.show({
-            type: 'success',
-            topOffset: 55,
-            text1: 'Review Added',
-            text2: 'Your Review has been added successfully.',
-          });
-        })
+        .then((response) => response.data)
         .catch(({ response }) => {
           handleError(response.data);
         });
@@ -76,6 +76,12 @@ export const useReviews = (id: string) => {
       onSuccess: () => {
         queryClient.invalidateQueries({
           queryKey: ['business', id],
+        });
+        Toast.show({
+          type: 'success',
+          topOffset: 55,
+          text1: 'Review Added',
+          text2: 'Your Review has been added successfully.',
         });
       },
     },
