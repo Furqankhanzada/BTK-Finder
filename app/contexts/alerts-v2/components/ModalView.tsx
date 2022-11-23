@@ -29,7 +29,7 @@ export const ModalView: React.FC<Props> = (props: Props) => {
           {props.icon ? <Icon {...props.icon} /> : null}
           <Text
             textAlign="center"
-            title2
+            header
             style={[
               // eslint-disable-next-line react-native/no-inline-styles
               {
