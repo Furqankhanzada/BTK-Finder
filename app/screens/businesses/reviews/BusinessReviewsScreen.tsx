@@ -30,19 +30,7 @@ export default function Review(
 ) {
   const { navigation, route } = props;
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
-  const {
-    isLoading,
-    data: business,
-    refetch,
-    isRefetching,
-    isFetching,
-  } = useBusiness(route.params.id);
-
-  useEffect(() => {
-    console.log('is Refetching', isRefetching);
-    console.log('is Fatching', isFetching);
-    console.log('is Loading', isLoading);
-  }, [business]);
+  const { isLoading, data: business, refetch } = useBusiness(route.params.id);
 
   const { colors } = useTheme();
   const { t } = useTranslation();
