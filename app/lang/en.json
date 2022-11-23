@@ -140,8 +140,10 @@
   "delete": "Delete",
   "ownerOfBusinessesCount": "You are the owner of {{count}} business.",
   "ownerOfBusinessesCount_plural": "You are the owner of {{count}} businesses.",
-  "reviewsOnYourBusinessesCount": "Your businesses have {{count}} review.",
-  "reviewsOnYourBusinessesCount_plural": "Your businesses have {{count}} reviews.",
+  "reviewsOnYourBusinessesCount": "Your $t(business, {\"count\": {{business}} }) have {{count}} review.",
+  "reviewsOnYourBusinessesCount_plural": "Your $t(business, {\"count\": {{business}} }) have {{count}} reviews.",
+  "business": "business",
+  "business_plural": "businesses",
   "businessesWhereGaveReviewsCount": "You gave {{count}} review to other business.",
   "businessesWhereGaveReviewsCount_plural": "You gave {{count}} reviews to other businesses."
 }
