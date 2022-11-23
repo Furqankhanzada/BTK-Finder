@@ -138,10 +138,10 @@
   "call_now": "Call Now",
   "menu": "Menu",
   "delete": "Delete",
-  "ownerOfBusinessesCount_one": "You are the owner of {{count}} business.",
-  "ownerOfBusinessesCount_other": "You are the owner of {{count}} businesses.",
-  "reviewsOnYourBusinessesCount_one": "Your businesses have {{count}} review.",
-  "reviewsOnYourBusinessesCount_other": "Your businesses have {{count}} reviews.",
-  "businessesWhereGaveReviewsCount_one": "You gave {{count}} review to other business.",
-  "businessesWhereGaveReviewsCount_other": "You gave {{count}} reviews to other businesses."
+  "ownerOfBusinessesCount": "You are the owner of {{count}} business.",
+  "ownerOfBusinessesCount_plural": "You are the owner of {{count}} businesses.",
+  "reviewsOnYourBusinessesCount": "Your businesses have {{count}} review.",
+  "reviewsOnYourBusinessesCount_plural": "Your businesses have {{count}} reviews.",
+  "businessesWhereGaveReviewsCount": "You gave {{count}} review to other business.",
+  "businessesWhereGaveReviewsCount_plural": "You gave {{count}} reviews to other businesses."
 }

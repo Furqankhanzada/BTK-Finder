@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import { Text } from '@components';
@@ -13,6 +14,8 @@ export default function AccountInfoAlertContent({
   businessesWhereGaveReviewsCount,
   reviewsOnYourBusinessesCount,
 }: DeleteUserAccountResponse) {
+  const { t } = useTranslation();
+
   return (
     <>
       <Icon size={70} name={IconName.Warning} color={BaseColor.redColor} />
@@ -26,18 +29,23 @@ export default function AccountInfoAlertContent({
         </Text>
         {businessesWhereGaveReviewsCount ? (
           <Text textAlign="center" bold>
-            You gave the {businessesWhereGaveReviewsCount} reviews to other
-            businesses.
+            {t('businessesWhereGaveReviewsCount', {
+              count: businessesWhereGaveReviewsCount,
+            }).toString()}
           </Text>
         ) : null}
         {ownerOfBusinessesCount ? (
           <Text textAlign="center" bold>
-            You are the owner of {ownerOfBusinessesCount} businesses.
+            {t('ownerOfBusinessesCount', {
+              count: ownerOfBusinessesCount,
+            }).toString()}
           </Text>
         ) : null}
         {reviewsOnYourBusinessesCount ? (
           <Text textAlign="center" bold>
-            You businesses have {reviewsOnYourBusinessesCount} reviews.
+            {t('reviewsOnYourBusinessesCount', {
+              count: reviewsOnYourBusinessesCount,
+            }).toString()}
           </Text>
         ) : null}
       </View>
