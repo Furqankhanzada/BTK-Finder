@@ -1,18 +1,17 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { handleError } from '@utils';
+import Toast from 'react-native-toast-message';
+import { useSelector } from 'react-redux';
 
 import {
   BusinessPresentable,
   Review,
 } from '@screens/businesses/models/BusinessPresentable';
-import { useSelector } from 'react-redux';
+import { useDynamicLinks } from '@hooks';
+import { toggleFavoritesInCache } from '@screens/businesses/helpers/toggleFavoritesInCache';
 
 import axiosApiInstance from '../../../interceptor/axios-interceptor';
 import { BUSINESSES_API } from '../../../constants';
-
-import { useDynamicLinks } from '@hooks';
-import { toggleFavoritesInCache } from '@screens/businesses/helpers/toggleFavoritesInCache';
-import Toast from 'react-native-toast-message';
 
 export enum FavoriteType {
   favorite = 'favorite',
@@ -76,11 +75,12 @@ export const useAddReview = (id: string) => {
         await queryClient.invalidateQueries({
           queryKey: ['business', id],
         });
+        // TODO: we need to change toast after recent pr marge
         Toast.show({
           type: 'success',
           topOffset: 55,
-          text1: 'Review Added',
-          text2: 'Your Review has been added successfully.',
+          text1: 'Review Added Successfully ',
+          text2: 'The review has been added successfully.',
         });
       },
     },

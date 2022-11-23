@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { View, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import {
+  View,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+} from 'react-native';
 import { BaseStyle, BaseColor, useTheme } from '@config';
 import { useSelector } from 'react-redux';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -35,7 +41,9 @@ export default function AddReviewScreen(
     title: '',
   });
 
-  const { mutateAsync: mutateReview } = useAddReview(route.params.id);
+  const { mutateAsync: mutateReview, isLoading } = useAddReview(
+    route.params.id,
+  );
 
   const onSubmit = async () => {
     await mutateReview(review);
@@ -69,22 +77,17 @@ export default function AddReviewScreen(
       <KeyboardAvoidingView
         behavior={Platform.OS === 'android' ? 'height' : 'padding'}
         keyboardVerticalOffset={offsetKeyboard}
-        style={{ flex: 1 }}>
-        <ScrollView
-          contentContainerStyle={{ alignItems: 'center', padding: 20 }}>
+        style={styles.keyboardView}>
+        <ScrollView contentContainerStyle={styles.contentContainer}>
           <Image
             source={
               profileData.avatar
                 ? { uri: profileData.avatar }
                 : require('@assets/images/default-avatar.png')
             }
-            style={{
-              width: 62,
-              height: 62,
-              borderRadius: 31,
-            }}
+            style={styles.contentImage}
           />
-          <View style={{ width: 160 }}>
+          <View style={styles.ratingContainer}>
             <StarRating
               starSize={26}
               maxStars={5}
@@ -93,14 +96,14 @@ export default function AddReviewScreen(
                 setReview({ ...review, rating });
               }}
               fullStarColor={BaseColor.yellowColor}
-              containerStyle={{ padding: 5 }}
+              containerStyle={styles.starRating}
             />
-            <Text caption1 grayColor style={{ textAlign: 'center' }}>
+            <Text caption1 grayColor style={styles.ratingText}>
               {t('tap_to_rate')}
             </Text>
           </View>
           <TextInput
-            style={{ marginTop: 10 }}
+            style={styles.reviewTitle}
             onChangeText={(title) => {
               setReview({ ...review, title });
             }}
@@ -108,7 +111,7 @@ export default function AddReviewScreen(
             value={review.title}
           />
           <TextInput
-            style={{ marginTop: 20, height: 150 }}
+            style={styles.reviewDiscription}
             onChangeText={(description) => {
               setReview({ ...review, description });
             }}
@@ -118,8 +121,9 @@ export default function AddReviewScreen(
             value={review.description}
           />
           <Button
+            loading={isLoading}
             full
-            style={{ marginTop: 20 }}
+            style={styles.reviewButton}
             onPress={() => {
               onSubmit();
             }}>
@@ -130,3 +134,37 @@ export default function AddReviewScreen(
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  keyboardView: {
+    flex: 1,
+  },
+  contentContainer: {
+    alignItems: 'center',
+    padding: 20,
+  },
+  contentImage: {
+    width: 62,
+    height: 62,
+    borderRadius: 31,
+  },
+  ratingContainer: {
+    width: 160,
+  },
+  starRating: {
+    padding: 5,
+  },
+  ratingText: {
+    textAlign: 'center',
+  },
+  reviewTitle: {
+    marginTop: 10,
+  },
+  reviewDiscription: {
+    marginTop: 20,
+    height: 150,
+  },
+  reviewButton: {
+    marginTop: 20,
+  },
+});
