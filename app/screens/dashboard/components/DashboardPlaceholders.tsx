@@ -131,15 +131,10 @@ const styles = StyleSheet.create({
   ratingFigure: {
     width: 25,
     height: 18,
-    marginRight: 0,
-    marginBottom: 0,
-    marginTop: 0,
+    marginRight: 5,
   },
   ratingStars: {
     width: 55,
     height: 5,
-    marginRight: 0,
-    marginBottom: 0,
-    marginTop: 0,
   },
 });
