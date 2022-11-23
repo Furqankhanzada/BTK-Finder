@@ -45,7 +45,6 @@ export default function AccountInfoAlertContent({
           <Text textAlign="center" bold>
             {t('reviewsOnYourBusinessesCount', {
               count: reviewsOnYourBusinessesCount,
-              business: ownerOfBusinessesCount,
             })}
           </Text>
         ) : null}
