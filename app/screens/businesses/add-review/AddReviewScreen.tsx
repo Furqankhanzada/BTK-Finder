@@ -6,11 +6,11 @@ import {
   Platform,
   StyleSheet,
 } from 'react-native';
-import { BaseStyle, BaseColor, useTheme } from '@config';
 import { useSelector } from 'react-redux';
-import { StackScreenProps } from '@react-navigation/stack';
 import { useTranslation } from 'react-i18next';
+import { StackScreenProps } from '@react-navigation/stack';
 
+import { BaseStyle, BaseColor, useTheme } from '@config';
 import {
   Image,
   Header,

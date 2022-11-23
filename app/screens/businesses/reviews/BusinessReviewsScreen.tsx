@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   FlatList,
   RefreshControl,
@@ -9,6 +9,8 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
+import { StackScreenProps } from '@react-navigation/stack';
+
 import { BaseStyle, useTheme } from '@config';
 import {
   Header,
@@ -19,9 +21,7 @@ import {
   CommentItem,
   Loading,
 } from '@components';
-
 import { useBusiness } from '@screens/businesses/queries/queries';
-import { StackScreenProps } from '@react-navigation/stack';
 
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 
