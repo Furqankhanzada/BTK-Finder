@@ -1,7 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { handleError } from '@utils';
 
-import { BusinessPresentable } from '@screens/businesses/models/BusinessPresentable';
+import {
+  BusinessPresentable,
+  Review,
+} from '@screens/businesses/models/BusinessPresentable';
 import { useSelector } from 'react-redux';
 
 import axiosApiInstance from '../../../interceptor/axios-interceptor';
@@ -21,11 +24,7 @@ export interface FavoritesMutationVar {
   type: FavoriteType;
 }
 
-export interface ReviewsPayload {
-  title: string;
-  description: string;
-  rating: number;
-}
+export type AddReviewPayload = Pick<Review, 'title' | 'description' | 'rating'>;
 
 export const useToggleFavorite = () => {
   const queryClient = useQueryClient();
@@ -60,7 +59,7 @@ export const useAddReview = (id: string) => {
   const queryClient = useQueryClient();
 
   //TODO: we need to fix response (BusinessPresentable) in the backend
-  return useMutation<BusinessPresentable, Error, ReviewsPayload>(
+  return useMutation<BusinessPresentable, Error, AddReviewPayload>(
     (payload) => {
       return axiosApiInstance({
         method: 'POST',
@@ -73,8 +72,8 @@ export const useAddReview = (id: string) => {
         });
     },
     {
-      onSuccess: () => {
-        queryClient.invalidateQueries({
+      onSuccess: async () => {
+        await queryClient.invalidateQueries({
           queryKey: ['business', id],
         });
         Toast.show({

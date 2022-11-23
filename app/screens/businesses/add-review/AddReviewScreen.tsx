@@ -18,7 +18,7 @@ import {
 } from '@components';
 
 import { ReviewStackParamList } from '../../../navigation/models/BusinessDetailBottomTabParamList';
-import { useAddReview } from '../queries/mutations';
+import { AddReviewPayload, useAddReview } from '../queries/mutations';
 
 export default function AddReviewScreen(
   props: StackScreenProps<ReviewStackParamList>,
@@ -30,26 +30,16 @@ export default function AddReviewScreen(
   const stateProps = useSelector(({ businesses }: any) => businesses);
   const { createReviewLoading } = stateProps;
 
-  const [rate, setRate] = useState<number>(4.5);
-  const [title, setTitle] = useState<string>('');
-  const [review, setReview] = useState<string>('');
+  const [review, setReview] = useState<AddReviewPayload>({
+    rating: 4.5,
+    title: '',
+  });
 
-  let payload = {
-    title: title,
-    description: review,
-    rating: rate,
-  };
-  const { mutate: mutateReview } = useAddReview(route.params.id);
+  const { mutateAsync: mutateReview } = useAddReview(route.params.id);
 
-  const addCallback = () => {
+  const onSubmit = async () => {
+    await mutateReview(review);
     navigation.goBack();
-  };
-
-  const onSubmit = () => {
-    mutateReview(payload);
-    setTimeout(() => {
-      addCallback();
-    }, 1500);
   };
 
   const offsetKeyboard = Platform.select({
@@ -98,9 +88,9 @@ export default function AddReviewScreen(
             <StarRating
               starSize={26}
               maxStars={5}
-              rating={rate}
+              rating={review?.rating}
               selectedStar={(rating) => {
-                setRate(rating);
+                setReview({ ...review, rating });
               }}
               fullStarColor={BaseColor.yellowColor}
               containerStyle={{ padding: 5 }}
@@ -111,21 +101,21 @@ export default function AddReviewScreen(
           </View>
           <TextInput
             style={{ marginTop: 10 }}
-            onChangeText={(text: React.SetStateAction<string>) =>
-              setTitle(text)
-            }
+            onChangeText={(title) => {
+              setReview({ ...review, title });
+            }}
             placeholder="Title"
-            value={title}
+            value={review.title}
           />
           <TextInput
             style={{ marginTop: 20, height: 150 }}
-            onChangeText={(text: React.SetStateAction<string>) =>
-              setReview(text)
-            }
+            onChangeText={(description) => {
+              setReview({ ...review, description });
+            }}
             textAlignVertical="top"
             multiline={true}
             placeholder="Review"
-            value={review}
+            value={review.description}
           />
           <Button
             full
