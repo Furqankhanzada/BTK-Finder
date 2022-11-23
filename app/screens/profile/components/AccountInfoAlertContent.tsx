@@ -7,7 +7,7 @@ import { Text } from '@components';
 import { BaseColor } from '@config';
 
 import { IconName } from '../../../contexts/alerts-v2/models/Icon';
-import { DeleteUserAccountResponse } from '@screens/ProfileEdit/queries/mutations';
+import { DeleteUserAccountResponse } from '@screens/profile/queries/mutations';
 
 export default function AccountInfoAlertContent({
   ownerOfBusinessesCount,

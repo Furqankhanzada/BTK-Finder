@@ -16,7 +16,7 @@ import Notification from '@screens/Notification';
 import Business from '@screens/AddBusiness';
 import FavouriteScreen from '@screens/favourite/FavouriteScreen';
 import Messenger from '@screens/Messenger';
-import Profile from '@screens/Profile';
+import Profile from '@screens/profile/info';
 
 /* Stack Screen */
 import ThemeSetting from '@screens/ThemeSetting';
@@ -29,7 +29,7 @@ import Messages from '@screens/Messages';
 import Walkthrough from '@screens/Walkthrough';
 import ResetPassword from '@screens/ResetPassword';
 import ChangePassword from '@screens/ChangePassword';
-import ProfileEdit from '@screens/ProfileEdit/edit/ProfileEditScreen';
+import ProfileEdit from '@screens/profile/edit/ProfileEditScreen';
 import ChangeLanguage from '@screens/ChangeLanguage';
 import ContactUs from '@screens/ContactUs';
 import AboutUs from '@screens/AboutUs';

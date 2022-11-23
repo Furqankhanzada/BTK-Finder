@@ -20,7 +20,7 @@ export interface EditProfileVar {
   name: string;
   email: string;
   phone: string;
-  _id: any;
+  _id: number;
 }
 
 export const useDeleteUserAccount = () => {
