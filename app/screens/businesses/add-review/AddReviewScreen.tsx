@@ -18,7 +18,7 @@ import {
 } from '@components';
 
 import { ReviewStackParamList } from '../../../navigation/models/BusinessDetailBottomTabParamList';
-import { useReviews } from '../queries/mutations';
+import { useAddReview } from '../queries/mutations';
 
 export default function AddReviewScreen(
   props: StackScreenProps<ReviewStackParamList>,
@@ -39,7 +39,7 @@ export default function AddReviewScreen(
     description: review,
     rating: rate,
   };
-  const { mutate: mutateReview } = useReviews(route.params.id);
+  const { mutate: mutateReview } = useAddReview(route.params.id);
 
   const addCallback = () => {
     navigation.goBack();

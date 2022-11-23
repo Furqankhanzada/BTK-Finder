@@ -56,7 +56,7 @@ export const useBuildBusinessURL = () => {
 };
 
 // Reviews Mutate
-export const useReviews = (id: string) => {
+export const useAddReview = (id: string) => {
   const queryClient = useQueryClient();
 
   //TODO: we need to fix response (BusinessPresentable) in the backend
