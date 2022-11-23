@@ -29,9 +29,9 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { AuthActions } from '@actions';
 import { MainStackParamList } from 'navigation/models/MainStackParamList';
 
-import { editProfile, uploadProfileImage } from '../../actions/auth';
+import { uploadProfileImage } from '../../actions/auth';
 import { IconName } from '../../contexts/alerts-v2/models/Icon';
-import { useDeleteUserAccount } from './queries/mutations';
+import { useDeleteUserAccount, useEditProfile } from './queries/mutations';
 import AccountInfoAlertContent from './components/AccountInfoAlertContent';
 
 export default function ProfileEdit(
@@ -43,11 +43,10 @@ export default function ProfileEdit(
   const { t } = useTranslation();
   const { showAlert, showNotification } = useAlerts();
   const { mutateAsync: deleteUserAccount, isLoading } = useDeleteUserAccount();
+  const { mutateAsync: editProfile, isLoading: isEditProfileLoading } =
+    useEditProfile();
 
   const profileData = useSelector((state: any) => state.profile);
-  const editProfileLoading = useSelector(
-    (state: any) => state.auth.editProfileLoading,
-  );
 
   const nameRef = useRef<TextInputOriginal>(null);
   const emailRef = useRef<TextInputOriginal>(null);
@@ -140,15 +139,18 @@ export default function ProfileEdit(
     android: 20,
   });
 
-  const onSubmit = () => {
-    dispatch(
-      editProfile(
-        { name, email, phone: phone.replace(/\s+/g, ''), _id: profileData._id },
-        () => {
-          navigation.goBack();
-        },
-      ),
-    );
+  const onSubmit = async () => {
+    const payload = {
+      name,
+      email,
+      phone: phone.replace(/\s+/g, ''),
+      _id: profileData._id,
+    };
+    const editUserProfile = await editProfile(payload);
+
+    if (editUserProfile !== undefined) {
+      navigation.goBack();
+    }
   };
 
   const uploadProfileImageCallBack = () => {};
@@ -282,7 +284,10 @@ export default function ProfileEdit(
           />
         </ScrollView>
         <View style={styles.buttonsContainer}>
-          <Button loading={editProfileLoading} full onPress={() => onSubmit()}>
+          <Button
+            loading={isEditProfileLoading}
+            full
+            onPress={() => onSubmit()}>
             {t('update')}
           </Button>
           <Button
