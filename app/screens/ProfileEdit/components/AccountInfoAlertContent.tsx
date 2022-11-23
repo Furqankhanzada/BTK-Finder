@@ -31,14 +31,14 @@ export default function AccountInfoAlertContent({
           <Text textAlign="center" bold>
             {t('businessesWhereGaveReviewsCount', {
               count: businessesWhereGaveReviewsCount,
-            }).toString()}
+            })}
           </Text>
         ) : null}
         {ownerOfBusinessesCount ? (
           <Text textAlign="center" bold>
             {t('ownerOfBusinessesCount', {
               count: ownerOfBusinessesCount,
-            }).toString()}
+            })}
           </Text>
         ) : null}
         {reviewsOnYourBusinessesCount ? (
@@ -46,7 +46,7 @@ export default function AccountInfoAlertContent({
             {t('reviewsOnYourBusinessesCount', {
               count: reviewsOnYourBusinessesCount,
               business: ownerOfBusinessesCount,
-            }).toString()}
+            })}
           </Text>
         ) : null}
       </View>
