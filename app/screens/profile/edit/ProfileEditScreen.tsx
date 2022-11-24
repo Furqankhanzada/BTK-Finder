@@ -29,10 +29,14 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { AuthActions } from '@actions';
 import { MainStackParamList } from 'navigation/models/MainStackParamList';
 
-import { uploadProfileImage } from '../../../actions/auth';
 import { IconName } from '../../../contexts/alerts-v2/models/Icon';
-import { useDeleteUserAccount, useEditProfile } from '../queries/mutations';
+import {
+  useDeleteUserAccount,
+  useEditProfile,
+  useUploadProfileImage,
+} from '../queries/mutations';
 import AccountInfoAlertContent from '../components/AccountInfoAlertContent';
+import { EDIT_PROFILE_API_SUCCESS } from '../../../constants/auth';
 
 export default function ProfileEdit(
   props: StackScreenProps<MainStackParamList, 'ProfileEdit'>,
@@ -45,6 +49,8 @@ export default function ProfileEdit(
   const { mutateAsync: deleteUserAccount, isLoading } = useDeleteUserAccount();
   const { mutateAsync: editProfile, isLoading: isEditProfileLoading } =
     useEditProfile();
+  const { mutate: uploadProfileImage, isLoading: isUploadProfileLoading } =
+    useUploadProfileImage();
 
   const profileData = useSelector((state: any) => state.profile);
 
@@ -146,14 +152,20 @@ export default function ProfileEdit(
       phone: phone.replace(/\s+/g, ''),
       _id: profileData._id,
     };
+
     const editUserProfile = await editProfile(payload);
 
     if (editUserProfile !== undefined) {
       navigation.goBack();
+
+      //Update User in Redux
+      //TODO: Will fix once we remove the redux from project.
+      dispatch({
+        type: EDIT_PROFILE_API_SUCCESS,
+        user: payload,
+      });
     }
   };
-
-  const uploadProfileImageCallBack = () => {};
 
   const pickSingle = () => {
     ImagePicker.openPicker({
@@ -185,9 +197,7 @@ export default function ProfileEdit(
         };
         const form = new FormData();
         form.append('file', file);
-        dispatch(
-          uploadProfileImage(profileData, form, uploadProfileImageCallBack),
-        );
+        uploadProfileImage({ user: profileData, form: form });
       })
       .catch((e) => {
         console.log('IMAGE_PICKER_ERROR', e);
@@ -222,7 +232,7 @@ export default function ProfileEdit(
             disabled={profileData.profileImageLoading}
             style={styles.thumbContainer}
             onPress={() => pickSingle()}>
-            <Loading loading={profileData.profileImageLoading} />
+            <Loading loading={isUploadProfileLoading} />
             <Image
               source={{
                 uri:
