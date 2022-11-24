@@ -18,11 +18,17 @@ export interface DeleteUserAccountResponse {
   success?: boolean;
 }
 
-export interface EditProfileVar {
+export interface EditProfilePayload {
+  _id: number;
   name: string;
   email: string;
   phone: string;
-  _id: number;
+  avatar?: string;
+}
+
+export interface UploadProfileImagePayload {
+  user: EditProfilePayload;
+  form: any;
 }
 
 export const useDeleteUserAccount = () => {
@@ -41,7 +47,7 @@ export const useDeleteUserAccount = () => {
 };
 
 export const useEditProfile = () => {
-  return useMutation<any, Error, EditProfileVar>((payload) => {
+  return useMutation<any, Error, EditProfilePayload>((payload) => {
     return axiosApiInstance({
       method: 'PUT',
       url: EDIT_PROFILE + payload._id,
@@ -58,7 +64,7 @@ export const useUploadProfileImage = () => {
   const { mutateAsync: editProfile } = useEditProfile();
   const dispatch = useDispatch();
 
-  return useMutation(
+  return useMutation<any, Error, UploadProfileImagePayload>(
     (payload: any) => {
       return axiosApiInstance
         .post(`${UPLOAD}/${payload.user._id}/profile`, payload.form, {

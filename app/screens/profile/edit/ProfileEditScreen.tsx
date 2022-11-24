@@ -229,7 +229,7 @@ export default function ProfileEdit(
         style={styles.KeyboardAvoidingView}>
         <ScrollView contentContainerStyle={styles.contain}>
           <TouchableOpacity
-            disabled={profileData.profileImageLoading}
+            disabled={isUploadProfileLoading}
             style={styles.thumbContainer}
             onPress={() => pickSingle()}>
             <Loading loading={isUploadProfileLoading} />
