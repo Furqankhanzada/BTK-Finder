@@ -9,6 +9,8 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
+import { StackScreenProps } from '@react-navigation/stack';
+
 import { BaseStyle, useTheme } from '@config';
 import {
   Header,
@@ -20,7 +22,6 @@ import {
   Loading,
 } from '@components';
 import { useBusiness } from '@screens/businesses/queries/queries';
-import { StackScreenProps } from '@react-navigation/stack';
 
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 
@@ -207,7 +208,7 @@ export default function Review(
         />
       ) : (
         <View style={styles.noReviewsAvailable}>
-          <Text subhead>There are no Reviews in this business yet</Text>
+          <Text subhead>No reviews found</Text>
         </View>
       )}
       {/*Users Review List */}

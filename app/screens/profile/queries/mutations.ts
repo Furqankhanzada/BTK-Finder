@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { handleError } from '@utils';
 
@@ -32,6 +32,7 @@ export interface UploadProfileImagePayload {
 }
 
 export const useDeleteUserAccount = () => {
+  const queryClient = useQueryClient();
   return useMutation<DeleteUserAccountResponse, Error, DeleteMutationVar>(
     ({ confirm }) => {
       return axiosApiInstance({
@@ -42,6 +43,11 @@ export const useDeleteUserAccount = () => {
         .catch(({ response }) => {
           handleError(response.data);
         });
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries();
+      },
     },
   );
 };
