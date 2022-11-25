@@ -65,33 +65,30 @@ export const useUploadProfileImage = () => {
   const dispatch = useDispatch();
 
   return useMutation<any, Error, UploadProfileImagePayload>(
-    (payload: any) => {
+    (payload) => {
       return axiosApiInstance
         .post(`${UPLOAD}/${payload.user._id}/profile`, payload.form, {
           headers: { 'Content-Type': 'multipart/form-data' },
         })
         .then((response) => {
           const user = payload.user;
-          const result = { user: user, avatar: response.data.Location };
-          return result;
+          const updatedUser = { ...user, avatar: response.data.Location };
+          return updatedUser;
         })
         .catch(({ response }) => {
           handleError(response.data);
         });
     },
     {
-      onSuccess: async (response: any) => {
-        const editUserProfile = await editProfile({
-          ...response.user,
-          avatar: response.avatar,
-        });
+      onSuccess: async (response: EditProfilePayload) => {
+        const editUserProfile = await editProfile(response);
 
         if (editUserProfile !== undefined) {
           //Update User in Redux
           //TODO: Will fix once we remove the redux from project.
           dispatch({
             type: EDIT_PROFILE_API_SUCCESS,
-            user: { ...response.user, avatar: response.avatar },
+            user: response,
           });
         }
       },

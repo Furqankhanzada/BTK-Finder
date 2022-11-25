@@ -31,6 +31,7 @@ import { MainStackParamList } from 'navigation/models/MainStackParamList';
 
 import { IconName } from '../../../contexts/alerts-v2/models/Icon';
 import {
+  EditProfilePayload,
   useDeleteUserAccount,
   useEditProfile,
   useUploadProfileImage,
@@ -56,9 +57,13 @@ export default function ProfileEdit(
 
   const nameRef = useRef<TextInputOriginal>(null);
   const emailRef = useRef<TextInputOriginal>(null);
-  const [name, setName] = useState<string>(profileData.name);
-  const [email, setEmail] = useState<string>(profileData.email);
-  const [phone, setPhone] = useState<string>(profileData.phone);
+  const [user, setUser] = useState<EditProfilePayload>({
+    _id: profileData._id,
+    name: profileData.name,
+    email: profileData.email,
+    phone: profileData.phone,
+    avatar: profileData?.avatar,
+  });
   const [imageUri, setImageUri] = useState('');
 
   const deleteUser = async () => {
@@ -147,10 +152,8 @@ export default function ProfileEdit(
 
   const onSubmit = async () => {
     const payload = {
-      name,
-      email,
-      phone: phone.replace(/\s+/g, ''),
-      _id: profileData._id,
+      ...user,
+      phone: user.phone.replace(/\s+/g, ''),
     };
 
     const editUserProfile = await editProfile(payload);
@@ -197,7 +200,12 @@ export default function ProfileEdit(
         };
         const form = new FormData();
         form.append('file', file);
-        uploadProfileImage({ user: profileData, form: form });
+
+        const userPayload = {
+          ...user,
+          phone: user.phone.replace(/\s+/g, ''),
+        };
+        uploadProfileImage({ user: userPayload, form: form });
       })
       .catch((e) => {
         console.log('IMAGE_PICKER_ERROR', e);
@@ -237,7 +245,7 @@ export default function ProfileEdit(
               source={{
                 uri:
                   imageUri ||
-                  profileData.avatar ||
+                  user.avatar ||
                   'https://i.ibb.co/RD6rVBy/default-avatar.png',
               }}
               style={[styles.thumb, { borderColor: colors.text }]}
@@ -253,11 +261,11 @@ export default function ProfileEdit(
               styles.textInput,
               { backgroundColor: colors.card, color: colors.text },
             ]}
-            onChangeText={(text) => setPhone(text)}
+            onChangeText={(phone) => setUser({ ...user, phone })}
             placeholder={'Input Phone'}
             placeholderTextColor={BaseColor.grayColor}
             keyboardType="numeric"
-            value={phone}
+            value={user.phone}
             autoCapitalize="none"
             mask={'+92 [000] [0000] [000]'}
             returnKeyType="next"
@@ -271,9 +279,9 @@ export default function ProfileEdit(
           </View>
           <TextInput
             ref={nameRef}
-            onChangeText={(text) => setName(text)}
+            onChangeText={(name) => setUser({ ...user, name })}
             placeholder={t('input_name')}
-            value={name}
+            value={user?.name}
             onSubmitEditing={() => emailRef.current?.focus()}
           />
           <View style={styles.contentTitle}>
@@ -283,9 +291,9 @@ export default function ProfileEdit(
           </View>
           <TextInput
             ref={emailRef}
-            onChangeText={(text) => setEmail(text)}
+            onChangeText={(email) => setUser({ ...user, email })}
             placeholder={t('input_email')}
-            value={email}
+            value={user.email}
             keyboardType="email-address"
             autoCapitalize="none"
             returnKeyType="done"
