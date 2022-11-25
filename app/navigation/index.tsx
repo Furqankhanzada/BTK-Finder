@@ -61,10 +61,15 @@ export default function Navigator() {
     dispatch(setIsLogin());
   }, [dispatch]);
 
+  const linking = {
+    prefixes: ['explorebtk://', 'https://explorebtk.com'],
+  };
+
   return (
     <NavigationContainer
       theme={theme}
       ref={navigationRef}
+      linking={linking}
       onReady={() => {
         isReadyRef.current = true;
       }}
