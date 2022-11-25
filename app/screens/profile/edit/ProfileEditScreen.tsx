@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   TextInput as TextInputOriginal,
+  Keyboard,
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -92,6 +93,7 @@ export default function ProfileEdit(
   };
 
   const onPressDelete = async () => {
+    Keyboard.dismiss();
     const buttonPressed = await showAlert({
       icon: {
         size: 70,
