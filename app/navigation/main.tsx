@@ -13,7 +13,8 @@ import { LastRoutes, withAuthRedirection } from './hoc/withAuthRedirection';
 
 /* Bottom Screen */
 import Notification from '@screens/Notification';
-import Business from '@screens/AddBusiness';
+// import Business from '@screens/AddBusiness';
+import EditBusinessScreen from '@screens/new-business/edit-business/EditBusinessScreen';
 import FavouriteScreen from '@screens/favourite/FavouriteScreen';
 import Messenger from '@screens/Messenger';
 import Profile from '@screens/Profile';
@@ -85,7 +86,7 @@ export default function Main() {
       {/* <MainStack.Screen name="FinalReview" component={FinalReview} /> */}
       {/* <MainStack.Screen name="Gallery" component={Gallery} /> */}
       <MainStack.Screen name="MyBusinesses" component={MyBusinessesScreen} />
-      <MainStack.Screen name="EditBusiness" component={Business} />
+      <MainStack.Screen name="EditBusiness" component={EditBusinessScreen} />
       <MainStack.Screen name="VerifyCode" component={VerifyCode} />
     </MainStack.Navigator>
   );
