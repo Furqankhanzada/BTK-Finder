@@ -6,6 +6,7 @@ import { handleError } from '@utils';
 import axiosApiInstance from '../../../interceptor/axios-interceptor';
 import { DELETE_PROFILE, EDIT_PROFILE, UPLOAD } from '../../../constants';
 import { EDIT_PROFILE_API_SUCCESS } from '../../../constants/auth';
+import { UserPresentable } from '../models/UserPresentable';
 
 export interface DeleteMutationVar {
   confirm: boolean;
@@ -18,13 +19,10 @@ export interface DeleteUserAccountResponse {
   success?: boolean;
 }
 
-export interface EditProfilePayload {
-  _id: number;
-  name: string;
-  email: string;
-  phone: string;
-  avatar?: string;
-}
+export type EditProfilePayload = Pick<
+  UserPresentable,
+  '_id' | 'name' | 'email' | 'phone' | 'avatar'
+>;
 
 export interface UploadProfileImagePayload {
   user: EditProfilePayload;
