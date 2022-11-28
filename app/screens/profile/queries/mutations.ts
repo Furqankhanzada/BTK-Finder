@@ -24,10 +24,18 @@ export type EditProfilePayload = Pick<
   '_id' | 'name' | 'email' | 'phone' | 'avatar'
 >;
 
+export type EditProfileResponse = {
+  data?: UserPresentable;
+};
+
 export interface UploadProfileImagePayload {
   user: EditProfilePayload;
   form: any;
 }
+
+export type UploadProfileImageResponse = {
+  Location: string;
+};
 
 export const useDeleteUserAccount = () => {
   const queryClient = useQueryClient();
@@ -51,48 +59,52 @@ export const useDeleteUserAccount = () => {
 };
 
 export const useEditProfile = () => {
-  return useMutation<any, Error, EditProfilePayload>((payload) => {
-    return axiosApiInstance({
-      method: 'PUT',
-      url: EDIT_PROFILE + payload._id,
-      data: payload,
-    })
-      .then((response) => response.data)
-      .catch(({ response }) => {
-        handleError(response.data);
-      });
-  });
+  return useMutation<EditProfileResponse, Error, EditProfilePayload>(
+    (payload) => {
+      return axiosApiInstance({
+        method: 'PUT',
+        url: EDIT_PROFILE + payload._id,
+        data: payload,
+      })
+        .then((response) => response.data)
+        .catch(({ response }) => {
+          handleError(response.data);
+        });
+    },
+  );
 };
 
 export const useUploadProfileImage = () => {
   const { mutateAsync: editProfile } = useEditProfile();
   const dispatch = useDispatch();
 
-  return useMutation<any, Error, UploadProfileImagePayload>(
+  return useMutation<
+    UploadProfileImageResponse,
+    Error,
+    UploadProfileImagePayload
+  >(
     (payload) => {
       return axiosApiInstance
         .post(`${UPLOAD}/${payload.user._id}/profile`, payload.form, {
           headers: { 'Content-Type': 'multipart/form-data' },
         })
-        .then((response) => {
-          const user = payload.user;
-          const updatedUser = { ...user, avatar: response.data.Location };
-          return updatedUser;
-        })
+        .then((response) => response.data)
         .catch(({ response }) => {
           handleError(response.data);
         });
     },
     {
-      onSuccess: async (response: EditProfilePayload) => {
-        const editUserProfile = await editProfile(response);
+      onSuccess: async (response, payload) => {
+        const user = payload.user;
+        const updatedUser = { ...user, avatar: response.Location };
+        const editUserProfile = await editProfile(updatedUser);
 
         if (editUserProfile !== undefined) {
           //Update User in Redux
           //TODO: Will fix once we remove the redux from project.
           dispatch({
             type: EDIT_PROFILE_API_SUCCESS,
-            user: response,
+            user: updatedUser,
           });
         }
       },
