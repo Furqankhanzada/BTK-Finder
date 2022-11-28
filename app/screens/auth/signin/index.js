@@ -17,7 +17,7 @@ import {
 } from '@components';
 import styles from './styles';
 import { useTranslation } from 'react-i18next';
-import { login } from '../../actions/auth';
+import { login } from '../../../actions/auth';
 
 export default function SignIn(props) {
   const { navigation, route } = props;

@@ -15,7 +15,7 @@ import styles from './styles';
 import { useTranslation } from 'react-i18next';
 import { clearFavoriteBusiness } from '../../../actions/favorites';
 
-export default function Profile(props) {
+export default function Welcome(props) {
   const { navigation, lastRoute } = props;
   const { colors } = useTheme();
   const { t } = useTranslation();

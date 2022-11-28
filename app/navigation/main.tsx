@@ -16,14 +16,14 @@ import Notification from '@screens/Notification';
 import Business from '@screens/AddBusiness';
 import FavouriteScreen from '@screens/favourite/FavouriteScreen';
 import Messenger from '@screens/Messenger';
-import Profile from '@screens/profile/info';
+import Welcome from '@screens/auth/welcome';
 
 /* Stack Screen */
 import ThemeSetting from '@screens/ThemeSetting';
 import Setting from '@screens/Setting';
 import Category from '@screens/category/CategoryScreen';
-import SignUp from '@screens/SignUp';
-import SignIn from '@screens/SignIn';
+import SignUp from '@screens/auth/signup';
+import SignIn from '@screens/auth/signin';
 import VerifyCode from '@screens/VerifyCode';
 import Messages from '@screens/Messages';
 import Walkthrough from '@screens/Walkthrough';
@@ -160,8 +160,8 @@ function MainBottomTabNavigator() {
         }}
       /> */}
       <MainBottomTab.Screen
-        name="Profile"
-        component={Profile}
+        name="Welcome"
+        component={Welcome}
         options={{
           title: 'More',
           tabBarIcon: ({ color }) => {
