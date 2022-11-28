@@ -37,8 +37,8 @@ import {
   useEditProfile,
   useUploadProfileImage,
 } from '../queries/mutations';
-import AccountInfoAlertContent from '../components/AccountInfoAlertContent';
 import { EDIT_PROFILE_API_SUCCESS } from '../../../constants/auth';
+import AccountInfoAlertContent from './components/AccountInfoAlertContent';
 
 export default function ProfileEdit(
   props: StackScreenProps<MainStackParamList, 'ProfileEdit'>,
