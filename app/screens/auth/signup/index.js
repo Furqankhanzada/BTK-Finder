@@ -59,7 +59,7 @@ export default function SignUp(props) {
         (error) => {
           setLoading(false);
           if (!error) {
-            navigation.navigate(lastRoute ? lastRoute : 'Profile');
+            navigation.navigate(lastRoute ? lastRoute : 'Welcome');
             Toast.show({
               type: 'success',
               topOffset: 55,
