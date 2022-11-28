@@ -63,6 +63,41 @@ export default function Navigator() {
 
   const linking = {
     prefixes: ['explorebtk://', 'https://explorebtk.com'],
+    config: {
+      screens: {
+        Main: {
+          path: 'main',
+          screens: {
+            BusinessDetailTabNavigator: {
+              path: 'businesses/:id',
+              exact: true,
+              screens: {
+                ReviewStack: 'reviews',
+                Products: 'products',
+              },
+            },
+            MainBottomTabNavigator: {
+              path: 'main_bottom',
+              exact: true,
+              screens: {
+                Profile: {
+                  path: 'profile',
+                  exact: true,
+                },
+              },
+            },
+            ContactUs: {
+              path: 'contact-us',
+              exact: true,
+            },
+            AboutUs: {
+              path: 'about-us',
+              exact: true,
+            },
+          },
+        },
+      },
+    },
   };
 
   return (
