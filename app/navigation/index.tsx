@@ -68,10 +68,22 @@ export default function Navigator() {
         Main: {
           path: 'main',
           screens: {
+            Businesses: {
+              path: 'businesses/:title',
+              exact: true,
+            },
             BusinessDetailTabNavigator: {
               path: 'businesses/:id',
               exact: true,
               screens: {
+                DetailStack: {
+                  path: 'overview',
+                  screens: {
+                    Product: {
+                      path: 'product/:businessId/:productSlug',
+                    },
+                  },
+                },
                 ReviewStack: 'reviews',
                 Products: 'products',
               },
@@ -92,6 +104,10 @@ export default function Navigator() {
             },
             AboutUs: {
               path: 'about-us',
+              exact: true,
+            },
+            MyBusinesses: {
+              path: 'my-businesses',
               exact: true,
             },
           },
