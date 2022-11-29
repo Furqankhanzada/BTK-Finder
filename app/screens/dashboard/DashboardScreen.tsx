@@ -207,7 +207,8 @@ function DashboardScreen({
               <HorizontalCategories onPress={onCategoryPress} />
             </Section>
             <Section
-              title="Restaurant with Menus (New)"
+              tag="New"
+              title="Restaurant with Menus"
               subTitle="Find Restaurant with Menus, Now you can see the prices and available food items"
               onViewAll={() =>
                 onBusinessesViewAllPress({
