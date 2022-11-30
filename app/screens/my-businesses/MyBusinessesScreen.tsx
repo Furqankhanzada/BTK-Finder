@@ -6,7 +6,7 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { BaseStyle, useTheme } from '@config';
 import {
@@ -17,19 +17,21 @@ import {
   Loading,
   Text,
 } from '@components';
-import { useBusinessesInfinite } from '../businesses/queries/queries';
+import useAddBusinessStore from '@screens/new-business/store/Store';
 
-import { getSingleBusiness } from '../../actions/business';
+import { useBusinessesInfinite } from '../businesses/queries/queries';
 
 export default function MyBusinessesScreen(props: any) {
   const { navigation } = props;
   const scrollAnim = new Animated.Value(0);
-  const dispatch = useDispatch();
   const { t } = useTranslation();
   const { colors } = useTheme();
 
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const user = useSelector((state: any) => state.profile);
+  const setIsEditBusiness = useAddBusinessStore(
+    (state: any) => state.setIsEditBusiness,
+  );
 
   const {
     data,
@@ -88,6 +90,7 @@ export default function MyBusinessesScreen(props: any) {
   };
 
   const onEdit = (id: string) => {
+    setIsEditBusiness(true);
     navigation.navigate('EditBusiness', { id });
   };
 

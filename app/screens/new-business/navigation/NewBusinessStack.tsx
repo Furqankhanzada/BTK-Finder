@@ -15,7 +15,6 @@ import { AddressScreen } from '../address/AddressScreen';
 import { Hours } from '../hours/Hours';
 import { PriceRange } from '../price/PriceRange';
 import { GalleryScreen } from '../gallery/GalleryScreen';
-import Review from '../review/Review';
 import EditBusinessScreen from '../edit-business/EditBusinessScreen';
 
 const NewBusinessStack = createStackNavigator<NewBusinessParamList>();
@@ -42,7 +41,6 @@ export function NewBusinessStackNavigator() {
       <NewBusinessStack.Screen name="Hours" component={Hours} />
       <NewBusinessStack.Screen name="Price" component={PriceRange} />
       <NewBusinessStack.Screen name="Gallery" component={GalleryScreen} />
-      <NewBusinessStack.Screen name="Review" component={Review} />
       <NewBusinessStack.Screen
         name="EditBusiness"
         component={EditBusinessScreen}

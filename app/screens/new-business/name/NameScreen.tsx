@@ -23,10 +23,13 @@ export const NameScreen = ({
   };
   const name = useAddBusinessStore((state: any) => state.name);
   const setName = useAddBusinessStore((state: any) => state.setName);
+  const isEditBusiness = useAddBusinessStore(
+    (state: any) => state.isEditBusiness,
+  );
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
-      <Header title="Add Business" />
+      <Header title={isEditBusiness ? 'Edit Business' : 'Add Business'} />
 
       <Formik
         initialValues={{ name: name }}
