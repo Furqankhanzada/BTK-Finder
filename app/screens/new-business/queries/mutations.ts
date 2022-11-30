@@ -8,7 +8,6 @@ import useAddBusinessStore from '../store/Store';
 import axiosApiInstance from '../../../interceptor/axios-interceptor';
 import { UPLOAD } from '../../../constants';
 
-
 export const useAddNewThumbnail = () => {
   const setThumbnail = useAddBusinessStore((state: any) => state.setThumbnail);
   const store = useAddBusinessStore((state: any) => state);
@@ -42,46 +41,39 @@ export const useAddGalleryImages = () => {
   const { _id } = user;
   return useMutation((imagePath: any) => {
     const chunks = imagePath.map((file: any) => {
-    return new Promise ( (resolve, reject) => {
-    const imageData = new FormData();
-    imageData.append('file', generateFileObject(file));
-    return axiosApiInstance
-      .post(
-        `${UPLOAD}/${_id}/businesses/`,
-        imageData,
-        {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        },
-      )
-      .then((response) =>
-          resolve({
-            image: response.data.Location,
-            cover: false,
-          }),
-        )
-        .catch((error) => reject(error));
-    })
-  })
-  Promise.all(chunks)
-  .then((res) => {
-    setGallery(res);
-  })
-  .catch((error) => {
-    handleError(error);
+      return new Promise((resolve, reject) => {
+        const imageData = new FormData();
+        imageData.append('file', generateFileObject(file));
+        return axiosApiInstance
+          .post(`${UPLOAD}/${_id}/businesses/`, imageData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+          })
+          .then((response) =>
+            resolve({
+              image: response.data.Location,
+              cover: false,
+            }),
+          )
+          .catch((error) => reject(error));
+      });
+    });
+    Promise.all(chunks)
+      .then((res) => {
+        setGallery(res);
+      })
+      .catch((error) => {
+        handleError(error);
+      });
   });
-
-  })
 };
 
 // Add New Business to Server
 export const useAddNewBusiness = () => {
   return useMutation((payload) => {
     return axiosApiInstance
-    .post(
-      `${Config.API_URL}/businesses`, payload,
-    )
-    .catch(({ response }) => {
-      handleError(response.data);
-    });
+      .post(`${Config.API_URL}/businesses`, payload)
+      .catch(({ response }) => {
+        handleError(response.data);
+      });
   });
-}
+};

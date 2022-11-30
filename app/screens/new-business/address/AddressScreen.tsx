@@ -230,6 +230,10 @@ export const AddressScreen = ({
           navigation.navigate('Hours');
           console.log('What is Value of addess ?', values.address);
           setAddress(values.address);
+          setStoreLocation({
+            type: 'Point',
+            coordinates: [location?.latitude, location?.longitude],
+          });
         }}
         validationSchema={addressSFormValidation}>
         {({ handleChange, values, handleSubmit, errors, setFieldValue }) => {
