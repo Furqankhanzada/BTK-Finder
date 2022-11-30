@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { ScrollView } from 'react-native';
 
 import { BaseStyle } from '@config';
 import { Header, SafeAreaView, Icon, ListItem, Loading } from '@components';
@@ -29,26 +29,32 @@ export default function EditBusinessScreen({ navigation, route }: any) {
           navigation.goBack();
         }}
       />
-      <View>
+      <ScrollView>
         <ListItem
           title="Name"
           businessDetail={businessData?.name}
           onPress={() => {
-            navigation.navigate('Name');
+            navigation.navigate('NewBusinessStack', {
+              screen: 'Name',
+            });
           }}
         />
         <ListItem
           title="Description"
           businessDetail={businessData?.description}
           onPress={() => {
-            navigation.navigate('Discription');
+            navigation.navigate('NewBusinessStack', {
+              screen: 'Description',
+            });
           }}
         />
         <ListItem
           title="Category"
           businessDetail={businessData?.category}
           onPress={() => {
-            navigation.navigate('Category');
+            navigation.navigate('NewBusinessStack', {
+              screen: 'Category',
+            });
           }}
         />
         <ListItem
@@ -59,73 +65,93 @@ export default function EditBusinessScreen({ navigation, route }: any) {
               : 'Empty'
           }
           onPress={() => {
-            navigation.navigate('Facilities');
+            navigation.navigate('NewBusinessStack', {
+              screen: 'Facilities',
+            });
           }}
         />
         <ListItem
           title="Tags"
           businessDetail={businessData?.tags[0]}
           onPress={() => {
-            navigation.navigate('Tags');
+            navigation.navigate('NewBusinessStack', {
+              screen: 'Tags',
+            });
           }}
         />
         <ListItem
           title="Telephone"
           businessDetail={businessData?.telephone}
           onPress={() => {
-            navigation.navigate('Telephone');
+            navigation.navigate('NewBusinessStack', {
+              screen: 'Telephone',
+            });
           }}
         />
         <ListItem
           title="Email"
           businessDetail={businessData?.email}
           onPress={() => {
-            navigation.navigate('Email');
+            navigation.navigate('NewBusinessStack', {
+              screen: 'Email',
+            });
           }}
         />
         <ListItem
           title="Website"
           businessDetail={businessData?.website}
           onPress={() => {
-            navigation.navigate('Website');
+            navigation.navigate('NewBusinessStack', {
+              screen: 'Website',
+            });
           }}
         />
         <ListItem
           title="Established"
           businessDetail={businessData?.established}
           onPress={() => {
-            navigation.navigate('Established');
+            navigation.navigate('NewBusinessStack', {
+              screen: 'Established',
+            });
           }}
         />
         <ListItem
           title="Address"
           businessDetail={businessData?.address}
           onPress={() => {
-            navigation.navigate('Address');
+            navigation.navigate('NewBusinessStack', {
+              screen: 'Address',
+            });
           }}
         />
         <ListItem
           title="OpenHours"
           businessDetail={`${businessData?.openHours[0]?.day} ${businessData?.openHours[0]?.from} To ${businessData?.openHours[0]?.to}`}
           onPress={() => {
-            navigation.navigate('Hours');
+            navigation.navigate('NewBusinessStack', {
+              screen: 'Hours',
+            });
           }}
         />
         <ListItem
           title="Price"
           businessDetail={`${businessData?.priceRange?.from} To ${businessData?.priceRange?.to}}`}
           onPress={() => {
-            navigation.navigate('Price');
+            navigation.navigate('NewBusinessStack', {
+              screen: 'Price',
+            });
           }}
         />
         <ListItem
           title="Gallery"
           businessDetail={'Gallery'}
           onPress={() => {
-            navigation.navigate('Gallery');
+            navigation.navigate('NewBusinessStack', {
+              screen: 'Gallery',
+            });
           }}
         />
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
