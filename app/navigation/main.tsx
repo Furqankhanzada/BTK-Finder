@@ -46,6 +46,7 @@ import BusinessesScreen from '@screens/businesses/list/BusinessesScreen';
 
 import { MainStackParamList } from './models/MainStackParamList';
 import { MainBottomTabParamList } from './models/MainBottomTabParamList';
+import useAddBusinessStore from '@screens/new-business/store/Store';
 
 const MainStack = createStackNavigator<MainStackParamList>();
 const MainBottomTab = createBottomTabNavigator<MainBottomTabParamList>();
@@ -94,9 +95,12 @@ export default function Main() {
 
 function MainBottomTabNavigator() {
   const { t } = useTranslation();
-  const dispatch = useDispatch();
   const { colors } = useTheme();
   const font = useFont();
+
+  const setIsEditBusiness = useAddBusinessStore(
+    (state: any) => state.setIsEditBusiness,
+  );
 
   return (
     <MainBottomTab.Navigator
@@ -147,7 +151,7 @@ function MainBottomTabNavigator() {
         }}
         listeners={() => ({
           tabPress: () => {
-            dispatch(setEditBusiness(false));
+            setIsEditBusiness(false);
           },
         })}
       />

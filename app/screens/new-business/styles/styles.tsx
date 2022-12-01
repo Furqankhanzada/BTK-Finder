@@ -21,6 +21,11 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 20,
     marginBottom: 15,
   },
+  stickyFooterEdit: {
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+    marginBottom: 15,
+  },
   renderItemList: {
     fontSize: 18,
     lineHeight: 45,
