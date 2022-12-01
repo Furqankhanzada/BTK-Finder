@@ -3,9 +3,10 @@ import { FlatList, SafeAreaView, View } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
-import { Header, Text, TextInput, Button } from '@components';
-import { BaseColor, BaseStyle, useTheme } from '@config';
+import { Header, Text, TextInput, Button, Icon } from '@components';
+import { BaseColor, BaseStyle } from '@config';
 import useAddBusinessStore from '../store/Store';
+import { useBusiness } from '@screens/businesses/queries/queries';
 
 import { StackScreenProps } from '@react-navigation/stack';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
@@ -17,11 +18,15 @@ const emailSchema = Yup.object({
 
 export const EmailScreen = ({
   navigation,
+  route,
 }: StackScreenProps<GlobalParamList>) => {
-  const { colors } = useTheme();
+  const { data: businessData } = useBusiness(route?.params?.id);
 
   const email = useAddBusinessStore((state: any) => state.email);
   const setEmail = useAddBusinessStore((state: any) => state.setEmail);
+  const isEditBusiness = useAddBusinessStore(
+    (state: any) => state.isEditBusiness,
+  );
 
   const navigateToNext = () => {
     navigation.navigate('Website');
@@ -34,14 +39,27 @@ export const EmailScreen = ({
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
-        title="Email Address"
+        title={isEditBusiness ? 'Update Email Address' : 'Email Address '}
         renderRight={() => {
-          return <Text>Skip</Text>;
+          return isEditBusiness ? null : <Text>Skip</Text>;
         }}
         onPressRight={navigateToNext}
+        renderLeft={() => {
+          return isEditBusiness ? (
+            <Icon
+              name="arrow-left"
+              size={20}
+              color="#5dade2"
+              enableRTL={true}
+            />
+          ) : null;
+        }}
+        onPressLeft={() => {
+          navigation.goBack();
+        }}
       />
       <Formik
-        initialValues={{ email: email }}
+        initialValues={{ email: isEditBusiness ? businessData?.email : email }}
         validationSchema={emailSchema}
         onSubmit={(values) => {
           navigation.navigate('Website');
@@ -72,23 +90,26 @@ export const EmailScreen = ({
                 }}
               />
 
-              <View style={styles.stickyFooter}>
-                <Button
-                  style={styles.footerButtons}
-                  onPress={() => navigateToBack()}>
-                  {'Back'}
-                </Button>
+              <View
+                style={
+                  isEditBusiness ? styles.stickyFooterEdit : styles.stickyFooter
+                }>
+                {isEditBusiness ? null : (
+                  <Button style={styles.footerButtons} onPress={navigateToBack}>
+                    {'Back'}
+                  </Button>
+                )}
 
                 <Button
                   style={[
                     styles.footerButtons,
-                    values.email.length < 6
+                    values?.email?.length < 6
                       ? { backgroundColor: BaseColor.grayColor }
                       : null,
                   ]}
                   title="submit"
                   onPress={handleSubmit}>
-                  {'Next'}
+                  {isEditBusiness ? 'Update Email Address' : 'Next'}
                 </Button>
               </View>
             </>

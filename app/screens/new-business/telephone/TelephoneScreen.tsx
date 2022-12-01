@@ -10,6 +10,7 @@ import useAddBusinessStore from '../store/Store';
 
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
+import { useBusiness } from '@screens/businesses/queries/queries';
 
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
@@ -24,9 +25,11 @@ const phoneSchema = Yup.object({
 
 export const TelephoneScreen = ({
   navigation,
+  route,
 }: StackScreenProps<GlobalParamList>) => {
   const [addNumber, setAddNumber] = useState<Array<number>>([0]);
 
+  const { data: businessData } = useBusiness(route?.params?.id);
   const telephone = useAddBusinessStore((state: any) => state.telephone);
   const setTelephone = useAddBusinessStore((state: any) => state.setTelephone);
   const isEditBusiness = useAddBusinessStore(
@@ -85,7 +88,9 @@ export const TelephoneScreen = ({
         What is the Telephone number of your Business ?
       </Text>
       <Formik
-        initialValues={{ telephone: telephone }}
+        initialValues={{
+          telephone: isEditBusiness ? businessData?.telephone : telephone,
+        }}
         validationSchema={phoneSchema}
         onSubmit={(values) => {
           navigation.navigate('Email');
