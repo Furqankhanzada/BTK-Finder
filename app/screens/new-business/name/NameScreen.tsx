@@ -35,14 +35,14 @@ export const NameScreen = ({
       <Header
         title={isEditBusiness ? 'Edit Business Name' : 'Add Business'}
         renderLeft={() => {
-          return (
+          return isEditBusiness ? (
             <Icon
               name="arrow-left"
               size={20}
               color="#5dade2"
               enableRTL={true}
             />
-          );
+          ) : null;
         }}
         onPressLeft={() => {
           navigation.goBack();
@@ -97,7 +97,7 @@ export const NameScreen = ({
                 <Button
                   style={[
                     styles.footerButtons,
-                    values.name.length < 3
+                    values?.name?.length < 3
                       ? { backgroundColor: BaseColor.grayColor }
                       : null,
                   ]}
