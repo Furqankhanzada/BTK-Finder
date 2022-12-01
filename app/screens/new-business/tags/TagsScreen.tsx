@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList, SafeAreaView, TouchableOpacity, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { Header, Text, TextInput, Button, Icon } from '@components';
-import { BaseStyle, useTheme } from '@config';
+import { BaseColor, BaseStyle, useTheme } from '@config';
 import remoteConfig from '@react-native-firebase/remote-config';
 import useAddBusinessStore from '../store/Store';
 
 import { StackScreenProps } from '@react-navigation/stack';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
-import { useTranslation } from 'react-i18next';
 import { NewAddBusinessPresentable } from '../models/AddNewBusinessPresentable';
 
 export const TagsScreen = ({
@@ -24,6 +24,9 @@ export const TagsScreen = ({
   const [items, setItems] = useState(tags);
 
   const setTag = useAddBusinessStore((state: any) => state.setTags);
+  const isEditBusiness = useAddBusinessStore(
+    (state: any) => state.isEditBusiness,
+  );
 
   const { colors } = useTheme();
   const { t } = useTranslation();
@@ -87,11 +90,24 @@ export const TagsScreen = ({
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
-        title="Select Tags"
+        title={isEditBusiness ? 'Update Tags' : 'Select Tags'}
         renderRight={() => {
-          return <Text>Skip</Text>;
+          return isEditBusiness ? null : <Text>Skip</Text>;
         }}
         onPressRight={navigateToNext}
+        renderLeft={() => {
+          return isEditBusiness ? (
+            <Icon
+              name="arrow-left"
+              size={20}
+              color="#5dade2"
+              enableRTL={true}
+            />
+          ) : null;
+        }}
+        onPressLeft={() => {
+          navigation.navigate('EditBusiness');
+        }}
       />
       <View style={styles.contain}>
         {tags ? (
@@ -148,15 +164,23 @@ export const TagsScreen = ({
           }}
         />
       </View>
-      <View style={styles.stickyFooter}>
-        <Button style={styles.footerButtons} onPress={() => navigateToBack()}>
-          {'Back'}
-        </Button>
-        {active === true ? (
-          <Button style={styles.footerButtons} onPress={() => navigateToNext()}>
-            {'Next'}
+      <View
+        style={isEditBusiness ? styles.stickyFooterEdit : styles.stickyFooter}>
+        {isEditBusiness ? null : (
+          <Button style={styles.footerButtons} onPress={navigateToBack}>
+            {'Back'}
           </Button>
-        ) : null}
+        )}
+
+        <Button
+          style={[
+            styles.footerButtons,
+            !active ? { backgroundColor: BaseColor.grayColor } : null,
+          ]}
+          title="submit"
+          onPress={() => navigateToNext()}>
+          {isEditBusiness ? 'Update Tags' : 'Next'}
+        </Button>
       </View>
     </SafeAreaView>
   );
