@@ -6,9 +6,7 @@ import { Header, SafeAreaView, Icon, ListItem, Loading } from '@components';
 import { useBusiness } from '@screens/businesses/queries/queries';
 
 export default function EditBusinessScreen({ navigation, route }: any) {
-  const { isLoading, data: businessData } = useBusiness(route.params.id);
-
-  console.log('What is business Form Data', businessData);
+  const { isLoading, data: businessData } = useBusiness(route?.params?.id);
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
@@ -36,6 +34,7 @@ export default function EditBusinessScreen({ navigation, route }: any) {
           onPress={() => {
             navigation.navigate('NewBusinessStack', {
               screen: 'Name',
+              params: { id: businessData?._id },
             });
           }}
         />
@@ -44,7 +43,8 @@ export default function EditBusinessScreen({ navigation, route }: any) {
           businessDetail={businessData?.description}
           onPress={() => {
             navigation.navigate('NewBusinessStack', {
-              screen: 'Description',
+              screen: 'Discription',
+              params: { id: businessData?._id },
             });
           }}
         />
@@ -54,6 +54,7 @@ export default function EditBusinessScreen({ navigation, route }: any) {
           onPress={() => {
             navigation.navigate('NewBusinessStack', {
               screen: 'Category',
+              params: { id: businessData?._id },
             });
           }}
         />
@@ -67,6 +68,7 @@ export default function EditBusinessScreen({ navigation, route }: any) {
           onPress={() => {
             navigation.navigate('NewBusinessStack', {
               screen: 'Facilities',
+              params: { id: businessData?._id },
             });
           }}
         />
@@ -76,6 +78,7 @@ export default function EditBusinessScreen({ navigation, route }: any) {
           onPress={() => {
             navigation.navigate('NewBusinessStack', {
               screen: 'Tags',
+              params: { id: businessData?._id },
             });
           }}
         />
@@ -85,6 +88,7 @@ export default function EditBusinessScreen({ navigation, route }: any) {
           onPress={() => {
             navigation.navigate('NewBusinessStack', {
               screen: 'Telephone',
+              params: { id: businessData?._id },
             });
           }}
         />
@@ -94,6 +98,7 @@ export default function EditBusinessScreen({ navigation, route }: any) {
           onPress={() => {
             navigation.navigate('NewBusinessStack', {
               screen: 'Email',
+              params: { id: businessData?._id },
             });
           }}
         />
@@ -103,6 +108,7 @@ export default function EditBusinessScreen({ navigation, route }: any) {
           onPress={() => {
             navigation.navigate('NewBusinessStack', {
               screen: 'Website',
+              params: { id: businessData?._id },
             });
           }}
         />
@@ -112,6 +118,7 @@ export default function EditBusinessScreen({ navigation, route }: any) {
           onPress={() => {
             navigation.navigate('NewBusinessStack', {
               screen: 'Established',
+              params: { id: businessData?._id },
             });
           }}
         />
@@ -121,6 +128,7 @@ export default function EditBusinessScreen({ navigation, route }: any) {
           onPress={() => {
             navigation.navigate('NewBusinessStack', {
               screen: 'Address',
+              params: { id: businessData?._id },
             });
           }}
         />
@@ -130,6 +138,7 @@ export default function EditBusinessScreen({ navigation, route }: any) {
           onPress={() => {
             navigation.navigate('NewBusinessStack', {
               screen: 'Hours',
+              params: { id: businessData?._id },
             });
           }}
         />
@@ -139,6 +148,7 @@ export default function EditBusinessScreen({ navigation, route }: any) {
           onPress={() => {
             navigation.navigate('NewBusinessStack', {
               screen: 'Price',
+              params: { id: businessData?._id },
             });
           }}
         />
@@ -148,6 +158,7 @@ export default function EditBusinessScreen({ navigation, route }: any) {
           onPress={() => {
             navigation.navigate('NewBusinessStack', {
               screen: 'Gallery',
+              params: { id: businessData?._id },
             });
           }}
         />
