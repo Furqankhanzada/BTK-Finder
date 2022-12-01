@@ -66,10 +66,11 @@ export default function Navigator() {
     config: {
       screens: {
         Main: {
-          path: 'main',
+          path: 'app',
+          initialRouteName: 'MainBottomTabNavigator',
           screens: {
             Businesses: {
-              path: 'businesses/:title',
+              path: 'businesses/list/:category',
               exact: true,
             },
             BusinessDetailTabNavigator: {
