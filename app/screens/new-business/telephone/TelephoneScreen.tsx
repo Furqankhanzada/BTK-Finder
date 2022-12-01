@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { FlatList, SafeAreaView, TouchableOpacity, View } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { StackScreenProps } from '@react-navigation/stack';
 
 import { Header, Text, TextInput, Button, Icon } from '@components';
 import { BaseColor, BaseStyle } from '@config';
 import useAddBusinessStore from '../store/Store';
 
-import { StackScreenProps } from '@react-navigation/stack';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
 
@@ -27,11 +27,11 @@ export const TelephoneScreen = ({
 }: StackScreenProps<GlobalParamList>) => {
   const [addNumber, setAddNumber] = useState<Array<number>>([0]);
 
-  // const store = useAddBusinessStore((state: any) => state);
   const telephone = useAddBusinessStore((state: any) => state.telephone);
   const setTelephone = useAddBusinessStore((state: any) => state.setTelephone);
-
-  // console.log('UPDATED STORE IN TELEPHONE SCREEN', store);
+  const isEditBusiness = useAddBusinessStore(
+    (state: any) => state.isEditBusiness,
+  );
 
   const increment = (index: number) => {
     let addedNumber = [...addNumber];
@@ -62,11 +62,24 @@ export const TelephoneScreen = ({
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
-        title="Telephone Number"
+        title={isEditBusiness ? 'Update Number' : 'Telephone Number'}
         renderRight={() => {
-          return <Text>Skip</Text>;
+          return isEditBusiness ? null : <Text>Skip</Text>;
         }}
         onPressRight={navigateToNext}
+        renderLeft={() => {
+          return isEditBusiness ? (
+            <Icon
+              name="arrow-left"
+              size={20}
+              color="#5dade2"
+              enableRTL={true}
+            />
+          ) : null;
+        }}
+        onPressLeft={() => {
+          navigation.goBack();
+        }}
       />
       <Text title1 bold style={styles.textPadding}>
         What is the Telephone number of your Business ?
@@ -118,12 +131,15 @@ export const TelephoneScreen = ({
                 }}
               />
 
-              <View style={styles.stickyFooter}>
-                <Button
-                  style={styles.footerButtons}
-                  onPress={() => navigateToBack()}>
-                  {'Back'}
-                </Button>
+              <View
+                style={
+                  isEditBusiness ? styles.stickyFooterEdit : styles.stickyFooter
+                }>
+                {isEditBusiness ? null : (
+                  <Button style={styles.footerButtons} onPress={navigateToBack}>
+                    {'Back'}
+                  </Button>
+                )}
 
                 <Button
                   style={[
@@ -134,7 +150,7 @@ export const TelephoneScreen = ({
                   ]}
                   title="submit"
                   onPress={handleSubmit}>
-                  {'Next'}
+                  {isEditBusiness ? 'Update Phone Number' : 'Next'}
                 </Button>
               </View>
             </>
