@@ -2,31 +2,32 @@ import React, { useState } from 'react';
 import { FlatList, SafeAreaView, TouchableOpacity, View } from 'react-native';
 
 import { Header, Text, TextInput, Button, Icon } from '@components';
-import { BaseStyle, useTheme } from '@config';
-import useAddBusinessStore from '../store/Store';
-
-import { useCategories } from '../../category/queries/queries';
+import { BaseColor, BaseStyle, useTheme } from '@config';
 import { StackScreenProps } from '@react-navigation/stack';
+import { useTranslation } from 'react-i18next';
+import { useBusiness } from '@screens/businesses/queries/queries';
+
+import useAddBusinessStore from '../store/Store';
+import { useCategories } from '../../category/queries/queries';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
-import { useTranslation } from 'react-i18next';
 import { NewAddBusinessPresentable } from '../models/AddNewBusinessPresentable';
 
 export const CategoryScreen = ({
   navigation,
+  route,
 }: StackScreenProps<GlobalParamList>) => {
-  const {
-    isLoading,
-    data: categories,
-    refetch,
-  } = useCategories(['select-category']);
+  const { data: categories, refetch } = useCategories(['select-category']);
+  // const { data: businessData } = useBusiness(route?.params?.id);
 
   const setCategory = useAddBusinessStore((state: any) => state.setCategory);
+  const isEditBusiness = useAddBusinessStore(
+    (state: any) => state.isEditBusiness,
+  );
 
   const { colors } = useTheme();
   const { t } = useTranslation();
 
-  const [refresh, setRefres] = useState<boolean>(false);
   const [search, setSearch] = useState<string>('');
   const [active, setActive] = useState<boolean>(false);
   const [items, setItems] = useState(categories);
@@ -73,15 +74,24 @@ export const CategoryScreen = ({
     navigation.goBack();
   };
 
-  const onRefresh = async () => {
-    setRefres(true);
-    await refetch();
-    setRefres(false);
-  };
-
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
-      <Header title="Select Category" />
+      <Header
+        title={isEditBusiness ? 'Update Category' : 'Select Category'}
+        renderLeft={() => {
+          return isEditBusiness ? (
+            <Icon
+              name="arrow-left"
+              size={20}
+              color="#5dade2"
+              enableRTL={true}
+            />
+          ) : null;
+        }}
+        onPressLeft={() => {
+          navigation.navigate('EditBusiness');
+        }}
+      />
       <>
         <View style={styles.contain}>
           {categories ? (
@@ -139,17 +149,25 @@ export const CategoryScreen = ({
           />
         </View>
 
-        <View style={styles.stickyFooter}>
-          <Button style={styles.footerButtons} onPress={() => navigateToBack()}>
-            {'Back'}
-          </Button>
-          {active === true ? (
-            <Button
-              style={styles.footerButtons}
-              onPress={() => navigateToNext()}>
-              {'Next'}
+        <View
+          style={
+            isEditBusiness ? styles.stickyFooterEdit : styles.stickyFooter
+          }>
+          {isEditBusiness ? null : (
+            <Button style={styles.footerButtons} onPress={navigateToBack}>
+              {'Back'}
             </Button>
-          ) : null}
+          )}
+
+          <Button
+            style={[
+              styles.footerButtons,
+              !active ? { backgroundColor: BaseColor.grayColor } : null,
+            ]}
+            title="submit"
+            onPress={() => navigateToNext()}>
+            {isEditBusiness ? 'Update Category' : 'Next'}
+          </Button>
         </View>
       </>
     </SafeAreaView>
