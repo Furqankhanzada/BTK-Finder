@@ -153,9 +153,12 @@ export default function ProfileEdit(
   });
 
   const onSubmit = async () => {
+    const userData = user;
+    delete userData.avatar;
+
     const payload = {
-      ...user,
-      phone: user.phone.replace(/\s+/g, ''),
+      ...userData,
+      phone: userData.phone.replace(/\s+/g, ''),
     };
 
     const editUserProfile = await editProfile(payload);
