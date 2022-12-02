@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   TextInput as TextInputOriginal,
+  Keyboard,
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -29,9 +30,14 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { AuthActions } from '@actions';
 import { MainStackParamList } from 'navigation/models/MainStackParamList';
 
-import { editProfile, uploadProfileImage } from '../../actions/auth';
-import { IconName } from '../../contexts/alerts-v2/models/Icon';
-import { useDeleteUserAccount } from './queries/mutations';
+import { IconName } from '../../../contexts/alerts-v2/models/Icon';
+import {
+  EditProfilePayload,
+  useDeleteUserAccount,
+  useEditProfile,
+  useUploadProfileImage,
+} from '../queries/mutations';
+import { EDIT_PROFILE_API_SUCCESS } from '../../../constants/auth';
 import AccountInfoAlertContent from './components/AccountInfoAlertContent';
 
 export default function ProfileEdit(
@@ -43,17 +49,22 @@ export default function ProfileEdit(
   const { t } = useTranslation();
   const { showAlert, showNotification } = useAlerts();
   const { mutateAsync: deleteUserAccount, isLoading } = useDeleteUserAccount();
+  const { mutateAsync: editProfile, isLoading: isEditProfileLoading } =
+    useEditProfile();
+  const { mutate: uploadProfileImage, isLoading: isUploadProfileLoading } =
+    useUploadProfileImage();
 
   const profileData = useSelector((state: any) => state.profile);
-  const editProfileLoading = useSelector(
-    (state: any) => state.auth.editProfileLoading,
-  );
 
   const nameRef = useRef<TextInputOriginal>(null);
   const emailRef = useRef<TextInputOriginal>(null);
-  const [name, setName] = useState<string>(profileData.name);
-  const [email, setEmail] = useState<string>(profileData.email);
-  const [phone, setPhone] = useState<string>(profileData.phone);
+  const [user, setUser] = useState<EditProfilePayload>({
+    _id: profileData._id,
+    name: profileData.name,
+    email: profileData.email,
+    phone: profileData.phone,
+    avatar: profileData?.avatar,
+  });
   const [imageUri, setImageUri] = useState('');
 
   const deleteUser = async () => {
@@ -82,6 +93,7 @@ export default function ProfileEdit(
   };
 
   const onPressDelete = async () => {
+    Keyboard.dismiss();
     const buttonPressed = await showAlert({
       icon: {
         size: 70,
@@ -140,18 +152,28 @@ export default function ProfileEdit(
     android: 20,
   });
 
-  const onSubmit = () => {
-    dispatch(
-      editProfile(
-        { name, email, phone: phone.replace(/\s+/g, ''), _id: profileData._id },
-        () => {
-          navigation.goBack();
-        },
-      ),
-    );
-  };
+  const onSubmit = async () => {
+    const userData = user;
+    delete userData.avatar;
 
-  const uploadProfileImageCallBack = () => {};
+    const payload = {
+      ...userData,
+      phone: userData.phone.replace(/\s+/g, ''),
+    };
+
+    const editUserProfile = await editProfile(payload);
+
+    if (editUserProfile !== undefined) {
+      navigation.goBack();
+
+      //Update User in Redux
+      //TODO: Will fix once we remove the redux from project.
+      dispatch({
+        type: EDIT_PROFILE_API_SUCCESS,
+        user: payload,
+      });
+    }
+  };
 
   const pickSingle = () => {
     ImagePicker.openPicker({
@@ -183,9 +205,12 @@ export default function ProfileEdit(
         };
         const form = new FormData();
         form.append('file', file);
-        dispatch(
-          uploadProfileImage(profileData, form, uploadProfileImageCallBack),
-        );
+
+        const userPayload = {
+          ...user,
+          phone: user.phone.replace(/\s+/g, ''),
+        };
+        uploadProfileImage({ user: userPayload, form: form });
       })
       .catch((e) => {
         console.log('IMAGE_PICKER_ERROR', e);
@@ -217,15 +242,15 @@ export default function ProfileEdit(
         style={styles.KeyboardAvoidingView}>
         <ScrollView contentContainerStyle={styles.contain}>
           <TouchableOpacity
-            disabled={profileData.profileImageLoading}
+            disabled={isUploadProfileLoading}
             style={styles.thumbContainer}
             onPress={() => pickSingle()}>
-            <Loading loading={profileData.profileImageLoading} />
+            <Loading loading={isUploadProfileLoading} />
             <Image
               source={{
                 uri:
                   imageUri ||
-                  profileData.avatar ||
+                  user.avatar ||
                   'https://i.ibb.co/RD6rVBy/default-avatar.png',
               }}
               style={[styles.thumb, { borderColor: colors.text }]}
@@ -241,11 +266,11 @@ export default function ProfileEdit(
               styles.textInput,
               { backgroundColor: colors.card, color: colors.text },
             ]}
-            onChangeText={(text) => setPhone(text)}
+            onChangeText={(phone) => setUser({ ...user, phone })}
             placeholder={'Input Phone'}
             placeholderTextColor={BaseColor.grayColor}
             keyboardType="numeric"
-            value={phone}
+            value={user.phone}
             autoCapitalize="none"
             mask={'+92 [000] [0000] [000]'}
             returnKeyType="next"
@@ -259,9 +284,9 @@ export default function ProfileEdit(
           </View>
           <TextInput
             ref={nameRef}
-            onChangeText={(text) => setName(text)}
+            onChangeText={(name) => setUser({ ...user, name })}
             placeholder={t('input_name')}
-            value={name}
+            value={user?.name}
             onSubmitEditing={() => emailRef.current?.focus()}
           />
           <View style={styles.contentTitle}>
@@ -271,9 +296,9 @@ export default function ProfileEdit(
           </View>
           <TextInput
             ref={emailRef}
-            onChangeText={(text) => setEmail(text)}
+            onChangeText={(email) => setUser({ ...user, email })}
             placeholder={t('input_email')}
-            value={email}
+            value={user.email}
             keyboardType="email-address"
             autoCapitalize="none"
             returnKeyType="done"
@@ -282,8 +307,11 @@ export default function ProfileEdit(
           />
         </ScrollView>
         <View style={styles.buttonsContainer}>
-          <Button loading={editProfileLoading} full onPress={() => onSubmit()}>
-            {t('confirm')}
+          <Button
+            loading={isEditProfileLoading}
+            full
+            onPress={() => onSubmit()}>
+            {t('update')}
           </Button>
           <Button
             loading={isLoading}
