@@ -89,15 +89,6 @@ static void InitializeFlipper(UIApplication *application) {
   return [RCTLinkingManager application:application openURL:url options:options];
 }
 
-// Required for React navigation deep linking and If app is using Universal Links
-- (BOOL)application:(UIApplication *)application continueUserActivity:(nonnull NSUserActivity *)userActivity
- restorationHandler:(nonnull void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler
-{
- return [RCTLinkingManager application:application
-                  continueUserActivity:userActivity
-                    restorationHandler:restorationHandler];
-}
-
 // Required for the register event.
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
