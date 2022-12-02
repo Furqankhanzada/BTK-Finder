@@ -74,14 +74,16 @@ export default function Navigator() {
               exact: true,
             },
             BusinessDetailTabNavigator: {
-              path: 'businesses/:id',
+              path: 'businesses/:businessId',
               exact: true,
               screens: {
                 DetailStack: {
                   path: 'overview',
+                  exact: true,
                   screens: {
                     Product: {
-                      path: 'product/:businessId/:productSlug',
+                      path: 'businesses/:businessId/products/:productSlug',
+                      exact: true,
                     },
                   },
                 },

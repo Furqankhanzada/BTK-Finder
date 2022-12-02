@@ -30,7 +30,11 @@ export default function Review(
 ) {
   const { navigation, route } = props;
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
-  const { isLoading, data: business, refetch } = useBusiness(route.params.id);
+  const {
+    isLoading,
+    data: business,
+    refetch,
+  } = useBusiness(route.params.businessId);
 
   const { colors } = useTheme();
   const { t } = useTranslation();
@@ -85,7 +89,7 @@ export default function Review(
   };
 
   const navigateToFeedback = (id: any) => {
-    navigation.navigate('AddReview', { id });
+    navigation.navigate('AddReview', { businessId: id });
   };
 
   const checkReviewAlreadyAdded = () => {
@@ -115,7 +119,7 @@ export default function Review(
           {
             text: 'Login',
             onPress: () =>
-              navigateToWalktrhough('ReviewStack', route.params.id),
+              navigateToWalktrhough('ReviewStack', route.params.businessId),
           },
           {
             text: 'Cancel',

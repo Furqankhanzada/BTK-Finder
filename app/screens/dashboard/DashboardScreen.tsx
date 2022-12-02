@@ -102,7 +102,7 @@ function DashboardScreen({
   const onBusinessPress = (business: BusinessPresentable) => {
     trackEvent(EVENTS.VISITED_BUSINESS);
     navigation.navigate('BusinessDetailTabNavigator', {
-      id: business._id,
+      businessId: business._id,
     });
   };
 
@@ -135,7 +135,7 @@ function DashboardScreen({
             primary
             onPress={() => {
               navigation.navigate('BusinessDetailTabNavigator', {
-                id: banner.businessId,
+                businessId: banner.businessId,
               });
             }}>
             {banner.buttonText}

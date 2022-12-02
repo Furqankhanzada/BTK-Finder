@@ -42,7 +42,7 @@ export default function AddReviewScreen(
   });
 
   const { mutateAsync: mutateReview, isLoading } = useAddReview(
-    route.params.id,
+    route.params.businessId,
   );
 
   const onSubmit = async () => {

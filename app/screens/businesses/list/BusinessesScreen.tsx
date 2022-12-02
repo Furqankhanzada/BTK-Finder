@@ -220,7 +220,7 @@ export default function BusinessesScreen(
     name,
     category,
   }: BusinessPresentable) => {
-    navigation.navigate('BusinessDetailTabNavigator', { id });
+    navigation.navigate('BusinessDetailTabNavigator', { businessId: id });
     trackEvent(EVENTS.VISITED_BUSINESS, {
       id,
       name,
