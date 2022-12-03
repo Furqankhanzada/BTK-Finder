@@ -68,6 +68,8 @@
 	<string>For Capturing user avatar</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Need location to show nearby business and better experience.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Need location to show nearby business and better experience.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Need location to show nearby business and better experience.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
