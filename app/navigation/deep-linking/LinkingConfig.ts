@@ -1,7 +1,8 @@
 import { LinkingOptions } from '@react-navigation/native';
 
-// @ts-expect-error Legacy module
-export const linkingConfig: LinkingOptions = {
+import { RootStackParamList } from '../models/RootStackParamList';
+
+export const linkingConfig: LinkingOptions<RootStackParamList> = {
   prefixes: ['explorebtk://', 'https://explorebtk.com'],
   config: {
     screens: {
@@ -16,6 +17,7 @@ export const linkingConfig: LinkingOptions = {
           BusinessDetailTabNavigator: {
             path: 'businesses/:businessId',
             exact: true,
+            // @ts-expect-error because we did heck
             screens: {
               DetailStack: {
                 path: 'overview',
@@ -35,6 +37,7 @@ export const linkingConfig: LinkingOptions = {
             path: 'main_bottom',
             exact: true,
             screens: {
+              // @ts-expect-error will update this once refactor Users (Settings) Tab
               Profile: {
                 path: 'profile',
                 exact: true,
