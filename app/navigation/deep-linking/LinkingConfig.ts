@@ -33,17 +33,6 @@ export const linkingConfig: LinkingOptions<RootStackParamList> = {
               Products: 'products',
             },
           },
-          MainBottomTabNavigator: {
-            path: 'main_bottom',
-            exact: true,
-            screens: {
-              // @ts-expect-error will update this once refactor Users (Settings) Tab
-              Profile: {
-                path: 'profile',
-                exact: true,
-              },
-            },
-          },
           ContactUs: {
             path: 'contact-us',
             exact: true,
