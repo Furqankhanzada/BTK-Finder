@@ -11,9 +11,11 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
 import { NewAddBusinessPresentable } from '../models/AddNewBusinessPresentable';
+import { useBusiness } from '@screens/businesses/queries/queries';
 
 export const TagsScreen = ({
   navigation,
+  route,
 }: StackScreenProps<GlobalParamList>) => {
   const [active, setActive] = useState<boolean>(false);
   const [search, setSearch] = useState<string>();
@@ -22,7 +24,7 @@ export const TagsScreen = ({
     [],
   );
   const [items, setItems] = useState(tags);
-
+  const { data: businessData } = useBusiness(route?.params?.id);
   const setTag = useAddBusinessStore((state: any) => state.setTags);
   const isEditBusiness = useAddBusinessStore(
     (state: any) => state.isEditBusiness,
@@ -106,7 +108,7 @@ export const TagsScreen = ({
           ) : null;
         }}
         onPressLeft={() => {
-          navigation.navigate('EditBusiness');
+          navigation.navigate('EditBusiness', { id: businessData?._id });
         }}
       />
       <View style={styles.contain}>

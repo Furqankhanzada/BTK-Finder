@@ -17,17 +17,23 @@ import {
 } from '../queries/mutations';
 import { ScrollView } from 'react-native-gesture-handler';
 import { NewAddBusinessPresentable } from '../models/AddNewBusinessPresentable';
+import { useBusiness } from '@screens/businesses/queries/queries';
 
 export const GalleryScreen = ({
   navigation,
+  route,
 }: StackScreenProps<GlobalParamList>) => {
   const { mutate: uploadThumbnail } = useAddNewThumbnail();
   const { mutate: uploadGallery } = useAddGalleryImages();
   const { mutate: addNewBusiness, isLoading } = useAddNewBusiness();
+  const { data: businessData } = useBusiness(route?.params?.id);
 
   const payload = useAddBusinessStore((state: any) => state);
   const gallery = useAddBusinessStore((state: any) => state.gallery);
   const setGallery = useAddBusinessStore((state: any) => state.setGallery);
+  const isEditBusiness = useAddBusinessStore(
+    (state: any) => state.isEditBusiness,
+  );
 
   console.log('UPDATED STORE IN GALLERY SCREEN', payload);
 
@@ -137,11 +143,24 @@ export const GalleryScreen = ({
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
-        title="Gallery"
+        title={isEditBusiness ? 'Edit Gallery' : 'Gallery'}
         renderRight={() => {
-          return <Text>Skip</Text>;
+          return isEditBusiness ? null : <Text>Skip</Text>;
         }}
         onPressRight={navigateToNext}
+        renderLeft={() => {
+          return isEditBusiness ? (
+            <Icon
+              name="arrow-left"
+              size={20}
+              color="#5dade2"
+              enableRTL={true}
+            />
+          ) : null;
+        }}
+        onPressLeft={() => {
+          navigation.navigate('EditBusiness', { id: businessData?._id });
+        }}
       />
       <Formik
         initialValues={{ gallery: gallery }}
@@ -171,7 +190,7 @@ export const GalleryScreen = ({
                           <Text>Thumbnail size must be 300x300</Text>
                         </View>
                         <View style={styles.thumbnailContainer}>
-                          {payload.thumbnail ? (
+                          {payload.thumbnail || businessData?.thumbnail ? (
                             <Fragment>
                               <TouchableOpacity
                                 style={styles.galleryActionButton}
@@ -183,7 +202,11 @@ export const GalleryScreen = ({
                               </TouchableOpacity>
                               <Image
                                 style={styles.thumbnailContainerImage}
-                                source={{ uri: payload.thumbnail }}
+                                source={{
+                                  uri: isEditBusiness
+                                    ? businessData?.thumbnail
+                                    : payload.thumbnail,
+                                }}
                               />
                             </Fragment>
                           ) : (
@@ -209,7 +232,11 @@ export const GalleryScreen = ({
                           <Text>Gallery Images size must be 600x400</Text>
                         </View>
                         <View style={styles.gallerySectionImagesContainer}>
-                          {renderGalleryImages(payload.gallery)}
+                          {renderGalleryImages(
+                            isEditBusiness
+                              ? businessData?.gallery
+                              : payload.gallery,
+                          )}
                           <TouchableOpacity
                             style={
                               payload.gallery.length === 0
@@ -230,24 +257,24 @@ export const GalleryScreen = ({
                   );
                 }}
               />
-
-              <View style={styles.stickyFooter}>
-                <Button
-                  style={styles.footerButtons}
-                  onPress={() => navigateToBack()}>
-                  {'Back'}
-                </Button>
+              <View
+                style={
+                  isEditBusiness ? styles.stickyFooterEdit : styles.stickyFooter
+                }>
+                {isEditBusiness ? null : (
+                  <Button style={styles.footerButtons} onPress={navigateToBack}>
+                    {'Back'}
+                  </Button>
+                )}
 
                 <Button
                   style={[
                     styles.footerButtons,
-                    active === true
-                      ? { backgroundColor: BaseColor.grayColor }
-                      : null,
+                    !active ? { backgroundColor: BaseColor.grayColor } : null,
                   ]}
                   title="submit"
-                  onPress={handleSubmit}>
-                  {'Next'}
+                  onPress={() => navigateToNext()}>
+                  {isEditBusiness ? 'Update Galeery' : 'Submit'}
                 </Button>
               </View>
             </>

@@ -81,7 +81,7 @@ export const TelephoneScreen = ({
           ) : null;
         }}
         onPressLeft={() => {
-          navigation.goBack();
+          navigation.navigate('EditBusiness', { id: businessData?._id });
         }}
       />
       <Text title1 bold style={styles.textPadding}>

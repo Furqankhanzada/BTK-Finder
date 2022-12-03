@@ -33,6 +33,7 @@ import { GlobalParamList } from 'navigation/models/GlobalParamList';
 import { StackScreenProps } from '@react-navigation/stack';
 import useAddBusinessStore from '../store/Store';
 import { NewAddBusinessPresentable } from '../models/AddNewBusinessPresentable';
+import { useBusiness } from '@screens/businesses/queries/queries';
 
 let defaultDelta = {
   latitudeDelta: 0.005,
@@ -45,13 +46,18 @@ const defaultLocation = {
 
 export const AddressScreen = ({
   navigation,
+  route,
 }: StackScreenProps<GlobalParamList>) => {
   const mapRef = useRef();
 
+  const { data: businessData } = useBusiness(route?.params?.id);
   const address = useAddBusinessStore((state: any) => state.address);
   const setAddress = useAddBusinessStore((state: any) => state.setAddress);
   const setStoreLocation = useAddBusinessStore(
     (state: any) => state.setLocation,
+  );
+  const isEditBusiness = useAddBusinessStore(
+    (state: any) => state.isEditBusiness,
   );
 
   const stateProps = useSelector(({ businesses }) => {
@@ -89,16 +95,17 @@ export const AddressScreen = ({
   }, [businessFormData.location, getUserLocation]);
 
   const [mapType, setMapType] = useState<string>('standard');
+
   const [location, setLocation] = useState<object>({
     ...defaultLocation,
     ...defaultDelta,
   });
-  const [fullScreen, setFullScreen] = useState<boolean>(false);
-
   const [region, setRegion] = useState({
     ...defaultLocation,
     ...defaultDelta,
   });
+
+  const [fullScreen, setFullScreen] = useState<boolean>(false);
 
   const reCenterMap = (currentLocation: NewAddBusinessPresentable) => {
     mapRef?.current?.animateToRegion({
@@ -220,23 +227,48 @@ export const AddressScreen = ({
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
-      <Header title={'Add Your Business'} />
+      <Header
+        title={isEditBusiness ? 'Edit your address' : 'Add Business Address'}
+        renderLeft={() => {
+          return isEditBusiness ? (
+            <Icon
+              name="arrow-left"
+              size={20}
+              color="#5dade2"
+              enableRTL={true}
+            />
+          ) : null;
+        }}
+        onPressLeft={() => {
+          navigation.navigate('EditBusiness', { id: businessData?._id });
+        }}
+      />
 
       <Formik
         initialValues={{
-          address: address,
+          address: isEditBusiness ? businessData?.address : address,
         }}
         onSubmit={(values) => {
-          navigation.navigate('Hours');
+          isEditBusiness
+            ? navigation.navigate('Dashboard')
+            : navigation.navigate('Hours');
           console.log('What is Value of addess ?', values.address);
           setAddress(values.address);
-          setStoreLocation({
-            type: 'Point',
-            coordinates: [location?.latitude, location?.longitude],
-          });
+          isEditBusiness
+            ? setStoreLocation({
+                type: 'Point',
+                coordinates: [
+                  businessData?.location?.coordinates[0],
+                  businessData?.location?.coordinates[1],
+                ],
+              })
+            : setStoreLocation({
+                type: 'Point',
+                coordinates: [location?.latitude, location?.longitude],
+              });
         }}
         validationSchema={addressSFormValidation}>
-        {({ handleChange, values, handleSubmit, errors, setFieldValue }) => {
+        {({ handleChange, values, handleSubmit, errors }) => {
           return (
             <Fragment>
               <ScrollView
@@ -261,7 +293,7 @@ export const AddressScreen = ({
                       />
                       {errors.address ? (
                         <Text style={GlobalStyle.errorText}>
-                          {errors.address}
+                          {errors?.address}
                         </Text>
                       ) : null}
                     </View>
@@ -284,12 +316,15 @@ export const AddressScreen = ({
                   </View>
                 </View>
               </ScrollView>
-              <View style={styles.stickyFooter}>
-                <Button
-                  style={styles.footerButtons}
-                  onPress={() => navigateToBack()}>
-                  {'Back'}
-                </Button>
+              <View
+                style={
+                  isEditBusiness ? styles.stickyFooterEdit : styles.stickyFooter
+                }>
+                {isEditBusiness ? null : (
+                  <Button style={styles.footerButtons} onPress={navigateToBack}>
+                    {'Back'}
+                  </Button>
+                )}
 
                 <Button
                   style={[
@@ -300,7 +335,7 @@ export const AddressScreen = ({
                   ]}
                   title="submit"
                   onPress={handleSubmit}>
-                  {'Next'}
+                  {isEditBusiness ? 'Update Address' : 'Next'}
                 </Button>
               </View>
             </Fragment>

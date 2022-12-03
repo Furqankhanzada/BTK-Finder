@@ -81,7 +81,7 @@ export const FacilitiesScreen = ({
           ) : null;
         }}
         onPressLeft={() => {
-          navigation.navigate('EditBusiness');
+          navigation.navigate('EditBusiness', { id: businessData?._id });
         }}
       />
 

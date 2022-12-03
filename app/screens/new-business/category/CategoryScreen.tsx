@@ -18,7 +18,7 @@ export const CategoryScreen = ({
   route,
 }: StackScreenProps<GlobalParamList>) => {
   const { data: categories, refetch } = useCategories(['select-category']);
-  // const { data: businessData } = useBusiness(route?.params?.id);
+  const { data: businessData } = useBusiness(route?.params?.id);
 
   const setCategory = useAddBusinessStore((state: any) => state.setCategory);
   const isEditBusiness = useAddBusinessStore(
@@ -89,7 +89,7 @@ export const CategoryScreen = ({
           ) : null;
         }}
         onPressLeft={() => {
-          navigation.navigate('EditBusiness');
+          navigation.navigate('EditBusiness', { id: businessData?._id });
         }}
       />
       <>

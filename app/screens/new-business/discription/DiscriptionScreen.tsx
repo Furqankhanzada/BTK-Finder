@@ -56,7 +56,7 @@ export const DiscriptionScreen = ({
           ) : null;
         }}
         onPressLeft={() => {
-          navigation.navigate('EditBusiness');
+          navigation.navigate('EditBusiness', { id: businessData?._id });
         }}
         renderRight={() => {
           return isEditBusiness ? null : <Text>Skip</Text>;

@@ -3,8 +3,8 @@ import { FlatList, SafeAreaView, TouchableOpacity, View } from 'react-native';
 import { Formik } from 'formik';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
-import { Header, Text, Button, TextInput } from '@components';
-import { BaseStyle, useTheme } from '@config';
+import { Header, Text, Button, Icon } from '@components';
+import { BaseColor, BaseStyle, useTheme } from '@config';
 import useAddBusinessStore from '../store/Store';
 
 import { StackScreenProps } from '@react-navigation/stack';
@@ -13,18 +13,26 @@ import { styles } from '../styles/styles';
 import GlobalStyle from '../../../assets/styling/GlobalStyle';
 import moment from 'moment';
 import { NewAddBusinessPresentable } from '../models/AddNewBusinessPresentable';
+import { useBusiness } from '@screens/businesses/queries/queries';
 
 export const EstablishedScreen = ({
   navigation,
+  route,
 }: StackScreenProps<GlobalParamList>) => {
   const navigateToNext = () => {
     navigation.navigate('Address');
   };
 
+  const { data: businessData } = useBusiness(route?.params?.id);
   const established = useAddBusinessStore((state: any) => state.established);
   const setEstablished = useAddBusinessStore(
     (state: any) => state.setEstablished,
   );
+  const isEditBusiness = useAddBusinessStore(
+    (state: any) => state.isEditBusiness,
+  );
+
+  console.log('Business ?', businessData?.established);
 
   const [isDatePickerVisible, setDatePickerVisibility] =
     useState<boolean>(false);
@@ -53,14 +61,29 @@ export const EstablishedScreen = ({
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
-        title="Established Date"
+        title={isEditBusiness ? 'Edit Established Date' : 'Established Date '}
         renderRight={() => {
-          return <Text>Skip</Text>;
+          return isEditBusiness ? null : <Text>Skip</Text>;
         }}
         onPressRight={navigateToNext}
+        renderLeft={() => {
+          return isEditBusiness ? (
+            <Icon
+              name="arrow-left"
+              size={20}
+              color="#5dade2"
+              enableRTL={true}
+            />
+          ) : null;
+        }}
+        onPressLeft={() => {
+          navigation.navigate('EditBusiness', { id: businessData?._id });
+        }}
       />
       <Formik
-        initialValues={{ established: established }}
+        initialValues={{
+          established: isEditBusiness ? businessData?.established : established,
+        }}
         onSubmit={(values) => {
           navigation.navigate('Address');
           setEstablished(moment(values.established).format('DD/MM/YYYY'));
@@ -109,19 +132,25 @@ export const EstablishedScreen = ({
                   );
                 }}
               />
-              <View style={styles.stickyFooter}>
-                <Button
-                  style={styles.footerButtons}
-                  onPress={() => {
-                    navigateToBack();
-                  }}>
-                  {'Back'}
-                </Button>
-                {active === true ? (
-                  <Button onPress={handleSubmit} style={styles.footerButtons}>
-                    {'Next'}
+              <View
+                style={
+                  isEditBusiness ? styles.stickyFooterEdit : styles.stickyFooter
+                }>
+                {isEditBusiness ? null : (
+                  <Button style={styles.footerButtons} onPress={navigateToBack}>
+                    {'Back'}
                   </Button>
-                ) : null}
+                )}
+
+                <Button
+                  style={[
+                    styles.footerButtons,
+                    !active ? { backgroundColor: BaseColor.grayColor } : null,
+                  ]}
+                  title="submit"
+                  onPress={() => navigateToNext()}>
+                  {isEditBusiness ? 'Update Category' : 'Next'}
+                </Button>
               </View>
             </>
           );

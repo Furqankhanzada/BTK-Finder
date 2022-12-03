@@ -45,7 +45,7 @@ export const NameScreen = ({
           ) : null;
         }}
         onPressLeft={() => {
-          navigation.goBack();
+          navigation.navigate('EditBusiness', { id: businessData?._id });
         }}
       />
 
