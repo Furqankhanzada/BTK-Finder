@@ -74,7 +74,7 @@ export default function BusinessOverviewScreen(props: Props) {
   const { t } = useTranslation();
   const { colors } = useTheme();
 
-  const { isLoading, data: business } = useBusiness(route?.params?.id);
+  const { isLoading, data: business } = useBusiness(route?.params?.businessId);
   const {
     isLoading: businessLinkLoading,
     mutateAsync: buildBusinessURLMutate,
@@ -122,15 +122,21 @@ export default function BusinessOverviewScreen(props: Props) {
   };
 
   const onMenuOrProductsPress = (id: string) => {
-    navigation.navigate('Products', { id: id });
+    navigation.navigate('Products', { businessId: id });
   };
 
   const onReviewsPress = (id: string) => {
-    navigation.navigate('ReviewStack', { screen: 'Reviews', params: { id } });
+    navigation.navigate('ReviewStack', {
+      screen: 'Reviews',
+      params: { businessId: id },
+    });
   };
 
   const onBusinessPress = (id: string) => {
-    navigation.navigate('DetailStack', { screen: 'Overview', params: { id } });
+    navigation.navigate('DetailStack', {
+      screen: 'Overview',
+      params: { businessId: id },
+    });
   };
 
   const headerBackgroundColor = scrollY.interpolate({

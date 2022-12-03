@@ -21,7 +21,7 @@ type Props = CompositeScreenProps<
 
 export default function BusinessProductsScreen(props: Props) {
   const { navigation, route } = props;
-  const { data: business } = useBusiness(route.params.id);
+  const { data: business } = useBusiness(route.params.businessId);
 
   const { colors } = useTheme();
   const { t } = useTranslation();

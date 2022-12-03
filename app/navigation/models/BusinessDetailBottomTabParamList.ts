@@ -4,16 +4,16 @@ import { Maybe } from '../../models/graphql';
 export type BusinessDetailBottomTabParamList = {
   DetailStack: NavigatorScreenParams<ProductStackParamList>;
   ReviewStack: NavigatorScreenParams<ReviewStackParamList>;
-  Products: { id: string };
+  Products: { businessId: string };
 };
 
 export type ReviewStackParamList = {
-  Reviews: { id: string };
-  AddReview: { id: string };
+  Reviews: { businessId: string };
+  AddReview: { businessId: string };
 };
 
 export type ProductStackParamList = {
-  Overview: { id: string };
+  Overview: { businessId: string };
   Product: {
     businessId: string | undefined;
     productSlug: Maybe<string> | undefined;

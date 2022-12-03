@@ -170,7 +170,7 @@ export default function Home({ navigation }: any) {
   ]);
 
   const navigateBusinessDetail = (id: string, name: string, type: string) => {
-    navigation.navigate('BusinessDetailTabNavigator', { id });
+    navigation.navigate('BusinessDetailTabNavigator', { businessId: id });
 
     const business = {
       id,

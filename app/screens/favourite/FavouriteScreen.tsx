@@ -33,7 +33,7 @@ export default function FavouriteScreen(props: Props) {
   };
 
   const navigateToBusinessDetail = (id: string) => {
-    navigation.navigate('BusinessDetailTabNavigator', { id });
+    navigation.navigate('BusinessDetailTabNavigator', { businessId: id });
   };
 
   return (
