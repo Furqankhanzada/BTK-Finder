@@ -10,7 +10,7 @@ export const linkingConfig: LinkingOptions = {
         initialRouteName: 'MainBottomTabNavigator',
         screens: {
           Businesses: {
-            path: 'businesses/list/:category',
+            path: 'businesses',
             exact: true,
           },
           BusinessDetailTabNavigator: {
