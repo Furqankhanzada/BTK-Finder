@@ -34,6 +34,7 @@ export interface NotificationOptions {
 export interface AlertButtons {
   confirmBtnTitle: string;
   cancelBtnTitle?: string;
+  confirmDestructive?: boolean;
   cancelDestructive?: boolean;
   layout?: 'row' | 'column';
 }

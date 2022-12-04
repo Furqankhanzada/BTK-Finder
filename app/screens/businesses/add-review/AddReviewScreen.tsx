@@ -1,10 +1,16 @@
 import React, { useState } from 'react';
-import { View, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
-import { BaseStyle, BaseColor, useTheme } from '@config';
-import { useDispatch, useSelector } from 'react-redux';
-import { StackScreenProps } from '@react-navigation/stack';
+import {
+  View,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+} from 'react-native';
+import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { StackScreenProps } from '@react-navigation/stack';
 
+import { BaseStyle, BaseColor, useTheme } from '@config';
 import {
   Image,
   Header,
@@ -17,8 +23,8 @@ import {
   Button,
 } from '@components';
 
-import { addReview } from '../../../actions/business';
 import { ReviewStackParamList } from '../../../navigation/models/BusinessDetailBottomTabParamList';
+import { AddReviewPayload, useAddReview } from '../queries/mutations';
 
 export default function AddReviewScreen(
   props: StackScreenProps<ReviewStackParamList>,
@@ -26,27 +32,22 @@ export default function AddReviewScreen(
   const { navigation, route } = props;
   const { colors } = useTheme();
   const { t } = useTranslation();
-  const dispatch = useDispatch();
   const profileData = useSelector((state: any) => state.profile);
   const stateProps = useSelector(({ businesses }: any) => businesses);
   const { createReviewLoading } = stateProps;
 
-  const [rate, setRate] = useState(4.5);
-  const [title, setTitle] = useState('');
-  const [review, setReview] = useState('');
+  const [review, setReview] = useState<AddReviewPayload>({
+    rating: 4.5,
+    title: '',
+  });
 
-  let payload = {
-    title: title,
-    description: review,
-    rating: rate,
-  };
+  const { mutateAsync: mutateReview, isLoading } = useAddReview(
+    route.params.businessId,
+  );
 
-  const addCallback = () => {
+  const onSubmit = async () => {
+    await mutateReview(review);
     navigation.goBack();
-  };
-
-  const onSubmit = () => {
-    dispatch(addReview(payload, addCallback, route?.params?.id));
   };
 
   const offsetKeyboard = Platform.select({
@@ -76,57 +77,53 @@ export default function AddReviewScreen(
       <KeyboardAvoidingView
         behavior={Platform.OS === 'android' ? 'height' : 'padding'}
         keyboardVerticalOffset={offsetKeyboard}
-        style={{ flex: 1 }}>
-        <ScrollView
-          contentContainerStyle={{ alignItems: 'center', padding: 20 }}>
+        style={styles.keyboardView}>
+        <ScrollView contentContainerStyle={styles.contentContainer}>
           <Image
             source={
               profileData.avatar
                 ? { uri: profileData.avatar }
                 : require('@assets/images/default-avatar.png')
             }
-            style={{
-              width: 62,
-              height: 62,
-              borderRadius: 31,
-            }}
+            style={styles.contentImage}
           />
-          <View style={{ width: 160 }}>
+          <View style={styles.ratingContainer}>
             <StarRating
               starSize={26}
               maxStars={5}
-              rating={rate}
+              rating={review?.rating}
               selectedStar={(rating) => {
-                setRate(rating);
+                setReview({ ...review, rating });
               }}
               fullStarColor={BaseColor.yellowColor}
-              containerStyle={{ padding: 5 }}
+              containerStyle={styles.starRating}
             />
-            <Text caption1 grayColor style={{ textAlign: 'center' }}>
+            <Text caption1 grayColor style={styles.ratingText}>
               {t('tap_to_rate')}
             </Text>
           </View>
           <TextInput
-            style={{ marginTop: 10 }}
-            onChangeText={(text: React.SetStateAction<string>) =>
-              setTitle(text)
-            }
+            style={styles.reviewTitle}
+            onChangeText={(title) => {
+              setReview({ ...review, title });
+            }}
             placeholder="Title"
-            value={title}
+            value={review.title}
           />
           <TextInput
-            style={{ marginTop: 20, height: 150 }}
-            onChangeText={(text: React.SetStateAction<string>) =>
-              setReview(text)
-            }
+            style={styles.reviewDiscription}
+            onChangeText={(description) => {
+              setReview({ ...review, description });
+            }}
             textAlignVertical="top"
             multiline={true}
             placeholder="Review"
-            value={review}
+            value={review.description}
           />
           <Button
+            loading={isLoading}
             full
-            style={{ marginTop: 20 }}
+            style={styles.reviewButton}
             onPress={() => {
               onSubmit();
             }}>
@@ -137,3 +134,37 @@ export default function AddReviewScreen(
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  keyboardView: {
+    flex: 1,
+  },
+  contentContainer: {
+    alignItems: 'center',
+    padding: 20,
+  },
+  contentImage: {
+    width: 62,
+    height: 62,
+    borderRadius: 31,
+  },
+  ratingContainer: {
+    width: 160,
+  },
+  starRating: {
+    padding: 5,
+  },
+  ratingText: {
+    textAlign: 'center',
+  },
+  reviewTitle: {
+    marginTop: 10,
+  },
+  reviewDiscription: {
+    marginTop: 20,
+    height: 150,
+  },
+  reviewButton: {
+    marginTop: 20,
+  },
+});

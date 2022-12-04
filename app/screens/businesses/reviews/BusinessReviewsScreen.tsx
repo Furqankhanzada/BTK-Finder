@@ -9,6 +9,8 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
+import { StackScreenProps } from '@react-navigation/stack';
+
 import { BaseStyle, useTheme } from '@config';
 import {
   Header,
@@ -20,7 +22,6 @@ import {
   Loading,
 } from '@components';
 import { useBusiness } from '@screens/businesses/queries/queries';
-import { StackScreenProps } from '@react-navigation/stack';
 
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 
@@ -29,7 +30,11 @@ export default function Review(
 ) {
   const { navigation, route } = props;
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
-  const { isLoading, data: business, refetch } = useBusiness(route.params.id);
+  const {
+    isLoading,
+    data: business,
+    refetch,
+  } = useBusiness(route.params.businessId);
 
   const { colors } = useTheme();
   const { t } = useTranslation();
@@ -84,7 +89,7 @@ export default function Review(
   };
 
   const navigateToFeedback = (id: any) => {
-    navigation.navigate('AddReview', { id });
+    navigation.navigate('AddReview', { businessId: id });
   };
 
   const checkReviewAlreadyAdded = () => {
@@ -114,7 +119,7 @@ export default function Review(
           {
             text: 'Login',
             onPress: () =>
-              navigateToWalktrhough('ReviewStack', route.params.id),
+              navigateToWalktrhough('ReviewStack', route.params.businessId),
           },
           {
             text: 'Cancel',
@@ -207,7 +212,7 @@ export default function Review(
         />
       ) : (
         <View style={styles.noReviewsAvailable}>
-          <Text subhead>There are no Reviews in this business yet</Text>
+          <Text subhead>No reviews found</Text>
         </View>
       )}
       {/*Users Review List */}

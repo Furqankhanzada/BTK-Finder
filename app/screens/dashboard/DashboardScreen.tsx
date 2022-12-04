@@ -102,7 +102,7 @@ function DashboardScreen({
   const onBusinessPress = (business: BusinessPresentable) => {
     trackEvent(EVENTS.VISITED_BUSINESS);
     navigation.navigate('BusinessDetailTabNavigator', {
-      id: business._id,
+      businessId: business._id,
     });
   };
 
@@ -135,7 +135,7 @@ function DashboardScreen({
             primary
             onPress={() => {
               navigation.navigate('BusinessDetailTabNavigator', {
-                id: banner.businessId,
+                businessId: banner.businessId,
               });
             }}>
             {banner.buttonText}
@@ -207,7 +207,8 @@ function DashboardScreen({
               <HorizontalCategories onPress={onCategoryPress} />
             </Section>
             <Section
-              title="Restaurant with Menus (New)"
+              tag="New"
+              title="Restaurant with Menus"
               subTitle="Find Restaurant with Menus, Now you can see the prices and available food items"
               onViewAll={() =>
                 onBusinessesViewAllPress({

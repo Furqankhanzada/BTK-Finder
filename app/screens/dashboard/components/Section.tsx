@@ -1,12 +1,13 @@
 import React from 'react';
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
-import { Text } from '@components';
+import { Tag, Text } from '@components';
 import { useTheme } from '@config';
 
 interface Props {
   title: string;
   subTitle?: string;
   viewAllText?: string;
+  tag?: string;
   onViewAll: () => void;
   isLoading: boolean;
   children: JSX.Element;
@@ -18,6 +19,7 @@ export default function Section({
   viewAllText,
   onViewAll,
   children,
+  tag,
 }: Props) {
   const { colors } = useTheme();
   return (
@@ -25,9 +27,16 @@ export default function Section({
       <View style={styles.sectionHeader}>
         <View style={styles.sectionHeaderContent}>
           {title ? (
-            <Text headline semibold>
-              {title}
-            </Text>
+            <View style={styles.titleContainer}>
+              <Text headline semibold>
+                {title}
+              </Text>
+              {tag ? (
+                <Tag primary style={styles.tag}>
+                  {tag}
+                </Tag>
+              ) : null}
+            </View>
           ) : null}
           {subTitle ? (
             <Text caption1 grayColor>
@@ -62,6 +71,13 @@ const styles = StyleSheet.create({
   sectionHeaderContent: {
     flex: 1,
     alignItems: 'flex-start',
+  },
+  titleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  tag: {
+    marginLeft: 10,
   },
   viewAllBtn: {
     flexDirection: 'row',

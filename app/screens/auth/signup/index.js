@@ -6,7 +6,7 @@ import TextInputMask from 'react-native-text-input-mask';
 import { useDispatch } from 'react-redux';
 import styles from './styles';
 import { useTranslation } from 'react-i18next';
-import { register } from '../../actions/auth';
+import { register } from '../../../actions/auth';
 import Toast from 'react-native-toast-message';
 
 export default function SignUp(props) {
@@ -59,7 +59,7 @@ export default function SignUp(props) {
         (error) => {
           setLoading(false);
           if (!error) {
-            navigation.navigate(lastRoute ? lastRoute : 'Profile');
+            navigation.navigate(lastRoute ? lastRoute : 'Welcome');
             Toast.show({
               type: 'success',
               topOffset: 55,

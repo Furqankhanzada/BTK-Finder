@@ -22,6 +22,7 @@ import { trackScreenView } from '../userTracking';
 import { setIsLogin } from '../actions/auth';
 import { RootStackParamList } from './models/RootStackParamList';
 import Main from './main';
+import { linkingConfig } from './deep-linking/LinkingConfig';
 
 const RootStack = createStackNavigator<RootStackParamList>();
 
@@ -65,6 +66,7 @@ export default function Navigator() {
     <NavigationContainer
       theme={theme}
       ref={navigationRef}
+      linking={linkingConfig}
       onReady={() => {
         isReadyRef.current = true;
       }}
