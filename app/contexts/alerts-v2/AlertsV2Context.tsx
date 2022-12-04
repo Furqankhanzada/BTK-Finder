@@ -299,7 +299,6 @@ const styles = StyleSheet.create({
   sheetContainer: {
     marginHorizontal: 16,
     borderRadius: 16,
-    backgroundColor: BaseColor.whiteColor,
     shadowColor: BaseColor.grayColor,
     shadowOffset: {
       width: 0,
