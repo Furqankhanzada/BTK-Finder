@@ -12,7 +12,6 @@ import {
   Loading,
 } from '@components';
 import { BaseStyle, Images, useTheme } from '@config';
-import { useAlerts } from '@hooks';
 import * as Utils from '@utils';
 import {
   useBusiness,
@@ -24,7 +23,6 @@ import EcommerceButton from '@screens/businesses/components/EcommerceButton';
 import { ProductStackParamList } from '../../../navigation/models/BusinessDetailBottomTabParamList';
 import { FlatList, RefreshControl, StyleSheet, View } from 'react-native';
 import { CatalogProductVariant } from '../../../models/graphql';
-import { IconName } from '../../../contexts/alerts-v2/models/Icon';
 
 export default function ProductDetailScreen(
   props: StackScreenProps<ProductStackParamList, 'Product'>,
@@ -40,8 +38,6 @@ export default function ProductDetailScreen(
 
   const { colors } = useTheme();
   const { t } = useTranslation();
-
-  const { showAlert } = useAlerts();
   const [selectedVariant, setSelectedVariant] =
     useState<CatalogProductVariant | null>();
   const [quantity, setQuantity] = useState<number>(1);
@@ -58,19 +54,7 @@ export default function ProductDetailScreen(
   };
 
   const onAddToCartPress = async () => {
-    await showAlert({
-      icon: {
-        size: 70,
-        name: IconName.ConstructOutline,
-        color: colors.primary,
-      },
-      title: 'Under Development',
-      message: 'This feature is under development, will be available soon!',
-      btn: {
-        confirmBtnTitle: 'Ok',
-      },
-      type: 'Standard',
-    });
+    navigation.navigate('Cart');
   };
 
   const onRefresh = async () => {
