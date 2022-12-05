@@ -68,7 +68,7 @@ export default function CartScreen(
               data={item?.items ? item?.items : []}
               keyExtractor={(subItem, index) => index + subItem._id + 'subItem'}
               ListEmptyComponent={
-                <Text title3 bold>
+                <Text body2 medium>
                   No Items Found!
                 </Text>
               }
