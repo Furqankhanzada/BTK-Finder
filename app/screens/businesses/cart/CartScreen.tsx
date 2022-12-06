@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     paddingHorizontal: 20,
-    paddingBottom: 100,
+    paddingBottom: 90,
   },
   emptyCartContainer: {
     flex: 1,
