@@ -11,6 +11,7 @@ import { useBusiness } from '@screens/businesses/queries/queries';
 import { StackScreenProps } from '@react-navigation/stack';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
+import { useEditBusiness } from '../queries/mutations';
 
 const emailSchema = Yup.object({
   email: Yup.string().email().required('ex: abc@gmail.com'),
@@ -20,6 +21,9 @@ export const EmailScreen = ({
   navigation,
   route,
 }: StackScreenProps<GlobalParamList>) => {
+  const { mutate: useEditEmail, isLoading } = useEditBusiness(
+    route?.params?.id,
+  );
   const { data: businessData } = useBusiness(route?.params?.id);
 
   const email = useAddBusinessStore((state: any) => state.email);
@@ -62,8 +66,12 @@ export const EmailScreen = ({
         initialValues={{ email: isEditBusiness ? businessData?.email : email }}
         validationSchema={emailSchema}
         onSubmit={(values) => {
-          navigation.navigate('Website');
-          setEmail(values.email);
+          isEditBusiness
+            ? navigation.navigate('EditBusiness', { id: businessData?._id })
+            : navigation.navigate('Website');
+          isEditBusiness
+            ? useEditEmail({ ...businessData, email: values.email })
+            : setEmail(values.email);
         }}>
         {({ values, handleChange, handleSubmit }) => {
           return (
