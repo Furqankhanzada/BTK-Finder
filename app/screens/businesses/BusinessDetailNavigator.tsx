@@ -21,6 +21,7 @@ import BusinessReviewsScreen from './reviews/BusinessReviewsScreen';
 import BusinessOverviewScreen from './info/BusinessOverviewScreen';
 import BusinessProductsScreen from './products/BusinessProductsScreen';
 import AddReviewScreen from './add-review/AddReviewScreen';
+import CartScreen from './cart/CartScreen';
 import {
   BusinessDetailBottomTabParamList,
   ProductStackParamList,
@@ -52,6 +53,7 @@ function ProductStackNavigator() {
     <ProductStack.Navigator screenOptions={{ headerShown: false }}>
       <ProductStack.Screen name="Overview" component={BusinessOverviewScreen} />
       <ProductStack.Screen name="Product" component={ProductDetailScreen} />
+      <ProductStack.Screen name="Cart" component={CartScreen} />
     </ProductStack.Navigator>
   );
 }

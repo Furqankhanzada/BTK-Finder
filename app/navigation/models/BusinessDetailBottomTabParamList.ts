@@ -18,12 +18,5 @@ export type ProductStackParamList = {
     businessId: string | undefined;
     productSlug: Maybe<string> | undefined;
   };
-};
-
-export type ProductStackParamList = {
-  Overview: { id: string };
-  Product: {
-    businessId: string | undefined;
-    productSlug: Maybe<string> | undefined;
-  };
+  Cart: undefined;
 };

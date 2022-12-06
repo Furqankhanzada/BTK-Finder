@@ -73,4 +73,5 @@ export const Images = {
   edhi: require('@assets/images/helpline-icons/edhi.png'),
   ayazJalbani: require('@assets/images/team/ayazjalbani.png'),
   furqan: require('@assets/images/team/furqan.jpg'),
+  emptyCart: require('@assets/images/empty-cart.png'),
 };

@@ -8,24 +8,40 @@ interface Props {
   quantity: number;
   onPressAdd: () => void;
   onPressRemove: () => void;
+  small?: boolean;
 }
 export default function QuantityButton({
   quantity,
   onPressAdd,
   onPressRemove,
+  small,
 }: Props) {
   const { colors } = useTheme();
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.primaryLight }]}>
+    <View
+      style={[
+        styles.container,
+        small && styles.containerSmall,
+        { backgroundColor: colors.primaryLight },
+      ]}>
       <TouchableOpacity onPress={onPressAdd} style={styles.button}>
-        <Icon name="add" size={24} color={BaseColor.whiteColor} />
+        <Icon name="add" size={small ? 12 : 24} color={BaseColor.whiteColor} />
       </TouchableOpacity>
-      <Text title3 style={{ color: BaseColor.whiteColor }}>
+      <Text
+        title3
+        style={[
+          { color: BaseColor.whiteColor },
+          small && styles.quantityTextSmall,
+        ]}>
         {quantity}
       </Text>
       <TouchableOpacity onPress={onPressRemove} style={styles.button}>
-        <Icon name="remove" size={24} color={BaseColor.whiteColor} />
+        <Icon
+          name="remove"
+          size={small ? 12 : 24}
+          color={BaseColor.whiteColor}
+        />
       </TouchableOpacity>
     </View>
   );
@@ -37,8 +53,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    borderRadius: 10,
+  },
+  containerSmall: {
+    borderRadius: 5,
   },
   button: {
     padding: 8,
+  },
+  quantityTextSmall: {
+    fontSize: 12,
   },
 });
