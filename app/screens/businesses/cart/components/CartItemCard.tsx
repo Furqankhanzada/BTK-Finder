@@ -1,7 +1,8 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
+import NumberFormat from 'react-number-format';
 
-import { Icon, Text, Image, StarRating } from '@components';
+import { Icon, Text, Image, StarRating, Tag } from '@components';
 import { BaseColor, useTheme } from '@config';
 
 interface Props {
@@ -22,8 +23,8 @@ export default function CartItemCard(props: Props) {
       style={[
         subItem ? styles.cartSubItem : styles.cartItem,
         {
-          borderColor: colors.border,
-          backgroundColor: subItem ? colors.card : colors.background,
+          borderColor: colors.card,
+          backgroundColor: colors.background,
         },
       ]}>
       <Image
@@ -57,13 +58,29 @@ export default function CartItemCard(props: Props) {
         )}
 
         {rating ? (
-          <StarRating
-            disabled={true}
-            starSize={10}
-            maxStars={5}
-            rating={rating}
-            fullStarColor={BaseColor.yellowColor}
-          />
+          <View style={styles.ratingContainer}>
+            <Tag rate>
+              <NumberFormat
+                value={rating ?? '0.0'}
+                displayType={'text'}
+                decimalScale={1}
+                fixedDecimalScale={true}
+                renderText={(value) => (
+                  <Text caption2 whiteColor semibold>
+                    {value}
+                  </Text>
+                )}
+              />
+            </Tag>
+            <StarRating
+              disabled={true}
+              starSize={12}
+              maxStars={5}
+              rating={rating}
+              fullStarColor={BaseColor.yellowColor}
+              containerStyle={styles.starRating}
+            />
+          </View>
         ) : null}
       </View>
 
@@ -90,8 +107,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   cartItemImage: {
-    width: 80,
-    height: 80,
+    width: 85,
+    height: 85,
     borderRadius: 10,
     marginRight: 15,
   },
@@ -101,11 +118,17 @@ const styles = StyleSheet.create({
   cartItemSubHeading: {
     marginVertical: 5,
   },
+  ratingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  starRating: {
+    marginLeft: 5,
+  },
   cartSubItem: {
     flexDirection: 'row',
     alignItems: 'center',
     marginVertical: 5,
-    marginHorizontal: 10,
     borderRadius: 10,
     borderWidth: 1,
   },
