@@ -11,6 +11,7 @@ import { BaseColor, BaseStyle, useTheme } from '@config';
 import useAddBusinessStore from '../store/Store';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
+import { useEditBusiness } from '../queries/mutations';
 
 const discriptionSchema = Yup.object({
   discription: Yup.string()
@@ -26,6 +27,9 @@ export const DiscriptionScreen = ({
   const navigateToBack = () => {
     navigation.goBack();
   };
+  const { mutate: useEditDescription, isLoading } = useEditBusiness(
+    route?.params?.id,
+  );
   const { data: businessData } = useBusiness(route?.params?.id);
   const description = useAddBusinessStore((state: any) => state.description);
   const setDescription = useAddBusinessStore(
@@ -69,8 +73,15 @@ export const DiscriptionScreen = ({
         }}
         validationSchema={discriptionSchema}
         onSubmit={(values) => {
-          navigation.navigate('Category');
-          setDescription(values.discription);
+          isEditBusiness
+            ? navigation.navigate('EditBusiness', { id: businessData?._id })
+            : navigation.navigate('Category');
+          isEditBusiness
+            ? useEditDescription({
+                ...businessData,
+                description: values.discription,
+              })
+            : setDescription(values.discription);
         }}>
         {({ values, handleChange, handleSubmit, errors }) => {
           return (
