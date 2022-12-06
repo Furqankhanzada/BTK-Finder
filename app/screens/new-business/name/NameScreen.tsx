@@ -32,7 +32,8 @@ export const NameScreen = ({
     (state: any) => state.isEditBusiness,
   );
 
-  const [editName, setEditName] = useState({ ...businessData });
+  const [editName, setEditName] = useState<any>({ ...businessData });
+  console.log('What is business Data', businessData);
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
@@ -61,7 +62,7 @@ export const NameScreen = ({
             ? navigation.navigate('EditBusiness', { id: businessData?._id })
             : navigation.navigate('Discription');
           isEditBusiness
-            ? useEditName(editName, values.name)
+            ? useEditName({ ...businessData, name: values.name })
             : setName(values.name);
         }}>
         {({ values, handleChange, handleSubmit, errors }) => {

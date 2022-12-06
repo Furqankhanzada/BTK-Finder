@@ -24,7 +24,7 @@ export default function EditBusinessScreen({ navigation, route }: any) {
           );
         }}
         onPressLeft={() => {
-          navigation.goBack();
+          navigation.navigate('MyBusinesses');
         }}
       />
       <ScrollView>
