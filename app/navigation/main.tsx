@@ -18,6 +18,7 @@ import EditBusinessScreen from '@screens/new-business/edit-business/EditBusiness
 import FavouriteScreen from '@screens/favourite/FavouriteScreen';
 import Messenger from '@screens/Messenger';
 import Welcome from '@screens/auth/welcome';
+import { NewBusinessStackNavigator } from '@screens/new-business/navigation/NewBusinessStack';
 
 /* Stack Screen */
 import ThemeSetting from '@screens/ThemeSetting';
