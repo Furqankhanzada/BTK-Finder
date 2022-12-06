@@ -9,6 +9,7 @@ import { BaseStyle, Images, useTheme } from '@config';
 
 import { ProductStackParamList } from '../../../navigation/models/BusinessDetailBottomTabParamList';
 import CartItemCard from './components/CartItemCard';
+import CartInfo from './components/CartInfo';
 import { cartItems } from './cartData';
 
 export default function CartScreen(
@@ -83,6 +84,9 @@ export default function CartScreen(
               )}
             />
           </>
+        )}
+        ListFooterComponent={() => (
+          <CartInfo subtotal="3,000" shipping="200" total="3,200" />
         )}
       />
     </SafeAreaView>
