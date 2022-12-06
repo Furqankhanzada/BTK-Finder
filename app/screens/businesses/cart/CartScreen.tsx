@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { StackScreenProps } from '@react-navigation/stack';
 
 import * as Utils from '@utils';
-import { Header, SafeAreaView, Icon, Text, Image } from '@components';
+import { Header, SafeAreaView, Icon, Text, Image, Button } from '@components';
 import { BaseStyle, Images, useTheme } from '@config';
 
 import { ProductStackParamList } from '../../../navigation/models/BusinessDetailBottomTabParamList';
@@ -91,6 +91,14 @@ export default function CartScreen(
           <CartInfo subtotal="3,000" shipping="200" total="3,200" />
         )}
       />
+
+      <View
+        style={[
+          styles.checkoutButtonContainer,
+          { backgroundColor: colors.background },
+        ]}>
+        <Button onPress={() => {}}>Checkout</Button>
+      </View>
     </SafeAreaView>
   );
 }
@@ -99,7 +107,7 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     paddingHorizontal: 20,
-    paddingBottom: 20,
+    paddingBottom: 100,
   },
   emptyCartContainer: {
     flex: 1,
@@ -113,5 +121,12 @@ const styles = StyleSheet.create({
   },
   emptyCartTitle: {
     marginBottom: 10,
+  },
+  checkoutButtonContainer: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
   },
 });
