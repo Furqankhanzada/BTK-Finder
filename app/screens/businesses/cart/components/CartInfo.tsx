@@ -8,17 +8,18 @@ interface Props {
   subtotal: string;
   shipping: string;
   total: string;
+  onApplyPromo?: () => void;
 }
 
 export default function (props: Props) {
-  const { subtotal, shipping, total } = props;
+  const { subtotal, shipping, total, onApplyPromo } = props;
   const { colors } = useTheme();
 
   return (
     <View style={styles.footerContainer}>
       <View style={[styles.promoCode, { borderColor: colors.border }]}>
         <Text body1>Promo Code</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={onApplyPromo}>
           <Text body1 primaryColor>
             Apply
           </Text>

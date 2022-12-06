@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { FlatList, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { StackScreenProps } from '@react-navigation/stack';
 
@@ -67,12 +67,14 @@ export default function CartScreen(
                 </Text>
               }
               ListHeaderComponent={() => (
-                <CartItemCard
-                  image={item.image}
-                  title={item.title}
-                  subTitle={item.category}
-                  rating={item.rating}
-                />
+                <TouchableOpacity onPress={() => {}}>
+                  <CartItemCard
+                    image={item.image}
+                    title={item.title}
+                    subTitle={item.category}
+                    rating={item.rating}
+                  />
+                </TouchableOpacity>
               )}
               renderItem={({ item: subItem }) => (
                 <CartItemCard
