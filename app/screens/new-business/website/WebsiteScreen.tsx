@@ -11,6 +11,7 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
 import { useBusiness } from '@screens/businesses/queries/queries';
+import { useEditBusiness } from '../queries/mutations';
 
 const webRejex =
   /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/;
@@ -27,6 +28,9 @@ export const WebsiteScreen = ({
 }: StackScreenProps<GlobalParamList>) => {
   const { colors } = useTheme();
 
+  const { mutate: useEditWebsite, isLoading } = useEditBusiness(
+    route?.params?.id,
+  );
   const { data: businessData } = useBusiness(route?.params?.id);
   const website = useAddBusinessStore((state: any) => state.website);
   const setWebsite = useAddBusinessStore((state: any) => state.setWebsite);
@@ -70,8 +74,12 @@ export const WebsiteScreen = ({
         }}
         validationSchema={webSchema}
         onSubmit={(values) => {
-          navigation.navigate('Established');
-          setWebsite(values.website);
+          isEditBusiness
+            ? navigation.navigate('EditBusiness', { id: businessData?._id })
+            : navigation.navigate('Established');
+          isEditBusiness
+            ? useEditWebsite({ ...businessData, website: values.website })
+            : setWebsite(values.website);
         }}>
         {({ values, handleChange, handleSubmit }) => {
           return (
