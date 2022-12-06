@@ -6,7 +6,8 @@ import { useSelector } from 'react-redux';
 import useAddBusinessStore from '../store/Store';
 
 import axiosApiInstance from '../../../interceptor/axios-interceptor';
-import { UPLOAD } from '../../../constants';
+import { BUSINESSES_API, UPLOAD } from '../../../constants';
+import Toast from 'react-native-toast-message';
 
 export const useAddNewThumbnail = () => {
   const setThumbnail = useAddBusinessStore((state: any) => state.setThumbnail);
@@ -72,6 +73,26 @@ export const useAddNewBusiness = () => {
   return useMutation((payload) => {
     return axiosApiInstance
       .post(`${Config.API_URL}/businesses`, payload)
+      .catch(({ response }) => {
+        handleError(response.data);
+      });
+  });
+};
+
+// Edit Business
+
+export const useEditBusiness = (id: any) => {
+  return useMutation((payload) => {
+    return axiosApiInstance
+      .put(`${BUSINESSES_API}/${id}`, payload)
+      .then((response) => {
+        Toast.show({
+          type: 'success',
+          topOffset: 55,
+          text1: 'Business Updated',
+          text2: 'You have Successfully updated your Business!',
+        });
+      })
       .catch(({ response }) => {
         handleError(response.data);
       });

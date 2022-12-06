@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FlatList, SafeAreaView, View } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -11,6 +11,7 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
 import useAddBusinessStore from '../store/Store';
+import { useEditBusiness } from '../queries/mutations';
 
 const nameSchema = Yup.object({
   name: Yup.string().required('name must be atleats 3 words').min(3),
@@ -24,11 +25,14 @@ export const NameScreen = ({
     navigation.goBack();
   };
   const { data: businessData } = useBusiness(route?.params?.id);
+  const { mutate: useEditName, isLoading } = useEditBusiness(route?.params?.id);
   const name = useAddBusinessStore((state: any) => state.name);
   const setName = useAddBusinessStore((state: any) => state.setName);
   const isEditBusiness = useAddBusinessStore(
     (state: any) => state.isEditBusiness,
   );
+
+  const [editName, setEditName] = useState({ ...businessData });
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
@@ -53,8 +57,12 @@ export const NameScreen = ({
         initialValues={{ name: isEditBusiness ? businessData?.name : name }}
         validationSchema={nameSchema}
         onSubmit={(values) => {
-          navigation.navigate('Discription');
-          setName(values.name);
+          isEditBusiness
+            ? navigation.navigate('EditBusiness', { id: businessData?._id })
+            : navigation.navigate('Discription');
+          isEditBusiness
+            ? useEditName(editName, values.name)
+            : setName(values.name);
         }}>
         {({ values, handleChange, handleSubmit, errors }) => {
           return (
