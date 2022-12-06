@@ -37,10 +37,10 @@ export default function CartScreen(
       />
 
       <FlatList
-        listKey="cart"
+        listKey="CartItems"
         contentContainerStyle={styles.container}
         data={cartItems ? cartItems : []}
-        keyExtractor={(item, index) => index + item._id + 'item'}
+        keyExtractor={(item, index) => `${item._id}_item${index.toString()}`}
         ListEmptyComponent={
           <View style={styles.emptyCartContainer}>
             <Image
@@ -56,28 +56,30 @@ export default function CartScreen(
         }
         renderItem={({ item }) => (
           <>
-            <CartItemCard
-              image={item.image}
-              title={item.title}
-              subTitle={item.category}
-              rating={item.rating}
-            />
-
             <FlatList
-              listKey="cart-sub"
               data={item?.items ? item?.items : []}
-              keyExtractor={(subItem, index) => index + subItem._id + 'subItem'}
+              keyExtractor={(subItem, index) =>
+                `${subItem._id}_subItem${index.toString()}`
+              }
               ListEmptyComponent={
                 <Text body2 medium>
                   No Items Found!
                 </Text>
               }
-              renderItem={({ item }) => (
+              ListHeaderComponent={() => (
                 <CartItemCard
-                  subItem
                   image={item.image}
                   title={item.title}
-                  subTitle={item.price}
+                  subTitle={item.category}
+                  rating={item.rating}
+                />
+              )}
+              renderItem={({ item: subItem }) => (
+                <CartItemCard
+                  subItem
+                  image={subItem.image}
+                  title={subItem.title}
+                  subTitle={subItem.price}
                 />
               )}
             />
