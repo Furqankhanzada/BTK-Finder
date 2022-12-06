@@ -19,7 +19,12 @@ export default function QuantityButton({
   const { colors } = useTheme();
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.primaryLight }]}>
+    <View
+      style={[
+        styles.container,
+        small && styles.containerSmall,
+        { backgroundColor: colors.primaryLight },
+      ]}>
       <TouchableOpacity onPress={onPressAdd} style={styles.button}>
         <Icon name="add" size={small ? 12 : 24} color={BaseColor.whiteColor} />
       </TouchableOpacity>
@@ -49,6 +54,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     borderRadius: 10,
+  },
+  containerSmall: {
+    borderRadius: 5,
   },
   button: {
     padding: 8,
