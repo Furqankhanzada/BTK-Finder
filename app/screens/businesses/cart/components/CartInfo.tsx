@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 
 import { Text } from '@components';
-import { useTheme } from '@config';
+import { BaseColor, useTheme } from '@config';
 
 interface Props {
   subtotal: string;
@@ -15,20 +15,39 @@ export default function (props: Props) {
   const { colors } = useTheme();
 
   return (
-    <View style={[styles.infoBox, { borderColor: colors.primary }]}>
+    <View style={styles.infoBox}>
       <View style={styles.infoTextContainer}>
-        <Text body2>Subtotal</Text>
-        <Text body2>Rs {subtotal}</Text>
+        <Text body2 medium>
+          Subtotal
+        </Text>
+        <Text body2 medium>
+          Rs {subtotal}
+        </Text>
       </View>
 
       <View style={styles.infoTextContainer}>
-        <Text body2>Shipping</Text>
-        <Text body2>Rs {shipping}</Text>
+        <Text body2 grayColor medium>
+          Shipping
+        </Text>
+
+        {shipping === '0' ? (
+          <Text body2 style={{ color: BaseColor.greenColor }}>
+            Free
+          </Text>
+        ) : (
+          <Text body2>Rs {shipping}</Text>
+        )}
       </View>
 
+      <View style={[styles.divider, { backgroundColor: colors.border }]} />
+
       <View style={styles.infoTextContainer}>
-        <Text body2>Total</Text>
-        <Text body2>Rs {total}</Text>
+        <Text body1 medium>
+          Total
+        </Text>
+        <Text body1 medium>
+          Rs {total}
+        </Text>
       </View>
     </View>
   );
@@ -37,7 +56,6 @@ export default function (props: Props) {
 const styles = StyleSheet.create({
   infoBox: {
     padding: 10,
-    borderWidth: 1,
     borderRadius: 10,
     marginTop: 20,
   },
@@ -46,5 +64,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     flexDirection: 'row',
     marginBottom: 5,
+  },
+  divider: {
+    width: '100%',
+    height: 1,
+    marginVertical: 5,
   },
 });
