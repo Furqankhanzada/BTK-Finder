@@ -15,6 +15,7 @@ export default function Button(props) {
     round,
     loading,
     children,
+    destructive,
     ...rest
   } = props;
 
@@ -22,7 +23,12 @@ export default function Button(props) {
     <TouchableOpacity
       {...rest}
       style={StyleSheet.flatten([
-        [styles.default, { backgroundColor: colors.primary }],
+        [
+          styles.default,
+          {
+            backgroundColor: destructive ? BaseColor.redColor : colors.primary,
+          },
+        ],
         outline && [
           styles.outline,
           { backgroundColor: colors.card, borderColor: colors.primary },

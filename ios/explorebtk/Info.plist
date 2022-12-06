@@ -32,6 +32,12 @@
 				<string>com.explore.btk</string>
 			</array>
 		</dict>
+        <dict>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>explorebtk</string>
+            </array>
+        </dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
@@ -61,6 +67,8 @@
 	<key>NSCameraUsageDescription</key>
 	<string>For Capturing user avatar</string>
 	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Need location to show nearby business and better experience.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Need location to show nearby business and better experience.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Need location to show nearby business and better experience.</string>

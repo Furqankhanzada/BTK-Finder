@@ -26,7 +26,7 @@ export const AlertView: React.FC<Props> = (props: Props) => {
           {props.icon ? <Icon {...props.icon} /> : null}
           <Text
             textAlign="center"
-            title2
+            header
             style={[
               // eslint-disable-next-line react-native/no-inline-styles
               {
@@ -35,7 +35,7 @@ export const AlertView: React.FC<Props> = (props: Props) => {
             ]}>
             {props.title}
           </Text>
-          <Text body1 style={styles.message}>
+          <Text body1 style={styles.message} numberOfLines={20}>
             {props.message}
           </Text>
         </>
@@ -50,6 +50,7 @@ export const AlertView: React.FC<Props> = (props: Props) => {
         <View style={[styles.btnContainer, btnLayoutStyle]}>
           {props.btn.cancelBtnTitle ? (
             <Button
+              full
               onPress={onCancel}
               isEmpty={!props.btn.cancelDestructive}
               destructive={props.btn.cancelDestructive}>
@@ -57,7 +58,10 @@ export const AlertView: React.FC<Props> = (props: Props) => {
             </Button>
           ) : null}
           <View style={styles.space} />
-          <Button full onPress={onConfirm}>
+          <Button
+            full
+            onPress={onConfirm}
+            destructive={props.btn.confirmDestructive}>
             {props.btn.confirmBtnTitle}
           </Button>
         </View>

@@ -23,14 +23,14 @@ export default function ChangePassword({ navigation }) {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const changePasswordLoading = useSelector(
-    state => state.auth.changePasswordLoading,
+    (state) => state.auth.changePasswordLoading,
   );
 
   const onConfirm = () => {
     if (newPassword === confirmPassword) {
       dispatch(
         changePassword({ password: newPassword }, () =>
-          navigation.navigate('Profile'),
+          navigation.navigate('Welcome'),
         ),
       );
     } else {
@@ -82,7 +82,7 @@ export default function ChangePassword({ navigation }) {
             </Text>
           </View>
           <TextInput
-            onChangeText={text => setNewPassword(text)}
+            onChangeText={(text) => setNewPassword(text)}
             secureTextEntry={true}
             placeholder="New Password"
             value={newPassword}
@@ -90,7 +90,7 @@ export default function ChangePassword({ navigation }) {
           />
           <TextInput
             ref={confirmPasswordRef}
-            onChangeText={text => setConfirmPassword(text)}
+            onChangeText={(text) => setConfirmPassword(text)}
             secureTextEntry={true}
             placeholder="Confirm Password"
             value={confirmPassword}

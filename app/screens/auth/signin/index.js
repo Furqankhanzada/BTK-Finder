@@ -17,7 +17,7 @@ import {
 } from '@components';
 import styles from './styles';
 import { useTranslation } from 'react-i18next';
-import { login } from '../../actions/auth';
+import { login } from '../../../actions/auth';
 
 export default function SignIn(props) {
   const { navigation, route } = props;
@@ -48,10 +48,10 @@ export default function SignIn(props) {
     } else {
       setLoading(true);
       dispatch(
-        login({ username, password }, error => {
+        login({ username, password }, (error) => {
           setLoading(false);
           if (!error) {
-            navigation.navigate(lastRoute ? lastRoute : 'Profile', { id });
+            navigation.navigate(lastRoute ? lastRoute : 'Welcome', { id });
           }
         }),
       );
@@ -87,7 +87,7 @@ export default function SignIn(props) {
         style={{ flex: 1 }}>
         <View style={styles.contain}>
           <TextInput
-            onChangeText={text => setUsername(text)}
+            onChangeText={(text) => setUsername(text)}
             onFocus={() => {
               setSuccess({
                 ...success,
@@ -106,7 +106,7 @@ export default function SignIn(props) {
           <TextInput
             ref={passwordRef}
             style={{ marginTop: 10 }}
-            onChangeText={text => setPassword(text)}
+            onChangeText={(text) => setPassword(text)}
             onFocus={() => {
               setSuccess({
                 ...success,

@@ -95,11 +95,14 @@ export default function MyBusinessesScreen(props: any) {
   };
 
   const navigateBusinessDetail = (id: string) => {
-    navigation.navigate('BusinessDetailTabNavigator', { id });
+    navigation.navigate('BusinessDetailTabNavigator', { businessId: id });
   };
 
   const navigateToReview = (id: string) => {
-    navigation.navigate('Review', { id });
+    navigation.navigate('BusinessDetailTabNavigator', {
+      screen: 'ReviewStack',
+      params: { businessId: id },
+    });
   };
 
   return (

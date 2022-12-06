@@ -59,7 +59,7 @@ function ProductStackNavigator() {
 export default function BusinessDetailNavigator({
   route,
 }: BottomTabScreenProps<MainStackParamList, 'BusinessDetailTabNavigator'>) {
-  const businessId = route.params.id;
+  const businessId = route.params.businessId;
   const { colors } = useTheme();
   const font = useFont();
   const { isLoading, data } = useBusiness(businessId);
@@ -79,7 +79,10 @@ export default function BusinessDetailNavigator({
       }}>
       <BusinessDetailBottomTab.Screen
         name="DetailStack"
-        initialParams={{ screen: 'Overview', params: { id: businessId } }}
+        initialParams={{
+          screen: 'Overview',
+          params: { businessId: businessId },
+        }}
         options={{
           title: 'Overview',
           tabBarIcon: ({ color }) => {
@@ -90,7 +93,10 @@ export default function BusinessDetailNavigator({
       />
       <BusinessDetailBottomTab.Screen
         name="ReviewStack"
-        initialParams={{ screen: 'Reviews', params: { id: businessId } }}
+        initialParams={{
+          screen: 'Reviews',
+          params: { businessId: businessId },
+        }}
         options={{
           title: 'Reviews',
           tabBarIcon: ({ color }) => {
@@ -101,7 +107,7 @@ export default function BusinessDetailNavigator({
       />
       {!isLoading && data?.shop && data.shop.status === ShopStatus.enabled ? (
         <BusinessDetailBottomTab.Screen
-          initialParams={{ id: businessId }}
+          initialParams={{ businessId: businessId }}
           name="Products"
           component={BusinessProductsScreen}
           options={{

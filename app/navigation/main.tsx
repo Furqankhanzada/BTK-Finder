@@ -17,21 +17,20 @@ import Notification from '@screens/Notification';
 import EditBusinessScreen from '@screens/new-business/edit-business/EditBusinessScreen';
 import FavouriteScreen from '@screens/favourite/FavouriteScreen';
 import Messenger from '@screens/Messenger';
-import Profile from '@screens/Profile';
-import { NewBusinessStackNavigator } from '@screens/new-business/navigation/NewBusinessStack';
+import Welcome from '@screens/auth/welcome';
 
 /* Stack Screen */
 import ThemeSetting from '@screens/ThemeSetting';
 import Setting from '@screens/Setting';
 import Category from '@screens/category/CategoryScreen';
-import SignUp from '@screens/SignUp';
-import SignIn from '@screens/SignIn';
+import SignUp from '@screens/auth/signup';
+import SignIn from '@screens/auth/signin';
 import VerifyCode from '@screens/VerifyCode';
 import Messages from '@screens/Messages';
 import Walkthrough from '@screens/Walkthrough';
 import ResetPassword from '@screens/ResetPassword';
 import ChangePassword from '@screens/ChangePassword';
-import ProfileEdit from '@screens/ProfileEdit';
+import ProfileEdit from '@screens/profile/edit/ProfileEditScreen';
 import ChangeLanguage from '@screens/ChangeLanguage';
 import ContactUs from '@screens/ContactUs';
 import AboutUs from '@screens/AboutUs';
@@ -167,8 +166,8 @@ function MainBottomTabNavigator() {
         }}
       /> */}
       <MainBottomTab.Screen
-        name="Profile"
-        component={Profile}
+        name="Welcome"
+        component={Welcome}
         options={{
           title: 'More',
           tabBarIcon: ({ color }) => {
