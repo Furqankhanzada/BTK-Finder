@@ -51,7 +51,7 @@ export default function CartItemCard(props: Props) {
             {title}
           </Text>
         ) : (
-          <Text body1 numberOfLines={1}>
+          <Text body1 medium numberOfLines={1}>
             {title}
           </Text>
         )}
@@ -65,7 +65,11 @@ export default function CartItemCard(props: Props) {
             {subTitle}
           </Text>
         ) : (
-          <Text subhead numberOfLines={1} style={styles.cartItemSubHeading}>
+          <Text
+            subhead
+            grayColor
+            numberOfLines={1}
+            style={styles.cartItemSubHeading}>
             {subTitle}
           </Text>
         )}
