@@ -4,6 +4,7 @@ import NumberFormat from 'react-number-format';
 
 import { Icon, Text, Image, StarRating, Tag } from '@components';
 import { BaseColor, useTheme, Images } from '@config';
+import QuantityButton from '@screens/businesses/components/QuantityButton';
 
 interface Props {
   image?: string;
@@ -11,12 +12,24 @@ interface Props {
   subTitle: string;
   rating?: number;
   subItem?: boolean;
+  quantity?: number;
+  onPressAdd?: () => void;
+  onPressRemove?: () => void;
 }
 
 export default function CartItemCard(props: Props) {
   const { colors } = useTheme();
 
-  const { image, title, subTitle, rating, subItem } = props;
+  const {
+    image,
+    title,
+    subTitle,
+    rating,
+    subItem,
+    quantity,
+    onPressAdd,
+    onPressRemove,
+  } = props;
 
   return (
     <View
@@ -93,7 +106,16 @@ export default function CartItemCard(props: Props) {
             enableRTL={true}
           />
         </View>
-      ) : null}
+      ) : (
+        <View style={styles.rightSection}>
+          <QuantityButton
+            small
+            onPressAdd={() => onPressAdd ?? {}}
+            onPressRemove={() => onPressRemove ?? {}}
+            quantity={quantity ?? 0}
+          />
+        </View>
+      )}
     </View>
   );
 }
@@ -116,11 +138,12 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   cartItemSubHeading: {
-    marginVertical: 5,
+    marginTop: 5,
   },
   ratingContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginTop: 5,
   },
   starRating: {
     marginLeft: 5,
@@ -141,5 +164,9 @@ const styles = StyleSheet.create({
   },
   rightSection: {
     marginLeft: 'auto',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    width: 75,
   },
 });
