@@ -34,6 +34,7 @@ import { StackScreenProps } from '@react-navigation/stack';
 import useAddBusinessStore from '../store/Store';
 import { NewAddBusinessPresentable } from '../models/AddNewBusinessPresentable';
 import { useBusiness } from '@screens/businesses/queries/queries';
+import { useEditBusiness } from '../queries/mutations';
 
 let defaultDelta = {
   latitudeDelta: 0.005,
@@ -50,6 +51,10 @@ export const AddressScreen = ({
 }: StackScreenProps<GlobalParamList>) => {
   const mapRef = useRef();
 
+  const { mutate: useEditAddress, isLoading } = useEditBusiness(
+    route?.params?.id,
+  );
+
   const { data: businessData } = useBusiness(route?.params?.id);
   const address = useAddBusinessStore((state: any) => state.address);
   const setAddress = useAddBusinessStore((state: any) => state.setAddress);
@@ -60,47 +65,13 @@ export const AddressScreen = ({
     (state: any) => state.isEditBusiness,
   );
 
-  const stateProps = useSelector(({ businesses }) => {
-    return {
-      editBusiness: businesses.editBusiness,
-      editBusinessData: businesses.editBusinessData,
-      businessFormData: businesses.businessFormData,
-    };
-  });
-
-  const businessFormData = stateProps?.editBusiness
-    ? stateProps?.editBusinessData
-    : stateProps?.businessFormData;
-  const onNext = () => {
-    navigation.navigate('Hours');
-  };
-
-  useEffect(() => {
-    let loc =
-      businessFormData.location && businessFormData.location.coordinates
-        ? businessFormData.location.coordinates
-        : null;
-    if (loc) {
-      const payload = {
-        latitude: loc[0],
-        longitude: loc[1],
-        ...defaultDelta,
-      };
-      setLocation(payload);
-      setRegion(payload);
-      reCenterMap(payload);
-    } else {
-      getUserLocation();
-    }
-  }, [businessFormData.location, getUserLocation]);
-
   const [mapType, setMapType] = useState<string>('standard');
 
   const [location, setLocation] = useState<object>({
     ...defaultLocation,
     ...defaultDelta,
   });
-  const [region, setRegion] = useState({
+  const [region, setRegion] = useState<any>({
     ...defaultLocation,
     ...defaultDelta,
   });
@@ -172,6 +143,25 @@ export const AddressScreen = ({
       getCurrentLocation();
     }
   }, [getCurrentLocation, requestLocationPermissionForAndroid]);
+
+  useEffect(() => {
+    let loc =
+      businessData?.location && businessData?.location.coordinates
+        ? businessData?.location.coordinates
+        : null;
+    if (loc) {
+      const payload = {
+        latitude: loc[0],
+        longitude: loc[1],
+        ...defaultDelta,
+      };
+      setLocation(payload);
+      setRegion(payload);
+      reCenterMap(payload);
+    } else {
+      getUserLocation();
+    }
+  }, [businessData?.location, getUserLocation]);
 
   // satellite function and button start here
   const switchMapType = () => {
@@ -250,10 +240,11 @@ export const AddressScreen = ({
         }}
         onSubmit={(values) => {
           isEditBusiness
-            ? navigation.navigate('Dashboard')
+            ? navigation.navigate('EditBusiness', { id: businessData?._id })
             : navigation.navigate('Hours');
           console.log('What is Value of addess ?', values.address);
           setAddress(values.address);
+
           isEditBusiness
             ? setStoreLocation({
                 type: 'Point',
@@ -266,6 +257,20 @@ export const AddressScreen = ({
                 type: 'Point',
                 coordinates: [location?.latitude, location?.longitude],
               });
+
+          // console.log('Locatuion', )
+          isEditBusiness
+            ? useEditAddress({
+                ...businessData,
+                location: {
+                  type: 'Point',
+                  coordinates: [
+                    businessData?.location?.coordinates[0],
+                    businessData?.location?.coordinates[1],
+                  ],
+                },
+              })
+            : null;
         }}
         validationSchema={addressSFormValidation}>
         {({ handleChange, values, handleSubmit, errors }) => {
