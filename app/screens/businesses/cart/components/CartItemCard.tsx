@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import NumberFormat from 'react-number-format';
 
 import { Icon, Text, Image, StarRating, Tag } from '@components';
-import { BaseColor, useTheme } from '@config';
+import { BaseColor, useTheme, Images } from '@config';
 
 interface Props {
   image?: string;
@@ -28,7 +28,7 @@ export default function CartItemCard(props: Props) {
         },
       ]}>
       <Image
-        source={image}
+        source={image ?? Images.imagePlaceholder}
         style={subItem ? styles.cartSubItemImage : styles.cartItemImage}
       />
 

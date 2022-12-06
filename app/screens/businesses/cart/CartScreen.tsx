@@ -5,12 +5,11 @@ import { StackScreenProps } from '@react-navigation/stack';
 
 import * as Utils from '@utils';
 import { Header, SafeAreaView, Icon, Text, Image } from '@components';
-import { BaseStyle, useTheme } from '@config';
+import { BaseStyle, Images, useTheme } from '@config';
 
 import { ProductStackParamList } from '../../../navigation/models/BusinessDetailBottomTabParamList';
 import CartItemCard from './components/CartItemCard';
 import { cartItems } from './cartData';
-import emptyCartImage from '@assets/images/empty-cart.png';
 
 export default function CartScreen(
   props: StackScreenProps<ProductStackParamList, 'Cart'>,
@@ -44,7 +43,7 @@ export default function CartScreen(
         ListEmptyComponent={
           <View style={styles.emptyCartContainer}>
             <Image
-              source={emptyCartImage}
+              source={Images.emptyCart}
               style={styles.emptyCartImage}
               resizeMode="contain"
             />
