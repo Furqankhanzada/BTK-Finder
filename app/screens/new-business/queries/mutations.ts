@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Config from 'react-native-config';
 import { generateFileObject, handleError } from '../../../utils';
 
@@ -82,19 +82,29 @@ export const useAddNewBusiness = () => {
 // Edit Business
 
 export const useEditBusiness = (id: any) => {
+  const queryClient = useQueryClient();
   return useMutation((payload) => {
-    return axiosApiInstance
-      .put(`${BUSINESSES_API}/${id}`, payload)
-      .then((response) => {
-        Toast.show({
-          type: 'success',
-          topOffset: 55,
-          text1: 'Business Updated',
-          text2: 'You have Successfully updated your Business!',
-        });
-      })
-      .catch(({ response }) => {
-        handleError(response.data);
-      });
+    return (
+      axiosApiInstance
+        .put(`${BUSINESSES_API}/${id}`, payload)
+        .then((response) => {
+          Toast.show({
+            type: 'success',
+            topOffset: 55,
+            text1: 'Business Updated',
+            text2: 'You have Successfully updated your Business!',
+          });
+        })
+        .catch(({ response }) => {
+          handleError(response.data);
+        }),
+      {
+        onSuccess: async () => {
+          await queryClient.invalidateQueries({
+            queryKey: ['business', id],
+          });
+        },
+      }
+    );
   });
 };

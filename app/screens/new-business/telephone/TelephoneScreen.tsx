@@ -11,6 +11,7 @@ import useAddBusinessStore from '../store/Store';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
 import { useBusiness } from '@screens/businesses/queries/queries';
+import { useEditBusiness } from '../queries/mutations';
 
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
@@ -29,6 +30,9 @@ export const TelephoneScreen = ({
 }: StackScreenProps<GlobalParamList>) => {
   const [addNumber, setAddNumber] = useState<Array<number>>([0]);
 
+  const { mutate: useEditTelephone, isLoading } = useEditBusiness(
+    route?.params?.id,
+  );
   const { data: businessData } = useBusiness(route?.params?.id);
   const telephone = useAddBusinessStore((state: any) => state.telephone);
   const setTelephone = useAddBusinessStore((state: any) => state.setTelephone);
@@ -93,8 +97,12 @@ export const TelephoneScreen = ({
         }}
         validationSchema={phoneSchema}
         onSubmit={(values) => {
-          navigation.navigate('Email');
-          setTelephone(values.telephone);
+          isEditBusiness
+            ? navigation.navigate('EditBusiness', { id: businessData?._id })
+            : navigation.navigate('Email');
+          isEditBusiness
+            ? useEditTelephone({ ...businessData, telephone: values.telephone })
+            : setTelephone(values.telephone);
         }}>
         {({ values, handleChange, handleSubmit, errors }) => {
           return (
