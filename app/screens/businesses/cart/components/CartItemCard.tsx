@@ -158,6 +158,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     borderRadius: 10,
     borderWidth: 1,
+    paddingRight: 10,
   },
   cartSubItemImage: {
     width: 75,
