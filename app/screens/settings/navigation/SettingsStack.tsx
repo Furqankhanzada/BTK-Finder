@@ -12,6 +12,8 @@ import MyBusinessesScreen from '@screens/my-businesses/MyBusinessesScreen';
 import ContactUs from '@screens/ContactUs';
 import AboutUs from '@screens/AboutUs';
 import Setting from '@screens/Setting';
+import EditBusinessScreen from '@screens/new-business/edit-business/EditBusinessScreen';
+import { NewBusinessStackNavigator } from '@screens/new-business/navigation/NewBusinessStack';
 
 const SettingsStack = createStackNavigator<SettingsParamList>();
 
@@ -31,6 +33,14 @@ export function SettingsStackNavigator() {
       <SettingsStack.Screen name="ContactUs" component={ContactUs} />
       <SettingsStack.Screen name="AboutUs" component={AboutUs} />
       <SettingsStack.Screen name="Setting" component={Setting} />
+      <SettingsStack.Screen
+        name="EditBusiness"
+        component={EditBusinessScreen}
+      />
+      <SettingsStack.Screen
+        name="EditBusinessStack"
+        component={NewBusinessStackNavigator}
+      />
     </SettingsStack.Navigator>
   );
 }

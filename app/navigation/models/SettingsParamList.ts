@@ -8,4 +8,6 @@ export type SettingsParamList = {
   ContactUs: undefined;
   AboutUs: undefined;
   Setting: undefined;
+  EditBusiness: undefined;
+  EditBusinessStack: any;
 };

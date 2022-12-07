@@ -14,7 +14,6 @@ import { LastRoutes, withAuthRedirection } from './hoc/withAuthRedirection';
 /* Bottom Screen */
 import Notification from '@screens/Notification';
 // import Business from '@screens/AddBusiness';
-import EditBusinessScreen from '@screens/new-business/edit-business/EditBusinessScreen';
 import FavouriteScreen from '@screens/favourite/FavouriteScreen';
 import Messenger from '@screens/Messenger';
 import { NewBusinessStackNavigator } from '@screens/new-business/navigation/NewBusinessStack';
@@ -71,7 +70,6 @@ export default function Main() {
       {/* <MainStack.Screen name="PriceRange" component={PriceRange} /> */}
       {/* <MainStack.Screen name="FinalReview" component={FinalReview} /> */}
       {/* <MainStack.Screen name="Gallery" component={Gallery} /> */}
-      <MainStack.Screen name="EditBusiness" component={EditBusinessScreen} />
       <MainStack.Screen name="VerifyCode" component={VerifyCode} />
     </MainStack.Navigator>
   );
