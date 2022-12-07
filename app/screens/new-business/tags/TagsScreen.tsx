@@ -12,6 +12,7 @@ import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
 import { NewAddBusinessPresentable } from '../models/AddNewBusinessPresentable';
 import { useBusiness } from '@screens/businesses/queries/queries';
+import { useEditBusiness } from '../queries/mutations';
 
 export const TagsScreen = ({
   navigation,
@@ -23,7 +24,12 @@ export const TagsScreen = ({
   const [selected, setSelected] = useState<Array<NewAddBusinessPresentable>>(
     [],
   );
+
   const [items, setItems] = useState(tags);
+  const [edit, setEdit] = useState<any>();
+
+  const { mutate: editTags } = useEditBusiness(route?.params?.id);
+
   const { data: businessData } = useBusiness(route?.params?.id);
   const setTag = useAddBusinessStore((state: any) => state.setTags);
   const isEditBusiness = useAddBusinessStore(
@@ -38,6 +44,15 @@ export const TagsScreen = ({
     getTags ? setTags(JSON.parse(getTags._value)) : null;
   }, []);
 
+  useEffect(() => {
+    // console.log('Business Data', businessData);
+    if (isEditBusiness) {
+      setSelected(businessData?.tags);
+      setActive(true);
+      // console.log('Selected Tags', businessData?.tags);
+    }
+  }, [businessData?.tags, isEditBusiness]);
+
   const onChange = (select: NewAddBusinessPresentable) => {
     const isItemSelected = selected.some(
       (obj: NewAddBusinessPresentable) => obj.name === select.name,
@@ -50,10 +65,15 @@ export const TagsScreen = ({
       const selectedTags: (string | undefined)[] = [];
       const tagsName = selectedArray.map(
         (tagName: NewAddBusinessPresentable) => {
+          // console.log('Tag Name', tagName.name);
+
           return selectedTags.push(tagName.name);
         },
       );
+      // console.log('Selected Tags Name', selectedTags);
+
       setTag(selectedTags);
+      setEdit(selectedTags);
     } else {
       const arr = selected.filter(
         (item: NewAddBusinessPresentable) => item.name != select.name,
@@ -82,7 +102,14 @@ export const TagsScreen = ({
   };
 
   const navigateToNext = () => {
-    navigation.navigate('Telephone');
+    if (isEditBusiness) {
+      editTags({ tags: edit });
+      setSelected(edit.name);
+      // console.log('What is edit', edit);
+      navigation.navigate('EditBusiness', { id: businessData?._id });
+    } else {
+      navigation.navigate('Telephone');
+    }
   };
 
   const navigateToBack = () => {
