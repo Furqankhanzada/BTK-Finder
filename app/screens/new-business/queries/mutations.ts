@@ -94,13 +94,25 @@ export const useAddGalleryImages = () => {
 
 // Add New Business to Server
 export const useAddNewBusiness = () => {
-  return useMutation((payload) => {
-    return axiosApiInstance
-      .post(`${Config.API_URL}/businesses`, payload)
-      .catch(({ response }) => {
-        handleError(response.data);
-      });
-  });
+  return useMutation(
+    (payload) => {
+      return axiosApiInstance
+        .post(`${Config.API_URL}/businesses`, payload)
+        .catch(({ response }) => {
+          handleError(response.data);
+        });
+    },
+    {
+      onSuccess: async () => {
+        Toast.show({
+          type: 'success',
+          topOffset: 55,
+          text1: 'Business Added',
+          text2: 'You have Successfully Add your Business!',
+        });
+      },
+    },
+  );
 };
 
 // Edit Business

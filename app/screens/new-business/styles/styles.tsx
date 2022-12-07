@@ -282,4 +282,14 @@ export const styles = StyleSheet.create({
   hide: {
     display: 'none',
   },
+  flatlistConatiner: {
+    paddingVertical: 10,
+  },
+  facilityView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  facilityViewIcon: {
+    marginRight: 10,
+  },
 });

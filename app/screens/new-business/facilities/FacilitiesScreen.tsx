@@ -10,12 +10,14 @@ import useAddBusinessStore from '../store/Store';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
 import { NewAddBusinessPresentable } from '../models/AddNewBusinessPresentable';
+import { useEditBusiness } from '../queries/mutations';
+import { useBusiness } from '@screens/businesses/queries/queries';
 
 export const FacilitiesScreen = ({
   navigation,
+  route,
 }: StackScreenProps<GlobalParamList>) => {
   const [active, setActive] = useState<boolean>(false);
-  const [tags, setTags] = useState<Array<any>>([]);
   const [selectedFacilities, setSelectedFacilities] = useState<
     Array<NewAddBusinessPresentable>
   >([]);
@@ -26,8 +28,21 @@ export const FacilitiesScreen = ({
   const isEditBusiness = useAddBusinessStore(
     (state: any) => state.isEditBusiness,
   );
+
+  const { data: businessData } = useBusiness(route?.params?.id);
+  const { mutate: editFacility } = useEditBusiness(route?.params?.id);
+
   const setFacility = useAddBusinessStore((state: any) => state.setFacilities);
   const { colors } = useTheme();
+
+  useEffect(() => {
+    console.log('Business Data', businessData);
+    if (isEditBusiness) {
+      setSelectedFacilities(businessData?.facilities);
+      setActive(true);
+      console.log('Selected Facility', businessData?.facilities);
+    }
+  }, [businessData?.facilities, isEditBusiness]);
 
   useEffect(() => {
     const getFacilities = remoteConfig().getValue('facilities');
@@ -55,7 +70,12 @@ export const FacilitiesScreen = ({
   };
 
   const navigateToNext = () => {
-    navigation.navigate('Tags');
+    if (isEditBusiness) {
+      editFacility({ facilities: selectedFacilities });
+      navigation.navigate('EditBusiness', { id: businessData?._id });
+    } else {
+      navigation.navigate('Tags');
+    }
   };
 
   const navigateToBack = () => {
@@ -87,7 +107,7 @@ export const FacilitiesScreen = ({
 
       <View style={styles.contain}>
         <FlatList
-          contentContainerStyle={{ paddingVertical: 10 }}
+          contentContainerStyle={styles.flatlistConatiner}
           data={facilities}
           keyExtractor={(item: object, index: any) => {
             return index;
@@ -102,11 +122,11 @@ export const FacilitiesScreen = ({
                 key={index}
                 style={[styles.item, { backgroundColor: colors.card }]}
                 onPress={() => onChange(item)}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <View style={styles.facilityView}>
                   <Icon
                     name={item.icon}
                     color={item?.checked ? colors.primary : colors.text}
-                    style={{ marginRight: 10 }}
+                    style={styles.facilityViewIcon}
                     size={15}
                   />
                   <Text
