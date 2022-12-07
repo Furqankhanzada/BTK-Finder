@@ -239,38 +239,26 @@ export const AddressScreen = ({
           address: isEditBusiness ? businessData?.address : address,
         }}
         onSubmit={(values) => {
-          isEditBusiness
-            ? navigation.navigate('EditBusiness', { id: businessData?._id })
-            : navigation.navigate('Hours');
           console.log('What is Value of addess ?', values.address);
-          setAddress(values.address);
 
-          isEditBusiness
-            ? setStoreLocation({
+          if (isEditBusiness) {
+            useEditAddress({
+              ...businessData,
+              address: values.address,
+              location: {
                 type: 'Point',
-                coordinates: [
-                  businessData?.location?.coordinates[0],
-                  businessData?.location?.coordinates[1],
-                ],
-              })
-            : setStoreLocation({
-                type: 'Point',
-                coordinates: [location?.latitude, location?.longitude],
-              });
-
-          // console.log('Locatuion', )
-          isEditBusiness
-            ? useEditAddress({
-                ...businessData,
-                location: {
-                  type: 'Point',
-                  coordinates: [
-                    businessData?.location?.coordinates[0],
-                    businessData?.location?.coordinates[1],
-                  ],
-                },
-              })
-            : null;
+                coordinates: [location.latitude, location.longitude],
+              },
+            });
+            navigation.navigate('EditBusiness', { id: businessData?._id });
+          } else {
+            setStoreLocation({
+              type: 'Point',
+              coordinates: [location?.latitude, location?.longitude],
+            });
+            setAddress(values.address);
+            navigation.navigate('Hours');
+          }
         }}
         validationSchema={addressSFormValidation}>
         {({ handleChange, values, handleSubmit, errors }) => {

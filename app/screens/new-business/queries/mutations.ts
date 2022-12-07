@@ -8,6 +8,30 @@ import useAddBusinessStore from '../store/Store';
 import axiosApiInstance from '../../../interceptor/axios-interceptor';
 import { BUSINESSES_API, UPLOAD } from '../../../constants';
 import Toast from 'react-native-toast-message';
+import {
+  Facility,
+  Gallery,
+  Location,
+  OpenHours,
+} from '@screens/businesses/models/BusinessPresentable';
+
+export interface EditBusinessPayload {
+  name?: string;
+  description?: string;
+  category?: string;
+  facilities?: Facility[];
+  tags?: any;
+  telephone?: string;
+  email?: string;
+  website?: string;
+  established?: string;
+  address?: string;
+  location?: any;
+  openHours?: OpenHours[];
+  price?: any;
+  thumbnail?: string;
+  gallery?: Gallery[];
+}
 
 export const useAddNewThumbnail = () => {
   const setThumbnail = useAddBusinessStore((state: any) => state.setThumbnail);
@@ -80,14 +104,14 @@ export const useAddNewBusiness = () => {
 };
 
 // Edit Business
-
 export const useEditBusiness = (id: any) => {
   const queryClient = useQueryClient();
-  return useMutation((payload) => {
-    return (
-      axiosApiInstance
+
+  return useMutation<any, Error, EditBusinessPayload>(
+    (payload) => {
+      return axiosApiInstance
         .put(`${BUSINESSES_API}/${id}`, payload)
-        .then((response) => {
+        .then(() => {
           Toast.show({
             type: 'success',
             topOffset: 55,
@@ -97,14 +121,14 @@ export const useEditBusiness = (id: any) => {
         })
         .catch(({ response }) => {
           handleError(response.data);
-        }),
-      {
-        onSuccess: async () => {
-          await queryClient.invalidateQueries({
-            queryKey: ['business', id],
-          });
-        },
-      }
-    );
-  });
+        });
+    },
+    {
+      onSuccess: async () => {
+        await queryClient.invalidateQueries({
+          queryKey: ['business', id],
+        });
+      },
+    },
+  );
 };
