@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatList, SafeAreaView, TouchableOpacity, View } from 'react-native';
 
 import { Header, Text, TextInput, Button, Icon } from '@components';
@@ -11,13 +11,13 @@ import useAddBusinessStore from '../store/Store';
 import { useCategories } from '../../category/queries/queries';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
-import { NewAddBusinessPresentable } from '../models/AddNewBusinessPresentable';
+import { useEditBusiness } from '../queries/mutations';
 
 export const CategoryScreen = ({
   navigation,
   route,
 }: StackScreenProps<GlobalParamList>) => {
-  const { data: categories, refetch } = useCategories(['select-category']);
+  const { data: categories } = useCategories(['categories']);
   const { data: businessData } = useBusiness(route?.params?.id);
 
   const setCategory = useAddBusinessStore((state: any) => state.setCategory);
@@ -28,29 +28,28 @@ export const CategoryScreen = ({
   const { colors } = useTheme();
   const { t } = useTranslation();
 
+  const { mutate: editBusiness } = useEditBusiness(route?.params?.id);
   const [search, setSearch] = useState<string>('');
   const [active, setActive] = useState<boolean>(false);
   const [items, setItems] = useState(categories);
-  const [selectedCategory, setSelectedCategory] = useState<
-    Array<NewAddBusinessPresentable>
-  >([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
 
-  const onChange = (select: NewAddBusinessPresentable) => {
-    const isItemSelected = selectedCategory.some(
-      (obj: NewAddBusinessPresentable) => obj.name === select.name,
-      setActive(true),
-    );
-
-    if (!isItemSelected) {
-      setSelectedCategory([...selectedCategory, select]);
-      setCategory(select.name);
-    } else {
-      const arr = selectedCategory.filter(
-        (item: NewAddBusinessPresentable) => item.name != select.name,
-      );
-      setSelectedCategory(arr);
-      setCategory(arr[0].name);
+  useEffect(() => {
+    if (isEditBusiness) {
+      setSelectedCategory(businessData?.category);
+      setActive(true);
     }
+  }, [businessData?.category, isEditBusiness]);
+
+  const onChange = (select: { name: string }) => {
+    // Set State
+    setSelectedCategory(select?.name);
+
+    // Set in store
+    setCategory(select?.name);
+
+    // Active Next Button
+    setActive(true);
   };
 
   const onSearch = (keyword: string) => {
@@ -67,7 +66,12 @@ export const CategoryScreen = ({
   };
 
   const navigateToNext = () => {
-    navigation.navigate('Facilities');
+    if (isEditBusiness) {
+      editBusiness({ category: selectedCategory });
+      navigation.navigate('EditBusiness', { id: businessData?._id });
+    } else {
+      navigation.navigate('Facilities');
+    }
   };
 
   const navigateToBack = () => {
@@ -113,9 +117,7 @@ export const CategoryScreen = ({
               return index;
             }}
             renderItem={({ item, index }) => {
-              const checked = selectedCategory.some(
-                (obj: NewAddBusinessPresentable) => obj.name === item.name,
-              );
+              const checked = selectedCategory === item.name;
               return (
                 <TouchableOpacity
                   key={index}
