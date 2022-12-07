@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { FlatList, SafeAreaView, View } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -14,7 +14,7 @@ import useAddBusinessStore from '../store/Store';
 import { useEditBusiness } from '../queries/mutations';
 
 const nameSchema = Yup.object({
-  name: Yup.string().required('name must be atleats 3 words').min(3),
+  name: Yup.string().required().min(3),
 });
 
 export const NameScreen = ({
@@ -25,14 +25,13 @@ export const NameScreen = ({
     navigation.goBack();
   };
   const { data: businessData } = useBusiness(route?.params?.id);
-  const { mutate: useEditName, isLoading } = useEditBusiness(route?.params?.id);
+  const { mutate: useEditName } = useEditBusiness(route?.params?.id);
   const name = useAddBusinessStore((state: any) => state.name);
   const setName = useAddBusinessStore((state: any) => state.setName);
   const isEditBusiness = useAddBusinessStore(
     (state: any) => state.isEditBusiness,
   );
 
-  const [editName, setEditName] = useState<any>({ ...businessData });
   console.log('What is business Data', businessData);
 
   return (
@@ -86,7 +85,7 @@ export const NameScreen = ({
                         onChangeText={handleChange('name')}
                       />
                       <Text style={{ color: BaseColor.redColor }}>
-                        {errors.name}
+                        {errors?.name?.toString()}
                       </Text>
                     </View>
                   );

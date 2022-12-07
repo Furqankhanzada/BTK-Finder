@@ -121,7 +121,7 @@ export default function MyBusinessesScreen(props: any) {
           );
         }}
         onPressLeft={() => {
-          navigation.goBack();
+          navigation.navigate('Welcome');
         }}
       />
       {isLoading ? (
