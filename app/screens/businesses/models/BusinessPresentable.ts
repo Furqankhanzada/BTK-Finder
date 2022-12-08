@@ -87,6 +87,11 @@ export interface Favorite {
   ownerId: string;
 }
 
+export interface PriceRange {
+  from: string;
+  to: string;
+}
+
 export interface BusinessPresentable {
   _id: string;
   name: string;
@@ -110,4 +115,5 @@ export interface BusinessPresentable {
   reviewStats: ReviewStats;
   favorites?: Favorite[];
   tags?: Array<string>;
+  priceRange?: PriceRange;
 }

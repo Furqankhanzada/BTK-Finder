@@ -14,7 +14,10 @@ interface Props {
   text: string;
   selectionColor: string;
   style: string;
-  onValueChanged?: (low: number, hight: number) => {};
+  max: number;
+  low?: number;
+  high?: number;
+  onValueChanged?: (low: number, hight: number) => void;
 }
 
 export default function RangeSlider(props: Props) {
@@ -40,7 +43,7 @@ export default function RangeSlider(props: Props) {
     <Slider
       style={[styles.slider, props.style]}
       min={0}
-      max={5000}
+      max={props.max ?? 5000}
       step={1}
       disableRange={false}
       floatingLabel={true}
@@ -50,6 +53,8 @@ export default function RangeSlider(props: Props) {
       renderLabel={renderLabel}
       renderNotch={renderNotch}
       onValueChanged={props.onValueChanged}
+      low={props.low ?? 0}
+      high={props.high ?? props.max}
     />
   );
 }
@@ -69,5 +74,5 @@ RangeSlider.defaultProps = {
   selectionColor: '#4499ff',
   min: 0,
   max: 5000,
-  onValueChanged: (low: number, hight: number) => {},
+  onValueChanged: () => {},
 };

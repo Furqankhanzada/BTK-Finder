@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Formik } from 'formik';
 import { StackScreenProps } from '@react-navigation/stack';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
@@ -15,21 +15,18 @@ export const PriceRange = ({
   navigation,
   route,
 }: StackScreenProps<GlobalParamList>) => {
-  const { data: businessData } = useBusiness(route?.params?.id);
+  const { colors } = useTheme();
+
+  const [from, setFrom] = useState<number>(0);
+  const [to, setTo] = useState<number>(1000);
 
   const priceRange = useAddBusinessStore((state: any) => state.priceRange);
   const setPriceRange = useAddBusinessStore(
     (state: any) => state.setPriceRange,
   );
-  const isEditBusiness = useAddBusinessStore(
-    (state: any) => state.isEditBusiness,
-  );
+  const { data: businessData } = useBusiness(route?.params?.id);
 
-  const [from, setFrom] = useState<string>(0);
-
-  const [to, setTo] = useState<string>(String(100));
-
-  const { colors } = useTheme();
+  const isEditBusiness = route?.params?.id;
 
   const navigateToBack = () => {
     navigation.goBack();
@@ -37,6 +34,17 @@ export const PriceRange = ({
   const navigateToNext = () => {
     navigation.navigate('Gallery');
   };
+
+  useEffect(() => {
+    if (isEditBusiness) {
+      setFrom(Number(businessData?.priceRange?.from));
+      setTo(Number(businessData?.priceRange?.to));
+    }
+  }, [
+    businessData?.priceRange?.from,
+    businessData?.priceRange?.to,
+    isEditBusiness,
+  ]);
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
@@ -83,6 +91,8 @@ export const PriceRange = ({
                         </Text>
                       </View>
                       <RangeSlider
+                        low={from}
+                        high={to}
                         color={colors.border}
                         style={styles.rangeSlider}
                         selectionColor={colors.primary}
