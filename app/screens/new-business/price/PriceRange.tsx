@@ -10,6 +10,7 @@ import useAddBusinessStore from '../store/Store';
 
 import { styles } from '../styles/styles';
 import { useBusiness } from '@screens/businesses/queries/queries';
+import { useEditBusiness } from '../queries/mutations';
 
 export const PriceRange = ({
   navigation,
@@ -24,6 +25,7 @@ export const PriceRange = ({
   const setPriceRange = useAddBusinessStore(
     (state: any) => state.setPriceRange,
   );
+  const { mutate: EditPrice } = useEditBusiness(route?.params?.id);
   const { data: businessData } = useBusiness(route?.params?.id);
 
   const isEditBusiness = route?.params?.id;
@@ -36,7 +38,7 @@ export const PriceRange = ({
   };
 
   useEffect(() => {
-    if (isEditBusiness) {
+    if (isEditBusiness && businessData?.priceRange) {
       setFrom(Number(businessData?.priceRange?.from));
       setTo(Number(businessData?.priceRange?.to));
     }
@@ -71,7 +73,12 @@ export const PriceRange = ({
       <Formik
         initialValues={{ price: priceRange }}
         onSubmit={(values) => {
-          navigation.navigate('Gallery');
+          isEditBusiness
+            ? navigation.navigate('EditBusiness', { id: businessData?._id })
+            : navigation.navigate('Gallery');
+          EditPrice({
+            priceRange: { from: from.toString(), to: to.toString() },
+          });
           setPriceRange({ from, to });
         }}>
         {({ values, handleSubmit }) => {
@@ -110,12 +117,15 @@ export const PriceRange = ({
                 }}
               />
 
-              <View style={styles.stickyFooter}>
-                <Button
-                  style={styles.footerButtons}
-                  onPress={() => navigateToBack()}>
-                  {'Back'}
-                </Button>
+              <View
+                style={
+                  isEditBusiness ? styles.stickyFooterEdit : styles.stickyFooter
+                }>
+                {isEditBusiness ? null : (
+                  <Button style={styles.footerButtons} onPress={navigateToBack}>
+                    {'Back'}
+                  </Button>
+                )}
 
                 <Button
                   style={[
@@ -126,7 +136,7 @@ export const PriceRange = ({
                   ]}
                   title="submit"
                   onPress={handleSubmit}>
-                  {'Next'}
+                  {isEditBusiness ? 'Update Price' : 'Next'}
                 </Button>
               </View>
             </>

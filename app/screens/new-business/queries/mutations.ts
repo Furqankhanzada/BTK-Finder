@@ -28,7 +28,7 @@ export interface EditBusinessPayload {
   address?: string;
   location?: any;
   openHours?: OpenHours[];
-  price?: any;
+  priceRange?: { from: string; to: string };
   thumbnail?: string;
   gallery?: Gallery[];
 }
