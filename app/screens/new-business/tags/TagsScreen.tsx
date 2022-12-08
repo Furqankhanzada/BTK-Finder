@@ -17,23 +17,20 @@ export const TagsScreen = ({
   navigation,
   route,
 }: StackScreenProps<GlobalParamList>) => {
+  const { colors } = useTheme();
+  const { t } = useTranslation();
+
   const [active, setActive] = useState<boolean>(false);
-  const [search, setSearch] = useState<string>('');
   const [tags, setTags] = useState<any>([]);
   const [selected, setSelected] = useState<any>([]);
-
+  const [search, setSearch] = useState<string>('');
   const [items, setItems] = useState(tags);
 
   const { mutate: editTags } = useEditBusiness(route?.params?.id);
-
   const { data: businessData } = useBusiness(route?.params?.id);
   const setTag = useAddBusinessStore((state: any) => state.setTags);
-  const isEditBusiness = useAddBusinessStore(
-    (state: any) => state.isEditBusiness,
-  );
 
-  const { colors } = useTheme();
-  const { t } = useTranslation();
+  const isEditBusiness = route?.params?.id;
 
   useEffect(() => {
     const getTags = remoteConfig().getValue('tags');
@@ -41,11 +38,9 @@ export const TagsScreen = ({
   }, []);
 
   useEffect(() => {
-    // console.log('Business Data', businessData);
     if (isEditBusiness && businessData?.tags) {
       setSelected(businessData?.tags);
       setActive(true);
-      // console.log('Selected Tags', businessData?.tags);
     }
   }, [businessData?.tags, isEditBusiness]);
 
@@ -54,13 +49,13 @@ export const TagsScreen = ({
     const isItemSelected = selected.includes(select?.name);
 
     if (!isItemSelected) {
-      //Add Tag into selected when not available in selected list
+      //Add Tag into selected tags when not available
       const selectedTags = [...selected];
       selectedTags.push(select.name);
       setSelected(selectedTags);
       setTag(selectedTags);
     } else {
-      //Remove Tag from selected if already available in selected list
+      //Remove Tag from selected tags if already available
       const updatedTags = selected.filter((item: any) => item !== select.name);
       setSelected(updatedTags);
       setTag(updatedTags);
@@ -97,7 +92,7 @@ export const TagsScreen = ({
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
-        title={isEditBusiness ? 'Update Tags' : 'Select Tags'}
+        title={isEditBusiness ? 'Edit Tags' : 'Select Tags'}
         renderRight={() => {
           return isEditBusiness ? null : <Text>Skip</Text>;
         }}
