@@ -73,13 +73,15 @@ export const PriceRange = ({
       <Formik
         initialValues={{ price: priceRange }}
         onSubmit={(values) => {
-          isEditBusiness
-            ? navigation.navigate('EditBusiness', { id: businessData?._id })
-            : navigation.navigate('Gallery');
-          EditPrice({
-            priceRange: { from: from.toString(), to: to.toString() },
-          });
-          setPriceRange({ from, to });
+          if (isEditBusiness) {
+            EditPrice({
+              priceRange: { from: from.toString(), to: to.toString() },
+            });
+            navigation.navigate('EditBusiness', { id: businessData?._id });
+          } else {
+            setPriceRange({ from, to });
+            navigation.navigate('Gallery');
+          }
         }}>
         {({ values, handleSubmit }) => {
           return (
