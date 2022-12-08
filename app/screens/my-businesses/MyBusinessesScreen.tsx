@@ -8,6 +8,9 @@ import {
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { StackScreenProps } from '@react-navigation/stack';
+
+import { GlobalParamList } from 'navigation/models/GlobalParamList';
 import { BaseStyle, useTheme } from '@config';
 import {
   Header,
@@ -21,7 +24,9 @@ import useAddBusinessStore from '@screens/new-business/store/Store';
 
 import { useBusinessesInfinite } from '../businesses/queries/queries';
 
-export default function MyBusinessesScreen(props: any) {
+export default function MyBusinessesScreen(
+  props: StackScreenProps<GlobalParamList, 'MyBusinesses'>,
+) {
   const { navigation } = props;
   const scrollAnim = new Animated.Value(0);
   const { t } = useTranslation();

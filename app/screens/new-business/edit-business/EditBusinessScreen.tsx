@@ -1,11 +1,16 @@
 import React from 'react';
 import { ScrollView } from 'react-native';
+import { StackScreenProps } from '@react-navigation/stack';
 
+import { GlobalParamList } from 'navigation/models/GlobalParamList';
 import { BaseStyle } from '@config';
 import { Header, SafeAreaView, Icon, ListItem, Loading } from '@components';
 import { useBusiness } from '@screens/businesses/queries/queries';
 
-export default function EditBusinessScreen({ navigation, route }: any) {
+export default function EditBusinessScreen({
+  navigation,
+  route,
+}: StackScreenProps<GlobalParamList, 'EditBusiness'>) {
   const { isLoading, data: businessData } = useBusiness(route?.params?.id);
 
   return (
@@ -32,7 +37,7 @@ export default function EditBusinessScreen({ navigation, route }: any) {
           title="Name"
           businessDetail={businessData?.name}
           onPress={() => {
-            navigation.navigate('NewBusinessStack', {
+            navigation.navigate('EditBusinessStack', {
               screen: 'Name',
               params: { id: businessData?._id },
             });
@@ -42,7 +47,7 @@ export default function EditBusinessScreen({ navigation, route }: any) {
           title="Description"
           businessDetail={businessData?.description}
           onPress={() => {
-            navigation.navigate('NewBusinessStack', {
+            navigation.navigate('EditBusinessStack', {
               screen: 'Discription',
               params: { id: businessData?._id },
             });
@@ -52,7 +57,7 @@ export default function EditBusinessScreen({ navigation, route }: any) {
           title="Category"
           businessDetail={businessData?.category}
           onPress={() => {
-            navigation.navigate('NewBusinessStack', {
+            navigation.navigate('EditBusinessStack', {
               screen: 'Category',
               params: { id: businessData?._id },
             });
@@ -66,7 +71,7 @@ export default function EditBusinessScreen({ navigation, route }: any) {
               : 'Empty'
           }
           onPress={() => {
-            navigation.navigate('NewBusinessStack', {
+            navigation.navigate('EditBusinessStack', {
               screen: 'Facilities',
               params: { id: businessData?._id },
             });
@@ -76,7 +81,7 @@ export default function EditBusinessScreen({ navigation, route }: any) {
           title="Tags"
           businessDetail={businessData?.tags[0]}
           onPress={() => {
-            navigation.navigate('NewBusinessStack', {
+            navigation.navigate('EditBusinessStack', {
               screen: 'Tags',
               params: { id: businessData?._id },
             });
@@ -86,7 +91,7 @@ export default function EditBusinessScreen({ navigation, route }: any) {
           title="Telephone"
           businessDetail={businessData?.telephone}
           onPress={() => {
-            navigation.navigate('NewBusinessStack', {
+            navigation.navigate('EditBusinessStack', {
               screen: 'Telephone',
               params: { id: businessData?._id },
             });
@@ -96,7 +101,7 @@ export default function EditBusinessScreen({ navigation, route }: any) {
           title="Email"
           businessDetail={businessData?.email}
           onPress={() => {
-            navigation.navigate('NewBusinessStack', {
+            navigation.navigate('EditBusinessStack', {
               screen: 'Email',
               params: { id: businessData?._id },
             });
@@ -106,7 +111,7 @@ export default function EditBusinessScreen({ navigation, route }: any) {
           title="Website"
           businessDetail={businessData?.website}
           onPress={() => {
-            navigation.navigate('NewBusinessStack', {
+            navigation.navigate('EditBusinessStack', {
               screen: 'Website',
               params: { id: businessData?._id },
             });
@@ -116,7 +121,7 @@ export default function EditBusinessScreen({ navigation, route }: any) {
           title="Established"
           businessDetail={businessData?.established}
           onPress={() => {
-            navigation.navigate('NewBusinessStack', {
+            navigation.navigate('EditBusinessStack', {
               screen: 'Established',
               params: { id: businessData?._id },
             });
@@ -126,7 +131,7 @@ export default function EditBusinessScreen({ navigation, route }: any) {
           title="Address"
           businessDetail={businessData?.address}
           onPress={() => {
-            navigation.navigate('NewBusinessStack', {
+            navigation.navigate('EditBusinessStack', {
               screen: 'Address',
               params: { id: businessData?._id },
             });
@@ -136,7 +141,7 @@ export default function EditBusinessScreen({ navigation, route }: any) {
           title="OpenHours"
           businessDetail={`${businessData?.openHours[0]?.day} ${businessData?.openHours[0]?.from} To ${businessData?.openHours[0]?.to}`}
           onPress={() => {
-            navigation.navigate('NewBusinessStack', {
+            navigation.navigate('EditBusinessStack', {
               screen: 'Hours',
               params: { id: businessData?._id },
             });
@@ -146,7 +151,7 @@ export default function EditBusinessScreen({ navigation, route }: any) {
           title="Price"
           businessDetail={`${businessData?.priceRange?.from} To ${businessData?.priceRange?.to}}`}
           onPress={() => {
-            navigation.navigate('NewBusinessStack', {
+            navigation.navigate('EditBusinessStack', {
               screen: 'Price',
               params: { id: businessData?._id },
             });
@@ -156,7 +161,7 @@ export default function EditBusinessScreen({ navigation, route }: any) {
           title="Gallery"
           businessDetail={'Gallery'}
           onPress={() => {
-            navigation.navigate('NewBusinessStack', {
+            navigation.navigate('EditBusinessStack', {
               screen: 'Gallery',
               params: { id: businessData?._id },
             });

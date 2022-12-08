@@ -28,7 +28,7 @@ import { BaseStyle, BaseColor, useTheme } from '@config';
 import { useAlerts } from '@hooks';
 import { StackScreenProps } from '@react-navigation/stack';
 import { AuthActions } from '@actions';
-import { MainStackParamList } from 'navigation/models/MainStackParamList';
+import { GlobalParamList } from 'navigation/models/GlobalParamList';
 
 import { IconName } from '../../../contexts/alerts-v2/models/Icon';
 import {
@@ -41,7 +41,7 @@ import { EDIT_PROFILE_API_SUCCESS } from '../../../constants/auth';
 import AccountInfoAlertContent from './components/AccountInfoAlertContent';
 
 export default function ProfileEdit(
-  props: StackScreenProps<MainStackParamList, 'ProfileEdit'>,
+  props: StackScreenProps<GlobalParamList, 'ProfileEdit'>,
 ) {
   const { navigation } = props;
   const dispatch = useDispatch();
