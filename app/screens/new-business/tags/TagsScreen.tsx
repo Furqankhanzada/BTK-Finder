@@ -10,7 +10,6 @@ import useAddBusinessStore from '../store/Store';
 import { StackScreenProps } from '@react-navigation/stack';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
-import { NewAddBusinessPresentable } from '../models/AddNewBusinessPresentable';
 import { useBusiness } from '@screens/businesses/queries/queries';
 import { useEditBusiness } from '../queries/mutations';
 
@@ -19,14 +18,11 @@ export const TagsScreen = ({
   route,
 }: StackScreenProps<GlobalParamList>) => {
   const [active, setActive] = useState<boolean>(false);
-  const [search, setSearch] = useState<string>();
-  const [tags, setTags] = useState<Array<NewAddBusinessPresentable>>([]);
-  const [selected, setSelected] = useState<Array<NewAddBusinessPresentable>>(
-    [],
-  );
+  const [search, setSearch] = useState<string>('');
+  const [tags, setTags] = useState<any>([]);
+  const [selected, setSelected] = useState<any>([]);
 
   const [items, setItems] = useState(tags);
-  const [edit, setEdit] = useState<any>();
 
   const { mutate: editTags } = useEditBusiness(route?.params?.id);
 
@@ -46,45 +42,28 @@ export const TagsScreen = ({
 
   useEffect(() => {
     // console.log('Business Data', businessData);
-    if (isEditBusiness) {
+    if (isEditBusiness && businessData?.tags) {
       setSelected(businessData?.tags);
       setActive(true);
       // console.log('Selected Tags', businessData?.tags);
     }
   }, [businessData?.tags, isEditBusiness]);
 
-  const onChange = (select: NewAddBusinessPresentable) => {
-    const isItemSelected = selected.some(
-      (obj: NewAddBusinessPresentable) => obj.name === select.name,
-      setActive(true),
-    );
+  const onChange = (select: { name: string }) => {
+    //Check if tag is selected or not
+    const isItemSelected = selected.includes(select?.name);
+
     if (!isItemSelected) {
-      setSelected([...selected, select]);
-      const selectedArray = [...selected, select];
-
-      const selectedTags: (string | undefined)[] = [];
-      const tagsName = selectedArray.map(
-        (tagName: NewAddBusinessPresentable) => {
-          // console.log('Tag Name', tagName.name);
-
-          return selectedTags.push(tagName.name);
-        },
-      );
-      // console.log('Selected Tags Name', selectedTags);
-
+      //Add Tag into selected when not available in selected list
+      const selectedTags = [...selected];
+      selectedTags.push(select.name);
+      setSelected(selectedTags);
       setTag(selectedTags);
-      setEdit(selectedTags);
     } else {
-      const arr = selected.filter(
-        (item: NewAddBusinessPresentable) => item.name != select.name,
-      );
-      setSelected(arr);
-
-      const unSelectedTags: (string | undefined)[] = [];
-      const tagsName = arr.map((tagName: NewAddBusinessPresentable) => {
-        return unSelectedTags.push(tagName.name);
-      });
-      setTag(unSelectedTags);
+      //Remove Tag from selected if already available in selected list
+      const updatedTags = selected.filter((item: any) => item !== select.name);
+      setSelected(updatedTags);
+      setTag(updatedTags);
     }
   };
 
@@ -94,7 +73,7 @@ export const TagsScreen = ({
       setItems(tags ?? []);
     } else {
       setItems(
-        items?.filter((item: object) => {
+        items?.filter((item: { name: string }) => {
           return item.name.toUpperCase().includes(search.toUpperCase());
         }),
       );
@@ -103,8 +82,7 @@ export const TagsScreen = ({
 
   const navigateToNext = () => {
     if (isEditBusiness) {
-      editTags({ tags: edit });
-      setSelected(edit.name);
+      editTags({ tags: selected });
       // console.log('What is edit', edit);
       navigation.navigate('EditBusiness', { id: businessData?._id });
     } else {
@@ -158,9 +136,7 @@ export const TagsScreen = ({
             return index;
           }}
           renderItem={({ item, index }: any) => {
-            const checked = selected.some(
-              (obj: NewAddBusinessPresentable) => obj.name === item.name,
-            );
+            const checked = selected.includes(item.name);
             return (
               <TouchableOpacity
                 key={index}

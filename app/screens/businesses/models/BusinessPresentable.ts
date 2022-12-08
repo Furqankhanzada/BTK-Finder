@@ -109,4 +109,5 @@ export interface BusinessPresentable {
   averageRatings?: number;
   reviewStats: ReviewStats;
   favorites?: Favorite[];
+  tags?: Array<string>;
 }
