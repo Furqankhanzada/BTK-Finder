@@ -25,6 +25,7 @@ import { ProductStackParamList } from '../../../navigation/models/BusinessDetail
 import { FlatList, RefreshControl, StyleSheet, View } from 'react-native';
 import { CatalogProductVariant } from '../../../models/graphql';
 import { IconName } from '../../../contexts/alerts-v2/models/Icon';
+import ProductDetailPlaceholder from './component/ProductDetailPlaceholder';
 
 export default function ProductDetailScreen(
   props: StackScreenProps<ProductStackParamList, 'Product'>,
@@ -80,7 +81,7 @@ export default function ProductDetailScreen(
   };
 
   if (isLoading) {
-    return <Loading />;
+    return <ProductDetailPlaceholder />;
   }
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
