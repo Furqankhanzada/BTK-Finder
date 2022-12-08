@@ -1,46 +1,38 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList, SafeAreaView, TouchableOpacity, View } from 'react-native';
-import remoteConfig from '@react-native-firebase/remote-config';
 
+import remoteConfig from '@react-native-firebase/remote-config';
+import { StackScreenProps } from '@react-navigation/stack';
 import { Header, Text, Button, Icon } from '@components';
 import { BaseColor, BaseStyle, useTheme } from '@config';
-import { StackScreenProps } from '@react-navigation/stack';
+import { useBusiness } from '@screens/businesses/queries/queries';
 
 import useAddBusinessStore from '../store/Store';
-import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
+import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { NewAddBusinessPresentable } from '../models/AddNewBusinessPresentable';
 import { useEditBusiness } from '../queries/mutations';
-import { useBusiness } from '@screens/businesses/queries/queries';
 
 export const FacilitiesScreen = ({
   navigation,
   route,
 }: StackScreenProps<GlobalParamList>) => {
+  const { colors } = useTheme();
+
   const [active, setActive] = useState<boolean>(false);
-  const [selectedFacilities, setSelectedFacilities] = useState<
-    Array<NewAddBusinessPresentable>
-  >([]);
-  const [facilities, setFacilities] = useState<
-    Array<NewAddBusinessPresentable>
-  >([]);
+  const [selectedFacilities, setSelectedFacilities] = useState<any>([]);
+  const [facilities, setFacilities] = useState<any>([]);
 
-  const isEditBusiness = useAddBusinessStore(
-    (state: any) => state.isEditBusiness,
-  );
-
+  const setFacility = useAddBusinessStore((state: any) => state.setFacilities);
   const { data: businessData } = useBusiness(route?.params?.id);
   const { mutate: editFacility } = useEditBusiness(route?.params?.id);
 
-  const setFacility = useAddBusinessStore((state: any) => state.setFacilities);
-  const { colors } = useTheme();
+  const isEditBusiness = route?.params?.id;
 
   useEffect(() => {
-    console.log('Business Data', businessData);
     if (isEditBusiness) {
       setSelectedFacilities(businessData?.facilities);
       setActive(true);
-      console.log('Selected Facility', businessData?.facilities);
     }
   }, [businessData?.facilities, isEditBusiness]);
 
@@ -51,8 +43,8 @@ export const FacilitiesScreen = ({
       : null;
   }, []);
 
-  const onChange = (facility: NewAddBusinessPresentable) => {
-    const isItemSelected = selectedFacilities.some(
+  const onChange = (facility: { name: string }) => {
+    const isItemSelected = selectedFacilities?.some(
       (obj: NewAddBusinessPresentable) => obj.name === facility.name,
       setActive(true),
     );
@@ -62,7 +54,7 @@ export const FacilitiesScreen = ({
       setFacility([...selectedFacilities, facility]);
     } else {
       const arr = selectedFacilities.filter(
-        (item: NewAddBusinessPresentable) => item.name === facility.name,
+        (item: NewAddBusinessPresentable) => item.name !== facility.name,
       );
       setSelectedFacilities(arr);
       setFacility(arr);
@@ -85,7 +77,7 @@ export const FacilitiesScreen = ({
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
-        title={isEditBusiness ? 'Update Facilites' : 'Select Facilities'}
+        title={isEditBusiness ? 'Edit Facilites' : 'Select Facilities'}
         renderRight={() => {
           return isEditBusiness ? null : <Text>Skip</Text>;
         }}
@@ -113,7 +105,7 @@ export const FacilitiesScreen = ({
             return index;
           }}
           renderItem={({ item, index }: any) => {
-            const checked = selectedFacilities.some(
+            const checked = selectedFacilities?.some(
               (obj: NewAddBusinessPresentable) => obj.name === item.name,
             );
 
