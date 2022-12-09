@@ -25,7 +25,7 @@ import { ProductStackParamList } from '../../../navigation/models/BusinessDetail
 import { FlatList, RefreshControl, StyleSheet, View } from 'react-native';
 import { CatalogProductVariant } from '../../../models/graphql';
 import { IconName } from '../../../contexts/alerts-v2/models/Icon';
-import ProductDetailPlaceholder from './component/ProductDetailPlaceholder';
+import ProductDetailPlaceholder from './components/ProductDetailPlaceholder';
 
 export default function ProductDetailScreen(
   props: StackScreenProps<ProductStackParamList, 'Product'>,
