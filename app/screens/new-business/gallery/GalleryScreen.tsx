@@ -1,10 +1,10 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { FlatList, SafeAreaView, TouchableOpacity, View } from 'react-native';
 import { Formik } from 'formik';
 import ImagePicker from 'react-native-image-crop-picker';
 
-import { Header, Text, Button, Icon, Loading, Image } from '@components';
-import { BaseColor, BaseStyle } from '@config';
+import { Header, Text, Button, Icon, Image } from '@components';
+import { BaseStyle } from '@config';
 import useAddBusinessStore from '../store/Store';
 
 import { StackScreenProps } from '@react-navigation/stack';
@@ -14,6 +14,7 @@ import {
   useAddNewBusiness,
   useAddNewThumbnail,
   useAddGalleryImages,
+  useEditBusiness,
 } from '../queries/mutations';
 import { ScrollView } from 'react-native-gesture-handler';
 import { NewAddBusinessPresentable } from '../models/AddNewBusinessPresentable';
@@ -23,24 +24,48 @@ export const GalleryScreen = ({
   navigation,
   route,
 }: StackScreenProps<GlobalParamList>) => {
+  const { mutate: updateGallery } = useEditBusiness(route?.params?.id);
   const { mutate: uploadThumbnail } = useAddNewThumbnail();
   const { mutate: uploadGallery } = useAddGalleryImages();
-  const { mutate: addNewBusiness, isLoading } = useAddNewBusiness();
+  const { mutate: addNewBusiness } = useAddNewBusiness();
   const { data: businessData } = useBusiness(route?.params?.id);
 
   const payload = useAddBusinessStore((state: any) => state);
+  const thumbnail = useAddBusinessStore((state: any) => state.thumbnail);
+  const setThumbnail = useAddBusinessStore((state: any) => state.setThumbnail);
   const gallery = useAddBusinessStore((state: any) => state.gallery);
   const setGallery = useAddBusinessStore((state: any) => state.setGallery);
-  const isEditBusiness = useAddBusinessStore(
-    (state: any) => state.isEditBusiness,
-  );
+  const isEditBusiness = route?.params?.id;
 
   console.log('UPDATED STORE IN GALLERY SCREEN', payload);
 
-  const [active, setActive] = useState<boolean>(false);
+  useEffect(() => {
+    if (isEditBusiness && businessData?.thumbnail) {
+      console.log('SET THUMBNAIL IF AVAILABLE');
+      setThumbnail(businessData?.thumbnail);
+    }
+    if (isEditBusiness && businessData?.gallery) {
+      console.log('SET GALLERY IF AVAILABLE');
+      setGallery(businessData?.gallery);
+    }
+  }, [
+    businessData?.gallery,
+    businessData?.thumbnail,
+    isEditBusiness,
+    setGallery,
+    setThumbnail,
+  ]);
+
   const navigateToNext = () => {
-    navigation.navigate('Dashboard');
-    addNewBusiness(payload);
+    if (isEditBusiness) {
+      updateGallery({ thumbnail, gallery });
+      setThumbnail('');
+      setGallery('');
+      navigation.navigate('EditBusiness', { id: route?.params?.id });
+    } else {
+      addNewBusiness(payload);
+      navigation.navigate('Dashboard');
+    }
   };
 
   const navigateToBack = () => {
@@ -48,21 +73,20 @@ export const GalleryScreen = ({
   };
 
   const removeThumbnail = () => {
-    if (payload.thumbnail) {
-      delete payload.thumbnail;
-      uploadThumbnail(payload.thumbnail);
+    if (thumbnail) {
+      setThumbnail('');
     } else {
       null;
     }
   };
 
-  const onChangeCover = (item: NewAddBusinessPresentable) => {
+  const onChangeCover = (item: any) => {
     let data = [...gallery];
     data.map((el) => (el.cover = el.image === item.image));
     setGallery(data);
   };
 
-  const removeSingleGalleryImage = (item: NewAddBusinessPresentable) => {
+  const removeSingleGalleryImage = (item: any) => {
     const newPayload = { ...payload };
     let data = newPayload.gallery.filter((el: any) => el.image !== item.image);
     console.log('Remove Gallery data', data);
@@ -164,11 +188,10 @@ export const GalleryScreen = ({
       />
       <Formik
         initialValues={{ gallery: gallery }}
-        onSubmit={(values) => {
-          navigation.navigate('Dashboard');
-          addNewBusiness(payload);
+        onSubmit={() => {
+          navigateToNext();
         }}>
-        {({ values, handleSubmit }) => {
+        {({ handleSubmit }) => {
           return (
             <>
               <FlatList
@@ -190,7 +213,7 @@ export const GalleryScreen = ({
                           <Text>Thumbnail size must be 300x300</Text>
                         </View>
                         <View style={styles.thumbnailContainer}>
-                          {payload.thumbnail || businessData?.thumbnail ? (
+                          {thumbnail ? (
                             <Fragment>
                               <TouchableOpacity
                                 style={styles.galleryActionButton}
@@ -202,11 +225,7 @@ export const GalleryScreen = ({
                               </TouchableOpacity>
                               <Image
                                 style={styles.thumbnailContainerImage}
-                                source={{
-                                  uri: isEditBusiness
-                                    ? businessData?.thumbnail
-                                    : payload.thumbnail,
-                                }}
+                                source={{ uri: thumbnail }}
                               />
                             </Fragment>
                           ) : (
@@ -232,11 +251,7 @@ export const GalleryScreen = ({
                           <Text>Gallery Images size must be 600x400</Text>
                         </View>
                         <View style={styles.gallerySectionImagesContainer}>
-                          {renderGalleryImages(
-                            isEditBusiness
-                              ? businessData?.gallery
-                              : payload.gallery,
-                          )}
+                          {renderGalleryImages(gallery)}
                           <TouchableOpacity
                             style={
                               payload.gallery.length === 0
@@ -268,13 +283,10 @@ export const GalleryScreen = ({
                 )}
 
                 <Button
-                  style={[
-                    styles.footerButtons,
-                    !active ? { backgroundColor: BaseColor.grayColor } : null,
-                  ]}
+                  style={styles.footerButtons}
                   title="submit"
-                  onPress={() => navigateToNext()}>
-                  {isEditBusiness ? 'Update Galeery' : 'Submit'}
+                  onPress={handleSubmit}>
+                  {isEditBusiness ? 'Update Gallery' : 'Submit'}
                 </Button>
               </View>
             </>
