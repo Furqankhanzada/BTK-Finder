@@ -61,6 +61,7 @@ export const useAddNewThumbnail = () => {
 
 export const useAddGalleryImages = () => {
   const setGallery = useAddBusinessStore((state: any) => state.setGallery);
+  const gallery = useAddBusinessStore((state: any) => state.gallery);
 
   const user = useSelector((state: any) => state.profile);
   const { _id } = user;
@@ -84,7 +85,7 @@ export const useAddGalleryImages = () => {
     });
     Promise.all(chunks)
       .then((res) => {
-        setGallery(res);
+        setGallery([...gallery, ...res]);
       })
       .catch((error) => {
         handleError(error);
