@@ -1,43 +1,40 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList, SafeAreaView, TouchableOpacity, View } from 'react-native';
-
-import { Header, Text, TextInput, Button, Icon } from '@components';
-import { BaseColor, BaseStyle, useTheme } from '@config';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useTranslation } from 'react-i18next';
+
 import { useBusiness } from '@screens/businesses/queries/queries';
+import { Header, Text, TextInput, Button, Icon } from '@components';
+import { BaseColor, BaseStyle, useTheme } from '@config';
 
-import useAddBusinessStore from '../store/Store';
-import { useCategories } from '../../category/queries/queries';
-import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
+import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { useEditBusiness } from '../queries/mutations';
+import { useCategories } from '../../category/queries/queries';
+import useAddBusinessStore from '../store/Store';
 
-export const CategoryScreen = ({
-  navigation,
-  route,
-}: StackScreenProps<GlobalParamList>) => {
-  const { data: categories } = useCategories(['categories']);
-  const { data: businessData } = useBusiness(route?.params?.id);
-
-  const setCategory = useAddBusinessStore((state: any) => state.setCategory);
-  const isEditBusiness = useAddBusinessStore(
-    (state: any) => state.isEditBusiness,
-  );
-
+export const CategoryScreen = (props: StackScreenProps<GlobalParamList>) => {
+  const { navigation, route } = props;
   const { colors } = useTheme();
   const { t } = useTranslation();
+  const isEditBusiness = route?.params?.id;
 
+  const { data: categories } = useCategories(['categories']);
+  const { data: businessData } = useBusiness(route?.params?.id);
   const { mutate: editBusiness } = useEditBusiness(route?.params?.id);
+
+  const category = useAddBusinessStore((state: any) => state.category);
+  const setCategory = useAddBusinessStore((state: any) => state.setCategory);
+
+  const [selectedCategory, setSelectedCategory] = useState<string>(
+    category ?? '',
+  );
   const [search, setSearch] = useState<string>('');
-  const [active, setActive] = useState<boolean>(false);
   const [items, setItems] = useState(categories);
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
 
   useEffect(() => {
     if (isEditBusiness) {
       setSelectedCategory(businessData?.category);
-      setActive(true);
     }
   }, [businessData?.category, isEditBusiness]);
 
@@ -47,9 +44,6 @@ export const CategoryScreen = ({
 
     // Set in store
     setCategory(select?.name);
-
-    // Active Next Button
-    setActive(true);
   };
 
   const onSearch = (keyword: string) => {
@@ -69,7 +63,7 @@ export const CategoryScreen = ({
     if (isEditBusiness) {
       editBusiness({ category: selectedCategory });
       navigation.navigate('EditBusiness', { id: businessData?._id });
-    } else {
+    } else if (selectedCategory) {
       navigation.navigate('Facilities');
     }
   };
@@ -92,9 +86,7 @@ export const CategoryScreen = ({
             />
           ) : null;
         }}
-        onPressLeft={() => {
-          navigation.navigate('EditBusiness', { id: businessData?._id });
-        }}
+        onPressLeft={navigateToBack}
       />
       <>
         <View style={styles.contain}>
@@ -164,7 +156,9 @@ export const CategoryScreen = ({
           <Button
             style={[
               styles.footerButtons,
-              !active ? { backgroundColor: BaseColor.grayColor } : null,
+              !selectedCategory
+                ? { backgroundColor: BaseColor.grayColor }
+                : null,
             ]}
             title="submit"
             onPress={() => navigateToNext()}>
