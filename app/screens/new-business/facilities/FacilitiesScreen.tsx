@@ -1,40 +1,41 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList, SafeAreaView, TouchableOpacity, View } from 'react-native';
-
-import remoteConfig from '@react-native-firebase/remote-config';
 import { StackScreenProps } from '@react-navigation/stack';
+import remoteConfig from '@react-native-firebase/remote-config';
+
 import { Header, Text, Button, Icon } from '@components';
-import { BaseColor, BaseStyle, useTheme } from '@config';
+import { BaseStyle, useTheme } from '@config';
 import { useBusiness } from '@screens/businesses/queries/queries';
 
-import useAddBusinessStore from '../store/Store';
 import { styles } from '../styles/styles';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { NewAddBusinessPresentable } from '../models/AddNewBusinessPresentable';
 import { useEditBusiness } from '../queries/mutations';
+import useAddBusinessStore from '../store/Store';
 
-export const FacilitiesScreen = ({
-  navigation,
-  route,
-}: StackScreenProps<GlobalParamList>) => {
+export const FacilitiesScreen = (props: StackScreenProps<GlobalParamList>) => {
+  const { navigation, route } = props;
   const { colors } = useTheme();
+  const isEditBusiness = route?.params?.id;
 
-  const [active, setActive] = useState<boolean>(false);
-  const [selectedFacilities, setSelectedFacilities] = useState<any>([]);
-  const [facilities, setFacilities] = useState<any>([]);
-
-  const setFacility = useAddBusinessStore((state: any) => state.setFacilities);
   const { data: businessData } = useBusiness(route?.params?.id);
   const { mutate: editFacility } = useEditBusiness(route?.params?.id);
 
-  const isEditBusiness = route?.params?.id;
+  const storeFacilities = useAddBusinessStore((state: any) => state.facilities);
+  const setStoreFacility = useAddBusinessStore(
+    (state: any) => state.setFacilities,
+  );
+
+  const [facilities, setFacilities] = useState<any>([]);
+  const [selectedFacilities, setSelectedFacilities] = useState<any>([]);
 
   useEffect(() => {
     if (isEditBusiness) {
       setSelectedFacilities(businessData?.facilities);
-      setActive(true);
+    } else if (storeFacilities) {
+      setSelectedFacilities(storeFacilities);
     }
-  }, [businessData?.facilities, isEditBusiness]);
+  }, [businessData?.facilities, isEditBusiness, storeFacilities]);
 
   useEffect(() => {
     const getFacilities = remoteConfig().getValue('facilities');
@@ -46,18 +47,15 @@ export const FacilitiesScreen = ({
   const onChange = (facility: { name: string }) => {
     const isItemSelected = selectedFacilities?.some(
       (obj: NewAddBusinessPresentable) => obj.name === facility.name,
-      setActive(true),
     );
 
     if (!isItemSelected) {
       setSelectedFacilities([...selectedFacilities, facility]);
-      setFacility([...selectedFacilities, facility]);
     } else {
       const arr = selectedFacilities.filter(
         (item: NewAddBusinessPresentable) => item.name !== facility.name,
       );
       setSelectedFacilities(arr);
-      setFacility(arr);
     }
   };
 
@@ -66,6 +64,7 @@ export const FacilitiesScreen = ({
       editFacility({ facilities: selectedFacilities });
       navigation.navigate('EditBusiness', { id: businessData?._id });
     } else {
+      setStoreFacility(selectedFacilities);
       navigation.navigate('Tags');
     }
   };
@@ -78,10 +77,6 @@ export const FacilitiesScreen = ({
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
         title={isEditBusiness ? 'Edit Facilites' : 'Select Facilities'}
-        renderRight={() => {
-          return isEditBusiness ? null : <Text>Skip</Text>;
-        }}
-        onPressRight={navigateToNext}
         renderLeft={() => {
           return isEditBusiness ? (
             <Icon
@@ -150,10 +145,7 @@ export const FacilitiesScreen = ({
         )}
 
         <Button
-          style={[
-            styles.footerButtons,
-            !active ? { backgroundColor: BaseColor.grayColor } : null,
-          ]}
+          style={styles.footerButtons}
           title="submit"
           onPress={() => navigateToNext()}>
           {isEditBusiness ? 'Update Facilities' : 'Next'}
