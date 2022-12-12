@@ -17,7 +17,7 @@ const useAddBusinessStore = create((set) => ({
   category: '',
   facilities: [],
   tags: [],
-  telephone: [],
+  telephone: '',
   email: '',
   website: '',
   established: '',
