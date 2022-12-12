@@ -48,7 +48,7 @@ export default function EditBusinessScreen({
           businessDetail={businessData?.description}
           onPress={() => {
             navigation.navigate('EditBusinessStack', {
-              screen: 'Discription',
+              screen: 'Description',
               params: { id: businessData?._id },
             });
           }}

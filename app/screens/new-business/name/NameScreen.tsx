@@ -2,11 +2,11 @@ import React from 'react';
 import { FlatList, SafeAreaView, View } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { StackScreenProps } from '@react-navigation/stack';
 
 import { useBusiness } from '@screens/businesses/queries/queries';
 import { Header, Text, TextInput, Button, Icon } from '@components';
 import { BaseColor, BaseStyle } from '@config';
-import { StackScreenProps } from '@react-navigation/stack';
 
 import { styles } from '../styles/styles';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
@@ -59,7 +59,7 @@ export const NameScreen = (props: StackScreenProps<GlobalParamList>) => {
             navigation.navigate('EditBusiness', { id: businessData?._id });
           } else {
             setName(values.name);
-            navigation.navigate('Discription');
+            navigation.navigate('Description');
           }
         }}>
         {({ values, handleChange, handleSubmit, errors }) => {

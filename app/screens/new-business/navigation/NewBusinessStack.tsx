@@ -3,7 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import { NewBusinessParamList } from '../../../navigation/models/NewBusinessParamList';
 import { NameScreen } from '../name/NameScreen';
-import { DiscriptionScreen } from '../discription/DiscriptionScreen';
+import { DescriptionScreen } from '../description/DescriptionScreen';
 import { CategoryScreen } from '../category/CategoryScreen';
 import { FacilitiesScreen } from '../facilities/FacilitiesScreen';
 import { TagsScreen } from '../tags/TagsScreen';
@@ -24,8 +24,8 @@ export function NewBusinessStackNavigator() {
     <NewBusinessStack.Navigator screenOptions={{ headerShown: false }}>
       <NewBusinessStack.Screen name="Name" component={NameScreen} />
       <NewBusinessStack.Screen
-        name="Discription"
-        component={DiscriptionScreen}
+        name="Description"
+        component={DescriptionScreen}
       />
       <NewBusinessStack.Screen name="Category" component={CategoryScreen} />
       <NewBusinessStack.Screen name="Facilities" component={FacilitiesScreen} />

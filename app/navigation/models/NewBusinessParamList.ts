@@ -1,6 +1,6 @@
 export type NewBusinessParamList = {
   Name: undefined;
-  Discription: undefined;
+  Description: undefined;
   Category: undefined;
   Facilities: undefined;
   Tags: undefined;

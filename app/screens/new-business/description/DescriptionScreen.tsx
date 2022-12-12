@@ -2,44 +2,36 @@ import React from 'react';
 import { FlatList, SafeAreaView, View } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-
-import { Header, Text, TextInput, Button, Icon } from '@components';
 import { StackScreenProps } from '@react-navigation/stack';
+
 import { useBusiness } from '@screens/businesses/queries/queries';
-import { BaseColor, BaseStyle, useTheme } from '@config';
+import { Header, Text, TextInput, Button, Icon } from '@components';
+import { BaseColor, BaseStyle } from '@config';
 
-import useAddBusinessStore from '../store/Store';
-import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
+import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { useEditBusiness } from '../queries/mutations';
+import useAddBusinessStore from '../store/Store';
 
-const discriptionSchema = Yup.object({
-  discription: Yup.string()
-    .required('Discribe  your business atleast 10 words')
-    .min(10),
+const descriptionSchema = Yup.object({
+  description: Yup.string().min(10),
 });
 
-export const DiscriptionScreen = ({
-  navigation,
-  route,
-}: StackScreenProps<GlobalParamList>) => {
-  const { colors } = useTheme();
-  const navigateToBack = () => {
-    navigation.goBack();
-  };
-  const { mutate: useEditDescription, isLoading } = useEditBusiness(
-    route?.params?.id,
-  );
+export const DescriptionScreen = (props: StackScreenProps<GlobalParamList>) => {
+  const { navigation, route } = props;
+  const isEditBusiness = route?.params?.id;
+
   const { data: businessData } = useBusiness(route?.params?.id);
+  const { mutate: editDescription } = useEditBusiness(route?.params?.id);
+
   const description = useAddBusinessStore((state: any) => state.description);
   const setDescription = useAddBusinessStore(
     (state: any) => state.setDescription,
   );
-  const isEditBusiness = useAddBusinessStore(
-    (state: any) => state.isEditBusiness,
-  );
 
-  console.log('What is Navigation Data', route.params);
+  const navigateToBack = () => {
+    navigation.goBack();
+  };
 
   const navigateToNext = () => {
     navigation.navigate('Category');
@@ -48,7 +40,7 @@ export const DiscriptionScreen = ({
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
-        title={isEditBusiness ? 'Edit Discription' : 'Add Discription'}
+        title={isEditBusiness ? 'Edit Description' : 'Add Description'}
         renderLeft={() => {
           return isEditBusiness ? (
             <Icon
@@ -69,19 +61,17 @@ export const DiscriptionScreen = ({
       />
       <Formik
         initialValues={{
-          discription: isEditBusiness ? businessData?.description : description,
+          description: isEditBusiness ? businessData?.description : description,
         }}
-        validationSchema={discriptionSchema}
+        validationSchema={descriptionSchema}
         onSubmit={(values) => {
-          isEditBusiness
-            ? navigation.navigate('EditBusiness', { id: businessData?._id })
-            : navigation.navigate('Category');
-          isEditBusiness
-            ? useEditDescription({
-                ...businessData,
-                description: values.discription,
-              })
-            : setDescription(values.discription);
+          if (isEditBusiness) {
+            editDescription({ description: values.description });
+            navigation.navigate('EditBusiness', { id: businessData?._id });
+          } else {
+            setDescription(values.description);
+            navigation.navigate('Category');
+          }
         }}>
         {({ values, handleChange, handleSubmit, errors }) => {
           return (
@@ -95,16 +85,19 @@ export const DiscriptionScreen = ({
                   return (
                     <View>
                       <Text title1 bold>
-                        Write Discription of your Business
+                        Write Description of your Business
                       </Text>
                       <TextInput
-                        style={styles.inputDiscrip}
-                        placeholder="Add Discription"
-                        value={values.discription}
+                        style={styles.inputDescription}
+                        placeholder="Add Description"
+                        value={values.description}
                         multiline={true}
                         textAlignVertical="top"
-                        onChangeText={handleChange('discription')}
+                        onChangeText={handleChange('description')}
                       />
+                      <Text style={{ color: BaseColor.redColor }}>
+                        {errors?.description?.toString()}
+                      </Text>
                     </View>
                   );
                 }}
@@ -121,12 +114,7 @@ export const DiscriptionScreen = ({
                 )}
 
                 <Button
-                  style={[
-                    styles.footerButtons,
-                    values?.discription?.length < 10
-                      ? { backgroundColor: BaseColor.grayColor }
-                      : null,
-                  ]}
+                  style={styles.footerButtons}
                   title="submit"
                   onPress={handleSubmit}>
                   {isEditBusiness ? 'Update Description' : 'Next'}
