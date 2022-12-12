@@ -8,31 +8,28 @@ import { Header, Text, TextInput, Button, Icon } from '@components';
 import { BaseColor, BaseStyle } from '@config';
 import { StackScreenProps } from '@react-navigation/stack';
 
-import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
-import useAddBusinessStore from '../store/Store';
+import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { useEditBusiness } from '../queries/mutations';
+import useAddBusinessStore from '../store/Store';
 
 const nameSchema = Yup.object({
   name: Yup.string().required().min(3),
 });
 
-export const NameScreen = ({
-  navigation,
-  route,
-}: StackScreenProps<GlobalParamList>) => {
+export const NameScreen = (props: StackScreenProps<GlobalParamList>) => {
+  const { navigation, route } = props;
+  const isEditBusiness = route?.params?.id;
+
+  const { data: businessData } = useBusiness(route?.params?.id);
+  const { mutate: editName } = useEditBusiness(route?.params?.id);
+
+  const name = useAddBusinessStore((state: any) => state.name);
+  const setName = useAddBusinessStore((state: any) => state.setName);
+
   const navigateToBack = () => {
     navigation.goBack();
   };
-  const { data: businessData } = useBusiness(route?.params?.id);
-  const { mutate: useEditName } = useEditBusiness(route?.params?.id);
-  const name = useAddBusinessStore((state: any) => state.name);
-  const setName = useAddBusinessStore((state: any) => state.setName);
-  const isEditBusiness = useAddBusinessStore(
-    (state: any) => state.isEditBusiness,
-  );
-
-  console.log('What is business Data', businessData);
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
@@ -57,12 +54,13 @@ export const NameScreen = ({
         initialValues={{ name: isEditBusiness ? businessData?.name : name }}
         validationSchema={nameSchema}
         onSubmit={(values) => {
-          isEditBusiness
-            ? navigation.navigate('EditBusiness', { id: businessData?._id })
-            : navigation.navigate('Discription');
-          isEditBusiness
-            ? useEditName({ ...businessData, name: values.name })
-            : setName(values.name);
+          if (isEditBusiness) {
+            editName({ ...businessData, name: values.name });
+            navigation.navigate('EditBusiness', { id: businessData?._id });
+          } else {
+            setName(values.name);
+            navigation.navigate('Discription');
+          }
         }}>
         {({ values, handleChange, handleSubmit, errors }) => {
           return (
