@@ -1,36 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList, SafeAreaView, TouchableOpacity, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { StackScreenProps } from '@react-navigation/stack';
+import remoteConfig from '@react-native-firebase/remote-config';
 
 import { Header, Text, TextInput, Button, Icon } from '@components';
-import { BaseColor, BaseStyle, useTheme } from '@config';
-import remoteConfig from '@react-native-firebase/remote-config';
+import { BaseStyle, useTheme } from '@config';
+import { useBusiness } from '@screens/businesses/queries/queries';
+
+import { styles } from '../styles/styles';
+import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
+import { useEditBusiness } from '../queries/mutations';
 import useAddBusinessStore from '../store/Store';
 
-import { StackScreenProps } from '@react-navigation/stack';
-import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
-import { styles } from '../styles/styles';
-import { useBusiness } from '@screens/businesses/queries/queries';
-import { useEditBusiness } from '../queries/mutations';
-
-export const TagsScreen = ({
-  navigation,
-  route,
-}: StackScreenProps<GlobalParamList>) => {
+export const TagsScreen = (props: StackScreenProps<GlobalParamList>) => {
+  const { navigation, route } = props;
   const { colors } = useTheme();
   const { t } = useTranslation();
+  const isEditBusiness = route?.params?.id;
 
-  const [active, setActive] = useState<boolean>(false);
+  const { mutate: editTags } = useEditBusiness(route?.params?.id);
+  const { data: businessData } = useBusiness(route?.params?.id);
+
+  const storeTags = useAddBusinessStore((state: any) => state.tags);
+  const setTag = useAddBusinessStore((state: any) => state.setTags);
+
   const [tags, setTags] = useState<any>([]);
   const [selected, setSelected] = useState<any>([]);
   const [search, setSearch] = useState<string>('');
   const [items, setItems] = useState(tags);
-
-  const { mutate: editTags } = useEditBusiness(route?.params?.id);
-  const { data: businessData } = useBusiness(route?.params?.id);
-  const setTag = useAddBusinessStore((state: any) => state.setTags);
-
-  const isEditBusiness = route?.params?.id;
 
   useEffect(() => {
     const getTags = remoteConfig().getValue('tags');
@@ -40,9 +38,10 @@ export const TagsScreen = ({
   useEffect(() => {
     if (isEditBusiness && businessData?.tags) {
       setSelected(businessData?.tags);
-      setActive(true);
+    } else if (storeTags) {
+      setSelected(storeTags);
     }
-  }, [businessData?.tags, isEditBusiness]);
+  }, [businessData?.tags, isEditBusiness, storeTags]);
 
   const onChange = (select: { name: string }) => {
     //Check if tag is selected or not
@@ -53,12 +52,10 @@ export const TagsScreen = ({
       const selectedTags = [...selected];
       selectedTags.push(select.name);
       setSelected(selectedTags);
-      setTag(selectedTags);
     } else {
       //Remove Tag from selected tags if already available
       const updatedTags = selected.filter((item: any) => item !== select.name);
       setSelected(updatedTags);
-      setTag(updatedTags);
     }
   };
 
@@ -78,9 +75,9 @@ export const TagsScreen = ({
   const navigateToNext = () => {
     if (isEditBusiness) {
       editTags({ tags: selected });
-      // console.log('What is edit', edit);
       navigation.navigate('EditBusiness', { id: businessData?._id });
     } else {
+      setTag(selected);
       navigation.navigate('Telephone');
     }
   };
@@ -93,10 +90,6 @@ export const TagsScreen = ({
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
         title={isEditBusiness ? 'Edit Tags' : 'Select Tags'}
-        renderRight={() => {
-          return isEditBusiness ? null : <Text>Skip</Text>;
-        }}
-        onPressRight={navigateToNext}
         renderLeft={() => {
           return isEditBusiness ? (
             <Icon
@@ -107,9 +100,7 @@ export const TagsScreen = ({
             />
           ) : null;
         }}
-        onPressLeft={() => {
-          navigation.navigate('EditBusiness', { id: businessData?._id });
-        }}
+        onPressLeft={navigateToBack}
       />
       <View style={styles.contain}>
         {tags ? (
@@ -173,10 +164,7 @@ export const TagsScreen = ({
         )}
 
         <Button
-          style={[
-            styles.footerButtons,
-            !active ? { backgroundColor: BaseColor.grayColor } : null,
-          ]}
+          style={styles.footerButtons}
           title="submit"
           onPress={() => navigateToNext()}>
           {isEditBusiness ? 'Update Tags' : 'Next'}
