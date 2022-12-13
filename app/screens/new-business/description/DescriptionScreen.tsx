@@ -51,9 +51,7 @@ export const DescriptionScreen = (props: StackScreenProps<GlobalParamList>) => {
             />
           ) : null;
         }}
-        onPressLeft={() => {
-          navigation.navigate('EditBusiness', { id: businessData?._id });
-        }}
+        onPressLeft={navigateToBack}
         renderRight={() => {
           return isEditBusiness ? null : <Text>Skip</Text>;
         }}

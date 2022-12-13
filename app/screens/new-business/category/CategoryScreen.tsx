@@ -34,7 +34,7 @@ export const CategoryScreen = (props: StackScreenProps<GlobalParamList>) => {
 
   useEffect(() => {
     if (isEditBusiness) {
-      setSelectedCategory(businessData?.category);
+      setSelectedCategory(businessData?.category ?? '');
     }
   }, [businessData?.category, isEditBusiness]);
 

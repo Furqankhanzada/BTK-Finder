@@ -45,9 +45,7 @@ export const NameScreen = (props: StackScreenProps<GlobalParamList>) => {
             />
           ) : null;
         }}
-        onPressLeft={() => {
-          navigation.navigate('EditBusiness', { id: businessData?._id });
-        }}
+        onPressLeft={navigateToBack}
       />
 
       <Formik
@@ -55,7 +53,7 @@ export const NameScreen = (props: StackScreenProps<GlobalParamList>) => {
         validationSchema={nameSchema}
         onSubmit={(values) => {
           if (isEditBusiness) {
-            editName({ ...businessData, name: values.name });
+            editName({ name: values.name });
             navigation.navigate('EditBusiness', { id: businessData?._id });
           } else {
             setName(values.name);

@@ -87,9 +87,7 @@ export const FacilitiesScreen = (props: StackScreenProps<GlobalParamList>) => {
             />
           ) : null;
         }}
-        onPressLeft={() => {
-          navigation.navigate('EditBusiness', { id: businessData?._id });
-        }}
+        onPressLeft={navigateToBack}
       />
 
       <View style={styles.contain}>
