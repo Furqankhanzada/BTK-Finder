@@ -6,12 +6,12 @@ import { StackScreenProps } from '@react-navigation/stack';
 
 import { Header, Text, TextInput, Button, Icon } from '@components';
 import { BaseColor, BaseStyle } from '@config';
-import useAddBusinessStore from '../store/Store';
 
-import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
-import { styles } from '../styles/styles';
 import { useBusiness } from '@screens/businesses/queries/queries';
+import { styles } from '../styles/styles';
+import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { useEditBusiness } from '../queries/mutations';
+import useAddBusinessStore from '../store/Store';
 
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
@@ -20,34 +20,23 @@ const phoneSchema = Yup.object({
   telephone: Yup.string()
     .min(11)
     .max(18)
-    .matches(phoneRegExp, 'Phone number is not valid')
-    .required('Valid Phone Number ex: 03001000100'),
+    .matches(phoneRegExp, 'Valid Phone Number ex: 03001000100'),
 });
 
-export const TelephoneScreen = ({
-  navigation,
-  route,
-}: StackScreenProps<GlobalParamList>) => {
-  const [addNumber, setAddNumber] = useState<Array<number>>([0]);
+export const TelephoneScreen = (props: StackScreenProps<GlobalParamList>) => {
+  const { navigation, route } = props;
+  const isEditBusiness = route?.params?.id;
 
-  const { mutate: useEditTelephone, isLoading } = useEditBusiness(
-    route?.params?.id,
-  );
+  const { mutate: editTelephone } = useEditBusiness(route?.params?.id);
   const { data: businessData } = useBusiness(route?.params?.id);
+
   const telephone = useAddBusinessStore((state: any) => state.telephone);
   const setTelephone = useAddBusinessStore((state: any) => state.setTelephone);
-  const isEditBusiness = useAddBusinessStore(
-    (state: any) => state.isEditBusiness,
-  );
 
-  const increment = (index: number) => {
+  const [addNumber, setAddNumber] = useState<Array<number>>([0]);
+
+  const increment = () => {
     let addedNumber = [...addNumber];
-    let newArr = addedNumber.map((one) => {
-      return console.log('ONE', one);
-    });
-    // if (addedNumber.length < 3) {
-    //   addedNumber.length++;
-    // }
     setAddNumber(addedNumber);
   };
   const decrement = () => {
@@ -84,9 +73,7 @@ export const TelephoneScreen = ({
             />
           ) : null;
         }}
-        onPressLeft={() => {
-          navigation.navigate('EditBusiness', { id: businessData?._id });
-        }}
+        onPressLeft={navigateToBack}
       />
       <Text title1 bold style={styles.textPadding}>
         What is the Telephone number of your Business ?
@@ -97,12 +84,13 @@ export const TelephoneScreen = ({
         }}
         validationSchema={phoneSchema}
         onSubmit={(values) => {
-          isEditBusiness
-            ? navigation.navigate('EditBusiness', { id: businessData?._id })
-            : navigation.navigate('Email');
-          isEditBusiness
-            ? useEditTelephone({ ...businessData, telephone: values.telephone })
-            : setTelephone(values.telephone);
+          if (isEditBusiness) {
+            editTelephone({ telephone: values.telephone });
+            navigation.navigate('EditBusiness', { id: businessData?._id });
+          } else {
+            setTelephone(values.telephone);
+            navigation.navigate('Email');
+          }
         }}>
         {({ values, handleChange, handleSubmit, errors }) => {
           return (
@@ -136,9 +124,9 @@ export const TelephoneScreen = ({
                           onPress={decrement}
                         />
                       </View>
-                      {/* <Text style={{ color: BaseColor.redColor }}>
-                        {errors.telephone}
-                      </Text> */}
+                      <Text style={{ color: BaseColor.redColor }}>
+                        {errors?.telephone?.toString()}
+                      </Text>
                     </View>
                   );
                 }}
