@@ -2,15 +2,16 @@ import React from 'react';
 import { ScrollView } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 
-import { GlobalParamList } from 'navigation/models/GlobalParamList';
-import { BaseStyle } from '@config';
 import { Header, SafeAreaView, Icon, ListItem, Loading } from '@components';
-import { useBusiness } from '@screens/businesses/queries/queries';
+import { BaseStyle } from '@config';
 
-export default function EditBusinessScreen({
-  navigation,
-  route,
-}: StackScreenProps<GlobalParamList, 'EditBusiness'>) {
+import { useBusiness } from '@screens/businesses/queries/queries';
+import { GlobalParamList } from 'navigation/models/GlobalParamList';
+
+export default function EditBusinessScreen(
+  props: StackScreenProps<GlobalParamList, 'EditBusiness'>,
+) {
+  const { navigation, route } = props;
   const { isLoading, data: businessData } = useBusiness(route?.params?.id);
 
   return (
@@ -79,7 +80,7 @@ export default function EditBusinessScreen({
         />
         <ListItem
           title="Tags"
-          businessDetail={businessData?.tags[0]}
+          businessDetail={businessData?.tags ? businessData?.tags[0] : 'Empty'}
           onPress={() => {
             navigation.navigate('EditBusinessStack', {
               screen: 'Tags',
@@ -145,7 +146,7 @@ export default function EditBusinessScreen({
           title="Price"
           businessDetail={
             businessData?.priceRange
-              ? `${businessData?.priceRange?.from} To ${businessData?.priceRange?.to}}`
+              ? `${businessData?.priceRange?.from} To ${businessData?.priceRange?.to}`
               : 'empty'
           }
           onPress={() => {
