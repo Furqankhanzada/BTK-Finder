@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import { StyleProp, ViewStyle } from 'react-native';
 import Slider from 'rn-range-slider';
 import PropTypes from 'prop-types';
 
@@ -11,9 +12,9 @@ import styles from './styles';
 
 interface Props {
   color: string;
-  text: string;
+  text?: string;
   selectionColor: string;
-  style: string;
+  style: StyleProp<ViewStyle>;
   max: number;
   low?: number;
   high?: number;

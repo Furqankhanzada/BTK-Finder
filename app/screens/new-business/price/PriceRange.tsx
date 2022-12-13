@@ -1,38 +1,37 @@
 import React, { useEffect, useState } from 'react';
+import { FlatList, SafeAreaView, View } from 'react-native';
 import { Formik } from 'formik';
 import { StackScreenProps } from '@react-navigation/stack';
-import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
-import { FlatList, SafeAreaView, View } from 'react-native';
 
 import { BaseColor, BaseStyle, useTheme } from '@config';
 import { Button, Header, Text, RangeSlider, Icon } from '@components';
+
+import { useBusiness } from '@screens/businesses/queries/queries';
+import { styles } from '../styles/styles';
+import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
+import { useEditBusiness } from '../queries/mutations';
 import useAddBusinessStore from '../store/Store';
 
-import { styles } from '../styles/styles';
-import { useBusiness } from '@screens/businesses/queries/queries';
-import { useEditBusiness } from '../queries/mutations';
-
-export const PriceRange = ({
-  navigation,
-  route,
-}: StackScreenProps<GlobalParamList>) => {
+export const PriceRange = (props: StackScreenProps<GlobalParamList>) => {
+  const { navigation, route } = props;
   const { colors } = useTheme();
+  const isEditBusiness = route?.params?.id;
 
-  const [from, setFrom] = useState<number>(0);
-  const [to, setTo] = useState<number>(1000);
+  const { mutate: EditPrice } = useEditBusiness(route?.params?.id);
+  const { data: businessData } = useBusiness(route?.params?.id);
 
   const priceRange = useAddBusinessStore((state: any) => state.priceRange);
   const setPriceRange = useAddBusinessStore(
     (state: any) => state.setPriceRange,
   );
-  const { mutate: EditPrice } = useEditBusiness(route?.params?.id);
-  const { data: businessData } = useBusiness(route?.params?.id);
 
-  const isEditBusiness = route?.params?.id;
+  const [from, setFrom] = useState<number>(0);
+  const [to, setTo] = useState<number>(1000);
 
   const navigateToBack = () => {
     navigation.goBack();
   };
+
   const navigateToNext = () => {
     navigation.navigate('Gallery');
   };
@@ -41,12 +40,11 @@ export const PriceRange = ({
     if (isEditBusiness && businessData?.priceRange) {
       setFrom(Number(businessData?.priceRange?.from));
       setTo(Number(businessData?.priceRange?.to));
+    } else if (priceRange) {
+      setFrom(Number(priceRange?.from));
+      setTo(Number(priceRange?.to));
     }
-  }, [
-    businessData?.priceRange?.from,
-    businessData?.priceRange?.to,
-    isEditBusiness,
-  ]);
+  }, [businessData?.priceRange, isEditBusiness, priceRange]);
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
@@ -72,7 +70,7 @@ export const PriceRange = ({
       />
       <Formik
         initialValues={{ price: priceRange }}
-        onSubmit={(values) => {
+        onSubmit={() => {
           if (isEditBusiness) {
             EditPrice({
               priceRange: { from: from.toString(), to: to.toString() },
@@ -83,7 +81,7 @@ export const PriceRange = ({
             navigation.navigate('Gallery');
           }
         }}>
-        {({ values, handleSubmit }) => {
+        {({ handleSubmit }) => {
           return (
             <>
               <FlatList
