@@ -2,44 +2,39 @@ import React from 'react';
 import { FlatList, SafeAreaView, View } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { StackScreenProps } from '@react-navigation/stack';
 
 import { Header, Text, TextInput, Button, Icon } from '@components';
-import { BaseColor, BaseStyle, useTheme } from '@config';
-import useAddBusinessStore from '../store/Store';
+import { BaseColor, BaseStyle } from '@config';
 
-import { StackScreenProps } from '@react-navigation/stack';
-import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
 import { useBusiness } from '@screens/businesses/queries/queries';
+import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { useEditBusiness } from '../queries/mutations';
+import useAddBusinessStore from '../store/Store';
 
 const webRejex =
   /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/;
 
 const webSchema = Yup.object({
-  website: Yup.string()
-    .matches(webRejex, 'Please enter url ex: https://abc.com')
-    .required('ex: https://abc.com'),
+  website: Yup.string().matches(
+    webRejex,
+    'Please enter a valid url, ex: https://abc.com',
+  ),
 });
 
-export const WebsiteScreen = ({
-  navigation,
-  route,
-}: StackScreenProps<GlobalParamList>) => {
-  const { colors } = useTheme();
+export const WebsiteScreen = (props: StackScreenProps<GlobalParamList>) => {
+  const { navigation, route } = props;
+  const isEditBusiness = route?.params?.id;
 
-  const { mutate: useEditWebsite, isLoading } = useEditBusiness(
-    route?.params?.id,
-  );
+  const { mutate: editWebsite } = useEditBusiness(route?.params?.id);
   const { data: businessData } = useBusiness(route?.params?.id);
+
   const website = useAddBusinessStore((state: any) => state.website);
   const setWebsite = useAddBusinessStore((state: any) => state.setWebsite);
-  const isEditBusiness = useAddBusinessStore(
-    (state: any) => state.isEditBusiness,
-  );
 
   const navigateToNext = () => {
-    navigation.navigate('Established');
+    navigation.navigate('Address');
   };
 
   const navigateToBack = () => {
@@ -64,9 +59,7 @@ export const WebsiteScreen = ({
             />
           ) : null;
         }}
-        onPressLeft={() => {
-          navigation.navigate('EditBusiness', { id: businessData?._id });
-        }}
+        onPressLeft={navigateToBack}
       />
       <Formik
         initialValues={{
@@ -74,14 +67,15 @@ export const WebsiteScreen = ({
         }}
         validationSchema={webSchema}
         onSubmit={(values) => {
-          isEditBusiness
-            ? navigation.navigate('EditBusiness', { id: businessData?._id })
-            : navigation.navigate('Established');
-          isEditBusiness
-            ? useEditWebsite({ ...businessData, website: values.website })
-            : setWebsite(values.website);
+          if (isEditBusiness) {
+            editWebsite({ website: values.website });
+            navigation.navigate('EditBusiness', { id: businessData?._id });
+          } else {
+            setWebsite(values.website);
+            navigation.navigate('Address');
+          }
         }}>
-        {({ values, handleChange, handleSubmit }) => {
+        {({ values, handleChange, handleSubmit, errors }) => {
           return (
             <>
               <FlatList
@@ -101,6 +95,9 @@ export const WebsiteScreen = ({
                         value={String(values.website)}
                         onChangeText={handleChange('website')}
                       />
+                      <Text style={{ color: BaseColor.redColor }}>
+                        {errors?.website?.toString()}
+                      </Text>
                     </View>
                   );
                 }}
@@ -118,7 +115,7 @@ export const WebsiteScreen = ({
                 <Button
                   style={[
                     styles.footerButtons,
-                    values.website.length < 8
+                    errors?.website
                       ? { backgroundColor: BaseColor.grayColor }
                       : null,
                   ]}
