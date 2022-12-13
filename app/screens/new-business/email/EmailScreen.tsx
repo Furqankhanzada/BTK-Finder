@@ -2,35 +2,32 @@ import React from 'react';
 import { FlatList, SafeAreaView, View } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { StackScreenProps } from '@react-navigation/stack';
 
 import { Header, Text, TextInput, Button, Icon } from '@components';
 import { BaseColor, BaseStyle } from '@config';
-import useAddBusinessStore from '../store/Store';
-import { useBusiness } from '@screens/businesses/queries/queries';
 
-import { StackScreenProps } from '@react-navigation/stack';
-import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
+import { useBusiness } from '@screens/businesses/queries/queries';
+import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { useEditBusiness } from '../queries/mutations';
+import useAddBusinessStore from '../store/Store';
+
+const emailRegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
 
 const emailSchema = Yup.object({
-  email: Yup.string().email().required('ex: abc@gmail.com'),
+  email: Yup.string().email().matches(emailRegExp, 'Invalid Email!'),
 });
 
-export const EmailScreen = ({
-  navigation,
-  route,
-}: StackScreenProps<GlobalParamList>) => {
-  const { mutate: useEditEmail, isLoading } = useEditBusiness(
-    route?.params?.id,
-  );
+export const EmailScreen = (props: StackScreenProps<GlobalParamList>) => {
+  const { navigation, route } = props;
+  const isEditBusiness = route?.params?.id;
+
+  const { mutate: editEmail } = useEditBusiness(route?.params?.id);
   const { data: businessData } = useBusiness(route?.params?.id);
 
   const email = useAddBusinessStore((state: any) => state.email);
   const setEmail = useAddBusinessStore((state: any) => state.setEmail);
-  const isEditBusiness = useAddBusinessStore(
-    (state: any) => state.isEditBusiness,
-  );
 
   const navigateToNext = () => {
     navigation.navigate('Website');
@@ -58,22 +55,21 @@ export const EmailScreen = ({
             />
           ) : null;
         }}
-        onPressLeft={() => {
-          navigation.navigate('EditBusiness', { id: businessData?._id });
-        }}
+        onPressLeft={navigateToBack}
       />
       <Formik
         initialValues={{ email: isEditBusiness ? businessData?.email : email }}
         validationSchema={emailSchema}
         onSubmit={(values) => {
-          isEditBusiness
-            ? navigation.navigate('EditBusiness', { id: businessData?._id })
-            : navigation.navigate('Website');
-          isEditBusiness
-            ? useEditEmail({ ...businessData, email: values.email })
-            : setEmail(values.email);
+          if (isEditBusiness) {
+            editEmail({ email: values.email });
+            navigation.navigate('EditBusiness', { id: businessData?._id });
+          } else {
+            setEmail(values.email);
+            navigation.navigate('Website');
+          }
         }}>
-        {({ values, handleChange, handleSubmit }) => {
+        {({ values, handleChange, handleSubmit, errors }) => {
           return (
             <>
               <FlatList
@@ -93,6 +89,9 @@ export const EmailScreen = ({
                         value={values.email}
                         onChangeText={handleChange('email')}
                       />
+                      <Text style={{ color: BaseColor.redColor }}>
+                        {errors?.email?.toString()}
+                      </Text>
                     </View>
                   );
                 }}
@@ -111,7 +110,7 @@ export const EmailScreen = ({
                 <Button
                   style={[
                     styles.footerButtons,
-                    values?.email?.length < 6
+                    errors?.email
                       ? { backgroundColor: BaseColor.grayColor }
                       : null,
                   ]}
