@@ -10,11 +10,13 @@ import {
   Platform,
   TouchableOpacity,
   PermissionsAndroid,
+  ScrollView,
 } from 'react-native';
-import { useSelector } from 'react-redux';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
-import { BaseColor, BaseStyle } from '@config';
+import MapView, { MapEvent, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import { Formik } from 'formik';
+import { StackScreenProps } from '@react-navigation/stack';
+
 import {
   Header,
   SafeAreaView,
@@ -23,18 +25,23 @@ import {
   Text,
   Button,
 } from '@components';
+import { BaseColor, BaseStyle } from '@config';
+import { useBusiness } from '@screens/businesses/queries/queries';
 
 import { styles } from '../styles/styles';
 import GlobalStyle from '../../../assets/styling/GlobalStyle';
-import { Formik } from 'formik';
-import { addressSFormValidation } from '../../AddBusiness/Validations';
-import { ScrollView } from 'react-native-gesture-handler';
 import { GlobalParamList } from 'navigation/models/GlobalParamList';
-import { StackScreenProps } from '@react-navigation/stack';
-import useAddBusinessStore from '../store/Store';
-import { NewAddBusinessPresentable } from '../models/AddNewBusinessPresentable';
-import { useBusiness } from '@screens/businesses/queries/queries';
+import { addressSFormValidation } from '../../AddBusiness/Validations';
 import { useEditBusiness } from '../queries/mutations';
+import useAddBusinessStore from '../store/Store';
+import { Location } from '@screens/businesses/models/BusinessPresentable';
+
+interface LocationDataType {
+  latitude: number;
+  longitude: number;
+  latitudeDelta: number;
+  longitudeDelta: number;
+}
 
 let defaultDelta = {
   latitudeDelta: 0.005,
@@ -45,43 +52,38 @@ const defaultLocation = {
   longitude: 67.2725909,
 };
 
-export const AddressScreen = ({
-  navigation,
-  route,
-}: StackScreenProps<GlobalParamList>) => {
-  const mapRef = useRef();
+export const AddressScreen = (props: StackScreenProps<GlobalParamList>) => {
+  const { navigation, route } = props;
+  const mapRef = useRef<MapView>();
+  const isEditBusiness = route?.params?.id;
 
-  const { mutate: useEditAddress, isLoading } = useEditBusiness(
-    route?.params?.id,
-  );
-
+  const { mutate: editAddress } = useEditBusiness(route?.params?.id);
   const { data: businessData } = useBusiness(route?.params?.id);
+
   const address = useAddBusinessStore((state: any) => state.address);
   const setAddress = useAddBusinessStore((state: any) => state.setAddress);
   const setStoreLocation = useAddBusinessStore(
     (state: any) => state.setLocation,
   );
-  const isEditBusiness = useAddBusinessStore(
-    (state: any) => state.isEditBusiness,
-  );
 
-  const [mapType, setMapType] = useState<string>('standard');
-
-  const [location, setLocation] = useState<object>({
-    ...defaultLocation,
-    ...defaultDelta,
-  });
-  const [region, setRegion] = useState<any>({
-    ...defaultLocation,
-    ...defaultDelta,
-  });
-
+  // const [mapType, setMapType] = useState<string>('standard');
   const [fullScreen, setFullScreen] = useState<boolean>(false);
+  const [location, setLocation] = useState<LocationDataType>({
+    ...defaultLocation,
+    ...defaultDelta,
+  });
+  const [region, setRegion] = useState<LocationDataType>({
+    ...defaultLocation,
+    ...defaultDelta,
+  });
 
-  const reCenterMap = (currentLocation: NewAddBusinessPresentable) => {
+  const reCenterMap = (currentLocation: {
+    latitude: number;
+    longitude: number;
+  }) => {
     mapRef?.current?.animateToRegion({
-      latitude: currentLocation.latitude,
-      longitude: currentLocation.longitude,
+      latitude: currentLocation.latitude ?? defaultLocation.latitude,
+      longitude: currentLocation.longitude ?? defaultLocation.longitude,
       latitudeDelta: defaultDelta.latitudeDelta,
       longitudeDelta: defaultDelta.longitudeDelta,
     });
@@ -108,7 +110,7 @@ export const AddressScreen = ({
           getCurrentLocation();
         }
       },
-      { enableHighAccuracy: true, timeout: 5000, interval: 100 },
+      { enableHighAccuracy: true, timeout: 5000, maximumAge: 1000 },
     );
   }, []);
 
@@ -164,9 +166,10 @@ export const AddressScreen = ({
   }, [businessData?.location, getUserLocation]);
 
   // satellite function and button start here
-  const switchMapType = () => {
-    setMapType(mapType === 'satellite' ? 'standard' : 'satellite');
-  };
+  // const switchMapType = () => {
+  //   setMapType(mapType === 'satellite' ? 'standard' : 'satellite');
+  // };
+
   const bottomButtons = () => {
     return (
       <View style={styles.mapFabButtonContainer}>
@@ -184,32 +187,37 @@ export const AddressScreen = ({
     );
   };
 
-  const onDragEnd = (location: NewAddBusinessPresentable) => {
-    setLocation(location);
-    setRegion({ ...location, ...defaultDelta });
-    reCenterMap({ ...location, ...defaultDelta });
-    setLocation({ ...location, ...defaultDelta });
+  const onDragEnd = (markerLocation: {
+    latitude: number;
+    longitude: number;
+  }) => {
+    setRegion({ ...markerLocation, ...defaultDelta });
+    reCenterMap({ ...markerLocation, ...defaultDelta });
+    setLocation({ ...markerLocation, ...defaultDelta });
 
-    const defaultMap = {
+    const defaultMap: Location = {
       type: 'Point',
       coordinates: [],
     };
-    defaultMap.coordinates.push(location.latitude, location.longitude);
+    defaultMap.coordinates.push(
+      markerLocation.latitude,
+      markerLocation.longitude,
+    );
     setStoreLocation(defaultMap);
   };
 
-  const submit = (values: NewAddBusinessPresentable) => {
-    let payload = {
-      ...values,
-    };
-    if (Object.keys(location).length) {
-      payload.location = {
-        type: 'Point',
-        coordinates: [location.latitude, location.longitude],
-      };
-    }
-    onNext();
-  };
+  // const submit = (values: NewAddBusinessPresentable) => {
+  //   let payload = {
+  //     ...values,
+  //   };
+  //   if (Object.keys(location).length) {
+  //     payload.location = {
+  //       type: 'Point',
+  //       coordinates: [location.latitude, location.longitude],
+  //     };
+  //   }
+  //   onNext();
+  // };
 
   const navigateToBack = () => {
     navigation.goBack();
@@ -242,12 +250,14 @@ export const AddressScreen = ({
           console.log('What is Value of addess ?', values.address);
 
           if (isEditBusiness) {
-            useEditAddress({
-              ...businessData,
+            editAddress({
               address: values.address,
               location: {
                 type: 'Point',
-                coordinates: [location.latitude, location.longitude],
+                coordinates: [
+                  location?.latitude ?? defaultLocation.latitude,
+                  location.longitude ?? defaultLocation.longitude,
+                ],
               },
             });
             navigation.navigate('EditBusiness', { id: businessData?._id });
@@ -268,7 +278,7 @@ export const AddressScreen = ({
                 contentContainerStyle={{ flexGrow: 1 }}
                 style={{ flex: 1 }}>
                 <View style={[styles.mapContainer]}>
-                  <View style={fullScreen ? styles.show : styles.hide}>
+                  <View style={fullScreen ? styles.hide : styles.show}>
                     <View style={styles.title}>
                       <Text title3 semibold style={styles.titleCenter}>
                         Address
@@ -284,9 +294,9 @@ export const AddressScreen = ({
                         // numberOfLines={10}
                         textAlignVertical="top"
                       />
-                      {errors.address ? (
+                      {errors?.address ? (
                         <Text style={GlobalStyle.errorText}>
-                          {errors?.address}
+                          {errors?.address?.toString()}
                         </Text>
                       ) : null}
                     </View>
@@ -296,11 +306,11 @@ export const AddressScreen = ({
                       provider={PROVIDER_GOOGLE}
                       style={styles.map}
                       region={region}>
-                      <MapView.Marker
+                      <Marker
                         coordinate={location}
                         title={'My current location'}
-                        onDragEnd={(e: NewAddBusinessPresentable) =>
-                          onDragEnd(e.nativeEvent.coordinate)
+                        onDragEnd={(event: MapEvent) =>
+                          onDragEnd(event.nativeEvent.coordinate)
                         }
                         draggable
                       />
