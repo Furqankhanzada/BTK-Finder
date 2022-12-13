@@ -1,14 +1,19 @@
 import React, { Fragment, useEffect } from 'react';
-import { FlatList, SafeAreaView, TouchableOpacity, View } from 'react-native';
-import { Formik } from 'formik';
+import {
+  FlatList,
+  SafeAreaView,
+  TouchableOpacity,
+  View,
+  ScrollView,
+} from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
+import { StackScreenProps } from '@react-navigation/stack';
 
 import { Header, Text, Button, Icon, Image } from '@components';
 import { BaseStyle } from '@config';
-import useAddBusinessStore from '../store/Store';
 
-import { StackScreenProps } from '@react-navigation/stack';
-import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
+import { useBusiness } from '@screens/businesses/queries/queries';
+import { Gallery } from '@screens/businesses/models/BusinessPresentable';
 import { styles } from '../styles/styles';
 import {
   useAddNewBusiness,
@@ -16,14 +21,13 @@ import {
   useAddGalleryImages,
   useEditBusiness,
 } from '../queries/mutations';
-import { ScrollView } from 'react-native-gesture-handler';
-import { NewAddBusinessPresentable } from '../models/AddNewBusinessPresentable';
-import { useBusiness } from '@screens/businesses/queries/queries';
+import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
+import useAddBusinessStore from '../store/Store';
 
-export const GalleryScreen = ({
-  navigation,
-  route,
-}: StackScreenProps<GlobalParamList>) => {
+export const GalleryScreen = (props: StackScreenProps<GlobalParamList>) => {
+  const { navigation, route } = props;
+  const isEditBusiness = route?.params?.id;
+
   const { mutate: updateGallery } = useEditBusiness(route?.params?.id);
   const { mutate: uploadThumbnail } = useAddNewThumbnail();
   const { mutate: uploadGallery } = useAddGalleryImages();
@@ -35,17 +39,14 @@ export const GalleryScreen = ({
   const setThumbnail = useAddBusinessStore((state: any) => state.setThumbnail);
   const gallery = useAddBusinessStore((state: any) => state.gallery);
   const setGallery = useAddBusinessStore((state: any) => state.setGallery);
-  const isEditBusiness = route?.params?.id;
 
   console.log('UPDATED STORE IN GALLERY SCREEN', payload);
 
   useEffect(() => {
     if (isEditBusiness && businessData?.thumbnail) {
-      console.log('SET THUMBNAIL IF AVAILABLE');
       setThumbnail(businessData?.thumbnail);
     }
     if (isEditBusiness && businessData?.gallery) {
-      console.log('SET GALLERY IF AVAILABLE');
       setGallery(businessData?.gallery);
     }
   }, [
@@ -56,7 +57,7 @@ export const GalleryScreen = ({
     setThumbnail,
   ]);
 
-  const navigateToNext = () => {
+  const onSubmit = () => {
     if (isEditBusiness) {
       updateGallery({ thumbnail, gallery });
       setThumbnail('');
@@ -93,7 +94,7 @@ export const GalleryScreen = ({
     setGallery(data);
   };
 
-  const renderGalleryImages = (data: Array<NewAddBusinessPresentable>) => {
+  const renderGalleryImages = (data: Gallery[]) => {
     if (data?.length) {
       return data?.map((el: any, i: any) => (
         <View key={i} style={styles.galleryImageSubContainer}>
@@ -168,10 +169,6 @@ export const GalleryScreen = ({
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
         title={isEditBusiness ? 'Edit Gallery' : 'Gallery'}
-        renderRight={() => {
-          return isEditBusiness ? null : <Text>Skip</Text>;
-        }}
-        onPressRight={navigateToNext}
         renderLeft={() => {
           return isEditBusiness ? (
             <Icon
@@ -186,113 +183,90 @@ export const GalleryScreen = ({
           navigation.navigate('EditBusiness', { id: businessData?._id });
         }}
       />
-      <Formik
-        initialValues={{ gallery: gallery }}
-        onSubmit={() => {
-          navigateToNext();
-        }}>
-        {({ handleSubmit }) => {
+      <FlatList
+        style={styles.container}
+        overScrollMode={'never'}
+        scrollEventThrottle={16}
+        data={[1]}
+        renderItem={() => {
           return (
-            <>
-              <FlatList
-                style={styles.container}
-                overScrollMode={'never'}
-                scrollEventThrottle={16}
-                data={[1]}
-                renderItem={() => {
-                  return (
-                    <ScrollView style={{ flex: 1, marginTop: 20 }}>
-                      <View style={styles.thumbnailSection}>
-                        <View style={styles.title}>
-                          <Text title3 semibold style={{ textAlign: 'center' }}>
-                            Thumbnail
-                          </Text>
-                        </View>
-                        <View
-                          style={{ marginHorizontal: 25, marginBottom: 10 }}>
-                          <Text>Thumbnail size must be 300x300</Text>
-                        </View>
-                        <View style={styles.thumbnailContainer}>
-                          {thumbnail ? (
-                            <Fragment>
-                              <TouchableOpacity
-                                style={styles.galleryActionButton}
-                                onPress={() => removeThumbnail()}>
-                                <Icon
-                                  style={styles.galleryActionButtonIcon}
-                                  name="minus"
-                                />
-                              </TouchableOpacity>
-                              <Image
-                                style={styles.thumbnailContainerImage}
-                                source={{ uri: thumbnail }}
-                              />
-                            </Fragment>
-                          ) : (
-                            <TouchableOpacity
-                              style={styles.thumbnailAddOverlay}
-                              onPress={() => pickSingle()}>
-                              <Text
-                                semibold
-                                style={styles.thumbnailAddOverlayText}>
-                                Tap To Add Thumbnail
-                              </Text>
-                            </TouchableOpacity>
-                          )}
-                        </View>
-                      </View>
-                      <View style={styles.gallerySection}>
-                        <View style={styles.title}>
-                          <Text title3 semibold style={{ textAlign: 'center' }}>
-                            Gallery
-                          </Text>
-                        </View>
-                        <View style={{ marginHorizontal: 25, marginBottom: 5 }}>
-                          <Text>Gallery Images size must be 600x400</Text>
-                        </View>
-                        <View style={styles.gallerySectionImagesContainer}>
-                          {renderGalleryImages(gallery)}
-                          <TouchableOpacity
-                            style={
-                              payload.gallery.length === 0
-                                ? styles.galleryImageContainer
-                                : styles.galleryImageSubContainer
-                            }
-                            onPress={() => pickMultiple()}>
-                            <View style={styles.galleryImageAddIconContainer}>
-                              <Icon
-                                name="plus"
-                                style={styles.galleryImageAddIcon}
-                              />
-                            </View>
-                          </TouchableOpacity>
-                        </View>
-                      </View>
-                    </ScrollView>
-                  );
-                }}
-              />
-              <View
-                style={
-                  isEditBusiness ? styles.stickyFooterEdit : styles.stickyFooter
-                }>
-                {isEditBusiness ? null : (
-                  <Button style={styles.footerButtons} onPress={navigateToBack}>
-                    {'Back'}
-                  </Button>
-                )}
-
-                <Button
-                  style={styles.footerButtons}
-                  title="submit"
-                  onPress={handleSubmit}>
-                  {isEditBusiness ? 'Update Gallery' : 'Submit'}
-                </Button>
+            <ScrollView style={{ flex: 1, marginTop: 20 }}>
+              <View style={styles.thumbnailSection}>
+                <View style={styles.title}>
+                  <Text title3 semibold style={{ textAlign: 'center' }}>
+                    Thumbnail
+                  </Text>
+                </View>
+                <View style={{ marginHorizontal: 25, marginBottom: 10 }}>
+                  <Text>Thumbnail size must be 300x300</Text>
+                </View>
+                <View style={styles.thumbnailContainer}>
+                  {thumbnail ? (
+                    <Fragment>
+                      <TouchableOpacity
+                        style={styles.galleryActionButton}
+                        onPress={() => removeThumbnail()}>
+                        <Icon
+                          style={styles.galleryActionButtonIcon}
+                          name="minus"
+                        />
+                      </TouchableOpacity>
+                      <Image
+                        style={styles.thumbnailContainerImage}
+                        source={{ uri: thumbnail }}
+                      />
+                    </Fragment>
+                  ) : (
+                    <TouchableOpacity
+                      style={styles.thumbnailAddOverlay}
+                      onPress={() => pickSingle()}>
+                      <Text semibold style={styles.thumbnailAddOverlayText}>
+                        Tap To Add Thumbnail
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
               </View>
-            </>
+              <View style={styles.gallerySection}>
+                <View style={styles.title}>
+                  <Text title3 semibold style={{ textAlign: 'center' }}>
+                    Gallery
+                  </Text>
+                </View>
+                <View style={{ marginHorizontal: 25, marginBottom: 5 }}>
+                  <Text>Gallery Images size must be 600x400</Text>
+                </View>
+                <View style={styles.gallerySectionImagesContainer}>
+                  {renderGalleryImages(gallery)}
+                  <TouchableOpacity
+                    style={
+                      payload.gallery.length === 0
+                        ? styles.galleryImageContainer
+                        : styles.galleryImageSubContainer
+                    }
+                    onPress={() => pickMultiple()}>
+                    <View style={styles.galleryImageAddIconContainer}>
+                      <Icon name="plus" style={styles.galleryImageAddIcon} />
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </ScrollView>
           );
         }}
-      </Formik>
+      />
+      <View
+        style={isEditBusiness ? styles.stickyFooterEdit : styles.stickyFooter}>
+        {isEditBusiness ? null : (
+          <Button style={styles.footerButtons} onPress={navigateToBack}>
+            {'Back'}
+          </Button>
+        )}
+
+        <Button style={styles.footerButtons} title="submit" onPress={onSubmit}>
+          {isEditBusiness ? 'Update Gallery' : 'Submit'}
+        </Button>
+      </View>
     </SafeAreaView>
   );
 };

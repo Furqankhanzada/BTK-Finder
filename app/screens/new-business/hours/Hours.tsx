@@ -18,6 +18,7 @@ export const Hours = (props: StackScreenProps<GlobalParamList>) => {
 
   const { mutate: updateTimings } = useEditBusiness(route?.params?.id);
   const { data: businessData } = useBusiness(route?.params?.id);
+
   const openHours = useAddBusinessStore((state: any) => state.openHours);
   const setOpenHours = useAddBusinessStore((state: any) => state.setOpenHours);
 
