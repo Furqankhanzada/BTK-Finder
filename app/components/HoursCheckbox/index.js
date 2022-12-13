@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { useTheme } from '@config';
-import PropTypes from 'prop-types';
 import CheckBox from 'react-native-check-box';
 import { Text } from '@components';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -103,11 +102,3 @@ export default function HoursCheckbox(props) {
     </View>
   );
 }
-
-HoursCheckbox.propTypes = {
-  hours: PropTypes.object,
-};
-
-HoursCheckbox.defaultProps = {
-  hours: {},
-};

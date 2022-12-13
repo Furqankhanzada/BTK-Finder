@@ -49,6 +49,7 @@ export interface OpenHours {
   day: string;
   from: string;
   to: string;
+  isOpen?: boolean;
 }
 
 export enum BusinessStatus {

@@ -1,36 +1,58 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatList, SafeAreaView, View } from 'react-native';
-import { Formik } from 'formik';
+import { StackScreenProps } from '@react-navigation/stack';
 
 import { Header, Text, Button, HoursCheckbox, Icon } from '@components';
-import { BaseColor, BaseStyle } from '@config';
-import useAddBusinessStore from '../store/Store';
+import { BaseStyle } from '@config';
 
-import { StackScreenProps } from '@react-navigation/stack';
-import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { styles } from '../styles/styles';
-import { NewAddBusinessPresentable } from '../models/AddNewBusinessPresentable';
 import { useBusiness } from '@screens/businesses/queries/queries';
+import { OpenHours } from '@screens/businesses/models/BusinessPresentable';
+import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
+import useAddBusinessStore from '../store/Store';
+import { useEditBusiness } from '../queries/mutations';
 
-export const Hours = ({
-  navigation,
-  route,
-}: StackScreenProps<GlobalParamList>) => {
+export const Hours = (props: StackScreenProps<GlobalParamList>) => {
+  const { navigation, route } = props;
+  const isEditBusiness = route?.params?.id;
+
+  const { mutate: updateTimings } = useEditBusiness(route?.params?.id);
   const { data: businessData } = useBusiness(route?.params?.id);
   const openHours = useAddBusinessStore((state: any) => state.openHours);
   const setOpenHours = useAddBusinessStore((state: any) => state.setOpenHours);
-  const isEditBusiness = useAddBusinessStore(
-    (state: any) => state.isEditBusiness,
-  );
 
-  const [active, setActive] = useState<boolean>(false);
+  const openHoursData = isEditBusiness ? businessData?.openHours : openHours;
+  const [selectedDays, setSelectedDays] = useState<any>([]);
 
-  const updateSelectedDays = (payload: NewAddBusinessPresentable) => {
-    let array = [...openHours];
+  useEffect(() => {
+    let array = [
+      { day: 'Monday', from: '09:00 am', to: '05:00 pm', isOpen: false },
+      { day: 'Tuesday', from: '09:00 am', to: '05:00 pm', isOpen: false },
+      { day: 'Wednesday', from: '09:00 am', to: '05:00 pm', isOpen: false },
+      { day: 'Thursday', from: '09:00 am', to: '05:00 pm', isOpen: false },
+      { day: 'Friday', from: '09:00 am', to: '05:00 pm', isOpen: false },
+      { day: 'Saturday', from: '09:00 am', to: '05:00 pm', isOpen: false },
+      { day: 'Sunday', from: '09:00 am', to: '05:00 pm', isOpen: false },
+    ];
+    if (openHoursData && openHoursData.length) {
+      array = openHoursData
+        .map((v: any) => ({ ...v, isOpen: true }))
+        .concat(
+          array.filter(
+            ({ day }) => !openHoursData.find((f: any) => f.day === day),
+          ),
+        );
+      setSelectedDays(array);
+    } else {
+      setSelectedDays(array);
+    }
+  }, [businessData, isEditBusiness, openHours, openHoursData]);
+
+  const updateSelectedDays = (payload: OpenHours) => {
+    let array = [...selectedDays];
     array.map((el) => {
       if (el.day === payload.day) {
         el.isOpen = payload.isOpen;
-        setActive(true);
         if (payload.to) {
           el.to = payload.to;
         }
@@ -39,17 +61,23 @@ export const Hours = ({
         }
       }
     });
-  };
-
-  const selectedHours = () => {
-    let newArray = openHours.filter(
-      (obj: NewAddBusinessPresentable) => obj.isOpen,
-    );
-    setOpenHours(newArray);
+    setSelectedDays(array);
   };
 
   const navigateToBack = () => {
     navigation.goBack();
+  };
+
+  const onSubmit = () => {
+    let hours = selectedDays.filter((day: OpenHours) => day.isOpen);
+
+    if (isEditBusiness) {
+      updateTimings({ openHours: hours });
+      navigation.navigate('EditBusiness', { id: route?.params?.id });
+    } else {
+      setOpenHours(hours);
+      navigation.navigate('Price');
+    }
   };
 
   return (
@@ -66,74 +94,47 @@ export const Hours = ({
             />
           ) : null;
         }}
-        onPressLeft={() => {
-          navigation.navigate('EditBusiness', { id: businessData?._id });
+        onPressLeft={navigateToBack}
+      />
+
+      <FlatList
+        style={styles.container}
+        overScrollMode={'never'}
+        scrollEventThrottle={16}
+        data={[1]}
+        renderItem={() => {
+          return (
+            <View>
+              <Text style={{ paddingBottom: 20 }} title1 bold>
+                Set Timings of your Business
+              </Text>
+
+              {selectedDays.map((item: OpenHours, index: number) => {
+                return (
+                  <HoursCheckbox
+                    key={index}
+                    day={item}
+                    getObject={updateSelectedDays}
+                  />
+                );
+              })}
+            </View>
+          );
         }}
       />
 
-      <Formik
-        initialValues={{
-          hours: isEditBusiness ? businessData?.openHours : openHours,
-        }}
-        onSubmit={(values) => {
-          navigation.navigate('Price');
-          selectedHours();
-        }}>
-        {({ values, handleSubmit }) => {
-          return (
-            <>
-              <FlatList
-                style={styles.container}
-                overScrollMode={'never'}
-                scrollEventThrottle={16}
-                data={[1]}
-                renderItem={(item) => {
-                  return (
-                    <View>
-                      <Text style={{ paddingBottom: 20 }} title1 bold>
-                        Set Timings of your Business
-                      </Text>
+      <View
+        style={isEditBusiness ? styles.stickyFooterEdit : styles.stickyFooter}>
+        {isEditBusiness ? null : (
+          <Button style={styles.footerButtons} onPress={navigateToBack}>
+            {'Back'}
+          </Button>
+        )}
 
-                      {openHours.map(
-                        (day: NewAddBusinessPresentable, index: number) => {
-                          return (
-                            <HoursCheckbox
-                              key={index}
-                              day={day}
-                              getObject={updateSelectedDays}
-                            />
-                          );
-                        },
-                      )}
-                    </View>
-                  );
-                }}
-              />
-
-              <View
-                style={
-                  isEditBusiness ? styles.stickyFooterEdit : styles.stickyFooter
-                }>
-                {isEditBusiness ? null : (
-                  <Button style={styles.footerButtons} onPress={navigateToBack}>
-                    {'Back'}
-                  </Button>
-                )}
-
-                <Button
-                  style={[
-                    styles.footerButtons,
-                    !active ? { backgroundColor: BaseColor.grayColor } : null,
-                  ]}
-                  title="submit"
-                  onPress={handleSubmit}>
-                  {isEditBusiness ? 'Update Address' : 'Next'}
-                </Button>
-              </View>
-            </>
-          );
-        }}
-      </Formik>
+        <Button style={styles.footerButtons} title="submit" onPress={onSubmit}>
+          {isEditBusiness ? 'Update Timings' : 'Next'}
+        </Button>
+      </View>
     </SafeAreaView>
   );
 };

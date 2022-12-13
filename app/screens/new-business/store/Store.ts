@@ -1,16 +1,6 @@
 import { object } from 'yup';
 import create from 'zustand';
 
-let hoursArray = [
-  { day: 'Monday', from: '09:00 am', to: '10:00 pm', isOpen: false },
-  { day: 'Tuesday', from: '09:00 am', to: '10:00 pm', isOpen: false },
-  { day: 'Wednesday', from: '09:00 am', to: '10:00 pm', isOpen: false },
-  { day: 'Thursday', from: '09:00 am', to: '10:00 pm', isOpen: false },
-  { day: 'Friday', from: '09:00 am', to: '10:00 pm', isOpen: false },
-  { day: 'Saturday', from: '09:00 am', to: '10:00 pm', isOpen: false },
-  { day: 'Sunday', from: '09:00 am', to: '10:00 pm', isOpen: false },
-];
-
 const useAddBusinessStore = create((set) => ({
   name: '',
   description: '',
@@ -22,7 +12,7 @@ const useAddBusinessStore = create((set) => ({
   website: '',
   established: '',
   address: '',
-  openHours: hoursArray,
+  openHours: [],
   priceRange: [],
   gallery: [],
   thumbnail: '',
