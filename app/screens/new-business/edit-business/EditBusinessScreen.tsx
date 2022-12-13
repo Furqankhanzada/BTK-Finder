@@ -118,16 +118,6 @@ export default function EditBusinessScreen({
           }}
         />
         <ListItem
-          title="Established"
-          businessDetail={businessData?.established}
-          onPress={() => {
-            navigation.navigate('EditBusinessStack', {
-              screen: 'Established',
-              params: { id: businessData?._id },
-            });
-          }}
-        />
-        <ListItem
           title="Address"
           businessDetail={businessData?.address}
           onPress={() => {
