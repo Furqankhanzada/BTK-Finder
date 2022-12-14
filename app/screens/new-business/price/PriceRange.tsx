@@ -38,13 +38,13 @@ export const PriceRange = (props: StackScreenProps<GlobalParamList>) => {
 
   useEffect(() => {
     if (isEditBusiness && businessData?.priceRange) {
-      setFrom(Number(businessData?.priceRange?.from));
-      setTo(Number(businessData?.priceRange?.to));
-    } else if (priceRange) {
-      setFrom(Number(priceRange?.from));
-      setTo(Number(priceRange?.to));
+      setFrom(Number(businessData?.priceRange?.from ?? from));
+      setTo(Number(businessData?.priceRange?.to ?? to));
+    } else if (!isEditBusiness && priceRange) {
+      setFrom(Number(priceRange?.from ?? from));
+      setTo(Number(priceRange?.to ?? to));
     }
-  }, [businessData?.priceRange, isEditBusiness, priceRange]);
+  }, [businessData?.priceRange, isEditBusiness, priceRange, from, to]);
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
