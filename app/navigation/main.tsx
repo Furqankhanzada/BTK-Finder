@@ -1,14 +1,12 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
 import { BaseColor, useFont, useTheme } from '@config';
 import { Icon } from '@components';
 import BusinessDetailNavigator from '@screens/businesses/BusinessDetailNavigator';
 
-import { setEditBusiness } from '../actions/business';
 import { LastRoutes, withAuthRedirection } from './hoc/withAuthRedirection';
 
 /* Bottom Screen */
@@ -36,7 +34,6 @@ import BusinessesScreen from '@screens/businesses/list/BusinessesScreen';
 
 import { MainStackParamList } from './models/MainStackParamList';
 import { MainBottomTabParamList } from './models/MainBottomTabParamList';
-import useAddBusinessStore from '@screens/new-business/store/Store';
 import { SettingsStackNavigator } from '@screens/settings/navigation/SettingsStack';
 
 const MainStack = createStackNavigator<MainStackParamList>();
@@ -79,10 +76,6 @@ function MainBottomTabNavigator() {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const font = useFont();
-
-  const setIsEditBusiness = useAddBusinessStore(
-    (state: any) => state.setIsEditBusiness,
-  );
 
   return (
     <MainBottomTab.Navigator
@@ -131,11 +124,6 @@ function MainBottomTabNavigator() {
             return <Icon color={color} name="business-time" size={20} solid />;
           },
         }}
-        listeners={() => ({
-          tabPress: () => {
-            setIsEditBusiness(false);
-          },
-        })}
       />
 
       {/* <BottomTab.Screen

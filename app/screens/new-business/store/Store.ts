@@ -17,7 +17,6 @@ const useAddBusinessStore = create((set) => ({
   gallery: [],
   thumbnail: '',
   location: object,
-  isEditBusiness: false,
 
   setName: (name: string) => set(() => ({ name })),
   setDescription: (description: string) => set(() => ({ description })),
@@ -34,8 +33,6 @@ const useAddBusinessStore = create((set) => ({
   setGallery: (gallery: any) => set(() => ({ gallery })),
   setThumbnail: (thumbnail: string) => set(() => ({ thumbnail })),
   setLocation: (location: object) => set(() => ({ location })),
-  setIsEditBusiness: (isEditBusiness: boolean) =>
-    set(() => ({ isEditBusiness })),
 }));
 
 export default useAddBusinessStore;

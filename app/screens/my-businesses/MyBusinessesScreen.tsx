@@ -20,7 +20,6 @@ import {
   Loading,
   Text,
 } from '@components';
-import useAddBusinessStore from '@screens/new-business/store/Store';
 
 import { useBusinessesInfinite } from '../businesses/queries/queries';
 
@@ -34,9 +33,6 @@ export default function MyBusinessesScreen(
 
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const user = useSelector((state: any) => state.profile);
-  const setIsEditBusiness = useAddBusinessStore(
-    (state: any) => state.setIsEditBusiness,
-  );
 
   const {
     data,
@@ -95,7 +91,6 @@ export default function MyBusinessesScreen(
   };
 
   const onEdit = (id: string) => {
-    setIsEditBusiness(true);
     navigation.navigate('EditBusiness', { id });
   };
 
