@@ -75,9 +75,6 @@ export const TelephoneScreen = (props: StackScreenProps<GlobalParamList>) => {
         }}
         onPressLeft={navigateToBack}
       />
-      <Text title1 bold style={styles.textPadding}>
-        What is the Telephone number of your Business ?
-      </Text>
       <Formik
         initialValues={{
           telephone: isEditBusiness ? businessData?.telephone : telephone,
@@ -105,24 +102,24 @@ export const TelephoneScreen = (props: StackScreenProps<GlobalParamList>) => {
                     <Text style={styles.addMoreText}>Add more +</Text>
                   </TouchableOpacity>
                 }
-                renderItem={(index) => {
+                renderItem={() => {
                   return (
                     <View>
+                      <Text title1 bold>
+                        What is the Telephone number of your Business ?{' '}
+                        <Text body1>(optional)</Text>
+                      </Text>
                       <View style={styles.phoneInputView}>
                         <TextInput
-                          key={index.index}
                           style={styles.phoneInput}
                           placeholder="Telephone number"
                           value={String(values.telephone)}
                           keyboardType="numeric"
                           onChangeText={handleChange('telephone')}
                         />
-                        <Icon
-                          name="trash"
-                          size={21}
-                          style={styles.phoneIcon}
-                          onPress={decrement}
-                        />
+                        <View style={styles.phoneIconContainer}>
+                          <Icon name="trash" size={20} onPress={decrement} />
+                        </View>
                       </View>
                       <Text style={{ color: BaseColor.redColor }}>
                         {errors?.telephone?.toString()}
@@ -145,7 +142,7 @@ export const TelephoneScreen = (props: StackScreenProps<GlobalParamList>) => {
                 <Button
                   style={[
                     styles.footerButtons,
-                    values.telephone.length < 11 || values.telephone.length > 18
+                    errors?.telephone
                       ? { backgroundColor: BaseColor.grayColor }
                       : null,
                   ]}

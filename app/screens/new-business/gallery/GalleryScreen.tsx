@@ -115,11 +115,6 @@ export const GalleryScreen = (props: StackScreenProps<GlobalParamList>) => {
       return data?.map((el: any, i: any) => (
         <View key={i} style={styles.galleryImageSubContainer}>
           <TouchableOpacity
-            style={styles.galleryActionButton}
-            onPress={() => removeSingleGalleryImage(el)}>
-            <Icon style={styles.galleryActionButtonIcon} name="minus" />
-          </TouchableOpacity>
-          <TouchableOpacity
             style={styles.galleryImageButton}
             onPress={() => onChangeCover(el)}>
             {el?.cover ? (
@@ -127,6 +122,11 @@ export const GalleryScreen = (props: StackScreenProps<GlobalParamList>) => {
                 Cover
               </Text>
             ) : null}
+            <TouchableOpacity
+              style={styles.galleryActionButton}
+              onPress={() => removeSingleGalleryImage(el)}>
+              <Icon style={styles.galleryActionButtonIcon} name="minus" />
+            </TouchableOpacity>
             <Image style={styles.galleryImage} source={{ uri: el.image }} />
           </TouchableOpacity>
         </View>
@@ -206,14 +206,14 @@ export const GalleryScreen = (props: StackScreenProps<GlobalParamList>) => {
         data={[1]}
         renderItem={() => {
           return (
-            <ScrollView style={{ flex: 1, marginTop: 20 }}>
+            <ScrollView style={{ flex: 1 }}>
               <View style={styles.thumbnailSection}>
                 <View style={styles.title}>
                   <Text title3 semibold style={{ textAlign: 'center' }}>
                     Thumbnail
                   </Text>
                 </View>
-                <View style={{ marginHorizontal: 25, marginBottom: 10 }}>
+                <View style={{ marginHorizontal: 10, marginBottom: 10 }}>
                   <Text>Thumbnail size must be 300x300</Text>
                 </View>
                 <View style={styles.thumbnailContainer}>
@@ -249,7 +249,7 @@ export const GalleryScreen = (props: StackScreenProps<GlobalParamList>) => {
                     Gallery
                   </Text>
                 </View>
-                <View style={{ marginHorizontal: 25, marginBottom: 5 }}>
+                <View style={{ marginHorizontal: 10, marginBottom: 5 }}>
                   <Text>Gallery Images size must be 600x400</Text>
                 </View>
                 <View style={styles.gallerySectionImagesContainer}>
@@ -261,8 +261,10 @@ export const GalleryScreen = (props: StackScreenProps<GlobalParamList>) => {
                         : styles.galleryImageSubContainer
                     }
                     onPress={() => pickMultiple()}>
-                    <View style={styles.galleryImageAddIconContainer}>
-                      <Icon name="plus" style={styles.galleryImageAddIcon} />
+                    <View style={styles.galleryImageBox}>
+                      <View style={styles.galleryImageAddIconContainer}>
+                        <Icon name="plus" style={styles.galleryImageAddIcon} />
+                      </View>
                     </View>
                   </TouchableOpacity>
                 </View>

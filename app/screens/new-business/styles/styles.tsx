@@ -61,19 +61,20 @@ export const styles = StyleSheet.create({
   phoneInputView: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    marginTop: 15,
   },
   phoneInput: {
-    marginTop: 5,
-    width: '95%',
+    width: '90%',
     paddingHorizontal: 20,
   },
-  phoneIcon: {
-    marginTop: 2,
-    width: '20%',
-    textAlign: 'center',
-    paddingLeft: 10,
+  phoneIconContainer: {
+    width: '10%',
+    height: '100%',
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+    justifyContent: 'center',
   },
   addMore: {
     display: 'flex',
@@ -120,7 +121,7 @@ export const styles = StyleSheet.create({
     fontSize: 18,
   },
   thumbnailContainer: {
-    marginHorizontal: 25,
+    marginHorizontal: 10,
     backgroundColor: BaseColor.grayColor,
     height: 150,
     position: 'relative',
@@ -148,14 +149,19 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     position: 'relative',
   },
-  galleryImageSubContainer: {
-    width: '28%',
-    height: 120,
-    margin: 10,
+  galleryImageBox: {
+    width: '100%',
+    height: '100%',
     borderRadius: 5,
-    backgroundColor: BaseColor.grayColor,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: BaseColor.grayColor,
+  },
+  galleryImageSubContainer: {
+    width: '33.33%',
+    padding: 10,
+    height: 120,
+    borderRadius: 5,
     position: 'relative',
   },
   gallerySection: {
@@ -192,7 +198,7 @@ export const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     borderRadius: 5,
-    overflow: 'hidden',
+    overflow: 'visible',
   },
   galleryImageBadge: {
     backgroundColor: BaseColor.blueColor,
@@ -205,9 +211,10 @@ export const styles = StyleSheet.create({
     left: 0,
     right: 0,
     textAlign: 'center',
+    borderBottomRightRadius: 4,
+    borderBottomLeftRadius: 4,
   },
   thumbnailSection: {
-    marginTop: 20,
     marginBottom: 30,
   },
   thumbnailContainerImage: {
@@ -218,12 +225,12 @@ export const styles = StyleSheet.create({
   gallerySectionImagesContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    paddingHorizontal: 15,
   },
 
   galleryImage: {
     width: '100%',
     height: '100%',
+    borderRadius: 5,
   },
   galleryContainer: {
     flex: 1,
