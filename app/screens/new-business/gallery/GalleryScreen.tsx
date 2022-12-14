@@ -34,6 +34,9 @@ export const GalleryScreen = (props: StackScreenProps<GlobalParamList>) => {
   const { mutate: addNewBusiness } = useAddNewBusiness();
   const { data: businessData } = useBusiness(route?.params?.id);
 
+  const resetAddBusinessStore = useAddBusinessStore(
+    (state: any) => state.resetAddBusinessStore,
+  );
   const payload = useAddBusinessStore((state: any) => state);
   const thumbnail = useAddBusinessStore((state: any) => state.thumbnail);
   const setThumbnail = useAddBusinessStore((state: any) => state.setThumbnail);
@@ -64,6 +67,7 @@ export const GalleryScreen = (props: StackScreenProps<GlobalParamList>) => {
       setGallery('');
       navigation.navigate('EditBusiness', { id: route?.params?.id });
     } else {
+      // Remove keys containing empty strings to avoid API Errors
       Object.keys(payload).forEach((key) => {
         if (payload[key] === '') {
           delete payload[key];
@@ -71,6 +75,13 @@ export const GalleryScreen = (props: StackScreenProps<GlobalParamList>) => {
       });
       addNewBusiness(payload);
       navigation.navigate('Dashboard');
+
+      // Reset Store & Stack
+      resetAddBusinessStore();
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Name' }],
+      });
     }
   };
 
