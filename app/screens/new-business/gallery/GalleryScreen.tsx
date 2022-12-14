@@ -64,6 +64,11 @@ export const GalleryScreen = (props: StackScreenProps<GlobalParamList>) => {
       setGallery('');
       navigation.navigate('EditBusiness', { id: route?.params?.id });
     } else {
+      Object.keys(payload).forEach((key) => {
+        if (payload[key] === '') {
+          delete payload[key];
+        }
+      });
       addNewBusiness(payload);
       navigation.navigate('Dashboard');
     }

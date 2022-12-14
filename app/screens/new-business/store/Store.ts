@@ -13,7 +13,7 @@ const useAddBusinessStore = create((set) => ({
   established: '',
   address: '',
   openHours: [],
-  priceRange: [],
+  priceRange: {},
   gallery: [],
   thumbnail: '',
   location: object,
