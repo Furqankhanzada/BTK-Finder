@@ -131,9 +131,9 @@ export default function EditBusinessScreen(
         <ListItem
           title="OpenHours"
           businessDetail={
-            businessData?.openHours
+            businessData?.openHours?.length
               ? `${businessData?.openHours[0]?.day} ${businessData?.openHours[0]?.from} To ${businessData?.openHours[0]?.to}`
-              : 'empty'
+              : 'Empty'
           }
           onPress={() => {
             navigation.navigate('EditBusinessStack', {
@@ -145,9 +145,9 @@ export default function EditBusinessScreen(
         <ListItem
           title="Price"
           businessDetail={
-            businessData?.priceRange
+            businessData?.priceRange?.from && businessData?.priceRange?.to
               ? `${businessData?.priceRange?.from} To ${businessData?.priceRange?.to}`
-              : 'empty'
+              : 'Empty'
           }
           onPress={() => {
             navigation.navigate('EditBusinessStack', {
