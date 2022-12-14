@@ -277,13 +277,13 @@ export const AddressScreen = (props: StackScreenProps<GlobalParamList>) => {
               <ScrollView
                 contentContainerStyle={{ flexGrow: 1 }}
                 style={{ flex: 1 }}>
+                <View style={styles.title}>
+                  <Text title3 semibold style={styles.titleCenter}>
+                    Address
+                  </Text>
+                </View>
                 <View style={[styles.mapContainer]}>
                   <View style={fullScreen ? styles.hide : styles.show}>
-                    <View style={styles.title}>
-                      <Text title3 semibold style={styles.titleCenter}>
-                        Address
-                      </Text>
-                    </View>
                     <View style={GlobalStyle.inputContainer}>
                       <TextInput
                         style={styles.textArea}

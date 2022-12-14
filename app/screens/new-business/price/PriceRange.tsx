@@ -75,12 +75,14 @@ export const PriceRange = (props: StackScreenProps<GlobalParamList>) => {
       <Formik
         initialValues={{ price: priceRange }}
         onSubmit={() => {
-          if (isEditBusiness) {
+          const isValidPrice = from >= 200;
+
+          if (isEditBusiness && isValidPrice) {
             EditPrice({
               priceRange: { from: from.toString(), to: to.toString() },
             });
             navigation.navigate('EditBusiness', { id: businessData?._id });
-          } else {
+          } else if (isValidPrice) {
             setPriceRange({ from, to });
             navigation.navigate('Gallery');
           }
@@ -95,12 +97,11 @@ export const PriceRange = (props: StackScreenProps<GlobalParamList>) => {
                 data={[1]}
                 renderItem={() => {
                   return (
-                    <View style={styles.contain}>
-                      <View style={styles.title}>
-                        <Text title1 bold style={{ paddingBottom: 30 }}>
-                          What is Price Range of your Business
-                        </Text>
-                      </View>
+                    <View>
+                      <Text title1 bold style={{ paddingBottom: 30 }}>
+                        What is Price Range of your Business{' '}
+                        <Text body1>(optional)</Text>
+                      </Text>
                       <RangeSlider
                         low={from}
                         high={to}

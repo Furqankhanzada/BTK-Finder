@@ -85,6 +85,10 @@ export const Hours = (props: StackScreenProps<GlobalParamList>) => {
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
         title={isEditBusiness ? 'Edit Open Hours' : 'Opne Hours'}
+        renderRight={() => {
+          return isEditBusiness ? null : <Text>Skip</Text>;
+        }}
+        onPressRight={() => navigation.navigate('Price')}
         renderLeft={() => {
           return isEditBusiness ? (
             <Icon
@@ -107,7 +111,7 @@ export const Hours = (props: StackScreenProps<GlobalParamList>) => {
           return (
             <View>
               <Text style={{ paddingBottom: 20 }} title1 bold>
-                Set Timings of your Business
+                Set Timings of your Business <Text body1>(optional)</Text>
               </Text>
 
               {selectedDays.map((item: OpenHours, index: number) => {

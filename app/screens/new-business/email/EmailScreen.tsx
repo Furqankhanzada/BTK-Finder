@@ -81,7 +81,8 @@ export const EmailScreen = (props: StackScreenProps<GlobalParamList>) => {
                   return (
                     <View>
                       <Text title1 bold>
-                        What is the valid Email address of your Business ?
+                        What is the valid Email address of your Business ?{' '}
+                        <Text body1>(optional)</Text>
                       </Text>
                       <TextInput
                         style={styles.input}

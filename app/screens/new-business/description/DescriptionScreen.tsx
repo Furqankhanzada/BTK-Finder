@@ -83,7 +83,8 @@ export const DescriptionScreen = (props: StackScreenProps<GlobalParamList>) => {
                   return (
                     <View>
                       <Text title1 bold>
-                        Write Description of your Business
+                        Write Description of your Business{' '}
+                        <Text body1>(optional)</Text>
                       </Text>
                       <TextInput
                         style={styles.inputDescription}
@@ -112,7 +113,12 @@ export const DescriptionScreen = (props: StackScreenProps<GlobalParamList>) => {
                 )}
 
                 <Button
-                  style={styles.footerButtons}
+                  style={[
+                    styles.footerButtons,
+                    errors?.description
+                      ? { backgroundColor: BaseColor.grayColor }
+                      : null,
+                  ]}
                   title="submit"
                   onPress={handleSubmit}>
                   {isEditBusiness ? 'Update Description' : 'Next'}

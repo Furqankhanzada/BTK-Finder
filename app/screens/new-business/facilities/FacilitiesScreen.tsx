@@ -92,7 +92,6 @@ export const FacilitiesScreen = (props: StackScreenProps<GlobalParamList>) => {
 
       <View style={styles.contain}>
         <FlatList
-          contentContainerStyle={styles.flatlistConatiner}
           data={facilities}
           keyExtractor={(item: object, index: any) => {
             return index;
