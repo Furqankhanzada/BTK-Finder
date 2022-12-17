@@ -3,6 +3,7 @@ import { Linking } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 
 import { RootStackParamList } from '../models/RootStackParamList';
+import { canOpenUrl } from '@utils';
 
 export const linkingConfig: LinkingOptions<RootStackParamList> = {
   prefixes: ['explorebtk://', 'https://explorebtk.com'],
@@ -62,9 +63,13 @@ export const linkingConfig: LinkingOptions<RootStackParamList> = {
     // Check if there is an initial firebase notification
     const message = await messaging().getInitialNotification();
 
-    // Get deep link from data
-    // if this is undefined, the app will open the default/home page
-    return message?.data?.link;
+    if (message?.data?.facebook) {
+      canOpenUrl(message?.data?.facebook, message?.data?.link);
+    } else {
+      // Get deep link from data
+      // if this is undefined, the app will open the default/home page
+      return message?.data?.link;
+    }
   },
   subscribe(listener) {
     const onReceiveURL = ({ url }: { url: string }) => listener(url);
@@ -76,8 +81,11 @@ export const linkingConfig: LinkingOptions<RootStackParamList> = {
     const unsubscribeNotification = messaging().onNotificationOpenedApp(
       (message) => {
         const url = message?.data?.link;
+        const facebook = message?.data?.facebook;
 
-        if (url) {
+        if (facebook) {
+          canOpenUrl(facebook, url);
+        } else if (url) {
           // Any custom logic to check whether the URL needs to be handled
 
           // Call the listener to let React Navigation handle the URL
