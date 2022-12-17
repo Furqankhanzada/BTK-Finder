@@ -37,21 +37,21 @@ export default function usePushNotifications() {
     }
   });
 
-  useEffect(() => {
-    // When the user presses a notification displayed via FCM,
-    // this listener will be called if the app has opened from a background state.
-    messaging().onNotificationOpenedApp((remoteMessage) => {
-      navigateToLink(remoteMessage);
-    });
+  // useEffect(() => {
+  //   // When the user presses a notification displayed via FCM,
+  //   // this listener will be called if the app has opened from a background state.
+  //   messaging().onNotificationOpenedApp((remoteMessage) => {
+  //     navigateToLink(remoteMessage);
+  //   });
 
-    // When a notification from FCM has triggered the application to open from a quit state,
-    // this method will return a RemoteMessage containing the notification data, or null if the app was opened via another method.
-    messaging()
-      .getInitialNotification()
-      .then((remoteMessage) => {
-        navigateToLink(remoteMessage);
-      });
-  }, []);
+  //   // When a notification from FCM has triggered the application to open from a quit state,
+  //   // this method will return a RemoteMessage containing the notification data, or null if the app was opened via another method.
+  //   messaging()
+  //     .getInitialNotification()
+  //     .then((remoteMessage) => {
+  //       navigateToLink(remoteMessage);
+  //     });
+  // }, []);
 
   useEffect(() => {
     // When any FCM payload is received, the listener callback is called with a `RemoteMessage`.
@@ -66,7 +66,7 @@ export default function usePushNotifications() {
           });
         } else {
           // In the future we can create multiple channels here like Promotional, Informational, Events, etc ...
-          createChannel(remoteMessage?.notification?.android?.channelId);
+          // createChannel(remoteMessage?.notification?.android?.channelId);
           PushNotification.localNotification({
             channelId: remoteMessage?.notification?.android?.channelId,
             title: remoteMessage?.notification?.title,
