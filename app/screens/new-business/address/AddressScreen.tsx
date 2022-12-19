@@ -206,19 +206,6 @@ export const AddressScreen = (props: StackScreenProps<GlobalParamList>) => {
     setStoreLocation(defaultMap);
   };
 
-  // const submit = (values: NewAddBusinessPresentable) => {
-  //   let payload = {
-  //     ...values,
-  //   };
-  //   if (Object.keys(location).length) {
-  //     payload.location = {
-  //       type: 'Point',
-  //       coordinates: [location.latitude, location.longitude],
-  //     };
-  //   }
-  //   onNext();
-  // };
-
   const navigateToBack = () => {
     navigation.goBack();
   };
