@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'; 
+import { useEffect, useState } from 'react';
 import { Linking, Platform } from 'react-native';
 import PushNotification from 'react-native-push-notification';
 import PushNotificationIOS, {
