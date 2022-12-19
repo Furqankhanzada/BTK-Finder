@@ -3,7 +3,6 @@ import { Linking } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 
 import { RootStackParamList } from '../models/RootStackParamList';
-import { canOpenUrl } from '@utils';
 
 export const linkingConfig: LinkingOptions<RootStackParamList> = {
   prefixes: ['explorebtk://', 'https://explorebtk.com'],
@@ -20,7 +19,6 @@ export const linkingConfig: LinkingOptions<RootStackParamList> = {
           BusinessDetailTabNavigator: {
             path: 'businesses/:businessId',
             exact: true,
-            // @ts-expect-error because we did heck
             screens: {
               DetailStack: {
                 path: 'overview',
@@ -71,7 +69,7 @@ export const linkingConfig: LinkingOptions<RootStackParamList> = {
     const onReceiveURL = ({ url }: { url: string }) => listener(url);
 
     // Listen to incoming links from deep linking
-    Linking.addEventListener('url', onReceiveURL);
+    const subscription = Linking.addEventListener('url', onReceiveURL);
 
     // Listen to firebase push notifications
     const unsubscribeNotification = messaging().onNotificationOpenedApp(
@@ -87,7 +85,7 @@ export const linkingConfig: LinkingOptions<RootStackParamList> = {
 
     return () => {
       // Clean up the event listeners
-      Linking.removeEventListener('url', onReceiveURL);
+      subscription.remove();
       unsubscribeNotification();
     };
   },
