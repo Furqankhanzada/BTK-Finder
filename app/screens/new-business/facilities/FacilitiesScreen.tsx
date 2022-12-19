@@ -6,10 +6,10 @@ import remoteConfig from '@react-native-firebase/remote-config';
 import { Header, Text, Button, Icon } from '@components';
 import { BaseStyle, useTheme } from '@config';
 import { useBusiness } from '@screens/businesses/queries/queries';
+import { Facility } from '@screens/businesses/models/BusinessPresentable';
 
 import { styles } from '../styles/styles';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
-import { NewAddBusinessPresentable } from '../models/AddNewBusinessPresentable';
 import { useEditBusiness } from '../queries/mutations';
 import useAddBusinessStore from '../store/Store';
 
@@ -46,14 +46,14 @@ export const FacilitiesScreen = (props: StackScreenProps<GlobalParamList>) => {
 
   const onChange = (facility: { name: string }) => {
     const isItemSelected = selectedFacilities?.some(
-      (obj: NewAddBusinessPresentable) => obj.name === facility.name,
+      (obj: Facility) => obj.name === facility.name,
     );
 
     if (!isItemSelected) {
       setSelectedFacilities([...selectedFacilities, facility]);
     } else {
       const arr = selectedFacilities.filter(
-        (item: NewAddBusinessPresentable) => item.name !== facility.name,
+        (item: Facility) => item.name !== facility.name,
       );
       setSelectedFacilities(arr);
     }
@@ -98,7 +98,7 @@ export const FacilitiesScreen = (props: StackScreenProps<GlobalParamList>) => {
           }}
           renderItem={({ item, index }: any) => {
             const checked = selectedFacilities?.some(
-              (obj: NewAddBusinessPresentable) => obj.name === item.name,
+              (obj: Facility) => obj.name === item.name,
             );
 
             return (
