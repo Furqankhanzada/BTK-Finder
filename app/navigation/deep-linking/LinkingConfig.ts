@@ -3,6 +3,7 @@ import { Linking } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 
 import { RootStackParamList } from '../models/RootStackParamList';
+import { navigateToLink } from '@utils';
 
 export const linkingConfig: LinkingOptions<RootStackParamList> = {
   prefixes: ['explorebtk://', 'https://explorebtk.com'],
@@ -19,6 +20,7 @@ export const linkingConfig: LinkingOptions<RootStackParamList> = {
           BusinessDetailTabNavigator: {
             path: 'businesses/:businessId',
             exact: true,
+            // @ts-expect-error because we did heck
             screens: {
               DetailStack: {
                 path: 'overview',
@@ -61,6 +63,10 @@ export const linkingConfig: LinkingOptions<RootStackParamList> = {
     // Check if there is an initial firebase notification
     const message = await messaging().getInitialNotification();
 
+    if (!message?.data?.deeplink) {
+      navigateToLink(message);
+      return '';
+    }
     // Get deep link from data
     // if this is undefined, the app will open the default/home page
     return message?.data?.deeplink;
