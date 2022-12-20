@@ -3,6 +3,7 @@ import { FlatList, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useDispatch, useSelector } from 'react-redux';
 import { firebase } from '@react-native-firebase/database';
+import {  TestIds,  BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
 
 import { SafeAreaView, Icon, Text, Tag, Image, Header } from '@components';
 import { BaseStyle, useTheme } from '@config';
@@ -23,6 +24,8 @@ import { EVENTS, setUser, trackEvent } from '../../userTracking';
 import { GlobalParamList } from '../../navigation/models/GlobalParamList';
 import { MainStackParamList } from '../../navigation/models/MainStackParamList';
 import { getProfile } from '../../actions/auth';
+
+const adUnitId = __DEV__ ? TestIds.BANNER : 'ca-app-pub-6507255964694411/5571216875';
 
 const database = firebase
   .app()
@@ -199,7 +202,13 @@ function DashboardScreen({
         // }
         renderItem={() => (
           <View>
-            {renderBanner(banners?.one)}
+            <BannerAd
+              unitId={adUnitId}
+              size={BannerAdSize.FULL_BANNER}
+              requestOptions={{
+                requestNonPersonalizedAdsOnly: true,
+              }}
+            />
             <Section
               title="Browse by categories"
               onViewAll={onCategoriesViewAllPress}
