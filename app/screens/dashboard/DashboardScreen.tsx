@@ -208,13 +208,15 @@ function DashboardScreen({
         // }
         renderItem={() => (
           <View>
-            <BannerAd
-              unitId={adUnitId}
-              size={BannerAdSize.FULL_BANNER}
-              requestOptions={{
-                requestNonPersonalizedAdsOnly: true,
-              }}
-            />
+            <View style={styles.adBanner}>
+              <BannerAd
+                unitId={adUnitId}
+                size={BannerAdSize.FULL_BANNER}
+                requestOptions={{
+                  requestNonPersonalizedAdsOnly: true,
+                }}
+              />
+            </View>
             <Section
               title="Browse by categories"
               onViewAll={onCategoriesViewAllPress}
@@ -473,6 +475,9 @@ const styles = StyleSheet.create({
   helplineButtonText: {
     marginLeft: 5,
     fontSize: 10,
+  },
+  adBanner: {
+    marginTop: 20,
   },
   serviceItem: {
     flex: 1,
