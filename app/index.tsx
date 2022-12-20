@@ -20,7 +20,7 @@ import { store } from './store';
 
 mobileAds()
   .initialize()
-  .then(adapterStatuses => {
+  .then((adapterStatuses) => {
     // Initialization complete!
   });
 
