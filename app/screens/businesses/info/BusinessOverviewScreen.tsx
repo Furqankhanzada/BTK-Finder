@@ -23,6 +23,7 @@ import { Placeholder, PlaceholderMedia, Progressive } from 'rn-placeholder';
 import ImageView from 'react-native-image-viewing';
 import { StackScreenProps } from '@react-navigation/stack';
 import { CompositeScreenProps } from '@react-navigation/native';
+import { useInterstitialAd, TestIds } from 'react-native-google-mobile-ads';
 
 import {
   Header,
@@ -54,6 +55,14 @@ import {
   ProductStackParamList,
 } from '../../../navigation/models/BusinessDetailBottomTabParamList';
 
+const whatsappAdUnitId = __DEV__
+  ? TestIds.INTERSTITIAL
+  : 'ca-app-pub-6507255964694411/7433009170';
+
+const contactAdUnitId = __DEV__
+  ? TestIds.INTERSTITIAL
+  : 'ca-app-pub-6507255964694411/1686692629';
+
 let defaultDelta = {
   latitudeDelta: 0.003,
   longitudeDelta: 0.003,
@@ -65,6 +74,23 @@ type Props = CompositeScreenProps<
 >;
 export default function BusinessOverviewScreen(props: Props) {
   const { navigation, route } = props;
+
+  const {
+    isLoaded: isWhatsappAdLoaded,
+    isClosed: isWhatsappAdClosed,
+    load: loadWhatsappAd,
+    show: showWhatsappAd,
+  } = useInterstitialAd(whatsappAdUnitId, {
+    requestNonPersonalizedAdsOnly: true,
+  });
+  const {
+    isLoaded: isContactAdLoaded,
+    isClosed: isContactAdClosed,
+    load: loadContactAd,
+    show: showContactAd,
+  } = useInterstitialAd(contactAdUnitId, {
+    requestNonPersonalizedAdsOnly: true,
+  });
 
   const mapRef = useRef<any>();
   const scrollY = useRef(new Animated.Value(0)).current;
@@ -81,6 +107,32 @@ export default function BusinessOverviewScreen(props: Props) {
   } = useBuildBusinessURL();
 
   const appLink = 'http://onelink.to/xwhffr';
+
+  useEffect(() => {
+    // Load interstitial Whatsapp ad
+    loadWhatsappAd();
+  }, [loadWhatsappAd]);
+
+  useEffect(() => {
+    if (isWhatsappAdClosed) {
+      // Action after the Whatsapp ad is closed
+      openWhatsapp();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isWhatsappAdClosed, navigation]);
+
+  useEffect(() => {
+    // Load interstitial Contact ad
+    loadContactAd();
+  }, [loadContactAd]);
+
+  useEffect(() => {
+    if (isContactAdClosed) {
+      // Action after the Contact ad is closed
+      openPhone();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isContactAdClosed, navigation]);
 
   useEffect(() => {
     let loc =
@@ -287,7 +339,7 @@ export default function BusinessOverviewScreen(props: Props) {
     return <Image source={getCoverImage()} style={styles.coverImage} />;
   };
 
-  const onPressWhatsApp = () => {
+  const openWhatsapp = () => {
     onOpen({
       id: '6',
       title: t('tel'),
@@ -296,8 +348,16 @@ export default function BusinessOverviewScreen(props: Props) {
       rightText: 'open WhatsApp',
     });
   };
+  const onPressWhatsApp = () => {
+    if (isWhatsappAdLoaded) {
+      showWhatsappAd();
+    } else {
+      // No advert ready to show yet
+      openWhatsapp();
+    }
+  };
 
-  const onPressPhone = () => {
+  const openPhone = () => {
     onOpen({
       id: '5',
       title: t('tel'),
@@ -305,6 +365,14 @@ export default function BusinessOverviewScreen(props: Props) {
       information: business?.telephone,
       rightText: 'call',
     });
+  };
+  const onPressPhone = () => {
+    if (isContactAdLoaded) {
+      showContactAd();
+    } else {
+      // No advert ready to show yet
+      openPhone();
+    }
   };
 
   const onPressGallery = () => {
