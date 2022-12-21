@@ -213,7 +213,7 @@ export const AddressScreen = (props: StackScreenProps<GlobalParamList>) => {
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
-        title={isEditBusiness ? 'Edit your address' : 'Add Business Address'}
+        title={isEditBusiness ? 'Edit Business Address' : 'Business Address'}
         renderLeft={() => {
           return isEditBusiness ? (
             <Icon

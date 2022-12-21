@@ -106,8 +106,8 @@ export const TelephoneScreen = (props: StackScreenProps<GlobalParamList>) => {
                   return (
                     <View>
                       <Text title1 bold>
-                        What is the Telephone number of your Business ?{' '}
-                        <Text body1>(optional)</Text>
+                        Add your business's contact number, Make it easy for
+                        users to connect with you <Text body1>(optional)</Text>
                       </Text>
                       <View style={styles.phoneInputView}>
                         <TextInput

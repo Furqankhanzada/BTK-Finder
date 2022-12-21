@@ -88,6 +88,10 @@ export const FacilitiesScreen = (props: StackScreenProps<GlobalParamList>) => {
           ) : null;
         }}
         onPressLeft={navigateToBack}
+        renderRight={() => {
+          return isEditBusiness ? null : <Text>Skip</Text>;
+        }}
+        onPressRight={() => navigation.navigate('Tags')}
       />
 
       <View style={styles.contain}>

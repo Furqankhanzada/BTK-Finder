@@ -83,12 +83,12 @@ export const DescriptionScreen = (props: StackScreenProps<GlobalParamList>) => {
                   return (
                     <View>
                       <Text title1 bold>
-                        Write Description of your Business{' '}
-                        <Text body1>(optional)</Text>
+                        Describe about your business, Let people know about your
+                        business <Text body1>(optional)</Text>
                       </Text>
                       <TextInput
                         style={styles.inputDescription}
-                        placeholder="Add Description"
+                        placeholder="e.g Kababjees are known for making each bite soulful and joyous..."
                         value={values.description}
                         multiline={true}
                         textAlignVertical="top"

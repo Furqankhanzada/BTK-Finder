@@ -101,6 +101,10 @@ export const TagsScreen = (props: StackScreenProps<GlobalParamList>) => {
           ) : null;
         }}
         onPressLeft={navigateToBack}
+        renderRight={() => {
+          return isEditBusiness ? null : <Text>Skip</Text>;
+        }}
+        onPressRight={() => navigation.navigate('Telephone')}
       />
       <View style={styles.contain}>
         {tags ? (

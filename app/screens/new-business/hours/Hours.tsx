@@ -111,7 +111,8 @@ export const Hours = (props: StackScreenProps<GlobalParamList>) => {
           return (
             <View>
               <Text style={{ paddingBottom: 20 }} title1 bold>
-                Set Timings of your Business <Text body1>(optional)</Text>
+                What are the timings of your business?{' '}
+                <Text body1>(optional)</Text>
               </Text>
 
               {selectedDays.map((item: OpenHours, index: number) => {

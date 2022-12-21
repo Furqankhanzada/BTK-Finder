@@ -87,8 +87,8 @@ export const WebsiteScreen = (props: StackScreenProps<GlobalParamList>) => {
                   return (
                     <View>
                       <Text title1 bold>
-                        What is the official website of your Business ?{' '}
-                        <Text body1>(optional)</Text>
+                        Add your business's official website, Let users to know
+                        about your business more <Text body1>(optional)</Text>
                       </Text>
                       <TextInput
                         style={styles.input}

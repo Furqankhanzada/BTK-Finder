@@ -72,11 +72,11 @@ export const NameScreen = (props: StackScreenProps<GlobalParamList>) => {
                   return (
                     <View>
                       <Text title1 bold>
-                        What is your Business name ?
+                        Please write your business name
                       </Text>
                       <TextInput
                         style={styles.input}
-                        placeholder="Business name ?"
+                        placeholder="e.g Kababjees"
                         value={values.name}
                         onChangeText={handleChange('name')}
                       />
