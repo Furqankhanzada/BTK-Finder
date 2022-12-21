@@ -114,10 +114,9 @@ function MainBottomTabNavigator() {
       />
       <MainBottomTab.Screen
         name="NewBusinessStack"
-        // component={withAuthRedirection(NewBusinessStackNavigator, {
-        //   lastRoute: LastRoutes.NewBusinessStack,
-        // })}
-        component={NewBusinessStackNavigator}
+        component={withAuthRedirection(NewBusinessStackNavigator, {
+          lastRoute: LastRoutes.NewBusinessStack,
+        })}
         options={{
           title: 'New Business',
           tabBarIcon: ({ color }) => {
