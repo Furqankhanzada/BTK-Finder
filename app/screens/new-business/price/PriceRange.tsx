@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, SafeAreaView, View } from 'react-native';
+import {
+  FlatList,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  View,
+} from 'react-native';
 import { Formik } from 'formik';
 import { StackScreenProps } from '@react-navigation/stack';
 
@@ -50,6 +56,11 @@ export const PriceRange = (props: StackScreenProps<GlobalParamList>) => {
     }
   }, [businessData?.priceRange, isEditBusiness, priceRange]);
 
+  const offsetKeyboard = Platform.select({
+    ios: 0,
+    android: 20,
+  });
+
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
@@ -72,82 +83,91 @@ export const PriceRange = (props: StackScreenProps<GlobalParamList>) => {
           navigation.navigate('EditBusiness', { id: businessData?._id });
         }}
       />
-      <Formik
-        initialValues={{ price: priceRange }}
-        onSubmit={() => {
-          const isValidPrice = from >= 200;
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'android' ? 'height' : 'padding'}
+        keyboardVerticalOffset={offsetKeyboard}
+        style={{ flex: 1 }}>
+        <Formik
+          initialValues={{ price: priceRange }}
+          onSubmit={() => {
+            const isValidPrice = from >= 200;
 
-          if (isEditBusiness && isValidPrice) {
-            EditPrice({
-              priceRange: { from: from.toString(), to: to.toString() },
-            });
-            navigation.navigate('EditBusiness', { id: businessData?._id });
-          } else if (isValidPrice) {
-            setPriceRange({ from, to });
-            navigation.navigate('Gallery');
-          }
-        }}>
-        {({ handleSubmit }) => {
-          return (
-            <>
-              <FlatList
-                style={styles.container}
-                overScrollMode={'never'}
-                scrollEventThrottle={16}
-                data={[1]}
-                renderItem={() => {
-                  return (
-                    <View>
-                      <Text title1 bold style={{ paddingBottom: 30 }}>
-                        What is Price Range of your Business{' '}
-                        <Text body1>(optional)</Text>
-                      </Text>
-                      <RangeSlider
-                        low={from}
-                        high={to}
-                        color={colors.border}
-                        style={styles.rangeSlider}
-                        selectionColor={colors.primary}
-                        onValueChanged={(low, high) => {
-                          setFrom(low);
-                          setTo(high);
-                        }}
-                      />
-                      <View style={styles.contentResultRange}>
-                        <Text style={styles.fontSize}>min - Rs. {from}</Text>
-                        <Text style={styles.fontSize}>max - Rs.{to}</Text>
+            if (isEditBusiness && isValidPrice) {
+              EditPrice({
+                priceRange: { from: from.toString(), to: to.toString() },
+              });
+              navigation.navigate('EditBusiness', { id: businessData?._id });
+            } else if (isValidPrice) {
+              setPriceRange({ from, to });
+              navigation.navigate('Gallery');
+            }
+          }}>
+          {({ handleSubmit }) => {
+            return (
+              <>
+                <FlatList
+                  style={styles.container}
+                  overScrollMode={'never'}
+                  scrollEventThrottle={16}
+                  data={[1]}
+                  renderItem={() => {
+                    return (
+                      <View>
+                        <Text title1 bold style={{ paddingBottom: 30 }}>
+                          What is Price Range of your Business{' '}
+                          <Text body1>(optional)</Text>
+                        </Text>
+                        <RangeSlider
+                          low={from}
+                          high={to}
+                          color={colors.border}
+                          style={styles.rangeSlider}
+                          selectionColor={colors.primary}
+                          onValueChanged={(low, high) => {
+                            setFrom(low);
+                            setTo(high);
+                          }}
+                        />
+                        <View style={styles.contentResultRange}>
+                          <Text style={styles.fontSize}>min - Rs. {from}</Text>
+                          <Text style={styles.fontSize}>max - Rs.{to}</Text>
+                        </View>
                       </View>
-                    </View>
-                  );
-                }}
-              />
+                    );
+                  }}
+                />
 
-              <View
-                style={
-                  isEditBusiness ? styles.stickyFooterEdit : styles.stickyFooter
-                }>
-                {isEditBusiness ? null : (
-                  <Button style={styles.footerButtons} onPress={navigateToBack}>
-                    {'Back'}
+                <View
+                  style={
+                    isEditBusiness
+                      ? styles.stickyFooterEdit
+                      : styles.stickyFooter
+                  }>
+                  {isEditBusiness ? null : (
+                    <Button
+                      style={styles.footerButtons}
+                      onPress={navigateToBack}>
+                      {'Back'}
+                    </Button>
+                  )}
+
+                  <Button
+                    style={[
+                      styles.footerButtons,
+                      from <= 200
+                        ? { backgroundColor: BaseColor.grayColor }
+                        : null,
+                    ]}
+                    title="submit"
+                    onPress={handleSubmit}>
+                    {isEditBusiness ? 'Update Price' : 'Next'}
                   </Button>
-                )}
-
-                <Button
-                  style={[
-                    styles.footerButtons,
-                    from <= 200
-                      ? { backgroundColor: BaseColor.grayColor }
-                      : null,
-                  ]}
-                  title="submit"
-                  onPress={handleSubmit}>
-                  {isEditBusiness ? 'Update Price' : 'Next'}
-                </Button>
-              </View>
-            </>
-          );
-        }}
-      </Formik>
+                </View>
+              </>
+            );
+          }}
+        </Formik>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };

@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   PermissionsAndroid,
   ScrollView,
+  KeyboardAvoidingView,
 } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import MapView, { MapEvent, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
@@ -210,6 +211,11 @@ export const AddressScreen = (props: StackScreenProps<GlobalParamList>) => {
     navigation.goBack();
   };
 
+  const offsetKeyboard = Platform.select({
+    ios: 0,
+    android: 20,
+  });
+
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
@@ -229,109 +235,120 @@ export const AddressScreen = (props: StackScreenProps<GlobalParamList>) => {
         }}
       />
 
-      <Formik
-        initialValues={{
-          address: isEditBusiness ? businessData?.address : address,
-        }}
-        onSubmit={(values) => {
-          console.log('What is Value of addess ?', values.address);
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'android' ? 'height' : 'padding'}
+        keyboardVerticalOffset={offsetKeyboard}
+        style={{ flex: 1 }}>
+        <Formik
+          initialValues={{
+            address: isEditBusiness ? businessData?.address : address,
+          }}
+          onSubmit={(values) => {
+            console.log('What is Value of addess ?', values.address);
 
-          if (isEditBusiness) {
-            editAddress({
-              address: values.address,
-              location: {
+            if (isEditBusiness) {
+              editAddress({
+                address: values.address,
+                location: {
+                  type: 'Point',
+                  coordinates: [
+                    location?.latitude ?? defaultLocation.latitude,
+                    location.longitude ?? defaultLocation.longitude,
+                  ],
+                },
+              });
+              navigation.navigate('EditBusiness', { id: businessData?._id });
+            } else {
+              setStoreLocation({
                 type: 'Point',
-                coordinates: [
-                  location?.latitude ?? defaultLocation.latitude,
-                  location.longitude ?? defaultLocation.longitude,
-                ],
-              },
-            });
-            navigation.navigate('EditBusiness', { id: businessData?._id });
-          } else {
-            setStoreLocation({
-              type: 'Point',
-              coordinates: [location?.latitude, location?.longitude],
-            });
-            setAddress(values.address);
-            navigation.navigate('Hours');
-          }
-        }}
-        validationSchema={addressSFormValidation}>
-        {({ handleChange, values, handleSubmit, errors }) => {
-          return (
-            <Fragment>
-              <ScrollView
-                contentContainerStyle={{ flexGrow: 1 }}
-                style={{ flex: 1 }}>
-                <View style={styles.title}>
-                  <Text title3 semibold style={styles.titleCenter}>
-                    Address
-                  </Text>
-                </View>
-                <View style={[styles.mapContainer]}>
-                  <View style={fullScreen ? styles.hide : styles.show}>
-                    <View style={GlobalStyle.inputContainer}>
-                      <TextInput
-                        style={styles.textArea}
-                        placeholder="Address"
-                        onChangeText={handleChange('address')}
-                        value={values.address}
-                        multiline={true}
-                        // numberOfLines={10}
-                        textAlignVertical="top"
-                      />
-                      {errors?.address ? (
-                        <Text style={GlobalStyle.errorText}>
-                          {errors?.address?.toString()}
-                        </Text>
-                      ) : null}
+                coordinates: [location?.latitude, location?.longitude],
+              });
+              setAddress(values.address);
+              navigation.navigate('Hours');
+            }
+          }}
+          validationSchema={addressSFormValidation}>
+          {({ handleChange, values, handleSubmit, errors }) => {
+            return (
+              <Fragment>
+                <ScrollView
+                  contentContainerStyle={{ flexGrow: 1 }}
+                  style={{ flex: 1 }}>
+                  <View style={styles.title}>
+                    <Text title3 semibold style={styles.titleCenter}>
+                      Address
+                    </Text>
+                  </View>
+                  <View style={[styles.mapContainer]}>
+                    <View style={fullScreen ? styles.hide : styles.show}>
+                      <View style={GlobalStyle.inputContainer}>
+                        <TextInput
+                          style={styles.textArea}
+                          placeholder="Address"
+                          onChangeText={handleChange('address')}
+                          value={values.address}
+                          multiline={true}
+                          // numberOfLines={10}
+                          textAlignVertical="top"
+                        />
+                        {errors?.address ? (
+                          <Text style={GlobalStyle.errorText}>
+                            {errors?.address?.toString()}
+                          </Text>
+                        ) : null}
+                      </View>
+                    </View>
+                    <View style={styles.container}>
+                      <MapView
+                        provider={PROVIDER_GOOGLE}
+                        style={styles.map}
+                        region={region}>
+                        <Marker
+                          coordinate={location}
+                          title={'My current location'}
+                          onDragEnd={(event: MapEvent) =>
+                            onDragEnd(event.nativeEvent.coordinate)
+                          }
+                          draggable
+                        />
+                      </MapView>
+                      <View style={styles.bottomSection}>
+                        {bottomButtons()}
+                      </View>
                     </View>
                   </View>
-                  <View style={styles.container}>
-                    <MapView
-                      provider={PROVIDER_GOOGLE}
-                      style={styles.map}
-                      region={region}>
-                      <Marker
-                        coordinate={location}
-                        title={'My current location'}
-                        onDragEnd={(event: MapEvent) =>
-                          onDragEnd(event.nativeEvent.coordinate)
-                        }
-                        draggable
-                      />
-                    </MapView>
-                    <View style={styles.bottomSection}>{bottomButtons()}</View>
-                  </View>
-                </View>
-              </ScrollView>
-              <View
-                style={
-                  isEditBusiness ? styles.stickyFooterEdit : styles.stickyFooter
-                }>
-                {isEditBusiness ? null : (
-                  <Button style={styles.footerButtons} onPress={navigateToBack}>
-                    {'Back'}
-                  </Button>
-                )}
+                </ScrollView>
+                <View
+                  style={
+                    isEditBusiness
+                      ? styles.stickyFooterEdit
+                      : styles.stickyFooter
+                  }>
+                  {isEditBusiness ? null : (
+                    <Button
+                      style={styles.footerButtons}
+                      onPress={navigateToBack}>
+                      {'Back'}
+                    </Button>
+                  )}
 
-                <Button
-                  style={[
-                    styles.footerButtons,
-                    !values.address
-                      ? { backgroundColor: BaseColor.grayColor }
-                      : null,
-                  ]}
-                  title="submit"
-                  onPress={handleSubmit}>
-                  {isEditBusiness ? 'Update Address' : 'Next'}
-                </Button>
-              </View>
-            </Fragment>
-          );
-        }}
-      </Formik>
+                  <Button
+                    style={[
+                      styles.footerButtons,
+                      !values.address
+                        ? { backgroundColor: BaseColor.grayColor }
+                        : null,
+                    ]}
+                    title="submit"
+                    onPress={handleSubmit}>
+                    {isEditBusiness ? 'Update Address' : 'Next'}
+                  </Button>
+                </View>
+              </Fragment>
+            );
+          }}
+        </Formik>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };

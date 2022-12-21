@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, SafeAreaView, TouchableOpacity, View } from 'react-native';
+import {
+  FlatList,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { StackScreenProps } from '@react-navigation/stack';
 import remoteConfig from '@react-native-firebase/remote-config';
@@ -86,6 +93,11 @@ export const TagsScreen = (props: StackScreenProps<GlobalParamList>) => {
     navigation.goBack();
   };
 
+  const offsetKeyboard = Platform.select({
+    ios: 0,
+    android: 20,
+  });
+
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
@@ -106,74 +118,83 @@ export const TagsScreen = (props: StackScreenProps<GlobalParamList>) => {
         }}
         onPressRight={() => navigation.navigate('Telephone')}
       />
-      <View style={styles.contain}>
-        {tags ? (
-          <TextInput
-            onChangeText={(text) => onSearch(text)}
-            placeholder={t('search')}
-            value={search}
-            icon={
-              <TouchableOpacity onPress={() => onSearch('')}>
-                <Icon name="times" size={16} color={colors.primaryLight} />
-              </TouchableOpacity>
-            }
-          />
-        ) : null}
-        <FlatList
-          contentContainerStyle={{ paddingVertical: 10 }}
-          data={tags}
-          keyExtractor={(item: object, index: any) => {
-            return index;
-          }}
-          renderItem={({ item, index }: any) => {
-            const checked = selected.includes(item.name);
-            return (
-              <TouchableOpacity
-                key={index}
-                style={[styles.item, { backgroundColor: colors.card }]}
-                onPress={() => onChange(item)}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Icon
-                    name={item.icon}
-                    color={item?.checked ? colors.primary : colors.text}
-                    style={{ marginRight: 10 }}
-                    size={15}
-                  />
-                  <Text
-                    body1
-                    style={
-                      checked
-                        ? {
-                            color: colors.primary,
-                          }
-                        : {}
-                    }>
-                    {item.name}
-                  </Text>
-                </View>
-                {checked && (
-                  <Icon name="check" size={14} color={colors.primary} />
-                )}
-              </TouchableOpacity>
-            );
-          }}
-        />
-      </View>
-      <View
-        style={isEditBusiness ? styles.stickyFooterEdit : styles.stickyFooter}>
-        {isEditBusiness ? null : (
-          <Button style={styles.footerButtons} onPress={navigateToBack}>
-            {'Back'}
-          </Button>
-        )}
 
-        <Button
-          style={styles.footerButtons}
-          title="submit"
-          onPress={() => navigateToNext()}>
-          {isEditBusiness ? 'Update Tags' : 'Next'}
-        </Button>
-      </View>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'android' ? 'height' : 'padding'}
+        keyboardVerticalOffset={offsetKeyboard}
+        style={{ flex: 1 }}>
+        <View style={styles.contain}>
+          {tags ? (
+            <TextInput
+              onChangeText={(text) => onSearch(text)}
+              placeholder={t('search')}
+              value={search}
+              icon={
+                <TouchableOpacity onPress={() => onSearch('')}>
+                  <Icon name="times" size={16} color={colors.primaryLight} />
+                </TouchableOpacity>
+              }
+            />
+          ) : null}
+          <FlatList
+            contentContainerStyle={{ paddingVertical: 10 }}
+            data={tags}
+            keyExtractor={(item: object, index: any) => {
+              return index;
+            }}
+            renderItem={({ item, index }: any) => {
+              const checked = selected.includes(item.name);
+              return (
+                <TouchableOpacity
+                  key={index}
+                  style={[styles.item, { backgroundColor: colors.card }]}
+                  onPress={() => onChange(item)}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Icon
+                      name={item.icon}
+                      color={item?.checked ? colors.primary : colors.text}
+                      style={{ marginRight: 10 }}
+                      size={15}
+                    />
+                    <Text
+                      body1
+                      style={
+                        checked
+                          ? {
+                              color: colors.primary,
+                            }
+                          : {}
+                      }>
+                      {item.name}
+                    </Text>
+                  </View>
+                  {checked && (
+                    <Icon name="check" size={14} color={colors.primary} />
+                  )}
+                </TouchableOpacity>
+              );
+            }}
+          />
+        </View>
+
+        <View
+          style={
+            isEditBusiness ? styles.stickyFooterEdit : styles.stickyFooter
+          }>
+          {isEditBusiness ? null : (
+            <Button style={styles.footerButtons} onPress={navigateToBack}>
+              {'Back'}
+            </Button>
+          )}
+
+          <Button
+            style={styles.footerButtons}
+            title="submit"
+            onPress={() => navigateToNext()}>
+            {isEditBusiness ? 'Update Tags' : 'Next'}
+          </Button>
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };

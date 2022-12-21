@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, SafeAreaView, TouchableOpacity, View } from 'react-native';
+import {
+  FlatList,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useTranslation } from 'react-i18next';
 
@@ -72,6 +79,11 @@ export const CategoryScreen = (props: StackScreenProps<GlobalParamList>) => {
     navigation.goBack();
   };
 
+  const offsetKeyboard = Platform.select({
+    ios: 0,
+    android: 20,
+  });
+
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
@@ -88,7 +100,11 @@ export const CategoryScreen = (props: StackScreenProps<GlobalParamList>) => {
         }}
         onPressLeft={navigateToBack}
       />
-      <>
+
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'android' ? 'height' : 'padding'}
+        keyboardVerticalOffset={offsetKeyboard}
+        style={{ flex: 1 }}>
         <View style={styles.contain}>
           {categories ? (
             <TextInput
@@ -165,7 +181,7 @@ export const CategoryScreen = (props: StackScreenProps<GlobalParamList>) => {
             {isEditBusiness ? 'Update Category' : 'Next'}
           </Button>
         </View>
-      </>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };

@@ -1,5 +1,11 @@
 import React from 'react';
-import { FlatList, SafeAreaView, View } from 'react-native';
+import {
+  FlatList,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  View,
+} from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -37,6 +43,11 @@ export const DescriptionScreen = (props: StackScreenProps<GlobalParamList>) => {
     navigation.navigate('Category');
   };
 
+  const offsetKeyboard = Platform.select({
+    ios: 0,
+    android: 20,
+  });
+
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
@@ -57,77 +68,89 @@ export const DescriptionScreen = (props: StackScreenProps<GlobalParamList>) => {
         }}
         onPressRight={navigateToNext}
       />
-      <Formik
-        initialValues={{
-          description: isEditBusiness ? businessData?.description : description,
-        }}
-        validationSchema={descriptionSchema}
-        onSubmit={(values) => {
-          if (isEditBusiness) {
-            editDescription({ description: values.description });
-            navigation.navigate('EditBusiness', { id: businessData?._id });
-          } else {
-            setDescription(values.description);
-            navigation.navigate('Category');
-          }
-        }}>
-        {({ values, handleChange, handleSubmit, errors }) => {
-          return (
-            <>
-              <FlatList
-                style={styles.container}
-                overScrollMode={'never'}
-                scrollEventThrottle={16}
-                data={[1]}
-                renderItem={() => {
-                  return (
-                    <View>
-                      <Text title1 bold>
-                        Describe about your business, Let people know about your
-                        business <Text body1>(optional)</Text>
-                      </Text>
-                      <TextInput
-                        style={styles.inputDescription}
-                        placeholder="e.g Kababjees are known for making each bite soulful and joyous..."
-                        value={values.description}
-                        multiline={true}
-                        textAlignVertical="top"
-                        onChangeText={handleChange('description')}
-                      />
-                      <Text style={{ color: BaseColor.redColor }}>
-                        {errors?.description?.toString()}
-                      </Text>
-                    </View>
-                  );
-                }}
-              />
 
-              <View
-                style={
-                  isEditBusiness ? styles.stickyFooterEdit : styles.stickyFooter
-                }>
-                {isEditBusiness ? null : (
-                  <Button style={styles.footerButtons} onPress={navigateToBack}>
-                    {'Back'}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'android' ? 'height' : 'padding'}
+        keyboardVerticalOffset={offsetKeyboard}
+        style={{ flex: 1 }}>
+        <Formik
+          initialValues={{
+            description: isEditBusiness
+              ? businessData?.description
+              : description,
+          }}
+          validationSchema={descriptionSchema}
+          onSubmit={(values) => {
+            if (isEditBusiness) {
+              editDescription({ description: values.description });
+              navigation.navigate('EditBusiness', { id: businessData?._id });
+            } else {
+              setDescription(values.description);
+              navigation.navigate('Category');
+            }
+          }}>
+          {({ values, handleChange, handleSubmit, errors }) => {
+            return (
+              <>
+                <FlatList
+                  style={styles.container}
+                  overScrollMode={'never'}
+                  scrollEventThrottle={16}
+                  data={[1]}
+                  renderItem={() => {
+                    return (
+                      <View>
+                        <Text title1 bold>
+                          Describe about your business, Let people know about
+                          your business <Text body1>(optional)</Text>
+                        </Text>
+                        <TextInput
+                          style={styles.inputDescription}
+                          placeholder="e.g Kababjees are known for making each bite soulful and joyous..."
+                          value={values.description}
+                          multiline={true}
+                          textAlignVertical="top"
+                          onChangeText={handleChange('description')}
+                        />
+                        <Text style={{ color: BaseColor.redColor }}>
+                          {errors?.description?.toString()}
+                        </Text>
+                      </View>
+                    );
+                  }}
+                />
+
+                <View
+                  style={
+                    isEditBusiness
+                      ? styles.stickyFooterEdit
+                      : styles.stickyFooter
+                  }>
+                  {isEditBusiness ? null : (
+                    <Button
+                      style={styles.footerButtons}
+                      onPress={navigateToBack}>
+                      {'Back'}
+                    </Button>
+                  )}
+
+                  <Button
+                    style={[
+                      styles.footerButtons,
+                      errors?.description
+                        ? { backgroundColor: BaseColor.grayColor }
+                        : null,
+                    ]}
+                    title="submit"
+                    onPress={handleSubmit}>
+                    {isEditBusiness ? 'Update Description' : 'Next'}
                   </Button>
-                )}
-
-                <Button
-                  style={[
-                    styles.footerButtons,
-                    errors?.description
-                      ? { backgroundColor: BaseColor.grayColor }
-                      : null,
-                  ]}
-                  title="submit"
-                  onPress={handleSubmit}>
-                  {isEditBusiness ? 'Update Description' : 'Next'}
-                </Button>
-              </View>
-            </>
-          );
-        }}
-      </Formik>
+                </View>
+              </>
+            );
+          }}
+        </Formik>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };

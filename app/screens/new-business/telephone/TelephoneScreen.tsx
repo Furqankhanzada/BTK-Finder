@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
-import { FlatList, SafeAreaView, TouchableOpacity, View } from 'react-native';
+import {
+  FlatList,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -55,6 +62,11 @@ export const TelephoneScreen = (props: StackScreenProps<GlobalParamList>) => {
     navigation.goBack();
   };
 
+  const offsetKeyboard = Platform.select({
+    ios: 0,
+    android: 20,
+  });
+
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
@@ -75,86 +87,99 @@ export const TelephoneScreen = (props: StackScreenProps<GlobalParamList>) => {
         }}
         onPressLeft={navigateToBack}
       />
-      <Formik
-        initialValues={{
-          telephone: isEditBusiness ? businessData?.telephone : telephone,
-        }}
-        validationSchema={phoneSchema}
-        onSubmit={(values) => {
-          if (isEditBusiness) {
-            editTelephone({ telephone: values.telephone });
-            navigation.navigate('EditBusiness', { id: businessData?._id });
-          } else {
-            setTelephone(values.telephone);
-            navigation.navigate('Email');
-          }
-        }}>
-        {({ values, handleChange, handleSubmit, errors }) => {
-          return (
-            <>
-              <FlatList
-                style={styles.container}
-                overScrollMode={'never'}
-                scrollEventThrottle={16}
-                data={addNumber}
-                ListFooterComponent={
-                  <TouchableOpacity style={styles.addMore} onPress={increment}>
-                    <Text style={styles.addMoreText}>Add more +</Text>
-                  </TouchableOpacity>
-                }
-                renderItem={() => {
-                  return (
-                    <View>
-                      <Text title1 bold>
-                        Add your business's contact number, Make it easy for
-                        users to connect with you <Text body1>(optional)</Text>
-                      </Text>
-                      <View style={styles.phoneInputView}>
-                        <TextInput
-                          style={styles.phoneInput}
-                          placeholder="Telephone number"
-                          value={String(values.telephone)}
-                          keyboardType="numeric"
-                          onChangeText={handleChange('telephone')}
-                        />
-                        <View style={styles.phoneIconContainer}>
-                          <Icon name="trash" size={20} onPress={decrement} />
+
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'android' ? 'height' : 'padding'}
+        keyboardVerticalOffset={offsetKeyboard}
+        style={{ flex: 1 }}>
+        <Formik
+          initialValues={{
+            telephone: isEditBusiness ? businessData?.telephone : telephone,
+          }}
+          validationSchema={phoneSchema}
+          onSubmit={(values) => {
+            if (isEditBusiness) {
+              editTelephone({ telephone: values.telephone });
+              navigation.navigate('EditBusiness', { id: businessData?._id });
+            } else {
+              setTelephone(values.telephone);
+              navigation.navigate('Email');
+            }
+          }}>
+          {({ values, handleChange, handleSubmit, errors }) => {
+            return (
+              <>
+                <FlatList
+                  style={styles.container}
+                  overScrollMode={'never'}
+                  scrollEventThrottle={16}
+                  data={addNumber}
+                  ListFooterComponent={
+                    <TouchableOpacity
+                      style={styles.addMore}
+                      onPress={increment}>
+                      <Text style={styles.addMoreText}>Add more +</Text>
+                    </TouchableOpacity>
+                  }
+                  renderItem={() => {
+                    return (
+                      <View>
+                        <Text title1 bold>
+                          Add your business's contact number, Make it easy for
+                          users to connect with you{' '}
+                          <Text body1>(optional)</Text>
+                        </Text>
+                        <View style={styles.phoneInputView}>
+                          <TextInput
+                            style={styles.phoneInput}
+                            placeholder="Telephone number"
+                            value={String(values.telephone)}
+                            keyboardType="numeric"
+                            onChangeText={handleChange('telephone')}
+                          />
+                          <View style={styles.phoneIconContainer}>
+                            <Icon name="trash" size={20} onPress={decrement} />
+                          </View>
                         </View>
+                        <Text style={{ color: BaseColor.redColor }}>
+                          {errors?.telephone?.toString()}
+                        </Text>
                       </View>
-                      <Text style={{ color: BaseColor.redColor }}>
-                        {errors?.telephone?.toString()}
-                      </Text>
-                    </View>
-                  );
-                }}
-              />
+                    );
+                  }}
+                />
 
-              <View
-                style={
-                  isEditBusiness ? styles.stickyFooterEdit : styles.stickyFooter
-                }>
-                {isEditBusiness ? null : (
-                  <Button style={styles.footerButtons} onPress={navigateToBack}>
-                    {'Back'}
+                <View
+                  style={
+                    isEditBusiness
+                      ? styles.stickyFooterEdit
+                      : styles.stickyFooter
+                  }>
+                  {isEditBusiness ? null : (
+                    <Button
+                      style={styles.footerButtons}
+                      onPress={navigateToBack}>
+                      {'Back'}
+                    </Button>
+                  )}
+
+                  <Button
+                    style={[
+                      styles.footerButtons,
+                      errors?.telephone
+                        ? { backgroundColor: BaseColor.grayColor }
+                        : null,
+                    ]}
+                    title="submit"
+                    onPress={handleSubmit}>
+                    {isEditBusiness ? 'Update Phone Number' : 'Next'}
                   </Button>
-                )}
-
-                <Button
-                  style={[
-                    styles.footerButtons,
-                    errors?.telephone
-                      ? { backgroundColor: BaseColor.grayColor }
-                      : null,
-                  ]}
-                  title="submit"
-                  onPress={handleSubmit}>
-                  {isEditBusiness ? 'Update Phone Number' : 'Next'}
-                </Button>
-              </View>
-            </>
-          );
-        }}
-      </Formik>
+                </View>
+              </>
+            );
+          }}
+        </Formik>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };

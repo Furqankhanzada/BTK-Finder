@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, SafeAreaView, TouchableOpacity, View } from 'react-native';
+import {
+  FlatList,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import remoteConfig from '@react-native-firebase/remote-config';
 
@@ -73,6 +80,11 @@ export const FacilitiesScreen = (props: StackScreenProps<GlobalParamList>) => {
     navigation.goBack();
   };
 
+  const offsetKeyboard = Platform.select({
+    ios: 0,
+    android: 20,
+  });
+
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
@@ -94,64 +106,72 @@ export const FacilitiesScreen = (props: StackScreenProps<GlobalParamList>) => {
         onPressRight={() => navigation.navigate('Tags')}
       />
 
-      <View style={styles.contain}>
-        <FlatList
-          data={facilities}
-          keyExtractor={(item: object, index: any) => {
-            return index;
-          }}
-          renderItem={({ item, index }: any) => {
-            const checked = selectedFacilities?.some(
-              (obj: Facility) => obj.name === item.name,
-            );
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'android' ? 'height' : 'padding'}
+        keyboardVerticalOffset={offsetKeyboard}
+        style={{ flex: 1 }}>
+        <View style={styles.contain}>
+          <FlatList
+            data={facilities}
+            keyExtractor={(item: object, index: any) => {
+              return index;
+            }}
+            renderItem={({ item, index }: any) => {
+              const checked = selectedFacilities?.some(
+                (obj: Facility) => obj.name === item.name,
+              );
 
-            return (
-              <TouchableOpacity
-                key={index}
-                style={[styles.item, { backgroundColor: colors.card }]}
-                onPress={() => onChange(item)}>
-                <View style={styles.facilityView}>
-                  <Icon
-                    name={item.icon}
-                    color={item?.checked ? colors.primary : colors.text}
-                    style={styles.facilityViewIcon}
-                    size={15}
-                  />
-                  <Text
-                    body1
-                    style={
-                      checked
-                        ? {
-                            color: colors.primary,
-                          }
-                        : {}
-                    }>
-                    {item.name}
-                  </Text>
-                </View>
-                {checked && (
-                  <Icon name="check" size={14} color={colors.primary} />
-                )}
-              </TouchableOpacity>
-            );
-          }}
-        />
-      </View>
-      <View
-        style={isEditBusiness ? styles.stickyFooterEdit : styles.stickyFooter}>
-        {isEditBusiness ? null : (
-          <Button style={styles.footerButtons} onPress={navigateToBack}>
-            {'Back'}
+              return (
+                <TouchableOpacity
+                  key={index}
+                  style={[styles.item, { backgroundColor: colors.card }]}
+                  onPress={() => onChange(item)}>
+                  <View style={styles.facilityView}>
+                    <Icon
+                      name={item.icon}
+                      color={item?.checked ? colors.primary : colors.text}
+                      style={styles.facilityViewIcon}
+                      size={15}
+                    />
+                    <Text
+                      body1
+                      style={
+                        checked
+                          ? {
+                              color: colors.primary,
+                            }
+                          : {}
+                      }>
+                      {item.name}
+                    </Text>
+                  </View>
+                  {checked && (
+                    <Icon name="check" size={14} color={colors.primary} />
+                  )}
+                </TouchableOpacity>
+              );
+            }}
+          />
+        </View>
+
+        <View
+          style={
+            isEditBusiness ? styles.stickyFooterEdit : styles.stickyFooter
+          }>
+          {isEditBusiness ? null : (
+            <Button style={styles.footerButtons} onPress={navigateToBack}>
+              {'Back'}
+            </Button>
+          )}
+
+          <Button
+            style={styles.footerButtons}
+            title="submit"
+            onPress={() => navigateToNext()}>
+            {isEditBusiness ? 'Update Facilities' : 'Next'}
           </Button>
-        )}
-
-        <Button
-          style={styles.footerButtons}
-          title="submit"
-          onPress={() => navigateToNext()}>
-          {isEditBusiness ? 'Update Facilities' : 'Next'}
-        </Button>
-      </View>
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };

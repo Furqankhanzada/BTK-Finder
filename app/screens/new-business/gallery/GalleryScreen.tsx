@@ -5,6 +5,8 @@ import {
   TouchableOpacity,
   View,
   ScrollView,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -110,6 +112,11 @@ export const GalleryScreen = (props: StackScreenProps<GlobalParamList>) => {
     setGallery(data);
   };
 
+  const offsetKeyboard = Platform.select({
+    ios: 0,
+    android: 20,
+  });
+
   const renderGalleryImages = (data: Gallery[]) => {
     if (data?.length) {
       return data?.map((el: any, i: any) => (
@@ -199,92 +206,105 @@ export const GalleryScreen = (props: StackScreenProps<GlobalParamList>) => {
           navigation.navigate('EditBusiness', { id: businessData?._id });
         }}
       />
-      <FlatList
-        style={styles.container}
-        overScrollMode={'never'}
-        scrollEventThrottle={16}
-        data={[1]}
-        renderItem={() => {
-          return (
-            <ScrollView style={{ flex: 1 }}>
-              <View style={styles.thumbnailSection}>
-                <View style={styles.title}>
-                  <Text title3 semibold style={{ textAlign: 'center' }}>
-                    Thumbnail
-                  </Text>
-                </View>
-                <View style={{ marginHorizontal: 10, marginBottom: 10 }}>
-                  <Text>Thumbnail size must be 300x300</Text>
-                </View>
-                <View style={styles.thumbnailContainer}>
-                  {thumbnail ? (
-                    <Fragment>
-                      <TouchableOpacity
-                        style={styles.galleryActionButton}
-                        onPress={() => removeThumbnail()}>
-                        <Icon
-                          style={styles.galleryActionButtonIcon}
-                          name="minus"
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'android' ? 'height' : 'padding'}
+        keyboardVerticalOffset={offsetKeyboard}
+        style={{ flex: 1 }}>
+        <FlatList
+          style={styles.container}
+          overScrollMode={'never'}
+          scrollEventThrottle={16}
+          data={[1]}
+          renderItem={() => {
+            return (
+              <ScrollView style={{ flex: 1 }}>
+                <View style={styles.thumbnailSection}>
+                  <View style={styles.title}>
+                    <Text title3 semibold style={{ textAlign: 'center' }}>
+                      Thumbnail
+                    </Text>
+                  </View>
+                  <View style={{ marginHorizontal: 10, marginBottom: 10 }}>
+                    <Text>Thumbnail size must be 300x300</Text>
+                  </View>
+                  <View style={styles.thumbnailContainer}>
+                    {thumbnail ? (
+                      <Fragment>
+                        <TouchableOpacity
+                          style={styles.galleryActionButton}
+                          onPress={() => removeThumbnail()}>
+                          <Icon
+                            style={styles.galleryActionButtonIcon}
+                            name="minus"
+                          />
+                        </TouchableOpacity>
+                        <Image
+                          style={styles.thumbnailContainerImage}
+                          source={{ uri: thumbnail }}
                         />
+                      </Fragment>
+                    ) : (
+                      <TouchableOpacity
+                        style={styles.thumbnailAddOverlay}
+                        onPress={() => pickSingle()}>
+                        <Text semibold style={styles.thumbnailAddOverlayText}>
+                          Tap To Add Thumbnail
+                        </Text>
                       </TouchableOpacity>
-                      <Image
-                        style={styles.thumbnailContainerImage}
-                        source={{ uri: thumbnail }}
-                      />
-                    </Fragment>
-                  ) : (
+                    )}
+                  </View>
+                </View>
+                <View style={styles.gallerySection}>
+                  <View style={styles.title}>
+                    <Text title3 semibold style={{ textAlign: 'center' }}>
+                      Gallery
+                    </Text>
+                  </View>
+                  <View style={{ marginHorizontal: 10, marginBottom: 5 }}>
+                    <Text>Gallery Images size must be 600x400</Text>
+                  </View>
+                  <View style={styles.gallerySectionImagesContainer}>
+                    {renderGalleryImages(gallery)}
                     <TouchableOpacity
-                      style={styles.thumbnailAddOverlay}
-                      onPress={() => pickSingle()}>
-                      <Text semibold style={styles.thumbnailAddOverlayText}>
-                        Tap To Add Thumbnail
-                      </Text>
-                    </TouchableOpacity>
-                  )}
-                </View>
-              </View>
-              <View style={styles.gallerySection}>
-                <View style={styles.title}>
-                  <Text title3 semibold style={{ textAlign: 'center' }}>
-                    Gallery
-                  </Text>
-                </View>
-                <View style={{ marginHorizontal: 10, marginBottom: 5 }}>
-                  <Text>Gallery Images size must be 600x400</Text>
-                </View>
-                <View style={styles.gallerySectionImagesContainer}>
-                  {renderGalleryImages(gallery)}
-                  <TouchableOpacity
-                    style={
-                      payload.gallery.length === 0
-                        ? styles.galleryImageContainer
-                        : styles.galleryImageSubContainer
-                    }
-                    onPress={() => pickMultiple()}>
-                    <View style={styles.galleryImageBox}>
-                      <View style={styles.galleryImageAddIconContainer}>
-                        <Icon name="plus" style={styles.galleryImageAddIcon} />
+                      style={
+                        payload.gallery.length === 0
+                          ? styles.galleryImageContainer
+                          : styles.galleryImageSubContainer
+                      }
+                      onPress={() => pickMultiple()}>
+                      <View style={styles.galleryImageBox}>
+                        <View style={styles.galleryImageAddIconContainer}>
+                          <Icon
+                            name="plus"
+                            style={styles.galleryImageAddIcon}
+                          />
+                        </View>
                       </View>
-                    </View>
-                  </TouchableOpacity>
+                    </TouchableOpacity>
+                  </View>
                 </View>
-              </View>
-            </ScrollView>
-          );
-        }}
-      />
-      <View
-        style={isEditBusiness ? styles.stickyFooterEdit : styles.stickyFooter}>
-        {isEditBusiness ? null : (
-          <Button style={styles.footerButtons} onPress={navigateToBack}>
-            {'Back'}
-          </Button>
-        )}
+              </ScrollView>
+            );
+          }}
+        />
+        <View
+          style={
+            isEditBusiness ? styles.stickyFooterEdit : styles.stickyFooter
+          }>
+          {isEditBusiness ? null : (
+            <Button style={styles.footerButtons} onPress={navigateToBack}>
+              {'Back'}
+            </Button>
+          )}
 
-        <Button style={styles.footerButtons} title="submit" onPress={onSubmit}>
-          {isEditBusiness ? 'Update Gallery' : 'Submit'}
-        </Button>
-      </View>
+          <Button
+            style={styles.footerButtons}
+            title="submit"
+            onPress={onSubmit}>
+            {isEditBusiness ? 'Update Gallery' : 'Submit'}
+          </Button>
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
