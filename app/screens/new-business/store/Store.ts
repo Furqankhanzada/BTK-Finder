@@ -15,7 +15,7 @@ interface Location {
   coordinates?: number[];
 }
 
-type State = {
+export type BusinessStoreTypes = {
   name: string;
   description: string;
   category: string;
@@ -32,7 +32,7 @@ type State = {
   location: Location;
 };
 
-type Actions = {
+export type BusinessStoreActions = {
   setName: (name: string) => void;
   setDescription: (description: string) => void;
   setCategory: (category: string) => void;
@@ -50,7 +50,7 @@ type Actions = {
   resetAddBusinessStore: () => void;
 };
 
-const initialState: State = {
+const initialState: BusinessStoreTypes = {
   name: '',
   description: '',
   category: '',
@@ -67,24 +67,26 @@ const initialState: State = {
   location: {},
 };
 
-const useAddBusinessStore = create<State & Actions>((set) => ({
-  ...initialState,
+const useAddBusinessStore = create<BusinessStoreTypes & BusinessStoreActions>(
+  (set) => ({
+    ...initialState,
 
-  setName: (name: string) => set(() => ({ name })),
-  setDescription: (description: string) => set(() => ({ description })),
-  setCategory: (category: string) => set(() => ({ category })),
-  setFacilities: (facilities: Facility[]) => set(() => ({ facilities })),
-  setTags: (tags: Array<string>) => set(() => ({ tags })),
-  setTelephone: (telephone: string) => set(() => ({ telephone })),
-  setEmail: (email: string) => set(() => ({ email })),
-  setWebsite: (website: string) => set(() => ({ website })),
-  setAddress: (address: string) => set(() => ({ address })),
-  setOpenHours: (openHours: OpenHours[]) => set(() => ({ openHours })),
-  setPriceRange: (priceRange: PriceRange) => set(() => ({ priceRange })),
-  setGallery: (gallery: Gallery[]) => set(() => ({ gallery })),
-  setThumbnail: (thumbnail: string) => set(() => ({ thumbnail })),
-  setLocation: (location: Location) => set(() => ({ location })),
-  resetAddBusinessStore: () => set(() => initialState),
-}));
+    setName: (name: string) => set(() => ({ name })),
+    setDescription: (description: string) => set(() => ({ description })),
+    setCategory: (category: string) => set(() => ({ category })),
+    setFacilities: (facilities: Facility[]) => set(() => ({ facilities })),
+    setTags: (tags: Array<string>) => set(() => ({ tags })),
+    setTelephone: (telephone: string) => set(() => ({ telephone })),
+    setEmail: (email: string) => set(() => ({ email })),
+    setWebsite: (website: string) => set(() => ({ website })),
+    setAddress: (address: string) => set(() => ({ address })),
+    setOpenHours: (openHours: OpenHours[]) => set(() => ({ openHours })),
+    setPriceRange: (priceRange: PriceRange) => set(() => ({ priceRange })),
+    setGallery: (gallery: Gallery[]) => set(() => ({ gallery })),
+    setThumbnail: (thumbnail: string) => set(() => ({ thumbnail })),
+    setLocation: (location: Location) => set(() => ({ location })),
+    resetAddBusinessStore: () => set(() => initialState),
+  }),
+);
 
 export default useAddBusinessStore;

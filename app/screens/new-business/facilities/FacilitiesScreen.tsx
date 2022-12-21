@@ -18,7 +18,10 @@ import { Facility } from '@screens/businesses/models/BusinessPresentable';
 import { styles } from '../styles/styles';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { useEditBusiness } from '../queries/mutations';
-import useAddBusinessStore from '../store/Store';
+import useAddBusinessStore, {
+  BusinessStoreActions,
+  BusinessStoreTypes,
+} from '../store/Store';
 
 export const FacilitiesScreen = (props: StackScreenProps<GlobalParamList>) => {
   const { navigation, route } = props;
@@ -28,17 +31,19 @@ export const FacilitiesScreen = (props: StackScreenProps<GlobalParamList>) => {
   const { data: businessData } = useBusiness(route?.params?.id);
   const { mutate: editFacility } = useEditBusiness(route?.params?.id);
 
-  const storeFacilities = useAddBusinessStore((state: any) => state.facilities);
+  const storeFacilities = useAddBusinessStore(
+    (state: BusinessStoreTypes) => state.facilities,
+  );
   const setStoreFacility = useAddBusinessStore(
-    (state: any) => state.setFacilities,
+    (state: BusinessStoreActions) => state.setFacilities,
   );
 
-  const [facilities, setFacilities] = useState<any>([]);
-  const [selectedFacilities, setSelectedFacilities] = useState<any>([]);
+  const [facilities, setFacilities] = useState<Facility[]>([]);
+  const [selectedFacilities, setSelectedFacilities] = useState<Facility[]>([]);
 
   useEffect(() => {
     if (isEditBusiness) {
-      setSelectedFacilities(businessData?.facilities);
+      setSelectedFacilities(businessData?.facilities ?? []);
     } else if (storeFacilities) {
       setSelectedFacilities(storeFacilities);
     }
@@ -51,7 +56,7 @@ export const FacilitiesScreen = (props: StackScreenProps<GlobalParamList>) => {
       : null;
   }, []);
 
-  const onChange = (facility: { name: string }) => {
+  const onChange = (facility: Facility) => {
     const isItemSelected = selectedFacilities?.some(
       (obj: Facility) => obj.name === facility.name,
     );
