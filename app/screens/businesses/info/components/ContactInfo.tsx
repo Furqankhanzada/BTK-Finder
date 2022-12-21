@@ -28,7 +28,7 @@ export default function ContactInfo({
 }: Props) {
   const renderWhatsAppButton = () => {
     // if it's not mobile number than ignore whatsapp button
-    if (!business.telephone?.includes('02')) {
+    if (!business.telephone?.startsWith('02')) {
       return (
         <Button
           onPress={onPressWhatsApp}
