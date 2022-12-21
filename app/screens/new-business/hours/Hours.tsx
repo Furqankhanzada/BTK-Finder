@@ -36,18 +36,22 @@ export const Hours = (props: StackScreenProps<GlobalParamList>) => {
       { day: 'Sunday', from: '09:00 am', to: '05:00 pm', isOpen: false },
     ];
     if (openHoursData && openHoursData.length) {
-      array = openHoursData
+      const hoursWithIsOpen = openHoursData.map((day: any) => ({
+        ...day,
+        isOpen: true,
+      }));
+      array = hoursWithIsOpen
         .map((v: any) => ({ ...v, isOpen: true }))
         .concat(
           array.filter(
-            ({ day }) => !openHoursData.find((f: any) => f.day === day),
+            ({ day }) => !hoursWithIsOpen.find((f: any) => f.day === day),
           ),
         );
       setSelectedDays(array);
     } else {
       setSelectedDays(array);
     }
-  }, [businessData, isEditBusiness, openHours, openHoursData]);
+  }, [openHoursData]);
 
   const updateSelectedDays = (payload: OpenHours) => {
     let array = [...selectedDays];
