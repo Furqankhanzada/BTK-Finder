@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, SafeAreaView, View } from 'react-native';
+import {
+  FlatList,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  View,
+} from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 
 import { Header, Text, Button, HoursCheckbox, Icon } from '@components';
@@ -81,6 +87,11 @@ export const Hours = (props: StackScreenProps<GlobalParamList>) => {
     }
   };
 
+  const offsetKeyboard = Platform.select({
+    ios: 0,
+    android: 20,
+  });
+
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
@@ -102,44 +113,54 @@ export const Hours = (props: StackScreenProps<GlobalParamList>) => {
         onPressLeft={navigateToBack}
       />
 
-      <FlatList
-        style={styles.container}
-        overScrollMode={'never'}
-        scrollEventThrottle={16}
-        data={[1]}
-        renderItem={() => {
-          return (
-            <View>
-              <Text style={{ paddingBottom: 20 }} title1 bold>
-                Set Timings of your Business <Text body1>(optional)</Text>
-              </Text>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'android' ? 'height' : 'padding'}
+        keyboardVerticalOffset={offsetKeyboard}
+        style={{ flex: 1 }}>
+        <FlatList
+          style={styles.container}
+          overScrollMode={'never'}
+          scrollEventThrottle={16}
+          data={[1]}
+          renderItem={() => {
+            return (
+              <View>
+                <Text style={{ paddingBottom: 20 }} title1 bold>
+                  Set Timings of your Business <Text body1>(optional)</Text>
+                </Text>
 
-              {selectedDays.map((item: OpenHours, index: number) => {
-                return (
-                  <HoursCheckbox
-                    key={index}
-                    day={item}
-                    getObject={updateSelectedDays}
-                  />
-                );
-              })}
-            </View>
-          );
-        }}
-      />
+                {selectedDays.map((item: OpenHours, index: number) => {
+                  return (
+                    <HoursCheckbox
+                      key={index}
+                      day={item}
+                      getObject={updateSelectedDays}
+                    />
+                  );
+                })}
+              </View>
+            );
+          }}
+        />
 
-      <View
-        style={isEditBusiness ? styles.stickyFooterEdit : styles.stickyFooter}>
-        {isEditBusiness ? null : (
-          <Button style={styles.footerButtons} onPress={navigateToBack}>
-            {'Back'}
+        <View
+          style={
+            isEditBusiness ? styles.stickyFooterEdit : styles.stickyFooter
+          }>
+          {isEditBusiness ? null : (
+            <Button style={styles.footerButtons} onPress={navigateToBack}>
+              {'Back'}
+            </Button>
+          )}
+
+          <Button
+            style={styles.footerButtons}
+            title="submit"
+            onPress={onSubmit}>
+            {isEditBusiness ? 'Update Timings' : 'Next'}
           </Button>
-        )}
-
-        <Button style={styles.footerButtons} title="submit" onPress={onSubmit}>
-          {isEditBusiness ? 'Update Timings' : 'Next'}
-        </Button>
-      </View>
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };

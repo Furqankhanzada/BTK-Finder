@@ -1,5 +1,11 @@
 import React from 'react';
-import { FlatList, SafeAreaView, View } from 'react-native';
+import {
+  FlatList,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  View,
+} from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -37,6 +43,11 @@ export const EmailScreen = (props: StackScreenProps<GlobalParamList>) => {
     navigation.goBack();
   };
 
+  const offsetKeyboard = Platform.select({
+    ios: 0,
+    android: 20,
+  });
+
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
@@ -57,73 +68,84 @@ export const EmailScreen = (props: StackScreenProps<GlobalParamList>) => {
         }}
         onPressLeft={navigateToBack}
       />
-      <Formik
-        initialValues={{ email: isEditBusiness ? businessData?.email : email }}
-        validationSchema={emailSchema}
-        onSubmit={(values) => {
-          if (isEditBusiness) {
-            editEmail({ email: values.email });
-            navigation.navigate('EditBusiness', { id: businessData?._id });
-          } else {
-            setEmail(values.email);
-            navigation.navigate('Website');
-          }
-        }}>
-        {({ values, handleChange, handleSubmit, errors }) => {
-          return (
-            <>
-              <FlatList
-                style={styles.container}
-                overScrollMode={'never'}
-                scrollEventThrottle={16}
-                data={[1]}
-                renderItem={() => {
-                  return (
-                    <View>
-                      <Text title1 bold>
-                        What is the valid Email address of your Business ?{' '}
-                        <Text body1>(optional)</Text>
-                      </Text>
-                      <TextInput
-                        style={styles.input}
-                        placeholder="Email"
-                        value={values.email}
-                        onChangeText={handleChange('email')}
-                      />
-                      <Text style={{ color: BaseColor.redColor }}>
-                        {errors?.email?.toString()}
-                      </Text>
-                    </View>
-                  );
-                }}
-              />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'android' ? 'height' : 'padding'}
+        keyboardVerticalOffset={offsetKeyboard}
+        style={{ flex: 1 }}>
+        <Formik
+          initialValues={{
+            email: isEditBusiness ? businessData?.email : email,
+          }}
+          validationSchema={emailSchema}
+          onSubmit={(values) => {
+            if (isEditBusiness) {
+              editEmail({ email: values.email });
+              navigation.navigate('EditBusiness', { id: businessData?._id });
+            } else {
+              setEmail(values.email);
+              navigation.navigate('Website');
+            }
+          }}>
+          {({ values, handleChange, handleSubmit, errors }) => {
+            return (
+              <>
+                <FlatList
+                  style={styles.container}
+                  overScrollMode={'never'}
+                  scrollEventThrottle={16}
+                  data={[1]}
+                  renderItem={() => {
+                    return (
+                      <View>
+                        <Text title1 bold>
+                          What is the valid Email address of your Business ?{' '}
+                          <Text body1>(optional)</Text>
+                        </Text>
+                        <TextInput
+                          style={styles.input}
+                          placeholder="Email"
+                          value={values.email}
+                          onChangeText={handleChange('email')}
+                        />
+                        <Text style={{ color: BaseColor.redColor }}>
+                          {errors?.email?.toString()}
+                        </Text>
+                      </View>
+                    );
+                  }}
+                />
 
-              <View
-                style={
-                  isEditBusiness ? styles.stickyFooterEdit : styles.stickyFooter
-                }>
-                {isEditBusiness ? null : (
-                  <Button style={styles.footerButtons} onPress={navigateToBack}>
-                    {'Back'}
+                <View
+                  style={
+                    isEditBusiness
+                      ? styles.stickyFooterEdit
+                      : styles.stickyFooter
+                  }>
+                  {isEditBusiness ? null : (
+                    <Button
+                      style={styles.footerButtons}
+                      onPress={navigateToBack}>
+                      {'Back'}
+                    </Button>
+                  )}
+
+                  <Button
+                    style={[
+                      styles.footerButtons,
+                      errors?.email
+                        ? { backgroundColor: BaseColor.grayColor }
+                        : null,
+                    ]}
+                    title="submit"
+                    onPress={handleSubmit}>
+                    {isEditBusiness ? 'Update Email Address' : 'Next'}
                   </Button>
-                )}
-
-                <Button
-                  style={[
-                    styles.footerButtons,
-                    errors?.email
-                      ? { backgroundColor: BaseColor.grayColor }
-                      : null,
-                  ]}
-                  title="submit"
-                  onPress={handleSubmit}>
-                  {isEditBusiness ? 'Update Email Address' : 'Next'}
-                </Button>
-              </View>
-            </>
-          );
-        }}
-      </Formik>
+                </View>
+              </>
+            );
+          }}
+        </Formik>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };

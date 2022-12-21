@@ -1,5 +1,11 @@
 import React from 'react';
-import { FlatList, SafeAreaView, View } from 'react-native';
+import {
+  FlatList,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  View,
+} from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -41,6 +47,11 @@ export const WebsiteScreen = (props: StackScreenProps<GlobalParamList>) => {
     navigation.goBack();
   };
 
+  const offsetKeyboard = Platform.select({
+    ios: 0,
+    android: 20,
+  });
+
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
@@ -61,74 +72,84 @@ export const WebsiteScreen = (props: StackScreenProps<GlobalParamList>) => {
         }}
         onPressLeft={navigateToBack}
       />
-      <Formik
-        initialValues={{
-          website: isEditBusiness ? businessData?.website : website,
-        }}
-        validationSchema={webSchema}
-        onSubmit={(values) => {
-          if (isEditBusiness) {
-            editWebsite({ website: values.website });
-            navigation.navigate('EditBusiness', { id: businessData?._id });
-          } else {
-            setWebsite(values.website);
-            navigation.navigate('Address');
-          }
-        }}>
-        {({ values, handleChange, handleSubmit, errors }) => {
-          return (
-            <>
-              <FlatList
-                style={styles.container}
-                overScrollMode={'never'}
-                scrollEventThrottle={16}
-                data={[1]}
-                renderItem={() => {
-                  return (
-                    <View>
-                      <Text title1 bold>
-                        What is the official website of your Business ?{' '}
-                        <Text body1>(optional)</Text>
-                      </Text>
-                      <TextInput
-                        style={styles.input}
-                        placeholder="Website"
-                        value={String(values.website)}
-                        onChangeText={handleChange('website')}
-                      />
-                      <Text style={{ color: BaseColor.redColor }}>
-                        {errors?.website?.toString()}
-                      </Text>
-                    </View>
-                  );
-                }}
-              />
-              <View
-                style={
-                  isEditBusiness ? styles.stickyFooterEdit : styles.stickyFooter
-                }>
-                {isEditBusiness ? null : (
-                  <Button style={styles.footerButtons} onPress={navigateToBack}>
-                    {'Back'}
-                  </Button>
-                )}
 
-                <Button
-                  style={[
-                    styles.footerButtons,
-                    errors?.website
-                      ? { backgroundColor: BaseColor.grayColor }
-                      : null,
-                  ]}
-                  title="submit"
-                  onPress={handleSubmit}>
-                  {isEditBusiness ? 'Update Website' : 'Next'}
-                </Button>
-              </View>
-            </>
-          );
-        }}
-      </Formik>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'android' ? 'height' : 'padding'}
+        keyboardVerticalOffset={offsetKeyboard}
+        style={{ flex: 1 }}>
+        <Formik
+          initialValues={{
+            website: isEditBusiness ? businessData?.website : website,
+          }}
+          validationSchema={webSchema}
+          onSubmit={(values) => {
+            if (isEditBusiness) {
+              editWebsite({ website: values.website });
+              navigation.navigate('EditBusiness', { id: businessData?._id });
+            } else {
+              setWebsite(values.website);
+              navigation.navigate('Address');
+            }
+          }}>
+          {({ values, handleChange, handleSubmit, errors }) => {
+            return (
+              <>
+                <FlatList
+                  style={styles.container}
+                  overScrollMode={'never'}
+                  scrollEventThrottle={16}
+                  data={[1]}
+                  renderItem={() => {
+                    return (
+                      <View>
+                        <Text title1 bold>
+                          What is the official website of your Business ?{' '}
+                          <Text body1>(optional)</Text>
+                        </Text>
+                        <TextInput
+                          style={styles.input}
+                          placeholder="Website"
+                          value={String(values.website)}
+                          onChangeText={handleChange('website')}
+                        />
+                        <Text style={{ color: BaseColor.redColor }}>
+                          {errors?.website?.toString()}
+                        </Text>
+                      </View>
+                    );
+                  }}
+                />
+                <View
+                  style={
+                    isEditBusiness
+                      ? styles.stickyFooterEdit
+                      : styles.stickyFooter
+                  }>
+                  {isEditBusiness ? null : (
+                    <Button
+                      style={styles.footerButtons}
+                      onPress={navigateToBack}>
+                      {'Back'}
+                    </Button>
+                  )}
+
+                  <Button
+                    style={[
+                      styles.footerButtons,
+                      errors?.website
+                        ? { backgroundColor: BaseColor.grayColor }
+                        : null,
+                    ]}
+                    title="submit"
+                    onPress={handleSubmit}>
+                    {isEditBusiness ? 'Update Website' : 'Next'}
+                  </Button>
+                </View>
+              </>
+            );
+          }}
+        </Formik>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
