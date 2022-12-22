@@ -84,7 +84,7 @@ export const PriceRange = (props: StackScreenProps<GlobalParamList>) => {
         }}
       />
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'android' ? 'height' : 'padding'}
+        behavior={Platform.OS === 'android' ? null : 'padding'}
         keyboardVerticalOffset={offsetKeyboard}
         style={{ flex: 1 }}>
         <Formik
