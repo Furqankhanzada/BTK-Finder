@@ -9,8 +9,8 @@ import {
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { StackScreenProps } from '@react-navigation/stack';
-import remoteConfig from '@react-native-firebase/remote-config';
 
+import { useRemoteConfig } from '@hooks';
 import { Header, Text, TextInput, Button, Icon } from '@components';
 import { BaseStyle, useTheme } from '@config';
 import { useBusiness } from '@screens/businesses/queries/queries';
@@ -18,29 +18,32 @@ import { useBusiness } from '@screens/businesses/queries/queries';
 import { styles } from '../styles/styles';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { useEditBusiness } from '../queries/mutations';
-import useAddBusinessStore from '../store/Store';
+import useAddBusinessStore, {
+  BusinessStoreActions,
+  BusinessStoreTypes,
+} from '../store/Store';
 
 export const TagsScreen = (props: StackScreenProps<GlobalParamList>) => {
   const { navigation, route } = props;
   const { colors } = useTheme();
   const { t } = useTranslation();
+  const remoteConfig = useRemoteConfig();
   const isEditBusiness = route?.params?.id;
 
   const { mutate: editTags } = useEditBusiness(route?.params?.id);
   const { data: businessData } = useBusiness(route?.params?.id);
 
-  const storeTags = useAddBusinessStore((state: any) => state.tags);
-  const setTag = useAddBusinessStore((state: any) => state.setTags);
+  const storeTags = useAddBusinessStore(
+    (state: BusinessStoreTypes) => state.tags,
+  );
+  const setTag = useAddBusinessStore(
+    (state: BusinessStoreActions) => state.setTags,
+  );
 
-  const [tags, setTags] = useState<any>([]);
-  const [selected, setSelected] = useState<any>([]);
+  const tags = remoteConfig?.tags;
+  const [selected, setSelected] = useState<string[]>([]);
   const [search, setSearch] = useState<string>('');
   const [items, setItems] = useState(tags);
-
-  useEffect(() => {
-    const getTags = remoteConfig().getValue('tags');
-    getTags ? setTags(JSON.parse(getTags._value)) : null;
-  }, []);
 
   useEffect(() => {
     if (isEditBusiness && businessData?.tags) {
