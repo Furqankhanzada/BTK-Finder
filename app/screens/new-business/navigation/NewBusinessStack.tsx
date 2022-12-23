@@ -15,13 +15,22 @@ import { Hours } from '../hours/Hours';
 import { PriceRange } from '../price/PriceRange';
 import { GalleryScreen } from '../gallery/GalleryScreen';
 import EditBusinessScreen from '../edit-business/EditBusinessScreen';
+import {
+  LastRoutes,
+  withAuthRedirection,
+} from '../../../navigation/hoc/withAuthRedirection';
 
 const NewBusinessStack = createStackNavigator<NewBusinessParamList>();
 
 export function NewBusinessStackNavigator() {
   return (
     <NewBusinessStack.Navigator screenOptions={{ headerShown: false }}>
-      <NewBusinessStack.Screen name="Name" component={NameScreen} />
+      <NewBusinessStack.Screen
+        name="Name"
+        component={withAuthRedirection(NameScreen, {
+          lastRoute: LastRoutes.NewBusinessStack,
+        })}
+      />
       <NewBusinessStack.Screen
         name="Description"
         component={DescriptionScreen}
