@@ -108,31 +108,31 @@ export default function BusinessOverviewScreen(props: Props) {
 
   const appLink = 'http://onelink.to/xwhffr';
 
+  // Load interstitial Whatsapp ad
   useEffect(() => {
-    // Load interstitial Whatsapp ad
     loadWhatsappAd();
   }, [loadWhatsappAd]);
 
+  // Action after the Whatsapp ad is closed
   useEffect(() => {
     if (isWhatsappAdClosed) {
-      // Action after the Whatsapp ad is closed
       openWhatsapp();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isWhatsappAdClosed, navigation]);
+  }, [isWhatsappAdClosed]);
 
+  // Load Contact ad
   useEffect(() => {
-    // Load interstitial Contact ad
     loadContactAd();
   }, [loadContactAd]);
 
+  // Action after the Contact ad is closed
   useEffect(() => {
     if (isContactAdClosed) {
-      // Action after the Contact ad is closed
       openPhone();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isContactAdClosed, navigation]);
+  }, [isContactAdClosed]);
 
   useEffect(() => {
     let loc =
