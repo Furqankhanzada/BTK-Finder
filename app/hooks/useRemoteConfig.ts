@@ -6,15 +6,27 @@ import { handleError } from '@utils';
 import { RemoteConfig } from '../models/RemoteConfig';
 
 export default function useRemoteConfig(): RemoteConfig {
-  const [config, setConfig] = useState<RemoteConfig>({
-    helplines: [],
-  });
+  const [facilities, setFacilities] = useState([]);
+  const [tags, setTags] = useState([]);
+  const [helplines, setHelplines] = useState([]);
+
+  const config: RemoteConfig = {
+    facilities: facilities,
+    tags: tags,
+    helplines: helplines,
+  };
 
   const updateStates = () => {
     const allValues: Record<string, any> = remoteConfig().getAll();
     for (const [key, value] of Object.entries(allValues)) {
+      if (key === 'facilities') {
+        setFacilities(JSON.parse(value._value));
+      }
+      if (key === 'tags') {
+        setTags(JSON.parse(value._value));
+      }
       if (key === 'helplines') {
-        setConfig({ ...config, helplines: JSON.parse(value._value) });
+        setHelplines(JSON.parse(value._value));
       }
     }
   };
