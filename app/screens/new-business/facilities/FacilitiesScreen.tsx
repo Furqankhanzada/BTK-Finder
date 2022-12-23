@@ -8,8 +8,8 @@ import {
   View,
 } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
-import remoteConfig from '@react-native-firebase/remote-config';
 
+import { useRemoteConfig } from '@hooks';
 import { Header, Text, Button, Icon } from '@components';
 import { BaseStyle, useTheme } from '@config';
 import { useBusiness } from '@screens/businesses/queries/queries';
@@ -27,6 +27,7 @@ export const FacilitiesScreen = (props: StackScreenProps<GlobalParamList>) => {
   const { navigation, route } = props;
   const { colors } = useTheme();
   const isEditBusiness = route?.params?.id;
+  const remoteConfig = useRemoteConfig();
 
   const { data: businessData } = useBusiness(route?.params?.id);
   const { mutate: editFacility } = useEditBusiness(route?.params?.id);
@@ -38,7 +39,6 @@ export const FacilitiesScreen = (props: StackScreenProps<GlobalParamList>) => {
     (state: BusinessStoreActions) => state.setFacilities,
   );
 
-  const [facilities, setFacilities] = useState<Facility[]>([]);
   const [selectedFacilities, setSelectedFacilities] = useState<Facility[]>([]);
 
   useEffect(() => {
@@ -48,13 +48,6 @@ export const FacilitiesScreen = (props: StackScreenProps<GlobalParamList>) => {
       setSelectedFacilities(storeFacilities);
     }
   }, [businessData?.facilities, isEditBusiness, storeFacilities]);
-
-  useEffect(() => {
-    const getFacilities = remoteConfig().getValue('facilities');
-    getFacilities._value
-      ? setFacilities(JSON.parse(getFacilities._value))
-      : null;
-  }, []);
 
   const onChange = (facility: Facility) => {
     const isItemSelected = selectedFacilities?.some(
@@ -117,7 +110,7 @@ export const FacilitiesScreen = (props: StackScreenProps<GlobalParamList>) => {
         style={{ flex: 1 }}>
         <View style={styles.contain}>
           <FlatList
-            data={facilities}
+            data={remoteConfig.facilities}
             keyExtractor={(item: object, index: any) => {
               return index;
             }}
