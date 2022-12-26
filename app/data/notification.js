@@ -9,16 +9,19 @@ const NotificationData = [
     image:
       'https://btk-explore-prod.s3-ap-southeast-1.amazonaws.com/assets/logo.png',
     date: 'Dec 24, 2022',
+    link: 'https://www.facebook.com/explore.btk/posts/560497296090920',
     isRead: false,
   },
   {
     id: '1',
-    title: 'DHA Motors 2',
-    description: 'Visit DHA Motors...',
+    title: 'Labbaik Drinking Water',
+    description:
+      'Pure & Fresh drinking water at Labbaik Drinking Water, Buy Now!',
     image:
-      'https://btk-explore-prod.s3-ap-southeast-1.amazonaws.com/assets/logo.png',
+      'https://btk-explore-prod.s3.ap-southeast-1.amazonaws.com/users/5fdd03d6ec31e556bb05ae2c/businesses//C3E9C95E-520D-4BB3-B092-BCD46D2B04DE.jpg',
     date: 'Dec 20, 2022',
-    isRead: true,
+    link: 'explorebtk://businesses/6399c961ae8c1b665391ade0',
+    isRead: false,
   },
   {
     id: '2',
@@ -28,6 +31,7 @@ const NotificationData = [
     image:
       'https://btk-explore-prod.s3-ap-southeast-1.amazonaws.com/assets/logo.png',
     date: 'Dec 18, 2022',
+    link: 'https://www.facebook.com/explore.btk/posts/475225528026070',
     isRead: true,
   },
   {
