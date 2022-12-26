@@ -166,6 +166,14 @@ function DashboardScreen({
           );
         }}
         onPressRight={onPressHelpLine}
+        renderLeft={() => {
+          return (
+            <View style={styles.notificationContent}>
+              <Icon name="bell" size={18} color={colors.primaryDark} solid />
+            </View>
+          );
+        }}
+        onPressLeft={() => navigation.navigate('Notification')}
       />
       <TouchableOpacity
         onPress={() => navigation.navigate('Filter', {})}
