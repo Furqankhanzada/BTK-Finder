@@ -74,6 +74,8 @@
   "type_message": "Type message ...",
   "messenger": "Messenger",
   "notification": "Notification",
+  "notifications": "Notifications",
+  "notification_info": "Notification Info",
   "place": "Place",
   "lowest_price": "Lowest Price",
   "hightest_price": "Hightest Price",

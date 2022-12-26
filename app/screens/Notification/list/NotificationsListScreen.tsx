@@ -21,7 +21,7 @@ export default function NotificationsListScreen({
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
-        title={t('notification')}
+        title={t('notifications')}
         renderLeft={() => {
           return (
             <Icon
@@ -59,6 +59,9 @@ export default function NotificationsListScreen({
               !item.isRead && { backgroundColor: colors.card },
             ]}
             txtContentStyle={{ color: colors.text }}
+            onPress={() =>
+              navigation.navigate('NotificationInfo', { data: item })
+            }
           />
         )}
       />
