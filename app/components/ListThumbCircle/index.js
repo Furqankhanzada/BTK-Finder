@@ -12,6 +12,8 @@ export default function ListThumbCircle(props) {
     image,
     txtLeftTitle,
     txtContent,
+    txtContentStyle,
+    txtSubContent,
     txtRight,
     iconRightName,
     onPress,
@@ -36,22 +38,32 @@ export default function ListThumbCircle(props) {
             numberOfLines={1}
             footnote
             grayColor
-            style={{
-              paddingTop: 5,
-            }}>
+            style={[{ paddingTop: 5 }, txtContentStyle]}>
             {txtContent}
           </Text>
-        </View>
-        <View style={styles.right}>
-          {txtRight ? (
-            <Text caption2 grayColor numberOfLines={1}>
-              {txtRight}
+          {txtSubContent ? (
+            <Text caption2 grayColor numberOfLines={1} style={{ marginTop: 5 }}>
+              {txtSubContent}
             </Text>
           ) : null}
-          {iconRightName ? (
-            <Icon name={iconRightName} size={15} color={colors.primary} solid />
-          ) : null}
         </View>
+        {txtRight || iconRightName ? (
+          <View style={styles.right}>
+            {txtRight ? (
+              <Text caption2 grayColor numberOfLines={1}>
+                {txtRight}
+              </Text>
+            ) : null}
+            {iconRightName ? (
+              <Icon
+                name={iconRightName}
+                size={15}
+                color={colors.primary}
+                solid
+              />
+            ) : null}
+          </View>
+        ) : null}
       </View>
     </TouchableOpacity>
   );
