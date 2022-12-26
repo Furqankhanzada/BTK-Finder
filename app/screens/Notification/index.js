@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { RefreshControl, FlatList } from 'react-native';
+import { RefreshControl, FlatList, View, StyleSheet } from 'react-native';
 import { BaseStyle, useTheme } from '@config';
 import { useTranslation } from 'react-i18next';
 import { Header, SafeAreaView, Icon, ListThumbCircle } from '@components';
-import styles from './styles';
 import { NotificationData } from '@data';
 
 export default function Notification({ navigation }) {
@@ -15,7 +14,22 @@ export default function Notification({ navigation }) {
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
-      <Header title={t('notification')} />
+      <Header
+        title={t('notification')}
+        renderLeft={() => {
+          return (
+            <Icon
+              name="arrow-left"
+              size={20}
+              color={colors.primary}
+              enableRTL={true}
+            />
+          );
+        }}
+        onPressLeft={() => {
+          navigation.goBack();
+        }}
+      />
       <FlatList
         contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 10 }}
         refreshControl={
@@ -33,11 +47,25 @@ export default function Notification({ navigation }) {
             image={item.image}
             txtLeftTitle={item.title}
             txtContent={item.description}
-            txtRight={item.date}
-            style={{ marginBottom: 5 }}
+            txtSubContent={item.date}
+            style={[
+              styles.item,
+              !item.isRead && { backgroundColor: colors.card },
+            ]}
+            txtContentStyle={{ color: colors.text }}
           />
         )}
       />
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  item: {
+    borderBottomWidth: 0,
+    marginBottom: 10,
+    paddingLeft: 5,
+    paddingRight: 5,
+    borderRadius: 10,
+  },
+});
