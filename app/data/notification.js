@@ -10,6 +10,7 @@ const NotificationData = [
       'https://btk-explore-prod.s3-ap-southeast-1.amazonaws.com/assets/logo.png',
     date: 'Dec 24, 2022',
     link: 'https://www.facebook.com/explore.btk/posts/560497296090920',
+    type: 'facebook',
     isRead: false,
   },
   {
@@ -21,6 +22,7 @@ const NotificationData = [
       'https://btk-explore-prod.s3.ap-southeast-1.amazonaws.com/users/5fdd03d6ec31e556bb05ae2c/businesses//C3E9C95E-520D-4BB3-B092-BCD46D2B04DE.jpg',
     date: 'Dec 20, 2022',
     link: 'explorebtk://businesses/6399c961ae8c1b665391ade0',
+    type: 'business',
     isRead: false,
   },
   {
@@ -32,6 +34,7 @@ const NotificationData = [
       'https://btk-explore-prod.s3-ap-southeast-1.amazonaws.com/assets/logo.png',
     date: 'Dec 18, 2022',
     link: 'https://www.facebook.com/explore.btk/posts/475225528026070',
+    type: 'facebook',
     isRead: true,
   },
   {

@@ -17,6 +17,22 @@ export default function NotificationInfoScreen(
 
   const data = route?.params?.data ?? {};
 
+  const getButtonText = (type: string) => {
+    if (type === 'facebook') {
+      return 'Open Facebook Link';
+    }
+    if (type === 'business') {
+      return 'View Details';
+    }
+  };
+
+  const getButtonColor = (type: string) => {
+    if (type === 'facebook') {
+      return '#3b5998';
+    }
+    return colors.primary;
+  };
+
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
@@ -47,9 +63,23 @@ export default function NotificationInfoScreen(
         {data?.link && (
           <Button
             full
-            style={styles.button}
-            onPress={() => Linking.openURL(data.link)}>
-            Go to Link
+            style={[
+              styles.button,
+              { backgroundColor: getButtonColor(data?.type) },
+            ]}
+            onPress={() => Linking.openURL(data.link)}
+            icon={
+              data?.type === 'facebook' ? (
+                <Icon
+                  name="facebook"
+                  size={20}
+                  color="#fff"
+                  style={styles.icon}
+                  enableRTL={true}
+                />
+              ) : null
+            }>
+            {getButtonText(data?.type)}
           </Button>
         )}
       </View>
@@ -75,5 +105,8 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 'auto',
+  },
+  icon: {
+    marginRight: 10,
   },
 });
