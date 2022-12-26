@@ -1,19 +1,25 @@
 import React, { useState } from 'react';
-import { RefreshControl, FlatList, View, StyleSheet } from 'react-native';
-import { BaseStyle, useTheme } from '@config';
+import { RefreshControl, FlatList, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { Header, SafeAreaView, Icon, ListThumbCircle } from '@components';
-import { NotificationData } from '@data';
+import { StackScreenProps } from '@react-navigation/stack';
 
-export default function Notification({ navigation }) {
+import { Header, SafeAreaView, Icon, ListThumbCircle } from '@components';
+import { BaseStyle, useTheme } from '@config';
+import { GlobalParamList } from 'navigation/models/GlobalParamList';
+
+import { NotificationData } from '../../../data/notification';
+
+export default function NotificationsListScreen({
+  navigation,
+}: StackScreenProps<GlobalParamList>) {
   const { t } = useTranslation();
   const { colors } = useTheme();
 
-  const [refreshing] = useState(false);
-  const [notification] = useState(NotificationData);
+  const [refreshing] = useState<boolean>(false);
+  const [notification] = useState<any>(NotificationData);
 
   return (
-    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
+    <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
         title={t('notification')}
         renderLeft={() => {
@@ -31,7 +37,7 @@ export default function Notification({ navigation }) {
         }}
       />
       <FlatList
-        contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 10 }}
+        contentContainerStyle={styles.listContainer}
         refreshControl={
           <RefreshControl
             colors={[colors.primary]}
@@ -41,8 +47,8 @@ export default function Notification({ navigation }) {
           />
         }
         data={notification}
-        keyExtractor={(item, index) => item.id}
-        renderItem={({ item, index }) => (
+        keyExtractor={(item, index) => item.id + index}
+        renderItem={({ item }) => (
           <ListThumbCircle
             image={item.image}
             txtLeftTitle={item.title}
@@ -61,6 +67,10 @@ export default function Notification({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  listContainer: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+  },
   item: {
     borderBottomWidth: 0,
     marginBottom: 10,
