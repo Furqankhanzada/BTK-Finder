@@ -35,7 +35,7 @@ export default function ListThumbCircle(props) {
           </Text>
           <Text
             note
-            numberOfLines={1}
+            numberOfLines={2}
             footnote
             grayColor
             style={[{ paddingTop: 5 }, txtContentStyle]}>
