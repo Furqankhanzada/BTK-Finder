@@ -56,7 +56,7 @@ export default function NotificationsListScreen({
             txtSubContent={item.date}
             style={[
               styles.item,
-              !item.isRead && { backgroundColor: colors.card },
+              !item.isRead && { backgroundColor: colors.primaryHighlight },
             ]}
             txtContentStyle={{ color: colors.text }}
             onPress={() =>
