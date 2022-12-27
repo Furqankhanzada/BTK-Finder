@@ -15,6 +15,7 @@ import {
   View,
   FlatList,
   ActivityIndicator,
+  Platform,
 } from 'react-native';
 import { showLocation } from 'react-native-map-link';
 import { useTranslation } from 'react-i18next';
@@ -57,10 +58,14 @@ import {
 
 const whatsappAdUnitId = __DEV__
   ? TestIds.INTERSTITIAL
+  : Platform.OS === 'ios'
+  ? 'ca-app-pub-6507255964694411/9670447241'
   : 'ca-app-pub-6507255964694411/7433009170';
 
 const contactAdUnitId = __DEV__
   ? TestIds.INTERSTITIAL
+  : Platform.OS === 'ios'
+  ? 'ca-app-pub-6507255964694411/8937355043'
   : 'ca-app-pub-6507255964694411/1686692629';
 
 let defaultDelta = {
