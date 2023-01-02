@@ -4,9 +4,18 @@ import { useTranslation } from 'react-i18next';
 import { StackScreenProps } from '@react-navigation/stack';
 
 import * as Utils from '@utils';
-import { Header, SafeAreaView, Icon, Image, Text, Button } from '@components';
+import {
+  Header,
+  SafeAreaView,
+  Icon,
+  Image,
+  Text,
+  Button,
+  Loading,
+} from '@components';
 import { BaseStyle, Images, useTheme } from '@config';
 import { GlobalParamList } from 'navigation/models/GlobalParamList';
+import { useNotification } from '../queries/queries';
 
 export default function NotificationInfoScreen(
   props: StackScreenProps<GlobalParamList>,
@@ -15,23 +24,23 @@ export default function NotificationInfoScreen(
   const { t } = useTranslation();
   const { colors } = useTheme();
 
-  const data = route?.params?.data ?? {};
+  const { data, isLoading } = useNotification(route?.params?.id);
 
-  const getButtonText = (type: string) => {
-    if (type === 'facebook') {
-      return 'Open Facebook Link';
-    }
-    if (type === 'business') {
-      return 'View Details';
-    }
-  };
+  // const getButtonText = (type: string) => {
+  //   if (type === 'facebook') {
+  //     return 'Open Facebook Link';
+  //   }
+  //   if (type === 'business') {
+  //     return 'View Details';
+  //   }
+  // };
 
-  const getButtonColor = (type: string) => {
-    if (type === 'facebook') {
-      return '#3b5998';
-    }
-    return colors.primary;
-  };
+  // const getButtonColor = (type: string) => {
+  //   if (type === 'facebook') {
+  //     return '#3b5998';
+  //   }
+  //   return colors.primary;
+  // };
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
@@ -51,38 +60,28 @@ export default function NotificationInfoScreen(
           navigation.goBack();
         }}
       />
-      <View style={styles.container}>
-        <Image
-          source={data?.image ?? Images.imagePlaceholder}
-          style={styles.image}
-        />
-        <Text title3>{data?.title}</Text>
-        <Text body2 style={styles.content}>
-          {data?.description}
-        </Text>
-        {data?.link && (
-          <Button
-            full
-            style={[
-              styles.button,
-              { backgroundColor: getButtonColor(data?.type) },
-            ]}
-            onPress={() => Linking.openURL(data.link)}
-            icon={
-              data?.type === 'facebook' ? (
-                <Icon
-                  name="facebook"
-                  size={20}
-                  color="#fff"
-                  style={styles.icon}
-                  enableRTL={true}
-                />
-              ) : null
-            }>
-            {getButtonText(data?.type)}
-          </Button>
-        )}
-      </View>
+      {isLoading ? (
+        <Loading loading={isLoading} />
+      ) : (
+        <View style={styles.container}>
+          <Image
+            source={data?.image ?? Images.imagePlaceholder}
+            style={styles.image}
+          />
+          <Text title3>{data?.title}</Text>
+          <Text body2 style={styles.content}>
+            {data?.description}
+          </Text>
+          {data?.link && (
+            <Button
+              full
+              style={[styles.button, { backgroundColor: colors.primary }]}
+              onPress={() => Linking.openURL(data.link)}>
+              View Details
+            </Button>
+          )}
+        </View>
+      )}
     </SafeAreaView>
   );
 }
