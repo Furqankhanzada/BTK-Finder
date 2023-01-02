@@ -1,13 +1,21 @@
 import React, { useState } from 'react';
-import { RefreshControl, FlatList, StyleSheet } from 'react-native';
+import { RefreshControl, FlatList, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { StackScreenProps } from '@react-navigation/stack';
+import moment from 'moment';
 
-import { Header, SafeAreaView, Icon, ListThumbCircle } from '@components';
-import { BaseStyle, useTheme } from '@config';
+import {
+  Header,
+  SafeAreaView,
+  Icon,
+  ListThumbCircle,
+  Text,
+  Loading,
+} from '@components';
+import { BaseStyle, Images, useTheme } from '@config';
 import { GlobalParamList } from 'navigation/models/GlobalParamList';
 
-import { NotificationData } from '../../../data/notification';
+import { useGetNotifications } from '../queries/queries';
 
 export default function NotificationsListScreen({
   navigation,
@@ -16,10 +24,12 @@ export default function NotificationsListScreen({
   const { colors } = useTheme();
 
   const [refreshing] = useState<boolean>(false);
-  const [notification] = useState<any>(NotificationData);
+
+  const { data, isLoading } = useGetNotifications();
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
+      <Loading loading={isLoading} />
       <Header
         title={t('notifications')}
         renderLeft={() => {
@@ -46,23 +56,30 @@ export default function NotificationsListScreen({
             onRefresh={() => {}}
           />
         }
-        data={notification}
-        keyExtractor={(item, index) => item.id + index}
+        data={data}
+        keyExtractor={(item, index) => item._id + index}
         renderItem={({ item }) => (
           <ListThumbCircle
-            image={item.image}
+            image={item?.image ?? Images.imagePlaceholder}
             txtLeftTitle={item.title}
             txtContent={item.description}
-            txtSubContent={item.date}
+            txtSubContent={moment(item.createdAt).fromNow()}
             style={[
               styles.item,
-              !item.isRead && { backgroundColor: colors.primaryHighlight },
+              !item.read && { backgroundColor: colors.primaryHighlight },
             ]}
             txtContentStyle={{ color: colors.text }}
             onPress={() =>
               navigation.navigate('NotificationInfo', { data: item })
             }
           />
+        )}
+        ListEmptyComponent={() => (
+          <View>
+            <Text body2 textAlign="center">
+              No Notifications Found!
+            </Text>
+          </View>
         )}
       />
     </SafeAreaView>
