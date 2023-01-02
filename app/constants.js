@@ -14,5 +14,6 @@ export const EDIT_PROFILE = `${Config.API_URL}/users/`;
 export const DELETE_PROFILE = `${Config.API_URL}/users`;
 
 export const BUSINESSES_API = `${Config.API_URL}/businesses`;
+export const NOTIFICATIONS_API = `${Config.API_URL}/notifications`;
 
 export const UPLOAD = `${Config.API_URL}/files/upload?folder=users`;
