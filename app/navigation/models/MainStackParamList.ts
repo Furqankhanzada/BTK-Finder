@@ -24,7 +24,7 @@ export type MainStackParamList = {
   SignUp: undefined;
   SignIn: undefined;
   Notification: undefined;
-  NotificationInfo: { data: any };
+  NotificationInfo: { id: string };
   Messenger: undefined;
   Messages: undefined;
   ResetPassword: undefined;
