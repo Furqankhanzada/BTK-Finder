@@ -149,31 +149,22 @@ function DashboardScreen({
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
         title={'Explore BTK'}
-        renderRight={() => {
+        renderRightSecond={() => {
           return (
             <View style={styles.notificationContent}>
               <Icon name="phone" size={18} color={colors.primaryDark} solid />
-              {/*<View*/}
-              {/*  style={[*/}
-              {/*    styles.doc,*/}
-              {/*    {*/}
-              {/*      backgroundColor: colors.primaryLight,*/}
-              {/*      borderColor: colors.card,*/}
-              {/*    },*/}
-              {/*  ]}*/}
-              {/*/>*/}
             </View>
           );
         }}
-        onPressRight={onPressHelpLine}
-        renderLeft={() => {
+        onPressRightSecond={onPressHelpLine}
+        renderRight={() => {
           return (
             <View style={styles.notificationContent}>
               <Icon name="bell" size={18} color={colors.primaryDark} solid />
             </View>
           );
         }}
-        onPressLeft={() => navigation.navigate('Notification')}
+        onPressRight={() => navigation.navigate('Notification')}
       />
       <TouchableOpacity
         onPress={() => navigation.navigate('Filter', {})}
