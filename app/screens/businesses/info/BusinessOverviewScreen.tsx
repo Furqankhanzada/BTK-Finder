@@ -15,7 +15,6 @@ import {
   View,
   FlatList,
   ActivityIndicator,
-  Platform,
 } from 'react-native';
 import { showLocation } from 'react-native-map-link';
 import { useTranslation } from 'react-i18next';
@@ -24,7 +23,6 @@ import { Placeholder, PlaceholderMedia, Progressive } from 'rn-placeholder';
 import ImageView from 'react-native-image-viewing';
 import { StackScreenProps } from '@react-navigation/stack';
 import { CompositeScreenProps } from '@react-navigation/native';
-import { useInterstitialAd, TestIds } from 'react-native-google-mobile-ads';
 
 import {
   Header,
@@ -55,18 +53,7 @@ import {
   BusinessDetailBottomTabParamList,
   ProductStackParamList,
 } from '../../../navigation/models/BusinessDetailBottomTabParamList';
-
-const whatsappAdUnitId = __DEV__
-  ? TestIds.INTERSTITIAL
-  : Platform.OS === 'ios'
-  ? 'ca-app-pub-6507255964694411/9670447241'
-  : 'ca-app-pub-6507255964694411/7433009170';
-
-const contactAdUnitId = __DEV__
-  ? TestIds.INTERSTITIAL
-  : Platform.OS === 'ios'
-  ? 'ca-app-pub-6507255964694411/8937355043'
-  : 'ca-app-pub-6507255964694411/1686692629';
+import useMobileAds from '../../../hooks/useMobileAds';
 
 let defaultDelta = {
   latitudeDelta: 0.003,
@@ -80,21 +67,25 @@ type Props = CompositeScreenProps<
 export default function BusinessOverviewScreen(props: Props) {
   const { navigation, route } = props;
 
-  const {
-    isLoaded: isWhatsappAdLoaded,
-    isClosed: isWhatsappAdClosed,
-    load: loadWhatsappAd,
-    show: showWhatsappAd,
-  } = useInterstitialAd(whatsappAdUnitId, {
-    requestNonPersonalizedAdsOnly: true,
-  });
-  const {
-    isLoaded: isContactAdLoaded,
-    isClosed: isContactAdClosed,
-    load: loadContactAd,
-    show: showContactAd,
-  } = useInterstitialAd(contactAdUnitId, {
-    requestNonPersonalizedAdsOnly: true,
+  const { onPressOne, onPressTwo } = useMobileAds({
+    interstitialOneCallback: () => {
+      onOpen({
+        id: '6',
+        title: t('tel'),
+        type: ContactItemType.whatsapp,
+        information: business?.telephone,
+        rightText: 'open WhatsApp',
+      });
+    },
+    interstitialTwoCallback: () => {
+      onOpen({
+        id: '5',
+        title: t('tel'),
+        type: ContactItemType.phone,
+        information: business?.telephone,
+        rightText: 'call',
+      });
+    },
   });
 
   const mapRef = useRef<any>();
@@ -112,32 +103,6 @@ export default function BusinessOverviewScreen(props: Props) {
   } = useBuildBusinessURL();
 
   const appLink = 'http://onelink.to/xwhffr';
-
-  // Load interstitial Whatsapp ad
-  useEffect(() => {
-    loadWhatsappAd();
-  }, [loadWhatsappAd]);
-
-  // Action after the Whatsapp ad is closed
-  useEffect(() => {
-    if (isWhatsappAdClosed) {
-      openWhatsapp();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isWhatsappAdClosed]);
-
-  // Load Contact ad
-  useEffect(() => {
-    loadContactAd();
-  }, [loadContactAd]);
-
-  // Action after the Contact ad is closed
-  useEffect(() => {
-    if (isContactAdClosed) {
-      openPhone();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isContactAdClosed]);
 
   useEffect(() => {
     let loc =
@@ -344,42 +309,6 @@ export default function BusinessOverviewScreen(props: Props) {
     return <Image source={getCoverImage()} style={styles.coverImage} />;
   };
 
-  const openWhatsapp = () => {
-    onOpen({
-      id: '6',
-      title: t('tel'),
-      type: ContactItemType.whatsapp,
-      information: business?.telephone,
-      rightText: 'open WhatsApp',
-    });
-  };
-  const onPressWhatsApp = () => {
-    if (isWhatsappAdLoaded) {
-      showWhatsappAd();
-    } else {
-      // No advert ready to show yet
-      openWhatsapp();
-    }
-  };
-
-  const openPhone = () => {
-    onOpen({
-      id: '5',
-      title: t('tel'),
-      type: ContactItemType.phone,
-      information: business?.telephone,
-      rightText: 'call',
-    });
-  };
-  const onPressPhone = () => {
-    if (isContactAdLoaded) {
-      showContactAd();
-    } else {
-      // No advert ready to show yet
-      openPhone();
-    }
-  };
-
   const onPressGallery = () => {
     setOpenGallery(true);
     trackEvent(EVENTS.SEE_MORE_IMAGES, { title: business?.name });
@@ -426,8 +355,8 @@ export default function BusinessOverviewScreen(props: Props) {
             onProductsPress={onMenuOrProductsPress}
             onReviewsPress={onReviewsPress}
             business={business}
-            onPressWhatsApp={onPressWhatsApp}
-            onPressPhone={onPressPhone}
+            onPressWhatsApp={onPressOne}
+            onPressPhone={onPressTwo}
             onOpen={onOpen}
           />
           <OpenHours business={business} />
