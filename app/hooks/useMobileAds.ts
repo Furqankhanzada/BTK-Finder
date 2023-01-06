@@ -70,7 +70,8 @@ export default function useMobileAds({
     if (isClosedOne) {
       interstitialOneCallback();
     }
-  }, [interstitialOneCallback, isClosedOne]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isClosedOne]);
 
   useEffect(() => {
     loadTwo();
@@ -80,7 +81,8 @@ export default function useMobileAds({
     if (isClosedTwo) {
       interstitialTwoCallback();
     }
-  }, [interstitialTwoCallback, isClosedTwo]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isClosedTwo]);
 
   const onPressOne = useCallback(() => {
     if (isLoadedOne) {
