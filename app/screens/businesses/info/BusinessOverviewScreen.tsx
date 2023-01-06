@@ -53,6 +53,7 @@ import {
   BusinessDetailBottomTabParamList,
   ProductStackParamList,
 } from '../../../navigation/models/BusinessDetailBottomTabParamList';
+import useMobileAds from '../../../hooks/useMobileAds';
 
 let defaultDelta = {
   latitudeDelta: 0.003,
@@ -65,6 +66,27 @@ type Props = CompositeScreenProps<
 >;
 export default function BusinessOverviewScreen(props: Props) {
   const { navigation, route } = props;
+
+  const { onPressOne, onPressTwo } = useMobileAds({
+    interstitialOneCallback: () => {
+      onOpen({
+        id: '6',
+        title: t('tel'),
+        type: ContactItemType.whatsapp,
+        information: business?.telephone,
+        rightText: 'open WhatsApp',
+      });
+    },
+    interstitialTwoCallback: () => {
+      onOpen({
+        id: '5',
+        title: t('tel'),
+        type: ContactItemType.phone,
+        information: business?.telephone,
+        rightText: 'call',
+      });
+    },
+  });
 
   const mapRef = useRef<any>();
   const scrollY = useRef(new Animated.Value(0)).current;
@@ -287,26 +309,6 @@ export default function BusinessOverviewScreen(props: Props) {
     return <Image source={getCoverImage()} style={styles.coverImage} />;
   };
 
-  const onPressWhatsApp = () => {
-    onOpen({
-      id: '6',
-      title: t('tel'),
-      type: ContactItemType.whatsapp,
-      information: business?.telephone,
-      rightText: 'open WhatsApp',
-    });
-  };
-
-  const onPressPhone = () => {
-    onOpen({
-      id: '5',
-      title: t('tel'),
-      type: ContactItemType.phone,
-      information: business?.telephone,
-      rightText: 'call',
-    });
-  };
-
   const onPressGallery = () => {
     setOpenGallery(true);
     trackEvent(EVENTS.SEE_MORE_IMAGES, { title: business?.name });
@@ -353,8 +355,8 @@ export default function BusinessOverviewScreen(props: Props) {
             onProductsPress={onMenuOrProductsPress}
             onReviewsPress={onReviewsPress}
             business={business}
-            onPressWhatsApp={onPressWhatsApp}
-            onPressPhone={onPressPhone}
+            onPressWhatsApp={onPressOne}
+            onPressPhone={onPressTwo}
             onOpen={onOpen}
           />
           <OpenHours business={business} />
