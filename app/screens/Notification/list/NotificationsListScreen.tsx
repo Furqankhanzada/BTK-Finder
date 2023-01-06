@@ -70,7 +70,10 @@ export default function NotificationsListScreen({
             ]}
             txtContentStyle={{ color: colors.text }}
             onPress={() =>
-              navigation.navigate('NotificationInfo', { id: item?._id })
+              navigation.navigate('NotificationInfo', {
+                id: item?._id,
+                read: item?.read ?? false,
+              })
             }
           />
         )}
