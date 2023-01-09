@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { View, StyleSheet, Linking } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { StackScreenProps } from '@react-navigation/stack';
+import { getUniqueId } from 'react-native-device-info';
 
 import * as Utils from '@utils';
 import {
@@ -49,6 +50,7 @@ export default function NotificationInfoScreen(
       mutate({
         read: true,
         notificationId: route?.params?.id,
+        deviceUniqueId: getUniqueId().toString(),
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
