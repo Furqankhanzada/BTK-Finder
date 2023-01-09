@@ -3,6 +3,7 @@ import { RefreshControl, FlatList, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { StackScreenProps } from '@react-navigation/stack';
 import moment from 'moment';
+import { getUniqueId } from 'react-native-device-info';
 
 import {
   Header,
@@ -25,7 +26,9 @@ export default function NotificationsListScreen({
 
   const [refreshing] = useState<boolean>(false);
 
-  const { data, isLoading } = useGetNotifications();
+  const { data, isLoading } = useGetNotifications({
+    deviceUniqueId: getUniqueId(),
+  });
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>

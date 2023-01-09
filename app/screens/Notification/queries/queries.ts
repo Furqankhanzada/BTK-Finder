@@ -4,13 +4,14 @@ import { handleError } from '@utils';
 import { NOTIFICATIONS_API } from '../../../constants';
 import axiosApiInstance from '../../../interceptor/axios-interceptor';
 
-export const useGetNotifications = () =>
+export const useGetNotifications = (params: any) =>
   useQuery(
     ['notifications'],
     (): Promise<any> => {
       return axiosApiInstance({
         method: 'GET',
         url: `${NOTIFICATIONS_API}`,
+        params: params,
       })
         .then((response) => response.data)
         .catch(({ response }) => {
