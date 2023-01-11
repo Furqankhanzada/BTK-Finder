@@ -26,7 +26,7 @@ export default function NotificationsListScreen({
 
   const [refreshing] = useState<boolean>(false);
 
-  const { data, isLoading } = useGetNotifications({
+  const { data, isLoading } = useGetNotifications(['notifications'], {
     deviceUniqueId: getUniqueId(),
   });
 
