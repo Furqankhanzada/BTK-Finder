@@ -23,6 +23,7 @@ import { setIsLogin } from '../actions/auth';
 import { RootStackParamList } from './models/RootStackParamList';
 import Main from './main';
 import { linkingConfig } from './deep-linking/LinkingConfig';
+import { useReactQuerySubscription } from '@screens/Notification/queries/queries';
 
 const RootStack = createStackNavigator<RootStackParamList>();
 
@@ -32,6 +33,8 @@ export default function Navigator() {
   const { theme, colors } = useTheme();
   const isDarkMode = useDarkMode();
   const routeNameRef = useRef() as MutableRefObject<string>;
+
+  useReactQuerySubscription();
 
   const forFade = ({ current }: any) => ({
     cardStyle: {
