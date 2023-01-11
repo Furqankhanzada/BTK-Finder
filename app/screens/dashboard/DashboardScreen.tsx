@@ -3,9 +3,10 @@ import { FlatList, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useDispatch, useSelector } from 'react-redux';
 import { firebase } from '@react-native-firebase/database';
+import { getUniqueId } from 'react-native-device-info';
 
 import { SafeAreaView, Icon, Text, Tag, Image, Header } from '@components';
-import { BaseStyle, useTheme } from '@config';
+import { BaseColor, BaseStyle, useTheme } from '@config';
 import * as Utils from '@utils';
 import Section from '@screens/dashboard/components/Section';
 import { CategoryPresentable } from '@screens/category/modals/CategoryPresentables';
@@ -18,6 +19,7 @@ import {
   BannerPresentable,
   BannersPresentable,
 } from '@screens/dashboard/models/BannersPresentable';
+import { useGetNotifications } from '@screens/Notification/queries/queries';
 
 import { EVENTS, setUser, trackEvent } from '../../userTracking';
 import { GlobalParamList } from '../../navigation/models/GlobalParamList';
@@ -37,6 +39,10 @@ function DashboardScreen({
   const dispatch = useDispatch();
   const isLogin = useSelector((state: any) => state.auth.isLogin);
   const profileData = useSelector((state: any) => state.profile);
+  const { data: notifications } = useGetNotifications(['notifications-count'], {
+    deviceUniqueId: getUniqueId(),
+    unreadCount: true,
+  });
 
   const [banners, setBanners] = useState<BannersPresentable>();
   // const [refreshing, setRefreshing] = useState(false);
@@ -152,7 +158,7 @@ function DashboardScreen({
         renderRightSecond={() => {
           return (
             <View style={styles.notificationContent}>
-              <Icon name="phone" size={18} color={colors.primaryDark} solid />
+              <Icon name="phone" size={19} color={colors.primaryDark} solid />
             </View>
           );
         }}
@@ -160,7 +166,20 @@ function DashboardScreen({
         renderRight={() => {
           return (
             <View style={styles.notificationContent}>
-              <Icon name="bell" size={18} color={colors.primaryDark} solid />
+              <Icon name="bell" size={19} color={colors.primaryDark} solid />
+              <View
+                style={[
+                  styles.unreadCount,
+                  { backgroundColor: BaseColor.redColor },
+                ]}>
+                <Text
+                  style={[
+                    styles.unreadCountText,
+                    { color: BaseColor.whiteColor },
+                  ]}>
+                  {notifications?.unread}
+                </Text>
+              </View>
             </View>
           );
         }}
@@ -497,6 +516,19 @@ const styles = StyleSheet.create({
   notificationContent: {
     width: 20,
     height: 20,
+  },
+  unreadCount: {
+    position: 'absolute',
+    right: 0,
+    top: -4,
+    width: 13,
+    height: 13,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  unreadCountText: {
+    fontSize: 11,
   },
   contentSearch: {
     marginTop: 10,
