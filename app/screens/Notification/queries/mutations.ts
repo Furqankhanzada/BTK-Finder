@@ -15,6 +15,7 @@ export const useNotificationUserSave = () => {
     })
       .then((response) => {
         queryClient.invalidateQueries(['notifications']);
+        queryClient.invalidateQueries(['notifications-count']);
         return response.data;
       })
       .catch(({ response }) => {
