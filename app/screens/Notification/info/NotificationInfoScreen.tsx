@@ -86,14 +86,14 @@ export default function NotificationInfoScreen(
           <Text body2 style={styles.content}>
             {data?.description}
           </Text>
-          {data?.link && (
+          {data?.link ? (
             <Button
               full
               style={[styles.button, { backgroundColor: colors.primary }]}
-              onPress={() => Linking.openURL(data.link)}>
+              onPress={() => Linking.openURL(data.link ?? '')}>
               View Details
             </Button>
-          )}
+          ) : null}
         </View>
       )}
     </SafeAreaView>
