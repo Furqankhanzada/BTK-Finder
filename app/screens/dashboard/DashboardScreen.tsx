@@ -171,19 +171,21 @@ function DashboardScreen({
           return (
             <View style={styles.notificationContent}>
               <Icon name="bell" size={19} color={colors.primaryDark} solid />
-              <View
-                style={[
-                  styles.unreadCount,
-                  { backgroundColor: BaseColor.redColor },
-                ]}>
-                <Text
+              {notifications?.unread >= 1 ? (
+                <View
                   style={[
-                    styles.unreadCountText,
-                    { color: BaseColor.whiteColor },
+                    styles.unreadCount,
+                    { backgroundColor: BaseColor.redColor },
                   ]}>
-                  {notifications?.unread}
-                </Text>
-              </View>
+                  <Text
+                    style={[
+                      styles.unreadCountText,
+                      { color: BaseColor.whiteColor },
+                    ]}>
+                    {notifications?.unread}
+                  </Text>
+                </View>
+              ) : null}
             </View>
           );
         }}
