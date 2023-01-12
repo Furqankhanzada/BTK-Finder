@@ -5,9 +5,10 @@ import { handleError, socket } from '@utils';
 import { NOTIFICATIONS_API } from '../../../constants';
 import axiosApiInstance from '../../../interceptor/axios-interceptor';
 
-export const useReactQuerySubscription = () => {
+export const useNotificationSubscription = () => {
   const queryClient = useQueryClient();
   React.useEffect(() => {
+    console.log('@Subscribe Notifications');
     socket.on('notification', () => {
       console.log('on notification listener');
       queryClient.invalidateQueries(['notifications']);

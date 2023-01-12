@@ -19,7 +19,10 @@ import {
   BannerPresentable,
   BannersPresentable,
 } from '@screens/dashboard/models/BannersPresentable';
-import { useGetNotifications } from '@screens/Notification/queries/queries';
+import {
+  useGetNotifications,
+  useNotificationSubscription,
+} from '@screens/Notification/queries/queries';
 
 import { EVENTS, setUser, trackEvent } from '../../userTracking';
 import { GlobalParamList } from '../../navigation/models/GlobalParamList';
@@ -37,6 +40,7 @@ function DashboardScreen({
 }: StackScreenProps<GlobalParamList, 'Dashboard'>) {
   const { colors } = useTheme();
   const dispatch = useDispatch();
+  useNotificationSubscription();
   const isLogin = useSelector((state: any) => state.auth.isLogin);
   const profileData = useSelector((state: any) => state.profile);
   const { data: notifications } = useGetNotifications(['notifications-count'], {
