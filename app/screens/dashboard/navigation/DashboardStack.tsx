@@ -4,6 +4,8 @@ import React from 'react';
 import { DashboardParamList } from '../../../navigation/models/DashboardParamList';
 import HelpLine from '@screens/dashboard/helpline/HelplineScreen';
 import DashboardScreen from '@screens/dashboard/DashboardScreen';
+import NotificationsListScreen from '@screens/Notification/list/NotificationsListScreen';
+import NotificationInfoScreen from '@screens/Notification/info/NotificationInfoScreen';
 
 const DashboardStack = createStackNavigator<DashboardParamList>();
 
@@ -15,6 +17,14 @@ export function DashboardStackNavigator() {
         options={{ presentation: 'modal' }}
         name="HelpLine"
         component={HelpLine}
+      />
+      <DashboardStack.Screen
+        name="Notification"
+        component={NotificationsListScreen}
+      />
+      <DashboardStack.Screen
+        name="NotificationInfo"
+        component={NotificationInfoScreen}
       />
     </DashboardStack.Navigator>
   );

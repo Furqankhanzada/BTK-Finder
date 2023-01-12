@@ -23,8 +23,6 @@ export type MainStackParamList = {
   Walkthrough: { lastRoute: keyof GlobalParamList; id: string };
   SignUp: undefined;
   SignIn: undefined;
-  Notification: undefined;
-  NotificationInfo: { id: string, read: boolean };
   Messenger: undefined;
   Messages: undefined;
   ResetPassword: undefined;

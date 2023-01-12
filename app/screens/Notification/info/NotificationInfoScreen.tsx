@@ -15,12 +15,12 @@ import {
   Loading,
 } from '@components';
 import { BaseStyle, Images, useTheme } from '@config';
-import { GlobalParamList } from 'navigation/models/GlobalParamList';
+import { DashboardParamList } from 'navigation/models/DashboardParamList';
 import { useNotification } from '../queries/queries';
 import { useNotificationUserSave } from '../queries/mutations';
 
 export default function NotificationInfoScreen(
-  props: StackScreenProps<GlobalParamList>,
+  props: StackScreenProps<DashboardParamList, 'NotificationInfo'>,
 ) {
   const { navigation, route } = props;
   const { t } = useTranslation();

@@ -12,8 +12,6 @@ import { setEditBusiness } from '../actions/business';
 import { LastRoutes, withAuthRedirection } from './hoc/withAuthRedirection';
 
 /* Bottom Screen */
-import NotificationsListScreen from '@screens/Notification/list/NotificationsListScreen';
-import NotificationInfoScreen from '@screens/Notification/info/NotificationInfoScreen';
 import Business from '@screens/AddBusiness';
 import FavouriteScreen from '@screens/favourite/FavouriteScreen';
 import Messenger from '@screens/Messenger';
@@ -71,14 +69,6 @@ export default function Main() {
       <MainStack.Screen name="SignIn" component={SignIn} />
       <MainStack.Screen name="Messenger" component={Messenger} />
       <MainStack.Screen name="Messages" component={Messages} />
-      <MainStack.Screen
-        name="Notification"
-        component={NotificationsListScreen}
-      />
-      <MainStack.Screen
-        name="NotificationInfo"
-        component={NotificationInfoScreen}
-      />
       <MainStack.Screen name="ResetPassword" component={ResetPassword} />
       <MainStack.Screen name="ChangePassword" component={ChangePassword} />
       <MainStack.Screen name="ProfileEdit" component={ProfileEdit} />
