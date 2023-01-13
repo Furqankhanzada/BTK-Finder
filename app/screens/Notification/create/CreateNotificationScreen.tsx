@@ -25,6 +25,7 @@ import { socket } from '@utils';
 import { BaseStyle, BaseColor, useTheme } from '@config';
 import { StackScreenProps } from '@react-navigation/stack';
 import { MainStackParamList } from 'navigation/models/MainStackParamList';
+import { useUploadNotificationImage } from '../queries/mutations';
 
 export default function CreateNotificationScreen(
   props: StackScreenProps<MainStackParamList, 'CreateNotification'>,
@@ -32,6 +33,8 @@ export default function CreateNotificationScreen(
   const { navigation } = props;
   const { colors } = useTheme();
   // const { t } = useTranslation();
+  const { mutate: uploadImage, isLoading: uploadImageLoading } =
+    useUploadNotificationImage();
 
   const titleRef = useRef<TextInputOriginal>(null);
   const descriptionRef = useRef<TextInputOriginal>(null);
@@ -90,7 +93,6 @@ export default function CreateNotificationScreen(
       cropperToolbarWidgetColor: '#3498DB',
     })
       .then((image) => {
-        // setImageUri(image.path);
         const filename = image.path.replace(/^.*[\\/]/, '');
         let file = {
           uri:
@@ -103,11 +105,14 @@ export default function CreateNotificationScreen(
         const form = new FormData();
         form.append('file', file);
 
-        // const userPayload = {
-        //   ...user,
-        //   phone: user.phone.replace(/\s+/g, ''),
-        // };
-        // uploadProfileImage({ user: userPayload, form: form });
+        uploadImage(
+          { form: form },
+          {
+            onSuccess(response) {
+              setNotification({ ...notification, image: response.Location });
+            },
+          },
+        );
       })
       .catch((e) => {
         console.log('IMAGE_PICKER_ERROR', e);
@@ -139,7 +144,7 @@ export default function CreateNotificationScreen(
         style={styles.KeyboardAvoidingView}>
         <ScrollView contentContainerStyle={styles.contain}>
           <View style={styles.imageContainer}>
-            <Loading loading={false} style={{ borderRadius: 5 }} />
+            <Loading loading={uploadImageLoading} style={{ borderRadius: 5 }} />
             {notification.image ? (
               <Fragment>
                 <TouchableOpacity
