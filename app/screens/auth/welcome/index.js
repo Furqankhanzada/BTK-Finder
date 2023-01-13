@@ -61,12 +61,7 @@ export default function Welcome(props) {
                     ? profileData.roles[0] === 'ADMIN'
                     : false
                 }
-                // onPress={() => navigation.navigate('ProfileExanple')}
               />
-              {/* <ProfilePerformance
-            data={userData.performance}
-            style={{ marginTop: 20, marginBottom: 20 }}
-          /> */}
               <TouchableOpacity
                 style={[
                   styles.profileItem,
@@ -116,6 +111,23 @@ export default function Welcome(props) {
                   enableRTL={true}
                 />
               </TouchableOpacity>
+              {profileData && profileData?.roles?.includes('ADMIN') ? (
+                <TouchableOpacity
+                  style={[
+                    styles.profileItem,
+                    { borderBottomColor: colors.border, borderBottomWidth: 1 },
+                  ]}
+                  onPress={() => navigation.navigate('CreateNotification')}>
+                  <Text body1>Create Notification</Text>
+                  <Icon
+                    name="angle-right"
+                    size={18}
+                    color={colors.primary}
+                    style={{ marginLeft: 5 }}
+                    enableRTL={true}
+                  />
+                </TouchableOpacity>
+              ) : null}
             </View>
           ) : (
             <ProfileDetail
