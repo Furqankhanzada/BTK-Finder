@@ -189,7 +189,11 @@ export default function CreateNotificationScreen(
             </Text>
           </View>
           <TextInput
+            style={styles.textArea}
             ref={descriptionRef}
+            multiline={true}
+            numberOfLines={6}
+            textAlignVertical="top"
             onChangeText={(description) =>
               setNotification({ ...notification, description })
             }
@@ -274,13 +278,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
   },
-  textInput: {
-    height: 46,
-    backgroundColor: BaseColor.fieldColor,
-    borderRadius: 5,
-    padding: 10,
-    width: '100%',
-    color: BaseColor.grayColor,
+  textArea: {
+    height: 'auto',
   },
   buttonsContainer: {
     paddingVertical: 15,

@@ -30,6 +30,7 @@ interface Props {
   onSubmitEditing?: () => void;
   returnKeyType?: 'done' | 'go' | 'next' | 'search' | 'send';
   blurOnSubmit?: boolean;
+  numberOfLines?: number;
 }
 
 export default React.forwardRef<TextInput, Props>((props, ref) => {
@@ -51,6 +52,7 @@ export default React.forwardRef<TextInput, Props>((props, ref) => {
     autoCapitalize = 'none',
     returnKeyType = 'next',
     blurOnSubmit = false,
+    numberOfLines,
   } = props;
   return (
     <View style={[BaseStyle.textInput, { backgroundColor: cardColor }, style]}>
@@ -78,6 +80,7 @@ export default React.forwardRef<TextInput, Props>((props, ref) => {
         selectionColor={colors.primary}
         keyboardType={keyboardType}
         multiline={multiline}
+        numberOfLines={numberOfLines}
         textAlignVertical={textAlignVertical}
         onSubmitEditing={onSubmitEditing}
       />
