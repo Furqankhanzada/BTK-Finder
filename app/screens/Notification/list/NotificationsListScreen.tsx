@@ -17,6 +17,7 @@ import { BaseStyle, Images, useTheme } from '@config';
 import { GlobalParamList } from 'navigation/models/GlobalParamList';
 
 import { useNotifications } from '../queries/queries';
+import { NotificationType } from '../models/NotificationPresentable';
 
 export default function NotificationsListScreen({
   navigation,
@@ -30,6 +31,19 @@ export default function NotificationsListScreen({
     deviceUniqueId: getUniqueId(),
     recent: true,
   });
+
+  const getIconName = (type?: NotificationType) => {
+    switch (type) {
+      case 'Announcement':
+        return 'bullhorn';
+      case 'User':
+        return 'bell';
+      case 'Review':
+        return 'comment-dots';
+      default:
+        return null;
+    }
+  };
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
@@ -64,6 +78,7 @@ export default function NotificationsListScreen({
         keyExtractor={(item, index) => item._id + index}
         renderItem={({ item }) => (
           <ListThumbCircle
+            icon={getIconName(item?.type)}
             image={item?.image ?? Images.imagePlaceholder}
             txtLeftTitle={item.title}
             txtContent={item.description}

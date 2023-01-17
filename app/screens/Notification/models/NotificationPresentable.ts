@@ -1,3 +1,10 @@
+export enum NotificationType {
+  ANNOUNCEMENT = 'Announcement',
+  BUSINESS = 'Business',
+  USER = 'User',
+  REVIEW = 'Review',
+}
+
 export interface NotificationPresentable {
   _id: string;
   createdAt: string;
@@ -6,7 +13,7 @@ export interface NotificationPresentable {
   description: string;
   image?: string;
   link?: string;
-  type?: string;
+  type?: NotificationType;
   read?: boolean;
   ownerId?: string;
 }
