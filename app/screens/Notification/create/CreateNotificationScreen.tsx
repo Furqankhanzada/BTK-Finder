@@ -170,7 +170,7 @@ export default function CreateNotificationScreen(
 
           <View style={styles.contentTitle}>
             <Text headline semibold>
-              Title
+              Title*
             </Text>
           </View>
           <TextInput
@@ -178,14 +178,14 @@ export default function CreateNotificationScreen(
             onChangeText={(title) =>
               setNotification({ ...notification, title })
             }
-            placeholder="Notification Title"
+            placeholder=""
             value={notification?.title}
             onSubmitEditing={() => descriptionRef.current?.focus()}
           />
 
           <View style={styles.contentTitle}>
             <Text headline semibold>
-              Description
+              Description*
             </Text>
           </View>
           <TextInput
@@ -197,7 +197,7 @@ export default function CreateNotificationScreen(
             onChangeText={(description) =>
               setNotification({ ...notification, description })
             }
-            placeholder="Notification Description"
+            placeholder=""
             value={notification?.description}
             onSubmitEditing={() => linkRef.current?.focus()}
           />
@@ -210,7 +210,7 @@ export default function CreateNotificationScreen(
           <TextInput
             ref={linkRef}
             onChangeText={(link) => setNotification({ ...notification, link })}
-            placeholder="Notification Link"
+            placeholder=""
             value={notification?.link}
             onSubmitEditing={() => onSubmit()}
           />
