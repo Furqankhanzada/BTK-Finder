@@ -18,7 +18,7 @@ export const useNotificationSubscription = () => {
   }, [queryClient]);
 };
 
-export const useGetNotifications = (key: Array<string | number>, params: any) =>
+export const useNotifications = (key: Array<string | number>, params: any) =>
   useQuery(
     key,
     (): Promise<NotificationPresentable[]> => {

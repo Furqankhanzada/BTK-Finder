@@ -20,7 +20,7 @@ import {
   BannersPresentable,
 } from '@screens/dashboard/models/BannersPresentable';
 import {
-  useGetNotifications,
+  useNotifications,
   useNotificationSubscription,
 } from '@screens/Notification/queries/queries';
 
@@ -43,7 +43,7 @@ function DashboardScreen({
   useNotificationSubscription();
   const isLogin = useSelector((state: any) => state.auth.isLogin);
   const profileData = useSelector((state: any) => state.profile);
-  const { data: notifications } = useGetNotifications(['notifications-count'], {
+  const { data: notifications } = useNotifications(['notifications-count'], {
     deviceUniqueId: getUniqueId(),
     unreadCount: true,
   });

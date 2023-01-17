@@ -16,7 +16,7 @@ import {
 import { BaseStyle, Images, useTheme } from '@config';
 import { GlobalParamList } from 'navigation/models/GlobalParamList';
 
-import { useGetNotifications } from '../queries/queries';
+import { useNotifications } from '../queries/queries';
 
 export default function NotificationsListScreen({
   navigation,
@@ -26,8 +26,9 @@ export default function NotificationsListScreen({
 
   const [refreshing] = useState<boolean>(false);
 
-  const { data, isLoading } = useGetNotifications(['notifications'], {
+  const { data, isLoading } = useNotifications(['notifications'], {
     deviceUniqueId: getUniqueId(),
+    recent: true,
   });
 
   return (
