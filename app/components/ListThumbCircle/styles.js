@@ -8,6 +8,10 @@ export default StyleSheet.create({
     paddingBottom: 5,
   },
   thumb: { width: 48, height: 48, marginRight: 10, borderRadius: 24 },
+  icon: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   content: {
     flex: 1,
     flexDirection: 'row',

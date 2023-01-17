@@ -3,7 +3,7 @@ import { View, TouchableOpacity } from 'react-native';
 import { Icon, Image, Text } from '@components';
 import styles from './styles';
 import PropTypes from 'prop-types';
-import { useTheme } from '@config';
+import { BaseColor, useTheme } from '@config';
 export default function ListThumbCircle(props) {
   const { colors } = useTheme();
   const {
@@ -17,6 +17,7 @@ export default function ListThumbCircle(props) {
     txtRight,
     iconRightName,
     onPress,
+    icon,
   } = props;
   return (
     <TouchableOpacity
@@ -27,7 +28,18 @@ export default function ListThumbCircle(props) {
       ]}
       onPress={onPress}
       activeOpacity={0.9}>
-      <Image source={image} style={[styles.thumb, imageStyle]} />
+      {!icon ? (
+        <Image source={image} style={[styles.thumb, imageStyle]} />
+      ) : (
+        <View
+          style={[
+            styles.thumb,
+            styles.icon,
+            { backgroundColor: colors.primary },
+          ]}>
+          <Icon name={icon} size={20} color={BaseColor.whiteColor} />
+        </View>
+      )}
       <View style={styles.content}>
         <View style={styles.left}>
           <Text headline semibold>
@@ -80,6 +92,7 @@ ListThumbCircle.propTypes = {
   txtRight: PropTypes.string,
   iconRightName: PropTypes.string,
   onPress: PropTypes.func,
+  icon: PropTypes.string,
 };
 
 ListThumbCircle.defaultProps = {
