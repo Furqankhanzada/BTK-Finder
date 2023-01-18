@@ -39,6 +39,7 @@ export default function CreateNotificationScreen(
   const titleRef = useRef<TextInputOriginal>(null);
   const descriptionRef = useRef<TextInputOriginal>(null);
   const linkRef = useRef<TextInputOriginal>(null);
+  const typeRef = useRef<TextInputOriginal>(null);
 
   const [loading, setLoading] = useState(false);
   const [notification, setNotification] = useState<any>({
@@ -168,26 +169,17 @@ export default function CreateNotificationScreen(
             )}
           </View>
 
-          <View style={styles.contentTitle}>
-            <Text headline semibold>
-              Title*
-            </Text>
-          </View>
           <TextInput
+            style={styles.textInput}
             ref={titleRef}
             onChangeText={(title) =>
               setNotification({ ...notification, title })
             }
-            placeholder=""
+            placeholder="Title*"
             value={notification?.title}
             onSubmitEditing={() => descriptionRef.current?.focus()}
           />
 
-          <View style={styles.contentTitle}>
-            <Text headline semibold>
-              Description*
-            </Text>
-          </View>
           <TextInput
             style={styles.textArea}
             ref={descriptionRef}
@@ -197,21 +189,26 @@ export default function CreateNotificationScreen(
             onChangeText={(description) =>
               setNotification({ ...notification, description })
             }
-            placeholder=""
+            placeholder="Description*"
             value={notification?.description}
             onSubmitEditing={() => linkRef.current?.focus()}
           />
 
-          <View style={styles.contentTitle}>
-            <Text headline semibold>
-              Link
-            </Text>
-          </View>
           <TextInput
+            style={styles.textInput}
             ref={linkRef}
             onChangeText={(link) => setNotification({ ...notification, link })}
-            placeholder=""
+            placeholder="Link"
             value={notification?.link}
+            onSubmitEditing={() => typeRef.current?.focus()}
+          />
+
+          <TextInput
+            style={styles.textInput}
+            ref={typeRef}
+            onChangeText={(type) => setNotification({ ...notification, type })}
+            placeholder="Notification Type"
+            value={notification?.type}
             onSubmitEditing={() => onSubmit()}
           />
         </ScrollView>
@@ -280,6 +277,10 @@ const styles = StyleSheet.create({
   },
   textArea: {
     height: 'auto',
+    marginBottom: 10,
+  },
+  textInput: {
+    marginBottom: 10,
   },
   buttonsContainer: {
     paddingVertical: 15,
