@@ -1,5 +1,6 @@
+import { useNavigation } from '@react-navigation/native';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { handleError } from '@utils';
+import { handleError, socket } from '@utils';
 
 import {
   NOTIFICATIONS_USER_API,
@@ -19,6 +20,20 @@ export interface UploadProfileImagePayload {
 
 export type UploadProfileImageResponse = {
   Location: string;
+};
+
+export const useCreateNotification = () => {
+  const navigation = useNavigation();
+  return useMutation<any, Error, any>((payload) => {
+    return socket.emit('createNotification', payload, (response: any) => {
+      if (response?.errors) {
+        handleError(response);
+      } else {
+        navigation.goBack();
+        return response;
+      }
+    });
+  });
 };
 
 export const useNotificationUserSave = () => {

@@ -21,11 +21,13 @@ import {
   TextInput,
   Loading,
 } from '@components';
-import { socket } from '@utils';
 import { BaseStyle, BaseColor, useTheme } from '@config';
 import { StackScreenProps } from '@react-navigation/stack';
 import { MainStackParamList } from 'navigation/models/MainStackParamList';
-import { useUploadNotificationImage } from '../queries/mutations';
+import {
+  useCreateNotification,
+  useUploadNotificationImage,
+} from '../queries/mutations';
 
 export default function CreateNotificationScreen(
   props: StackScreenProps<MainStackParamList, 'CreateNotification'>,
@@ -35,13 +37,14 @@ export default function CreateNotificationScreen(
   // const { t } = useTranslation();
   const { mutate: uploadImage, isLoading: uploadImageLoading } =
     useUploadNotificationImage();
+  const { mutate: createNotification, isLoading: notificationLoading } =
+    useCreateNotification();
 
   const titleRef = useRef<TextInputOriginal>(null);
   const descriptionRef = useRef<TextInputOriginal>(null);
   const linkRef = useRef<TextInputOriginal>(null);
   const typeRef = useRef<TextInputOriginal>(null);
 
-  const [loading, setLoading] = useState(false);
   const [notification, setNotification] = useState<any>({
     title: '',
     description: '',
@@ -69,11 +72,7 @@ export default function CreateNotificationScreen(
   };
 
   const onSubmit = async () => {
-    setLoading(true);
-    socket.emit('createNotification', removeEmptyKeys(notification), () => {
-      setLoading(false);
-      navigation.goBack();
-    });
+    createNotification(removeEmptyKeys(notification));
   };
 
   const pickSingle = () => {
@@ -214,7 +213,7 @@ export default function CreateNotificationScreen(
         </ScrollView>
 
         <View style={styles.buttonsContainer}>
-          <Button loading={loading} full onPress={() => onSubmit()}>
+          <Button loading={notificationLoading} full onPress={() => onSubmit()}>
             Create
           </Button>
         </View>
