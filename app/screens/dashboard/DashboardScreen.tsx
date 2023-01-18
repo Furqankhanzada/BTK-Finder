@@ -3,7 +3,12 @@ import { FlatList, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useDispatch, useSelector } from 'react-redux';
 import { firebase } from '@react-native-firebase/database';
-import { getUniqueId } from 'react-native-device-info';
+import {
+  getSystemName,
+  getSystemVersion,
+  getUniqueId,
+} from 'react-native-device-info';
+import messaging from '@react-native-firebase/messaging';
 
 import { SafeAreaView, Icon, Text, Tag, Image, Header } from '@components';
 import { BaseColor, BaseStyle, useTheme } from '@config';
@@ -28,6 +33,7 @@ import { EVENTS, setUser, trackEvent } from '../../userTracking';
 import { GlobalParamList } from '../../navigation/models/GlobalParamList';
 import { MainStackParamList } from '../../navigation/models/MainStackParamList';
 import { getProfile } from '../../actions/auth';
+import { useDeviceRegisteration } from './queries/mutations';
 
 const database = firebase
   .app()
@@ -40,7 +46,6 @@ function DashboardScreen({
 }: StackScreenProps<GlobalParamList, 'Dashboard'>) {
   const { colors } = useTheme();
   const dispatch = useDispatch();
-  useNotificationSubscription();
   const isLogin = useSelector((state: any) => state.auth.isLogin);
   const profileData = useSelector((state: any) => state.profile);
   const { data: notifications } = useNotifications(['notifications-count'], {
@@ -49,7 +54,29 @@ function DashboardScreen({
   });
 
   const [banners, setBanners] = useState<BannersPresentable>();
-  // const [refreshing, setRefreshing] = useState(false);
+  const [fcmToken, setFcmToken] = useState('');
+  const { mutate } = useDeviceRegisteration();
+  useNotificationSubscription();
+
+  async function getFcmToken() {
+    const token = await messaging().getToken();
+    setFcmToken(token);
+  }
+
+  useEffect(() => {
+    getFcmToken();
+  }, []);
+
+  useEffect(() => {
+    if (fcmToken !== '') {
+      mutate({
+        deviceUniqueId: getUniqueId(),
+        fcmToken: fcmToken,
+        os: getSystemName(),
+        osVersion: getSystemVersion(),
+      });
+    }
+  }, [mutate, fcmToken]);
 
   useEffect(() => {
     const onValueChange = database

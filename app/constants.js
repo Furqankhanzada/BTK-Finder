@@ -16,6 +16,7 @@ export const DELETE_PROFILE = `${Config.API_URL}/users`;
 export const BUSINESSES_API = `${Config.API_URL}/businesses`;
 export const NOTIFICATIONS_API = `${Config.API_URL}/notifications`;
 export const NOTIFICATIONS_USER_API = `${Config.API_URL}/notification-users`;
+export const DEVICES_API = `${Config.API_URL}/devices`;
 
 export const UPLOAD = `${Config.API_URL}/files/upload?folder=users`;
 export const UPLOAD_NOTIFICATION = `${Config.API_URL}/files/upload?folder=notifications`;
