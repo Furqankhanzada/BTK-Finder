@@ -33,16 +33,18 @@ static void InitializeFlipper(UIApplication *application) {
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  [GMSServices provideAPIKey:@"AIzaSyBUgV84Ub-NU2mDmdWA-_H2Llt3NsaXi2c"]; // add this line using the api key obtained from Google Console
+  [GMSServices provideAPIKey:@"AIzaSyBUgV84Ub-NU2mDmdWA-_H2Llt3NsaXi2c"];
+  // add this line using the api key obtained from Google Console
+  
   // firebase
   if ([FIRApp defaultApp] == nil) {
       [FIRApp configure];
     }
   // firebase end
 
-#ifdef FB_SONARKIT_ENABLED
+  #ifdef FB_SONARKIT_ENABLED
   InitializeFlipper(application);
-#endif
+  #endif
 
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
@@ -60,14 +62,14 @@ static void InitializeFlipper(UIApplication *application) {
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
-
+  
   // RNSplashScreen
   [RNSplashScreen show];
   // RNSplashScreen end
 
   // Define UNUserNotificationCenter
-    UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
-    center.delegate = self;
+  UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+  center.delegate = self;
 
   return YES;
 }
