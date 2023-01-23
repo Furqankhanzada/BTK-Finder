@@ -1,4 +1,8 @@
 {
   "name": "Explore BTK",
-  "displayName": "Explore BTK"
+  "displayName": "Explore BTK",
+  "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-6507255964694411~1632349160",
+    "ios_app_id": "ca-app-pub-6507255964694411~8956305415"
+  }
 }
