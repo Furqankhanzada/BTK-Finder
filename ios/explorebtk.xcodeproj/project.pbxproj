@@ -22,6 +22,7 @@
 		371C205F254B4DDBB8474579 /* Raleway-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 21D0C732B05D4C50A37E9BA6 /* Raleway-Black.ttf */; };
 		460A660A2DB045E48A75C690 /* Raleway-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 07342B2F47F449D8A9A02E6F /* Raleway-Regular.ttf */; };
 		50DB1EA931284FEC978F7E86 /* Merriweather-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DF9C1CB374D41C88911248A /* Merriweather-Bold.ttf */; };
+		5231112F297E63E300DF0454 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5231112E297E63E300DF0454 /* Launch Screen.storyboard */; };
 		5B7DCD9203944E618485BDCB /* Merriweather-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8B03C245B3A540CEBC8C2E89 /* Merriweather-Black.ttf */; };
 		5B99EC7114D94C93A8E9540C /* Merriweather-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7249ECA4F31B44229992F0C2 /* Merriweather-Regular.ttf */; };
 		613D037694A24483ADE172CB /* Raleway-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9DD5639BDA224B0FBC7C9AAC /* Raleway-ExtraLight.ttf */; };
@@ -96,6 +97,7 @@
 		3D0FEA5943DA851DC402F5D8 /* Pods-explorebtk.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-explorebtk.release.xcconfig"; path = "Target Support Files/Pods-explorebtk/Pods-explorebtk.release.xcconfig"; sourceTree = "<group>"; };
 		4342277BF2904667B2E77731 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		48E3A4CDB0584157B8657D74 /* Raleway-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Raleway-BoldItalic.ttf"; path = "../app/assets/fonts/Raleway-BoldItalic.ttf"; sourceTree = "<group>"; };
+		5231112E297E63E300DF0454 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		533A24472F84459B89156D68 /* Raleway-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Raleway-BlackItalic.ttf"; path = "../app/assets/fonts/Raleway-BlackItalic.ttf"; sourceTree = "<group>"; };
 		543863AE9F6FC278FDE84688 /* libPods-explorebtk.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-explorebtk.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5625512DDB56423480184F32 /* Raleway-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Raleway-Thin.ttf"; path = "../app/assets/fonts/Raleway-Thin.ttf"; sourceTree = "<group>"; };
@@ -184,6 +186,7 @@
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
+				5231112E297E63E300DF0454 /* Launch Screen.storyboard */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
@@ -428,6 +431,7 @@
 				86672E7543E8410CAC818700 /* Raleway-Thin.ttf in Resources */,
 				AE4FF8B349A84A5FB809F2EA /* Raleway-ThinItalic.ttf in Resources */,
 				E98728E4FA154BB8859DF824 /* Roboto-Black.ttf in Resources */,
+				5231112F297E63E300DF0454 /* Launch Screen.storyboard in Resources */,
 				CC440D5BF15E4908A17F8B7E /* Roboto-BlackItalic.ttf in Resources */,
 				8542DB0A3C31462CA4D23DD2 /* Roboto-Bold.ttf in Resources */,
 				C9C1693E3C47481CBF9420CE /* Roboto-BoldItalic.ttf in Resources */,
@@ -448,7 +452,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 8;
 			files = (
 			);
 			inputPaths = (
@@ -456,7 +460,7 @@
 			name = "Bundle React Native code and images";
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nexport NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
