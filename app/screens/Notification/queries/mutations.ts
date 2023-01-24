@@ -7,11 +7,20 @@ import {
   UPLOAD_NOTIFICATION,
 } from '../../../constants';
 import axiosApiInstance from '../../../interceptor/axios-interceptor';
+import { NotificationPresentable } from '../models/NotificationPresentable';
 
 interface NotificationUsersPayload {
   read: boolean;
   notificationId: string;
   deviceUniqueId: string;
+}
+
+interface NotificationUsersResponse {
+  _id: string;
+  read: boolean;
+  notificationId: string;
+  deviceUniqueId: string;
+  userId?: string;
 }
 
 export interface UploadProfileImagePayload {
@@ -22,24 +31,35 @@ export type UploadProfileImageResponse = {
   Location: string;
 };
 
+type NotificationPayload = Pick<
+  NotificationPresentable,
+  'title' | 'description' | 'link' | 'image' | 'type'
+>;
+
 export const useCreateNotification = () => {
   const navigation = useNavigation();
-  return useMutation<any, Error, any>((payload) => {
-    return socket.emit('createNotification', payload, (response: any) => {
-      if (response?.errors) {
-        handleError(response);
-      } else {
-        navigation.goBack();
-        return response;
-      }
-    });
-  });
+  return useMutation<NotificationPresentable, Error, NotificationPayload>(
+    (payload) => {
+      return socket.emit('createNotification', payload, (response: any) => {
+        if (response?.errors) {
+          handleError(response);
+        } else {
+          navigation.goBack();
+          return response;
+        }
+      });
+    },
+  );
 };
 
 export const useNotificationUserSave = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<NotificationUsersPayload, Error, any>((payload) => {
+  return useMutation<
+    NotificationUsersResponse,
+    Error,
+    NotificationUsersPayload
+  >((payload) => {
     return axiosApiInstance({
       method: 'POST',
       url: `${NOTIFICATIONS_USER_API}`,
