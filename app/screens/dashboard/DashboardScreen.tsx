@@ -54,8 +54,8 @@ function DashboardScreen({
   });
 
   const [banners, setBanners] = useState<BannersPresentable>();
-  const [fcmToken, setFcmToken] = useState('');
-  const { mutate } = useDeviceRegisteration();
+  const [fcmToken, setFcmToken] = useState<string>('');
+  const { mutate: registerDevice } = useDeviceRegisteration();
   useNotificationSubscription();
 
   async function getFcmToken() {
@@ -69,14 +69,14 @@ function DashboardScreen({
 
   useEffect(() => {
     if (fcmToken !== '') {
-      mutate({
+      registerDevice({
         deviceUniqueId: getUniqueId(),
         fcmToken: fcmToken,
         os: getSystemName(),
         osVersion: getSystemVersion(),
       });
     }
-  }, [mutate, fcmToken]);
+  }, [registerDevice, fcmToken]);
 
   useEffect(() => {
     const onValueChange = database
