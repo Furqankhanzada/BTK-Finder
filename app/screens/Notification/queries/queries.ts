@@ -6,19 +6,26 @@ import { NOTIFICATIONS_API } from '../../../constants';
 import { NotificationPresentable } from '../models/NotificationPresentable';
 import axiosApiInstance from '../../../interceptor/axios-interceptor';
 
+interface NotificationsParams {
+  deviceUniqueId: string;
+  recent?: boolean;
+  unreadCount?: boolean;
+}
+
 export const useNotificationSubscription = () => {
   const queryClient = useQueryClient();
   React.useEffect(() => {
-    console.log('@Subscribe Notifications');
     socket.on('notification', () => {
-      console.log('on notification listener');
       queryClient.invalidateQueries(['notifications']);
       queryClient.invalidateQueries(['notifications-count']);
     });
   }, [queryClient]);
 };
 
-export const useNotifications = (key: Array<string | number>, params: any) =>
+export const useNotifications = (
+  key: Array<string | number>,
+  params: NotificationsParams,
+) =>
   useQuery(
     key,
     (): Promise<NotificationPresentable[]> => {
