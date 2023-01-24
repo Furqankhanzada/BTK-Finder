@@ -118,7 +118,7 @@ export default function Welcome(props) {
                     { borderBottomColor: colors.border, borderBottomWidth: 1 },
                   ]}
                   onPress={() => navigation.navigate('CreateNotification')}>
-                  <Text body1>Create Notification</Text>
+                  <Text body1>{t('create_notification')}</Text>
                   <Icon
                     name="angle-right"
                     size={18}
