@@ -2,11 +2,17 @@ import { useMutation } from '@tanstack/react-query';
 
 import { handleError } from '@utils';
 
-import { DEVICES_API } from '../../../constants';
 import axiosApiInstance from '../../../interceptor/axios-interceptor';
+import { DEVICES_API } from '../../../constants';
+import { DevicePresentable } from '../models/DevicePresentable';
+
+type DevicePayload = Pick<
+  DevicePresentable,
+  'deviceUniqueId' | 'fcmToken' | 'os' | 'osVersion'
+>;
 
 export const useDeviceRegisteration = () => {
-  return useMutation<any, Error, any>((payload) => {
+  return useMutation<DevicePresentable, Error, DevicePayload>((payload) => {
     return axiosApiInstance({
       method: 'POST',
       url: `${DEVICES_API}`,
