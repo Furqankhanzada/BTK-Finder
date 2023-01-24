@@ -7,7 +7,7 @@
 
     <!-- Base application theme. -->
     <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowBackground">@drawable/bg_launch_screen</item>
+        <item name="android:windowBackground">@drawable/launch_screen</item>
         <item name="android:windowFullscreen">true</item>
     </style>
 

@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import SplashScreen from 'react-native-splash-screen';
 
 import { BaseColor, useFont, useTheme } from '@config';
 import { Icon } from '@components';
@@ -49,6 +50,9 @@ const MainStack = createStackNavigator<MainStackParamList>();
 const MainBottomTab = createBottomTabNavigator<MainBottomTabParamList>();
 
 export default function Main() {
+  useEffect(() => {
+    SplashScreen.hide();
+  }, []);
   return (
     <MainStack.Navigator
       screenOptions={{ headerShown: false }}
