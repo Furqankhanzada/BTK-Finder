@@ -29,6 +29,14 @@ import {
   useUploadNotificationImage,
 } from '../queries/mutations';
 
+interface NotificationType {
+  title: string;
+  description: string;
+  image: string;
+  link: string;
+  type: string;
+}
+
 export default function CreateNotificationScreen(
   props: StackScreenProps<MainStackParamList, 'CreateNotification'>,
 ) {
@@ -45,7 +53,7 @@ export default function CreateNotificationScreen(
   const linkRef = useRef<TextInputOriginal>(null);
   const typeRef = useRef<TextInputOriginal>(null);
 
-  const [notification, setNotification] = useState<any>({
+  const [notification, setNotification] = useState<NotificationType>({
     title: '',
     description: '',
     image: '',
@@ -144,7 +152,10 @@ export default function CreateNotificationScreen(
         style={styles.KeyboardAvoidingView}>
         <ScrollView contentContainerStyle={styles.contain}>
           <View style={styles.imageContainer}>
-            <Loading loading={uploadImageLoading} style={{ borderRadius: 5 }} />
+            <Loading
+              loading={uploadImageLoading}
+              style={styles.uploadImageLoading}
+            />
             {notification.image ? (
               <Fragment>
                 <TouchableOpacity
@@ -206,7 +217,7 @@ export default function CreateNotificationScreen(
             style={styles.textInput}
             ref={typeRef}
             onChangeText={(type) => setNotification({ ...notification, type })}
-            placeholder="Notification Type"
+            placeholder="Type e.g: Announcement or Business"
             value={notification?.type}
             onSubmitEditing={() => onSubmit()}
           />
@@ -232,6 +243,9 @@ const styles = StyleSheet.create({
     height: 200,
     width: '100%',
     position: 'relative',
+    borderRadius: 5,
+  },
+  uploadImageLoading: {
     borderRadius: 5,
   },
   actionButton: {
