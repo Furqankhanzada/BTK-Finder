@@ -183,6 +183,9 @@ PODS:
     - GoogleMaps
   - Google-Maps-iOS-Utils/QuadTree (3.10.3):
     - GoogleMaps
+  - Google-Mobile-Ads-SDK (9.12.0):
+    - GoogleAppMeasurement (< 11.0, >= 7.0)
+    - GoogleUserMessagingPlatform (>= 1.1)
   - GoogleAppMeasurement (8.15.0):
     - GoogleAppMeasurement/AdIdSupport (= 8.15.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.7)
@@ -212,6 +215,7 @@ PODS:
   - GoogleMaps/Base (5.1.0)
   - GoogleMaps/Maps (5.1.0):
     - GoogleMaps/Base
+  - GoogleUserMessagingPlatform (2.0.0)
   - GoogleUtilities/AppDelegateSwizzler (7.7.0):
     - GoogleUtilities/Environment
     - GoogleUtilities/Logger
@@ -612,6 +616,10 @@ PODS:
     - RNFBApp
   - RNGestureHandler (2.5.0):
     - React-Core
+  - RNGoogleMobileAds (8.2.2):
+    - Google-Mobile-Ads-SDK (= 9.12.0)
+    - GoogleUserMessagingPlatform (= 2.0.0)
+    - React-Core
   - RNImageCropPicker (0.36.4):
     - React-Core
     - React-RCTImage
@@ -750,6 +758,7 @@ DEPENDENCIES:
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - "RNFBRemoteConfig (from `../node_modules/@react-native-firebase/remote-config`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - RNGoogleMobileAds (from `../node_modules/react-native-google-mobile-ads`)
   - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
@@ -783,9 +792,11 @@ SPEC REPOS:
     - FlipperKit
     - fmt
     - Google-Maps-iOS-Utils
+    - Google-Mobile-Ads-SDK
     - GoogleAppMeasurement
     - GoogleDataTransport
     - GoogleMaps
+    - GoogleUserMessagingPlatform
     - GoogleUtilities
     - hermes-engine
     - InputMask
@@ -914,6 +925,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/remote-config"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
+  RNGoogleMobileAds:
+    :path: "../node_modules/react-native-google-mobile-ads"
   RNImageCropPicker:
     :path: "../node_modules/react-native-image-crop-picker"
   RNPermissions:
@@ -957,9 +970,11 @@ SPEC CHECKSUMS:
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: 85ecdd10ee8d8ec362ef519a6a45ff9aa27b2e85
   Google-Maps-iOS-Utils: 95d5ca4d2004314eff88c1819b969db6cac37ab6
+  Google-Mobile-Ads-SDK: b4e9efb765ef1693ae9dd94c527b6c1d91ee5052
   GoogleAppMeasurement: 4c19f031220c72464d460c9daa1fb5d1acce958e
   GoogleDataTransport: 1c8145da7117bd68bbbed00cf304edb6a24de00f
   GoogleMaps: 086ae1dab659eaa7339bdb30fc88e2f44e7c597c
+  GoogleUserMessagingPlatform: ab890ce5f6620f293a21b6bdd82e416a2c73aeca
   GoogleUtilities: e0913149f6b0625b553d70dae12b49fc62914fd1
   hermes-engine: bf7577d12ac6ccf53ab8b5af3c6ccf0dd8458c5c
   InputMask: 71d291dc54d2deaeac6512afb6ec2304228c0bb7
@@ -1020,6 +1035,7 @@ SPEC CHECKSUMS:
   RNFBMessaging: 3e2682ea5e15fe86da24d16d16019395a881f33c
   RNFBRemoteConfig: 92fbb75ceb69fec44ae727b70d23c5d1798f7648
   RNGestureHandler: bad495418bcbd3ab47017a38d93d290ebd406f50
+  RNGoogleMobileAds: 6e399a1b02f3d493f6b0ec7cf7f37623cc997034
   RNImageCropPicker: 73891a709e6fd8a47d32104d942757971f220aee
   RNPermissions: dcdb7b99796bbeda6975a6e79ad519c41b251b1c
   RNReanimated: b5b17149593e7c05e4ec5c0efea1f21e05829510
@@ -1032,6 +1048,6 @@ SPEC CHECKSUMS:
   Yoga: 5cbf25add73edb290e1067017690f7ebf56c5468
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 5241170e70610da2f5126172e338d0c55ac01cf9
+PODFILE CHECKSUM: d328266d27667420c7ce7167cea2cffa20e95efb
 
 COCOAPODS: 1.11.2
