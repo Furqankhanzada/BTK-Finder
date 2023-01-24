@@ -198,7 +198,9 @@ function DashboardScreen({
           return (
             <View style={styles.notificationContent}>
               <Icon name="bell" size={19} color={colors.primaryDark} solid />
-              {notifications?.unread >= 1 ? (
+              {notifications &&
+              !Array.isArray(notifications) &&
+              notifications?.unread >= 1 ? (
                 <View
                   style={[
                     styles.unreadCount,
@@ -209,7 +211,7 @@ function DashboardScreen({
                       styles.unreadCountText,
                       { color: BaseColor.whiteColor },
                     ]}>
-                    {notifications?.unread}
+                    {notifications.unread}
                   </Text>
                 </View>
               ) : null}

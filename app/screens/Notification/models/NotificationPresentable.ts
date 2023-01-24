@@ -17,3 +17,7 @@ export interface NotificationPresentable {
   read?: boolean;
   ownerId?: string;
 }
+
+export interface NotificationCountPresentable {
+  unread: number;
+}

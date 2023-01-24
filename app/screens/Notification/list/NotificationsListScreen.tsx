@@ -74,7 +74,7 @@ export default function NotificationsListScreen({
             onRefresh={() => {}}
           />
         }
-        data={data}
+        data={Array.isArray(data) ? data : []}
         keyExtractor={(item, index) => item._id + index}
         renderItem={({ item }) => (
           <ListThumbCircle

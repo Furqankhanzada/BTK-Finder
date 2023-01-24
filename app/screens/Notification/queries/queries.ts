@@ -3,7 +3,10 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { handleError, socket } from '@utils';
 import { NOTIFICATIONS_API } from '../../../constants';
-import { NotificationPresentable } from '../models/NotificationPresentable';
+import {
+  NotificationCountPresentable,
+  NotificationPresentable,
+} from '../models/NotificationPresentable';
 import axiosApiInstance from '../../../interceptor/axios-interceptor';
 
 interface NotificationsParams {
@@ -28,7 +31,7 @@ export const useNotifications = (
 ) =>
   useQuery(
     key,
-    (): Promise<NotificationPresentable[]> => {
+    (): Promise<NotificationPresentable[] | NotificationCountPresentable> => {
       return axiosApiInstance({
         method: 'GET',
         url: `${NOTIFICATIONS_API}`,
