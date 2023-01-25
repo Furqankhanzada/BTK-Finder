@@ -40,13 +40,16 @@ export const useCreateNotification = () => {
   const navigation = useNavigation();
   return useMutation<NotificationPresentable, Error, NotificationPayload>(
     (payload) => {
-      return socket.emit('createNotification', payload, (response: any) => {
-        if (response?.errors) {
-          handleError(response);
-        } else {
-          navigation.goBack();
-          return response;
-        }
+      return new Promise((resolve, reject) => {
+        socket.emit('createNotification', payload, (response: any) => {
+          if (response?.errors) {
+            handleError(response);
+            reject(response);
+          } else {
+            navigation.goBack();
+            resolve(response);
+          }
+        });
       });
     },
   );
