@@ -6,6 +6,9 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
+import { useQueryClient } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
+
 import { BaseStyle, useTheme } from '@config';
 import {
   Header,
@@ -15,8 +18,8 @@ import {
   Button,
   TextInput,
 } from '@components';
+
 import styles from './styles';
-import { useTranslation } from 'react-i18next';
 import { login } from '../../../actions/auth';
 
 export default function SignIn(props) {
@@ -24,6 +27,7 @@ export default function SignIn(props) {
   const { colors } = useTheme();
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const queryClient = useQueryClient();
   const { params } = route;
   const passwordRef = useRef(null);
 
@@ -52,6 +56,8 @@ export default function SignIn(props) {
           setLoading(false);
           if (!error) {
             navigation.navigate(lastRoute ? lastRoute : 'Welcome', { id });
+            queryClient.invalidateQueries(['notifications']);
+            queryClient.invalidateQueries(['notifications-count']);
           }
         }),
       );

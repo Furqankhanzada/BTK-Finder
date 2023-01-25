@@ -1,6 +1,9 @@
 import React from 'react';
 import { View, ScrollView, TouchableOpacity } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import { useQueryClient } from '@tanstack/react-query';
+
 import { AuthActions } from '@actions';
 import { BaseStyle, useTheme } from '@config';
 import {
@@ -11,14 +14,15 @@ import {
   Button,
   ProfileDetail,
 } from '@components';
+
 import styles from './styles';
-import { useTranslation } from 'react-i18next';
 import { clearFavoriteBusiness } from '../../../actions/favorites';
 
 export default function Welcome(props) {
   const { navigation, lastRoute } = props;
   const { colors } = useTheme();
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
 
   const isLogin = useSelector((state) => state.auth.isLogin);
   const signOutLoading = useSelector((state) => state.auth.signOutLoading);
@@ -35,7 +39,12 @@ export default function Welcome(props) {
    * @date 2019-08-03
    */
   const onLogOut = () => {
-    dispatch(AuthActions.authentication(false, (response) => {}));
+    dispatch(
+      AuthActions.authentication(false, (response) => {
+        queryClient.invalidateQueries(['notifications']);
+        queryClient.invalidateQueries(['notifications-count']);
+      }),
+    );
     dispatch(clearFavoriteBusiness());
   };
 
