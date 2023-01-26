@@ -11,23 +11,14 @@ export default function ListItem(props: any) {
     <ScrollView>
       <View style={styles.contains}>
         <TouchableOpacity
-          style={[
-            styles.profileItem,
-            { borderBottomColor: colors.border, borderBottomWidth: 1 },
-          ]}
+          style={[styles.profileItem, { borderBottomColor: colors.border }]}
           onPress={onPress}>
           <Text body1>{title}</Text>
-          <View
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'flex-end',
-              alignItems: 'flex-end',
-            }}>
+          <View style={styles.businessDetailContainer}>
             {businessDetail?.length >= 18 ? (
               <Text
                 numberOfLines={1}
-                style={{ color: colors.border, width: '65%' }}
+                style={[styles.businessDetailText, { color: colors.border }]}
                 body1>
                 {businessDetail ? businessDetail : 'Empty'}
               </Text>
@@ -42,7 +33,7 @@ export default function ListItem(props: any) {
                 name="angle-right"
                 size={18}
                 color={colors.primary}
-                style={{ marginLeft: 5 }}
+                style={styles.icon}
                 enableRTL={true}
               />
             </View>
@@ -70,5 +61,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 6,
+    borderBottomWidth: 1,
+  },
+  businessDetailContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
+  },
+  businessDetailText: {
+    width: '65%',
+  },
+  icon: {
+    marginLeft: 5,
   },
 });
