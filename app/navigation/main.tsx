@@ -12,7 +12,6 @@ import { LastRoutes, withAuthRedirection } from './hoc/withAuthRedirection';
 
 /* Bottom Screen */
 import Notification from '@screens/Notification';
-// import Business from '@screens/AddBusiness';
 import FavouriteScreen from '@screens/favourite/FavouriteScreen';
 import Messenger from '@screens/Messenger';
 import { NewBusinessStackNavigator } from '@screens/new-business/navigation/NewBusinessStack';
@@ -25,11 +24,6 @@ import Messages from '@screens/Messages';
 import Walkthrough from '@screens/Walkthrough';
 import ResetPassword from '@screens/ResetPassword';
 import ChangeLanguage from '@screens/ChangeLanguage';
-// import Address from '@screens/AddBusiness/address';
-// import Hours from '@screens/AddBusiness/hours';
-// import PriceRange from '@screens/AddBusiness/priceRange';
-// import FinalReview from '@screens/AddBusiness/review';
-// import Gallery from '@screens/AddBusiness/gallery';
 import { DashboardStackNavigator } from '@screens/dashboard/navigation/DashboardStack';
 import BusinessesScreen from '@screens/businesses/list/BusinessesScreen';
 
@@ -65,12 +59,6 @@ export default function Main() {
       <MainStack.Screen name="Notification" component={Notification} />
       <MainStack.Screen name="ResetPassword" component={ResetPassword} />
       <MainStack.Screen name="ChangeLanguage" component={ChangeLanguage} />
-      {/*<MainStack.Screen name="Business" component={Business} />*/}
-      {/* <MainStack.Screen name="Address" component={Address} /> */}
-      {/* <MainStack.Screen name="Hours" component={Hours} /> */}
-      {/* <MainStack.Screen name="PriceRange" component={PriceRange} /> */}
-      {/* <MainStack.Screen name="FinalReview" component={FinalReview} /> */}
-      {/* <MainStack.Screen name="Gallery" component={Gallery} /> */}
       <MainStack.Screen name="VerifyCode" component={VerifyCode} />
     </MainStack.Navigator>
   );
@@ -127,16 +115,6 @@ function MainBottomTabNavigator() {
         }}
       />
 
-      {/* <BottomTab.Screen
-        name="Notification"
-        component={Notification}
-        options={{
-          title: t('notification'),
-          tabBarIcon: ({ color }) => {
-            return <Icon color={color} name="bell" size={20} solid />;
-          },
-        }}
-      /> */}
       <MainBottomTab.Screen
         name="SettingsStack"
         component={SettingsStackNavigator}
