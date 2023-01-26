@@ -41,7 +41,7 @@ import Gallery from '@screens/AddBusiness/gallery';
 import MyBusinessesScreen from '@screens/my-businesses/MyBusinessesScreen';
 import { DashboardStackNavigator } from '@screens/dashboard/navigation/DashboardStack';
 import BusinessesScreen from '@screens/businesses/list/BusinessesScreen';
-import CreateNotificationScreen from '@screens/Notification/create/CreateNotificationScreen';
+import CreateNotificationScreen from '@screens/notification/create/CreateNotificationScreen';
 
 import { MainStackParamList } from './models/MainStackParamList';
 import { MainBottomTabParamList } from './models/MainBottomTabParamList';

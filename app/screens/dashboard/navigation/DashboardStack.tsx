@@ -4,8 +4,8 @@ import React from 'react';
 import { DashboardParamList } from '../../../navigation/models/DashboardParamList';
 import HelpLine from '@screens/dashboard/helpline/HelplineScreen';
 import DashboardScreen from '@screens/dashboard/DashboardScreen';
-import NotificationsListScreen from '@screens/Notification/list/NotificationsListScreen';
-import NotificationInfoScreen from '@screens/Notification/info/NotificationInfoScreen';
+import NotificationsListScreen from '@screens/notification/list/NotificationsListScreen';
+import NotificationInfoScreen from '@screens/notification/info/NotificationInfoScreen';
 
 const DashboardStack = createStackNavigator<DashboardParamList>();
 
