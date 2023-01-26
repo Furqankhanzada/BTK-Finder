@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Linking, Platform } from 'react-native';
+import { Platform } from 'react-native';
 import PushNotification from 'react-native-push-notification';
 import PushNotificationIOS, {
   PushNotification as PushNotificationIOSType,
@@ -8,7 +8,7 @@ import messaging, {
   FirebaseMessagingTypes,
 } from '@react-native-firebase/messaging';
 
-import { canOpenUrl } from '@utils';
+import { navigateToLink } from '@utils';
 
 export default function usePushNotifications() {
   const [localNotificationInfo, setLocalNotificationInfo] =
@@ -43,14 +43,6 @@ export default function usePushNotifications() {
     messaging().onNotificationOpenedApp((remoteMessage) => {
       navigateToLink(remoteMessage);
     });
-
-    // When a notification from FCM has triggered the application to open from a quit state,
-    // this method will return a RemoteMessage containing the notification data, or null if the app was opened via another method.
-    messaging()
-      .getInitialNotification()
-      .then((remoteMessage) => {
-        navigateToLink(remoteMessage);
-      });
   }, []);
 
   useEffect(() => {
@@ -88,19 +80,6 @@ export default function usePushNotifications() {
       // typescript required callback
       () => {},
     );
-  };
-
-  const navigateToLink = (
-    notification: FirebaseMessagingTypes.RemoteMessage | null,
-  ) => {
-    if (notification && notification.data) {
-      const { facebook, link } = notification.data;
-      if (facebook) {
-        canOpenUrl(facebook, link);
-      } else if (link) {
-        Linking.openURL(link);
-      }
-    }
   };
 
   // Android local notification on click functionality and configuration
