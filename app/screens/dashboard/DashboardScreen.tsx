@@ -9,6 +9,7 @@ import {
   getUniqueId,
 } from 'react-native-device-info';
 import messaging from '@react-native-firebase/messaging';
+import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
 
 import { SafeAreaView, Icon, Text, Tag, Image, Header } from '@components';
 import { BaseColor, BaseStyle, useTheme } from '@config';
@@ -34,6 +35,10 @@ import { GlobalParamList } from '../../navigation/models/GlobalParamList';
 import { MainStackParamList } from '../../navigation/models/MainStackParamList';
 import { getProfile } from '../../actions/auth';
 import { useDeviceRegisteration } from './queries/mutations';
+import {
+  dashboardBannerUnitIdOne,
+  dashboardBannerUnitIdTwo,
+} from '../../hooks/useMobileAds';
 
 const database = firebase
   .app()
@@ -252,7 +257,15 @@ function DashboardScreen({
         // }
         renderItem={() => (
           <View>
-            {renderBanner(banners?.one)}
+            <View style={styles.adBanner}>
+              <BannerAd
+                unitId={dashboardBannerUnitIdOne}
+                size={BannerAdSize.FULL_BANNER}
+                requestOptions={{
+                  requestNonPersonalizedAdsOnly: true,
+                }}
+              />
+            </View>
             <Section
               title="Browse by categories"
               onViewAll={onCategoriesViewAllPress}
@@ -296,7 +309,17 @@ function DashboardScreen({
                 params={{ tags: ['Cakes', 'Fast Food', 'Cafe'] }}
               />
             </Section>
-            {renderBanner(banners?.two)}
+
+            <View style={styles.adBanner}>
+              <BannerAd
+                unitId={dashboardBannerUnitIdTwo}
+                size={BannerAdSize.FULL_BANNER}
+                requestOptions={{
+                  requestNonPersonalizedAdsOnly: true,
+                }}
+              />
+            </View>
+
             <Section
               title="Transport"
               subTitle="Find Courier Service, Shuttle Service, CAB Service, Van Service and Internation Flight Services"
@@ -511,6 +534,9 @@ const styles = StyleSheet.create({
   helplineButtonText: {
     marginLeft: 5,
     fontSize: 10,
+  },
+  adBanner: {
+    marginTop: 20,
   },
   serviceItem: {
     flex: 1,

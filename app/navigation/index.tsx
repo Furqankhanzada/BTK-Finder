@@ -4,13 +4,11 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useDarkMode } from 'react-native-dynamic';
 import { useTheme, BaseSetting } from '@config';
-import SplashScreen from 'react-native-splash-screen';
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
 /* Modal Screen only affect iOS */
-import Loading from '@screens/Loading';
 import Filter from '@screens/Filter';
 import ChooseItems from '@screens/ChooseItems';
 import SearchHistory from '@screens/SearchHistory';
@@ -49,7 +47,6 @@ export default function Navigator() {
       StatusBar.setBackgroundColor(colors.primary, true);
     }
     StatusBar.setBarStyle(isDarkMode ? 'light-content' : 'dark-content', true);
-    SplashScreen.hide();
   }, [colors.primary, isDarkMode, storeLanguage]);
 
   useEffect(() => {
@@ -84,8 +81,7 @@ export default function Navigator() {
         screenOptions={{
           headerShown: false,
         }}
-        initialRouteName="Loading">
-        <RootStack.Screen name="Loading" component={Loading} />
+        initialRouteName="Main">
         <RootStack.Screen name="Main" component={Main} />
         <RootStack.Screen name="Filter" component={Filter} />
         <RootStack.Screen

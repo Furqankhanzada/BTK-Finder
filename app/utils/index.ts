@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { Image } from 'react-native-image-crop-picker';
+import { FirebaseMessagingTypes } from '@react-native-firebase/messaging';
 import { io } from 'socket.io-client';
 import Config from 'react-native-config';
 
@@ -116,6 +117,19 @@ export const canOpenUrl = (url: string, altUrl: string): void => {
       return Linking.openURL(altUrl);
     }
   });
+};
+
+export const navigateToLink = (
+  notification: FirebaseMessagingTypes.RemoteMessage | null,
+) => {
+  if (notification && notification.data) {
+    const { facebook, link, deeplink } = notification.data;
+    if (facebook) {
+      canOpenUrl(facebook, link);
+    } else if (link || deeplink) {
+      Linking.openURL(link || deeplink);
+    }
+  }
 };
 
 export const getLastIndex = (item: string): string => {

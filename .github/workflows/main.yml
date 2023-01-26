@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - uses: actions/setup-node@v2
@@ -26,9 +26,10 @@ jobs:
           node-version: '14.17.0'
       - run: yarn install
 
-      - uses: actions/setup-ruby@v1
+      - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '2.7'
+          ruby-version: '2.7.4' # Not needed with a .ruby-version file
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
 
       - name: Cache Ruby - Bundler
         uses: actions/cache@v2
@@ -92,11 +93,11 @@ jobs:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Previous Tag v1
-        run: echo ${{ steps.semvers.outputs.patch }}
+        run: echo ${{ steps.previoustag.outputs.tag }}
 
       - name: Bump release version
         id: bump_version
-        uses: christian-draeger/increment-semantic-version@1.0.2
+        uses: christian-draeger/increment-semantic-version@1.0.3
         with:
           current-version: ${{ steps.previoustag.outputs.tag }}
           # current-version: '1.0.1'
