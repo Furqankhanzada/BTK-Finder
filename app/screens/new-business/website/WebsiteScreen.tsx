@@ -17,7 +17,10 @@ import { styles } from '../styles/styles';
 import { useBusiness } from '@screens/businesses/queries/queries';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { useEditBusiness } from '../queries/mutations';
-import useAddBusinessStore from '../store/Store';
+import useAddBusinessStore, {
+  BusinessStoreActions,
+  BusinessStoreTypes,
+} from '../store/Store';
 
 const webRejex =
   /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/;
@@ -36,8 +39,12 @@ export const WebsiteScreen = (props: StackScreenProps<GlobalParamList>) => {
   const { mutate: editWebsite } = useEditBusiness(route?.params?.id);
   const { data: businessData } = useBusiness(route?.params?.id);
 
-  const website = useAddBusinessStore((state: any) => state.website);
-  const setWebsite = useAddBusinessStore((state: any) => state.setWebsite);
+  const website = useAddBusinessStore(
+    (state: BusinessStoreTypes) => state.website,
+  );
+  const setWebsite = useAddBusinessStore(
+    (state: BusinessStoreActions) => state.setWebsite,
+  );
 
   const navigateToNext = () => {
     navigation.navigate('Address');
@@ -74,9 +81,9 @@ export const WebsiteScreen = (props: StackScreenProps<GlobalParamList>) => {
       />
 
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'android' ? null : 'padding'}
+        behavior={Platform.select({ android: undefined, ios: 'padding' })}
         keyboardVerticalOffset={offsetKeyboard}
-        style={{ flex: 1 }}>
+        style={styles.keyboardAvoidView}>
         <Formik
           initialValues={{
             website: isEditBusiness ? businessData?.website : website,
@@ -87,7 +94,7 @@ export const WebsiteScreen = (props: StackScreenProps<GlobalParamList>) => {
               editWebsite({ website: values.website });
               navigation.navigate('EditBusiness', { id: businessData?._id });
             } else {
-              setWebsite(values.website);
+              setWebsite(values?.website ?? '');
               navigation.navigate('Address');
             }
           }}>
