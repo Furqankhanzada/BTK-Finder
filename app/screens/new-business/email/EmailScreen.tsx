@@ -69,9 +69,9 @@ export const EmailScreen = (props: StackScreenProps<GlobalParamList>) => {
         onPressLeft={navigateToBack}
       />
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'android' ? null : 'padding'}
+        behavior={Platform.select({ android: undefined, ios: 'padding' })}
         keyboardVerticalOffset={offsetKeyboard}
-        style={{ flex: 1 }}>
+        style={styles.keyboardAvoidView}>
         <Formik
           initialValues={{
             email: isEditBusiness ? businessData?.email : email,
