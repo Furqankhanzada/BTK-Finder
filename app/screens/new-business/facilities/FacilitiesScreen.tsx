@@ -105,16 +105,16 @@ export const FacilitiesScreen = (props: StackScreenProps<GlobalParamList>) => {
       />
 
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'android' ? null : 'padding'}
+        behavior={Platform.select({ android: undefined, ios: 'padding' })}
         keyboardVerticalOffset={offsetKeyboard}
-        style={{ flex: 1 }}>
+        style={styles.keyboardAvoidView}>
         <View style={styles.contain}>
           <FlatList
             data={remoteConfig.facilities}
-            keyExtractor={(item: object, index: any) => {
-              return index;
+            keyExtractor={(item, index) => {
+              return `${index}-${item.name}`;
             }}
-            renderItem={({ item, index }: any) => {
+            renderItem={({ item, index }) => {
               const checked = selectedFacilities?.some(
                 (obj: Facility) => obj.name === item.name,
               );
