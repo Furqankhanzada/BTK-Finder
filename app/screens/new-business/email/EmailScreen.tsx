@@ -17,7 +17,10 @@ import { styles } from '../styles/styles';
 import { useBusiness } from '@screens/businesses/queries/queries';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { useEditBusiness } from '../queries/mutations';
-import useAddBusinessStore from '../store/Store';
+import useAddBusinessStore, {
+  BusinessStoreActions,
+  BusinessStoreTypes,
+} from '../store/Store';
 
 const emailRegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
 
@@ -32,8 +35,10 @@ export const EmailScreen = (props: StackScreenProps<GlobalParamList>) => {
   const { mutate: editEmail } = useEditBusiness(route?.params?.id);
   const { data: businessData } = useBusiness(route?.params?.id);
 
-  const email = useAddBusinessStore((state: any) => state.email);
-  const setEmail = useAddBusinessStore((state: any) => state.setEmail);
+  const email = useAddBusinessStore((state: BusinessStoreTypes) => state.email);
+  const setEmail = useAddBusinessStore(
+    (state: BusinessStoreActions) => state.setEmail,
+  );
 
   const navigateToNext = () => {
     navigation.navigate('Website');
@@ -82,7 +87,7 @@ export const EmailScreen = (props: StackScreenProps<GlobalParamList>) => {
               editEmail({ email: values.email });
               navigation.navigate('EditBusiness', { id: businessData?._id });
             } else {
-              setEmail(values.email);
+              setEmail(values?.email ?? '');
               navigation.navigate('Website');
             }
           }}>
