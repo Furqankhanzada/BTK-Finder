@@ -16,7 +16,10 @@ import { useBusiness } from '@screens/businesses/queries/queries';
 import { styles } from '../styles/styles';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { useEditBusiness } from '../queries/mutations';
-import useAddBusinessStore from '../store/Store';
+import useAddBusinessStore, {
+  BusinessStoreActions,
+  BusinessStoreTypes,
+} from '../store/Store';
 
 export const PriceRange = (props: StackScreenProps<GlobalParamList>) => {
   const { navigation, route } = props;
@@ -26,9 +29,11 @@ export const PriceRange = (props: StackScreenProps<GlobalParamList>) => {
   const { mutate: EditPrice } = useEditBusiness(route?.params?.id);
   const { data: businessData } = useBusiness(route?.params?.id);
 
-  const priceRange = useAddBusinessStore((state: any) => state.priceRange);
+  const priceRange = useAddBusinessStore(
+    (state: BusinessStoreTypes) => state.priceRange,
+  );
   const setPriceRange = useAddBusinessStore(
-    (state: any) => state.setPriceRange,
+    (state: BusinessStoreActions) => state.setPriceRange,
   );
 
   const [from, setFrom] = useState<number>(0);
@@ -84,9 +89,9 @@ export const PriceRange = (props: StackScreenProps<GlobalParamList>) => {
         }}
       />
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'android' ? null : 'padding'}
+        behavior={Platform.select({ android: undefined, ios: 'padding' })}
         keyboardVerticalOffset={offsetKeyboard}
-        style={{ flex: 1 }}>
+        style={styles.keyboardAvoidView}>
         <Formik
           initialValues={{ price: priceRange }}
           onSubmit={() => {
@@ -98,7 +103,7 @@ export const PriceRange = (props: StackScreenProps<GlobalParamList>) => {
               });
               navigation.navigate('EditBusiness', { id: businessData?._id });
             } else if (isValidPrice) {
-              setPriceRange({ from, to });
+              setPriceRange({ from: from.toString(), to: to.toString() });
               navigation.navigate('Gallery');
             }
           }}>
@@ -113,7 +118,7 @@ export const PriceRange = (props: StackScreenProps<GlobalParamList>) => {
                   renderItem={() => {
                     return (
                       <View>
-                        <Text title1 bold style={{ paddingBottom: 30 }}>
+                        <Text title1 bold style={styles.priceText}>
                           What is Price Range of your Business{' '}
                           <Text body1>(optional)</Text>
                         </Text>

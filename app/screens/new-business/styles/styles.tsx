@@ -62,6 +62,9 @@ export const styles = StyleSheet.create({
   timingsText: {
     paddingBottom: 20,
   },
+  priceText: {
+    paddingBottom: 30,
+  },
   footerButtons: {
     height: 40,
   },
