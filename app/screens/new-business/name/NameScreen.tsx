@@ -17,7 +17,10 @@ import { BaseColor, BaseStyle } from '@config';
 import { styles } from '../styles/styles';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { useEditBusiness } from '../queries/mutations';
-import useAddBusinessStore from '../store/Store';
+import useAddBusinessStore, {
+  BusinessStoreActions,
+  BusinessStoreTypes,
+} from '../store/Store';
 
 const nameSchema = Yup.object({
   name: Yup.string().required().min(3),
@@ -30,8 +33,10 @@ export const NameScreen = (props: StackScreenProps<GlobalParamList>) => {
   const { data: businessData } = useBusiness(route?.params?.id);
   const { mutate: editName } = useEditBusiness(route?.params?.id);
 
-  const name = useAddBusinessStore((state: any) => state.name);
-  const setName = useAddBusinessStore((state: any) => state.setName);
+  const name = useAddBusinessStore((state: BusinessStoreTypes) => state.name);
+  const setName = useAddBusinessStore(
+    (state: BusinessStoreActions) => state.setName,
+  );
 
   const navigateToBack = () => {
     navigation.goBack();
@@ -60,9 +65,9 @@ export const NameScreen = (props: StackScreenProps<GlobalParamList>) => {
       />
 
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'android' ? null : 'padding'}
+        behavior={Platform.select({ android: undefined, ios: 'padding' })}
         keyboardVerticalOffset={offsetKeyboard}
-        style={{ flex: 1 }}>
+        style={styles.keyboardAvoidView}>
         <Formik
           initialValues={{ name: isEditBusiness ? businessData?.name : name }}
           validationSchema={nameSchema}
@@ -71,7 +76,7 @@ export const NameScreen = (props: StackScreenProps<GlobalParamList>) => {
               editName({ name: values.name });
               navigation.navigate('EditBusiness', { id: businessData?._id });
             } else {
-              setName(values.name);
+              setName(values?.name ?? '');
               navigation.navigate('Description');
             }
           }}>
@@ -120,7 +125,7 @@ export const NameScreen = (props: StackScreenProps<GlobalParamList>) => {
                   <Button
                     style={[
                       styles.footerButtons,
-                      values?.name?.length < 3
+                      values?.name?.length && values?.name?.length < 3
                         ? { backgroundColor: BaseColor.grayColor }
                         : null,
                     ]}
