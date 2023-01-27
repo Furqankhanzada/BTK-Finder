@@ -64,7 +64,9 @@ export const TagsScreen = (props: StackScreenProps<GlobalParamList>) => {
       setSelected(selectedTags);
     } else {
       //Remove Tag from selected tags if already available
-      const updatedTags = selected.filter((item: any) => item !== select.name);
+      const updatedTags = selected.filter(
+        (item: string) => item !== select.name,
+      );
       setSelected(updatedTags);
     }
   };
@@ -123,9 +125,9 @@ export const TagsScreen = (props: StackScreenProps<GlobalParamList>) => {
       />
 
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'android' ? null : 'padding'}
+        behavior={Platform.select({ android: undefined, ios: 'padding' })}
         keyboardVerticalOffset={offsetKeyboard}
-        style={{ flex: 1 }}>
+        style={styles.keyboardAvoidView}>
         <View style={styles.contain}>
           {tags ? (
             <TextInput
@@ -140,37 +142,29 @@ export const TagsScreen = (props: StackScreenProps<GlobalParamList>) => {
             />
           ) : null}
           <FlatList
-            contentContainerStyle={{ paddingVertical: 10 }}
+            contentContainerStyle={styles.flatlistConatiner}
             data={tags}
-            keyExtractor={(item: object, index: any) => {
-              return index;
+            keyExtractor={(item, index) => {
+              return `${index}-${item.name}`;
             }}
-            renderItem={({ item, index }: any) => {
+            renderItem={({ item, index }) => {
               const checked = selected.includes(item.name);
               return (
                 <TouchableOpacity
                   key={index}
                   style={[styles.item, { backgroundColor: colors.card }]}
                   onPress={() => onChange(item)}>
-                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Icon
-                      name={item.icon}
-                      color={item?.checked ? colors.primary : colors.text}
-                      style={{ marginRight: 10 }}
-                      size={15}
-                    />
-                    <Text
-                      body1
-                      style={
-                        checked
-                          ? {
-                              color: colors.primary,
-                            }
-                          : {}
-                      }>
-                      {item.name}
-                    </Text>
-                  </View>
+                  <Text
+                    body1
+                    style={
+                      checked
+                        ? {
+                            color: colors.primary,
+                          }
+                        : {}
+                    }>
+                    {item.name}
+                  </Text>
                   {checked && (
                     <Icon name="check" size={14} color={colors.primary} />
                   )}
