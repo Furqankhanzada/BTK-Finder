@@ -7,6 +7,15 @@ export const styles = StyleSheet.create({
     flex: 1,
     marginTop: 10,
   },
+  keyboardAvoidView: {
+    flex: 1,
+  },
+  scrollViewContainerStyle: {
+    flexGrow: 1,
+  },
+  scrollView: {
+    flex: 1,
+  },
   input: {
     marginTop: 15,
   },

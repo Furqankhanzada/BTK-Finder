@@ -34,7 +34,10 @@ import GlobalStyle from '../../../assets/styling/GlobalStyle';
 import { GlobalParamList } from 'navigation/models/GlobalParamList';
 import { addressSFormValidation } from '../../AddBusiness/Validations';
 import { useEditBusiness } from '../queries/mutations';
-import useAddBusinessStore from '../store/Store';
+import useAddBusinessStore, {
+  BusinessStoreActions,
+  BusinessStoreTypes,
+} from '../store/Store';
 import { Location } from '@screens/businesses/models/BusinessPresentable';
 
 interface LocationDataType {
@@ -61,10 +64,14 @@ export const AddressScreen = (props: StackScreenProps<GlobalParamList>) => {
   const { mutate: editAddress } = useEditBusiness(route?.params?.id);
   const { data: businessData } = useBusiness(route?.params?.id);
 
-  const address = useAddBusinessStore((state: any) => state.address);
-  const setAddress = useAddBusinessStore((state: any) => state.setAddress);
+  const address = useAddBusinessStore(
+    (state: BusinessStoreTypes) => state.address,
+  );
+  const setAddress = useAddBusinessStore(
+    (state: BusinessStoreActions) => state.setAddress,
+  );
   const setStoreLocation = useAddBusinessStore(
-    (state: any) => state.setLocation,
+    (state: BusinessStoreActions) => state.setLocation,
   );
 
   // const [mapType, setMapType] = useState<string>('standard');
@@ -236,9 +243,9 @@ export const AddressScreen = (props: StackScreenProps<GlobalParamList>) => {
       />
 
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'android' ? null : 'padding'}
+        behavior={Platform.select({ android: undefined, ios: 'padding' })}
         keyboardVerticalOffset={offsetKeyboard}
-        style={{ flex: 1 }}>
+        style={styles.keyboardAvoidView}>
         <Formik
           initialValues={{
             address: isEditBusiness ? businessData?.address : address,
@@ -263,7 +270,7 @@ export const AddressScreen = (props: StackScreenProps<GlobalParamList>) => {
                 type: 'Point',
                 coordinates: [location?.latitude, location?.longitude],
               });
-              setAddress(values.address);
+              setAddress(values?.address ?? '');
               navigation.navigate('Hours');
             }
           }}
@@ -272,8 +279,8 @@ export const AddressScreen = (props: StackScreenProps<GlobalParamList>) => {
             return (
               <Fragment>
                 <ScrollView
-                  contentContainerStyle={{ flexGrow: 1 }}
-                  style={{ flex: 1 }}>
+                  contentContainerStyle={styles.scrollViewContainerStyle}
+                  style={styles.scrollView}>
                   <View style={styles.title}>
                     <Text title3 semibold style={styles.titleCenter}>
                       Address
