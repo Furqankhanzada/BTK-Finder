@@ -18,7 +18,10 @@ import { useBusiness } from '@screens/businesses/queries/queries';
 import { styles } from '../styles/styles';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { useEditBusiness } from '../queries/mutations';
-import useAddBusinessStore from '../store/Store';
+import useAddBusinessStore, {
+  BusinessStoreActions,
+  BusinessStoreTypes,
+} from '../store/Store';
 
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
@@ -37,8 +40,12 @@ export const TelephoneScreen = (props: StackScreenProps<GlobalParamList>) => {
   const { mutate: editTelephone } = useEditBusiness(route?.params?.id);
   const { data: businessData } = useBusiness(route?.params?.id);
 
-  const telephone = useAddBusinessStore((state: any) => state.telephone);
-  const setTelephone = useAddBusinessStore((state: any) => state.setTelephone);
+  const telephone = useAddBusinessStore(
+    (state: BusinessStoreTypes) => state.telephone,
+  );
+  const setTelephone = useAddBusinessStore(
+    (state: BusinessStoreActions) => state.setTelephone,
+  );
 
   const [addNumber, setAddNumber] = useState<Array<number>>([0]);
 
@@ -89,9 +96,9 @@ export const TelephoneScreen = (props: StackScreenProps<GlobalParamList>) => {
       />
 
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'android' ? null : 'padding'}
+        behavior={Platform.select({ android: undefined, ios: 'padding' })}
         keyboardVerticalOffset={offsetKeyboard}
-        style={{ flex: 1 }}>
+        style={styles.keyboardAvoidView}>
         <Formik
           initialValues={{
             telephone: isEditBusiness ? businessData?.telephone : telephone,
@@ -102,7 +109,7 @@ export const TelephoneScreen = (props: StackScreenProps<GlobalParamList>) => {
               editTelephone({ telephone: values.telephone });
               navigation.navigate('EditBusiness', { id: businessData?._id });
             } else {
-              setTelephone(values.telephone);
+              setTelephone(values?.telephone || '');
               navigation.navigate('Email');
             }
           }}>
