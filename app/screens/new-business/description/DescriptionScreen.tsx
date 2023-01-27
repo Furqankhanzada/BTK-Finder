@@ -17,7 +17,10 @@ import { BaseColor, BaseStyle } from '@config';
 import { styles } from '../styles/styles';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { useEditBusiness } from '../queries/mutations';
-import useAddBusinessStore from '../store/Store';
+import useAddBusinessStore, {
+  BusinessStoreActions,
+  BusinessStoreTypes,
+} from '../store/Store';
 
 const descriptionSchema = Yup.object({
   description: Yup.string().min(10),
@@ -30,9 +33,11 @@ export const DescriptionScreen = (props: StackScreenProps<GlobalParamList>) => {
   const { data: businessData } = useBusiness(route?.params?.id);
   const { mutate: editDescription } = useEditBusiness(route?.params?.id);
 
-  const description = useAddBusinessStore((state: any) => state.description);
+  const description = useAddBusinessStore(
+    (state: BusinessStoreTypes) => state.description,
+  );
   const setDescription = useAddBusinessStore(
-    (state: any) => state.setDescription,
+    (state: BusinessStoreActions) => state.setDescription,
   );
 
   const navigateToBack = () => {
@@ -70,9 +75,9 @@ export const DescriptionScreen = (props: StackScreenProps<GlobalParamList>) => {
       />
 
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'android' ? null : 'padding'}
+        behavior={Platform.select({ android: undefined, ios: 'padding' })}
         keyboardVerticalOffset={offsetKeyboard}
-        style={{ flex: 1 }}>
+        style={styles.keyboardAvoidView}>
         <Formik
           initialValues={{
             description: isEditBusiness
@@ -85,7 +90,7 @@ export const DescriptionScreen = (props: StackScreenProps<GlobalParamList>) => {
               editDescription({ description: values.description });
               navigation.navigate('EditBusiness', { id: businessData?._id });
             } else {
-              setDescription(values.description);
+              setDescription(values?.description ?? '');
               navigation.navigate('Category');
             }
           }}>
