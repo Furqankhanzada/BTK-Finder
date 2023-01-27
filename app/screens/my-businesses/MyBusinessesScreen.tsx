@@ -57,12 +57,6 @@ export default function MyBusinessesScreen(
     setIsRefreshing(false);
   };
 
-  const stateProps = useSelector(({ businesses }) => {
-    return {
-      getEditLoading: businesses.getSingleBusinessLoading,
-    };
-  });
-
   const onEndReached = () => {
     if (hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
@@ -98,16 +92,8 @@ export default function MyBusinessesScreen(
     navigation.navigate('BusinessDetailTabNavigator', { businessId: id });
   };
 
-  const navigateToReview = (id: string) => {
-    navigation.navigate('BusinessDetailTabNavigator', {
-      screen: 'ReviewStack',
-      params: { businessId: id },
-    });
-  };
-
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
-      <Loading loading={stateProps.getEditLoading} />
       <Header
         title={t('my_businesses')}
         renderLeft={() => {
@@ -127,12 +113,13 @@ export default function MyBusinessesScreen(
       {isLoading ? (
         <Loading loading={isLoading} />
       ) : (
-        <View style={{ flex: 1 }}>
+        <View style={styles.container}>
           <Animated.FlatList
-            contentContainerStyle={{
-              padding: 20,
-              flex: myBusinesses?.length ? 0 : 1,
-            }}
+            contentContainerStyle={[
+              styles.animatedFlatlist,
+              // eslint-disable-next-line react-native/no-inline-styles
+              { flex: myBusinesses?.length ? 0 : 1 },
+            ]}
             refreshControl={
               <RefreshControl
                 colors={[colors.primary]}
@@ -169,9 +156,8 @@ export default function MyBusinessesScreen(
                   title={item.name}
                   subtitle={item.category}
                   rate={item?.averageRatings || 0.0}
-                  style={{ marginBottom: 15 }}
+                  style={styles.cardList}
                   onPress={() => navigateBusinessDetail(item._id)}
-                  onPressTag={() => navigateToReview(item._id)}
                   editAble={true}
                   onPressEdit={() => onEdit(item._id)}
                 />
@@ -198,5 +184,14 @@ const styles = StyleSheet.create({
     padding: 15,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  container: {
+    flex: 1,
+  },
+  animatedFlatlist: {
+    padding: 20,
+  },
+  cardList: {
+    marginBottom: 15,
   },
 });

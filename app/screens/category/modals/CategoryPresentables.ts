@@ -11,4 +11,3 @@ export interface CategoryPresentable {
   text: string;
   category: object;
 }
-
