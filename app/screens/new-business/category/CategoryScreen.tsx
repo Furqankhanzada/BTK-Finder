@@ -18,7 +18,10 @@ import { styles } from '../styles/styles';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 import { useEditBusiness } from '../queries/mutations';
 import { useCategories } from '../../category/queries/queries';
-import useAddBusinessStore from '../store/Store';
+import useAddBusinessStore, {
+  BusinessStoreActions,
+  BusinessStoreTypes,
+} from '../store/Store';
 
 export const CategoryScreen = (props: StackScreenProps<GlobalParamList>) => {
   const { navigation, route } = props;
@@ -30,8 +33,12 @@ export const CategoryScreen = (props: StackScreenProps<GlobalParamList>) => {
   const { data: businessData } = useBusiness(route?.params?.id);
   const { mutate: editBusiness } = useEditBusiness(route?.params?.id);
 
-  const category = useAddBusinessStore((state: any) => state.category);
-  const setCategory = useAddBusinessStore((state: any) => state.setCategory);
+  const category = useAddBusinessStore(
+    (state: BusinessStoreTypes) => state.category,
+  );
+  const setCategory = useAddBusinessStore(
+    (state: BusinessStoreActions) => state.setCategory,
+  );
 
   const [selectedCategory, setSelectedCategory] = useState<string>(
     category ?? '',
@@ -102,9 +109,9 @@ export const CategoryScreen = (props: StackScreenProps<GlobalParamList>) => {
       />
 
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'android' ? null : 'padding'}
+        behavior={Platform.select({ android: undefined, ios: 'padding' })}
         keyboardVerticalOffset={offsetKeyboard}
-        style={{ flex: 1 }}>
+        style={styles.keyboardAvoidView}>
         <View style={styles.contain}>
           {categories ? (
             <TextInput
@@ -119,10 +126,10 @@ export const CategoryScreen = (props: StackScreenProps<GlobalParamList>) => {
             />
           ) : null}
           <FlatList
-            contentContainerStyle={{ paddingVertical: 10 }}
+            contentContainerStyle={styles.flatlistConatiner}
             data={items}
-            keyExtractor={(item: object, index: any) => {
-              return index;
+            keyExtractor={(item, index) => {
+              return `${index}-${item.name}`;
             }}
             renderItem={({ item, index }) => {
               const checked = selectedCategory === item.name;
@@ -131,11 +138,11 @@ export const CategoryScreen = (props: StackScreenProps<GlobalParamList>) => {
                   key={index}
                   style={[styles.item, { backgroundColor: colors.card }]}
                   onPress={() => onChange(item)}>
-                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <View style={styles.itemContent}>
                     <Icon
                       name={item.icon}
                       color={item?.checked ? colors.primary : colors.text}
-                      style={{ marginRight: 10 }}
+                      style={styles.checkIcon}
                       size={15}
                     />
                     <Text

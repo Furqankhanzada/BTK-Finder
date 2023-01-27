@@ -106,6 +106,13 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  itemContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  checkIcon: {
+    marginRight: 10,
+  },
   sectionEmpty: {
     alignItems: 'center',
     justifyContent: 'center',
