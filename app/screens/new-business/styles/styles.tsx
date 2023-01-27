@@ -59,6 +59,9 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 5,
   },
+  timingsText: {
+    paddingBottom: 20,
+  },
   footerButtons: {
     height: 40,
   },

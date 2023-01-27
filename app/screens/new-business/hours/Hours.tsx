@@ -15,7 +15,10 @@ import { styles } from '../styles/styles';
 import { useBusiness } from '@screens/businesses/queries/queries';
 import { OpenHours } from '@screens/businesses/models/BusinessPresentable';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
-import useAddBusinessStore from '../store/Store';
+import useAddBusinessStore, {
+  BusinessStoreActions,
+  BusinessStoreTypes,
+} from '../store/Store';
 import { useEditBusiness } from '../queries/mutations';
 
 export const Hours = (props: StackScreenProps<GlobalParamList>) => {
@@ -25,11 +28,15 @@ export const Hours = (props: StackScreenProps<GlobalParamList>) => {
   const { mutate: updateTimings } = useEditBusiness(route?.params?.id);
   const { data: businessData } = useBusiness(route?.params?.id);
 
-  const openHours = useAddBusinessStore((state: any) => state.openHours);
-  const setOpenHours = useAddBusinessStore((state: any) => state.setOpenHours);
+  const openHours = useAddBusinessStore(
+    (state: BusinessStoreTypes) => state.openHours,
+  );
+  const setOpenHours = useAddBusinessStore(
+    (state: BusinessStoreActions) => state.setOpenHours,
+  );
 
   const openHoursData = isEditBusiness ? businessData?.openHours : openHours;
-  const [selectedDays, setSelectedDays] = useState<any>([]);
+  const [selectedDays, setSelectedDays] = useState<OpenHours[]>([]);
 
   useEffect(() => {
     let array = [
@@ -42,15 +49,15 @@ export const Hours = (props: StackScreenProps<GlobalParamList>) => {
       { day: 'Sunday', from: '09:00 am', to: '05:00 pm', isOpen: false },
     ];
     if (openHoursData && openHoursData.length) {
-      const hoursWithIsOpen = openHoursData.map((day: any) => ({
+      const hoursWithIsOpen = openHoursData.map((day: OpenHours) => ({
         ...day,
         isOpen: true,
       }));
       array = hoursWithIsOpen
-        .map((v: any) => ({ ...v, isOpen: true }))
+        .map((v: OpenHours) => ({ ...v, isOpen: true }))
         .concat(
           array.filter(
-            ({ day }) => !hoursWithIsOpen.find((f: any) => f.day === day),
+            ({ day }) => !hoursWithIsOpen.find((f: OpenHours) => f.day === day),
           ),
         );
       setSelectedDays(array);
@@ -118,9 +125,9 @@ export const Hours = (props: StackScreenProps<GlobalParamList>) => {
       />
 
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'android' ? null : 'padding'}
+        behavior={Platform.select({ android: undefined, ios: 'padding' })}
         keyboardVerticalOffset={offsetKeyboard}
-        style={{ flex: 1 }}>
+        style={styles.keyboardAvoidView}>
         <FlatList
           style={styles.container}
           overScrollMode={'never'}
@@ -129,7 +136,7 @@ export const Hours = (props: StackScreenProps<GlobalParamList>) => {
           renderItem={() => {
             return (
               <View>
-                <Text style={{ paddingBottom: 20 }} title1 bold>
+                <Text style={styles.timingsText} title1 bold>
                   What are the timings of your business?{' '}
                   <Text body1>(optional)</Text>
                 </Text>
