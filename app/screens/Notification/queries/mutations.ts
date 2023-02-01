@@ -2,10 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { handleError, socket } from '@utils';
 
-import {
-  NOTIFICATIONS_USER_API,
-  UPLOAD_NOTIFICATION,
-} from '../../../constants';
+import { NOTIFICATIONS_USER_API, UPLOAD } from '../../../constants';
 import axiosApiInstance from '../../../interceptor/axios-interceptor';
 import { NotificationPresentable } from '../models/NotificationPresentable';
 
@@ -86,7 +83,7 @@ export const useUploadNotificationImage = () => {
     UploadProfileImagePayload
   >((payload) => {
     return axiosApiInstance
-      .post(`${UPLOAD_NOTIFICATION}/notification`, payload.form, {
+      .post(`${UPLOAD}notifications`, payload.form, {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
       .then((response) => response.data)
