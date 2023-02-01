@@ -18,5 +18,4 @@ export const NOTIFICATIONS_API = `${Config.API_URL}/notifications`;
 export const NOTIFICATIONS_USER_API = `${Config.API_URL}/notification-users`;
 export const DEVICES_API = `${Config.API_URL}/devices`;
 
-export const UPLOAD = `${Config.API_URL}/files/upload?folder=users`;
-export const UPLOAD_NOTIFICATION = `${Config.API_URL}/files/upload?folder=notifications`;
+export const UPLOAD = `${Config.API_URL}/files/upload?folder=`;
