@@ -1,5 +1,6 @@
 import React from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import ShortcutBadge from 'react-native-app-badge';
 
 import { handleError, socket } from '@utils';
 import { NOTIFICATIONS_API } from '../../../constants';
@@ -37,7 +38,12 @@ export const useNotifications = (
         url: `${NOTIFICATIONS_API}`,
         params: params,
       })
-        .then((response) => response.data)
+        .then((response) => {
+          if (params?.unreadCount) {
+            ShortcutBadge.setCount(response.data.unread);
+          }
+          return response.data;
+        })
         .catch(({ response }) => {
           handleError(response.data);
         });

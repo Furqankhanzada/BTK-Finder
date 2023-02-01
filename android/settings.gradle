@@ -1,4 +1,6 @@
 rootProject.name = 'explorebtk'
+include ':react-native-app-badge'
+project(':react-native-app-badge').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-app-badge/android')
 include ':react-native-config'
 project(':react-native-config').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-config/android')
 include ':react-native-safe-area-context'

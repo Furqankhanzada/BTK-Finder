@@ -44,6 +44,7 @@
     "react-i18next": "^11.8.10",
     "react-native": "0.67.1",
     "react-native-action-button": "^2.8.5",
+    "react-native-app-badge": "^0.1.5",
     "react-native-calendars": "^1.1254.0",
     "react-native-check-box": "^2.1.7",
     "react-native-config": "^1.4.2",
