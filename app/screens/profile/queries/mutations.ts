@@ -85,7 +85,7 @@ export const useUploadProfileImage = () => {
   >(
     (payload) => {
       return axiosApiInstance
-        .post(`${UPLOAD}/${payload.user._id}/profile`, payload.form, {
+        .post(`${UPLOAD}users/${payload.user._id}/profile`, payload.form, {
           headers: { 'Content-Type': 'multipart/form-data' },
         })
         .then((response) => response.data)
