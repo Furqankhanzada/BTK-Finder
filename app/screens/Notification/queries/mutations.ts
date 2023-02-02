@@ -1,3 +1,5 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import { useNavigation } from '@react-navigation/native';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { handleError, socket } from '@utils';
@@ -36,17 +38,23 @@ type NotificationPayload = Pick<
 export const useCreateNotification = () => {
   const navigation = useNavigation();
   return useMutation<NotificationPresentable, Error, NotificationPayload>(
-    (payload) => {
+    async (payload) => {
+      const token = await AsyncStorage.getItem('access_token');
       return new Promise((resolve, reject) => {
-        socket.emit('createNotification', payload, (response: any) => {
-          if (response?.errors) {
-            handleError(response);
-            reject(response);
-          } else {
-            navigation.goBack();
-            resolve(response);
-          }
-        });
+        socket.emit(
+          'createNotification',
+          payload,
+          { Authorization: `Bearer ${token}` },
+          (response: any) => {
+            if (response?.errors) {
+              handleError(response);
+              reject(response);
+            } else {
+              navigation.goBack();
+              resolve(response);
+            }
+          },
+        );
       });
     },
   );
