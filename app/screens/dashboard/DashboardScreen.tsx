@@ -28,7 +28,7 @@ import {
 import {
   useNotifications,
   useNotificationSubscription,
-} from '@screens/notification/queries/queries';
+} from '@screens/notifications/queries/queries';
 
 import { EVENTS, setUser, trackEvent } from '../../userTracking';
 import { GlobalParamList } from '../../navigation/models/GlobalParamList';
