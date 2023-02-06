@@ -28,8 +28,8 @@ import { BaseStyle, BaseColor, useTheme } from '@config';
 import { useAlerts } from '@hooks';
 import { StackScreenProps } from '@react-navigation/stack';
 import { AuthActions } from '@actions';
-import { GlobalParamList } from 'navigation/models/GlobalParamList';
 
+import { SettingsParamList } from 'navigation/models/SettingsParamList';
 import { IconName } from '../../../contexts/alerts-v2/models/Icon';
 import {
   EditProfilePayload,
@@ -41,7 +41,7 @@ import { EDIT_PROFILE_API_SUCCESS } from '../../../constants/auth';
 import AccountInfoAlertContent from './components/AccountInfoAlertContent';
 
 export default function ProfileEdit(
-  props: StackScreenProps<GlobalParamList, 'ProfileEdit'>,
+  props: StackScreenProps<SettingsParamList, 'ProfileEdit'>,
 ) {
   const { navigation } = props;
   const dispatch = useDispatch();
@@ -74,9 +74,7 @@ export default function ProfileEdit(
       //TODO: Will fix once we remove the redux from project.
       dispatch(AuthActions.authentication(false));
 
-      navigation.navigate('MainBottomTabNavigator', {
-        screen: 'DashboardStack',
-      });
+      navigation.goBack();
 
       showNotification({
         icon: {
