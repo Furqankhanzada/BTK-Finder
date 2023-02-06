@@ -1,5 +1,5 @@
 export interface CategoryPresentable {
-  checked: boolean;
+  checked?: boolean;
   order: number;
   _id: string;
   name: string;
