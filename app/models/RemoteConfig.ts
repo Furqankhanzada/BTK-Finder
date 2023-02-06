@@ -1,3 +1,5 @@
+import { Facility } from '@screens/businesses/models/BusinessPresentable';
+
 export interface HelplinesData {
   title: string;
   numbers: string[];
@@ -9,12 +11,6 @@ export interface HelplinesData {
 interface Helplines {
   title: string;
   data: HelplinesData[];
-}
-
-interface Facility {
-  name: string;
-  icon: string;
-  checked?: boolean;
 }
 
 export interface Tags {
