@@ -25,12 +25,22 @@ export default function NotificationsListScreen({
   const { t } = useTranslation();
   const { colors } = useTheme();
 
-  const [refreshing] = useState<boolean>(false);
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
 
-  const { data, isLoading } = useNotifications(['notifications'], {
+  const { data, isLoading, refetch } = useNotifications(['notifications'], {
     deviceUniqueId: getUniqueId(),
     recent: true,
   });
+  const { refetch: refecthCount } = useNotifications(['notifications-count'], {
+    deviceUniqueId: getUniqueId(),
+    unreadCount: true,
+  });
+
+  const onRefresh = async () => {
+    setIsRefreshing(true);
+    await refetch().then(refecthCount);
+    setIsRefreshing(false);
+  };
 
   const getIconName = (type?: NotificationType) => {
     switch (type) {
@@ -70,8 +80,8 @@ export default function NotificationsListScreen({
           <RefreshControl
             colors={[colors.primary]}
             tintColor={colors.primary}
-            refreshing={refreshing}
-            onRefresh={() => {}}
+            refreshing={isRefreshing}
+            onRefresh={onRefresh}
           />
         }
         data={Array.isArray(data) ? data : []}
