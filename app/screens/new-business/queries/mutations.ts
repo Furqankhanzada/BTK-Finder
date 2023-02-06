@@ -1,5 +1,4 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import Config from 'react-native-config';
 import { generateFileObject, handleError } from '../../../utils';
 
 import { useSelector } from 'react-redux';
@@ -64,13 +63,9 @@ export const useAddNewThumbnail = () => {
     const imageData = new FormData();
     imageData.append('file', generateFileObject(imagePath));
     return axiosApiInstance
-      .post(
-        `${Config.API_URL}/files/upload?folder=users/${_id}/businesses/`,
-        imageData,
-        {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        },
-      )
+      .post(`${UPLOAD}/${_id}/businesses/`, imageData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
       .then((res) => {
         setThumbnail(res.data.Location);
       })
@@ -119,7 +114,7 @@ export const useAddNewBusiness = () => {
   return useMutation<BusinessPresentable, Error, AddBusinessPayload>(
     (payload) => {
       return axiosApiInstance
-        .post(`${Config.API_URL}/businesses`, payload)
+        .post(`${BUSINESSES_API}`, payload)
         .then((response) => {
           Toast.show({
             type: 'success',
