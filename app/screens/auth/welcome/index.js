@@ -25,10 +25,6 @@ export default function Welcome(props) {
   const profileData = useSelector((state) => state.profile);
   const dispatch = useDispatch();
 
-  const navigateToMyBusinesses = (id) => {
-    navigation.navigate('MyBusinesses', { id });
-  };
-
   /**
    * @description Simple logout with Redux
    * @author Passion UI <passionui.com>
@@ -106,7 +102,7 @@ export default function Welcome(props) {
                   styles.profileItem,
                   { borderBottomColor: colors.border, borderBottomWidth: 1 },
                 ]}
-                onPress={() => navigateToMyBusinesses(profileData._id)}>
+                onPress={() => navigation.navigate('MyBusinesses')}>
                 <Text body1>{t('my_businesses')}</Text>
                 <Icon
                   name="angle-right"
