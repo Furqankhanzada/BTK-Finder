@@ -83,15 +83,18 @@ export default function CreateNotificationScreen(
     createNotification(removeEmptyKeys(notification));
   };
 
+  const onRemoveImage = () => {
+    setNotification({ ...notification, image: '' });
+  };
+
   const pickSingle = () => {
     ImagePicker.openPicker({
-      width: 250,
-      height: 250,
+      width: 1000,
+      height: 500,
       cropping: true,
-      cropperCircleOverlay: true,
       sortOrder: 'none',
       compressImageMaxWidth: 1000,
-      compressImageMaxHeight: 1000,
+      compressImageMaxHeight: 500,
       compressImageQuality: 1,
       compressVideoPreset: 'MediumQuality',
       includeExif: true,
@@ -161,7 +164,11 @@ export default function CreateNotificationScreen(
                 <TouchableOpacity
                   style={styles.actionButton}
                   onPress={() => {}}>
-                  <Icon style={styles.actionButtonIcon} name="minus" />
+                  <Icon
+                    style={styles.actionButtonIcon}
+                    name="minus"
+                    onPress={onRemoveImage}
+                  />
                 </TouchableOpacity>
                 <Image
                   style={styles.notificaitonImage}
