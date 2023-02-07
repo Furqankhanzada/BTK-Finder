@@ -132,27 +132,28 @@ export default function CreateNotificationScreen(
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
-      <Header
-        title="Create Notification"
-        renderLeft={() => {
-          return (
-            <Icon
-              name="arrow-left"
-              size={20}
-              color={colors.primary}
-              enableRTL={true}
-            />
-          );
-        }}
-        onPressLeft={() => {
-          navigation.goBack();
-        }}
-        onPressRight={() => {}}
-      />
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'android' ? 'height' : 'padding'}
+        behavior={Platform.OS === 'android' ? undefined : 'padding'}
         keyboardVerticalOffset={offsetKeyboard}
         style={styles.KeyboardAvoidingView}>
+        <Header
+          title="Create Notification"
+          renderLeft={() => {
+            return (
+              <Icon
+                name="arrow-left"
+                size={20}
+                color={colors.primary}
+                enableRTL={true}
+              />
+            );
+          }}
+          onPressLeft={() => {
+            navigation.goBack();
+          }}
+          onPressRight={() => {}}
+        />
+
         <ScrollView contentContainerStyle={styles.contain}>
           <View style={styles.imageContainer}>
             <Loading
@@ -211,7 +212,6 @@ export default function CreateNotificationScreen(
             }
             placeholder="Description*"
             value={notification?.description}
-            onSubmitEditing={() => linkRef.current?.focus()}
           />
 
           <TextInput
@@ -297,9 +297,12 @@ const styles = StyleSheet.create({
   contain: {
     alignItems: 'center',
     padding: 20,
+    paddingBottom: 50,
+    flexGrow: 1,
   },
   textArea: {
     height: 'auto',
+    minHeight: 100,
     marginBottom: 10,
   },
   textInput: {
