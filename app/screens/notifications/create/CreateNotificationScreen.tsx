@@ -177,7 +177,10 @@ export default function CreateNotificationScreen(
               </Fragment>
             ) : (
               <TouchableOpacity
-                style={styles.imageAddOverlay}
+                style={[
+                  styles.imageAddOverlay,
+                  { backgroundColor: colors.card },
+                ]}
                 onPress={() => pickSingle()}>
                 <Text semibold style={styles.imageAddOverlayText}>
                   Tap to add Notification Image
@@ -250,7 +253,7 @@ const styles = StyleSheet.create({
     height: 200,
     width: '100%',
     position: 'relative',
-    borderRadius: 5,
+    borderRadius: 6,
   },
   uploadImageLoading: {
     borderRadius: 5,
