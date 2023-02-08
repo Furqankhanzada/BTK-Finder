@@ -2,7 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { handleError, socket } from '@utils';
 
-import { NOTIFICATIONS_USER_API, UPLOAD } from '../../../constants';
+import { DELETE, NOTIFICATIONS_USER_API, UPLOAD } from '../../../constants';
 import axiosApiInstance from '../../../interceptor/axios-interceptor';
 import { NotificationPresentable } from '../models/NotificationPresentable';
 
@@ -84,6 +84,20 @@ export const useUploadNotificationImage = () => {
   >((payload) => {
     return axiosApiInstance
       .post(`${UPLOAD}notifications`, payload.form, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
+      .then((response) => response.data)
+      .catch(({ response }) => {
+        handleError(response.data);
+      });
+  });
+};
+
+// Need to test and finalize after backend work is done
+export const useDeleteNotificationImage = () => {
+  return useMutation<any, Error, any>((payload) => {
+    return axiosApiInstance
+      .post(`${DELETE}?filename=notifications/${payload.filename}`, {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
       .then((response) => response.data)
