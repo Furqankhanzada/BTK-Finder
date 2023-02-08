@@ -83,7 +83,7 @@ export const useUploadNotificationImage = () => {
     UploadProfileImagePayload
   >((payload) => {
     return axiosApiInstance
-      .post(`${UPLOAD}notifications`, payload.form, {
+      .post(`${UPLOAD}?folder=notifications`, payload.form, {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
       .then((response) => response.data)

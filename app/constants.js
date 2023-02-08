@@ -18,5 +18,5 @@ export const NOTIFICATIONS_API = `${Config.API_URL}/notifications`;
 export const NOTIFICATIONS_USER_API = `${Config.API_URL}/notification-users`;
 export const DEVICES_API = `${Config.API_URL}/devices`;
 
-export const UPLOAD = `${Config.API_URL}/files/upload?folder=`;
+export const UPLOAD = `${Config.API_URL}/files/upload`;
 export const DELETE = `${Config.API_URL}/files/delete`;

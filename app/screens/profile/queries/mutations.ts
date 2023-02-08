@@ -85,9 +85,13 @@ export const useUploadProfileImage = () => {
   >(
     (payload) => {
       return axiosApiInstance
-        .post(`${UPLOAD}users/${payload.user._id}/profile`, payload.form, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        })
+        .post(
+          `${UPLOAD}?folder=users/${payload.user._id}/profile`,
+          payload.form,
+          {
+            headers: { 'Content-Type': 'multipart/form-data' },
+          },
+        )
         .then((response) => response.data)
         .catch(({ response }) => {
           handleError(response.data);
