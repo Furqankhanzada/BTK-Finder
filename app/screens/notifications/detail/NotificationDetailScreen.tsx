@@ -5,7 +5,6 @@ import { getUniqueId } from 'react-native-device-info';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import ImageView from 'react-native-image-viewing';
 
-import * as Utils from '@utils';
 import {
   Header,
   SafeAreaView,
@@ -129,13 +128,10 @@ const styles = StyleSheet.create({
     paddingTop: 0,
   },
   imageContainer: {
-    width: '100%',
-    height: Utils.scaleWithPixel(200),
     borderRadius: 10,
   },
   image: {
-    width: '100%',
-    height: '100%',
+    aspectRatio: 1000 / 500,
     borderRadius: 10,
   },
   title: {
