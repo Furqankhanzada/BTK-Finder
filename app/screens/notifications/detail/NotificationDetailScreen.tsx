@@ -19,8 +19,8 @@ import { DashboardParamList } from 'navigation/models/DashboardParamList';
 import { useNotification } from '../queries/queries';
 import { useNotificationUserSave } from '../queries/mutations';
 
-export default function NotificationInfoScreen(
-  props: StackScreenProps<DashboardParamList, 'NotificationInfo'>,
+export default function NotificationDetailScreen(
+  props: StackScreenProps<DashboardParamList, 'NotificationDetail'>,
 ) {
   const { navigation, route } = props;
   const { t } = useTranslation();

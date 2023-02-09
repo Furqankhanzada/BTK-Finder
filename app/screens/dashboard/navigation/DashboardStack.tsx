@@ -5,7 +5,7 @@ import { DashboardParamList } from '../../../navigation/models/DashboardParamLis
 import HelpLine from '@screens/dashboard/helpline/HelplineScreen';
 import DashboardScreen from '@screens/dashboard/DashboardScreen';
 import NotificationsListScreen from '@screens/notifications/list/NotificationsListScreen';
-import NotificationInfoScreen from '@screens/notifications/info/NotificationInfoScreen';
+import NotificationDetailScreen from '@screens/notifications/detail/NotificationDetailScreen';
 
 const DashboardStack = createStackNavigator<DashboardParamList>();
 
@@ -23,8 +23,8 @@ export function DashboardStackNavigator() {
         component={NotificationsListScreen}
       />
       <DashboardStack.Screen
-        name="NotificationInfo"
-        component={NotificationInfoScreen}
+        name="NotificationDetail"
+        component={NotificationDetailScreen}
       />
     </DashboardStack.Navigator>
   );
