@@ -13,7 +13,7 @@ export interface NotificationPresentable {
   description: string;
   image?: string;
   link?: string;
-  type?: NotificationType;
+  type: NotificationType;
   read?: boolean;
   ownerId?: string;
 }

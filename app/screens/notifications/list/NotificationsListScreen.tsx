@@ -96,7 +96,7 @@ export default function NotificationsListScreen({
             txtLeftTitle={item.title}
             txtContent={item.description}
             txtSubContent={moment(item.createdAt).fromNow()}
-            style={styles.item}
+            style={[styles.item, { backgroundColor: colors.card }]}
             txtContentStyle={{ color: colors.text }}
             onPress={() =>
               navigation.navigate('NotificationDetail', {
@@ -125,6 +125,10 @@ const styles = StyleSheet.create({
   },
   item: {
     borderBottomWidth: 0,
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    paddingTop: 10,
+    paddingBottom: 10,
     marginBottom: 10,
   },
 });

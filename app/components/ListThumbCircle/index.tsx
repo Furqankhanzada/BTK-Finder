@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     width: 7,
     height: 7,
     borderRadius: 4,
-    marginRight: 7,
+    marginLeft: 7,
     alignSelf: 'center',
   },
   thumb: {
