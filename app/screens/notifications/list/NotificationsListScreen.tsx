@@ -51,7 +51,7 @@ export default function NotificationsListScreen({
       case 'User':
         return 'bell';
       case 'Review':
-        return 'comment-dots';
+        return 'star';
       default:
         return null;
     }

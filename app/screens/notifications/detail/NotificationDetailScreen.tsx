@@ -88,8 +88,10 @@ export default function NotificationDetailScreen(
               <Loading loading={isImageLoading} />
             </View>
           ) : null}
-          <Text title3>{data?.title}</Text>
-          <Text body2 style={styles.content}>
+          <Text title2 bold>
+            {data?.title}
+          </Text>
+          <Text body1 style={styles.content}>
             {data?.description}
           </Text>
           {data?.link ? (
