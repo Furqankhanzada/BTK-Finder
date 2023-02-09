@@ -14,7 +14,7 @@ import {
   Button,
   Loading,
 } from '@components';
-import { BaseStyle, Images, useTheme } from '@config';
+import { BaseStyle, useTheme } from '@config';
 import { DashboardParamList } from 'navigation/models/DashboardParamList';
 import { useNotification } from '../queries/queries';
 import { useNotificationUserSave } from '../queries/mutations';
@@ -80,14 +80,16 @@ export default function NotificationDetailScreen(
         <Loading loading={isLoading} />
       ) : (
         <View style={styles.container}>
-          <View style={styles.imageContainer}>
-            <Image
-              source={data?.image ?? Images.imagePlaceholder}
-              style={styles.image}
-              onLoadEnd={() => setImageLoading(false)}
-            />
-            <Loading loading={isImageLoading} />
-          </View>
+          {data?.image ? (
+            <View style={styles.imageContainer}>
+              <Image
+                source={data?.image}
+                style={styles.image}
+                onLoadEnd={() => setImageLoading(false)}
+              />
+              <Loading loading={isImageLoading} />
+            </View>
+          ) : null}
           <Text title3>{data?.title}</Text>
           <Text body2 style={styles.content}>
             {data?.description}
