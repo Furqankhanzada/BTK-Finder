@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Linking } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -28,6 +28,8 @@ export default function NotificationDetailScreen(
 
   const { data, isLoading } = useNotification(route?.params?.id);
   const { mutate } = useNotificationUserSave();
+
+  const [isImageLoading, setImageLoading] = useState(true);
 
   // const getButtonText = (type: string) => {
   //   if (type === 'facebook') {
@@ -78,10 +80,14 @@ export default function NotificationDetailScreen(
         <Loading loading={isLoading} />
       ) : (
         <View style={styles.container}>
-          <Image
-            source={data?.image ?? Images.imagePlaceholder}
-            style={styles.image}
-          />
+          <View style={styles.imageContainer}>
+            <Image
+              source={data?.image ?? Images.imagePlaceholder}
+              style={styles.image}
+              onLoadEnd={() => setImageLoading(false)}
+            />
+            <Loading loading={isImageLoading} />
+          </View>
           <Text title3>{data?.title}</Text>
           <Text body2 style={styles.content}>
             {data?.description}
@@ -106,12 +112,16 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 0,
   },
-  image: {
+  imageContainer: {
     width: '100%',
-    height: Utils.scaleWithPixel(300),
-    borderRadius: 10,
+    height: Utils.scaleWithPixel(200),
     marginTop: 5,
     marginBottom: 15,
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 10,
   },
   content: {
     marginTop: 10,
