@@ -1,10 +1,30 @@
 import React from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import {
+  View,
+  TouchableOpacity,
+  StyleProp,
+  ViewStyle,
+  TextStyle,
+  StyleSheet,
+} from 'react-native';
 import { Icon, Image, Text } from '@components';
-import styles from './styles';
-import PropTypes from 'prop-types';
 import { BaseColor, useTheme } from '@config';
-export default function ListThumbCircle(props) {
+
+type Props = {
+  style?: StyleProp<ViewStyle>;
+  imageStyle?: StyleProp<ViewStyle>;
+  image: string;
+  txtLeftTitle: string;
+  txtContent: string;
+  txtSubContent?: string;
+  txtContentStyle?: StyleProp<TextStyle>;
+  txtRight?: string;
+  iconRightName?: string;
+  onPress: () => void;
+  icon?: string | null;
+};
+
+export default function ListThumbCircle(props: Props) {
   const { colors } = useTheme();
   const {
     style,
@@ -21,11 +41,7 @@ export default function ListThumbCircle(props) {
   } = props;
   return (
     <TouchableOpacity
-      style={[
-        styles.contain,
-        { borderBottomWidth: 1, borderBottomColor: colors.border },
-        style,
-      ]}
+      style={[styles.contain, { borderBottomColor: colors.border }, style]}
       onPress={onPress}
       activeOpacity={0.9}>
       {!icon ? (
@@ -46,15 +62,18 @@ export default function ListThumbCircle(props) {
             {txtLeftTitle}
           </Text>
           <Text
-            note
             numberOfLines={2}
             footnote
             grayColor
-            style={[{ paddingTop: 5 }, txtContentStyle]}>
+            style={[styles.textContentStyle, txtContentStyle]}>
             {txtContent}
           </Text>
           {txtSubContent ? (
-            <Text caption2 grayColor numberOfLines={1} style={{ marginTop: 5 }}>
+            <Text
+              caption2
+              grayColor
+              numberOfLines={1}
+              style={styles.textSubContent}>
               {txtSubContent}
             </Text>
           ) : null}
@@ -81,29 +100,36 @@ export default function ListThumbCircle(props) {
   );
 }
 
-ListThumbCircle.propTypes = {
-  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-  imageStyle: PropTypes.object,
-  image: PropTypes.node.isRequired,
-  txtLeftTitle: PropTypes.string,
-  txtContent: PropTypes.string,
-  txtSubContent: PropTypes.string,
-  txtContentStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-  txtRight: PropTypes.string,
-  iconRightName: PropTypes.string,
-  onPress: PropTypes.func,
-  icon: PropTypes.string,
-};
-
-ListThumbCircle.defaultProps = {
-  style: {},
-  imageStyle: {},
-  image: '',
-  txtLeftTitle: '',
-  txtContent: '',
-  txtSubContent: null,
-  txtContentStyle: {},
-  txtRight: '',
-  iconRightName: null,
-  onPress: () => {},
-};
+const styles = StyleSheet.create({
+  contain: {
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    paddingTop: 5,
+    paddingBottom: 5,
+  },
+  thumb: { width: 48, height: 48, marginRight: 10, borderRadius: 24 },
+  icon: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  content: {
+    flex: 1,
+    flexDirection: 'row',
+  },
+  textContentStyle: {
+    paddingTop: 5,
+  },
+  textSubContent: {
+    marginTop: 5,
+  },
+  left: {
+    flex: 7.5,
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+  },
+  right: {
+    flex: 2.5,
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+  },
+});
