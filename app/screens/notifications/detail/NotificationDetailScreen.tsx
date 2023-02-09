@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Linking } from 'react-native';
-import { useTranslation } from 'react-i18next';
 import { StackScreenProps } from '@react-navigation/stack';
 import { getUniqueId } from 'react-native-device-info';
 
@@ -18,12 +17,12 @@ import { BaseStyle, useTheme } from '@config';
 import { DashboardParamList } from 'navigation/models/DashboardParamList';
 import { useNotification } from '../queries/queries';
 import { useNotificationUserSave } from '../queries/mutations';
+import { NotificationType } from '../models/NotificationPresentable';
 
 export default function NotificationDetailScreen(
   props: StackScreenProps<DashboardParamList, 'NotificationDetail'>,
 ) {
   const { navigation, route } = props;
-  const { t } = useTranslation();
   const { colors } = useTheme();
 
   const { data, isLoading } = useNotification(route?.params?.id);
@@ -31,21 +30,20 @@ export default function NotificationDetailScreen(
 
   const [isImageLoading, setImageLoading] = useState(true);
 
-  // const getButtonText = (type: string) => {
-  //   if (type === 'facebook') {
-  //     return 'Open Facebook Link';
-  //   }
-  //   if (type === 'business') {
-  //     return 'View Details';
-  //   }
-  // };
-
-  // const getButtonColor = (type: string) => {
-  //   if (type === 'facebook') {
-  //     return '#3b5998';
-  //   }
-  //   return colors.primary;
-  // };
+  const getTitle = (type?: NotificationType) => {
+    switch (type) {
+      case 'Announcement':
+        return 'Announcement';
+      case 'Business':
+        return 'Business';
+      case 'User':
+        return 'Notification';
+      case 'Review':
+        return 'Review Added';
+      default:
+        return null;
+    }
+  };
 
   useEffect(() => {
     if (!route?.params?.read) {
@@ -61,7 +59,7 @@ export default function NotificationDetailScreen(
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
-        title={t('notification_info')}
+        title={getTitle(data?.type)}
         renderLeft={() => {
           return (
             <Icon
