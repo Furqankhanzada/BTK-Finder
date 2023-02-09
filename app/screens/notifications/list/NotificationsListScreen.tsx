@@ -90,15 +90,13 @@ export default function NotificationsListScreen({
         keyExtractor={(item, index) => item._id + index}
         renderItem={({ item }) => (
           <ListThumbCircle
+            showPoint={!item.read}
             icon={getIconName(item?.type)}
             image={item?.image}
             txtLeftTitle={item.title}
             txtContent={item.description}
             txtSubContent={moment(item.createdAt).fromNow()}
-            style={[
-              styles.item,
-              !item.read && { backgroundColor: colors.primaryHighlight },
-            ]}
+            style={styles.item}
             txtContentStyle={{ color: colors.text }}
             onPress={() =>
               navigation.navigate('NotificationDetail', {
@@ -128,8 +126,5 @@ const styles = StyleSheet.create({
   item: {
     borderBottomWidth: 0,
     marginBottom: 10,
-    paddingLeft: 5,
-    paddingRight: 5,
-    borderRadius: 10,
   },
 });

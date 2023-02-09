@@ -22,6 +22,7 @@ type Props = {
   iconRightName?: string;
   onPress: () => void;
   icon?: string | null;
+  showPoint?: boolean;
 };
 
 export default function ListThumbCircle(props: Props) {
@@ -38,6 +39,7 @@ export default function ListThumbCircle(props: Props) {
     iconRightName,
     onPress,
     icon,
+    showPoint,
   } = props;
   return (
     <TouchableOpacity
@@ -101,6 +103,10 @@ export default function ListThumbCircle(props: Props) {
           </View>
         ) : null}
       </View>
+
+      {showPoint ? (
+        <View style={[styles.point, { backgroundColor: colors.primary }]} />
+      ) : null}
     </TouchableOpacity>
   );
 }
@@ -112,7 +118,19 @@ const styles = StyleSheet.create({
     paddingTop: 5,
     paddingBottom: 5,
   },
-  thumb: { width: 48, height: 48, marginRight: 10, borderRadius: 24 },
+  point: {
+    width: 7,
+    height: 7,
+    borderRadius: 4,
+    marginRight: 7,
+    alignSelf: 'center',
+  },
+  thumb: {
+    width: 48,
+    height: 48,
+    marginRight: 10,
+    borderRadius: 24,
+  },
   icon: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -134,7 +152,7 @@ const styles = StyleSheet.create({
   },
   right: {
     flex: 2.5,
-    alignItems: 'flex-end',
+    alignItems: 'center',
     justifyContent: 'center',
   },
 });
