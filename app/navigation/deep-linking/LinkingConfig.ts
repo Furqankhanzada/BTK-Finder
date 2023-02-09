@@ -13,6 +13,22 @@ export const linkingConfig: LinkingOptions<RootStackParamList> = {
         path: 'app',
         initialRouteName: 'MainBottomTabNavigator',
         screens: {
+          MainBottomTabNavigator: {
+            screens: {
+              DashboardStack: {
+                screens: {
+                  Notification: {
+                    path: 'notifications',
+                    exact: true,
+                  },
+                  NotificationDetail: {
+                    path: 'notifications/:id',
+                    exact: true,
+                  },
+                },
+              },
+            },
+          },
           Businesses: {
             path: 'businesses',
             exact: true,
