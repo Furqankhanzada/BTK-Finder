@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Linking } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { getUniqueId } from 'react-native-device-info';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import ImageView from 'react-native-image-viewing';
 
 import * as Utils from '@utils';
 import {
@@ -29,6 +31,7 @@ export default function NotificationDetailScreen(
   const { mutate } = useNotificationUserSave();
 
   const [isImageLoading, setImageLoading] = useState(true);
+  const [openImage, setOpenImage] = useState(false);
 
   const getTitle = (type?: NotificationType) => {
     switch (type) {
@@ -74,21 +77,32 @@ export default function NotificationDetailScreen(
           navigation.goBack();
         }}
       />
+
+      <ImageView
+        backgroundColor={colors.background}
+        images={[{ uri: data?.image }]}
+        imageIndex={0}
+        visible={openImage}
+        onRequestClose={() => setOpenImage(false)}
+      />
+
       {isLoading ? (
         <Loading loading={isLoading} />
       ) : (
         <View style={styles.container}>
           {data?.image ? (
-            <View style={styles.imageContainer}>
+            <TouchableOpacity
+              onPress={() => setOpenImage(true)}
+              style={styles.imageContainer}>
               <Image
                 source={data?.image}
                 style={styles.image}
                 onLoadEnd={() => setImageLoading(false)}
               />
               <Loading loading={isImageLoading} />
-            </View>
+            </TouchableOpacity>
           ) : null}
-          <Text title2 bold>
+          <Text title2 bold style={styles.title}>
             {data?.title}
           </Text>
           <Text body1 style={styles.content}>
@@ -117,13 +131,15 @@ const styles = StyleSheet.create({
   imageContainer: {
     width: '100%',
     height: Utils.scaleWithPixel(200),
-    marginTop: 5,
-    marginBottom: 15,
+    borderRadius: 20,
   },
   image: {
     width: '100%',
     height: '100%',
-    borderRadius: 10,
+    borderRadius: 20,
+  },
+  title: {
+    marginTop: 15,
   },
   content: {
     marginTop: 10,
