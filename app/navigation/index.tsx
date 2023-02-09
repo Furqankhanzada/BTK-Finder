@@ -8,6 +8,13 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
+import {
+  usePushNotifications,
+  useDynamicLinks,
+  useNativeUpdate,
+  useRemoteConfig,
+} from '@hooks';
+
 /* Modal Screen only affect iOS */
 import Filter from '@screens/Filter';
 import ChooseItems from '@screens/ChooseItems';
@@ -25,6 +32,15 @@ import { linkingConfig } from './deep-linking/LinkingConfig';
 const RootStack = createStackNavigator<RootStackParamList>();
 
 export default function Navigator() {
+  // Firebase Dynamic links handling
+  useDynamicLinks();
+  // Firebase push notification and cloud messaging
+  usePushNotifications();
+  // in-app update hook
+  useNativeUpdate();
+  // Firebase remote config
+  useRemoteConfig();
+
   const dispatch = useDispatch();
   const storeLanguage = useSelector((state: any) => state.application.language);
   const { theme, colors } = useTheme();
