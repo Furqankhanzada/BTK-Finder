@@ -126,7 +126,7 @@ export default function Welcome(props) {
                     styles.profileItem,
                     { borderBottomColor: colors.border, borderBottomWidth: 1 },
                   ]}
-                  onPress={() => navigation.navigate('CreateNotification')}>
+                  onPress={() => navigation.navigate('SendNotification')}>
                   <Text body1>{t('create_notification')}</Text>
                   <Icon
                     name="angle-right"

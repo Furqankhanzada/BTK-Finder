@@ -39,5 +39,5 @@ export type MainStackParamList = {
   MyBusinesses: undefined;
   EditBusiness: undefined;
   VerifyCode: undefined;
-  CreateNotification: undefined;
+  SendNotification: undefined;
 };

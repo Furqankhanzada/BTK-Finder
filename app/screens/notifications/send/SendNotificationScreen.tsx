@@ -26,6 +26,7 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { MainStackParamList } from 'navigation/models/MainStackParamList';
 import {
   useCreateNotification,
+  useDeleteNotificationImage,
   useUploadNotificationImage,
 } from '../queries/mutations';
 
@@ -37,14 +38,16 @@ interface NotificationType {
   type: string;
 }
 
-export default function CreateNotificationScreen(
-  props: StackScreenProps<MainStackParamList, 'CreateNotification'>,
+export default function SendNotificationScreen(
+  props: StackScreenProps<MainStackParamList, 'SendNotification'>,
 ) {
   const { navigation } = props;
   const { colors } = useTheme();
   // const { t } = useTranslation();
   const { mutate: uploadImage, isLoading: uploadImageLoading } =
     useUploadNotificationImage();
+  const { mutate: deleteImage, isLoading: deleteImageLoading } =
+    useDeleteNotificationImage();
   const { mutate: createNotification, isLoading: notificationLoading } =
     useCreateNotification();
 
@@ -53,6 +56,7 @@ export default function CreateNotificationScreen(
   const linkRef = useRef<TextInputOriginal>(null);
   const typeRef = useRef<TextInputOriginal>(null);
 
+  const [imageKey, setImageKey] = useState<string>('');
   const [notification, setNotification] = useState<NotificationType>({
     title: '',
     description: '',
@@ -84,7 +88,14 @@ export default function CreateNotificationScreen(
   };
 
   const onRemoveImage = () => {
-    setNotification({ ...notification, image: '' });
+    deleteImage(
+      { pathname: imageKey },
+      {
+        onSuccess() {
+          setNotification({ ...notification, image: '' });
+        },
+      },
+    );
   };
 
   const pickSingle = () => {
@@ -121,6 +132,7 @@ export default function CreateNotificationScreen(
           {
             onSuccess(response) {
               setNotification({ ...notification, image: response.Location });
+              setImageKey(response.key);
             },
           },
         );
@@ -157,7 +169,7 @@ export default function CreateNotificationScreen(
         <ScrollView contentContainerStyle={styles.contain}>
           <View style={styles.imageContainer}>
             <Loading
-              loading={uploadImageLoading}
+              loading={uploadImageLoading || deleteImageLoading}
               style={styles.uploadImageLoading}
             />
             {notification.image ? (

@@ -41,7 +41,7 @@ import Gallery from '@screens/AddBusiness/gallery';
 import MyBusinessesScreen from '@screens/my-businesses/MyBusinessesScreen';
 import { DashboardStackNavigator } from '@screens/dashboard/navigation/DashboardStack';
 import BusinessesScreen from '@screens/businesses/list/BusinessesScreen';
-import CreateNotificationScreen from '@screens/notifications/create/CreateNotificationScreen';
+import SendNotificationScreen from '@screens/notifications/send/SendNotificationScreen';
 
 import { MainStackParamList } from './models/MainStackParamList';
 import { MainBottomTabParamList } from './models/MainBottomTabParamList';
@@ -90,8 +90,8 @@ export default function Main() {
       <MainStack.Screen name="EditBusiness" component={Business} />
       <MainStack.Screen name="VerifyCode" component={VerifyCode} />
       <MainStack.Screen
-        name="CreateNotification"
-        component={CreateNotificationScreen}
+        name="SendNotification"
+        component={SendNotificationScreen}
       />
     </MainStack.Navigator>
   );
