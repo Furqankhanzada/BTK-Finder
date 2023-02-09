@@ -20,13 +20,18 @@ interface NotificationUsersResponse {
   userId?: string;
 }
 
-export interface UploadProfileImagePayload {
+export interface UploadNotificationImagePayload {
   form: any;
 }
 
-export type UploadProfileImageResponse = {
+export type UploadNotificationImageResponse = {
   Location: string;
+  key: string;
 };
+
+export interface DeleteNotificationImagePayload {
+  pathname: string;
+}
 
 type NotificationPayload = Pick<
   NotificationPresentable,
@@ -78,9 +83,9 @@ export const useNotificationUserSave = () => {
 
 export const useUploadNotificationImage = () => {
   return useMutation<
-    UploadProfileImageResponse,
+    UploadNotificationImageResponse,
     Error,
-    UploadProfileImagePayload
+    UploadNotificationImagePayload
   >((payload) => {
     return axiosApiInstance
       .post(`${UPLOAD}?folder=notifications`, payload.form, {
@@ -93,16 +98,17 @@ export const useUploadNotificationImage = () => {
   });
 };
 
-// Need to test and finalize after backend work is done
 export const useDeleteNotificationImage = () => {
-  return useMutation<any, Error, any>((payload) => {
-    return axiosApiInstance
-      .post(`${DELETE}?filename=notifications/${payload.filename}`, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      })
-      .then((response) => response.data)
-      .catch(({ response }) => {
-        handleError(response.data);
-      });
-  });
+  return useMutation<Object, Error, DeleteNotificationImagePayload>(
+    (payload) => {
+      return axiosApiInstance
+        .post(`${DELETE}?pathname=${payload.pathname}`, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        })
+        .then((response) => response.data)
+        .catch(({ response }) => {
+          handleError(response.data);
+        });
+    },
+  );
 };
