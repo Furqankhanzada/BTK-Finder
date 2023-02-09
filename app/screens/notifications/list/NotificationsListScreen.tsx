@@ -13,7 +13,7 @@ import {
   Text,
   Loading,
 } from '@components';
-import { BaseStyle, Images, useTheme } from '@config';
+import { BaseStyle, useTheme } from '@config';
 import { GlobalParamList } from 'navigation/models/GlobalParamList';
 
 import { useNotifications } from '../queries/queries';
@@ -46,6 +46,8 @@ export default function NotificationsListScreen({
     switch (type) {
       case 'Announcement':
         return 'bullhorn';
+      case 'Business':
+        return 'building';
       case 'User':
         return 'bell';
       case 'Review':
@@ -89,7 +91,7 @@ export default function NotificationsListScreen({
         renderItem={({ item }) => (
           <ListThumbCircle
             icon={getIconName(item?.type)}
-            image={item?.image ?? Images.imagePlaceholder}
+            image={item?.image}
             txtLeftTitle={item.title}
             txtContent={item.description}
             txtSubContent={moment(item.createdAt).fromNow()}

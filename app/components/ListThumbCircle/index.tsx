@@ -8,12 +8,12 @@ import {
   StyleSheet,
 } from 'react-native';
 import { Icon, Image, Text } from '@components';
-import { BaseColor, useTheme } from '@config';
+import { BaseColor, Images, useTheme } from '@config';
 
 type Props = {
   style?: StyleProp<ViewStyle>;
   imageStyle?: StyleProp<ViewStyle>;
-  image: string;
+  image?: string;
   txtLeftTitle: string;
   txtContent: string;
   txtSubContent?: string;
@@ -44,9 +44,9 @@ export default function ListThumbCircle(props: Props) {
       style={[styles.contain, { borderBottomColor: colors.border }, style]}
       onPress={onPress}
       activeOpacity={0.9}>
-      {!icon ? (
+      {image ? (
         <Image source={image} style={[styles.thumb, imageStyle]} />
-      ) : (
+      ) : icon ? (
         <View
           style={[
             styles.thumb,
@@ -55,6 +55,11 @@ export default function ListThumbCircle(props: Props) {
           ]}>
           <Icon name={icon} size={20} color={BaseColor.whiteColor} />
         </View>
+      ) : (
+        <Image
+          source={Images.imagePlaceholder}
+          style={[styles.thumb, imageStyle]}
+        />
       )}
       <View style={styles.content}>
         <View style={styles.left}>
