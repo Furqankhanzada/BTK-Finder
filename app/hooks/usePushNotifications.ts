@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Platform } from 'react-native';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   getSystemName,
   getSystemVersion,
@@ -13,36 +14,70 @@ import messaging, {
   FirebaseMessagingTypes,
 } from '@react-native-firebase/messaging';
 
-import { navigateToLink } from '@utils';
-import { useDeviceRegisteration } from '@screens/dashboard/queries/mutations';
-import { useNotificationSubscription } from '@screens/notifications/queries/queries';
+import { handleError, navigateToLink, socket } from '@utils';
+
+import axiosApiInstance from '../interceptor/axios-interceptor';
+import { DEVICES_API } from '../constants';
+
+type Device = {
+  _id: string;
+  createdAt: string;
+  updatedAt: string;
+  userId?: string;
+  deviceUniqueId: string;
+  fcmToken: string;
+  os: string;
+  osVersion: string;
+};
+
+type DevicePayload = Pick<
+  Device,
+  'deviceUniqueId' | 'fcmToken' | 'os' | 'osVersion' | 'userId'
+>;
+
+export const useDeviceRegistration = () => {
+  return useMutation<Device, Error, DevicePayload>((payload) => {
+    return axiosApiInstance({
+      method: 'POST',
+      url: DEVICES_API,
+      data: payload,
+    })
+      .then((response) => response.data)
+      .catch(({ response }) => {
+        handleError(response.data);
+      });
+  });
+};
 
 export default function usePushNotifications() {
   const [localNotificationInfo, setLocalNotificationInfo] =
     useState<FirebaseMessagingTypes.RemoteMessage | null>(null);
-  const [fcmToken, setFcmToken] = useState<string>('');
-  const { mutate: registerDevice } = useDeviceRegisteration();
-  useNotificationSubscription();
 
-  async function getFcmToken() {
-    const token = await messaging().getToken();
-    setFcmToken(token);
-  }
+  const { mutate: registerDevice } = useDeviceRegistration();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
-    getFcmToken();
-  }, []);
-
-  useEffect(() => {
-    if (fcmToken !== '') {
+    const getFcmToken = async () => {
+      const fcmToken = await messaging().getToken();
       registerDevice({
         deviceUniqueId: getUniqueId(),
-        fcmToken: fcmToken,
+        fcmToken,
         os: getSystemName(),
         osVersion: getSystemVersion(),
       });
-    }
-  }, [registerDevice, fcmToken]);
+    };
+    getFcmToken();
+  }, [registerDevice]);
+
+  useEffect(() => {
+    socket.on('notification', () => {
+      queryClient.invalidateQueries(['notifications']);
+      queryClient.invalidateQueries(['notifications-count']);
+    });
+    return () => {
+      socket.removeListener('notification');
+    };
+  }, [queryClient]);
 
   // request user permission
   useEffect(() => {

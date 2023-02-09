@@ -1,7 +1,7 @@
-import React from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
-import { handleError, socket } from '@utils';
+import { handleError } from '@utils';
+
 import { NOTIFICATIONS_API } from '../../../constants';
 import {
   NotificationCountPresentable,
@@ -14,16 +14,6 @@ interface NotificationsParams {
   recent?: boolean;
   unreadCount?: boolean;
 }
-
-export const useNotificationSubscription = () => {
-  const queryClient = useQueryClient();
-  React.useEffect(() => {
-    socket.on('notification', () => {
-      queryClient.invalidateQueries(['notifications']);
-      queryClient.invalidateQueries(['notifications-count']);
-    });
-  }, [queryClient]);
-};
 
 export const useNotifications = (
   key: Array<string | number>,
