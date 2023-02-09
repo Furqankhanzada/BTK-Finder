@@ -1,5 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Platform } from 'react-native';
+import {
+  getSystemName,
+  getSystemVersion,
+  getUniqueId,
+} from 'react-native-device-info';
 import PushNotification from 'react-native-push-notification';
 import PushNotificationIOS, {
   PushNotification as PushNotificationIOSType,
@@ -9,10 +14,35 @@ import messaging, {
 } from '@react-native-firebase/messaging';
 
 import { navigateToLink } from '@utils';
+import { useDeviceRegisteration } from '@screens/dashboard/queries/mutations';
+import { useNotificationSubscription } from '@screens/notifications/queries/queries';
 
 export default function usePushNotifications() {
   const [localNotificationInfo, setLocalNotificationInfo] =
     useState<FirebaseMessagingTypes.RemoteMessage | null>(null);
+  const [fcmToken, setFcmToken] = useState<string>('');
+  const { mutate: registerDevice } = useDeviceRegisteration();
+  useNotificationSubscription();
+
+  async function getFcmToken() {
+    const token = await messaging().getToken();
+    setFcmToken(token);
+  }
+
+  useEffect(() => {
+    getFcmToken();
+  }, []);
+
+  useEffect(() => {
+    if (fcmToken !== '') {
+      registerDevice({
+        deviceUniqueId: getUniqueId(),
+        fcmToken: fcmToken,
+        os: getSystemName(),
+        osVersion: getSystemVersion(),
+      });
+    }
+  }, [registerDevice, fcmToken]);
 
   // request user permission
   useEffect(() => {

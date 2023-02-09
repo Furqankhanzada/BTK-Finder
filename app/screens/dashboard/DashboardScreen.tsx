@@ -3,12 +3,7 @@ import { FlatList, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useDispatch, useSelector } from 'react-redux';
 import { firebase } from '@react-native-firebase/database';
-import {
-  getSystemName,
-  getSystemVersion,
-  getUniqueId,
-} from 'react-native-device-info';
-import messaging from '@react-native-firebase/messaging';
+import { getUniqueId } from 'react-native-device-info';
 import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
 
 import { SafeAreaView, Icon, Text, Tag, Image, Header } from '@components';
@@ -25,16 +20,12 @@ import {
   BannerPresentable,
   BannersPresentable,
 } from '@screens/dashboard/models/BannersPresentable';
-import {
-  useNotifications,
-  useNotificationSubscription,
-} from '@screens/notifications/queries/queries';
+import { useNotifications } from '@screens/notifications/queries/queries';
 
 import { EVENTS, setUser, trackEvent } from '../../userTracking';
 import { GlobalParamList } from '../../navigation/models/GlobalParamList';
 import { MainStackParamList } from '../../navigation/models/MainStackParamList';
 import { getProfile } from '../../actions/auth';
-import { useDeviceRegisteration } from './queries/mutations';
 import {
   dashboardBannerUnitIdOne,
   dashboardBannerUnitIdTwo,
@@ -59,29 +50,6 @@ function DashboardScreen({
   });
 
   const [banners, setBanners] = useState<BannersPresentable>();
-  const [fcmToken, setFcmToken] = useState<string>('');
-  const { mutate: registerDevice } = useDeviceRegisteration();
-  useNotificationSubscription();
-
-  async function getFcmToken() {
-    const token = await messaging().getToken();
-    setFcmToken(token);
-  }
-
-  useEffect(() => {
-    getFcmToken();
-  }, []);
-
-  useEffect(() => {
-    if (fcmToken !== '') {
-      registerDevice({
-        deviceUniqueId: getUniqueId(),
-        fcmToken: fcmToken,
-        os: getSystemName(),
-        osVersion: getSystemVersion(),
-      });
-    }
-  }, [registerDevice, fcmToken]);
 
   useEffect(() => {
     const onValueChange = database
