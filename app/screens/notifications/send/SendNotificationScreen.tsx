@@ -76,7 +76,7 @@ export default function SendNotificationScreen(
   };
 
   const onSubmit = async (data: NotificationType) => {
-    createNotification(removeEmptyKeys(data));
+    createNotification(removeEmptyKeys({ ...data, image: notificationImage }));
   };
 
   const onRemoveImage = () => {
