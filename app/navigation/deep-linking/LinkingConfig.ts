@@ -17,13 +17,17 @@ export const linkingConfig: LinkingOptions<RootStackParamList> = {
             screens: {
               DashboardStack: {
                 screens: {
-                  Notification: {
-                    path: 'notifications',
-                    exact: true,
-                  },
-                  NotificationDetail: {
-                    path: 'notifications/:id',
-                    exact: true,
+                  NotificationStack: {
+                    screens: {
+                      Notification: {
+                        path: 'notifications',
+                        exact: true,
+                      },
+                      NotificationDetail: {
+                        path: 'notifications/:id',
+                        exact: true,
+                      },
+                    },
                   },
                 },
               },
