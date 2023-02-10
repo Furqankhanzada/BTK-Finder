@@ -12,16 +12,16 @@ import { BaseColor, Images, useTheme } from '@config';
 
 type Props = {
   style?: StyleProp<ViewStyle>;
-  imageStyle?: StyleProp<ViewStyle>;
+  thumbStyle?: StyleProp<ViewStyle>;
+  txtContentStyle?: StyleProp<TextStyle>;
   image?: string;
   txtLeftTitle: string;
   txtContent: string;
   txtSubContent?: string;
-  txtContentStyle?: StyleProp<TextStyle>;
   txtRight?: string;
   iconRightName?: string;
   onPress: () => void;
-  icon?: string | null;
+  thumbIconName?: string | null;
   showPoint?: boolean;
 };
 
@@ -29,7 +29,7 @@ export default function ListThumbCircle(props: Props) {
   const { colors } = useTheme();
   const {
     style,
-    imageStyle,
+    thumbStyle,
     image,
     txtLeftTitle,
     txtContent,
@@ -38,7 +38,7 @@ export default function ListThumbCircle(props: Props) {
     txtRight,
     iconRightName,
     onPress,
-    icon,
+    thumbIconName,
     showPoint,
   } = props;
   return (
@@ -47,20 +47,21 @@ export default function ListThumbCircle(props: Props) {
       onPress={onPress}
       activeOpacity={0.9}>
       {image ? (
-        <Image source={image} style={[styles.thumb, imageStyle]} />
-      ) : icon ? (
+        <Image source={image} style={[styles.thumb, thumbStyle]} />
+      ) : thumbIconName ? (
         <View
           style={[
             styles.thumb,
             styles.icon,
             { backgroundColor: colors.primary },
+            thumbStyle,
           ]}>
-          <Icon name={icon} size={20} color={BaseColor.whiteColor} />
+          <Icon name={thumbIconName} size={20} color={BaseColor.whiteColor} />
         </View>
       ) : (
         <Image
           source={Images.imagePlaceholder}
-          style={[styles.thumb, imageStyle]}
+          style={[styles.thumb, thumbStyle]}
         />
       )}
       <View style={styles.content}>
@@ -152,7 +153,7 @@ const styles = StyleSheet.create({
   },
   right: {
     flex: 2.5,
-    alignItems: 'center',
+    alignItems: 'flex-end',
     justifyContent: 'center',
   },
 });
