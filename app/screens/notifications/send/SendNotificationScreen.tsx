@@ -213,11 +213,11 @@ export default function SendNotificationScreen(
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
+                success={!errors.title}
               />
             )}
             name="title"
           />
-          {errors.title && <Text>Title is required.</Text>}
 
           <Controller
             control={control}
@@ -235,11 +235,11 @@ export default function SendNotificationScreen(
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
+                success={!errors.description}
               />
             )}
             name="description"
           />
-          {errors.description && <Text>Description is required.</Text>}
 
           <Controller
             control={control}
