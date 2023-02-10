@@ -1,8 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
 
 import { handleError } from '@utils';
-import { DELETE } from '../../constants';
-import axiosApiInstance from '../../interceptor/axios-interceptor';
+
+import { DELETE } from '../constants';
+import axiosApiInstance from '../interceptor/axios-interceptor';
 
 export interface DeleteImagePayload {
   pathname: string;

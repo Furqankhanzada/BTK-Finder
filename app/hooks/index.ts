@@ -5,7 +5,6 @@ import usLocation from './useLocation';
 import useLocalStorage from './useLocalStorage';
 import useRemoteConfig from './useRemoteConfig';
 import { useAlerts } from './useAlerts';
-import { useDeleteImage } from './apis/mutations';
 
 export {
   usePushNotifications,
@@ -15,5 +14,4 @@ export {
   useLocalStorage,
   useRemoteConfig,
   useAlerts,
-  useDeleteImage,
 };

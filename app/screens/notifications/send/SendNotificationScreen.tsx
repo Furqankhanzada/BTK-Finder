@@ -24,12 +24,13 @@ import {
 import { BaseStyle, BaseColor, useTheme } from '@config';
 import { StackScreenProps } from '@react-navigation/stack';
 import { MainStackParamList } from 'navigation/models/MainStackParamList';
-import { useDeleteImage } from '@hooks';
+
 import {
   useCreateNotification,
   useUploadNotificationImage,
 } from '../queries/mutations';
 import { NotificationPresentable } from '../models/NotificationPresentable';
+import { useDeleteImage } from '../../../apis/mutations';
 
 type NotificationType = Pick<
   NotificationPresentable,
