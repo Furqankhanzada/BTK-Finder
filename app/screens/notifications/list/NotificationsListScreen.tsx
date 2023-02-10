@@ -44,13 +44,13 @@ export default function NotificationsListScreen({
 
   const getIconName = (type?: NotificationType) => {
     switch (type) {
-      case 'Announcement':
+      case NotificationType.ANNOUNCEMENT:
         return 'bullhorn';
-      case 'Business':
+      case NotificationType.BUSINESS:
         return 'building';
-      case 'User':
+      case NotificationType.USER:
         return 'bell';
-      case 'Review':
+      case NotificationType.REVIEW:
         return 'star';
       default:
         return null;
