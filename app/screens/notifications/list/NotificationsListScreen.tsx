@@ -123,14 +123,12 @@ export default function NotificationsListScreen({
 
 const styles = StyleSheet.create({
   item: {
-    paddingHorizontal: 10,
-    paddingTop: 10,
-    paddingBottom: 10,
-    borderBottomWidth: 0,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
   },
   thumb: {
     width: 60,
     height: 60,
-    borderRadius: 30,
+    borderRadius: 60 / 2,
   },
 });
