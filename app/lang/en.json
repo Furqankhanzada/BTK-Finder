@@ -147,5 +147,5 @@
   "businessesWhereGaveReviewsCount": "You gave {{count}} review to other business.",
   "businessesWhereGaveReviewsCount_plural": "You gave {{count}} reviews to other businesses.",
   "update": "Update",
-  "create_notification": "Create Notification"
+  "send_notification": "Send Notification"
 }

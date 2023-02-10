@@ -149,7 +149,7 @@ export default function SendNotificationScreen(
         keyboardVerticalOffset={offsetKeyboard}
         style={styles.KeyboardAvoidingView}>
         <Header
-          title="Create Notification"
+          title="Send Notification"
           renderLeft={() => {
             return (
               <Icon
