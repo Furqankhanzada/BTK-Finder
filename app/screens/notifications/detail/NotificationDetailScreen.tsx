@@ -15,13 +15,13 @@ import {
   Loading,
 } from '@components';
 import { BaseStyle, useTheme } from '@config';
-import { DashboardParamList } from 'navigation/models/DashboardParamList';
+import { NotificationParamList } from 'navigation/models/NotificationParamList';
 import { useNotification } from '../queries/queries';
 import { useNotificationUserSave } from '../queries/mutations';
 import { NotificationType } from '../models/NotificationPresentable';
 
 export default function NotificationDetailScreen(
-  props: StackScreenProps<DashboardParamList, 'NotificationDetail'>,
+  props: StackScreenProps<NotificationParamList, 'NotificationDetail'>,
 ) {
   const { navigation, route } = props;
   const { colors } = useTheme();

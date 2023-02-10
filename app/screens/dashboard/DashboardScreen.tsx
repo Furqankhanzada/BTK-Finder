@@ -191,7 +191,11 @@ function DashboardScreen({
             </View>
           );
         }}
-        onPressRight={() => navigation.navigate('Notification')}
+        onPressRight={() =>
+          navigation.navigate('NotificationStack', {
+            screen: 'Notification',
+          })
+        }
       />
       <TouchableOpacity
         onPress={() => navigation.navigate('Filter', {})}

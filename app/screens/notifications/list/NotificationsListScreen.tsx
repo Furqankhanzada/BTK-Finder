@@ -14,14 +14,14 @@ import {
   Loading,
 } from '@components';
 import { BaseStyle, useTheme } from '@config';
-import { GlobalParamList } from 'navigation/models/GlobalParamList';
+import { NotificationParamList } from 'navigation/models/NotificationParamList';
 
 import { useNotifications } from '../queries/queries';
 import { NotificationType } from '../models/NotificationPresentable';
 
 export default function NotificationsListScreen({
   navigation,
-}: StackScreenProps<GlobalParamList>) {
+}: StackScreenProps<NotificationParamList, 'Notification'>) {
   const { t } = useTranslation();
   const { colors } = useTheme();
 

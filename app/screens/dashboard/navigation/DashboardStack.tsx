@@ -1,11 +1,10 @@
+import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import React from 'react';
 import { DashboardParamList } from '../../../navigation/models/DashboardParamList';
 import HelpLine from '@screens/dashboard/helpline/HelplineScreen';
 import DashboardScreen from '@screens/dashboard/DashboardScreen';
-import NotificationsListScreen from '@screens/notifications/list/NotificationsListScreen';
-import NotificationDetailScreen from '@screens/notifications/detail/NotificationDetailScreen';
+import { NotificationStackNavigator } from './NotificationStack';
 
 const DashboardStack = createStackNavigator<DashboardParamList>();
 
@@ -19,12 +18,8 @@ export function DashboardStackNavigator() {
         component={HelpLine}
       />
       <DashboardStack.Screen
-        name="Notification"
-        component={NotificationsListScreen}
-      />
-      <DashboardStack.Screen
-        name="NotificationDetail"
-        component={NotificationDetailScreen}
+        name="NotificationStack"
+        component={NotificationStackNavigator}
       />
     </DashboardStack.Navigator>
   );

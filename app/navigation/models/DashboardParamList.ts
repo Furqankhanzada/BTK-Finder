@@ -1,6 +1,8 @@
+import { NavigatorScreenParams } from '@react-navigation/native';
+import { NotificationParamList } from './NotificationParamList';
+
 export type DashboardParamList = {
   Dashboard: undefined;
   HelpLine: undefined;
-  Notification: undefined;
-  NotificationDetail: { id: string; read: boolean };
+  NotificationStack: NavigatorScreenParams<NotificationParamList>;
 };
