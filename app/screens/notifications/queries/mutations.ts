@@ -2,7 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { handleError, socket } from '@utils';
 
-import { DELETE, NOTIFICATIONS_USER_API, UPLOAD } from '../../../constants';
+import { NOTIFICATIONS_USER_API, UPLOAD } from '../../../constants';
 import axiosApiInstance from '../../../interceptor/axios-interceptor';
 import { NotificationPresentable } from '../models/NotificationPresentable';
 
@@ -28,10 +28,6 @@ export type UploadNotificationImageResponse = {
   Location: string;
   key: string;
 };
-
-export interface DeleteNotificationImagePayload {
-  pathname: string;
-}
 
 type NotificationPayload = Pick<
   NotificationPresentable,
@@ -96,19 +92,4 @@ export const useUploadNotificationImage = () => {
         handleError(response.data);
       });
   });
-};
-
-export const useDeleteNotificationImage = () => {
-  return useMutation<Object, Error, DeleteNotificationImagePayload>(
-    (payload) => {
-      return axiosApiInstance
-        .post(`${DELETE}?pathname=${payload.pathname}`, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        })
-        .then((response) => response.data)
-        .catch(({ response }) => {
-          handleError(response.data);
-        });
-    },
-  );
 };

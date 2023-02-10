@@ -24,9 +24,9 @@ import {
 import { BaseStyle, BaseColor, useTheme } from '@config';
 import { StackScreenProps } from '@react-navigation/stack';
 import { MainStackParamList } from 'navigation/models/MainStackParamList';
+import { useDeleteImage } from '@hooks';
 import {
   useCreateNotification,
-  useDeleteNotificationImage,
   useUploadNotificationImage,
 } from '../queries/mutations';
 
@@ -47,7 +47,7 @@ export default function SendNotificationScreen(
   const { mutate: uploadImage, isLoading: uploadImageLoading } =
     useUploadNotificationImage();
   const { mutate: deleteImage, isLoading: deleteImageLoading } =
-    useDeleteNotificationImage();
+    useDeleteImage();
   const { mutate: createNotification, isLoading: notificationLoading } =
     useCreateNotification();
 
