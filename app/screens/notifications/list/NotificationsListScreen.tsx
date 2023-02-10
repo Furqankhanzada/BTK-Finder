@@ -77,7 +77,6 @@ export default function NotificationsListScreen({
         }}
       />
       <FlatList
-        contentContainerStyle={styles.listContainer}
         refreshControl={
           <RefreshControl
             colors={[colors.primary]}
@@ -90,14 +89,18 @@ export default function NotificationsListScreen({
         keyExtractor={(item, index) => item._id + index}
         renderItem={({ item }) => (
           <ListThumbCircle
-            showPoint={!item.read}
-            icon={getIconName(item?.type)}
+            style={[
+              styles.item,
+              !item.read ? { backgroundColor: colors.card } : {},
+            ]}
+            thumbStyle={styles.thumb}
+            txtContentStyle={{ color: colors.text }}
             image={item?.image}
+            thumbIconName={getIconName(item?.type)}
             txtLeftTitle={item.title}
             txtContent={item.description}
             txtSubContent={moment(item.createdAt).fromNow()}
-            style={[styles.item, { backgroundColor: colors.card }]}
-            txtContentStyle={{ color: colors.text }}
+            showPoint={!item.read}
             onPress={() =>
               navigation.navigate('NotificationDetail', {
                 id: item?._id,
@@ -119,16 +122,15 @@ export default function NotificationsListScreen({
 }
 
 const styles = StyleSheet.create({
-  listContainer: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-  },
   item: {
-    borderBottomWidth: 0,
-    borderRadius: 10,
     paddingHorizontal: 10,
     paddingTop: 10,
     paddingBottom: 10,
-    marginBottom: 10,
+    borderBottomWidth: 0,
+  },
+  thumb: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
   },
 });
