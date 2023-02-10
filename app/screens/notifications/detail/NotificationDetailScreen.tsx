@@ -34,13 +34,13 @@ export default function NotificationDetailScreen(
 
   const getTitle = (type?: NotificationType) => {
     switch (type) {
-      case 'Announcement':
+      case NotificationType.ANNOUNCEMENT:
         return 'Announcement';
-      case 'Business':
+      case NotificationType.BUSINESS:
         return 'Business';
-      case 'User':
+      case NotificationType.USER:
         return 'Notification';
-      case 'Review':
+      case NotificationType.REVIEW:
         return 'Review Added';
       default:
         return null;
