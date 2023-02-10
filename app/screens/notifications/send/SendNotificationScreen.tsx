@@ -8,8 +8,8 @@ import {
   StyleSheet,
   TextInput as TextInputOriginal,
 } from 'react-native';
-// import { useTranslation } from 'react-i18next';
 import ImagePicker from 'react-native-image-crop-picker';
+import { useForm, Controller } from 'react-hook-form';
 
 import {
   Image,
@@ -29,21 +29,24 @@ import {
   useCreateNotification,
   useUploadNotificationImage,
 } from '../queries/mutations';
+import { NotificationPresentable } from '../models/NotificationPresentable';
 
-interface NotificationType {
-  title: string;
-  description: string;
-  image: string;
-  link: string;
-  type: string;
-}
+type NotificationType = Pick<
+  NotificationPresentable,
+  'title' | 'description' | 'link' | 'type' | 'image'
+>;
 
 export default function SendNotificationScreen(
   props: StackScreenProps<MainStackParamList, 'SendNotification'>,
 ) {
   const { navigation } = props;
   const { colors } = useTheme();
-  // const { t } = useTranslation();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<NotificationType>();
+
   const { mutate: uploadImage, isLoading: uploadImageLoading } =
     useUploadNotificationImage();
   const { mutate: deleteImage, isLoading: deleteImageLoading } =
@@ -57,18 +60,7 @@ export default function SendNotificationScreen(
   const typeRef = useRef<TextInputOriginal>(null);
 
   const [imageKey, setImageKey] = useState<string>('');
-  const [notification, setNotification] = useState<NotificationType>({
-    title: '',
-    description: '',
-    image: '',
-    link: '',
-    type: '',
-  });
-
-  const offsetKeyboard = Platform.select({
-    ios: 0,
-    android: 20,
-  });
+  const [notificationImage, setNotificationImage] = useState<string>('');
 
   const removeEmptyKeys = (obj: any) => {
     for (var propName in obj) {
@@ -83,8 +75,8 @@ export default function SendNotificationScreen(
     return obj;
   };
 
-  const onSubmit = async () => {
-    createNotification(removeEmptyKeys(notification));
+  const onSubmit = async (data: NotificationType) => {
+    createNotification(removeEmptyKeys(data));
   };
 
   const onRemoveImage = () => {
@@ -92,7 +84,7 @@ export default function SendNotificationScreen(
       { pathname: imageKey },
       {
         onSuccess() {
-          setNotification({ ...notification, image: '' });
+          setNotificationImage('');
         },
       },
     );
@@ -131,7 +123,7 @@ export default function SendNotificationScreen(
           { form: form },
           {
             onSuccess(response) {
-              setNotification({ ...notification, image: response.Location });
+              setNotificationImage(response.Location);
               setImageKey(response.key);
             },
           },
@@ -141,6 +133,11 @@ export default function SendNotificationScreen(
         console.log('IMAGE_PICKER_ERROR', e);
       });
   };
+
+  const offsetKeyboard = Platform.select({
+    ios: 0,
+    android: 20,
+  });
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
@@ -172,7 +169,7 @@ export default function SendNotificationScreen(
               loading={uploadImageLoading || deleteImageLoading}
               style={styles.uploadImageLoading}
             />
-            {notification.image ? (
+            {notificationImage ? (
               <Fragment>
                 <TouchableOpacity
                   style={styles.actionButton}
@@ -185,7 +182,7 @@ export default function SendNotificationScreen(
                 </TouchableOpacity>
                 <Image
                   style={styles.notificaitonImage}
-                  source={{ uri: notification.image }}
+                  source={{ uri: notificationImage }}
                 />
               </Fragment>
             ) : (
@@ -202,51 +199,86 @@ export default function SendNotificationScreen(
             )}
           </View>
 
-          <TextInput
-            style={styles.textInput}
-            ref={titleRef}
-            onChangeText={(title) =>
-              setNotification({ ...notification, title })
-            }
-            placeholder="Title*"
-            value={notification?.title}
-            onSubmitEditing={() => descriptionRef.current?.focus()}
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <TextInput
+                style={styles.textInput}
+                ref={titleRef}
+                placeholder="Title*"
+                onSubmitEditing={() => descriptionRef.current?.focus()}
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+              />
+            )}
+            name="title"
+          />
+          {errors.title && <Text>Title is required.</Text>}
+
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <TextInput
+                style={styles.textArea}
+                ref={descriptionRef}
+                multiline={true}
+                numberOfLines={6}
+                textAlignVertical="top"
+                placeholder="Description*"
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+              />
+            )}
+            name="description"
+          />
+          {errors.description && <Text>Description is required.</Text>}
+
+          <Controller
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <TextInput
+                style={styles.textInput}
+                ref={linkRef}
+                placeholder="Link"
+                onSubmitEditing={() => typeRef.current?.focus()}
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+              />
+            )}
+            name="link"
           />
 
-          <TextInput
-            style={styles.textArea}
-            ref={descriptionRef}
-            multiline={true}
-            numberOfLines={6}
-            textAlignVertical="top"
-            onChangeText={(description) =>
-              setNotification({ ...notification, description })
-            }
-            placeholder="Description*"
-            value={notification?.description}
-          />
-
-          <TextInput
-            style={styles.textInput}
-            ref={linkRef}
-            onChangeText={(link) => setNotification({ ...notification, link })}
-            placeholder="Link"
-            value={notification?.link}
-            onSubmitEditing={() => typeRef.current?.focus()}
-          />
-
-          <TextInput
-            style={styles.textInput}
-            ref={typeRef}
-            onChangeText={(type) => setNotification({ ...notification, type })}
-            placeholder="Type e.g: Announcement or Business"
-            value={notification?.type}
-            onSubmitEditing={() => onSubmit()}
+          <Controller
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <TextInput
+                style={styles.textInput}
+                ref={typeRef}
+                placeholder="Type e.g: Announcement or Business"
+                onSubmitEditing={handleSubmit(onSubmit)}
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+              />
+            )}
+            name="type"
           />
         </ScrollView>
 
         <View style={styles.buttonsContainer}>
-          <Button loading={notificationLoading} full onPress={() => onSubmit()}>
+          <Button
+            loading={notificationLoading}
+            full
+            onPress={handleSubmit(onSubmit)}>
             Create
           </Button>
         </View>
@@ -260,7 +292,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   imageContainer: {
-    marginBottom: 20,
+    marginBottom: 10,
     backgroundColor: BaseColor.fieldColor,
     height: 200,
     width: '100%',
@@ -278,7 +310,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
-    zIndex: 1,
+    zIndex: 2,
     right: -10,
     top: -10,
   },
@@ -315,10 +347,10 @@ const styles = StyleSheet.create({
   textArea: {
     height: 'auto',
     minHeight: 100,
-    marginBottom: 10,
+    marginTop: 10,
   },
   textInput: {
-    marginBottom: 10,
+    marginTop: 10,
   },
   buttonsContainer: {
     paddingVertical: 15,
