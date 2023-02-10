@@ -15,7 +15,7 @@ export interface NotificationPresentable {
   link?: string;
   type: NotificationType;
   read?: boolean;
-  ownerId?: string;
+  userId?: string;
 }
 
 export interface NotificationCountPresentable {
