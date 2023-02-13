@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Linking } from 'react-native';
-import { StackScreenProps } from '@react-navigation/stack';
+import { useTranslation } from 'react-i18next';
 import { getUniqueId } from 'react-native-device-info';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import ImageView from 'react-native-image-viewing';
+import { StackScreenProps } from '@react-navigation/stack';
 
 import {
   Header,
@@ -23,6 +24,7 @@ import { NotificationType } from '../models/NotificationPresentable';
 export default function NotificationDetailScreen(
   props: StackScreenProps<NotificationParamList, 'NotificationDetail'>,
 ) {
+  const { t } = useTranslation();
   const { navigation, route } = props;
   const { colors } = useTheme();
 
@@ -35,13 +37,13 @@ export default function NotificationDetailScreen(
   const getTitle = (type?: NotificationType) => {
     switch (type) {
       case NotificationType.ANNOUNCEMENT:
-        return 'Announcement';
+        return t('notification_detail.announcement');
       case NotificationType.BUSINESS:
-        return 'Business';
+        return t('notification_detail.business');
       case NotificationType.USER:
-        return 'Notification';
+        return t('notification_detail.notification');
       case NotificationType.REVIEW:
-        return 'Review Added';
+        return t('notification_detail.review_added');
       default:
         return null;
     }
@@ -112,7 +114,7 @@ export default function NotificationDetailScreen(
               full
               style={[styles.button, { backgroundColor: colors.primary }]}
               onPress={() => Linking.openURL(data.link ?? '')}>
-              View Details
+              {t('view_details')}
             </Button>
           ) : null}
         </View>
