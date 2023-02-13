@@ -1,4 +1,3 @@
-import { useNavigation } from '@react-navigation/native';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { handleError, socket } from '@utils';
 
@@ -35,7 +34,6 @@ type NotificationPayload = Pick<
 >;
 
 export const useCreateNotification = () => {
-  const navigation = useNavigation();
   return useMutation<NotificationPresentable, Error, NotificationPayload>(
     async (payload) => {
       return new Promise((resolve, reject) => {
@@ -44,7 +42,6 @@ export const useCreateNotification = () => {
             handleError(response);
             reject(response);
           } else {
-            navigation.goBack();
             resolve(response);
           }
         });
