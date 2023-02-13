@@ -61,7 +61,7 @@ export default function NotificationsListScreen({
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Loading loading={isLoading} />
       <Header
-        title={t('notifications')}
+        title={t('notifications_list.title')}
         renderLeft={() => {
           return (
             <Icon
@@ -112,7 +112,7 @@ export default function NotificationsListScreen({
         ListEmptyComponent={() => (
           <View>
             <Text body2 textAlign="center">
-              No Notifications Found!
+              {t('notifications_list.empty_text')}
             </Text>
           </View>
         )}

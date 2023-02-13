@@ -74,7 +74,10 @@
   "type_message": "Type message ...",
   "messenger": "Messenger",
   "notification": "Notification",
-  "notifications": "Notifications",
+  "notifications_list": {
+    "title": "Notifications",
+    "empty_text": "No Notifications Found!"
+  },
   "notification_info": "Notification Info",
   "place": "Place",
   "lowest_price": "Lowest Price",
