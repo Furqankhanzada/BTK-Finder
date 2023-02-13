@@ -50,7 +50,7 @@ export const useCreateNotification = () => {
   );
 };
 
-export const useNotificationUserSave = () => {
+export const useReadNotification = () => {
   const queryClient = useQueryClient();
 
   return useMutation<

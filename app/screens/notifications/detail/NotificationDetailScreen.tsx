@@ -17,7 +17,7 @@ import {
 import { BaseStyle, useTheme } from '@config';
 import { NotificationParamList } from 'navigation/models/NotificationParamList';
 import { useNotification } from '../queries/queries';
-import { useNotificationUserSave } from '../queries/mutations';
+import { useReadNotification } from '../queries/mutations';
 import { NotificationType } from '../models/NotificationPresentable';
 
 export default function NotificationDetailScreen(
@@ -27,7 +27,7 @@ export default function NotificationDetailScreen(
   const { colors } = useTheme();
 
   const { data, isLoading } = useNotification(route?.params?.id);
-  const { mutate } = useNotificationUserSave();
+  const { mutate } = useReadNotification();
 
   const [isImageLoading, setImageLoading] = useState(true);
   const [openImage, setOpenImage] = useState(false);
