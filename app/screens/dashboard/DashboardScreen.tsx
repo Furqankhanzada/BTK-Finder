@@ -180,6 +180,7 @@ function DashboardScreen({
                     { backgroundColor: BaseColor.redColor },
                   ]}>
                   <Text
+                    bold
                     style={[
                       styles.unreadCountText,
                       { color: BaseColor.whiteColor },
@@ -552,16 +553,16 @@ const styles = StyleSheet.create({
   },
   unreadCount: {
     position: 'absolute',
-    right: 0,
-    top: -4,
-    width: 13,
-    height: 13,
+    right: -2,
+    top: -6,
+    width: 17,
+    height: 17,
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
   },
   unreadCountText: {
-    fontSize: 11,
+    fontSize: 12,
   },
   contentSearch: {
     marginTop: 10,
