@@ -16,7 +16,6 @@ import {
 } from '@components';
 
 import styles from './styles';
-import { clearFavoriteBusiness } from '../../../actions/favorites';
 
 export default function Welcome(props) {
   const { navigation, lastRoute } = props;
@@ -45,7 +44,6 @@ export default function Welcome(props) {
         queryClient.invalidateQueries(['notifications-count']);
       }),
     );
-    dispatch(clearFavoriteBusiness());
   };
 
   return (

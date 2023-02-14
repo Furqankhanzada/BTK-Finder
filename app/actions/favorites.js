@@ -4,7 +4,6 @@ import {
   GET_FAVORITES_API_ERROR,
   ADD_FAVORITE_API,
   REMOVE_FAVORITE_API,
-  CLEAR_FAVORITES_IN_REDUX,
 } from '../constants/favorites';
 import { BUSINESSES_API } from '../constants';
 import { handleError } from '../utils';
@@ -87,8 +86,4 @@ export const removeFavoriteBusiness = (id, cb) => (dispatch) => {
       dispatch({ type: REMOVE_FAVORITE_API, loading: false });
       handleError(response.data);
     });
-};
-
-export const clearFavoriteBusiness = () => (dispatch) => {
-  dispatch({ type: CLEAR_FAVORITES_IN_REDUX });
 };
