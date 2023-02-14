@@ -73,30 +73,30 @@
   "messages": "Messages",
   "type_message": "Type message ...",
   "messenger": "Messenger",
-  "notification": "Notification",
-  "notifications_list": {
-    "title": "Notifications",
-    "empty_text": "No Notifications Found!"
-  },
-  "notification_detail": {
-    "announcement": "Announcement",
-    "business": "Business",
-    "notification": "Notification",
-    "review_added": "Review Added",
-    "view_details": "View Details"
-  },
-  "send_notification": {
-    "title": "Send Notification",
-    "tap_to_add_notification_image": "Tap to add Notification Image",
-    "placeholder": {
-      "title": "Title*",
-      "description": "Description*",
-      "link": "Link",
-      "type": "Type (Announcement or Business)"
+  "notification": {
+    "list": {
+      "title": "Notifications",
+      "empty_text": "No Notifications Found!"
     },
-    "create": "Create"
+    "detail": {
+      "announcement": "Announcement",
+      "business": "Business",
+      "notification": "Notification",
+      "review_added": "Review Added",
+      "view_details": "View Details"
+    },
+    "send": {
+      "title": "Send Notification",
+      "image": "Tap to add Notification Image",
+      "placeholder": {
+        "title": "Title*",
+        "description": "Description*",
+        "link": "Link",
+        "type": "Type (Announcement or Business)"
+      },
+      "button": "Create"
+    }
   },
-  "notification_info": "Notification Info",
   "place": "Place",
   "lowest_price": "Lowest Price",
   "hightest_price": "Hightest Price",
