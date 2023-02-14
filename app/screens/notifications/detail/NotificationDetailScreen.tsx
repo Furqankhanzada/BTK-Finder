@@ -37,13 +37,13 @@ export default function NotificationDetailScreen(
   const getTitle = (type?: NotificationType) => {
     switch (type) {
       case NotificationType.ANNOUNCEMENT:
-        return t('notification_detail.announcement');
+        return t('notification.detail.announcement');
       case NotificationType.BUSINESS:
-        return t('notification_detail.business');
+        return t('notification.detail.business');
       case NotificationType.USER:
-        return t('notification_detail.notification');
+        return t('notification.detail.notification');
       case NotificationType.REVIEW:
-        return t('notification_detail.review_added');
+        return t('notification.detail.review_added');
       default:
         return null;
     }
@@ -114,7 +114,7 @@ export default function NotificationDetailScreen(
               full
               style={[styles.button, { backgroundColor: colors.primary }]}
               onPress={() => Linking.openURL(data.link ?? '')}>
-              {t('notification_detail.view_details')}
+              {t('notification.detail.view_details')}
             </Button>
           ) : null}
         </View>

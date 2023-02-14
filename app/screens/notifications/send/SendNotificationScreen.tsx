@@ -153,7 +153,7 @@ export default function SendNotificationScreen(
         keyboardVerticalOffset={offsetKeyboard}
         style={styles.KeyboardAvoidingView}>
         <Header
-          title={t('send_notification.title')}
+          title={t('notification.send.title')}
           renderLeft={() => {
             return (
               <Icon
@@ -200,7 +200,7 @@ export default function SendNotificationScreen(
                 ]}
                 onPress={() => pickSingle()}>
                 <Text semibold style={styles.imageAddOverlayText}>
-                  {t('send_notification.tap_to_add_notification_image')}
+                  {t('notification.send.image')}
                 </Text>
               </TouchableOpacity>
             )}
@@ -215,7 +215,7 @@ export default function SendNotificationScreen(
               <TextInput
                 style={styles.textInput}
                 ref={titleRef}
-                placeholder={t('send_notification.placeholder.title')}
+                placeholder={t('notification.send.placeholder.title')}
                 onSubmitEditing={() => descriptionRef.current?.focus()}
                 onBlur={onBlur}
                 onChangeText={onChange}
@@ -238,7 +238,7 @@ export default function SendNotificationScreen(
                 multiline={true}
                 numberOfLines={6}
                 textAlignVertical="top"
-                placeholder={t('send_notification.placeholder.description')}
+                placeholder={t('notification.send.placeholder.description')}
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
@@ -254,7 +254,7 @@ export default function SendNotificationScreen(
               <TextInput
                 style={styles.textInput}
                 ref={linkRef}
-                placeholder={t('send_notification.placeholder.link')}
+                placeholder={t('notification.send.placeholder.link')}
                 onSubmitEditing={() => typeRef.current?.focus()}
                 onBlur={onBlur}
                 onChangeText={onChange}
@@ -270,7 +270,7 @@ export default function SendNotificationScreen(
               <TextInput
                 style={styles.textInput}
                 ref={typeRef}
-                placeholder={t('send_notification.placeholder.type')}
+                placeholder={t('notification.send.placeholder.type')}
                 onSubmitEditing={handleSubmit(onSubmit)}
                 onBlur={onBlur}
                 onChangeText={onChange}
@@ -286,7 +286,7 @@ export default function SendNotificationScreen(
             loading={notificationLoading}
             full
             onPress={handleSubmit(onSubmit)}>
-            {t('send_notification.create')}
+            {t('notification.send.button')}
           </Button>
         </View>
       </KeyboardAvoidingView>
