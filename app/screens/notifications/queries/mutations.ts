@@ -5,25 +5,25 @@ import { NOTIFICATIONS_USER_API, UPLOAD } from '../../../constants';
 import axiosApiInstance from '../../../interceptor/axios-interceptor';
 import { NotificationPresentable } from '../models/NotificationPresentable';
 
-interface NotificationUsersPayload {
+type NotificationUsersPayload = {
   read: boolean;
   notificationId: string;
   deviceUniqueId: string;
-}
+};
 
-interface NotificationUsersResponse {
+type NotificationUsersResponse = {
   _id: string;
   read: boolean;
   notificationId: string;
   deviceUniqueId: string;
   userId?: string;
-}
+};
 
-export interface UploadNotificationImagePayload {
-  form: any;
-}
+type UploadNotificationImagePayload = {
+  form: FormData;
+};
 
-export type UploadNotificationImageResponse = {
+type UploadNotificationImageResponse = {
   Location: string;
   key: string;
 };
