@@ -114,7 +114,7 @@ export default function NotificationDetailScreen(
               full
               style={[styles.button, { backgroundColor: colors.primary }]}
               onPress={() => Linking.openURL(data.link ?? '')}>
-              {t('view_details')}
+              {t('notification_detail.view_details')}
             </Button>
           ) : null}
         </View>
