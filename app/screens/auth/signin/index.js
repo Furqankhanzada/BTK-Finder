@@ -15,7 +15,7 @@ import {
 } from 'react-native-device-info';
 import messaging from '@react-native-firebase/messaging';
 
-import { useDeviceRegistration } from '../../../hooks/usePushNotifications';
+import { useDeviceRegistration } from '../../../apis/mutations';
 import { BaseStyle, useTheme } from '@config';
 import {
   Header,

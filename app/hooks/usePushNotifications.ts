@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Platform } from 'react-native';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import {
   getSystemName,
   getSystemVersion,
@@ -14,40 +14,8 @@ import messaging, {
   FirebaseMessagingTypes,
 } from '@react-native-firebase/messaging';
 
-import { handleError, navigateToLink, socket } from '@utils';
-
-import axiosApiInstance from '../interceptor/axios-interceptor';
-import { DEVICES_API } from '../constants';
-
-type Device = {
-  _id: string;
-  createdAt: string;
-  updatedAt: string;
-  userId?: string;
-  deviceUniqueId: string;
-  fcmToken: string;
-  os: string;
-  osVersion: string;
-};
-
-type DevicePayload = Pick<
-  Device,
-  'deviceUniqueId' | 'fcmToken' | 'os' | 'osVersion' | 'userId'
->;
-
-export const useDeviceRegistration = () => {
-  return useMutation<Device, Error, DevicePayload>((payload) => {
-    return axiosApiInstance({
-      method: 'POST',
-      url: DEVICES_API,
-      data: payload,
-    })
-      .then((response) => response.data)
-      .catch(({ response }) => {
-        handleError(response.data);
-      });
-  });
-};
+import { navigateToLink, socket } from '@utils';
+import { useDeviceRegistration } from '../apis/mutations';
 
 export default function usePushNotifications() {
   const [localNotificationInfo, setLocalNotificationInfo] =
