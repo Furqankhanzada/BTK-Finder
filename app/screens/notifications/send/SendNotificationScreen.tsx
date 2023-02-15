@@ -94,16 +94,13 @@ export default function SendNotificationScreen(
       width: 1000,
       height: 500,
       cropping: true,
-      sortOrder: 'none',
       compressImageMaxWidth: 1000,
       compressImageMaxHeight: 500,
-      compressImageQuality: 1,
-      compressVideoPreset: 'MediumQuality',
-      includeExif: true,
-      cropperStatusBarColor: 'white',
-      cropperToolbarColor: 'white',
-      cropperActiveWidgetColor: 'white',
-      cropperToolbarWidgetColor: '#3498DB',
+      mediaType: 'photo',
+      cropperStatusBarColor: colors.primary,
+      cropperToolbarColor: colors.primary,
+      cropperToolbarWidgetColor: BaseColor.whiteColor,
+      cropperActiveWidgetColor: colors.primary,
     })
       .then((image) => {
         const filename = image.path.replace(/^.*[\\/]/, '');
