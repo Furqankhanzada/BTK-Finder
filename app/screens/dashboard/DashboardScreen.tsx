@@ -7,7 +7,7 @@ import { getUniqueId } from 'react-native-device-info';
 import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
 
 import { SafeAreaView, Icon, Text, Tag, Image, Header } from '@components';
-import { BaseColor, BaseStyle, useTheme } from '@config';
+import { BaseStyle, useTheme } from '@config';
 import * as Utils from '@utils';
 import Section from '@screens/dashboard/components/Section';
 import { CategoryPresentable } from '@screens/category/modals/CategoryPresentables';
@@ -22,6 +22,7 @@ import {
 } from '@screens/dashboard/models/BannersPresentable';
 import { useNotifications } from '@screens/notifications/queries/queries';
 
+import NotificationIcon from './components/NotificationIcon';
 import { EVENTS, setUser, trackEvent } from '../../userTracking';
 import { GlobalParamList } from '../../navigation/models/GlobalParamList';
 import { MainStackParamList } from '../../navigation/models/MainStackParamList';
@@ -159,39 +160,23 @@ function DashboardScreen({
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
         title={'Explore BTK'}
-        renderRightSecond={() => {
-          return (
-            <View style={styles.notificationContent}>
-              <Icon name="phone" size={19} color={colors.primaryDark} solid />
-            </View>
-          );
-        }}
+        renderRightSecond={() => (
+          <View style={styles.iconContainer}>
+            <Icon name="phone" size={19} color={colors.primaryDark} solid />
+          </View>
+        )}
         onPressRightSecond={onPressHelpLine}
-        renderRight={() => {
-          return (
-            <View style={styles.notificationContent}>
-              <Icon name="bell" size={19} color={colors.primaryDark} solid />
-              {notifications &&
+        renderRight={() => (
+          <NotificationIcon
+            count={
+              notifications &&
               !Array.isArray(notifications) &&
-              notifications?.unread >= 1 ? (
-                <View
-                  style={[
-                    styles.unreadCount,
-                    { backgroundColor: BaseColor.redColor },
-                  ]}>
-                  <Text
-                    bold
-                    style={[
-                      styles.unreadCountText,
-                      { color: BaseColor.whiteColor },
-                    ]}>
-                    {notifications.unread}
-                  </Text>
-                </View>
-              ) : null}
-            </View>
-          );
-        }}
+              notifications?.unread
+                ? notifications?.unread
+                : 0
+            }
+          />
+        )}
         onPressRight={() =>
           navigation.navigate('NotificationStack', {
             screen: 'Notification',
@@ -547,7 +532,7 @@ const styles = StyleSheet.create({
     top: 0,
     right: 0,
   },
-  notificationContent: {
+  iconContainer: {
     width: 20,
     height: 20,
   },
