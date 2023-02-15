@@ -89,45 +89,45 @@ export default function SendNotificationScreen(
     );
   };
 
-  const pickSingle = () => {
-    ImagePicker.openPicker({
-      width: 1000,
-      height: 500,
-      cropping: true,
-      compressImageMaxWidth: 1000,
-      compressImageMaxHeight: 500,
-      mediaType: 'photo',
-      cropperStatusBarColor: colors.primary,
-      cropperToolbarColor: colors.primary,
-      cropperToolbarWidgetColor: BaseColor.whiteColor,
-      cropperActiveWidgetColor: colors.primary,
-    })
-      .then((image) => {
-        const filename = image.path.replace(/^.*[\\/]/, '');
-        let file = {
-          uri:
-            Platform.OS === 'android'
-              ? image.path
-              : image.path.replace('file://', ''),
-          type: 'multipart/form-data',
-          name: filename,
-        };
-        const form = new FormData();
-        form.append('file', file);
-
-        uploadImage(
-          { form: form },
-          {
-            onSuccess(response) {
-              setNotificationImage(response.Location);
-              setImageKey(response.key);
-            },
-          },
-        );
-      })
-      .catch((e) => {
-        console.log('IMAGE_PICKER_ERROR', e);
+  const pickSingle = async () => {
+    try {
+      const image = await ImagePicker.openPicker({
+        width: 1000,
+        height: 500,
+        cropping: true,
+        compressImageMaxWidth: 1000,
+        compressImageMaxHeight: 500,
+        mediaType: 'photo',
+        cropperStatusBarColor: colors.primary,
+        cropperToolbarColor: colors.primary,
+        cropperToolbarWidgetColor: BaseColor.whiteColor,
+        cropperActiveWidgetColor: colors.primary,
       });
+
+      const filename = image.path.replace(/^.*[\\/]/, '');
+      let file = {
+        uri:
+          Platform.OS === 'android'
+            ? image.path
+            : image.path.replace('file://', ''),
+        type: 'multipart/form-data',
+        name: filename,
+      };
+      const form = new FormData();
+      form.append('file', file);
+
+      uploadImage(
+        { form: form },
+        {
+          onSuccess(response) {
+            setNotificationImage(response.Location);
+            setImageKey(response.key);
+          },
+        },
+      );
+    } catch (error) {
+      console.log('IMAGE_PICKER_ERROR', error);
+    }
   };
 
   const offsetKeyboard = Platform.select({
