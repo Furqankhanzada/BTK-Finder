@@ -177,7 +177,7 @@ export default function SendNotificationScreen(
                   />
                 </TouchableOpacity>
                 <Image
-                  style={styles.notificaitonImage}
+                  style={styles.notificationImage}
                   source={{ uri: notificationImage }}
                 />
               </Fragment>
@@ -313,7 +313,7 @@ const styles = StyleSheet.create({
   actionButtonIcon: {
     color: BaseColor.whiteColor,
   },
-  notificaitonImage: {
+  notificationImage: {
     width: '100%',
     height: '100%',
     borderRadius: 5,
