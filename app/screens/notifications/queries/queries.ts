@@ -8,6 +8,7 @@ import {
   NotificationPresentable,
 } from '../models/NotificationPresentable';
 import axiosApiInstance from '../../../interceptor/axios-interceptor';
+import PushNotification from 'react-native-push-notification';
 
 interface NotificationsParams {
   deviceUniqueId: string;
@@ -27,7 +28,14 @@ export const useNotifications = (
         url: `${NOTIFICATIONS_API}`,
         params: params,
       })
-        .then((response) => response.data)
+        .then((response) => {
+          if (params?.unreadCount) {
+            PushNotification.setApplicationIconBadgeNumber(
+              response.data.unread,
+            );
+          }
+          return response.data;
+        })
         .catch(({ response }) => {
           handleError(response.data);
         });
