@@ -140,7 +140,7 @@ export default function SendNotificationScreen(
       <KeyboardAvoidingView
         behavior={Platform.OS === 'android' ? undefined : 'padding'}
         keyboardVerticalOffset={offsetKeyboard}
-        style={styles.KeyboardAvoidingView}>
+        style={styles.keyboardAvoidingView}>
         <Header
           title={t('notification.send.title')}
           renderLeft={() => {
@@ -284,7 +284,7 @@ export default function SendNotificationScreen(
 }
 
 const styles = StyleSheet.create({
-  KeyboardAvoidingView: {
+  keyboardAvoidingView: {
     flex: 1,
   },
   imageContainer: {
