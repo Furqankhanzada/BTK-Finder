@@ -17,6 +17,7 @@ import {
 } from '@components';
 import { BaseStyle, useTheme } from '@config';
 import { NotificationParamList } from 'navigation/models/NotificationParamList';
+import { NotificationDetailPlaceholder } from './components/NotificationDetailPlaceholder';
 import { useNotification } from '../queries/queries';
 import { useReadNotification } from '../queries/mutations';
 import { NotificationType } from '../models/NotificationPresentable';
@@ -88,7 +89,7 @@ export default function NotificationDetailScreen(
       />
 
       {isLoading ? (
-        <Loading loading={isLoading} />
+        <NotificationDetailPlaceholder />
       ) : (
         <View style={styles.container}>
           {data?.image ? (
