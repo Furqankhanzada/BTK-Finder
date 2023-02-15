@@ -8,8 +8,8 @@ export function NotificationListPlaceholder() {
   return (
     <View style={styles.mainContainer}>
       <Placeholder Animation={Progressive}>
-        {items.map(() => (
-          <View style={styles.itemContainer}>
+        {items.map((item, index) => (
+          <View style={styles.itemContainer} key={index}>
             <PlaceholderLine style={styles.image} />
             <View style={styles.textContainer}>
               <PlaceholderLine style={styles.headingLine} />
