@@ -11,6 +11,7 @@ import {
 import ImagePicker from 'react-native-image-crop-picker';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import _ from 'lodash';
 
 import {
   Image,
@@ -65,21 +66,12 @@ export default function SendNotificationScreen(
   const [imageKey, setImageKey] = useState<string>('');
   const [notificationImage, setNotificationImage] = useState<string>('');
 
-  const removeEmptyKeys = (obj: any) => {
-    for (var propName in obj) {
-      if (
-        obj[propName] === null ||
-        obj[propName] === undefined ||
-        obj[propName] === ''
-      ) {
-        delete obj[propName];
-      }
-    }
-    return obj;
-  };
-
   const onSubmit = async (data: NotificationType) => {
-    createNotification(removeEmptyKeys({ ...data, image: notificationImage }), {
+    const payload = _.pickBy(
+      { ...data, image: notificationImage },
+      _.identity,
+    ) as NotificationType;
+    createNotification(payload, {
       onSuccess() {
         navigation.goBack();
       },
