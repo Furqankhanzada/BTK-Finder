@@ -5,17 +5,11 @@ import { StackScreenProps } from '@react-navigation/stack';
 import moment from 'moment';
 import { getUniqueId } from 'react-native-device-info';
 
-import {
-  Header,
-  SafeAreaView,
-  Icon,
-  ListThumbCircle,
-  Text,
-  Loading,
-} from '@components';
+import { Header, SafeAreaView, Icon, ListThumbCircle, Text } from '@components';
 import { BaseStyle, useTheme } from '@config';
 import { NotificationParamList } from 'navigation/models/NotificationParamList';
 
+import { NotificationListPlaceholder } from './components/NotificationListPlaceholder';
 import { useNotifications } from '../queries/queries';
 import { NotificationType } from '../models/NotificationPresentable';
 
@@ -59,7 +53,6 @@ export default function NotificationsListScreen({
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
-      <Loading loading={isLoading} />
       <Header
         title={t('notification.list.title')}
         renderLeft={() => {
@@ -76,47 +69,51 @@ export default function NotificationsListScreen({
           navigation.goBack();
         }}
       />
-      <FlatList
-        refreshControl={
-          <RefreshControl
-            colors={[colors.primary]}
-            tintColor={colors.primary}
-            refreshing={isRefreshing}
-            onRefresh={onRefresh}
-          />
-        }
-        data={Array.isArray(data) ? data : []}
-        keyExtractor={(item, index) => item._id + index}
-        renderItem={({ item }) => (
-          <ListThumbCircle
-            style={[
-              styles.item,
-              !item.read ? { backgroundColor: colors.card } : {},
-            ]}
-            thumbStyle={styles.thumb}
-            txtContentStyle={{ color: colors.text }}
-            image={item?.image}
-            thumbIconName={getIconName(item?.type)}
-            txtLeftTitle={item.title}
-            txtContent={item.description}
-            txtSubContent={moment(item.createdAt).fromNow()}
-            showPoint={!item.read}
-            onPress={() =>
-              navigation.navigate('NotificationDetail', {
-                id: item?._id,
-                read: item?.read ?? false,
-              })
-            }
-          />
-        )}
-        ListEmptyComponent={() => (
-          <View>
-            <Text body2 textAlign="center">
-              {t('notification.list.empty_text')}
-            </Text>
-          </View>
-        )}
-      />
+      {isLoading ? (
+        <NotificationListPlaceholder />
+      ) : (
+        <FlatList
+          refreshControl={
+            <RefreshControl
+              colors={[colors.primary]}
+              tintColor={colors.primary}
+              refreshing={isRefreshing}
+              onRefresh={onRefresh}
+            />
+          }
+          data={Array.isArray(data) ? data : []}
+          keyExtractor={(item, index) => item._id + index}
+          renderItem={({ item }) => (
+            <ListThumbCircle
+              style={[
+                styles.item,
+                !item.read ? { backgroundColor: colors.card } : {},
+              ]}
+              thumbStyle={styles.thumb}
+              txtContentStyle={{ color: colors.text }}
+              image={item?.image}
+              thumbIconName={getIconName(item?.type)}
+              txtLeftTitle={item.title}
+              txtContent={item.description}
+              txtSubContent={moment(item.createdAt).fromNow()}
+              showPoint={!item.read}
+              onPress={() =>
+                navigation.navigate('NotificationDetail', {
+                  id: item?._id,
+                  read: item?.read ?? false,
+                })
+              }
+            />
+          )}
+          ListEmptyComponent={() => (
+            <View>
+              <Text body2 textAlign="center">
+                {t('notification.list.empty_text')}
+              </Text>
+            </View>
+          )}
+        />
+      )}
     </SafeAreaView>
   );
 }
