@@ -6,7 +6,7 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { BaseStyle, useTheme } from '@config';
 import {
@@ -19,12 +19,14 @@ import {
 } from '@components';
 import { useBusinessesInfinite } from '../businesses/queries/queries';
 
-import { getSingleBusiness } from '../../actions/business';
+import { StackScreenProps } from '@react-navigation/stack';
+import { MainStackParamList } from 'navigation/models/MainStackParamList';
 
-export default function MyBusinessesScreen(props: any) {
-  const { navigation, route } = props;
+export default function MyBusinessesScreen(
+  props: StackScreenProps<MainStackParamList, 'MyBusinesses'>,
+) {
+  const { navigation } = props;
   const scrollAnim = new Animated.Value(0);
-  const dispatch = useDispatch();
   const { t } = useTranslation();
   const { colors } = useTheme();
 
@@ -54,12 +56,6 @@ export default function MyBusinessesScreen(props: any) {
     setIsRefreshing(false);
   };
 
-  const stateProps = useSelector(({ businesses }) => {
-    return {
-      getEditLoading: businesses.getSingleBusinessLoading,
-    };
-  });
-
   const onEndReached = () => {
     if (hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
@@ -88,27 +84,18 @@ export default function MyBusinessesScreen(props: any) {
   };
 
   const onEdit = (id: string) => {
-    dispatch(
-      getSingleBusiness(id, true, () =>
-        navigation.navigate('EditBusiness', { id }),
-      ),
-    );
+    navigation.navigate('EditBusinessStack', {
+      screen: 'EditBusiness',
+      params: { businessId: id },
+    });
   };
 
   const navigateBusinessDetail = (id: string) => {
     navigation.navigate('BusinessDetailTabNavigator', { businessId: id });
   };
 
-  const navigateToReview = (id: string) => {
-    navigation.navigate('BusinessDetailTabNavigator', {
-      screen: 'ReviewStack',
-      params: { businessId: id },
-    });
-  };
-
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
-      <Loading loading={stateProps.getEditLoading} />
       <Header
         title={t('my_businesses')}
         renderLeft={() => {
@@ -128,12 +115,12 @@ export default function MyBusinessesScreen(props: any) {
       {isLoading ? (
         <Loading loading={isLoading} />
       ) : (
-        <View style={{ flex: 1 }}>
+        <View style={styles.container}>
           <Animated.FlatList
-            contentContainerStyle={{
-              padding: 20,
-              flex: myBusinesses?.length ? 0 : 1,
-            }}
+            contentContainerStyle={[
+              styles.flatListContainer,
+              { flex: myBusinesses?.length ? 0 : 1 },
+            ]}
             refreshControl={
               <RefreshControl
                 colors={[colors.primary]}
@@ -160,9 +147,9 @@ export default function MyBusinessesScreen(props: any) {
             )}
             data={myBusinesses}
             key={'block'}
-            keyExtractor={(item, index) => item._id}
+            keyExtractor={(item) => item._id}
             ListEmptyComponent={listEmptyComponent}
-            renderItem={({ item, index }) => {
+            renderItem={({ item }) => {
               return (
                 <CardList
                   key={item._id}
@@ -170,9 +157,9 @@ export default function MyBusinessesScreen(props: any) {
                   title={item.name}
                   subtitle={item.category}
                   rate={item?.averageRatings || 0.0}
-                  style={{ marginBottom: 15 }}
+                  style={styles.cardList}
                   onPress={() => navigateBusinessDetail(item._id)}
-                  onPressTag={() => navigateToReview(item._id)}
+                  onPressTag={() => {}}
                   editAble={true}
                   onPressEdit={() => onEdit(item._id)}
                 />
@@ -187,6 +174,12 @@ export default function MyBusinessesScreen(props: any) {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  flatListContainer: {
+    padding: 20,
+  },
   sectionEmpty: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -199,5 +192,8 @@ const styles = StyleSheet.create({
     padding: 15,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  cardList: {
+    marginBottom: 15,
   },
 });
