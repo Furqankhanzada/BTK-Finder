@@ -536,19 +536,6 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
   },
-  unreadCount: {
-    position: 'absolute',
-    right: -2,
-    top: -6,
-    width: 17,
-    height: 17,
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  unreadCountText: {
-    fontSize: 12,
-  },
   contentSearch: {
     marginTop: 10,
     paddingHorizontal: 20,
