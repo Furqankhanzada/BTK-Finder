@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import Walkthrough from '@screens/Walkthrough';
 
 export enum LastRoutes {
-  Business = 'Business',
+  NewBusinessStack = 'NewBusinessStack',
   Favourite = 'Favourite',
 }
 
