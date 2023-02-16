@@ -38,7 +38,7 @@ export interface EditBusinessPayload {
   description?: string;
   category?: string;
   facilities?: Facility[];
-  tags?: any;
+  tags?: string[];
   telephone?: string;
   email?: string;
   website?: string;
@@ -51,7 +51,7 @@ export interface EditBusinessPayload {
 }
 
 // Edit Business
-export const useEditBusiness = (id: any) => {
+export const useEditBusiness = (id: string) => {
   const queryClient = useQueryClient();
 
   return useMutation<any, Error, EditBusinessPayload>(

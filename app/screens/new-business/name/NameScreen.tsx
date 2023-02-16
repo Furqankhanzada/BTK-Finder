@@ -28,7 +28,7 @@ export const NameScreen = (
   const isEditBusiness = route?.params?.businessId;
 
   const { data: businessData } = useBusiness(route?.params?.businessId ?? '');
-  const { mutate: editName } = useEditBusiness(route?.params?.businessId);
+  const { mutate: editName } = useEditBusiness(route?.params?.businessId ?? '');
 
   const setName = useAddBusinessStore(
     (state: BusinessStoreActions) => state.setName,
