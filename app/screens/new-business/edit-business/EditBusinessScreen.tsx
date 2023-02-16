@@ -37,7 +37,7 @@ export default function EditBusinessScreen(
       <ScrollView>
         <ListItem
           title="Name"
-          businessDetail={businessData?.name}
+          text={businessData?.name}
           onPress={() => {
             navigation.navigate('Edit', {
               screen: 'Name',
@@ -47,69 +47,65 @@ export default function EditBusinessScreen(
         />
         <ListItem
           title="Description"
-          businessDetail={businessData?.description}
+          text={businessData?.description}
           onPress={() => {}}
         />
         <ListItem
           title="Category"
-          businessDetail={businessData?.category}
+          text={businessData?.category}
           onPress={() => {}}
         />
         <ListItem
           title="Facilities"
-          businessDetail={
+          text={
             businessData?.facilities?.length
               ? businessData.facilities[0].name
-              : '-'
+              : ''
           }
           onPress={() => {}}
         />
         <ListItem
           title="Tags"
-          businessDetail={businessData?.tags ? businessData?.tags[0] : '-'}
+          text={businessData?.tags ? businessData?.tags[0] : ''}
           onPress={() => {}}
         />
         <ListItem
           title="Telephone"
-          businessDetail={businessData?.telephone}
+          text={businessData?.telephone}
           onPress={() => {}}
         />
-        <ListItem
-          title="Email"
-          businessDetail={businessData?.email}
-          onPress={() => {}}
-        />
+        <ListItem title="Email" text={businessData?.email} onPress={() => {}} />
         <ListItem
           title="Website"
-          businessDetail={businessData?.website}
+          text={businessData?.website}
           onPress={() => {}}
         />
         <ListItem
           title="Address"
-          businessDetail={businessData?.address}
+          text={businessData?.address}
           onPress={() => {}}
         />
         <ListItem
           title="OpenHours"
-          businessDetail={
+          text={
             businessData?.openHours?.length
               ? `${businessData?.openHours[0]?.day} ${businessData?.openHours[0]?.from} To ${businessData?.openHours[0]?.to}`
-              : '-'
+              : ''
           }
           onPress={() => {}}
         />
         <ListItem
           title="Pricing"
-          businessDetail={
+          text={
             businessData?.priceRange?.from && businessData?.priceRange?.to
               ? `${businessData?.priceRange?.from} To ${businessData?.priceRange?.to}`
-              : '-'
+              : ''
           }
           onPress={() => {}}
         />
         <ListItem
           title="Gallery"
-          businessDetail={businessData?.thumbnail ? 'Gallery' : '-'}
+          text={businessData?.thumbnail ? 'Gallery' : ''}
           onPress={() => {}}
         />
       </ScrollView>

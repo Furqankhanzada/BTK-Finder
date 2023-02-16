@@ -1,76 +1,60 @@
 import React from 'react';
-import { View, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
 
 import { Icon, Text } from '@components';
-import { BaseColor, useTheme } from '@config';
+import { useTheme } from '@config';
 
-export default function ListItem(props: any) {
+type Props = {
+  title: string;
+  text?: string;
+  onPress: () => void;
+};
+
+export default function ListItem(props: Props) {
   const { colors } = useTheme();
-  const { title, businessDetail, onPress } = props;
+  const { title, text, onPress } = props;
   return (
-    <ScrollView>
-      <View style={styles.contains}>
-        <TouchableOpacity
-          style={[styles.profileItem, { borderBottomColor: colors.border }]}
-          onPress={onPress}>
-          <Text body1>{title}</Text>
-          <View style={styles.businessDetailContainer}>
-            {businessDetail?.length >= 18 ? (
-              <Text
-                numberOfLines={1}
-                style={[styles.businessDetailText, { color: colors.border }]}
-                body1>
-                {businessDetail ? businessDetail : '-'}
-              </Text>
-            ) : (
-              <Text style={{ color: colors.border }} body1>
-                {businessDetail ? businessDetail : '-'}
-              </Text>
-            )}
-
-            <View>
-              <Icon
-                name="angle-right"
-                size={18}
-                color={colors.primary}
-                style={styles.icon}
-                enableRTL={true}
-              />
-            </View>
-          </View>
-        </TouchableOpacity>
+    <TouchableOpacity
+      style={[styles.container, { borderBottomColor: colors.border }]}
+      onPress={onPress}>
+      <Text body1 semibold style={styles.title}>
+        {title}
+      </Text>
+      <View style={styles.leftContainer}>
+        <Text body1 numberOfLines={1}>
+          {text ? text : ''}
+        </Text>
+        <Icon
+          name="angle-right"
+          size={18}
+          color={colors.primary}
+          style={styles.icon}
+          enableRTL={true}
+        />
       </View>
-    </ScrollView>
+    </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
-  contains: {
-    flex: 1,
-    padding: 20,
-  },
-  textInput: {
-    height: 56,
-    backgroundColor: BaseColor.fieldColor,
-    borderRadius: 5,
-    padding: 10,
-    width: '100%',
-  },
-  profileItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 6,
+  container: {
+    paddingHorizontal: 20,
+    paddingVertical: 20,
     borderBottomWidth: 1,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
-  businessDetailContainer: {
+  title: {
+    width: '50%',
+  },
+  leftContainer: {
+    flex: 1,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    alignItems: 'flex-end',
-  },
-  businessDetailText: {
-    width: '65%',
+    alignItems: 'center',
   },
   icon: {
     marginLeft: 5,
