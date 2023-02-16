@@ -28,7 +28,7 @@ type UploadNotificationImageResponse = {
   key: string;
 };
 
-type NotificationPayload = Pick<
+export type NotificationPayload = Pick<
   NotificationPresentable,
   'title' | 'description' | 'link' | 'image' | 'type'
 >;

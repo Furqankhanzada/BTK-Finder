@@ -28,16 +28,12 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { MainStackParamList } from 'navigation/models/MainStackParamList';
 
 import {
+  NotificationPayload,
   useCreateNotification,
   useUploadNotificationImage,
 } from '../queries/mutations';
 import { NotificationPresentable } from '../models/NotificationPresentable';
 import { useDeleteImage } from '../../../apis/mutations';
-
-type NotificationType = Pick<
-  NotificationPresentable,
-  'title' | 'description' | 'link' | 'type' | 'image'
->;
 
 export default function SendNotificationScreen(
   props: StackScreenProps<MainStackParamList, 'SendNotification'>,
@@ -49,7 +45,7 @@ export default function SendNotificationScreen(
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<NotificationType>();
+  } = useForm<NotificationPresentable>();
 
   const { mutate: uploadImage, isLoading: uploadImageLoading } =
     useUploadNotificationImage();
@@ -66,11 +62,11 @@ export default function SendNotificationScreen(
   const [imageKey, setImageKey] = useState<string>('');
   const [notificationImage, setNotificationImage] = useState<string>('');
 
-  const onSubmit = async (data: NotificationType) => {
+  const onSubmit = async (data: NotificationPresentable) => {
     const payload = _.pickBy(
       { ...data, image: notificationImage },
       _.identity,
-    ) as NotificationType;
+    ) as NotificationPayload;
     createNotification(payload, {
       onSuccess() {
         navigation.goBack();
