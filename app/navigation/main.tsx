@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import SplashScreen from 'react-native-splash-screen';
 
@@ -9,11 +8,10 @@ import { BaseColor, useFont, useTheme } from '@config';
 import { Icon } from '@components';
 import BusinessDetailNavigator from '@screens/businesses/BusinessDetailNavigator';
 
-import { setEditBusiness } from '../actions/business';
 import { LastRoutes, withAuthRedirection } from './hoc/withAuthRedirection';
 
 /* Bottom Screen */
-import Business from '@screens/AddBusiness';
+import NewBusinessStackNavigator from '@screens/new-business/NewBusinessStackNavigator';
 import FavouriteScreen from '@screens/favourite/FavouriteScreen';
 import Messenger from '@screens/Messenger';
 import Welcome from '@screens/auth/welcome';
@@ -33,11 +31,6 @@ import ProfileEdit from '@screens/profile/edit/ProfileEditScreen';
 import ChangeLanguage from '@screens/ChangeLanguage';
 import ContactUs from '@screens/ContactUs';
 import AboutUs from '@screens/AboutUs';
-import Address from '@screens/AddBusiness/address';
-import Hours from '@screens/AddBusiness/hours';
-import PriceRange from '@screens/AddBusiness/priceRange';
-import FinalReview from '@screens/AddBusiness/review';
-import Gallery from '@screens/AddBusiness/gallery';
 import MyBusinessesScreen from '@screens/my-businesses/MyBusinessesScreen';
 import { DashboardStackNavigator } from '@screens/dashboard/navigation/DashboardStack';
 import BusinessesScreen from '@screens/businesses/list/BusinessesScreen';
@@ -45,6 +38,7 @@ import SendNotificationScreen from '@screens/notifications/send/SendNotification
 
 import { MainStackParamList } from './models/MainStackParamList';
 import { MainBottomTabParamList } from './models/MainBottomTabParamList';
+import EditBusinessStackNavigator from '@screens/new-business/edit-business/navigation/EditBusinessStackNavigator';
 
 const MainStack = createStackNavigator<MainStackParamList>();
 const MainBottomTab = createBottomTabNavigator<MainBottomTabParamList>();
@@ -80,14 +74,11 @@ export default function Main() {
       <MainStack.Screen name="ChangeLanguage" component={ChangeLanguage} />
       <MainStack.Screen name="ContactUs" component={ContactUs} />
       <MainStack.Screen name="AboutUs" component={AboutUs} />
-      {/*<MainStack.Screen name="Business" component={Business} />*/}
-      <MainStack.Screen name="Address" component={Address} />
-      <MainStack.Screen name="Hours" component={Hours} />
-      <MainStack.Screen name="PriceRange" component={PriceRange} />
-      <MainStack.Screen name="FinalReview" component={FinalReview} />
-      <MainStack.Screen name="Gallery" component={Gallery} />
       <MainStack.Screen name="MyBusinesses" component={MyBusinessesScreen} />
-      <MainStack.Screen name="EditBusiness" component={Business} />
+      <MainStack.Screen
+        name="EditBusinessStack"
+        component={EditBusinessStackNavigator}
+      />
       <MainStack.Screen name="VerifyCode" component={VerifyCode} />
       <MainStack.Screen
         name="SendNotification"
@@ -99,7 +90,6 @@ export default function Main() {
 
 function MainBottomTabNavigator() {
   const { t } = useTranslation();
-  const dispatch = useDispatch();
   const { colors } = useTheme();
   const font = useFont();
 
@@ -140,32 +130,15 @@ function MainBottomTabNavigator() {
       />
       <MainBottomTab.Screen
         name="Business"
-        component={withAuthRedirection(Business, {
-          lastRoute: LastRoutes.Business,
-        })}
+        component={NewBusinessStackNavigator}
         options={{
-          title: 'Add Business',
+          title: 'New Business',
           tabBarIcon: ({ color }) => {
-            return <Icon color={color} name="business-time" size={20} solid />;
+            return <Icon color={color} name="building" size={20} solid />;
           },
         }}
-        listeners={() => ({
-          tabPress: () => {
-            dispatch(setEditBusiness(false));
-          },
-        })}
       />
 
-      {/* <BottomTab.Screen
-        name="Notification"
-        component={Notification}
-        options={{
-          title: t('notification'),
-          tabBarIcon: ({ color }) => {
-            return <Icon color={color} name="bell" size={20} solid />;
-          },
-        }}
-      /> */}
       <MainBottomTab.Screen
         name="Welcome"
         component={Welcome}
