@@ -2,6 +2,7 @@ import { NavigatorScreenParams } from '@react-navigation/native';
 
 import { MainBottomTabParamList } from './MainBottomTabParamList';
 import { GlobalParamList } from './GlobalParamList';
+import { EditBusinessStackParamList } from './EditBusinessStackParamList';
 
 export type MainStackParamList = {
   MainBottomTabNavigator: NavigatorScreenParams<MainBottomTabParamList>;
@@ -37,7 +38,7 @@ export type MainStackParamList = {
   FinalReview: undefined;
   Gallery: undefined;
   MyBusinesses: undefined;
-  EditBusiness: undefined;
+  EditBusinessStack: NavigatorScreenParams<EditBusinessStackParamList>;
   VerifyCode: undefined;
   SendNotification: undefined;
 };
