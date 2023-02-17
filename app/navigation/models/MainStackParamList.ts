@@ -23,7 +23,6 @@ export type MainStackParamList = {
   Walkthrough: { lastRoute: keyof GlobalParamList; id: string };
   SignUp: undefined;
   SignIn: undefined;
-  Notification: undefined;
   Messenger: undefined;
   Messages: undefined;
   ResetPassword: undefined;
@@ -40,4 +39,5 @@ export type MainStackParamList = {
   MyBusinesses: undefined;
   EditBusiness: undefined;
   VerifyCode: undefined;
+  SendNotification: undefined;
 };

@@ -149,7 +149,7 @@ export const editProfile = (payload, cb) => {
 export const uploadProfileImage = (payload, form, cb) => (dispatch) => {
   dispatch({ type: PROFILE_UPLOAD_API, loading: true });
   axiosApiInstance
-    .post(`${UPLOAD}/${payload._id}/profile`, form, {
+    .post(`${UPLOAD}?folder=users/${payload._id}/profile`, form, {
       headers: { 'Content-Type': 'multipart/form-data' },
     })
     .then((response) => {

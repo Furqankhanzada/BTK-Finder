@@ -13,7 +13,6 @@ import { setEditBusiness } from '../actions/business';
 import { LastRoutes, withAuthRedirection } from './hoc/withAuthRedirection';
 
 /* Bottom Screen */
-import Notification from '@screens/Notification';
 import Business from '@screens/AddBusiness';
 import FavouriteScreen from '@screens/favourite/FavouriteScreen';
 import Messenger from '@screens/Messenger';
@@ -42,6 +41,7 @@ import Gallery from '@screens/AddBusiness/gallery';
 import MyBusinessesScreen from '@screens/my-businesses/MyBusinessesScreen';
 import { DashboardStackNavigator } from '@screens/dashboard/navigation/DashboardStack';
 import BusinessesScreen from '@screens/businesses/list/BusinessesScreen';
+import SendNotificationScreen from '@screens/notifications/send/SendNotificationScreen';
 
 import { MainStackParamList } from './models/MainStackParamList';
 import { MainBottomTabParamList } from './models/MainBottomTabParamList';
@@ -74,7 +74,6 @@ export default function Main() {
       <MainStack.Screen name="SignIn" component={SignIn} />
       <MainStack.Screen name="Messenger" component={Messenger} />
       <MainStack.Screen name="Messages" component={Messages} />
-      <MainStack.Screen name="Notification" component={Notification} />
       <MainStack.Screen name="ResetPassword" component={ResetPassword} />
       <MainStack.Screen name="ChangePassword" component={ChangePassword} />
       <MainStack.Screen name="ProfileEdit" component={ProfileEdit} />
@@ -90,6 +89,10 @@ export default function Main() {
       <MainStack.Screen name="MyBusinesses" component={MyBusinessesScreen} />
       <MainStack.Screen name="EditBusiness" component={Business} />
       <MainStack.Screen name="VerifyCode" component={VerifyCode} />
+      <MainStack.Screen
+        name="SendNotification"
+        component={SendNotificationScreen}
+      />
     </MainStack.Navigator>
   );
 }

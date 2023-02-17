@@ -9,6 +9,7 @@
   "edit_profile": "Edit Profile",
   "change_password": "Change Password",
   "my_businesses": "My Businesses",
+  "send_notification": "Send Notification",
   "contact_us": "Contact Us",
   "settings": "Settings",
   "sign_out": "Sign Out",
@@ -73,7 +74,30 @@
   "messages": "Messages",
   "type_message": "Type message ...",
   "messenger": "Messenger",
-  "notification": "Notification",
+  "notification": {
+    "list": {
+      "title": "Notifications",
+      "empty_text": "No Notifications Found!"
+    },
+    "detail": {
+      "announcement": "Announcement",
+      "business": "Business",
+      "notification": "Notification",
+      "review_added": "Review Added",
+      "view_details": "View Details"
+    },
+    "send": {
+      "title": "Send Notification",
+      "image": "Tap to add Notification Image",
+      "placeholder": {
+        "title": "Title*",
+        "description": "Description*",
+        "link": "Link",
+        "type": "Type (Announcement or Business)"
+      },
+      "button": "Create"
+    }
+  },
   "place": "Place",
   "lowest_price": "Lowest Price",
   "hightest_price": "Hightest Price",

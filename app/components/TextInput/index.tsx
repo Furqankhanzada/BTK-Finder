@@ -3,85 +3,64 @@ import {
   TextInput,
   View,
   I18nManager,
+  TextInputProps,
+  StyleSheet,
   StyleProp,
   ViewStyle,
 } from 'react-native';
-import { BaseStyle, BaseColor, useTheme } from '@config';
+import { BaseStyle, BaseColor, useTheme, useFont } from '@config';
 
-interface Props {
-  style?: StyleProp<ViewStyle>;
-  onChangeText: (text: string) => void;
-  onFocus?: () => void;
-  placeholder?: string;
-  value?: string;
+interface Props extends TextInputProps {
   success?: boolean;
-  secureTextEntry?: boolean;
-  keyboardType?:
-    | 'default'
-    | 'email-address'
-    | 'numeric'
-    | 'phone-pad'
-    | 'number-pad'
-    | 'decimal-pad';
-  multiline?: boolean;
-  textAlignVertical?: 'center' | 'auto' | 'bottom' | 'top' | undefined;
-  autoCapitalize?: 'none';
   icon?: JSX.Element;
-  onSubmitEditing?: () => void;
-  returnKeyType?: 'done' | 'go' | 'next' | 'search' | 'send';
-  blurOnSubmit?: boolean;
+  containerStyle?: StyleProp<ViewStyle>;
 }
 
 export default React.forwardRef<TextInput, Props>((props, ref) => {
   const { colors } = useTheme();
+  const font = useFont();
+
   const cardColor = colors.card;
   const {
-    style,
-    onChangeText,
-    onFocus,
-    placeholder = 'Placeholder',
-    value = '',
+    style, //TODO: remove it so it cannot be used in View as its input style
+    containerStyle,
     success = true,
-    secureTextEntry = false,
-    keyboardType = 'default',
-    multiline = false,
     textAlignVertical = 'center',
     icon,
-    onSubmitEditing,
-    autoCapitalize = 'none',
     returnKeyType = 'next',
     blurOnSubmit = false,
+    ...inputProps
   } = props;
   return (
-    <View style={[BaseStyle.textInput, { backgroundColor: cardColor }, style]}>
+    <View
+      style={[
+        BaseStyle.textInput,
+        { backgroundColor: cardColor },
+        style,
+        containerStyle,
+      ]}>
       <TextInput
+        {...inputProps}
         ref={ref}
-        style={{
-          fontFamily: 'Raleway',
-          flex: 1,
-          height: '100%',
-          textAlign: I18nManager.isRTL ? 'right' : 'left',
-          color: colors.text,
-          paddingTop: 5,
-          paddingBottom: 5,
-        }}
+        style={[styles.input, { color: colors.text, fontFamily: font }]}
         returnKeyType={returnKeyType}
-        onChangeText={(text) => onChangeText(text)}
         blurOnSubmit={blurOnSubmit}
-        onFocus={onFocus}
         autoCorrect={false}
-        placeholder={placeholder}
         placeholderTextColor={success ? BaseColor.grayColor : colors.primary}
-        secureTextEntry={secureTextEntry}
-        value={value}
-        autoCapitalize={autoCapitalize}
         selectionColor={colors.primary}
-        keyboardType={keyboardType}
-        multiline={multiline}
         textAlignVertical={textAlignVertical}
-        onSubmitEditing={onSubmitEditing}
       />
       {icon}
     </View>
   );
+});
+
+const styles = StyleSheet.create({
+  input: {
+    flex: 1,
+    height: '100%',
+    textAlign: I18nManager.isRTL ? 'right' : 'left',
+    paddingTop: 5,
+    paddingBottom: 5,
+  },
 });

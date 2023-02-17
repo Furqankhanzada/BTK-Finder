@@ -6,6 +6,16 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
+import { useQueryClient } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
+import {
+  getSystemName,
+  getSystemVersion,
+  getUniqueId,
+} from 'react-native-device-info';
+import messaging from '@react-native-firebase/messaging';
+
+import { useDeviceRegistration } from '../../../apis/mutations';
 import { BaseStyle, useTheme } from '@config';
 import {
   Header,
@@ -15,8 +25,8 @@ import {
   Button,
   TextInput,
 } from '@components';
+
 import styles from './styles';
-import { useTranslation } from 'react-i18next';
 import { login } from '../../../actions/auth';
 
 export default function SignIn(props) {
@@ -24,9 +34,11 @@ export default function SignIn(props) {
   const { colors } = useTheme();
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const queryClient = useQueryClient();
   const { params } = route;
   const passwordRef = useRef(null);
 
+  const { mutate: registerDevice } = useDeviceRegistration();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -48,10 +60,20 @@ export default function SignIn(props) {
     } else {
       setLoading(true);
       dispatch(
-        login({ username, password }, (error) => {
+        login({ username, password }, async (error) => {
           setLoading(false);
           if (!error) {
+            const fcmToken = await messaging().getToken();
+            registerDevice({
+              deviceUniqueId: getUniqueId(),
+              fcmToken,
+              os: getSystemName(),
+              osVersion: getSystemVersion(),
+            });
+
             navigation.navigate(lastRoute ? lastRoute : 'Welcome', { id });
+            queryClient.invalidateQueries(['notifications']);
+            queryClient.invalidateQueries(['notifications-count']);
           }
         }),
       );

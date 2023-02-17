@@ -1,6 +1,9 @@
 import React from 'react';
 import { View, ScrollView, TouchableOpacity } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import { useQueryClient } from '@tanstack/react-query';
+
 import { AuthActions } from '@actions';
 import { BaseStyle, useTheme } from '@config';
 import {
@@ -11,14 +14,14 @@ import {
   Button,
   ProfileDetail,
 } from '@components';
+
 import styles from './styles';
-import { useTranslation } from 'react-i18next';
-import { clearFavoriteBusiness } from '../../../actions/favorites';
 
 export default function Welcome(props) {
   const { navigation, lastRoute } = props;
   const { colors } = useTheme();
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
 
   const isLogin = useSelector((state) => state.auth.isLogin);
   const signOutLoading = useSelector((state) => state.auth.signOutLoading);
@@ -35,8 +38,12 @@ export default function Welcome(props) {
    * @date 2019-08-03
    */
   const onLogOut = () => {
-    dispatch(AuthActions.authentication(false, (response) => {}));
-    dispatch(clearFavoriteBusiness());
+    dispatch(
+      AuthActions.authentication(false, (response) => {
+        queryClient.invalidateQueries(['notifications']);
+        queryClient.invalidateQueries(['notifications-count']);
+      }),
+    );
   };
 
   return (
@@ -61,12 +68,7 @@ export default function Welcome(props) {
                     ? profileData.roles[0] === 'ADMIN'
                     : false
                 }
-                // onPress={() => navigation.navigate('ProfileExanple')}
               />
-              {/* <ProfilePerformance
-            data={userData.performance}
-            style={{ marginTop: 20, marginBottom: 20 }}
-          /> */}
               <TouchableOpacity
                 style={[
                   styles.profileItem,
@@ -116,6 +118,23 @@ export default function Welcome(props) {
                   enableRTL={true}
                 />
               </TouchableOpacity>
+              {profileData && profileData?.roles?.includes('ADMIN') ? (
+                <TouchableOpacity
+                  style={[
+                    styles.profileItem,
+                    { borderBottomColor: colors.border, borderBottomWidth: 1 },
+                  ]}
+                  onPress={() => navigation.navigate('SendNotification')}>
+                  <Text body1>{t('send_notification')}</Text>
+                  <Icon
+                    name="angle-right"
+                    size={18}
+                    color={colors.primary}
+                    style={{ marginLeft: 5 }}
+                    enableRTL={true}
+                  />
+                </TouchableOpacity>
+              ) : null}
             </View>
           ) : (
             <ProfileDetail

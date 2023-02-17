@@ -1,5 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Platform } from 'react-native';
+import { useQueryClient } from '@tanstack/react-query';
+import {
+  getSystemName,
+  getSystemVersion,
+  getUniqueId,
+} from 'react-native-device-info';
 import PushNotification from 'react-native-push-notification';
 import PushNotificationIOS, {
   PushNotification as PushNotificationIOSType,
@@ -8,11 +14,38 @@ import messaging, {
   FirebaseMessagingTypes,
 } from '@react-native-firebase/messaging';
 
-import { navigateToLink } from '@utils';
+import { navigateToLink, socket } from '@utils';
+import { useDeviceRegistration } from '../apis/mutations';
 
 export default function usePushNotifications() {
   const [localNotificationInfo, setLocalNotificationInfo] =
     useState<FirebaseMessagingTypes.RemoteMessage | null>(null);
+
+  const { mutate: registerDevice } = useDeviceRegistration();
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    const getFcmToken = async () => {
+      const fcmToken = await messaging().getToken();
+      registerDevice({
+        deviceUniqueId: getUniqueId(),
+        fcmToken,
+        os: getSystemName(),
+        osVersion: getSystemVersion(),
+      });
+    };
+    getFcmToken();
+  }, [registerDevice]);
+
+  useEffect(() => {
+    socket.on('notification', () => {
+      queryClient.invalidateQueries(['notifications']);
+      queryClient.invalidateQueries(['notifications-count']);
+    });
+    return () => {
+      socket.removeListener('notification');
+    };
+  }, [queryClient]);
 
   // request user permission
   useEffect(() => {

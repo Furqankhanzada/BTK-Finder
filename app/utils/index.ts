@@ -9,6 +9,10 @@ import {
 import Toast from 'react-native-toast-message';
 import { Image } from 'react-native-image-crop-picker';
 import { FirebaseMessagingTypes } from '@react-native-firebase/messaging';
+import { io } from 'socket.io-client';
+import Config from 'react-native-config';
+
+export const socket = io(`${Config.API_URL}`);
 
 export const enableExperimental = () => {
   if (Platform.OS === 'android') {

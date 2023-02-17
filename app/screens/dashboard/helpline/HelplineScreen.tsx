@@ -78,7 +78,6 @@ const HelpLine = React.memo(
           keyExtractor={(_, index) => index.toString()}
           renderItem={({ item }) => (
             <ListThumbCircle
-              onPress={() => onItemClick(item)}
               style={{ paddingHorizontal: 20 }}
               image={item.image}
               txtLeftTitle={item.title}
@@ -86,6 +85,7 @@ const HelpLine = React.memo(
                 item.extension ? `Dial Extension ${item.extension}` : ''
               }
               iconRightName="phone"
+              onPress={() => onItemClick(item)}
             />
           )}
           renderSectionHeader={({ section: { title } }) => (

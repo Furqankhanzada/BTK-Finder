@@ -3,6 +3,7 @@ import { FlatList, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useDispatch, useSelector } from 'react-redux';
 import { firebase } from '@react-native-firebase/database';
+import { getUniqueId } from 'react-native-device-info';
 import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
 
 import { SafeAreaView, Icon, Text, Tag, Image, Header } from '@components';
@@ -19,7 +20,9 @@ import {
   BannerPresentable,
   BannersPresentable,
 } from '@screens/dashboard/models/BannersPresentable';
+import { useNotifications } from '@screens/notifications/queries/queries';
 
+import NotificationIcon from './components/NotificationIcon';
 import { EVENTS, setUser, trackEvent } from '../../userTracking';
 import { GlobalParamList } from '../../navigation/models/GlobalParamList';
 import { MainStackParamList } from '../../navigation/models/MainStackParamList';
@@ -42,9 +45,12 @@ function DashboardScreen({
   const dispatch = useDispatch();
   const isLogin = useSelector((state: any) => state.auth.isLogin);
   const profileData = useSelector((state: any) => state.profile);
+  const { data: notifications } = useNotifications(['notifications-count'], {
+    deviceUniqueId: getUniqueId(),
+    unreadCount: true,
+  });
 
   const [banners, setBanners] = useState<BannersPresentable>();
-  // const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     const onValueChange = database
@@ -154,23 +160,28 @@ function DashboardScreen({
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
         title={'Explore BTK'}
-        renderRight={() => {
-          return (
-            <View style={styles.notificationContent}>
-              <Icon name="phone" size={18} color={colors.primaryDark} solid />
-              {/*<View*/}
-              {/*  style={[*/}
-              {/*    styles.doc,*/}
-              {/*    {*/}
-              {/*      backgroundColor: colors.primaryLight,*/}
-              {/*      borderColor: colors.card,*/}
-              {/*    },*/}
-              {/*  ]}*/}
-              {/*/>*/}
-            </View>
-          );
-        }}
-        onPressRight={onPressHelpLine}
+        renderRightSecond={() => (
+          <View style={styles.iconContainer}>
+            <Icon name="phone" size={19} color={colors.primaryDark} solid />
+          </View>
+        )}
+        onPressRightSecond={onPressHelpLine}
+        renderRight={() => (
+          <NotificationIcon
+            count={
+              notifications &&
+              !Array.isArray(notifications) &&
+              notifications?.unread
+                ? notifications?.unread
+                : 0
+            }
+          />
+        )}
+        onPressRight={() =>
+          navigation.navigate('NotificationStack', {
+            screen: 'Notification',
+          })
+        }
       />
       <TouchableOpacity
         onPress={() => navigation.navigate('Filter', {})}
@@ -521,7 +532,7 @@ const styles = StyleSheet.create({
     top: 0,
     right: 0,
   },
-  notificationContent: {
+  iconContainer: {
     width: 20,
     height: 20,
   },

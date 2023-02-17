@@ -6,13 +6,6 @@ import Toast from 'react-native-toast-message';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import crashlytics from '@react-native-firebase/crashlytics';
 
-import {
-  usePushNotifications,
-  useDynamicLinks,
-  useNativeUpdate,
-  useRemoteConfig,
-} from '@hooks';
-
 import { reactQueryClient } from './services/network/client';
 import { AlertsV2Provider } from './contexts/alerts-v2/AlertsV2Context';
 import Navigator from './navigation';
@@ -25,15 +18,6 @@ initMobileAds().catch((error) =>
 );
 
 export default function App() {
-  // Firebase Dynamic links handling
-  useDynamicLinks();
-  // Firebase push notification and cloud messaging
-  usePushNotifications();
-  // in-app update hook
-  useNativeUpdate();
-  // Firebase remote config
-  useRemoteConfig();
-
   return (
     <QueryClientProvider client={reactQueryClient}>
       <Provider store={store}>

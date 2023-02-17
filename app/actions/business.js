@@ -342,7 +342,7 @@ export const uploadImages = (image) => (dispatch, getState) => {
   form.append('file', generateFileObject(image));
   dispatch({ type: UPLOAD_THUMBNAIL_IMAGE_API, thumbnailLoading: true });
   axiosApiInstance
-    .post(`${UPLOAD}/${_id}/businesses/`, form, {
+    .post(`${UPLOAD}?folder=users/${_id}/businesses/`, form, {
       headers: { 'Content-Type': 'multipart/form-data' },
     })
     .then((response) => {
@@ -373,7 +373,7 @@ export const uploadGalleryImages = (payload) => (dispatch, getState) => {
       let form = new FormData();
       form.append('file', generateFileObject(file));
       axiosApiInstance
-        .post(`${UPLOAD}/${_id}/businesses/`, form, {
+        .post(`${UPLOAD}?folder=users/${_id}/businesses/`, form, {
           headers: { 'Content-Type': 'multipart/form-data' },
         })
         .then((response) =>

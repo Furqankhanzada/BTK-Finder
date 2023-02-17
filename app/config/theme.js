@@ -97,7 +97,7 @@ export const ThemeSupport = [
         background: 'white',
         card: '#F5F5F5',
         text: '#212121',
-        border: '#c7c7cc',
+        border: '#e5e5e5',
         notification: '#272729',
       },
     },

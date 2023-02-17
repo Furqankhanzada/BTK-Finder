@@ -4,7 +4,6 @@ import {
   GET_FAVORITES_API_ERROR,
   ADD_FAVORITE_API,
   REMOVE_FAVORITE_API,
-  CLEAR_FAVORITES_IN_REDUX,
 } from '../constants/favorites';
 
 const initialState = {
@@ -42,11 +41,6 @@ export default function userReducer(state = initialState, action = {}) {
       return {
         ...state,
         isFavoriteLoading: action.loading,
-      };
-    case CLEAR_FAVORITES_IN_REDUX:
-      return {
-        ...state,
-        getFavoriteBusinesses: [],
       };
     default:
       return state;
