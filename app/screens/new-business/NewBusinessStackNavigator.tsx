@@ -7,6 +7,7 @@ import {
   withAuthRedirection,
 } from '../../navigation/hoc/withAuthRedirection';
 import { NameScreen } from './name/NameScreen';
+import { AddressScreen } from './address/AddressScreen';
 
 const NewBusinessStack = createStackNavigator<NewBusinessParamList>();
 
@@ -19,6 +20,7 @@ export default function NewBusinessStackNavigator() {
           lastRoute: LastRoutes.NewBusinessStack,
         })}
       />
+      <NewBusinessStack.Screen name="Address" component={AddressScreen} />
     </NewBusinessStack.Navigator>
   );
 }
