@@ -23,6 +23,7 @@ export const useNotifications = (
   useQuery(
     key,
     (): Promise<NotificationPresentable[] | NotificationCountPresentable> => {
+      // TODO: fix return type with conditional types
       return axiosApiInstance({
         method: 'GET',
         url: `${NOTIFICATIONS_API}`,
