@@ -162,7 +162,7 @@ function DashboardScreen({
         title={'Explore BTK'}
         renderRightSecond={() => (
           <View style={styles.iconContainer}>
-            <Icon name="phone" size={19} color={colors.primaryDark} solid />
+            <Icon name="headset" size={19} color={colors.primaryDark} solid />
           </View>
         )}
         onPressRightSecond={onPressHelpLine}
