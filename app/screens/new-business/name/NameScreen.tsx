@@ -31,6 +31,7 @@ export const NameScreen = (
   const { data: businessData } = useBusiness(route?.params?.businessId ?? '');
   const { mutate: editName } = useEditBusiness(route?.params?.businessId ?? '');
 
+  const name = useAddBusinessStore((state: BusinessStoreTypes) => state.name);
   const setName = useAddBusinessStore(
     (state: BusinessStoreActions) => state.setName,
   );
@@ -41,7 +42,7 @@ export const NameScreen = (
     formState: { errors },
   } = useForm<BusinessStoreTypes>({
     defaultValues: {
-      name: isEditBusiness ? businessData?.name : '',
+      name: isEditBusiness ? businessData?.name : name,
     },
   });
 
