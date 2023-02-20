@@ -51,7 +51,7 @@ export const NameScreen = (
       navigation.goBack();
     } else {
       setName(data.name);
-      // navigation.navigate('Description');
+      navigation.navigate('Description');
     }
   };
 
