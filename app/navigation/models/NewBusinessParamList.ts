@@ -1,7 +1,7 @@
 export type NewBusinessParamList = {
   Name: undefined | { businessId?: string };
   Description: undefined | { businessId?: string };
-  Category: undefined | { businessId?: string };
+  CategorySelect: undefined | { businessId?: string };
   Facilities: undefined | { businessId?: string };
   Tags: undefined | { businessId?: string };
   Telephone: undefined | { businessId?: string };
