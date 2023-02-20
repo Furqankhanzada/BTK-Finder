@@ -22,7 +22,7 @@ import { useBusinessesInfinite } from '../businesses/queries/queries';
 import { getSingleBusiness } from '../../actions/business';
 
 export default function MyBusinessesScreen(props: any) {
-  const { navigation, route } = props;
+  const { navigation } = props;
   const scrollAnim = new Animated.Value(0);
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -54,7 +54,7 @@ export default function MyBusinessesScreen(props: any) {
     setIsRefreshing(false);
   };
 
-  const stateProps = useSelector(({ businesses }) => {
+  const stateProps = useSelector(({ businesses }: any) => {
     return {
       getEditLoading: businesses.getSingleBusinessLoading,
     };
@@ -160,9 +160,9 @@ export default function MyBusinessesScreen(props: any) {
             )}
             data={myBusinesses}
             key={'block'}
-            keyExtractor={(item, index) => item._id}
+            keyExtractor={(item) => item._id}
             ListEmptyComponent={listEmptyComponent}
-            renderItem={({ item, index }) => {
+            renderItem={({ item }) => {
               return (
                 <CardList
                   key={item._id}

@@ -3,9 +3,9 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { handleError } from '@utils';
 
-import axiosApiInstance from '../../../interceptor/axios-interceptor';
-import { DELETE_PROFILE, EDIT_PROFILE, UPLOAD } from '../../../constants';
-import { EDIT_PROFILE_API_SUCCESS } from '../../../constants/auth';
+import axiosApiInstance from '../../../../interceptor/axios-interceptor';
+import { DELETE_PROFILE, EDIT_PROFILE, UPLOAD } from '../../../../constants';
+import { EDIT_PROFILE_API_SUCCESS } from '../../../../constants/auth';
 import { UserPresentable } from '../models/UserPresentable';
 
 export interface DeleteMutationVar {

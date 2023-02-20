@@ -11,6 +11,22 @@ interface Helplines {
   data: HelplinesData[];
 }
 
+interface Team {
+  image: string;
+  name: string;
+  subName: string;
+  description: string;
+  link: string;
+}
+
+interface About {
+  backgroundImage: string;
+  whoWeAre: string;
+  ourTeam: Team[];
+  disclaimer: string;
+}
+
 export interface RemoteConfig {
   helplines: Helplines[];
+  about?: About;
 }
