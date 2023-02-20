@@ -13,18 +13,11 @@ import MapView, { MapEvent, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { StackScreenProps } from '@react-navigation/stack';
 import { Controller, useForm } from 'react-hook-form';
 
-import {
-  Header,
-  SafeAreaView,
-  Icon,
-  TextInput,
-  Text,
-  Button,
-} from '@components';
+import { Header, SafeAreaView, Icon, TextInput, Text } from '@components';
 import { BaseColor, BaseStyle } from '@config';
 import { useBusiness } from '@screens/businesses/queries/queries';
 
-import { newBusinessStyles } from '../styles/NewBusinessStyles';
+import { NavigationButtons } from '../components/NavigationButtons';
 import { NewBusinessParamList } from 'navigation/models/NewBusinessParamList';
 import { useEditBusiness } from '../apis/mutations';
 import useAddBusinessStore, {
@@ -218,7 +211,7 @@ export const AddressScreen = (
         coordinates: [location?.latitude, location?.longitude],
       });
       setAddress(data.address);
-      navigation.navigate('Hours');
+      // navigation.navigate('Hours');
     }
   };
 
@@ -247,11 +240,11 @@ export const AddressScreen = (
       <KeyboardAvoidingView
         behavior={Platform.select({ android: undefined, ios: 'padding' })}
         keyboardVerticalOffset={offsetKeyboard}
-        style={newBusinessStyles.keyboardAvoidView}>
-        <View style={newBusinessStyles.container}>
+        style={styles.keyboardAvoidView}>
+        <View style={styles.container}>
           <ScrollView
-            contentContainerStyle={newBusinessStyles.scrollViewContainerStyle}
-            style={newBusinessStyles.scrollView}>
+            contentContainerStyle={styles.scrollViewContainerStyle}
+            style={styles.scrollView}>
             <Text title1 bold>
               Address
             </Text>
@@ -262,7 +255,7 @@ export const AddressScreen = (
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
-                  style={newBusinessStyles.textArea}
+                  style={styles.textArea}
                   placeholder="Address"
                   onChangeText={onChange}
                   onBlur={onBlur}
@@ -295,36 +288,45 @@ export const AddressScreen = (
             </View>
           </ScrollView>
         </View>
-        <View
-          style={
-            isEditBusiness
-              ? newBusinessStyles.stickyFooterEdit
-              : newBusinessStyles.stickyFooter
-          }>
-          {isEditBusiness ? null : (
-            <Button
-              style={newBusinessStyles.footerButton}
-              onPress={navigateToBack}>
-              {'Back'}
-            </Button>
-          )}
-
-          <Button
-            style={[
-              newBusinessStyles.footerButton,
-              errors.address ? { backgroundColor: BaseColor.grayColor } : null,
-            ]}
-            title="submit"
-            onPress={handleSubmit(onSubmit)}>
-            {isEditBusiness ? 'Update Address' : 'Next'}
-          </Button>
-        </View>
+        <NavigationButtons
+          onSubmit={handleSubmit(onSubmit)}
+          disabled={!!errors.address}
+          isEdit={!!isEditBusiness}
+        />
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  keyboardAvoidView: {
+    flex: 1,
+  },
+  container: {
+    paddingHorizontal: 20,
+    flex: 1,
+    marginTop: 10,
+  },
+  scrollViewContainerStyle: {
+    flexGrow: 1,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  textArea: {
+    height: 80,
+    padding: 10,
+    marginTop: 15,
+  },
+  mapContainer: {
+    flex: 1,
+    marginVertical: 15,
+    borderRadius: 5,
+    overflow: 'hidden',
+  },
+  map: {
+    ...StyleSheet.absoluteFillObject,
+  },
   locationButton: {
     width: 52,
     height: 52,
@@ -344,14 +346,5 @@ const styles = StyleSheet.create({
   locationButtonIcon: {
     fontSize: 22,
     color: BaseColor.blueColor,
-  },
-  mapContainer: {
-    flex: 1,
-    marginVertical: 15,
-    borderRadius: 5,
-    overflow: 'hidden',
-  },
-  map: {
-    ...StyleSheet.absoluteFillObject,
   },
 });
