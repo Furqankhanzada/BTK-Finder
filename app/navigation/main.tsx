@@ -16,7 +16,6 @@ import { LastRoutes, withAuthRedirection } from './hoc/withAuthRedirection';
 import Business from '@screens/AddBusiness';
 import FavouriteScreen from '@screens/favourite/FavouriteScreen';
 import Messenger from '@screens/Messenger';
-import Welcome from '@screens/auth/welcome';
 
 /* Stack Screen */
 import ThemeSetting from '@screens/ThemeSetting';
@@ -28,11 +27,8 @@ import VerifyCode from '@screens/VerifyCode';
 import Messages from '@screens/Messages';
 import Walkthrough from '@screens/Walkthrough';
 import ResetPassword from '@screens/ResetPassword';
-import ChangePassword from '@screens/ChangePassword';
-import ProfileEdit from '@screens/profile/edit/ProfileEditScreen';
 import ChangeLanguage from '@screens/ChangeLanguage';
-import ContactUs from '@screens/ContactUs';
-import AboutUs from '@screens/AboutUs';
+import ContactUs from '@screens/settings/contact-us/ContactUsScreen';
 import Address from '@screens/AddBusiness/address';
 import Hours from '@screens/AddBusiness/hours';
 import PriceRange from '@screens/AddBusiness/priceRange';
@@ -41,7 +37,7 @@ import Gallery from '@screens/AddBusiness/gallery';
 import MyBusinessesScreen from '@screens/my-businesses/MyBusinessesScreen';
 import { DashboardStackNavigator } from '@screens/dashboard/navigation/DashboardStack';
 import BusinessesScreen from '@screens/businesses/list/BusinessesScreen';
-import SendNotificationScreen from '@screens/notifications/send/SendNotificationScreen';
+import { SettingsStackNavigator } from '@screens/settings/navigation/SettingsStack';
 
 import { MainStackParamList } from './models/MainStackParamList';
 import { MainBottomTabParamList } from './models/MainBottomTabParamList';
@@ -75,11 +71,8 @@ export default function Main() {
       <MainStack.Screen name="Messenger" component={Messenger} />
       <MainStack.Screen name="Messages" component={Messages} />
       <MainStack.Screen name="ResetPassword" component={ResetPassword} />
-      <MainStack.Screen name="ChangePassword" component={ChangePassword} />
-      <MainStack.Screen name="ProfileEdit" component={ProfileEdit} />
       <MainStack.Screen name="ChangeLanguage" component={ChangeLanguage} />
       <MainStack.Screen name="ContactUs" component={ContactUs} />
-      <MainStack.Screen name="AboutUs" component={AboutUs} />
       {/*<MainStack.Screen name="Business" component={Business} />*/}
       <MainStack.Screen name="Address" component={Address} />
       <MainStack.Screen name="Hours" component={Hours} />
@@ -89,10 +82,6 @@ export default function Main() {
       <MainStack.Screen name="MyBusinesses" component={MyBusinessesScreen} />
       <MainStack.Screen name="EditBusiness" component={Business} />
       <MainStack.Screen name="VerifyCode" component={VerifyCode} />
-      <MainStack.Screen
-        name="SendNotification"
-        component={SendNotificationScreen}
-      />
     </MainStack.Navigator>
   );
 }
@@ -155,24 +144,13 @@ function MainBottomTabNavigator() {
           },
         })}
       />
-
-      {/* <BottomTab.Screen
-        name="Notification"
-        component={Notification}
-        options={{
-          title: t('notification'),
-          tabBarIcon: ({ color }) => {
-            return <Icon color={color} name="bell" size={20} solid />;
-          },
-        }}
-      /> */}
       <MainBottomTab.Screen
-        name="Welcome"
-        component={Welcome}
+        name="SettingsStack"
+        component={SettingsStackNavigator}
         options={{
-          title: 'More',
+          title: 'Settings',
           tabBarIcon: ({ color }) => {
-            return <Icon solid color={color} name="ellipsis-h" size={25} />;
+            return <Icon solid color={color} name="cogs" size={25} />;
           },
         }}
       />

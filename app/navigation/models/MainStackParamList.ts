@@ -26,8 +26,6 @@ export type MainStackParamList = {
   Messenger: undefined;
   Messages: undefined;
   ResetPassword: undefined;
-  ChangePassword: undefined;
-  ProfileEdit: undefined;
   ChangeLanguage: undefined;
   ContactUs: undefined;
   AboutUs: undefined;
@@ -39,5 +37,4 @@ export type MainStackParamList = {
   MyBusinesses: undefined;
   EditBusiness: undefined;
   VerifyCode: undefined;
-  SendNotification: undefined;
 };
