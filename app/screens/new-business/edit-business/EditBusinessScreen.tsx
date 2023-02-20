@@ -72,7 +72,12 @@ export default function EditBusinessScreen(
               ? businessData.facilities[0].name
               : ''
           }
-          onPress={() => {}}
+          onPress={() => {
+            navigation.navigate('Edit', {
+              screen: 'Facilities',
+              params: { businessId: businessData?._id },
+            });
+          }}
         />
         <ListItem
           title="Tags"

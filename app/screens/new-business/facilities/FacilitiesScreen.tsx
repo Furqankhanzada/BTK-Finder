@@ -5,18 +5,17 @@ import {
   Platform,
   SafeAreaView,
   StyleSheet,
-  TouchableOpacity,
 } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
-import { useTranslation } from 'react-i18next';
 
+import { useRemoteConfig } from '@hooks';
+import { Header, Icon } from '@components';
+import { BaseStyle } from '@config';
 import { useBusiness } from '@screens/businesses/queries/queries';
-import { Header, TextInput, Icon } from '@components';
-import { BaseStyle, useTheme } from '@config';
+import { Facility } from '@screens/businesses/models/BusinessPresentable';
 
 import { NewBusinessParamList } from 'navigation/models/NewBusinessParamList';
 import { useEditBusiness } from '../apis/mutations';
-import { useCategories } from '../../category/queries/queries';
 import useAddBusinessStore, {
   BusinessStoreActions,
   BusinessStoreTypes,
@@ -24,66 +23,57 @@ import useAddBusinessStore, {
 import { NavigationButtons } from '../components/NavigationButtons';
 import { SelectItem } from '../components/SelectItem';
 
-export const CategorySelectScreen = (
-  props: StackScreenProps<NewBusinessParamList, 'CategorySelect'>,
+export const FacilitiesScreen = (
+  props: StackScreenProps<NewBusinessParamList, 'Facilities'>,
 ) => {
   const { navigation, route } = props;
-  const { colors } = useTheme();
-  const { t } = useTranslation();
   const isEditBusiness = route?.params?.businessId;
+  const remoteConfig = useRemoteConfig();
 
-  const { data: categories } = useCategories(['categories']);
   const { data: businessData } = useBusiness(route?.params?.businessId ?? '');
-  const { mutate: editBusiness } = useEditBusiness(
+  const { mutate: editFacility } = useEditBusiness(
     route?.params?.businessId ?? '',
   );
 
-  const category = useAddBusinessStore(
-    (state: BusinessStoreTypes) => state.category,
+  const storeFacilities = useAddBusinessStore(
+    (state: BusinessStoreTypes) => state.facilities,
   );
-  const setCategory = useAddBusinessStore(
-    (state: BusinessStoreActions) => state.setCategory,
+  const setStoreFacility = useAddBusinessStore(
+    (state: BusinessStoreActions) => state.setFacilities,
   );
 
-  const [selectedCategory, setSelectedCategory] = useState<string>(
-    category ?? '',
-  );
-  const [search, setSearch] = useState<string>('');
-  const [items, setItems] = useState(categories);
+  const [selectedFacilities, setSelectedFacilities] = useState<Facility[]>([]);
 
   useEffect(() => {
     if (isEditBusiness) {
-      setSelectedCategory(businessData?.category ?? '');
+      setSelectedFacilities(businessData?.facilities ?? []);
+    } else if (storeFacilities) {
+      setSelectedFacilities(storeFacilities);
     }
-  }, [businessData?.category, isEditBusiness]);
+  }, [businessData?.facilities, isEditBusiness, storeFacilities]);
 
-  const onChange = (select: { name: string }) => {
-    // Set State
-    setSelectedCategory(select?.name);
+  const onChange = (facility: Facility) => {
+    const isItemSelected = selectedFacilities?.some(
+      (obj: Facility) => obj.name === facility.name,
+    );
 
-    // Set in store
-    setCategory(select?.name);
-  };
-
-  const onSearch = (keyword: string) => {
-    setSearch(keyword);
-    if (!keyword) {
-      setItems(categories ?? []);
+    if (!isItemSelected) {
+      setSelectedFacilities([...selectedFacilities, facility]);
     } else {
-      setItems(
-        items?.filter((item: { name: string }) => {
-          return item.name.toUpperCase().includes(search.toUpperCase());
-        }),
+      const arr = selectedFacilities.filter(
+        (item: Facility) => item.name !== facility.name,
       );
+      setSelectedFacilities(arr);
     }
   };
 
   const navigateToNext = () => {
     if (isEditBusiness) {
-      editBusiness({ category: selectedCategory });
+      editFacility({ facilities: selectedFacilities });
       navigation.goBack();
-    } else if (selectedCategory) {
-      navigation.navigate('Facilities');
+    } else {
+      setStoreFacility(selectedFacilities);
+      // navigation.navigate('Tags');
     }
   };
 
@@ -99,7 +89,7 @@ export const CategorySelectScreen = (
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
-        title={isEditBusiness ? 'Update Category' : 'Select Category'}
+        title={isEditBusiness ? 'Edit Facilites' : 'Select Facilities'}
         renderLeft={() => {
           return isEditBusiness ? (
             <Icon
@@ -118,30 +108,18 @@ export const CategorySelectScreen = (
         keyboardVerticalOffset={offsetKeyboard}
         style={styles.keyboardAvoidView}>
         <FlatList
-          contentContainerStyle={styles.container}
-          data={items}
+          data={remoteConfig.facilities}
           keyExtractor={(item, index) => {
             return `${index}-${item.name}`;
           }}
-          ListHeaderComponent={() => {
-            return categories ? (
-              <TextInput
-                onChangeText={(text) => onSearch(text)}
-                placeholder={t('search')}
-                value={search}
-                icon={
-                  <TouchableOpacity onPress={() => onSearch('')}>
-                    <Icon name="times" size={16} color={colors.primaryLight} />
-                  </TouchableOpacity>
-                }
-              />
-            ) : null;
-          }}
           renderItem={({ item, index }) => {
-            const checked = selectedCategory === item.name;
+            const checked = selectedFacilities?.some(
+              (obj: Facility) => obj.name === item.name,
+            );
+
             return (
               <SelectItem
-                key={`${index + item._id}`}
+                key={`${index + item.name}`}
                 onPress={() => onChange(item)}
                 text={item.name}
                 checked={checked}
@@ -153,7 +131,6 @@ export const CategorySelectScreen = (
 
         <NavigationButtons
           onSubmit={navigateToNext}
-          disabled={!category}
           isEdit={!!isEditBusiness}
         />
       </KeyboardAvoidingView>

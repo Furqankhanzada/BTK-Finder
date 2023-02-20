@@ -10,6 +10,7 @@ import { NameScreen } from './name/NameScreen';
 import { DescriptionScreen } from './description/DescriptionScreen';
 import { AddressScreen } from './address/AddressScreen';
 import { CategorySelectScreen } from './category/CategorySelectScreen';
+import { FacilitiesScreen } from './facilities/FacilitiesScreen';
 
 const NewBusinessStack = createStackNavigator<NewBusinessParamList>();
 
@@ -30,6 +31,7 @@ export default function NewBusinessStackNavigator() {
         name="CategorySelect"
         component={CategorySelectScreen}
       />
+      <NewBusinessStack.Screen name="Facilities" component={FacilitiesScreen} />
       <NewBusinessStack.Screen name="Address" component={AddressScreen} />
     </NewBusinessStack.Navigator>
   );
