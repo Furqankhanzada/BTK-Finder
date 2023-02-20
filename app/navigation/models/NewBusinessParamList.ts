@@ -1,14 +1,14 @@
 export type NewBusinessParamList = {
-  Name: { businessId?: string };
-  Description: { businessId?: string };
-  Category: { businessId?: string };
-  Facilities: { businessId?: string };
-  Tags: { businessId?: string };
-  Telephone: { businessId?: string };
-  Email: { businessId?: string };
-  Website: { businessId?: string };
-  Address: { businessId?: string };
-  Hours: { businessId?: string };
-  Price: { businessId?: string };
-  Gallery: { businessId?: string };
+  Name: undefined | { businessId?: string };
+  Description: undefined | { businessId?: string };
+  Category: undefined | { businessId?: string };
+  Facilities: undefined | { businessId?: string };
+  Tags: undefined | { businessId?: string };
+  Telephone: undefined | { businessId?: string };
+  Email: undefined | { businessId?: string };
+  Website: undefined | { businessId?: string };
+  Address: undefined | { businessId?: string };
+  Hours: undefined | { businessId?: string };
+  Price: undefined | { businessId?: string };
+  Gallery: undefined | { businessId?: string };
 };
