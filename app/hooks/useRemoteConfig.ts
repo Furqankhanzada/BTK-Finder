@@ -19,6 +19,9 @@ export default function useRemoteConfig(): RemoteConfig {
       if (key === 'facilities') {
         setConfig({ ...config, facilities: JSON.parse(value._value) });
       }
+      if (key === 'tags') {
+        setConfig({ ...config, tags: JSON.parse(value._value) });
+      }
     }
   };
 

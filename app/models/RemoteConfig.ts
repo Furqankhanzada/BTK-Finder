@@ -16,4 +16,5 @@ interface Helplines {
 export interface RemoteConfig {
   helplines: Helplines[];
   facilities?: Facility[];
+  tags?: { name: string }[];
 }
