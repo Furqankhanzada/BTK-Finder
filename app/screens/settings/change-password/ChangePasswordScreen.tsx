@@ -1,7 +1,18 @@
 import React, { useRef, useState } from 'react';
-import { View, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
-import { BaseStyle, useTheme } from '@config';
+import {
+  View,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  TextInput as TextInputOriginal,
+  StyleSheet,
+} from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import Toast from 'react-native-toast-message';
+import { StackScreenProps } from '@react-navigation/stack';
 import { useTranslation } from 'react-i18next';
+
+import { BaseColor, BaseStyle, useTheme } from '@config';
 import {
   Header,
   SafeAreaView,
@@ -10,27 +21,28 @@ import {
   Button,
   TextInput,
 } from '@components';
-import styles from './styles';
-import { changePassword } from '../../actions/auth';
-import { useDispatch, useSelector } from 'react-redux';
-import Toast from 'react-native-toast-message';
 
-export default function ChangePassword({ navigation }) {
+import { SettingsParamList } from '../../../navigation/models/SettingsParamList';
+import { changePassword } from '../../../actions/auth';
+
+export default function ChangePasswordScreen({
+  navigation,
+}: StackScreenProps<SettingsParamList, 'ChangePassword'>) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { colors } = useTheme();
-  const confirmPasswordRef = useRef(null);
+  const confirmPasswordRef = useRef<TextInputOriginal>(null);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const changePasswordLoading = useSelector(
-    (state) => state.auth.changePasswordLoading,
+    (state: any) => state.auth.changePasswordLoading,
   );
 
   const onConfirm = () => {
     if (newPassword === confirmPassword) {
       dispatch(
         changePassword({ password: newPassword }, () =>
-          navigation.navigate('Welcome'),
+          navigation.navigate('Settings'),
         ),
       );
     } else {
@@ -49,7 +61,7 @@ export default function ChangePassword({ navigation }) {
   });
 
   return (
-    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
+    <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
         title={t('change_password')}
         renderLeft={() => {
@@ -86,7 +98,7 @@ export default function ChangePassword({ navigation }) {
             secureTextEntry={true}
             placeholder="New Password"
             value={newPassword}
-            onSubmitEditing={() => confirmPasswordRef.current.focus()}
+            onSubmitEditing={() => confirmPasswordRef.current?.focus()}
           />
           <TextInput
             ref={confirmPasswordRef}
@@ -114,3 +126,23 @@ export default function ChangePassword({ navigation }) {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  contentTitle: {
+    alignItems: 'flex-start',
+    width: '100%',
+    height: 32,
+    justifyContent: 'center',
+  },
+  contain: {
+    flex: 1,
+    padding: 20,
+  },
+  textInput: {
+    height: 46,
+    backgroundColor: BaseColor.fieldColor,
+    borderRadius: 5,
+    padding: 10,
+    width: '100%',
+  },
+});
