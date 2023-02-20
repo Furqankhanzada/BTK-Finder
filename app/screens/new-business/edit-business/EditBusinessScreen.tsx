@@ -48,7 +48,12 @@ export default function EditBusinessScreen(
         <ListItem
           title="Description"
           text={businessData?.description}
-          onPress={() => {}}
+          onPress={() => {
+            navigation.navigate('Edit', {
+              screen: 'Description',
+              params: { businessId: businessData?._id },
+            });
+          }}
         />
         <ListItem
           title="Category"
