@@ -37,11 +37,7 @@ export const DescriptionScreen = (
     (state: BusinessStoreActions) => state.setDescription,
   );
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<BusinessStoreTypes>({
+  const { control, handleSubmit } = useForm<BusinessStoreTypes>({
     defaultValues: {
       description: isEditBusiness ? businessData?.description : '',
     },
