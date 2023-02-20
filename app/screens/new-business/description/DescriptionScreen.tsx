@@ -102,9 +102,6 @@ export const DescriptionScreen = (
             return (
               <Controller
                 control={control}
-                rules={{
-                  required: true,
-                }}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <View>
                     <Text title1 bold>
@@ -117,7 +114,6 @@ export const DescriptionScreen = (
                       onBlur={onBlur}
                       onChangeText={onChange}
                       value={value}
-                      success={!errors.description}
                       multiline={true}
                       textAlignVertical="top"
                     />
@@ -131,7 +127,6 @@ export const DescriptionScreen = (
 
         <NavigationButtons
           onSubmit={handleSubmit(onSubmit)}
-          disabled={!!errors.name}
           isEdit={!!isEditBusiness}
         />
       </KeyboardAvoidingView>

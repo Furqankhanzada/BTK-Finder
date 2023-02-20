@@ -7,7 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 
 type Props = {
   isEdit: boolean;
-  disabled: boolean;
+  disabled?: boolean;
   onSubmit: () => void;
 };
 
