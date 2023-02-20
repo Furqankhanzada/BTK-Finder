@@ -5,14 +5,14 @@ import {
   Platform,
   SafeAreaView,
   StyleSheet,
+  TouchableOpacity,
 } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 
 import { useRemoteConfig } from '@hooks';
-import { Header, Icon } from '@components';
-import { BaseStyle } from '@config';
+import { Header, TextInput, Icon } from '@components';
+import { BaseStyle, useTheme } from '@config';
 import { useBusiness } from '@screens/businesses/queries/queries';
-import { Facility } from '@screens/businesses/models/BusinessPresentable';
 
 import { NewBusinessParamList } from 'navigation/models/NewBusinessParamList';
 import { useEditBusiness } from '../apis/mutations';
@@ -23,57 +23,75 @@ import useAddBusinessStore, {
 import { NavigationButtons } from '../components/NavigationButtons';
 import { SelectItem } from '../components/SelectItem';
 
-export const FacilitiesScreen = (
-  props: StackScreenProps<NewBusinessParamList, 'Facilities'>,
+export const TagsScreen = (
+  props: StackScreenProps<NewBusinessParamList, 'Tags'>,
 ) => {
   const { navigation, route } = props;
-  const isEditBusiness = route?.params?.businessId;
+  const { colors } = useTheme();
   const remoteConfig = useRemoteConfig();
+  const isEditBusiness = route?.params?.businessId;
 
   const { data: businessData } = useBusiness(route?.params?.businessId ?? '');
-  const { mutate: editFacility } = useEditBusiness(
-    route?.params?.businessId ?? '',
+  const { mutate: editTags } = useEditBusiness(route?.params?.businessId ?? '');
+
+  const storeTags = useAddBusinessStore(
+    (state: BusinessStoreTypes) => state.tags,
+  );
+  const setTag = useAddBusinessStore(
+    (state: BusinessStoreActions) => state.setTags,
   );
 
-  const storeFacilities = useAddBusinessStore(
-    (state: BusinessStoreTypes) => state.facilities,
-  );
-  const setStoreFacility = useAddBusinessStore(
-    (state: BusinessStoreActions) => state.setFacilities,
-  );
-
-  const [selectedFacilities, setSelectedFacilities] = useState<Facility[]>([]);
+  const tags = remoteConfig?.tags;
+  const [selected, setSelected] = useState<string[]>([]);
+  const [search, setSearch] = useState<string>('');
+  const [items, setItems] = useState(tags);
 
   useEffect(() => {
-    if (isEditBusiness) {
-      setSelectedFacilities(businessData?.facilities ?? []);
-    } else if (storeFacilities) {
-      setSelectedFacilities(storeFacilities);
+    if (isEditBusiness && businessData?.tags) {
+      setSelected(businessData?.tags);
+    } else if (storeTags) {
+      setSelected(storeTags);
     }
-  }, [businessData?.facilities, isEditBusiness, storeFacilities]);
+  }, [businessData?.tags, isEditBusiness, storeTags]);
 
-  const onChange = (facility: Facility) => {
-    const isItemSelected = selectedFacilities?.some(
-      (obj: Facility) => obj.name === facility.name,
-    );
+  const onChange = (select: { name: string }) => {
+    //Check if tag is selected or not
+    const isItemSelected = selected.includes(select?.name);
 
     if (!isItemSelected) {
-      setSelectedFacilities([...selectedFacilities, facility]);
+      //Add Tag into selected tags when not available
+      const selectedTags = [...selected];
+      selectedTags.push(select.name);
+      setSelected(selectedTags);
     } else {
-      const arr = selectedFacilities.filter(
-        (item: Facility) => item.name !== facility.name,
+      //Remove Tag from selected tags if already available
+      const updatedTags = selected.filter(
+        (item: string) => item !== select.name,
       );
-      setSelectedFacilities(arr);
+      setSelected(updatedTags);
+    }
+  };
+
+  const onSearch = (keyword: string) => {
+    setSearch(keyword);
+    if (!keyword) {
+      setItems(tags ?? []);
+    } else {
+      setItems(
+        items?.filter((item: { name: string }) => {
+          return item.name.toUpperCase().includes(search.toUpperCase());
+        }),
+      );
     }
   };
 
   const navigateToNext = () => {
     if (isEditBusiness) {
-      editFacility({ facilities: selectedFacilities });
+      editTags({ tags: selected });
       navigation.goBack();
     } else {
-      setStoreFacility(selectedFacilities);
-      navigation.navigate('Tags');
+      setTag(selected);
+      // navigation.navigate('Telephone');
     }
   };
 
@@ -89,7 +107,7 @@ export const FacilitiesScreen = (
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
-        title={isEditBusiness ? 'Edit Facilites' : 'Select Facilities'}
+        title={isEditBusiness ? 'Edit Tags' : 'Select Tags'}
         renderLeft={() => {
           return isEditBusiness ? (
             <Icon
@@ -107,23 +125,32 @@ export const FacilitiesScreen = (
         behavior={Platform.select({ android: undefined, ios: 'padding' })}
         keyboardVerticalOffset={offsetKeyboard}
         style={styles.keyboardAvoidView}>
+        {tags ? (
+          <TextInput
+            onChangeText={(text) => onSearch(text)}
+            placeholder="Search"
+            value={search}
+            icon={
+              <TouchableOpacity onPress={() => onSearch('')}>
+                <Icon name="times" size={16} color={colors.primaryLight} />
+              </TouchableOpacity>
+            }
+          />
+        ) : null}
         <FlatList
-          data={remoteConfig.facilities}
+          contentContainerStyle={styles.container}
+          data={tags}
           keyExtractor={(item, index) => {
             return `${index}-${item.name}`;
           }}
           renderItem={({ item, index }) => {
-            const checked = selectedFacilities?.some(
-              (obj: Facility) => obj.name === item.name,
-            );
-
+            const checked = selected.includes(item.name);
             return (
               <SelectItem
                 key={`${index + item.name}`}
                 onPress={() => onChange(item)}
                 text={item.name}
                 checked={checked}
-                icon={item.icon}
               />
             );
           }}

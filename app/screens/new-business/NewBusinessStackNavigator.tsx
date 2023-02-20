@@ -8,9 +8,10 @@ import {
 } from '../../navigation/hoc/withAuthRedirection';
 import { NameScreen } from './name/NameScreen';
 import { DescriptionScreen } from './description/DescriptionScreen';
-import { AddressScreen } from './address/AddressScreen';
 import { CategorySelectScreen } from './category/CategorySelectScreen';
 import { FacilitiesScreen } from './facilities/FacilitiesScreen';
+import { TagsScreen } from './tags/TagsScreen';
+import { AddressScreen } from './address/AddressScreen';
 
 const NewBusinessStack = createStackNavigator<NewBusinessParamList>();
 
@@ -32,6 +33,7 @@ export default function NewBusinessStackNavigator() {
         component={CategorySelectScreen}
       />
       <NewBusinessStack.Screen name="Facilities" component={FacilitiesScreen} />
+      <NewBusinessStack.Screen name="Tags" component={TagsScreen} />
       <NewBusinessStack.Screen name="Address" component={AddressScreen} />
     </NewBusinessStack.Navigator>
   );
