@@ -4,22 +4,23 @@ import {
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
+  StyleSheet,
   View,
 } from 'react-native';
 import { Controller, useForm } from 'react-hook-form';
 import { StackScreenProps } from '@react-navigation/stack';
 
 import { useBusiness } from '@screens/businesses/queries/queries';
-import { Header, Text, TextInput, Button, Icon } from '@components';
-import { BaseColor, BaseStyle } from '@config';
+import { Header, Text, TextInput, Icon } from '@components';
+import { BaseStyle } from '@config';
 
-import { newBusinessStyles } from '../styles/NewBusinessStyles';
 import { NewBusinessParamList } from '../../../navigation/models/NewBusinessParamList';
 import { useEditBusiness } from '../apis/mutations';
 import useAddBusinessStore, {
   BusinessStoreActions,
   BusinessStoreTypes,
 } from '../store/Store';
+import { NavigationButtons } from '../components/NavigationButtons';
 
 export const NameScreen = (
   props: StackScreenProps<NewBusinessParamList, 'Name'>,
@@ -47,7 +48,7 @@ export const NameScreen = (
   const onSubmit = async (data: BusinessStoreTypes) => {
     if (isEditBusiness) {
       editName({ name: data.name });
-      // navigation.navigate('EditBusiness', { id: businessData?._id });
+      navigation.goBack();
     } else {
       setName(data.name);
       // navigation.navigate('Description');
@@ -66,7 +67,7 @@ export const NameScreen = (
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
-        title={isEditBusiness ? 'Edit Business Name' : 'Add Business'}
+        title={isEditBusiness ? 'Edit Business Name' : 'Add New Business'}
         renderLeft={() => {
           return isEditBusiness ? (
             <Icon
@@ -83,9 +84,9 @@ export const NameScreen = (
       <KeyboardAvoidingView
         behavior={Platform.select({ android: undefined, ios: 'padding' })}
         keyboardVerticalOffset={offsetKeyboard}
-        style={newBusinessStyles.keyboardAvoidView}>
+        style={styles.keyboardAvoidView}>
         <FlatList
-          style={newBusinessStyles.container}
+          style={styles.container}
           overScrollMode={'never'}
           scrollEventThrottle={16}
           data={[1]}
@@ -102,7 +103,7 @@ export const NameScreen = (
                       Please write your business name
                     </Text>
                     <TextInput
-                      style={newBusinessStyles.input}
+                      style={styles.input}
                       placeholder="e.g Kababjees"
                       onBlur={onBlur}
                       onChangeText={onChange}
@@ -117,31 +118,26 @@ export const NameScreen = (
           }}
         />
 
-        <View
-          style={
-            isEditBusiness
-              ? newBusinessStyles.stickyFooterEdit
-              : newBusinessStyles.stickyFooter
-          }>
-          {isEditBusiness ? null : (
-            <Button
-              style={newBusinessStyles.footerButton}
-              onPress={navigateToBack}>
-              {'Back'}
-            </Button>
-          )}
-
-          <Button
-            style={[
-              newBusinessStyles.footerButton,
-              errors.name ? { backgroundColor: BaseColor.grayColor } : null,
-            ]}
-            title="submit"
-            onPress={handleSubmit(onSubmit)}>
-            {isEditBusiness ? 'Update Name' : 'Next'}
-          </Button>
-        </View>
+        <NavigationButtons
+          onSubmit={handleSubmit(onSubmit)}
+          disabled={!!errors.name}
+          isEdit={!!isEditBusiness}
+        />
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  keyboardAvoidView: {
+    flex: 1,
+  },
+  container: {
+    paddingHorizontal: 20,
+    flex: 1,
+    marginTop: 10,
+  },
+  input: {
+    marginTop: 15,
+  },
+});
