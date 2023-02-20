@@ -57,10 +57,6 @@ export const DescriptionScreen = (
     navigation.goBack();
   };
 
-  const navigateToNext = () => {
-    // navigation.navigate('Category');
-  };
-
   const offsetKeyboard = Platform.select({
     ios: 0,
     android: 20,
@@ -81,8 +77,6 @@ export const DescriptionScreen = (
           ) : null;
         }}
         onPressLeft={navigateToBack}
-        renderRight={() => (isEditBusiness ? null : <Text>Skip</Text>)}
-        onPressRight={() => (isEditBusiness ? null : navigateToNext())}
       />
 
       <KeyboardAvoidingView
