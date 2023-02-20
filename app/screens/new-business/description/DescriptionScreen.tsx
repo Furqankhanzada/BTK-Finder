@@ -33,13 +33,16 @@ export const DescriptionScreen = (
     route?.params?.businessId ?? '',
   );
 
+  const description = useAddBusinessStore(
+    (state: BusinessStoreTypes) => state.description,
+  );
   const setDescription = useAddBusinessStore(
     (state: BusinessStoreActions) => state.setDescription,
   );
 
   const { control, handleSubmit } = useForm<BusinessStoreTypes>({
     defaultValues: {
-      description: isEditBusiness ? businessData?.description : '',
+      description: isEditBusiness ? businessData?.description : description,
     },
   });
 
@@ -49,7 +52,7 @@ export const DescriptionScreen = (
       navigation.goBack();
     } else {
       setDescription(data.description);
-      // navigation.navigate('Category');
+      navigation.navigate('CategorySelect');
     }
   };
 
