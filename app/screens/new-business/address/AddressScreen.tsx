@@ -260,6 +260,7 @@ export const AddressScreen = (
                   onChangeText={onChange}
                   onBlur={onBlur}
                   value={value}
+                  success={!errors.address}
                   multiline={true}
                   textAlignVertical="top"
                 />
