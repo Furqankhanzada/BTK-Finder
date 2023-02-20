@@ -16,6 +16,9 @@ export default function useRemoteConfig(): RemoteConfig {
       if (key === 'helplines') {
         setConfig({ ...config, helplines: JSON.parse(value._value) });
       }
+      if (key === 'aboutUs') {
+        setConfig({ ...config, about: JSON.parse(value._value) });
+      }
     }
   };
 
