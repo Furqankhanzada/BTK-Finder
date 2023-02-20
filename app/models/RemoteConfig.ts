@@ -1,3 +1,5 @@
+import { Facility } from '@screens/businesses/models/BusinessPresentable';
+
 export interface HelplinesData {
   title: string;
   numbers: string[];
@@ -13,4 +15,5 @@ interface Helplines {
 
 export interface RemoteConfig {
   helplines: Helplines[];
+  facilities?: Facility[];
 }
