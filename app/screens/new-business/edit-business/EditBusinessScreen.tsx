@@ -92,7 +92,12 @@ export default function EditBusinessScreen(
         <ListItem
           title="Telephone"
           text={businessData?.telephone}
-          onPress={() => {}}
+          onPress={() => {
+            navigation.navigate('Edit', {
+              screen: 'Telephone',
+              params: { businessId: businessData?._id },
+            });
+          }}
         />
         <ListItem title="Email" text={businessData?.email} onPress={() => {}} />
         <ListItem

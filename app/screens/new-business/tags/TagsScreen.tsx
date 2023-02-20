@@ -91,7 +91,7 @@ export const TagsScreen = (
       navigation.goBack();
     } else {
       setTag(selected);
-      // navigation.navigate('Telephone');
+      navigation.navigate('Telephone');
     }
   };
 
