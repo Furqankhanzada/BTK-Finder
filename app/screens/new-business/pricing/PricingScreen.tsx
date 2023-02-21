@@ -46,14 +46,12 @@ export const PricingScreen = (
   });
 
   const onSubmit = (data: BusinessStoreTypes) => {
-    const isValidPrice = data?.priceRange?.from ?? 0 >= 200;
-
-    if (isEditBusiness && isValidPrice) {
+    if (isEditBusiness) {
       EditPrice({
         priceRange: data.priceRange,
       });
       navigation.goBack();
-    } else if (isValidPrice) {
+    } else {
       setPriceRange(data.priceRange);
       navigation.navigate('Gallery');
     }

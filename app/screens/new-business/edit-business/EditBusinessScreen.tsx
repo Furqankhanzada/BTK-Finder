@@ -160,7 +160,12 @@ export default function EditBusinessScreen(
         <ListItem
           title="Gallery"
           text={businessData?.thumbnail ? 'Gallery' : ''}
-          onPress={() => {}}
+          onPress={() => {
+            navigation.navigate('Edit', {
+              screen: 'Gallery',
+              params: { businessId: businessData?._id },
+            });
+          }}
         />
       </ScrollView>
     </SafeAreaView>
