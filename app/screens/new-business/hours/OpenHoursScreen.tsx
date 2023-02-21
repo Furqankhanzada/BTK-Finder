@@ -99,7 +99,7 @@ export const OpenHoursScreen = (
       navigation.goBack();
     } else {
       setOpenHours(hours);
-      // navigation.navigate('Price');
+      navigation.navigate('Pricing');
     }
   };
 
@@ -170,8 +170,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     flex: 1,
     marginTop: 10,
-  },
-  input: {
-    marginTop: 15,
   },
 });

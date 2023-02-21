@@ -150,7 +150,12 @@ export default function EditBusinessScreen(
               ? `${businessData?.priceRange?.from} To ${businessData?.priceRange?.to}`
               : ''
           }
-          onPress={() => {}}
+          onPress={() => {
+            navigation.navigate('Edit', {
+              screen: 'Pricing',
+              params: { businessId: businessData?._id },
+            });
+          }}
         />
         <ListItem
           title="Gallery"

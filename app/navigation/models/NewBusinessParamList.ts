@@ -9,6 +9,6 @@ export type NewBusinessParamList = {
   Website: undefined | { businessId?: string };
   Address: undefined | { businessId?: string };
   OpenHours: undefined | { businessId?: string };
-  Price: undefined | { businessId?: string };
+  Pricing: undefined | { businessId?: string };
   Gallery: undefined | { businessId?: string };
 };
