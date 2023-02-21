@@ -211,7 +211,7 @@ export const AddressScreen = (
         coordinates: [location?.latitude, location?.longitude],
       });
       setAddress(data.address);
-      // navigation.navigate('Hours');
+      navigation.navigate('OpenHours');
     }
   };
 

@@ -130,13 +130,18 @@ export default function EditBusinessScreen(
           }}
         />
         <ListItem
-          title="OpenHours"
+          title="Open Hours"
           text={
             businessData?.openHours?.length
               ? `${businessData?.openHours[0]?.day} ${businessData?.openHours[0]?.from} To ${businessData?.openHours[0]?.to}`
               : ''
           }
-          onPress={() => {}}
+          onPress={() => {
+            navigation.navigate('Edit', {
+              screen: 'OpenHours',
+              params: { businessId: businessData?._id },
+            });
+          }}
         />
         <ListItem
           title="Pricing"

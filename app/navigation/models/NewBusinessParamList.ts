@@ -8,7 +8,7 @@ export type NewBusinessParamList = {
   Email: undefined | { businessId?: string };
   Website: undefined | { businessId?: string };
   Address: undefined | { businessId?: string };
-  Hours: undefined | { businessId?: string };
+  OpenHours: undefined | { businessId?: string };
   Price: undefined | { businessId?: string };
   Gallery: undefined | { businessId?: string };
 };

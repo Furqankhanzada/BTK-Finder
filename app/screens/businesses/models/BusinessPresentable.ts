@@ -47,6 +47,7 @@ export interface Facility {
 }
 
 export interface OpenHours {
+  isOpen?: boolean;
   day: string;
   from: string;
   to: string;
