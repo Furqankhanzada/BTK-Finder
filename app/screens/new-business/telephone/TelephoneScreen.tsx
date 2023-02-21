@@ -11,9 +11,9 @@ import { StackScreenProps } from '@react-navigation/stack';
 
 import { Header, Text, TextInput, Icon } from '@components';
 import { BaseStyle } from '@config';
+import { useBusiness } from '@screens/businesses/queries/queries';
 
 import { NewBusinessParamList } from 'navigation/models/NewBusinessParamList';
-import { useBusiness } from '@screens/businesses/queries/queries';
 import { useEditBusiness } from '../apis/mutations';
 import useAddBusinessStore, {
   BusinessStoreActions,
