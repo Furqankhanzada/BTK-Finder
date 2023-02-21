@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { useTheme } from '@config';
-import PropTypes from 'prop-types';
 import CheckBox from 'react-native-check-box';
 import { Text } from '@components';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -12,7 +11,7 @@ export default function HoursCheckbox(props) {
   const { colors } = useTheme();
   const { day, getObject } = props;
 
-  const [isSelected, setSelection] = useState(false);
+  const [isSelected, setSelection] = useState(day.isOpen ?? false);
   const [fromPickerVisible, setFromPickerVisibility] = useState(false);
   const [toPickerVisible, setToPickerVisibility] = useState(false);
 
@@ -25,12 +24,12 @@ export default function HoursCheckbox(props) {
 
   const fromHandleConfirm = (value) => {
     let from = moment(value).format('hh:mm a');
-    getObject({ day: day.day, isOpen: isSelected, from });
+    getObject({ day: day.day, isOpen: day.isOpen ?? isSelected, from });
     toggleFromPicker();
   };
   const toHandleConfirm = (value) => {
     let to = moment(value).format('hh:mm a');
-    getObject({ day: day.day, isOpen: isSelected, to });
+    getObject({ day: day.day, isOpen: day.isOpen ?? isSelected, to });
     toggleToPicker();
   };
 
@@ -103,11 +102,3 @@ export default function HoursCheckbox(props) {
     </View>
   );
 }
-
-HoursCheckbox.propTypes = {
-  hours: PropTypes.object,
-};
-
-HoursCheckbox.defaultProps = {
-  hours: {},
-};
