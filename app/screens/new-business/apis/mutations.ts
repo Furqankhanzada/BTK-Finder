@@ -1,27 +1,30 @@
+import { useSelector } from 'react-redux';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { handleError } from '../../../utils';
-
-import axiosApiInstance from '../../../interceptor/axios-interceptor';
-import { BUSINESSES_API } from '../../../constants';
 import Toast from 'react-native-toast-message';
+
 import {
+  BusinessPresentable,
   Facility,
   Gallery,
+  Location,
   OpenHours,
   PriceRange,
 } from '@screens/businesses/models/BusinessPresentable';
 
-export interface Location {
-  type: string;
-  coordinates: number[];
-}
+import axiosApiInstance from '../../../interceptor/axios-interceptor';
+import { generateFileObject, handleError } from '../../../utils';
+import { BUSINESSES_API, UPLOAD } from '../../../constants';
+import useAddBusinessStore, {
+  BusinessStoreActions,
+  BusinessStoreTypes,
+} from '../store/Store';
 
 export interface AddBusinessPayload {
   name: string;
   description?: string;
   category: string;
-  facilities?: Facility;
-  tags?: Array<string>;
+  facilities?: Facility[];
+  tags?: string[];
   telephone?: string;
   email?: string;
   website?: string;
@@ -33,7 +36,7 @@ export interface AddBusinessPayload {
   gallery?: Gallery[];
 }
 
-export interface EditBusinessPayload {
+interface EditBusinessPayload {
   name?: string;
   description?: string;
   category?: string;
@@ -50,7 +53,89 @@ export interface EditBusinessPayload {
   gallery?: Gallery[];
 }
 
-// Edit Business
+export const useAddThumbnail = () => {
+  const setThumbnail = useAddBusinessStore(
+    (state: BusinessStoreActions) => state.setThumbnail,
+  );
+
+  const user = useSelector((state: any) => state.profile);
+  const { _id } = user;
+  return useMutation((imagePath: any) => {
+    const imageData = new FormData();
+    imageData.append('file', generateFileObject(imagePath));
+    return axiosApiInstance
+      .post(`${UPLOAD}?folder=users/${_id}/businesses`, imageData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
+      .then((res) => {
+        setThumbnail(res.data.Location);
+      })
+      .catch((error) => {
+        handleError(error);
+      });
+  });
+};
+
+export const useAddGalleryImages = () => {
+  const setGallery = useAddBusinessStore(
+    (state: BusinessStoreActions) => state.setGallery,
+  );
+  const gallery = useAddBusinessStore(
+    (state: BusinessStoreTypes) => state.gallery,
+  );
+
+  const user = useSelector((state: any) => state.profile);
+  const { _id } = user;
+  return useMutation((imagePath: any) => {
+    console.log('@imagePath', imagePath);
+    const chunks = imagePath.map((file: any) => {
+      return new Promise((resolve, reject) => {
+        const imageData = new FormData();
+        imageData.append('file', generateFileObject(file));
+        return axiosApiInstance
+          .post(`${UPLOAD}?folder=users/${_id}/businesses`, imageData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+          })
+          .then((response) =>
+            resolve({
+              image: response.data.Location,
+              cover: false,
+            }),
+          )
+          .catch((error) => reject(error));
+      });
+    });
+    Promise.all(chunks)
+      .then((res) => {
+        setGallery([...gallery, ...res]);
+      })
+      .catch((error) => {
+        handleError(error);
+      });
+  });
+};
+
+export const useAddBusiness = () => {
+  return useMutation<BusinessPresentable, Error, AddBusinessPayload>(
+    (payload) => {
+      return axiosApiInstance
+        .post(`${BUSINESSES_API}`, payload)
+        .then((response) => {
+          Toast.show({
+            type: 'success',
+            topOffset: 55,
+            text1: 'Business Added',
+            text2: 'You have Successfully Add your Business!',
+          });
+          return response.data;
+        })
+        .catch(({ response }) => {
+          handleError(response.data);
+        });
+    },
+  );
+};
+
 export const useEditBusiness = (id: string) => {
   const queryClient = useQueryClient();
 
