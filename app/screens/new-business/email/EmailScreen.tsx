@@ -7,6 +7,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
+import { Controller, useForm } from 'react-hook-form';
 import { StackScreenProps } from '@react-navigation/stack';
 
 import { Header, Text, TextInput, Icon } from '@components';
@@ -20,7 +21,6 @@ import useAddBusinessStore, {
   BusinessStoreTypes,
 } from '../store/Store';
 import { NavigationButtons } from '../components/NavigationButtons';
-import { Controller, useForm } from 'react-hook-form';
 
 export const EmailScreen = (
   props: StackScreenProps<NewBusinessParamList, 'Email'>,
