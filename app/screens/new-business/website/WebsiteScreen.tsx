@@ -22,35 +22,37 @@ import useAddBusinessStore, {
 } from '../store/Store';
 import { NavigationButtons } from '../components/NavigationButtons';
 
-export const EmailScreen = (
-  props: StackScreenProps<NewBusinessParamList, 'Email'>,
+export const WebsiteScreen = (
+  props: StackScreenProps<NewBusinessParamList, 'Website'>,
 ) => {
   const { navigation, route } = props;
   const isEditBusiness = route?.params?.businessId;
 
-  const { mutate: editEmail } = useEditBusiness(
+  const { mutate: editWebsite } = useEditBusiness(
     route?.params?.businessId ?? '',
   );
   const { data: businessData } = useBusiness(route?.params?.businessId ?? '');
 
-  const email = useAddBusinessStore((state: BusinessStoreTypes) => state.email);
-  const setEmail = useAddBusinessStore(
-    (state: BusinessStoreActions) => state.setEmail,
+  const website = useAddBusinessStore(
+    (state: BusinessStoreTypes) => state.website,
+  );
+  const setWebsite = useAddBusinessStore(
+    (state: BusinessStoreActions) => state.setWebsite,
   );
 
   const { control, handleSubmit } = useForm<BusinessStoreTypes>({
     defaultValues: {
-      email: isEditBusiness ? businessData?.email : email,
+      website: isEditBusiness ? businessData?.website : website,
     },
   });
 
   const onSubmit = (data: BusinessStoreTypes) => {
     if (isEditBusiness) {
-      editEmail({ email: data.email });
+      editWebsite({ website: data.website });
       navigation.goBack();
     } else {
-      setEmail(data.email);
-      navigation.navigate('Website');
+      setWebsite(data.website);
+      navigation.navigate('Address');
     }
   };
 
@@ -66,7 +68,7 @@ export const EmailScreen = (
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
-        title={isEditBusiness ? 'Update Email Address' : 'Email Address '}
+        title={isEditBusiness ? 'Update Website' : 'Business Website '}
         renderLeft={() => {
           return isEditBusiness ? (
             <Icon
@@ -79,6 +81,7 @@ export const EmailScreen = (
         }}
         onPressLeft={navigateToBack}
       />
+
       <KeyboardAvoidingView
         behavior={Platform.select({ android: undefined, ios: 'padding' })}
         keyboardVerticalOffset={offsetKeyboard}
@@ -95,19 +98,19 @@ export const EmailScreen = (
                 render={({ field: { onChange, onBlur, value } }) => (
                   <View>
                     <Text title1 bold>
-                      What is the valid Email address of your Business ?{' '}
-                      <Text body1>(optional)</Text>
+                      Add your business's official website, Let users to know
+                      about your business more <Text body1>(optional)</Text>
                     </Text>
                     <TextInput
                       style={styles.input}
-                      placeholder="Email"
+                      placeholder="Website"
                       onBlur={onBlur}
                       onChangeText={onChange}
                       value={value}
                     />
                   </View>
                 )}
-                name="email"
+                name="website"
               />
             );
           }}
