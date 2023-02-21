@@ -99,7 +99,16 @@ export default function EditBusinessScreen(
             });
           }}
         />
-        <ListItem title="Email" text={businessData?.email} onPress={() => {}} />
+        <ListItem
+          title="Email"
+          text={businessData?.email}
+          onPress={() => {
+            navigation.navigate('Edit', {
+              screen: 'Email',
+              params: { businessId: businessData?._id },
+            });
+          }}
+        />
         <ListItem
           title="Website"
           text={businessData?.website}

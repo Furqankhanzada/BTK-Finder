@@ -22,37 +22,35 @@ import useAddBusinessStore, {
 import { NavigationButtons } from '../components/NavigationButtons';
 import { Controller, useForm } from 'react-hook-form';
 
-export const TelephoneScreen = (
-  props: StackScreenProps<NewBusinessParamList, 'Telephone'>,
+export const EmailScreen = (
+  props: StackScreenProps<NewBusinessParamList, 'Email'>,
 ) => {
   const { navigation, route } = props;
   const isEditBusiness = route?.params?.businessId;
 
-  const { mutate: editTelephone } = useEditBusiness(
+  const { mutate: editEmail } = useEditBusiness(
     route?.params?.businessId ?? '',
   );
   const { data: businessData } = useBusiness(route?.params?.businessId ?? '');
 
-  const telephone = useAddBusinessStore(
-    (state: BusinessStoreTypes) => state.telephone,
-  );
-  const setTelephone = useAddBusinessStore(
-    (state: BusinessStoreActions) => state.setTelephone,
+  const email = useAddBusinessStore((state: BusinessStoreTypes) => state.email);
+  const setEmail = useAddBusinessStore(
+    (state: BusinessStoreActions) => state.setEmail,
   );
 
   const { control, handleSubmit } = useForm<BusinessStoreTypes>({
     defaultValues: {
-      telephone: isEditBusiness ? businessData?.telephone : telephone,
+      email: isEditBusiness ? businessData?.email : email,
     },
   });
 
   const onSubmit = (data: BusinessStoreTypes) => {
     if (isEditBusiness) {
-      editTelephone({ telephone: data.telephone });
+      editEmail({ email: data.email });
       navigation.goBack();
     } else {
-      setTelephone(data.telephone);
-      navigation.navigate('Email');
+      setEmail(data.email);
+      // navigation.navigate('Website');
     }
   };
 
@@ -68,7 +66,7 @@ export const TelephoneScreen = (
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
-        title={isEditBusiness ? 'Update Number' : 'Add Telephone Number'}
+        title={isEditBusiness ? 'Update Email Address' : 'Email Address '}
         renderLeft={() => {
           return isEditBusiness ? (
             <Icon
@@ -81,7 +79,6 @@ export const TelephoneScreen = (
         }}
         onPressLeft={navigateToBack}
       />
-
       <KeyboardAvoidingView
         behavior={Platform.select({ android: undefined, ios: 'padding' })}
         keyboardVerticalOffset={offsetKeyboard}
@@ -90,7 +87,7 @@ export const TelephoneScreen = (
           style={styles.container}
           overScrollMode={'never'}
           scrollEventThrottle={16}
-          data={[0]}
+          data={[1]}
           renderItem={() => {
             return (
               <Controller
@@ -98,20 +95,19 @@ export const TelephoneScreen = (
                 render={({ field: { onChange, onBlur, value } }) => (
                   <View>
                     <Text title1 bold>
-                      Add your business's contact number, Make it easy for users
-                      to connect with you <Text body1>(optional)</Text>
+                      What is the valid Email address of your Business ?{' '}
+                      <Text body1>(optional)</Text>
                     </Text>
                     <TextInput
                       style={styles.input}
-                      placeholder="Telephone Number"
+                      placeholder="Email"
                       onBlur={onBlur}
                       onChangeText={onChange}
                       value={value}
-                      keyboardType="numeric"
                     />
                   </View>
                 )}
-                name="telephone"
+                name="email"
               />
             );
           }}
