@@ -99,7 +99,7 @@ export const OpenHoursScreen = (
       navigation.goBack();
     } else {
       setOpenHours(hours);
-      navigation.navigate('Price');
+      // navigation.navigate('Price');
     }
   };
 
@@ -112,10 +112,6 @@ export const OpenHoursScreen = (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
         title={isEditBusiness ? 'Edit Open Hours' : 'Opne Hours'}
-        renderRight={() => {
-          return isEditBusiness ? null : <Text>Skip</Text>;
-        }}
-        onPressRight={() => navigation.navigate('Price')}
         renderLeft={() => {
           return isEditBusiness ? (
             <Icon
