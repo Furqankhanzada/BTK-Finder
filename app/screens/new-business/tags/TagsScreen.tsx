@@ -6,11 +6,12 @@ import {
   SafeAreaView,
   StyleSheet,
   TouchableOpacity,
+  View,
 } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 
 import { useRemoteConfig } from '@hooks';
-import { Header, TextInput, Icon } from '@components';
+import { Header, TextInput, Icon, Text } from '@components';
 import { BaseStyle, useTheme } from '@config';
 import { useBusiness } from '@screens/businesses/queries/queries';
 
@@ -125,24 +126,37 @@ export const TagsScreen = (
         behavior={Platform.select({ android: undefined, ios: 'padding' })}
         keyboardVerticalOffset={offsetKeyboard}
         style={styles.keyboardAvoidView}>
-        {tags ? (
-          <TextInput
-            onChangeText={(text) => onSearch(text)}
-            placeholder="Search"
-            value={search}
-            icon={
-              <TouchableOpacity onPress={() => onSearch('')}>
-                <Icon name="times" size={16} color={colors.primaryLight} />
-              </TouchableOpacity>
-            }
-          />
-        ) : null}
         <FlatList
           contentContainerStyle={styles.container}
           data={tags}
           keyExtractor={(item, index) => {
             return `${index}-${item.name}`;
           }}
+          ListHeaderComponent={() => (
+            <View>
+              <Text title1 bold>
+                Select tags related to your business, To help users find your
+                business through our search engine <Text body1>(optional)</Text>
+              </Text>
+              {tags ? (
+                <TextInput
+                  style={styles.input}
+                  onChangeText={(text) => onSearch(text)}
+                  placeholder="Search"
+                  value={search}
+                  icon={
+                    <TouchableOpacity onPress={() => onSearch('')}>
+                      <Icon
+                        name="times"
+                        size={16}
+                        color={colors.primaryLight}
+                      />
+                    </TouchableOpacity>
+                  }
+                />
+              ) : null}
+            </View>
+          )}
           renderItem={({ item, index }) => {
             const checked = selected.includes(item.name);
             return (
@@ -171,7 +185,10 @@ const styles = StyleSheet.create({
   },
   container: {
     paddingHorizontal: 20,
-    flex: 1,
     marginTop: 10,
+    paddingBottom: 50,
+  },
+  input: {
+    marginTop: 15,
   },
 });
