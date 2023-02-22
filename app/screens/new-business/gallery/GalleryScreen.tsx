@@ -14,7 +14,7 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { URL } from 'react-native-url-polyfill';
 
 import { Header, Text, Icon, Image, Loading } from '@components';
-import { BaseColor, BaseStyle } from '@config';
+import { BaseColor, BaseStyle, useTheme } from '@config';
 
 import { useBusiness } from '@screens/businesses/queries/queries';
 import { Gallery } from '@screens/businesses/models/BusinessPresentable';
@@ -39,6 +39,7 @@ export const GalleryScreen = (
   props: StackScreenProps<NewBusinessParamList, 'Gallery'>,
 ) => {
   const { navigation, route } = props;
+  const { colors } = useTheme();
   const isEditBusiness = route?.params?.businessId;
 
   const { mutate: uploadThumbnail, isLoading: thumbnailLoading } =
@@ -190,18 +191,13 @@ export const GalleryScreen = (
       width: 250,
       height: 250,
       cropping: true,
-      cropperCircleOverlay: true,
-      sortOrder: 'none',
       compressImageMaxWidth: 1000,
-      compressImageMaxHeight: 1000,
-      compressImageQuality: 1,
-      compressVideoPreset: 'MediumQuality',
-      includeExif: true,
-      cropperStatusBarColor: 'white',
-      cropperToolbarColor: 'white',
-      cropperActiveWidgetColor: 'white',
-      cropperToolbarWidgetColor: '#3498DB',
-      multiple: false,
+      compressImageMaxHeight: 500,
+      mediaType: 'photo',
+      cropperStatusBarColor: colors.primary,
+      cropperToolbarColor: colors.primary,
+      cropperToolbarWidgetColor: BaseColor.whiteColor,
+      cropperActiveWidgetColor: colors.primary,
     })
       .then((image) => {
         uploadThumbnail(image);
@@ -215,9 +211,7 @@ export const GalleryScreen = (
     ImagePicker.openPicker({
       compressImageMaxWidth: 1000,
       compressImageMaxHeight: 1000,
-      compressImageQuality: 1,
-      compressVideoPreset: 'MediumQuality',
-      includeExif: true,
+      mediaType: 'photo',
       multiple: true,
     })
       .then((images) => {
