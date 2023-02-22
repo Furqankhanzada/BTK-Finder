@@ -6,12 +6,13 @@ import {
   SafeAreaView,
   StyleSheet,
   TouchableOpacity,
+  View,
 } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useTranslation } from 'react-i18next';
 
 import { useBusiness } from '@screens/businesses/queries/queries';
-import { Header, TextInput, Icon } from '@components';
+import { Header, TextInput, Icon, Text } from '@components';
 import { BaseStyle, useTheme } from '@config';
 
 import { NewBusinessParamList } from 'navigation/models/NewBusinessParamList';
@@ -123,20 +124,30 @@ export const CategorySelectScreen = (
           keyExtractor={(item, index) => {
             return `${index}-${item.name}`;
           }}
-          ListHeaderComponent={() => {
-            return categories ? (
-              <TextInput
-                onChangeText={(text) => onSearch(text)}
-                placeholder={t('search')}
-                value={search}
-                icon={
-                  <TouchableOpacity onPress={() => onSearch('')}>
-                    <Icon name="times" size={16} color={colors.primaryLight} />
-                  </TouchableOpacity>
-                }
-              />
-            ) : null;
-          }}
+          ListHeaderComponent={() => (
+            <View>
+              <Text title1 bold>
+                Select a category for your business
+              </Text>
+              {categories ? (
+                <TextInput
+                  style={styles.input}
+                  onChangeText={(text) => onSearch(text)}
+                  placeholder={t('search')}
+                  value={search}
+                  icon={
+                    <TouchableOpacity onPress={() => onSearch('')}>
+                      <Icon
+                        name="times"
+                        size={16}
+                        color={colors.primaryLight}
+                      />
+                    </TouchableOpacity>
+                  }
+                />
+              ) : null}
+            </View>
+          )}
           renderItem={({ item, index }) => {
             const checked = selectedCategory === item.name;
             return (
@@ -167,7 +178,10 @@ const styles = StyleSheet.create({
   },
   container: {
     paddingHorizontal: 20,
-    flex: 1,
     marginTop: 10,
+    paddingBottom: 50,
+  },
+  input: {
+    marginTop: 15,
   },
 });
