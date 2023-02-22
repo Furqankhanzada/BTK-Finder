@@ -11,14 +11,16 @@ import {
 } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import { StackScreenProps } from '@react-navigation/stack';
+import { URL } from 'react-native-url-polyfill';
 
-import { Header, Text, Icon, Image } from '@components';
+import { Header, Text, Icon, Image, Loading } from '@components';
 import { BaseColor, BaseStyle } from '@config';
 
 import { useBusiness } from '@screens/businesses/queries/queries';
 import { Gallery } from '@screens/businesses/models/BusinessPresentable';
 
 import { NewBusinessParamList } from 'navigation/models/NewBusinessParamList';
+import { useDeleteImage } from '../../../apis/mutations';
 import {
   useAddThumbnail,
   useAddGalleryImages,
@@ -39,8 +41,12 @@ export const GalleryScreen = (
   const { navigation, route } = props;
   const isEditBusiness = route?.params?.businessId;
 
-  const { mutate: uploadThumbnail } = useAddThumbnail();
-  const { mutate: uploadGallery } = useAddGalleryImages();
+  const { mutate: uploadThumbnail, isLoading: thumbnailLoading } =
+    useAddThumbnail();
+  const { mutate: uploadGallery, isLoading: galleryLoading } =
+    useAddGalleryImages();
+  const { mutate: deleteImage, isLoading: deleteImageLoading } =
+    useDeleteImage();
   const { mutate: addNewBusiness } = useAddBusiness();
   const { mutate: updateGallery } = useEditBusiness(
     route?.params?.businessId ?? '',
@@ -108,12 +114,17 @@ export const GalleryScreen = (
     navigation.goBack();
   };
 
-  const removeThumbnail = () => {
-    if (thumbnail) {
-      setThumbnail('');
-    } else {
-      null;
-    }
+  const removeThumbnail = (image: string) => {
+    const url = new URL(image);
+
+    deleteImage(
+      { pathname: url.pathname.replace(/^\/|\/$/g, '') },
+      {
+        onSuccess() {
+          setThumbnail('');
+        },
+      },
+    );
   };
 
   const onChangeCover = (item: Gallery) => {
@@ -123,11 +134,20 @@ export const GalleryScreen = (
   };
 
   const removeSingleGalleryImage = (item: Gallery) => {
-    const newPayload = { ...payload };
-    let data = newPayload.gallery.filter(
-      (el: Gallery) => el.image !== item.image,
+    const url = new URL(item.image);
+
+    deleteImage(
+      { pathname: url.pathname.replace(/^\/|\/$/g, '') },
+      {
+        onSuccess() {
+          const newPayload = { ...payload };
+          let data = newPayload.gallery.filter(
+            (el: Gallery) => el.image !== item.image,
+          );
+          setGallery(data);
+        },
+      },
     );
-    setGallery(data);
   };
 
   const offsetKeyboard = Platform.select({
@@ -231,6 +251,8 @@ export const GalleryScreen = (
         behavior={Platform.OS === 'android' ? undefined : 'padding'}
         keyboardVerticalOffset={offsetKeyboard}
         style={styles.keyboardAvoidView}>
+        <Loading loading={deleteImageLoading} />
+
         <FlatList
           style={styles.container}
           overScrollMode={'never'}
@@ -240,6 +262,7 @@ export const GalleryScreen = (
             return (
               <ScrollView style={styles.scrollView}>
                 <View style={styles.thumbnailSection}>
+                  <Loading loading={thumbnailLoading} />
                   <Text title3 semibold>
                     Thumbnail
                   </Text>
@@ -248,7 +271,7 @@ export const GalleryScreen = (
                     <View style={styles.thumbnailContainer}>
                       <TouchableOpacity
                         style={styles.actionButton}
-                        onPress={() => removeThumbnail()}>
+                        onPress={() => removeThumbnail(thumbnail)}>
                         <Icon style={styles.actionButtonIcon} name="minus" />
                       </TouchableOpacity>
                       <Image
@@ -267,6 +290,7 @@ export const GalleryScreen = (
                   )}
                 </View>
                 <View style={styles.gallerySection}>
+                  <Loading loading={galleryLoading} />
                   <Text title3 semibold>
                     Gallery
                   </Text>
