@@ -149,9 +149,9 @@ export const GalleryScreen = (
                 </Text>
               ) : null}
               <TouchableOpacity
-                style={styles.galleryActionButton}
+                style={styles.actionButton}
                 onPress={() => removeSingleGalleryImage(image)}>
-                <Icon style={styles.galleryActionButtonIcon} name="minus" />
+                <Icon style={styles.actionButtonIcon} name="minus" />
               </TouchableOpacity>
               <Image
                 style={styles.galleryImage}
@@ -226,6 +226,7 @@ export const GalleryScreen = (
         }}
         onPressLeft={navigateToBack}
       />
+
       <KeyboardAvoidingView
         behavior={Platform.OS === 'android' ? undefined : 'padding'}
         keyboardVerticalOffset={offsetKeyboard}
@@ -239,46 +240,37 @@ export const GalleryScreen = (
             return (
               <ScrollView style={styles.scrollView}>
                 <View style={styles.thumbnailSection}>
-                  <Text title3 semibold style={{ textAlign: 'center' }}>
+                  <Text title3 semibold>
                     Thumbnail
                   </Text>
-                  <View style={{ marginHorizontal: 10, marginBottom: 10 }}>
-                    <Text>Thumbnail size must be 300x300</Text>
-                  </View>
-                  <View style={styles.thumbnailContainer}>
-                    {thumbnail ? (
-                      <Fragment>
-                        <TouchableOpacity
-                          style={styles.galleryActionButton}
-                          onPress={() => removeThumbnail()}>
-                          <Icon
-                            style={styles.galleryActionButtonIcon}
-                            name="minus"
-                          />
-                        </TouchableOpacity>
-                        <Image
-                          style={styles.thumbnailContainerImage}
-                          source={{ uri: thumbnail }}
-                        />
-                      </Fragment>
-                    ) : (
+                  <Text>Thumbnail size must be 300x300</Text>
+                  {thumbnail ? (
+                    <View style={styles.thumbnailContainer}>
                       <TouchableOpacity
-                        style={styles.thumbnailAddOverlay}
-                        onPress={() => pickSingle()}>
-                        <Text semibold style={styles.thumbnailAddOverlayText}>
-                          Tap To Add Thumbnail
-                        </Text>
+                        style={styles.actionButton}
+                        onPress={() => removeThumbnail()}>
+                        <Icon style={styles.actionButtonIcon} name="minus" />
                       </TouchableOpacity>
-                    )}
-                  </View>
+                      <Image
+                        style={styles.thumbnailContainerImage}
+                        source={{ uri: thumbnail }}
+                      />
+                    </View>
+                  ) : (
+                    <TouchableOpacity
+                      style={styles.thumbnailAddOverlay}
+                      onPress={() => pickSingle()}>
+                      <Text semibold style={styles.thumbnailAddOverlayText}>
+                        Tap To Add Thumbnail
+                      </Text>
+                    </TouchableOpacity>
+                  )}
                 </View>
                 <View style={styles.gallerySection}>
-                  <Text title3 semibold style={{ textAlign: 'center' }}>
+                  <Text title3 semibold>
                     Gallery
                   </Text>
-                  <View style={{ marginHorizontal: 10, marginBottom: 5 }}>
-                    <Text>Gallery Images size must be 600x400</Text>
-                  </View>
+                  <Text>Gallery Images size must be 600x400</Text>
                   <View style={styles.gallerySectionImagesContainer}>
                     {renderGalleryImages(gallery)}
                     <TouchableOpacity
@@ -315,21 +307,51 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   container: {
-    paddingHorizontal: 20,
     flex: 1,
     marginTop: 10,
   },
   scrollView: {
     flex: 1,
   },
+  thumbnailSection: {
+    marginBottom: 20,
+    paddingHorizontal: 20,
+  },
+  thumbnailContainer: {
+    marginTop: 15,
+    backgroundColor: BaseColor.grayColor,
+    position: 'relative',
+    borderRadius: 5,
+  },
+  thumbnailContainerImage: {
+    borderRadius: 5,
+    aspectRatio: 300 / 300,
+  },
+  thumbnailAddOverlay: {
+    marginTop: 15,
+    height: 300,
+    borderRadius: 5,
+    backgroundColor: BaseColor.grayColor,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  thumbnailAddOverlayText: {
+    fontSize: 20,
+    textAlign: 'center',
+    color: BaseColor.whiteColor,
+  },
+  gallerySection: {
+    marginBottom: 5,
+    paddingHorizontal: 20,
+  },
   gallerySectionImagesContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
   },
   galleryImageContainer: {
-    width: '93%',
+    marginTop: 15,
+    width: '100%',
     height: 120,
-    margin: 10,
     borderRadius: 5,
     backgroundColor: BaseColor.grayColor,
     justifyContent: 'center',
@@ -351,9 +373,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     position: 'relative',
   },
-  gallerySection: {
-    marginBottom: 5,
-  },
   galleryImageAddIconContainer: {
     width: 52,
     height: 52,
@@ -366,7 +385,7 @@ const styles = StyleSheet.create({
     color: BaseColor.blueColor,
     fontSize: 22,
   },
-  galleryActionButton: {
+  actionButton: {
     width: 32,
     height: 32,
     borderRadius: 32,
@@ -378,7 +397,7 @@ const styles = StyleSheet.create({
     right: -10,
     top: -10,
   },
-  galleryActionButtonIcon: {
+  actionButtonIcon: {
     color: BaseColor.whiteColor,
   },
   galleryImage: {
@@ -405,32 +424,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     borderBottomRightRadius: 4,
     borderBottomLeftRadius: 4,
-  },
-  thumbnailSection: {
-    marginBottom: 30,
-  },
-  thumbnailContainerImage: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 5,
-  },
-  thumbnailContainer: {
-    marginHorizontal: 10,
-    backgroundColor: BaseColor.grayColor,
-    height: 150,
-    position: 'relative',
-    borderRadius: 5,
-  },
-  thumbnailAddOverlay: {
-    height: 150,
-    borderRadius: 5,
-    backgroundColor: BaseColor.grayColor,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  thumbnailAddOverlayText: {
-    fontSize: 20,
-    textAlign: 'center',
-    color: BaseColor.whiteColor,
   },
 });
