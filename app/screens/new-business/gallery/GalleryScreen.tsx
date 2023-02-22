@@ -19,7 +19,7 @@ import { BaseColor, BaseStyle, useTheme } from '@config';
 import { useBusiness } from '@screens/businesses/queries/queries';
 import { Gallery } from '@screens/businesses/models/BusinessPresentable';
 
-import { NewBusinessParamList } from 'navigation/models/NewBusinessParamList';
+import { GlobalParamList } from 'navigation/models/GlobalParamList';
 import { useDeleteImage } from '../../../apis/mutations';
 import {
   useAddThumbnail,
@@ -36,7 +36,7 @@ import { NavigationButtons } from '../components/NavigationButtons';
 import _ from 'lodash';
 
 export const GalleryScreen = (
-  props: StackScreenProps<NewBusinessParamList, 'Gallery'>,
+  props: StackScreenProps<GlobalParamList, 'Gallery'>,
 ) => {
   const { navigation, route } = props;
   const { colors } = useTheme();
@@ -48,10 +48,10 @@ export const GalleryScreen = (
     useAddGalleryImages();
   const { mutate: deleteImage, isLoading: deleteImageLoading } =
     useDeleteImage();
-  const { mutate: addNewBusiness } = useAddBusiness();
-  const { mutate: updateGallery } = useEditBusiness(
-    route?.params?.businessId ?? '',
-  );
+  const { mutate: addNewBusiness, isLoading: addBusinessLoading } =
+    useAddBusiness();
+  const { mutate: updateGallery, isLoading: updateBusinessLoading } =
+    useEditBusiness(route?.params?.businessId ?? '');
   const { data: businessData } = useBusiness(route?.params?.businessId ?? '');
 
   const resetAddBusinessStore = useAddBusinessStore(
@@ -88,10 +88,16 @@ export const GalleryScreen = (
 
   const onSubmit = () => {
     if (isEditBusiness) {
-      updateGallery({ thumbnail, gallery });
-      setThumbnail('');
-      setGallery([]);
-      navigation.goBack();
+      updateGallery(
+        { thumbnail, gallery },
+        {
+          onSuccess() {
+            setThumbnail('');
+            setGallery([]);
+            navigation.goBack();
+          },
+        },
+      );
     } else {
       // Remove keys containing empty strings to avoid API Errors
       const payloadData = _.pickBy(
@@ -99,14 +105,19 @@ export const GalleryScreen = (
         _.identity,
       ) as unknown as AddBusinessPayload;
 
-      addNewBusiness(payloadData);
-      // navigation.navigate('Dashboard');
+      addNewBusiness(payloadData, {
+        onSuccess() {
+          navigation.navigate('Dashboard');
 
-      // Reset Store & Stack
-      resetAddBusinessStore();
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'Name' }],
+          // Reset Store
+          resetAddBusinessStore();
+
+          // Reset Stack
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'Name' }],
+          });
+        },
       });
     }
   };
@@ -314,7 +325,12 @@ export const GalleryScreen = (
           }}
         />
 
-        <NavigationButtons onSubmit={onSubmit} isEdit={!!isEditBusiness} />
+        <NavigationButtons
+          onSubmit={onSubmit}
+          isEdit={!!isEditBusiness}
+          loading={addBusinessLoading || updateBusinessLoading}
+          disabled={addBusinessLoading || updateBusinessLoading}
+        />
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
