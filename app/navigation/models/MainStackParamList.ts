@@ -32,11 +32,6 @@ export type MainStackParamList = {
   ChangeLanguage: undefined;
   ContactUs: undefined;
   AboutUs: undefined;
-  Address: undefined;
-  Hours: undefined;
-  PriceRange: undefined;
-  FinalReview: undefined;
-  Gallery: undefined;
   MyBusinesses: undefined;
   EditBusinessStack: NavigatorScreenParams<EditBusinessStackParamList>;
   VerifyCode: undefined;
