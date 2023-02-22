@@ -12,7 +12,7 @@ import { StackScreenProps } from '@react-navigation/stack';
 
 import { useBusiness } from '@screens/businesses/queries/queries';
 import { Header, Text, TextInput, Icon } from '@components';
-import { BaseStyle } from '@config';
+import { BaseColor, BaseStyle } from '@config';
 
 import { NewBusinessParamList } from '../../../navigation/models/NewBusinessParamList';
 import { useEditBusiness } from '../apis/mutations';
@@ -97,6 +97,7 @@ export const NameScreen = (
                 control={control}
                 rules={{
                   required: true,
+                  minLength: 3,
                 }}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <View>
@@ -111,6 +112,15 @@ export const NameScreen = (
                       value={value}
                       success={!errors.name}
                     />
+                    {errors.name?.type === 'minLength' ? (
+                      <Text
+                        style={[
+                          styles.errorText,
+                          { color: BaseColor.redColor },
+                        ]}>
+                        Name should be minimum 3 characters
+                      </Text>
+                    ) : null}
                   </View>
                 )}
                 name="name"
@@ -140,5 +150,8 @@ const styles = StyleSheet.create({
   },
   input: {
     marginTop: 15,
+  },
+  errorText: {
+    marginTop: 5,
   },
 });
