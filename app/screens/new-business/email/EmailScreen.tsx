@@ -11,7 +11,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { StackScreenProps } from '@react-navigation/stack';
 
 import { Header, Text, TextInput, Icon } from '@components';
-import { BaseStyle } from '@config';
+import { BaseColor, BaseStyle } from '@config';
 import { useBusiness } from '@screens/businesses/queries/queries';
 
 import { NewBusinessParamList } from 'navigation/models/NewBusinessParamList';
@@ -21,6 +21,8 @@ import useAddBusinessStore, {
   BusinessStoreTypes,
 } from '../store/Store';
 import { NavigationButtons } from '../components/NavigationButtons';
+
+const emailRegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
 
 export const EmailScreen = (
   props: StackScreenProps<NewBusinessParamList, 'Email'>,
@@ -38,7 +40,11 @@ export const EmailScreen = (
     (state: BusinessStoreActions) => state.setEmail,
   );
 
-  const { control, handleSubmit } = useForm<BusinessStoreTypes>({
+  const {
+    control,
+    handleSubmit,
+    formState: { isValid },
+  } = useForm<BusinessStoreTypes>({
     defaultValues: {
       email: isEditBusiness ? businessData?.email : email,
     },
@@ -92,6 +98,12 @@ export const EmailScreen = (
             return (
               <Controller
                 control={control}
+                rules={{
+                  pattern: {
+                    value: emailRegExp,
+                    message: 'Invalid Email!',
+                  },
+                }}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <View>
                     <Text title1 bold>
@@ -105,6 +117,15 @@ export const EmailScreen = (
                       onChangeText={onChange}
                       value={value}
                     />
+                    {!isValid ? (
+                      <Text
+                        style={[
+                          styles.errorText,
+                          { color: BaseColor.redColor },
+                        ]}>
+                        Please use a valid email
+                      </Text>
+                    ) : null}
                   </View>
                 )}
                 name="email"
@@ -116,6 +137,7 @@ export const EmailScreen = (
         <NavigationButtons
           onSubmit={handleSubmit(onSubmit)}
           isEdit={!!isEditBusiness}
+          disabled={!isValid}
         />
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -133,5 +155,8 @@ const styles = StyleSheet.create({
   },
   input: {
     marginTop: 15,
+  },
+  errorText: {
+    marginTop: 5,
   },
 });
