@@ -11,7 +11,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { StackScreenProps } from '@react-navigation/stack';
 
 import { Header, Text, TextInput, Icon } from '@components';
-import { BaseStyle } from '@config';
+import { BaseColor, BaseStyle } from '@config';
 import { useBusiness } from '@screens/businesses/queries/queries';
 
 import { NewBusinessParamList } from 'navigation/models/NewBusinessParamList';
@@ -21,6 +21,9 @@ import useAddBusinessStore, {
   BusinessStoreTypes,
 } from '../store/Store';
 import { NavigationButtons } from '../components/NavigationButtons';
+
+const webRegExp =
+  /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/;
 
 export const WebsiteScreen = (
   props: StackScreenProps<NewBusinessParamList, 'Website'>,
@@ -40,7 +43,11 @@ export const WebsiteScreen = (
     (state: BusinessStoreActions) => state.setWebsite,
   );
 
-  const { control, handleSubmit } = useForm<BusinessStoreTypes>({
+  const {
+    control,
+    handleSubmit,
+    formState: { isValid },
+  } = useForm<BusinessStoreTypes>({
     defaultValues: {
       website: isEditBusiness ? businessData?.website : website,
     },
@@ -95,6 +102,12 @@ export const WebsiteScreen = (
             return (
               <Controller
                 control={control}
+                rules={{
+                  pattern: {
+                    value: webRegExp,
+                    message: 'Invalid URL!',
+                  },
+                }}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <View>
                     <Text title1 bold>
@@ -108,6 +121,15 @@ export const WebsiteScreen = (
                       onChangeText={onChange}
                       value={value}
                     />
+                    {!isValid ? (
+                      <Text
+                        style={[
+                          styles.errorText,
+                          { color: BaseColor.redColor },
+                        ]}>
+                        Please enter a valid URL
+                      </Text>
+                    ) : null}
                   </View>
                 )}
                 name="website"
@@ -119,6 +141,7 @@ export const WebsiteScreen = (
         <NavigationButtons
           onSubmit={handleSubmit(onSubmit)}
           isEdit={!!isEditBusiness}
+          disabled={!isValid}
         />
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -136,5 +159,8 @@ const styles = StyleSheet.create({
   },
   input: {
     marginTop: 15,
+  },
+  errorText: {
+    marginTop: 5,
   },
 });
