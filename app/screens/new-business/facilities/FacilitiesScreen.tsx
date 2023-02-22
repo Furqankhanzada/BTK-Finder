@@ -9,7 +9,7 @@ import {
 import { StackScreenProps } from '@react-navigation/stack';
 
 import { useRemoteConfig } from '@hooks';
-import { Header, Icon } from '@components';
+import { Header, Icon, Text } from '@components';
 import { BaseStyle } from '@config';
 import { useBusiness } from '@screens/businesses/queries/queries';
 import { Facility } from '@screens/businesses/models/BusinessPresentable';
@@ -108,10 +108,17 @@ export const FacilitiesScreen = (
         keyboardVerticalOffset={offsetKeyboard}
         style={styles.keyboardAvoidView}>
         <FlatList
+          contentContainerStyle={styles.container}
           data={remoteConfig.facilities}
           keyExtractor={(item, index) => {
             return `${index}-${item.name}`;
           }}
+          ListHeaderComponent={() => (
+            <Text title1 bold>
+              Select the facilities that you provide{' '}
+              <Text body1>(optional)</Text>
+            </Text>
+          )}
           renderItem={({ item, index }) => {
             const checked = selectedFacilities?.some(
               (obj: Facility) => obj.name === item.name,
@@ -144,7 +151,7 @@ const styles = StyleSheet.create({
   },
   container: {
     paddingHorizontal: 20,
-    flex: 1,
     marginTop: 10,
+    paddingBottom: 50,
   },
 });
