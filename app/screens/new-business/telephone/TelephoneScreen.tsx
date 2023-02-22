@@ -11,7 +11,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { StackScreenProps } from '@react-navigation/stack';
 
 import { Header, Text, TextInput, Icon } from '@components';
-import { BaseStyle } from '@config';
+import { BaseColor, BaseStyle } from '@config';
 import { useBusiness } from '@screens/businesses/queries/queries';
 
 import { NewBusinessParamList } from 'navigation/models/NewBusinessParamList';
@@ -21,6 +21,9 @@ import useAddBusinessStore, {
   BusinessStoreTypes,
 } from '../store/Store';
 import { NavigationButtons } from '../components/NavigationButtons';
+
+const phoneRegExp =
+  /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
 export const TelephoneScreen = (
   props: StackScreenProps<NewBusinessParamList, 'Telephone'>,
@@ -40,7 +43,11 @@ export const TelephoneScreen = (
     (state: BusinessStoreActions) => state.setTelephone,
   );
 
-  const { control, handleSubmit } = useForm<BusinessStoreTypes>({
+  const {
+    control,
+    handleSubmit,
+    formState: { isValid },
+  } = useForm<BusinessStoreTypes>({
     defaultValues: {
       telephone: isEditBusiness ? businessData?.telephone : telephone,
     },
@@ -95,6 +102,12 @@ export const TelephoneScreen = (
             return (
               <Controller
                 control={control}
+                rules={{
+                  pattern: {
+                    value: phoneRegExp,
+                    message: 'Invalid Phone!',
+                  },
+                }}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <View>
                     <Text title1 bold>
@@ -109,6 +122,15 @@ export const TelephoneScreen = (
                       value={value}
                       keyboardType="numeric"
                     />
+                    {!isValid ? (
+                      <Text
+                        style={[
+                          styles.errorText,
+                          { color: BaseColor.redColor },
+                        ]}>
+                        Please use a valid number
+                      </Text>
+                    ) : null}
                   </View>
                 )}
                 name="telephone"
@@ -120,6 +142,7 @@ export const TelephoneScreen = (
         <NavigationButtons
           onSubmit={handleSubmit(onSubmit)}
           isEdit={!!isEditBusiness}
+          disabled={!isValid}
         />
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -137,5 +160,8 @@ const styles = StyleSheet.create({
   },
   input: {
     marginTop: 15,
+  },
+  errorText: {
+    marginTop: 5,
   },
 });
