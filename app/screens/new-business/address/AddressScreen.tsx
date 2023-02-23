@@ -43,9 +43,9 @@ const defaultLocation = {
   longitude: 67.2725909,
 };
 
-export const AddressScreen = (
+export default function AddressScreen(
   props: StackScreenProps<NewBusinessParamList, 'Address'>,
-) => {
+) {
   const { navigation, route } = props;
   const isEditBusiness = route?.params?.businessId;
   const mapRef = useRef<MapView>();
@@ -297,7 +297,7 @@ export const AddressScreen = (
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   keyboardAvoidView: {

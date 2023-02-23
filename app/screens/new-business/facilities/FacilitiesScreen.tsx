@@ -23,9 +23,9 @@ import useAddBusinessStore, {
 import { NavigationButtons } from '../components/NavigationButtons';
 import { SelectItem } from '../components/SelectItem';
 
-export const FacilitiesScreen = (
+export default function FacilitiesScreen(
   props: StackScreenProps<NewBusinessParamList, 'Facilities'>,
-) => {
+) {
   const { navigation, route } = props;
   const isEditBusiness = route?.params?.businessId;
   const remoteConfig = useRemoteConfig();
@@ -143,7 +143,7 @@ export const FacilitiesScreen = (
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   keyboardAvoidView: {

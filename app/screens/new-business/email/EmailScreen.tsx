@@ -24,9 +24,9 @@ import { NavigationButtons } from '../components/NavigationButtons';
 
 const emailRegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
 
-export const EmailScreen = (
+export default function EmailScreen(
   props: StackScreenProps<NewBusinessParamList, 'Email'>,
-) => {
+) {
   const { navigation, route } = props;
   const isEditBusiness = route?.params?.businessId;
 
@@ -142,7 +142,7 @@ export const EmailScreen = (
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   keyboardAvoidView: {

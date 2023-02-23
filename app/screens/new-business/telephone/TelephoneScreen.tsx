@@ -25,9 +25,9 @@ import { NavigationButtons } from '../components/NavigationButtons';
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
-export const TelephoneScreen = (
+export default function TelephoneScreen(
   props: StackScreenProps<NewBusinessParamList, 'Telephone'>,
-) => {
+) {
   const { navigation, route } = props;
   const isEditBusiness = route?.params?.businessId;
 
@@ -147,7 +147,7 @@ export const TelephoneScreen = (
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   keyboardAvoidView: {

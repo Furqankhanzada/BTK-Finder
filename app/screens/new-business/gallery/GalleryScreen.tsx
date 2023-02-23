@@ -35,9 +35,9 @@ import useAddBusinessStore, {
 import { NavigationButtons } from '../components/NavigationButtons';
 import _ from 'lodash';
 
-export const GalleryScreen = (
+export default function GalleryScreen(
   props: StackScreenProps<GlobalParamList, 'Gallery'>,
-) => {
+) {
   const { navigation, route } = props;
   const { colors } = useTheme();
   const isEditBusiness = route?.params?.businessId;
@@ -334,7 +334,7 @@ export const GalleryScreen = (
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   keyboardAvoidView: {

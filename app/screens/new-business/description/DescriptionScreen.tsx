@@ -22,9 +22,9 @@ import useAddBusinessStore, {
 } from '../store/Store';
 import { NavigationButtons } from '../components/NavigationButtons';
 
-export const DescriptionScreen = (
+export default function DescriptionScreen(
   props: StackScreenProps<NewBusinessParamList, 'Description'>,
-) => {
+) {
   const { navigation, route } = props;
   const isEditBusiness = route?.params?.businessId;
 
@@ -125,7 +125,7 @@ export const DescriptionScreen = (
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   keyboardAvoidView: {

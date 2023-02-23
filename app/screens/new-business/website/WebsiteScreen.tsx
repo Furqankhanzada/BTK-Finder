@@ -25,9 +25,9 @@ import { NavigationButtons } from '../components/NavigationButtons';
 const webRegExp =
   /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/;
 
-export const WebsiteScreen = (
+export default function WebsiteScreen(
   props: StackScreenProps<NewBusinessParamList, 'Website'>,
-) => {
+) {
   const { navigation, route } = props;
   const isEditBusiness = route?.params?.businessId;
 
@@ -146,7 +146,7 @@ export const WebsiteScreen = (
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   keyboardAvoidView: {

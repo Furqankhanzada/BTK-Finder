@@ -21,9 +21,9 @@ import useAddBusinessStore, {
 import { NavigationButtons } from '../components/NavigationButtons';
 import { Controller, useForm } from 'react-hook-form';
 
-export const PricingScreen = (
+export default function PricingScreen(
   props: StackScreenProps<NewBusinessParamList, 'Pricing'>,
-) => {
+) {
   const { navigation, route } = props;
   const isEditBusiness = route?.params?.businessId;
 
@@ -136,7 +136,7 @@ export const PricingScreen = (
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   keyboardAvoidView: {

@@ -22,9 +22,9 @@ import useAddBusinessStore, {
 } from '../store/Store';
 import { NavigationButtons } from '../components/NavigationButtons';
 
-export const OpenHoursScreen = (
+export default function OpenHoursScreen(
   props: StackScreenProps<NewBusinessParamList, 'OpenHours'>,
-) => {
+) {
   const { navigation, route } = props;
   const isEditBusiness = route?.params?.businessId;
 
@@ -160,7 +160,7 @@ export const OpenHoursScreen = (
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   keyboardAvoidView: {

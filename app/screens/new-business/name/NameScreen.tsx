@@ -22,9 +22,9 @@ import useAddBusinessStore, {
 } from '../store/Store';
 import { NavigationButtons } from '../components/NavigationButtons';
 
-export const NameScreen = (
+export default function NameScreen(
   props: StackScreenProps<NewBusinessParamList, 'Name'>,
-) => {
+) {
   const { navigation, route } = props;
   const isEditBusiness = route?.params?.businessId;
 
@@ -137,7 +137,7 @@ export const NameScreen = (
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   keyboardAvoidView: {

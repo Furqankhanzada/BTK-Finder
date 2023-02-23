@@ -24,9 +24,9 @@ import useAddBusinessStore, {
 import { NavigationButtons } from '../components/NavigationButtons';
 import { SelectItem } from '../components/SelectItem';
 
-export const TagsScreen = (
+export default function TagsScreen(
   props: StackScreenProps<NewBusinessParamList, 'Tags'>,
-) => {
+) {
   const { navigation, route } = props;
   const { colors } = useTheme();
   const remoteConfig = useRemoteConfig();
@@ -177,7 +177,7 @@ export const TagsScreen = (
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   keyboardAvoidView: {

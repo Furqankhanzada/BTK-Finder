@@ -25,9 +25,9 @@ import useAddBusinessStore, {
 import { NavigationButtons } from '../components/NavigationButtons';
 import { SelectItem } from '../components/SelectItem';
 
-export const CategorySelectScreen = (
+export default function CategorySelectScreen(
   props: StackScreenProps<NewBusinessParamList, 'CategorySelect'>,
-) => {
+) {
   const { navigation, route } = props;
   const { colors } = useTheme();
   const { t } = useTranslation();
@@ -170,7 +170,7 @@ export const CategorySelectScreen = (
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   keyboardAvoidView: {
