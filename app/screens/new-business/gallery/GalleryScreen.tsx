@@ -123,7 +123,9 @@ export default function GalleryScreen(
   };
 
   const navigateToBack = () => {
-    navigation.goBack();
+    if (isEditBusiness) {
+      navigation.goBack();
+    }
   };
 
   const removeThumbnail = (image: string) => {
