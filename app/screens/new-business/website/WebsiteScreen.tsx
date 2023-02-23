@@ -31,7 +31,7 @@ export default function WebsiteScreen(
   const { navigation, route } = props;
   const isEditBusiness = route?.params?.businessId;
 
-  const { mutate: editWebsite } = useEditBusiness(
+  const { mutate: editWebsite, isLoading } = useEditBusiness(
     route?.params?.businessId ?? '',
   );
   const { data: businessData } = useBusiness(route?.params?.businessId ?? '');
@@ -55,8 +55,14 @@ export default function WebsiteScreen(
 
   const onSubmit = (data: BusinessStoreTypes) => {
     if (isEditBusiness) {
-      editWebsite({ website: data.website });
-      navigation.goBack();
+      editWebsite(
+        { website: data.website },
+        {
+          onSuccess() {
+            navigation.goBack();
+          },
+        },
+      );
     } else {
       setWebsite(data.website);
       navigation.navigate('Address');
@@ -64,7 +70,9 @@ export default function WebsiteScreen(
   };
 
   const navigateToBack = () => {
-    navigation.goBack();
+    if (isEditBusiness) {
+      navigation.goBack();
+    }
   };
 
   const offsetKeyboard = Platform.select({
@@ -140,8 +148,9 @@ export default function WebsiteScreen(
 
         <NavigationButtons
           onSubmit={handleSubmit(onSubmit)}
+          loading={isLoading}
+          disabled={!isValid || isLoading}
           isEdit={!!isEditBusiness}
-          disabled={!isValid}
         />
       </KeyboardAvoidingView>
     </SafeAreaView>
