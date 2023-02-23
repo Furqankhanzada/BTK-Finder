@@ -33,7 +33,9 @@ export default function TagsScreen(
   const isEditBusiness = route?.params?.businessId;
 
   const { data: businessData } = useBusiness(route?.params?.businessId ?? '');
-  const { mutate: editTags } = useEditBusiness(route?.params?.businessId ?? '');
+  const { mutate: editTags, isLoading } = useEditBusiness(
+    route?.params?.businessId ?? '',
+  );
 
   const storeTags = useAddBusinessStore(
     (state: BusinessStoreTypes) => state.tags,
@@ -86,10 +88,16 @@ export default function TagsScreen(
     }
   };
 
-  const navigateToNext = () => {
+  const onSubmit = () => {
     if (isEditBusiness) {
-      editTags({ tags: selected });
-      navigation.goBack();
+      editTags(
+        { tags: selected },
+        {
+          onSuccess() {
+            navigation.goBack();
+          },
+        },
+      );
     } else {
       setTag(selected);
       navigation.navigate('Telephone');
@@ -97,7 +105,9 @@ export default function TagsScreen(
   };
 
   const navigateToBack = () => {
-    navigation.goBack();
+    if (isEditBusiness) {
+      navigation.goBack();
+    }
   };
 
   const offsetKeyboard = Platform.select({
@@ -171,7 +181,9 @@ export default function TagsScreen(
         />
 
         <NavigationButtons
-          onSubmit={navigateToNext}
+          onSubmit={onSubmit}
+          loading={isLoading}
+          disabled={isLoading}
           isEdit={!!isEditBusiness}
         />
       </KeyboardAvoidingView>
