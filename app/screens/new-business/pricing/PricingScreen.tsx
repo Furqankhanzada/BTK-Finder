@@ -27,7 +27,7 @@ export default function PricingScreen(
   const { navigation, route } = props;
   const isEditBusiness = route?.params?.businessId;
 
-  const { mutate: EditPrice } = useEditBusiness(
+  const { mutate: EditPrice, isLoading } = useEditBusiness(
     route?.params?.businessId ?? '',
   );
   const { data: businessData } = useBusiness(route?.params?.businessId ?? '');
@@ -47,10 +47,16 @@ export default function PricingScreen(
 
   const onSubmit = (data: BusinessStoreTypes) => {
     if (isEditBusiness) {
-      EditPrice({
-        priceRange: data.priceRange,
-      });
-      navigation.goBack();
+      EditPrice(
+        {
+          priceRange: data.priceRange,
+        },
+        {
+          onSuccess() {
+            navigation.goBack();
+          },
+        },
+      );
     } else {
       setPriceRange(data.priceRange);
       navigation.navigate('Gallery');
@@ -58,7 +64,9 @@ export default function PricingScreen(
   };
 
   const navigateToBack = () => {
-    navigation.goBack();
+    if (isEditBusiness) {
+      navigation.goBack();
+    }
   };
 
   const offsetKeyboard = Platform.select({
@@ -133,6 +141,8 @@ export default function PricingScreen(
 
         <NavigationButtons
           onSubmit={handleSubmit(onSubmit)}
+          loading={isLoading}
+          disabled={isLoading}
           isEdit={!!isEditBusiness}
         />
       </KeyboardAvoidingView>
