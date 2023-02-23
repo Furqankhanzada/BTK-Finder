@@ -50,7 +50,7 @@ export default function AddressScreen(
   const isEditBusiness = route?.params?.businessId;
   const mapRef = useRef<MapView>();
 
-  const { mutate: editAddress } = useEditBusiness(
+  const { mutate: editAddress, isLoading } = useEditBusiness(
     route?.params?.businessId ?? '',
   );
   const { data: businessData } = useBusiness(route?.params?.businessId ?? '');
@@ -192,22 +192,30 @@ export default function AddressScreen(
   };
 
   const navigateToBack = () => {
-    navigation.goBack();
+    if (isEditBusiness) {
+      navigation.goBack();
+    }
   };
 
   const onSubmit = async (data: BusinessStoreTypes) => {
     if (isEditBusiness) {
-      editAddress({
-        address: data.address,
-        location: {
-          type: 'Point',
-          coordinates: [
-            location?.latitude ?? defaultLocation.latitude,
-            location.longitude ?? defaultLocation.longitude,
-          ],
+      editAddress(
+        {
+          address: data.address,
+          location: {
+            type: 'Point',
+            coordinates: [
+              location?.latitude ?? defaultLocation.latitude,
+              location.longitude ?? defaultLocation.longitude,
+            ],
+          },
         },
-      });
-      navigation.goBack();
+        {
+          onSuccess() {
+            navigation.goBack();
+          },
+        },
+      );
     } else {
       setStoreLocation({
         type: 'Point',
@@ -294,7 +302,8 @@ export default function AddressScreen(
         </View>
         <NavigationButtons
           onSubmit={handleSubmit(onSubmit)}
-          disabled={!!errors.address}
+          loading={isLoading}
+          disabled={!!errors.address || isLoading}
           isEdit={!!isEditBusiness}
         />
       </KeyboardAvoidingView>
