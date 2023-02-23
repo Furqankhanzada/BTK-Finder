@@ -29,7 +29,9 @@ export default function NameScreen(
   const isEditBusiness = route?.params?.businessId;
 
   const { data: businessData } = useBusiness(route?.params?.businessId ?? '');
-  const { mutate: editName } = useEditBusiness(route?.params?.businessId ?? '');
+  const { mutate: editName, isLoading } = useEditBusiness(
+    route?.params?.businessId ?? '',
+  );
 
   const name = useAddBusinessStore((state: BusinessStoreTypes) => state.name);
   const setName = useAddBusinessStore(
@@ -48,8 +50,14 @@ export default function NameScreen(
 
   const onSubmit = async (data: BusinessStoreTypes) => {
     if (isEditBusiness) {
-      editName({ name: data.name });
-      navigation.goBack();
+      editName(
+        { name: data.name },
+        {
+          onSuccess() {
+            navigation.goBack();
+          },
+        },
+      );
     } else {
       setName(data.name);
       navigation.navigate('Description');
@@ -57,7 +65,9 @@ export default function NameScreen(
   };
 
   const navigateToBack = () => {
-    navigation.goBack();
+    if (isEditBusiness) {
+      navigation.goBack();
+    }
   };
 
   const offsetKeyboard = Platform.select({
@@ -131,7 +141,8 @@ export default function NameScreen(
 
         <NavigationButtons
           onSubmit={handleSubmit(onSubmit)}
-          disabled={!!errors.name}
+          loading={isLoading}
+          disabled={!!errors.name || isLoading}
           isEdit={!!isEditBusiness}
         />
       </KeyboardAvoidingView>
