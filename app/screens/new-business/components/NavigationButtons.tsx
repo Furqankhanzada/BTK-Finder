@@ -30,7 +30,7 @@ export const NavigationButtons = ({
 
       <Button
         style={[
-          styles.button,
+          isEdit ? styles.editButton : styles.button,
           disabled ? { backgroundColor: BaseColor.grayColor } : null,
         ]}
         disabled={disabled}
@@ -55,6 +55,11 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   button: {
-    height: 40,
+    height: 50,
+    width: '48%',
+  },
+  editButton: {
+    height: 50,
+    width: '100%',
   },
 });
