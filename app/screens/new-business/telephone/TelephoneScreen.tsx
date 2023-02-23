@@ -31,7 +31,7 @@ export default function TelephoneScreen(
   const { navigation, route } = props;
   const isEditBusiness = route?.params?.businessId;
 
-  const { mutate: editTelephone } = useEditBusiness(
+  const { mutate: editTelephone, isLoading } = useEditBusiness(
     route?.params?.businessId ?? '',
   );
   const { data: businessData } = useBusiness(route?.params?.businessId ?? '');
@@ -55,8 +55,14 @@ export default function TelephoneScreen(
 
   const onSubmit = (data: BusinessStoreTypes) => {
     if (isEditBusiness) {
-      editTelephone({ telephone: data.telephone });
-      navigation.goBack();
+      editTelephone(
+        { telephone: data.telephone },
+        {
+          onSuccess() {
+            navigation.goBack();
+          },
+        },
+      );
     } else {
       setTelephone(data.telephone);
       navigation.navigate('Email');
@@ -64,7 +70,9 @@ export default function TelephoneScreen(
   };
 
   const navigateToBack = () => {
-    navigation.goBack();
+    if (isEditBusiness) {
+      navigation.goBack();
+    }
   };
 
   const offsetKeyboard = Platform.select({
@@ -141,8 +149,9 @@ export default function TelephoneScreen(
 
         <NavigationButtons
           onSubmit={handleSubmit(onSubmit)}
+          loading={isLoading}
+          disabled={!isValid || isLoading}
           isEdit={!!isEditBusiness}
-          disabled={!isValid}
         />
       </KeyboardAvoidingView>
     </SafeAreaView>
