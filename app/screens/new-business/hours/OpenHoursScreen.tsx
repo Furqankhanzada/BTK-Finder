@@ -28,7 +28,7 @@ export default function OpenHoursScreen(
   const { navigation, route } = props;
   const isEditBusiness = route?.params?.businessId;
 
-  const { mutate: updateTimings } = useEditBusiness(
+  const { mutate: updateTimings, isLoading } = useEditBusiness(
     route?.params?.businessId ?? '',
   );
   const { data: businessData } = useBusiness(route?.params?.businessId ?? '');
@@ -88,15 +88,23 @@ export default function OpenHoursScreen(
   };
 
   const navigateToBack = () => {
-    navigation.goBack();
+    if (isEditBusiness) {
+      navigation.goBack();
+    }
   };
 
   const onSubmit = () => {
     let hours = selectedDays.filter((day: OpenHours) => day.isOpen);
 
     if (isEditBusiness) {
-      updateTimings({ openHours: hours });
-      navigation.goBack();
+      updateTimings(
+        { openHours: hours },
+        {
+          onSuccess() {
+            navigation.goBack();
+          },
+        },
+      );
     } else {
       setOpenHours(hours);
       navigation.navigate('Pricing');
@@ -156,7 +164,12 @@ export default function OpenHoursScreen(
           }}
         />
 
-        <NavigationButtons onSubmit={onSubmit} isEdit={!!isEditBusiness} />
+        <NavigationButtons
+          onSubmit={onSubmit}
+          loading={isLoading}
+          disabled={isLoading}
+          isEdit={!!isEditBusiness}
+        />
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
