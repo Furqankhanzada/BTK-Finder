@@ -10,7 +10,10 @@ import {
   OpenHours,
   PriceRange,
 } from '@screens/businesses/models/BusinessPresentable';
+import { useAlerts } from '@hooks';
+import { BaseColor } from '@config';
 
+import { IconName } from '../../../contexts/alerts-v2/models/Icon';
 import axiosApiInstance from '../../../interceptor/axios-interceptor';
 import { generateFileObject, handleError } from '../../../utils';
 import { BUSINESSES_API, UPLOAD } from '../../../constants';
@@ -116,41 +119,42 @@ export const useAddGalleryImages = () => {
 };
 
 export const useAddBusiness = () => {
+  const { showNotification } = useAlerts();
+
   return useMutation<BusinessPresentable, Error, AddBusinessPayload>(
     (payload) => {
       return axiosApiInstance
         .post(`${BUSINESSES_API}`, payload)
-        .then((response) => {
-          Toast.show({
-            type: 'success',
-            topOffset: 55,
-            text1: 'Business Added',
-            text2: 'You have Successfully Add your Business!',
-          });
-          return response.data;
-        })
+        .then((response) => response.data)
         .catch(({ response }) => {
           handleError(response.data);
         });
+    },
+    {
+      onSuccess() {
+        showNotification({
+          icon: {
+            size: 70,
+            name: IconName.CheckMarkCircle,
+            color: BaseColor.greenColor,
+          },
+          message: 'You have Successfully added your Business!',
+          dismissAfterMs: 3000,
+        });
+      },
     },
   );
 };
 
 export const useEditBusiness = (id: string) => {
   const queryClient = useQueryClient();
+  const { showNotification } = useAlerts();
 
   return useMutation<any, Error, EditBusinessPayload>(
     (payload) => {
       return axiosApiInstance
         .put(`${BUSINESSES_API}/${id}`, payload)
-        .then(() => {
-          Toast.show({
-            type: 'success',
-            topOffset: 55,
-            text1: 'Business Updated',
-            text2: 'You have Successfully updated your Business!',
-          });
-        })
+        .then((response) => response.data)
         .catch(({ response }) => {
           handleError(response.data);
         });
@@ -159,6 +163,16 @@ export const useEditBusiness = (id: string) => {
       onSuccess: async () => {
         await queryClient.invalidateQueries({
           queryKey: ['business', id],
+        });
+
+        showNotification({
+          icon: {
+            size: 70,
+            name: IconName.CheckMarkCircle,
+            color: BaseColor.greenColor,
+          },
+          message: 'You have Successfully updated your Business!',
+          dismissAfterMs: 3000,
         });
       },
     },
