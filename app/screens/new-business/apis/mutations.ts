@@ -1,5 +1,6 @@
 import { useSelector } from 'react-redux';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Image } from 'react-native-image-crop-picker';
 
 import {
   BusinessPresentable,
@@ -55,6 +56,10 @@ interface EditBusinessPayload {
   gallery?: Gallery[];
 }
 
+type ImageResponse = {
+  Location: string;
+};
+
 export const useAddThumbnail = () => {
   const setThumbnail = useAddBusinessStore(
     (state: BusinessStoreActions) => state.setThumbnail,
@@ -62,7 +67,7 @@ export const useAddThumbnail = () => {
 
   const user = useSelector((state: any) => state.profile);
   const { _id } = user;
-  return useMutation((imagePath: any) => {
+  return useMutation<ImageResponse, Error, Image>((imagePath) => {
     const imageData = new FormData();
     imageData.append('file', generateFileObject(imagePath));
     return axiosApiInstance
@@ -71,6 +76,7 @@ export const useAddThumbnail = () => {
       })
       .then((res) => {
         setThumbnail(res.data.Location);
+        return res.data;
       })
       .catch((error) => {
         handleError(error);
@@ -89,7 +95,7 @@ export const useAddGalleryImages = () => {
   const user = useSelector((state: any) => state.profile);
   const { _id } = user;
 
-  return useMutation<any, Error, any>(async (imagePath: any) => {
+  return useMutation<any, Error, any>(async (imagePath) => {
     const chunks = imagePath.map((file: any) => {
       return new Promise((resolve, reject) => {
         const imageData = new FormData();
