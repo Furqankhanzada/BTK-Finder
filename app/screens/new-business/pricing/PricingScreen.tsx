@@ -107,6 +107,7 @@ export default function PricingScreen(
                       onBlur={onBlur}
                       onChangeText={onChange}
                       value={value}
+                      keyboardType="numeric"
                     />
                   )}
                   name="priceRange.from"
@@ -120,6 +121,7 @@ export default function PricingScreen(
                       onBlur={onBlur}
                       onChangeText={onChange}
                       value={value}
+                      keyboardType="numeric"
                     />
                   )}
                   name="priceRange.to"
