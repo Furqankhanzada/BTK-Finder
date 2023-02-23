@@ -326,6 +326,7 @@ export default function GalleryScreen(
         />
 
         <NavigationButtons
+          submitButtonText="Create"
           onSubmit={onSubmit}
           isEdit={!!isEditBusiness}
           loading={addBusinessLoading || updateBusinessLoading}
