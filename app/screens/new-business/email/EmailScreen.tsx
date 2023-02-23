@@ -30,7 +30,7 @@ export default function EmailScreen(
   const { navigation, route } = props;
   const isEditBusiness = route?.params?.businessId;
 
-  const { mutate: editEmail } = useEditBusiness(
+  const { mutate: editEmail, isLoading } = useEditBusiness(
     route?.params?.businessId ?? '',
   );
   const { data: businessData } = useBusiness(route?.params?.businessId ?? '');
@@ -52,8 +52,14 @@ export default function EmailScreen(
 
   const onSubmit = (data: BusinessStoreTypes) => {
     if (isEditBusiness) {
-      editEmail({ email: data.email });
-      navigation.goBack();
+      editEmail(
+        { email: data.email },
+        {
+          onSuccess() {
+            navigation.goBack();
+          },
+        },
+      );
     } else {
       setEmail(data.email);
       navigation.navigate('Website');
@@ -61,7 +67,9 @@ export default function EmailScreen(
   };
 
   const navigateToBack = () => {
-    navigation.goBack();
+    if (isEditBusiness) {
+      navigation.goBack();
+    }
   };
 
   const offsetKeyboard = Platform.select({
@@ -136,8 +144,9 @@ export default function EmailScreen(
 
         <NavigationButtons
           onSubmit={handleSubmit(onSubmit)}
+          loading={isLoading}
+          disabled={!isValid || isLoading}
           isEdit={!!isEditBusiness}
-          disabled={!isValid}
         />
       </KeyboardAvoidingView>
     </SafeAreaView>
