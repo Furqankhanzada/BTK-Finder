@@ -29,7 +29,7 @@ export default function DescriptionScreen(
   const isEditBusiness = route?.params?.businessId;
 
   const { data: businessData } = useBusiness(route?.params?.businessId ?? '');
-  const { mutate: editDescription } = useEditBusiness(
+  const { mutate: editDescription, isLoading } = useEditBusiness(
     route?.params?.businessId ?? '',
   );
 
@@ -48,8 +48,14 @@ export default function DescriptionScreen(
 
   const onSubmit = async (data: BusinessStoreTypes) => {
     if (isEditBusiness) {
-      editDescription({ description: data.description });
-      navigation.goBack();
+      editDescription(
+        { description: data.description },
+        {
+          onSuccess() {
+            navigation.goBack();
+          },
+        },
+      );
     } else {
       setDescription(data.description);
       navigation.navigate('CategorySelect');
@@ -57,7 +63,9 @@ export default function DescriptionScreen(
   };
 
   const navigateToBack = () => {
-    navigation.goBack();
+    if (isEditBusiness) {
+      navigation.goBack();
+    }
   };
 
   const offsetKeyboard = Platform.select({
@@ -120,6 +128,8 @@ export default function DescriptionScreen(
 
         <NavigationButtons
           onSubmit={handleSubmit(onSubmit)}
+          loading={isLoading}
+          disabled={isLoading}
           isEdit={!!isEditBusiness}
         />
       </KeyboardAvoidingView>
