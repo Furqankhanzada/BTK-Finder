@@ -9,6 +9,7 @@ type Props = {
   isEdit: boolean;
   disabled?: boolean;
   onSubmit: () => void;
+  submitButtonText?: string;
   loading?: boolean;
 };
 
@@ -17,6 +18,7 @@ export const NavigationButtons = ({
   disabled,
   onSubmit,
   loading,
+  submitButtonText = 'Next',
 }: Props) => {
   const navigation = useNavigation();
 
@@ -36,7 +38,7 @@ export const NavigationButtons = ({
         disabled={disabled}
         onPress={onSubmit}
         loading={loading}>
-        {isEdit ? 'Update' : 'Next'}
+        {isEdit ? 'Update' : submitButtonText}
       </Button>
     </View>
   );
