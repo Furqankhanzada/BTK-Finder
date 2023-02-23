@@ -31,7 +31,7 @@ export default function FacilitiesScreen(
   const remoteConfig = useRemoteConfig();
 
   const { data: businessData } = useBusiness(route?.params?.businessId ?? '');
-  const { mutate: editFacility } = useEditBusiness(
+  const { mutate: editFacility, isLoading } = useEditBusiness(
     route?.params?.businessId ?? '',
   );
 
@@ -67,10 +67,16 @@ export default function FacilitiesScreen(
     }
   };
 
-  const navigateToNext = () => {
+  const onSubmit = () => {
     if (isEditBusiness) {
-      editFacility({ facilities: selectedFacilities });
-      navigation.goBack();
+      editFacility(
+        { facilities: selectedFacilities },
+        {
+          onSuccess() {
+            navigation.goBack();
+          },
+        },
+      );
     } else {
       setStoreFacility(selectedFacilities);
       navigation.navigate('Tags');
@@ -78,7 +84,9 @@ export default function FacilitiesScreen(
   };
 
   const navigateToBack = () => {
-    navigation.goBack();
+    if (isEditBusiness) {
+      navigation.goBack();
+    }
   };
 
   const offsetKeyboard = Platform.select({
@@ -137,7 +145,9 @@ export default function FacilitiesScreen(
         />
 
         <NavigationButtons
-          onSubmit={navigateToNext}
+          onSubmit={onSubmit}
+          loading={isLoading}
+          disabled={isLoading}
           isEdit={!!isEditBusiness}
         />
       </KeyboardAvoidingView>
