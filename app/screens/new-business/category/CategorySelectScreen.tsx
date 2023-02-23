@@ -35,7 +35,7 @@ export default function CategorySelectScreen(
 
   const { data: categories } = useCategories(['categories']);
   const { data: businessData } = useBusiness(route?.params?.businessId ?? '');
-  const { mutate: editBusiness } = useEditBusiness(
+  const { mutate: editBusiness, isLoading } = useEditBusiness(
     route?.params?.businessId ?? '',
   );
 
@@ -79,17 +79,25 @@ export default function CategorySelectScreen(
     }
   };
 
-  const navigateToNext = () => {
+  const onSubmit = () => {
     if (isEditBusiness) {
-      editBusiness({ category: selectedCategory });
-      navigation.goBack();
+      editBusiness(
+        { category: selectedCategory },
+        {
+          onSuccess() {
+            navigation.goBack();
+          },
+        },
+      );
     } else if (selectedCategory) {
       navigation.navigate('Facilities');
     }
   };
 
   const navigateToBack = () => {
-    navigation.goBack();
+    if (isEditBusiness) {
+      navigation.goBack();
+    }
   };
 
   const offsetKeyboard = Platform.select({
@@ -163,8 +171,9 @@ export default function CategorySelectScreen(
         />
 
         <NavigationButtons
-          onSubmit={navigateToNext}
-          disabled={!category}
+          onSubmit={onSubmit}
+          loading={isLoading}
+          disabled={!category || isLoading}
           isEdit={!!isEditBusiness}
         />
       </KeyboardAvoidingView>
