@@ -6,18 +6,19 @@ import {
   LastRoutes,
   withAuthRedirection,
 } from '../../navigation/hoc/withAuthRedirection';
-import { NameScreen } from './name/NameScreen';
-import { DescriptionScreen } from './description/DescriptionScreen';
-import { CategorySelectScreen } from './category/CategorySelectScreen';
-import { FacilitiesScreen } from './facilities/FacilitiesScreen';
-import { TagsScreen } from './tags/TagsScreen';
-import { TelephoneScreen } from './telephone/TelephoneScreen';
-import { EmailScreen } from './email/EmailScreen';
-import { WebsiteScreen } from './website/WebsiteScreen';
-import { AddressScreen } from './address/AddressScreen';
-import { OpenHoursScreen } from './hours/OpenHoursScreen';
-import { PricingScreen } from './pricing/PricingScreen';
-import { GalleryScreen } from './gallery/GalleryScreen';
+
+import NameScreen from './name/NameScreen';
+import DescriptionScreen from './description/DescriptionScreen';
+import CategorySelectScreen from './category/CategorySelectScreen';
+import FacilitiesScreen from './facilities/FacilitiesScreen';
+import TagsScreen from './tags/TagsScreen';
+import TelephoneScreen from './telephone/TelephoneScreen';
+import EmailScreen from './email/EmailScreen';
+import WebsiteScreen from './website/WebsiteScreen';
+import AddressScreen from './address/AddressScreen';
+import OpenHoursScreen from './hours/OpenHoursScreen';
+import PricingScreen from './pricing/PricingScreen';
+import GalleryScreen from './gallery/GalleryScreen';
 
 const NewBusinessStack = createStackNavigator<NewBusinessParamList>();
 
