@@ -88,8 +88,8 @@ export const useAddGalleryImages = () => {
 
   const user = useSelector((state: any) => state.profile);
   const { _id } = user;
-  return useMutation((imagePath: any) => {
-    console.log('@imagePath', imagePath);
+
+  return useMutation<any, Error, any>(async (imagePath: any) => {
     const chunks = imagePath.map((file: any) => {
       return new Promise((resolve, reject) => {
         const imageData = new FormData();
@@ -107,13 +107,9 @@ export const useAddGalleryImages = () => {
           .catch((error) => reject(error));
       });
     });
-    Promise.all(chunks)
-      .then((res) => {
-        setGallery([...gallery, ...res]);
-      })
-      .catch((error) => {
-        handleError(error);
-      });
+    const result = await Promise.all(chunks);
+    setGallery([...gallery, ...result]);
+    return result;
   });
 };
 
