@@ -55,22 +55,25 @@ export default function AddressScreen(
   );
   const { data: businessData } = useBusiness(route?.params?.businessId ?? '');
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<BusinessStoreTypes>({
-    defaultValues: {
-      address: isEditBusiness ? businessData?.address : '',
-    },
-  });
-
+  const address = useAddBusinessStore(
+    (state: BusinessStoreTypes) => state.address,
+  );
   const setAddress = useAddBusinessStore(
     (state: BusinessStoreActions) => state.setAddress,
   );
   const setStoreLocation = useAddBusinessStore(
     (state: BusinessStoreActions) => state.setLocation,
   );
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<BusinessStoreTypes>({
+    defaultValues: {
+      address: isEditBusiness ? businessData?.address : address,
+    },
+  });
 
   const [location, setLocation] = useState<LocationDataType>({
     ...defaultLocation,
