@@ -57,7 +57,9 @@ export default function GalleryScreen(
   const resetAddBusinessStore = useAddBusinessStore(
     (state: BusinessStoreActions) => state.resetAddBusinessStore,
   );
-  const payload = useAddBusinessStore((state: BusinessStoreTypes) => state);
+  const businessStoreData = useAddBusinessStore(
+    (state: BusinessStoreTypes) => state,
+  );
   const thumbnail = useAddBusinessStore(
     (state: BusinessStoreTypes) => state.thumbnail,
   );
@@ -101,7 +103,7 @@ export default function GalleryScreen(
     } else {
       // Remove keys containing empty strings to avoid API Errors
       const payloadData = _.pickBy(
-        payload,
+        businessStoreData,
         _.identity,
       ) as unknown as AddBusinessPayload;
 
@@ -154,7 +156,7 @@ export default function GalleryScreen(
       { pathname: url.pathname.replace(/^\/|\/$/g, '') },
       {
         onSuccess() {
-          const newPayload = { ...payload };
+          const newPayload = { ...businessStoreData };
           let data = newPayload.gallery.filter(
             (el: Gallery) => el.image !== item.image,
           );
@@ -306,7 +308,7 @@ export default function GalleryScreen(
                     {renderGalleryImages(gallery)}
                     <TouchableOpacity
                       style={
-                        payload.gallery.length === 0
+                        businessStoreData.gallery.length === 0
                           ? styles.galleryImageContainer
                           : styles.galleryImageSubContainer
                       }
