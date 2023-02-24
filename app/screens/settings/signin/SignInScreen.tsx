@@ -5,6 +5,8 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
+  StyleSheet,
+  TextInput as TextInputOriginal,
 } from 'react-native';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
@@ -26,7 +28,6 @@ import {
   TextInput,
 } from '@components';
 
-import styles from './styles';
 import { login } from '../../../actions/auth';
 import { StackScreenProps } from '@react-navigation/stack';
 import { SettingsParamList } from '../../../navigation/models/SettingsParamList';
@@ -40,7 +41,7 @@ export default function SignInScreen(
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
   const { params } = route;
-  const passwordRef = useRef(null);
+  const passwordRef = useRef<TextInputOriginal>(null);
 
   const { mutate: registerDevice } = useDeviceRegistration();
   const [username, setUsername] = useState('');
@@ -110,7 +111,7 @@ export default function SignInScreen(
       <KeyboardAvoidingView
         behavior={Platform.OS === 'android' ? 'height' : 'padding'}
         keyboardVerticalOffset={offsetKeyboard}
-        style={{ flex: 1 }}>
+        style={styles.keyboardAvoidingView}>
         <View style={styles.contain}>
           <TextInput
             onChangeText={(text) => setUsername(text)}
@@ -127,11 +128,11 @@ export default function SignInScreen(
             keyboardType="email-address"
             autoCorrect={false}
             autoCapitalize="none"
-            onSubmitEditing={() => passwordRef.current.focus()}
+            onSubmitEditing={() => passwordRef?.current?.focus()}
           />
           <TextInput
             ref={passwordRef}
-            style={{ marginTop: 10 }}
+            style={styles.textInput}
             onChangeText={(text) => setPassword(text)}
             onFocus={() => {
               setSuccess({
@@ -148,7 +149,7 @@ export default function SignInScreen(
             blurOnSubmit={true}
           />
           <Button
-            style={{ marginTop: 20 }}
+            style={styles.button}
             full
             loading={loading}
             onPress={() => {
@@ -167,3 +168,21 @@ export default function SignInScreen(
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  keyboardAvoidingView: {
+    flex: 1,
+  },
+  textInput: {
+    marginTop: 10,
+  },
+  contain: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+    flex: 1,
+  },
+  button: {
+    marginTop: 20,
+  },
+});
