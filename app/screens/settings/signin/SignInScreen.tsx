@@ -76,7 +76,7 @@ export default function SignInScreen(
               osVersion: getSystemVersion(),
             });
 
-            navigation.navigate(lastRoute ? lastRoute : 'Welcome', { id });
+            navigation.navigate(lastRoute ? lastRoute : 'Settings', { id });
             queryClient.invalidateQueries(['notifications']);
             queryClient.invalidateQueries(['notifications-count']);
           }
@@ -159,7 +159,7 @@ export default function SignInScreen(
           </Button>
           <TouchableOpacity
             onPress={() => navigation.navigate('ResetPassword')}>
-            <Text body1 grayColor style={{ marginTop: 25 }}>
+            <Text body1 grayColor style={styles.forgotPasswordText}>
               {t('forgot_your_password')}
             </Text>
           </TouchableOpacity>
@@ -184,5 +184,8 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 20,
+  },
+  forgotPasswordText: {
+    marginTop: 25,
   },
 });
