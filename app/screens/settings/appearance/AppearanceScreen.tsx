@@ -1,10 +1,12 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { View, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
-import { BaseStyle, useTheme } from '@config';
-import { Header, SafeAreaView, Icon, Text } from '@components';
+import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { StackScreenProps } from '@react-navigation/stack';
+
+import { BaseStyle, useTheme } from '@config';
+import { Header, SafeAreaView, Icon, Text } from '@components';
+
 import { SettingsParamList } from '../../../navigation/models/SettingsParamList';
 
 export default function AppearanceScreen({
@@ -56,15 +58,12 @@ export default function AppearanceScreen({
         <TouchableOpacity
           style={[
             styles.profileItem,
-            { borderBottomColor: colors.border, borderBottomWidth: 1 },
+            styles.fontContainer,
+            { borderBottomColor: colors.border },
           ]}
           onPress={() => navigation.navigate('SelectFontOption')}>
           <Text body1>{t('font')}</Text>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}>
+          <View style={styles.profileItemRightContainer}>
             <Text body1 grayColor>
               {font ?? t('default')}
             </Text>
@@ -72,7 +71,7 @@ export default function AppearanceScreen({
               name="angle-right"
               size={18}
               color={colors.primary}
-              style={{ marginLeft: 5 }}
+              style={styles.angleRight}
               enableRTL={true}
             />
           </View>
@@ -83,11 +82,7 @@ export default function AppearanceScreen({
             navigation.navigate('SelectDarkOption');
           }}>
           <Text body1>{t('dark_theme')}</Text>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}>
+          <View style={styles.profileItemRightContainer}>
             <Text body1 grayColor>
               {darkOption}
             </Text>
@@ -95,7 +90,7 @@ export default function AppearanceScreen({
               name="angle-right"
               size={18}
               color={colors.primary}
-              style={{ marginLeft: 5 }}
+              style={styles.angleRight}
               enableRTL={true}
             />
           </View>
@@ -115,6 +110,16 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 20,
+  },
+  profileItemRightContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  fontContainer: {
+    borderBottomWidth: 1,
+  },
+  angleRight: {
+    marginLeft: 5,
   },
   themeIcon: {
     width: 16,
