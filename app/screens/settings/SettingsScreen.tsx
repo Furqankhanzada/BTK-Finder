@@ -230,7 +230,11 @@ export default function SettingsScreen(
           <Button
             full
             loading={false}
-            onPress={() => navigation.navigate('SignIn', { lastRoute })}>
+            onPress={() =>
+              navigation.navigate('SignIn', {
+                lastRoute: { lastRoute: 'Settings' },
+              })
+            }>
             Sign In
           </Button>
           <Button
