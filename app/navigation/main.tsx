@@ -18,23 +18,19 @@ import FavouriteScreen from '@screens/favourite/FavouriteScreen';
 import Messenger from '@screens/Messenger';
 
 /* Stack Screen */
-import ThemeSetting from '@screens/ThemeSetting';
-import Setting from '@screens/Setting';
+import ThemeSetting from '@screens/settings/appearance/components/ThemeSetting';
 import Category from '@screens/category/CategoryScreen';
-import SignUp from '@screens/auth/signup';
-import SignIn from '@screens/auth/signin';
+import SignUp from '@screens/settings/signup';
+import SignIn from '@screens/settings/signin/SignInScreen';
 import VerifyCode from '@screens/VerifyCode';
 import Messages from '@screens/Messages';
 import Walkthrough from '@screens/Walkthrough';
 import ResetPassword from '@screens/ResetPassword';
-import ChangeLanguage from '@screens/ChangeLanguage';
-import ContactUs from '@screens/settings/contact-us/ContactUsScreen';
 import Address from '@screens/AddBusiness/address';
 import Hours from '@screens/AddBusiness/hours';
 import PriceRange from '@screens/AddBusiness/priceRange';
 import FinalReview from '@screens/AddBusiness/review';
 import Gallery from '@screens/AddBusiness/gallery';
-import MyBusinessesScreen from '@screens/my-businesses/MyBusinessesScreen';
 import { DashboardStackNavigator } from '@screens/dashboard/navigation/DashboardStack';
 import BusinessesScreen from '@screens/businesses/list/BusinessesScreen';
 import { SettingsStackNavigator } from '@screens/settings/navigation/SettingsStack';
@@ -62,7 +58,6 @@ export default function Main() {
         component={BusinessDetailNavigator}
       />
       <MainStack.Screen name="ThemeSetting" component={ThemeSetting} />
-      <MainStack.Screen name="Setting" component={Setting} />
       <MainStack.Screen name="Category" component={Category} />
       <MainStack.Screen name="Businesses" component={BusinessesScreen} />
       <MainStack.Screen name="Walkthrough" component={Walkthrough} />
@@ -71,15 +66,12 @@ export default function Main() {
       <MainStack.Screen name="Messenger" component={Messenger} />
       <MainStack.Screen name="Messages" component={Messages} />
       <MainStack.Screen name="ResetPassword" component={ResetPassword} />
-      <MainStack.Screen name="ChangeLanguage" component={ChangeLanguage} />
-      <MainStack.Screen name="ContactUs" component={ContactUs} />
       {/*<MainStack.Screen name="Business" component={Business} />*/}
       <MainStack.Screen name="Address" component={Address} />
       <MainStack.Screen name="Hours" component={Hours} />
       <MainStack.Screen name="PriceRange" component={PriceRange} />
       <MainStack.Screen name="FinalReview" component={FinalReview} />
       <MainStack.Screen name="Gallery" component={Gallery} />
-      <MainStack.Screen name="MyBusinesses" component={MyBusinessesScreen} />
       <MainStack.Screen name="EditBusiness" component={Business} />
       <MainStack.Screen name="VerifyCode" component={VerifyCode} />
     </MainStack.Navigator>

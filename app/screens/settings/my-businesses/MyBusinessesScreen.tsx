@@ -8,6 +8,8 @@ import {
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { StackScreenProps } from '@react-navigation/stack';
+
 import { BaseStyle, useTheme } from '@config';
 import {
   Header,
@@ -17,11 +19,14 @@ import {
   Loading,
   Text,
 } from '@components';
-import { useBusinessesInfinite } from '../businesses/queries/queries';
 
-import { getSingleBusiness } from '../../actions/business';
+import { useBusinessesInfinite } from '../../businesses/queries/queries';
+import { getSingleBusiness } from '../../../actions/business';
+import { SettingsParamList } from '../../../navigation/models/SettingsParamList';
 
-export default function MyBusinessesScreen(props: any) {
+export default function MyBusinessesScreen(
+  props: StackScreenProps<SettingsParamList, 'MyBusinesses'>,
+) {
   const { navigation } = props;
   const scrollAnim = new Animated.Value(0);
   const dispatch = useDispatch();

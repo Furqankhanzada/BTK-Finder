@@ -28,8 +28,12 @@ import {
 
 import styles from './styles';
 import { login } from '../../../actions/auth';
+import { StackScreenProps } from '@react-navigation/stack';
+import { SettingsParamList } from '../../../navigation/models/SettingsParamList';
 
-export default function SignIn(props) {
+export default function SignInScreen(
+  props: StackScreenProps<SettingsParamList, 'SignIn'>,
+) {
   const { navigation, route } = props;
   const { colors } = useTheme();
   const { t } = useTranslation();
@@ -86,7 +90,7 @@ export default function SignIn(props) {
   });
 
   return (
-    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
+    <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
         title={t('sign_in')}
         renderLeft={() => {

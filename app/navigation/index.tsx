@@ -19,8 +19,8 @@ import {
 import Filter from '@screens/Filter';
 import ChooseItems from '@screens/ChooseItems';
 import SearchHistory from '@screens/SearchHistory';
-import SelectDarkOption from '@screens/SelectDarkOption';
-import SelectFontOption from '@screens/SelectFontOption';
+import SelectDarkOption from '@screens/settings/appearance/components/SelectDarkOption';
+import SelectFontOption from '@screens/settings/appearance/components/SelectFontOption';
 
 import { navigationRef, isReadyRef } from '../services/NavigationService';
 import { trackScreenView } from '../userTracking';

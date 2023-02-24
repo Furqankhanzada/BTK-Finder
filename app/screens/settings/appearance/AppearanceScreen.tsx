@@ -1,26 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
-import { View, TouchableOpacity, Switch, ScrollView } from 'react-native';
+import { View, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
 import { BaseStyle, useTheme } from '@config';
 import { Header, SafeAreaView, Icon, Text } from '@components';
 import { useTranslation } from 'react-i18next';
-import DeviceInfo from 'react-native-device-info';
-import styles from './styles';
+import { StackScreenProps } from '@react-navigation/stack';
+import { SettingsParamList } from '../../../navigation/models/SettingsParamList';
 
-export default function Setting({ navigation }) {
-  const { t, i18n } = useTranslation();
+export default function AppearanceScreen({
+  navigation,
+}: StackScreenProps<SettingsParamList, 'Appearance'>) {
+  const { t } = useTranslation();
   const { colors } = useTheme();
-  const forceDark = useSelector((state) => state.application.force_dark);
-  const font = useSelector((state) => state.application.font);
-
-  const [reminders, setReminders] = useState(true);
-
-  /**
-   * @description Call when reminder option switch on/off
-   */
-  const toggleSwitch = (value) => {
-    setReminders(value);
-  };
+  const forceDark = useSelector((state: any) => state.application.force_dark);
+  const font = useSelector((state: any) => state.application.font);
 
   const darkOption = forceDark
     ? t('always_on')
@@ -29,9 +22,9 @@ export default function Setting({ navigation }) {
     : t('dynamic_system');
 
   return (
-    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
+    <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
-        title={t('settings')}
+        title={t('Appearance')}
         renderLeft={() => {
           return (
             <Icon
@@ -47,33 +40,7 @@ export default function Setting({ navigation }) {
         }}
       />
       <ScrollView contentContainerStyle={styles.contain}>
-        {/* <TouchableOpacity
-          style={[
-            styles.profileItem,
-            {borderBottomColor: colors.border, borderBottomWidth: 1},
-          ]}
-          onPress={() => {
-            navigation.navigate('ChangeLanguage');
-          }}>
-          <Text body1>{t('language')}</Text>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}>
-            <Text body1 grayColor>
-              {Utils.languageFromCode(i18n.language)}
-            </Text>
-            <Icon
-              name="angle-right"
-              size={18}
-              color={colors.primary}
-              style={{marginLeft: 5}}
-              enableRTL={true}
-            />
-          </View>
-        </TouchableOpacity> */}
-        <TouchableOpacity
+        {/*        <TouchableOpacity
           style={[
             styles.profileItem,
             { borderBottomColor: colors.border, borderBottomWidth: 1 },
@@ -85,7 +52,7 @@ export default function Setting({ navigation }) {
           <View
             style={[styles.themeIcon, { backgroundColor: colors.primary }]}
           />
-        </TouchableOpacity>
+        </TouchableOpacity>*/}
         <TouchableOpacity
           style={[
             styles.profileItem,
@@ -111,10 +78,7 @@ export default function Setting({ navigation }) {
           </View>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[
-            styles.profileItem,
-            { borderBottomColor: colors.border, borderBottomWidth: 1 },
-          ]}
+          style={[styles.profileItem]}
           onPress={() => {
             navigation.navigate('SelectDarkOption');
           }}>
@@ -136,32 +100,24 @@ export default function Setting({ navigation }) {
             />
           </View>
         </TouchableOpacity>
-        {/* <View
-          style={[
-            styles.profileItem,
-            {borderBottomColor: colors.border, borderBottomWidth: 1},
-            {paddingVertical: 15},
-          ]}>
-          <Text body1>{t('reminders')}</Text>
-          <Switch size={18} onValueChange={toggleSwitch} value={reminders} />
-        </View> */}
-        <View
-          style={[
-            styles.profileItem,
-            { borderBottomColor: colors.border, borderBottomWidth: 1 },
-          ]}>
-          <Text body1>App Version</Text>
-          <Text body1 grayColor>
-            {DeviceInfo.getVersion()}
-          </Text>
-        </View>
-        <View style={styles.profileItem}>
-          <Text body1>Build Number</Text>
-          <Text body1 grayColor>
-            {DeviceInfo.getBuildNumber()}
-          </Text>
-        </View>
       </ScrollView>
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  contain: {
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+  },
+  profileItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 20,
+  },
+  themeIcon: {
+    width: 16,
+    height: 16,
+  },
+});

@@ -1,11 +1,13 @@
 import React from 'react';
-import { View, ScrollView, TouchableOpacity } from 'react-native';
+import { View, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
+import { StackScreenProps } from '@react-navigation/stack';
+import DeviceInfo from 'react-native-device-info';
 
 import { AuthActions } from '@actions';
-import { BaseStyle, useTheme } from '@config';
+import { BaseColor, BaseStyle, useTheme } from '@config';
 import {
   Header,
   SafeAreaView,
@@ -15,20 +17,22 @@ import {
   ProfileDetail,
 } from '@components';
 
-import styles from './styles';
+import { SettingsParamList } from '../../navigation/models/SettingsParamList';
 
-export default function Welcome(props) {
-  const { navigation, lastRoute } = props;
+export default function SettingsScreen(
+  props: StackScreenProps<SettingsParamList, 'Settings'>,
+) {
+  const { navigation } = props;
   const { colors } = useTheme();
   const { t } = useTranslation();
   const queryClient = useQueryClient();
 
-  const isLogin = useSelector((state) => state.auth.isLogin);
-  const signOutLoading = useSelector((state) => state.auth.signOutLoading);
-  const profileData = useSelector((state) => state.profile);
+  const isLogin = useSelector((state: any) => state.auth.isLogin);
+  const signOutLoading = useSelector((state: any) => state.auth.signOutLoading);
+  const profileData = useSelector((state: any) => state.profile);
   const dispatch = useDispatch();
 
-  const navigateToMyBusinesses = (id) => {
+  const navigateToMyBusinesses = (id: string) => {
     navigation.navigate('MyBusinesses', { id });
   };
 
@@ -39,7 +43,7 @@ export default function Welcome(props) {
    */
   const onLogOut = () => {
     dispatch(
-      AuthActions.authentication(false, (response) => {
+      AuthActions.authentication(false, () => {
         queryClient.invalidateQueries(['notifications']);
         queryClient.invalidateQueries(['notifications-count']);
       }),
@@ -47,8 +51,8 @@ export default function Welcome(props) {
   };
 
   return (
-    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
-      <Header title="More" />
+    <SafeAreaView style={BaseStyle.safeAreaView}>
+      <Header title="Settings" />
       <ScrollView>
         <View style={styles.contain}>
           {isLogin ? (
@@ -75,7 +79,7 @@ export default function Welcome(props) {
                   { borderBottomColor: colors.border, borderBottomWidth: 1 },
                 ]}
                 onPress={() => {
-                  navigation.navigate('ProfileEdit');
+                  navigation.navigate('EditProfile');
                 }}>
                 <Text body1>{t('edit_profile')}</Text>
                 <Icon
@@ -181,11 +185,14 @@ export default function Welcome(props) {
             </View>
           </TouchableOpacity>
           <TouchableOpacity
-            style={styles.profileItem}
+            style={[
+              styles.profileItem,
+              { borderBottomColor: colors.border, borderBottomWidth: 1 },
+            ]}
             onPress={() => {
-              navigation.navigate('Setting');
+              navigation.navigate('Appearance');
             }}>
-            <Text body1>Settings</Text>
+            <Text body1>Appearance</Text>
             <Icon
               name="angle-right"
               size={18}
@@ -194,6 +201,22 @@ export default function Welcome(props) {
               enableRTL={true}
             />
           </TouchableOpacity>
+          <View
+            style={[
+              styles.profileItem,
+              { borderBottomColor: colors.border, borderBottomWidth: 1 },
+            ]}>
+            <Text body1>App Version</Text>
+            <Text body1 grayColor>
+              {DeviceInfo.getVersion()}
+            </Text>
+          </View>
+          <View style={styles.profileItem}>
+            <Text body1>Build Number</Text>
+            <Text body1 grayColor>
+              {DeviceInfo.getBuildNumber()}
+            </Text>
+          </View>
         </View>
       </ScrollView>
       {isLogin ? (
@@ -222,3 +245,29 @@ export default function Welcome(props) {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  contentTitle: {
+    alignItems: 'flex-start',
+    width: '100%',
+    height: 32,
+    justifyContent: 'center',
+  },
+  contain: {
+    flex: 1,
+    padding: 20,
+  },
+  textInput: {
+    height: 56,
+    backgroundColor: BaseColor.fieldColor,
+    borderRadius: 5,
+    padding: 10,
+    width: '100%',
+  },
+  profileItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 20,
+  },
+});

@@ -6,4 +6,6 @@ export type SettingsParamList = {
   ContactUs: undefined;
   MyBusinesses: { id: string };
   SendNotification: undefined;
+  Appearance: undefined;
+  SignIn: undefined;
 };

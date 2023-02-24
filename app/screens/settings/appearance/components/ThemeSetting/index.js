@@ -21,7 +21,7 @@ export default function ThemeSetting({ navigation }) {
       themeSupport.map((item) => {
         return {
           ...item,
-          selected: item.theme == themeStorage,
+          selected: item.theme === themeStorage,
         };
       }),
     );
@@ -37,7 +37,7 @@ export default function ThemeSetting({ navigation }) {
       themeSupport.map((item) => {
         return {
           ...item,
-          selected: item.theme == selected.theme,
+          selected: item.theme === selected.theme,
         };
       }),
     );
@@ -75,7 +75,8 @@ export default function ThemeSetting({ navigation }) {
               width: 16,
               height: 16,
               backgroundColor: item.light.colors.primary,
-            }}></View>
+            }}
+          />
           <Text body1 style={{ marginHorizontal: 8 }}>
             {item.theme}
           </Text>

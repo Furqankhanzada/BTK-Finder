@@ -28,20 +28,20 @@ import { BaseStyle, BaseColor, useTheme } from '@config';
 import { useAlerts } from '@hooks';
 import { StackScreenProps } from '@react-navigation/stack';
 import { AuthActions } from '@actions';
-import { MainStackParamList } from 'navigation/models/MainStackParamList';
 
-import { IconName } from '../../../contexts/alerts-v2/models/Icon';
+import { IconName } from '../../../../contexts/alerts-v2/models/Icon';
 import {
   EditProfilePayload,
   useDeleteUserAccount,
   useEditProfile,
   useUploadProfileImage,
 } from '../queries/mutations';
-import { EDIT_PROFILE_API_SUCCESS } from '../../../constants/auth';
+import { EDIT_PROFILE_API_SUCCESS } from '../../../../constants/auth';
+import { SettingsParamList } from '../../../../navigation/models/SettingsParamList';
 import AccountInfoAlertContent from './components/AccountInfoAlertContent';
 
-export default function ProfileEdit(
-  props: StackScreenProps<MainStackParamList, 'ProfileEdit'>,
+export default function EditProfileScreen(
+  props: StackScreenProps<SettingsParamList, 'EditProfile'>,
 ) {
   const { navigation } = props;
   const dispatch = useDispatch();
@@ -74,9 +74,12 @@ export default function ProfileEdit(
       //TODO: Will fix once we remove the redux from project.
       dispatch(AuthActions.authentication(false));
 
+      //TODO: See how to redirect to Dashboard
+      /*
       navigation.navigate('MainBottomTabNavigator', {
         screen: 'DashboardStack',
       });
+      */
 
       showNotification({
         icon: {
