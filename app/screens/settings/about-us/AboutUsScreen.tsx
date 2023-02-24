@@ -9,6 +9,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { StackScreenProps } from '@react-navigation/stack';
 
+import { useRemoteConfig } from '@hooks';
 import { BaseStyle, useTheme } from '@config';
 import {
   Header,
@@ -19,7 +20,6 @@ import {
 } from '@components';
 
 import { SettingsParamList } from '../../../navigation/models/SettingsParamList';
-import { useRemoteConfig } from '@hooks';
 
 export default function AboutUsScreen({
   navigation,
@@ -46,7 +46,7 @@ export default function AboutUsScreen({
           navigation.goBack();
         }}
       />
-      <ScrollView style={{ flex: 1 }}>
+      <ScrollView style={styles.scrollView}>
         <ImageBackground
           source={{ uri: remoteConfig.about?.backgroundImage }}
           style={styles.banner}
@@ -57,7 +57,7 @@ export default function AboutUsScreen({
               <Text headline semibold>
                 {t('who_we_are').toUpperCase()}
               </Text>
-              <Text body2 style={{ marginTop: 10 }} numberOfLines={20}>
+              <Text body2 style={styles.aboutText} numberOfLines={20}>
                 {remoteConfig.about?.whoWeAre}
               </Text>
             </View>
@@ -68,7 +68,7 @@ export default function AboutUsScreen({
             <Text headline semibold style={styles.title}>
               {t('meet_our_team').toUpperCase()}
             </Text>
-            <View style={{ paddingHorizontal: 20 }}>
+            <View style={styles.teamContainer}>
               {remoteConfig.about?.ourTeam?.map((item, index) => {
                 return (
                   <ProfileDescription
@@ -77,7 +77,7 @@ export default function AboutUsScreen({
                     name={item.name}
                     subName={item.subName}
                     description={item.description}
-                    style={{ marginBottom: 10 }}
+                    style={styles.teamItemContainer}
                     onPress={() => item.link && Linking.openURL(item.link)}
                   />
                 );
@@ -86,8 +86,8 @@ export default function AboutUsScreen({
           </View>
         ) : null}
         {remoteConfig.about?.disclaimer ? (
-          <View style={{ paddingHorizontal: 20, paddingVertical: 30 }}>
-            <Text headline semibold style={{ marginBottom: 10, color: 'red' }}>
+          <View style={styles.disclaimerContainer}>
+            <Text headline semibold style={styles.disclaimerTitle}>
               DISCLAIMER
             </Text>
             <Text>{remoteConfig.about?.disclaimer}</Text>
@@ -99,6 +99,9 @@ export default function AboutUsScreen({
 }
 
 const styles = StyleSheet.create({
+  scrollView: {
+    flex: 1,
+  },
   textShadow: {
     textShadowColor: 'rgba(0, 0, 0, 0.75)',
     textShadowOffset: { width: 1, height: 1 },
@@ -114,10 +117,30 @@ const styles = StyleSheet.create({
     width: '100%',
     padding: 20,
   },
+  aboutText: {
+    marginTop: 10,
+  },
   team: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
   },
-  title: { paddingHorizontal: 20, paddingBottom: 15 },
+  title: {
+    paddingHorizontal: 20,
+    paddingBottom: 15,
+  },
+  teamContainer: {
+    paddingHorizontal: 20,
+  },
+  teamItemContainer: {
+    marginBottom: 10,
+  },
+  disclaimerContainer: {
+    paddingHorizontal: 20,
+    paddingVertical: 30,
+  },
+  disclaimerTitle: {
+    marginBottom: 10,
+    color: 'red',
+  },
 });
