@@ -13,6 +13,7 @@ import MyBusinessesScreen from '@screens/settings/my-businesses/MyBusinessesScre
 
 import { SettingsParamList } from '../../../navigation/models/SettingsParamList';
 import SignInScreen from '@screens/settings/signin/SignInScreen';
+import SignUpScreen from '@screens/settings/signup/SignUpScreen';
 
 const SettingsStack = createStackNavigator<SettingsParamList>();
 
@@ -37,6 +38,7 @@ export function SettingsStackNavigator() {
       />
       <SettingsStack.Screen name="Appearance" component={AppearanceScreen} />
       <SettingsStack.Screen name="SignIn" component={SignInScreen} />
+      <SettingsStack.Screen name="SignUp" component={SignUpScreen} />
     </SettingsStack.Navigator>
   );
 }

@@ -1,21 +1,32 @@
 import React, { useRef, useState } from 'react';
-import { View, KeyboardAvoidingView, Platform } from 'react-native';
-import { BaseStyle, BaseColor, useTheme } from '@config';
-import { Header, SafeAreaView, Icon, Button, TextInput } from '@components';
-import TextInputMask from 'react-native-text-input-mask';
+import {
+  View,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
+  TextInput as TextInputOriginal,
+} from 'react-native';
+import { StackScreenProps } from '@react-navigation/stack';
 import { useDispatch } from 'react-redux';
-import styles from './styles';
 import { useTranslation } from 'react-i18next';
-import { register } from '../../../actions/auth';
+import TextInputMask from 'react-native-text-input-mask';
 import Toast from 'react-native-toast-message';
 
-export default function SignUp(props) {
+import { BaseStyle, BaseColor, useTheme } from '@config';
+import { Header, SafeAreaView, Icon, Button, TextInput } from '@components';
+
+import { SettingsParamList } from 'navigation/models/SettingsParamList';
+import { register } from '../../../actions/auth';
+
+export default function SignUpScreen(
+  props: StackScreenProps<SettingsParamList, 'SignUp'>,
+) {
   const { navigation, route } = props;
   const { params } = route;
 
-  const nameRef = useRef(null);
-  const emailRef = useRef(null);
-  const passwordRef = useRef(null);
+  const nameRef = useRef<TextInputOriginal>(null);
+  const emailRef = useRef<TextInputOriginal>(null);
+  const passwordRef = useRef<TextInputOriginal>(null);
 
   const { colors } = useTheme();
   const { t } = useTranslation();
@@ -39,15 +50,14 @@ export default function SignUp(props) {
    */
   const onSignUp = () => {
     let lastRoute = params?.lastRoute?.lastRoute ?? params.lastRoute ?? '';
-    let id = params?.lastRoute?.id ?? '';
 
     if (name === '' || email === '' || phone === '' || password === '') {
       setSuccess({
         ...success,
-        name: name != '' ? true : false,
-        email: email != '' ? true : false,
-        phone: phone != '' ? true : false,
-        password: password != '' ? true : false,
+        name: name !== '' ? true : false,
+        email: email !== '' ? true : false,
+        phone: phone !== '' ? true : false,
+        password: password !== '' ? true : false,
       });
     } else {
       setLoading(true);
@@ -59,7 +69,7 @@ export default function SignUp(props) {
         (error) => {
           setLoading(false);
           if (!error) {
-            navigation.navigate(lastRoute ? lastRoute : 'Welcome');
+            navigation.navigate(lastRoute ? lastRoute : 'Settings');
             Toast.show({
               type: 'success',
               topOffset: 55,
@@ -77,7 +87,7 @@ export default function SignUp(props) {
     android: 20,
   });
   return (
-    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
+    <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
         title={t('sign_up')}
         renderLeft={() => {
@@ -97,48 +107,47 @@ export default function SignUp(props) {
       <KeyboardAvoidingView
         behavior={Platform.OS === 'android' ? 'height' : 'padding'}
         keyboardVerticalOffset={offsetKeyboard}
-        style={{ flex: 1 }}>
+        style={styles.keyboardAvoidingView}>
         <View style={styles.contain}>
           <TextInputMask
             style={[
-              styles.textInput,
+              styles.textInputMask,
               { backgroundColor: colors.card, color: colors.text },
             ]}
             onChangeText={(text) => setPhone(text)}
             placeholder="+92 300 1234 567"
             placeholderTextColor={BaseColor.grayColor}
             keyboardType="numeric"
-            success={success.phone}
             value={phone}
             autoCapitalize="none"
             mask={'+92 [000] [0000] [000]'}
             returnKeyType="next"
-            onSubmitEditing={() => nameRef.current.focus()}
+            onSubmitEditing={() => nameRef?.current?.focus()}
             blurOnSubmit={false}
           />
           <TextInput
             ref={nameRef}
-            style={{ marginTop: 10 }}
+            style={styles.textInput}
             onChangeText={(text) => setName(text)}
             placeholder="Name"
             success={success.name}
             value={name}
-            onSubmitEditing={() => emailRef.current.focus()}
+            onSubmitEditing={() => emailRef?.current?.focus()}
           />
           <TextInput
             ref={emailRef}
-            style={{ marginTop: 10 }}
+            style={styles.textInput}
             onChangeText={(text) => setEmail(text)}
             placeholder="Email"
             keyboardType="email-address"
             success={success.email}
             value={email}
             autoCapitalize="none"
-            onSubmitEditing={() => passwordRef.current.focus()}
+            onSubmitEditing={() => passwordRef?.current?.focus()}
           />
           <TextInput
             ref={passwordRef}
-            style={{ marginTop: 10 }}
+            style={styles.textInput}
             onChangeText={(text) => setPassword(text)}
             placeholder="Password"
             secureTextEntry={true}
@@ -151,7 +160,7 @@ export default function SignUp(props) {
           />
           <Button
             full
-            style={{ marginTop: 20 }}
+            style={styles.button}
             loading={loading}
             onPress={() => onSignUp()}>
             {t('sign_up')}
@@ -161,3 +170,28 @@ export default function SignUp(props) {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  keyboardAvoidingView: {
+    flex: 1,
+  },
+  contain: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+    flex: 1,
+  },
+  textInputMask: {
+    height: 46,
+    borderRadius: 5,
+    marginTop: 10,
+    padding: 10,
+    width: '100%',
+  },
+  textInput: {
+    marginTop: 10,
+  },
+  button: {
+    marginTop: 20,
+  },
+});

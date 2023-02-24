@@ -20,7 +20,7 @@ import Messenger from '@screens/Messenger';
 /* Stack Screen */
 import ThemeSetting from '@screens/settings/appearance/components/ThemeSetting';
 import Category from '@screens/category/CategoryScreen';
-import SignUp from '@screens/settings/signup';
+import SignUp from '@screens/settings/signup/SignUpScreen';
 import SignIn from '@screens/settings/signin/SignInScreen';
 import VerifyCode from '@screens/VerifyCode';
 import Messages from '@screens/Messages';

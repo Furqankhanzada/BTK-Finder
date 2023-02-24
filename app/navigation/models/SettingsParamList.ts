@@ -8,4 +8,5 @@ export type SettingsParamList = {
   SendNotification: undefined;
   Appearance: undefined;
   SignIn: { lastRoute: { lastRoute?: string; id?: string } };
+  SignUp: { lastRoute: { lastRoute?: string; id?: string } };
 };
