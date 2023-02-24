@@ -64,7 +64,6 @@ export default function SettingsScreen(
                     : require('@assets/images/default-avatar.png')
                 }
                 textFirst={profileData.name}
-                // point={profileData.}
                 textSecond={profileData.email}
                 textThird={profileData.phone}
                 isAdmin={
@@ -76,7 +75,7 @@ export default function SettingsScreen(
               <TouchableOpacity
                 style={[
                   styles.profileItem,
-                  { borderBottomColor: colors.border, borderBottomWidth: 1 },
+                  { borderBottomColor: colors.border },
                 ]}
                 onPress={() => {
                   navigation.navigate('EditProfile');
@@ -86,14 +85,13 @@ export default function SettingsScreen(
                   name="angle-right"
                   size={18}
                   color={colors.primary}
-                  style={{ marginLeft: 5 }}
                   enableRTL={true}
                 />
               </TouchableOpacity>
               <TouchableOpacity
                 style={[
                   styles.profileItem,
-                  { borderBottomColor: colors.border, borderBottomWidth: 1 },
+                  { borderBottomColor: colors.border },
                 ]}
                 onPress={() => {
                   navigation.navigate('ChangePassword');
@@ -103,14 +101,13 @@ export default function SettingsScreen(
                   name="angle-right"
                   size={18}
                   color={colors.primary}
-                  style={{ marginLeft: 5 }}
                   enableRTL={true}
                 />
               </TouchableOpacity>
               <TouchableOpacity
                 style={[
                   styles.profileItem,
-                  { borderBottomColor: colors.border, borderBottomWidth: 1 },
+                  { borderBottomColor: colors.border },
                 ]}
                 onPress={() => navigateToMyBusinesses(profileData._id)}>
                 <Text body1>{t('my_businesses')}</Text>
@@ -118,7 +115,6 @@ export default function SettingsScreen(
                   name="angle-right"
                   size={18}
                   color={colors.primary}
-                  style={{ marginLeft: 5 }}
                   enableRTL={true}
                 />
               </TouchableOpacity>
@@ -126,7 +122,7 @@ export default function SettingsScreen(
                 <TouchableOpacity
                   style={[
                     styles.profileItem,
-                    { borderBottomColor: colors.border, borderBottomWidth: 1 },
+                    { borderBottomColor: colors.border },
                   ]}
                   onPress={() => navigation.navigate('SendNotification')}>
                   <Text body1>{t('send_notification')}</Text>
@@ -134,7 +130,6 @@ export default function SettingsScreen(
                     name="angle-right"
                     size={18}
                     color={colors.primary}
-                    style={{ marginLeft: 5 }}
                     enableRTL={true}
                   />
                 </TouchableOpacity>
@@ -147,48 +142,31 @@ export default function SettingsScreen(
             />
           )}
           <TouchableOpacity
-            style={[
-              styles.profileItem,
-              { borderBottomColor: colors.border, borderBottomWidth: 1 },
-            ]}
+            style={[styles.profileItem, { borderBottomColor: colors.border }]}
             onPress={() => navigation.navigate('ContactUs')}>
             <Text body1>{t('contact_us')}</Text>
             <Icon
               name="angle-right"
               size={18}
               color={colors.primary}
-              style={{ marginLeft: 5 }}
               enableRTL={true}
             />
           </TouchableOpacity>
           <TouchableOpacity
-            style={[
-              styles.profileItem,
-              { borderBottomColor: colors.border, borderBottomWidth: 1 },
-            ]}
+            style={[styles.profileItem, { borderBottomColor: colors.border }]}
             onPress={() => {
               navigation.navigate('AboutUs');
             }}>
             <Text body1>{t('about_us')}</Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}>
-              <Icon
-                name="angle-right"
-                size={18}
-                color={colors.primary}
-                style={{ marginLeft: 5 }}
-                enableRTL={true}
-              />
-            </View>
+            <Icon
+              name="angle-right"
+              size={18}
+              color={colors.primary}
+              enableRTL={true}
+            />
           </TouchableOpacity>
           <TouchableOpacity
-            style={[
-              styles.profileItem,
-              { borderBottomColor: colors.border, borderBottomWidth: 1 },
-            ]}
+            style={[styles.profileItem, { borderBottomColor: colors.border }]}
             onPress={() => {
               navigation.navigate('Appearance');
             }}>
@@ -197,15 +175,11 @@ export default function SettingsScreen(
               name="angle-right"
               size={18}
               color={colors.primary}
-              style={{ marginLeft: 5 }}
               enableRTL={true}
             />
           </TouchableOpacity>
           <View
-            style={[
-              styles.profileItem,
-              { borderBottomColor: colors.border, borderBottomWidth: 1 },
-            ]}>
+            style={[styles.profileItem, { borderBottomColor: colors.border }]}>
             <Text body1>App Version</Text>
             <Text body1 grayColor>
               {DeviceInfo.getVersion()}
@@ -220,13 +194,13 @@ export default function SettingsScreen(
         </View>
       </ScrollView>
       {isLogin ? (
-        <View style={{ paddingHorizontal: 20, paddingVertical: 15 }}>
+        <View style={styles.signoutButtonContainer}>
           <Button full loading={signOutLoading} onPress={() => onLogOut()}>
             Sign Out
           </Button>
         </View>
       ) : (
-        <View style={{ paddingHorizontal: 20 }}>
+        <View style={styles.buttonsContainer}>
           <Button
             full
             loading={false}
@@ -238,10 +212,14 @@ export default function SettingsScreen(
             Sign In
           </Button>
           <Button
-            style={{ marginVertical: 15 }}
+            style={styles.signupButton}
             full
             loading={false}
-            onPress={() => navigation.navigate('SignUp', { lastRoute })}>
+            onPress={() =>
+              navigation.navigate('SignUp', {
+                lastRoute: { lastRoute: 'Settings' },
+              })
+            }>
             Sign Up
           </Button>
         </View>
@@ -273,5 +251,16 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 20,
+    borderBottomWidth: 1,
+  },
+  signoutButtonContainer: {
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+  },
+  buttonsContainer: {
+    paddingHorizontal: 20,
+  },
+  signupButton: {
+    marginVertical: 15,
   },
 });
