@@ -92,7 +92,12 @@ export default function ChangePasswordScreen({
             placeholder="New Password"
             value={newPassword}
             onSubmitEditing={() => confirmPasswordRef.current?.focus()}
+            style={styles.textInput}
           />
+
+          <Text headline semibold style={styles.title}>
+            Confirm New Password
+          </Text>
           <TextInput
             ref={confirmPasswordRef}
             onChangeText={(text) => setConfirmPassword(text)}
@@ -138,7 +143,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   textInput: {
-    marginTop: 10,
+    marginBottom: 10,
   },
   buttonContainer: {
     paddingVertical: 15,
