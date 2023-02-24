@@ -14,10 +14,16 @@ export default function useRemoteConfig(): RemoteConfig {
     const allValues: Record<string, any> = remoteConfig().getAll();
     for (const [key, value] of Object.entries(allValues)) {
       if (key === 'helplines') {
-        setConfig({ ...config, helplines: JSON.parse(value._value) });
+        setConfig((prevConfig) => ({
+          ...prevConfig,
+          helplines: JSON.parse(value._value),
+        }));
       }
       if (key === 'aboutUs') {
-        setConfig({ ...config, about: JSON.parse(value._value) });
+        setConfig((prevConfig) => ({
+          ...prevConfig,
+          about: JSON.parse(value._value),
+        }));
       }
     }
   };
