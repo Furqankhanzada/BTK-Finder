@@ -132,7 +132,7 @@ export default function ContactUsScreen({
         }}
       />
       <FlatList
-        contentContainerStyle={{ paddingHorizontal: 20 }}
+        contentContainerStyle={styles.flatListContainer}
         data={contactData}
         keyExtractor={(item) => item.name}
         ListHeaderComponent={headerComponent}
@@ -140,11 +140,11 @@ export default function ContactUsScreen({
           <TouchableOpacity
             style={[styles.item, { backgroundColor: colors.card }]}
             onPress={() => onOpen(item)}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View style={styles.itemContent}>
               <Icon
                 name={item.icon}
                 color={item?.iconColor}
-                style={{ marginRight: 10 }}
+                style={styles.itemIcon}
                 size={30}
               />
               <Text body1>{item.name}</Text>
@@ -159,6 +159,9 @@ export default function ContactUsScreen({
 }
 
 const styles = StyleSheet.create({
+  flatListContainer: {
+    paddingHorizontal: 20,
+  },
   sectionEmpty: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -187,6 +190,20 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  logo: { width: 100, height: 100, alignSelf: 'center' },
-  text: { marginTop: 10, textAlign: 'center' },
+  itemContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  itemIcon: {
+    marginRight: 10,
+  },
+  logo: {
+    width: 100,
+    height: 100,
+    alignSelf: 'center',
+  },
+  text: {
+    marginTop: 10,
+    textAlign: 'center',
+  },
 });
