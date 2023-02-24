@@ -12,7 +12,7 @@ import Toast from 'react-native-toast-message';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useTranslation } from 'react-i18next';
 
-import { BaseColor, BaseStyle, useTheme } from '@config';
+import { BaseStyle, useTheme } from '@config';
 import {
   Header,
   SafeAreaView,
@@ -79,20 +79,13 @@ export default function ChangePasswordScreen({
         }}
       />
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'android' ? 'height' : 'padding'}
-        style={{ flex: 1, justifyContent: 'center' }}
+        behavior={Platform.OS === 'android' ? undefined : 'padding'}
+        style={styles.keyboardAvoidingView}
         keyboardVerticalOffset={offsetKeyboard}>
-        <ScrollView
-          contentContainerStyle={{
-            flex: 1,
-            justifyContent: 'center',
-            padding: 20,
-          }}>
-          <View style={styles.contentTitle}>
-            <Text headline semibold>
-              Enter New Password
-            </Text>
-          </View>
+        <ScrollView contentContainerStyle={styles.scrollViewContentContainer}>
+          <Text headline semibold style={styles.title}>
+            Enter New Password
+          </Text>
           <TextInput
             onChangeText={(text) => setNewPassword(text)}
             secureTextEntry={true}
@@ -109,40 +102,46 @@ export default function ChangePasswordScreen({
             onSubmitEditing={() => onConfirm()}
             blurOnSubmit={true}
             returnKeyType="done"
-            style={{ marginTop: 10 }}
+            style={styles.textInput}
           />
-          <View style={{ paddingVertical: 15 }}>
-            <Button
-              loading={changePasswordLoading}
-              full
-              onPress={() => {
-                onConfirm();
-              }}>
-              {t('confirm')}
-            </Button>
-          </View>
         </ScrollView>
+        <View style={styles.buttonContainer}>
+          <Button
+            loading={changePasswordLoading}
+            full
+            onPress={() => {
+              onConfirm();
+            }}>
+            {t('confirm')}
+          </Button>
+        </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  contentTitle: {
-    alignItems: 'flex-start',
-    width: '100%',
-    height: 32,
+  keyboardAvoidingView: {
+    flex: 1,
     justifyContent: 'center',
+  },
+  scrollViewContentContainer: {
+    flex: 1,
+    padding: 20,
+    position: 'relative',
+  },
+  title: {
+    marginBottom: 10,
   },
   contain: {
     flex: 1,
     padding: 20,
   },
   textInput: {
-    height: 46,
-    backgroundColor: BaseColor.fieldColor,
-    borderRadius: 5,
-    padding: 10,
-    width: '100%',
+    marginTop: 10,
+  },
+  buttonContainer: {
+    paddingVertical: 15,
+    paddingHorizontal: 20,
   },
 });
