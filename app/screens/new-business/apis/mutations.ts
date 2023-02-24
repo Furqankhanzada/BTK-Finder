@@ -22,24 +22,25 @@ import useAddBusinessStore, {
   BusinessStoreTypes,
 } from '../store/Store';
 
-export interface AddBusinessPayload {
-  name: string;
-  description?: string;
-  category: string;
-  facilities?: Facility[];
-  tags?: string[];
-  telephone?: string;
-  email?: string;
-  website?: string;
-  address: string;
-  location: Location;
-  openHours?: OpenHours[];
-  priceRange?: PriceRange;
-  thumbnail?: string;
-  gallery?: Gallery[];
-}
+export type AddBusinessPayload = Pick<
+  BusinessPresentable,
+  | 'name'
+  | 'description'
+  | 'category'
+  | 'facilities'
+  | 'tags'
+  | 'telephone'
+  | 'email'
+  | 'website'
+  | 'address'
+  | 'location'
+  | 'openHours'
+  | 'priceRange'
+  | 'thumbnail'
+  | 'gallery'
+>;
 
-interface EditBusinessPayload {
+type EditBusinessPayload = {
   name?: string;
   description?: string;
   category?: string;
@@ -54,7 +55,7 @@ interface EditBusinessPayload {
   priceRange?: PriceRange;
   thumbnail?: string;
   gallery?: Gallery[];
-}
+};
 
 type ImageResponse = {
   Location: string;
@@ -67,9 +68,9 @@ export const useAddThumbnail = () => {
 
   const user = useSelector((state: any) => state.profile);
   const { _id } = user;
-  return useMutation<ImageResponse, Error, Image>((imagePath) => {
+  return useMutation<ImageResponse, Error, Image>((image) => {
     const imageData = new FormData();
-    imageData.append('file', generateFileObject(imagePath));
+    imageData.append('file', generateFileObject(image));
     return axiosApiInstance
       .post(`${UPLOAD}?folder=users/${_id}/businesses`, imageData, {
         headers: { 'Content-Type': 'multipart/form-data' },
@@ -95,8 +96,9 @@ export const useAddGalleryImages = () => {
   const user = useSelector((state: any) => state.profile);
   const { _id } = user;
 
-  return useMutation<any, Error, any>(async (imagePath) => {
-    const chunks = imagePath.map((file: any) => {
+  // TODO: Fix types.
+  return useMutation<any, Error, any>(async (images) => {
+    const uploadImagePromises = images.map((file: any) => {
       return new Promise((resolve, reject) => {
         const imageData = new FormData();
         imageData.append('file', generateFileObject(file));
@@ -113,7 +115,7 @@ export const useAddGalleryImages = () => {
           .catch((error) => reject(error));
       });
     });
-    const result = await Promise.all(chunks);
+    const result = await Promise.all(uploadImagePromises);
     setGallery([...gallery, ...result]);
     return result;
   });
@@ -151,6 +153,7 @@ export const useEditBusiness = (id: string) => {
   const queryClient = useQueryClient();
   const { showNotification } = useAlerts();
 
+  // TODO: will change response type after fixing response from backend.
   return useMutation<any, Error, EditBusinessPayload>(
     (payload) => {
       return axiosApiInstance
