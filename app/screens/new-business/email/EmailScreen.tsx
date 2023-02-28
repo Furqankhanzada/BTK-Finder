@@ -10,7 +10,7 @@ import {
 import { Controller, useForm } from 'react-hook-form';
 import { StackScreenProps } from '@react-navigation/stack';
 
-import { Header, Text, TextInput, Icon } from '@components';
+import { Header, Text, TextInput } from '@components';
 import { BaseColor, BaseStyle } from '@config';
 import { useBusiness } from '@screens/businesses/queries/queries';
 
@@ -21,6 +21,7 @@ import useAddBusinessStore, {
   BusinessStoreTypes,
 } from '../store/Store';
 import { NavigationButtons } from '../components/NavigationButtons';
+import ArrowBack from '../components/ArrowBack';
 
 const emailRegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
 
@@ -81,16 +82,7 @@ export default function EmailScreen(
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
         title={isEditBusiness ? 'Update Email Address' : 'Email Address '}
-        renderLeft={() => {
-          return isEditBusiness ? (
-            <Icon
-              name="arrow-left"
-              size={20}
-              color="#5dade2"
-              enableRTL={true}
-            />
-          ) : null;
-        }}
+        renderLeft={() => <ArrowBack show={!!isEditBusiness} />}
         onPressLeft={navigateToBack}
       />
       <KeyboardAvoidingView

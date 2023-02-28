@@ -25,6 +25,7 @@ import useAddBusinessStore, {
   BusinessStoreTypes,
 } from '../store/Store';
 import { NavigationButtons } from '../components/NavigationButtons';
+import ArrowBack from '../components/ArrowBack';
 
 interface LocationDataType {
   latitude: number;
@@ -235,16 +236,7 @@ export default function AddressScreen(
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
         title={isEditBusiness ? 'Edit Business Address' : 'Business Address'}
-        renderLeft={() => {
-          return isEditBusiness ? (
-            <Icon
-              name="arrow-left"
-              size={20}
-              color="#5dade2"
-              enableRTL={true}
-            />
-          ) : null;
-        }}
+        renderLeft={() => <ArrowBack show={!!isEditBusiness} />}
         onPressLeft={navigateToBack}
       />
 

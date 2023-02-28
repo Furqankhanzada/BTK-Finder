@@ -9,7 +9,7 @@ import {
 import { StackScreenProps } from '@react-navigation/stack';
 
 import { useRemoteConfig } from '@hooks';
-import { Header, Icon, Text } from '@components';
+import { Header, Text } from '@components';
 import { BaseStyle } from '@config';
 import { useBusiness } from '@screens/businesses/queries/queries';
 import { Facility } from '@screens/businesses/models/BusinessPresentable';
@@ -22,6 +22,7 @@ import useAddBusinessStore, {
 } from '../store/Store';
 import { NavigationButtons } from '../components/NavigationButtons';
 import { SelectItem } from '../components/SelectItem';
+import ArrowBack from '../components/ArrowBack';
 
 export default function FacilitiesScreen(
   props: StackScreenProps<NewBusinessParamList, 'Facilities'>,
@@ -98,16 +99,7 @@ export default function FacilitiesScreen(
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
         title={isEditBusiness ? 'Edit Facilites' : 'Select Facilities'}
-        renderLeft={() => {
-          return isEditBusiness ? (
-            <Icon
-              name="arrow-left"
-              size={20}
-              color="#5dade2"
-              enableRTL={true}
-            />
-          ) : null;
-        }}
+        renderLeft={() => <ArrowBack show={!!isEditBusiness} />}
         onPressLeft={navigateToBack}
       />
 

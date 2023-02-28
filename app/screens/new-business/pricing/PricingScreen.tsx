@@ -9,7 +9,7 @@ import {
 import { StackScreenProps } from '@react-navigation/stack';
 
 import { BaseStyle } from '@config';
-import { Header, Text, Icon, TextInput } from '@components';
+import { Header, Text, TextInput } from '@components';
 import { useBusiness } from '@screens/businesses/queries/queries';
 
 import { NewBusinessParamList } from 'navigation/models/NewBusinessParamList';
@@ -20,6 +20,7 @@ import useAddBusinessStore, {
 } from '../store/Store';
 import { NavigationButtons } from '../components/NavigationButtons';
 import { Controller, useForm } from 'react-hook-form';
+import ArrowBack from '../components/ArrowBack';
 
 export default function PricingScreen(
   props: StackScreenProps<NewBusinessParamList, 'Pricing'>,
@@ -78,16 +79,7 @@ export default function PricingScreen(
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
         title={isEditBusiness ? 'Edit Pricing' : 'Pricing'}
-        renderLeft={() => {
-          return isEditBusiness ? (
-            <Icon
-              name="arrow-left"
-              size={20}
-              color="#5dade2"
-              enableRTL={true}
-            />
-          ) : null;
-        }}
+        renderLeft={() => <ArrowBack show={!!isEditBusiness} />}
         onPressLeft={navigateToBack}
       />
       <KeyboardAvoidingView

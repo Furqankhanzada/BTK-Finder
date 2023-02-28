@@ -23,6 +23,7 @@ import useAddBusinessStore, {
 } from '../store/Store';
 import { NavigationButtons } from '../components/NavigationButtons';
 import { SelectItem } from '../components/SelectItem';
+import ArrowBack from '../components/ArrowBack';
 
 export default function TagsScreen(
   props: StackScreenProps<NewBusinessParamList, 'Tags'>,
@@ -119,16 +120,7 @@ export default function TagsScreen(
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
         title={isEditBusiness ? 'Edit Tags' : 'Select Tags'}
-        renderLeft={() => {
-          return isEditBusiness ? (
-            <Icon
-              name="arrow-left"
-              size={20}
-              color="#5dade2"
-              enableRTL={true}
-            />
-          ) : null;
-        }}
+        renderLeft={() => <ArrowBack show={!!isEditBusiness} />}
         onPressLeft={navigateToBack}
       />
 

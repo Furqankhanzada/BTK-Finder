@@ -10,7 +10,7 @@ import {
 import { Controller, useForm } from 'react-hook-form';
 import { StackScreenProps } from '@react-navigation/stack';
 
-import { Header, Text, TextInput, Icon } from '@components';
+import { Header, Text, TextInput } from '@components';
 import { BaseColor, BaseStyle } from '@config';
 import { useBusiness } from '@screens/businesses/queries/queries';
 
@@ -21,6 +21,7 @@ import useAddBusinessStore, {
   BusinessStoreTypes,
 } from '../store/Store';
 import { NavigationButtons } from '../components/NavigationButtons';
+import ArrowBack from '../components/ArrowBack';
 
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
@@ -84,16 +85,7 @@ export default function TelephoneScreen(
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
         title={isEditBusiness ? 'Update Number' : 'Add Telephone Number'}
-        renderLeft={() => {
-          return isEditBusiness ? (
-            <Icon
-              name="arrow-left"
-              size={20}
-              color="#5dade2"
-              enableRTL={true}
-            />
-          ) : null;
-        }}
+        renderLeft={() => <ArrowBack show={!!isEditBusiness} />}
         onPressLeft={navigateToBack}
       />
 

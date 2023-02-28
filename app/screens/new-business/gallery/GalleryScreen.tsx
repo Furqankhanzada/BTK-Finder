@@ -9,6 +9,7 @@ import {
   Platform,
   StyleSheet,
 } from 'react-native';
+import _ from 'lodash';
 import ImagePicker from 'react-native-image-crop-picker';
 import { StackScreenProps } from '@react-navigation/stack';
 import { URL } from 'react-native-url-polyfill';
@@ -33,7 +34,7 @@ import useAddBusinessStore, {
   BusinessStoreTypes,
 } from '../store/Store';
 import { NavigationButtons } from '../components/NavigationButtons';
-import _ from 'lodash';
+import ArrowBack from '../components/ArrowBack';
 
 export default function GalleryScreen(
   props: StackScreenProps<GlobalParamList, 'Gallery'>,
@@ -243,16 +244,7 @@ export default function GalleryScreen(
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
         title={isEditBusiness ? 'Edit Gallery' : 'Gallery'}
-        renderLeft={() => {
-          return isEditBusiness ? (
-            <Icon
-              name="arrow-left"
-              size={20}
-              color="#5dade2"
-              enableRTL={true}
-            />
-          ) : null;
-        }}
+        renderLeft={() => <ArrowBack show={!!isEditBusiness} />}
         onPressLeft={navigateToBack}
       />
 

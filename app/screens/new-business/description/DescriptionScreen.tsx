@@ -11,7 +11,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { StackScreenProps } from '@react-navigation/stack';
 
 import { useBusiness } from '@screens/businesses/queries/queries';
-import { Header, Text, TextInput, Icon } from '@components';
+import { Header, Text, TextInput } from '@components';
 import { BaseStyle } from '@config';
 
 import { NewBusinessParamList } from 'navigation/models/NewBusinessParamList';
@@ -21,6 +21,7 @@ import useAddBusinessStore, {
   BusinessStoreTypes,
 } from '../store/Store';
 import { NavigationButtons } from '../components/NavigationButtons';
+import ArrowBack from '../components/ArrowBack';
 
 export default function DescriptionScreen(
   props: StackScreenProps<NewBusinessParamList, 'Description'>,
@@ -77,16 +78,7 @@ export default function DescriptionScreen(
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
         title={isEditBusiness ? 'Edit Business Description' : 'Add Description'}
-        renderLeft={() => {
-          return isEditBusiness ? (
-            <Icon
-              name="arrow-left"
-              size={20}
-              color="#5dade2"
-              enableRTL={true}
-            />
-          ) : null;
-        }}
+        renderLeft={() => <ArrowBack show={!!isEditBusiness} />}
         onPressLeft={navigateToBack}
       />
 
