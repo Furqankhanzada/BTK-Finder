@@ -40,7 +40,7 @@ export type AddBusinessPayload = Pick<
   | 'gallery'
 >;
 
-type EditBusinessPayload = {
+type EditBusinessData = {
   name?: string;
   description?: string;
   category?: string;
@@ -55,6 +55,11 @@ type EditBusinessPayload = {
   priceRange?: PriceRange;
   thumbnail?: string;
   gallery?: Gallery[];
+};
+
+type EditBusinessPayload = {
+  businessId: string;
+  data: EditBusinessData;
 };
 
 type ImageResponse = {
@@ -149,7 +154,7 @@ export const useAddBusiness = () => {
   );
 };
 
-export const useEditBusiness = (id: string) => {
+export const useEditBusiness = () => {
   const queryClient = useQueryClient();
   const { showNotification } = useAlerts();
 
@@ -157,16 +162,18 @@ export const useEditBusiness = (id: string) => {
   return useMutation<any, Error, EditBusinessPayload>(
     (payload) => {
       return axiosApiInstance
-        .put(`${BUSINESSES_API}/${id}`, payload)
-        .then((response) => response.data)
+        .put(`${BUSINESSES_API}/${payload.businessId}`, payload.data)
+        .then(() => {
+          return { businessId: payload.businessId };
+        })
         .catch(({ response }) => {
           handleError(response.data);
         });
     },
     {
-      onSuccess: async () => {
+      onSuccess: async (response) => {
         await queryClient.invalidateQueries({
-          queryKey: ['business', id],
+          queryKey: ['business', response.businessId],
         });
 
         showNotification({
