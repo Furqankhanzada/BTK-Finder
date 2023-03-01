@@ -30,9 +30,7 @@ export default function DescriptionScreen(
   const isEditBusiness = route?.params?.businessId;
 
   const { data: businessData } = useBusiness(route.params?.businessId);
-  const { mutate: editDescription, isLoading } = useEditBusiness(
-    route?.params?.businessId ?? '',
-  );
+  const { mutate: editDescription, isLoading } = useEditBusiness();
 
   const description = useAddBusinessStore(
     (state: BusinessStoreTypes) => state.description,
@@ -50,7 +48,10 @@ export default function DescriptionScreen(
   const onSubmit = async (data: BusinessStoreTypes) => {
     if (isEditBusiness) {
       editDescription(
-        { description: data.description },
+        {
+          businessId: route?.params?.businessId,
+          data: { description: data.description },
+        },
         {
           onSuccess() {
             navigation.goBack();

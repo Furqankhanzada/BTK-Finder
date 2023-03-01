@@ -32,9 +32,7 @@ export default function FacilitiesScreen(
   const remoteConfig = useRemoteConfig();
 
   const { data: businessData } = useBusiness(route.params?.businessId);
-  const { mutate: editFacility, isLoading } = useEditBusiness(
-    route?.params?.businessId ?? '',
-  );
+  const { mutate: editFacility, isLoading } = useEditBusiness();
 
   const storeFacilities = useAddBusinessStore(
     (state: BusinessStoreTypes) => state.facilities,
@@ -71,7 +69,10 @@ export default function FacilitiesScreen(
   const onSubmit = () => {
     if (isEditBusiness) {
       editFacility(
-        { facilities: selectedFacilities },
+        {
+          businessId: route?.params?.businessId,
+          data: { facilities: selectedFacilities },
+        },
         {
           onSuccess() {
             navigation.goBack();

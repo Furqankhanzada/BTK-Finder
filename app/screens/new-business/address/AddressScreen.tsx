@@ -51,9 +51,7 @@ export default function AddressScreen(
   const isEditBusiness = route?.params?.businessId;
   const mapRef = useRef<MapView>();
 
-  const { mutate: editAddress, isLoading } = useEditBusiness(
-    route?.params?.businessId ?? '',
-  );
+  const { mutate: editAddress, isLoading } = useEditBusiness();
   const { data: businessData } = useBusiness(route.params?.businessId);
 
   const address = useAddBusinessStore(
@@ -202,13 +200,16 @@ export default function AddressScreen(
     if (isEditBusiness) {
       editAddress(
         {
-          address: data.address,
-          location: {
-            type: 'Point',
-            coordinates: [
-              location?.latitude ?? defaultLocation.latitude,
-              location.longitude ?? defaultLocation.longitude,
-            ],
+          businessId: route?.params?.businessId,
+          data: {
+            address: data.address,
+            location: {
+              type: 'Point',
+              coordinates: [
+                location?.latitude ?? defaultLocation.latitude,
+                location.longitude ?? defaultLocation.longitude,
+              ],
+            },
           },
         },
         {

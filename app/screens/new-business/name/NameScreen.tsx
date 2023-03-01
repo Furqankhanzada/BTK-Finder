@@ -30,9 +30,7 @@ export default function NameScreen(
   const isEditBusiness = route?.params?.businessId;
 
   const { data: businessData } = useBusiness(route.params?.businessId);
-  const { mutate: editName, isLoading } = useEditBusiness(
-    route?.params?.businessId ?? '',
-  );
+  const { mutate: editName, isLoading } = useEditBusiness();
 
   const name = useAddBusinessStore((state: BusinessStoreTypes) => state.name);
   const setName = useAddBusinessStore(
@@ -52,7 +50,10 @@ export default function NameScreen(
   const onSubmit = async (data: BusinessStoreTypes) => {
     if (isEditBusiness) {
       editName(
-        { name: data.name },
+        {
+          businessId: route?.params?.businessId,
+          data: { name: data.name },
+        },
         {
           onSuccess() {
             navigation.goBack();

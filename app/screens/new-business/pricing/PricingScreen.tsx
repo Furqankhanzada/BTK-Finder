@@ -28,9 +28,7 @@ export default function PricingScreen(
   const { navigation, route } = props;
   const isEditBusiness = route?.params?.businessId;
 
-  const { mutate: EditPrice, isLoading } = useEditBusiness(
-    route?.params?.businessId ?? '',
-  );
+  const { mutate: EditPrice, isLoading } = useEditBusiness();
   const { data: businessData } = useBusiness(route.params?.businessId);
 
   const priceRange = useAddBusinessStore(
@@ -50,7 +48,8 @@ export default function PricingScreen(
     if (isEditBusiness) {
       EditPrice(
         {
-          priceRange: data.priceRange,
+          businessId: route?.params?.businessId,
+          data: { priceRange: data.priceRange },
         },
         {
           onSuccess() {

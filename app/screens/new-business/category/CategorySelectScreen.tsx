@@ -36,9 +36,7 @@ export default function CategorySelectScreen(
 
   const { data: categories } = useCategories(['categories']);
   const { data: businessData } = useBusiness(route.params?.businessId);
-  const { mutate: editBusiness, isLoading } = useEditBusiness(
-    route?.params?.businessId ?? '',
-  );
+  const { mutate: editBusiness, isLoading } = useEditBusiness();
 
   const category = useAddBusinessStore(
     (state: BusinessStoreTypes) => state.category,
@@ -83,7 +81,10 @@ export default function CategorySelectScreen(
   const onSubmit = () => {
     if (isEditBusiness) {
       editBusiness(
-        { category: selectedCategory },
+        {
+          businessId: route?.params?.businessId,
+          data: { category: selectedCategory },
+        },
         {
           onSuccess() {
             navigation.goBack();

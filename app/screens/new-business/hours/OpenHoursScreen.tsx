@@ -29,9 +29,7 @@ export default function OpenHoursScreen(
   const { navigation, route } = props;
   const isEditBusiness = route?.params?.businessId;
 
-  const { mutate: updateTimings, isLoading } = useEditBusiness(
-    route?.params?.businessId ?? '',
-  );
+  const { mutate: updateTimings, isLoading } = useEditBusiness();
   const { data: businessData } = useBusiness(route.params?.businessId);
 
   const openHours = useAddBusinessStore(
@@ -99,7 +97,10 @@ export default function OpenHoursScreen(
 
     if (isEditBusiness) {
       updateTimings(
-        { openHours: hours },
+        {
+          businessId: route?.params?.businessId,
+          data: { openHours: hours },
+        },
         {
           onSuccess() {
             navigation.goBack();

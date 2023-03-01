@@ -32,9 +32,7 @@ export default function WebsiteScreen(
   const { navigation, route } = props;
   const isEditBusiness = route?.params?.businessId;
 
-  const { mutate: editWebsite, isLoading } = useEditBusiness(
-    route?.params?.businessId ?? '',
-  );
+  const { mutate: editWebsite, isLoading } = useEditBusiness();
   const { data: businessData } = useBusiness(route.params?.businessId);
 
   const website = useAddBusinessStore(
@@ -57,7 +55,10 @@ export default function WebsiteScreen(
   const onSubmit = (data: BusinessStoreTypes) => {
     if (isEditBusiness) {
       editWebsite(
-        { website: data.website },
+        {
+          businessId: route?.params?.businessId,
+          data: { website: data.website },
+        },
         {
           onSuccess() {
             navigation.goBack();

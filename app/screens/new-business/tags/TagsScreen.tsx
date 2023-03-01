@@ -34,9 +34,7 @@ export default function TagsScreen(
   const isEditBusiness = route?.params?.businessId;
 
   const { data: businessData } = useBusiness(route.params?.businessId);
-  const { mutate: editTags, isLoading } = useEditBusiness(
-    route?.params?.businessId ?? '',
-  );
+  const { mutate: editTags, isLoading } = useEditBusiness();
 
   const storeTags = useAddBusinessStore(
     (state: BusinessStoreTypes) => state.tags,
@@ -92,7 +90,10 @@ export default function TagsScreen(
   const onSubmit = () => {
     if (isEditBusiness) {
       editTags(
-        { tags: selected },
+        {
+          businessId: route?.params?.businessId,
+          data: { tags: selected },
+        },
         {
           onSuccess() {
             navigation.goBack();

@@ -52,7 +52,7 @@ export default function GalleryScreen(
   const { mutate: addNewBusiness, isLoading: addBusinessLoading } =
     useAddBusiness();
   const { mutate: updateGallery, isLoading: updateBusinessLoading } =
-    useEditBusiness(route?.params?.businessId ?? '');
+    useEditBusiness();
   const { data: businessData } = useBusiness(route.params?.businessId);
 
   const resetAddBusinessStore = useAddBusinessStore(
@@ -92,7 +92,10 @@ export default function GalleryScreen(
   const onSubmit = () => {
     if (isEditBusiness) {
       updateGallery(
-        { thumbnail, gallery },
+        {
+          businessId: route?.params?.businessId,
+          data: { thumbnail, gallery },
+        },
         {
           onSuccess() {
             setThumbnail('');
@@ -158,7 +161,7 @@ export default function GalleryScreen(
       {
         onSuccess() {
           const newPayload = { ...businessStoreData };
-          let data = newPayload.gallery.filter(
+          let data = newPayload?.gallery?.filter(
             (el: Gallery) => el.image !== item.image,
           );
           setGallery(data);
@@ -300,7 +303,7 @@ export default function GalleryScreen(
                     {renderGalleryImages(gallery)}
                     <TouchableOpacity
                       style={
-                        businessStoreData.gallery.length === 0
+                        businessStoreData?.gallery?.length === 0
                           ? styles.galleryImageContainer
                           : styles.galleryImageSubContainer
                       }

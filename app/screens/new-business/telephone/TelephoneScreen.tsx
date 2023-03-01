@@ -32,9 +32,7 @@ export default function TelephoneScreen(
   const { navigation, route } = props;
   const isEditBusiness = route?.params?.businessId;
 
-  const { mutate: editTelephone, isLoading } = useEditBusiness(
-    route?.params?.businessId ?? '',
-  );
+  const { mutate: editTelephone, isLoading } = useEditBusiness();
   const { data: businessData } = useBusiness(route.params?.businessId);
 
   const telephone = useAddBusinessStore(
@@ -57,7 +55,10 @@ export default function TelephoneScreen(
   const onSubmit = (data: BusinessStoreTypes) => {
     if (isEditBusiness) {
       editTelephone(
-        { telephone: data.telephone },
+        {
+          businessId: route?.params?.businessId,
+          data: { telephone: data.telephone },
+        },
         {
           onSuccess() {
             navigation.goBack();

@@ -31,9 +31,7 @@ export default function EmailScreen(
   const { navigation, route } = props;
   const isEditBusiness = route?.params?.businessId;
 
-  const { mutate: editEmail, isLoading } = useEditBusiness(
-    route?.params?.businessId ?? '',
-  );
+  const { mutate: editEmail, isLoading } = useEditBusiness();
   const { data: businessData } = useBusiness(route.params?.businessId);
 
   const email = useAddBusinessStore((state: BusinessStoreTypes) => state.email);
@@ -54,7 +52,10 @@ export default function EmailScreen(
   const onSubmit = (data: BusinessStoreTypes) => {
     if (isEditBusiness) {
       editEmail(
-        { email: data.email },
+        {
+          businessId: route?.params?.businessId,
+          data: { email: data.email },
+        },
         {
           onSuccess() {
             navigation.goBack();
