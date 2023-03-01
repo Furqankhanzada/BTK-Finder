@@ -35,7 +35,7 @@ export default function CategorySelectScreen(
   const isEditBusiness = route?.params?.businessId;
 
   const { data: categories } = useCategories(['categories']);
-  const { data: businessData } = useBusiness(route?.params?.businessId ?? '');
+  const { data: businessData } = useBusiness(route.params?.businessId);
   const { mutate: editBusiness, isLoading } = useEditBusiness(
     route?.params?.businessId ?? '',
   );

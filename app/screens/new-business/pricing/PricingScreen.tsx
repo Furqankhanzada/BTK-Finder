@@ -31,7 +31,7 @@ export default function PricingScreen(
   const { mutate: EditPrice, isLoading } = useEditBusiness(
     route?.params?.businessId ?? '',
   );
-  const { data: businessData } = useBusiness(route?.params?.businessId ?? '');
+  const { data: businessData } = useBusiness(route.params?.businessId);
 
   const priceRange = useAddBusinessStore(
     (state: BusinessStoreTypes) => state.priceRange,

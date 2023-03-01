@@ -54,7 +54,7 @@ export default function AddressScreen(
   const { mutate: editAddress, isLoading } = useEditBusiness(
     route?.params?.businessId ?? '',
   );
-  const { data: businessData } = useBusiness(route?.params?.businessId ?? '');
+  const { data: businessData } = useBusiness(route.params?.businessId);
 
   const address = useAddBusinessStore(
     (state: BusinessStoreTypes) => state.address,

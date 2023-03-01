@@ -34,7 +34,7 @@ export default function EmailScreen(
   const { mutate: editEmail, isLoading } = useEditBusiness(
     route?.params?.businessId ?? '',
   );
-  const { data: businessData } = useBusiness(route?.params?.businessId ?? '');
+  const { data: businessData } = useBusiness(route.params?.businessId);
 
   const email = useAddBusinessStore((state: BusinessStoreTypes) => state.email);
   const setEmail = useAddBusinessStore(

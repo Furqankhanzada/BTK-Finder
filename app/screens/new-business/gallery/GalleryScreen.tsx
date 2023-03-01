@@ -53,7 +53,7 @@ export default function GalleryScreen(
     useAddBusiness();
   const { mutate: updateGallery, isLoading: updateBusinessLoading } =
     useEditBusiness(route?.params?.businessId ?? '');
-  const { data: businessData } = useBusiness(route?.params?.businessId ?? '');
+  const { data: businessData } = useBusiness(route.params?.businessId);
 
   const resetAddBusinessStore = useAddBusinessStore(
     (state: BusinessStoreActions) => state.resetAddBusinessStore,

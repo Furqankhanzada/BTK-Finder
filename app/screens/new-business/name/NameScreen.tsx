@@ -29,7 +29,7 @@ export default function NameScreen(
   const { navigation, route } = props;
   const isEditBusiness = route?.params?.businessId;
 
-  const { data: businessData } = useBusiness(route?.params?.businessId ?? '');
+  const { data: businessData } = useBusiness(route.params?.businessId);
   const { mutate: editName, isLoading } = useEditBusiness(
     route?.params?.businessId ?? '',
   );

@@ -31,7 +31,7 @@ export default function FacilitiesScreen(
   const isEditBusiness = route?.params?.businessId;
   const remoteConfig = useRemoteConfig();
 
-  const { data: businessData } = useBusiness(route?.params?.businessId ?? '');
+  const { data: businessData } = useBusiness(route.params?.businessId);
   const { mutate: editFacility, isLoading } = useEditBusiness(
     route?.params?.businessId ?? '',
   );

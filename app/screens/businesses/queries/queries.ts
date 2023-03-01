@@ -32,7 +32,7 @@ import {
   TagSortByField,
 } from '../../../models/graphql';
 
-export const useBusiness = (id: string) =>
+export const useBusiness = (id: string | undefined) =>
   useQuery(
     ['business', id],
     (): Promise<BusinessPresentable> => {

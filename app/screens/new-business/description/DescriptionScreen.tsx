@@ -29,7 +29,7 @@ export default function DescriptionScreen(
   const { navigation, route } = props;
   const isEditBusiness = route?.params?.businessId;
 
-  const { data: businessData } = useBusiness(route?.params?.businessId ?? '');
+  const { data: businessData } = useBusiness(route.params?.businessId);
   const { mutate: editDescription, isLoading } = useEditBusiness(
     route?.params?.businessId ?? '',
   );

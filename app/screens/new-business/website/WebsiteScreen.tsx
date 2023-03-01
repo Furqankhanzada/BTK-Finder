@@ -35,7 +35,7 @@ export default function WebsiteScreen(
   const { mutate: editWebsite, isLoading } = useEditBusiness(
     route?.params?.businessId ?? '',
   );
-  const { data: businessData } = useBusiness(route?.params?.businessId ?? '');
+  const { data: businessData } = useBusiness(route.params?.businessId);
 
   const website = useAddBusinessStore(
     (state: BusinessStoreTypes) => state.website,

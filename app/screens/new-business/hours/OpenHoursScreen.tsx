@@ -32,7 +32,7 @@ export default function OpenHoursScreen(
   const { mutate: updateTimings, isLoading } = useEditBusiness(
     route?.params?.businessId ?? '',
   );
-  const { data: businessData } = useBusiness(route?.params?.businessId ?? '');
+  const { data: businessData } = useBusiness(route.params?.businessId);
 
   const openHours = useAddBusinessStore(
     (state: BusinessStoreTypes) => state.openHours,

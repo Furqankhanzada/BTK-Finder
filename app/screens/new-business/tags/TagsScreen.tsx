@@ -33,7 +33,7 @@ export default function TagsScreen(
   const remoteConfig = useRemoteConfig();
   const isEditBusiness = route?.params?.businessId;
 
-  const { data: businessData } = useBusiness(route?.params?.businessId ?? '');
+  const { data: businessData } = useBusiness(route.params?.businessId);
   const { mutate: editTags, isLoading } = useEditBusiness(
     route?.params?.businessId ?? '',
   );

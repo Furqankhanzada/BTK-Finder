@@ -35,7 +35,7 @@ export default function TelephoneScreen(
   const { mutate: editTelephone, isLoading } = useEditBusiness(
     route?.params?.businessId ?? '',
   );
-  const { data: businessData } = useBusiness(route?.params?.businessId ?? '');
+  const { data: businessData } = useBusiness(route.params?.businessId);
 
   const telephone = useAddBusinessStore(
     (state: BusinessStoreTypes) => state.telephone,
