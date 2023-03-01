@@ -8,20 +8,20 @@ import {
 } from '@screens/businesses/models/BusinessPresentable';
 
 export type BusinessStoreTypes = {
-  name: string;
-  description: string;
-  category: string;
-  facilities: Facility[];
-  tags: Array<string>;
-  telephone: string;
-  email: string;
-  website: string;
-  address: string;
-  openHours: OpenHours[];
-  priceRange: PriceRange;
-  gallery: Gallery[];
-  thumbnail: string;
-  location: Location;
+  name?: string;
+  description?: string;
+  category?: string;
+  facilities?: Facility[];
+  tags?: Array<string>;
+  telephone?: string;
+  email?: string;
+  website?: string;
+  address?: string;
+  openHours?: OpenHours[];
+  priceRange?: PriceRange;
+  gallery?: Gallery[];
+  thumbnail?: string;
+  location?: Location;
 };
 
 export type BusinessStoreActions = {
@@ -42,41 +42,26 @@ export type BusinessStoreActions = {
   resetAddBusinessStore: () => void;
 };
 
-const initialState: BusinessStoreTypes = {
-  name: '',
-  description: '',
-  category: '',
-  facilities: [],
-  tags: [],
-  telephone: '',
-  email: '',
-  website: '',
-  address: '',
-  openHours: [],
-  priceRange: {},
-  gallery: [],
-  thumbnail: '',
-  location: { coordinates: [] },
-};
+const initialState: BusinessStoreTypes = {};
 
 const useAddBusinessStore = create<BusinessStoreTypes & BusinessStoreActions>(
   (set) => ({
     ...initialState,
 
-    setName: (name: string) => set(() => ({ name })),
-    setDescription: (description: string) => set(() => ({ description })),
-    setCategory: (category: string) => set(() => ({ category })),
-    setFacilities: (facilities: Facility[]) => set(() => ({ facilities })),
-    setTags: (tags: Array<string>) => set(() => ({ tags })),
-    setTelephone: (telephone: string) => set(() => ({ telephone })),
-    setEmail: (email: string) => set(() => ({ email })),
-    setWebsite: (website: string) => set(() => ({ website })),
-    setAddress: (address: string) => set(() => ({ address })),
-    setOpenHours: (openHours: OpenHours[]) => set(() => ({ openHours })),
-    setPriceRange: (priceRange: PriceRange) => set(() => ({ priceRange })),
-    setGallery: (gallery: Gallery[]) => set(() => ({ gallery })),
-    setThumbnail: (thumbnail: string) => set(() => ({ thumbnail })),
-    setLocation: (location: Location) => set(() => ({ location })),
+    setName: (name) => set(() => ({ name })),
+    setDescription: (description) => set(() => ({ description })),
+    setCategory: (category) => set(() => ({ category })),
+    setFacilities: (facilities) => set(() => ({ facilities })),
+    setTags: (tags) => set(() => ({ tags })),
+    setTelephone: (telephone) => set(() => ({ telephone })),
+    setEmail: (email) => set(() => ({ email })),
+    setWebsite: (website) => set(() => ({ website })),
+    setAddress: (address) => set(() => ({ address })),
+    setOpenHours: (openHours) => set(() => ({ openHours })),
+    setPriceRange: (priceRange) => set(() => ({ priceRange })),
+    setGallery: (gallery) => set(() => ({ gallery })),
+    setThumbnail: (thumbnail) => set(() => ({ thumbnail })),
+    setLocation: (location) => set(() => ({ location })),
     resetAddBusinessStore: () => set(() => initialState),
   }),
 );
