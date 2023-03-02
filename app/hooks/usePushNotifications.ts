@@ -58,7 +58,7 @@ export default function usePushNotifications() {
     if (Platform.OS === 'android') {
       requestNotifications(['alert']).then(() => {
         checkNotifications().then(({ status }: NotificationsResponse) => {
-          if (status === RESULTS.DENIED || RESULTS.BLOCKED) {
+          if (status === RESULTS.DENIED || status === RESULTS.BLOCKED) {
             Alert.alert(
               'Allow Notifications',
               'Open Settings > Manage Notifications > Allow notifications from Explore BTK',
