@@ -27,7 +27,7 @@ export default function DescriptionScreen(
   props: StackScreenProps<NewBusinessParamList, 'Description'>,
 ) {
   const { navigation, route } = props;
-  const isEditBusiness = route?.params?.businessId;
+  const isEditBusiness = route.params?.businessId;
 
   const { data: businessData } = useBusiness(route.params?.businessId);
   const { mutate: editDescription, isLoading } = useEditBusiness();
@@ -45,12 +45,12 @@ export default function DescriptionScreen(
     },
   });
 
-  const onSubmit = async (data: BusinessStoreTypes) => {
+  const onSubmit = async (form: BusinessStoreTypes) => {
     if (isEditBusiness) {
       editDescription(
         {
-          businessId: route?.params?.businessId,
-          data: { description: data.description },
+          businessId: route.params.businessId,
+          data: { description: form.description },
         },
         {
           onSuccess() {
@@ -59,7 +59,9 @@ export default function DescriptionScreen(
         },
       );
     } else {
-      setDescription(data.description);
+      if (form.description) {
+        setDescription(form.description);
+      }
       navigation.navigate('CategorySelect');
     }
   };

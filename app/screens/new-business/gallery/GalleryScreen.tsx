@@ -41,7 +41,7 @@ export default function GalleryScreen(
 ) {
   const { navigation, route } = props;
   const { colors } = useTheme();
-  const isEditBusiness = route?.params?.businessId;
+  const isEditBusiness = route.params?.businessId;
 
   const { mutate: uploadThumbnail, isLoading: thumbnailLoading } =
     useAddThumbnail();
@@ -76,10 +76,10 @@ export default function GalleryScreen(
 
   useEffect(() => {
     if (isEditBusiness && businessData?.thumbnail) {
-      setThumbnail(businessData?.thumbnail);
+      setThumbnail(businessData.thumbnail);
     }
     if (isEditBusiness && businessData?.gallery) {
-      setGallery(businessData?.gallery);
+      setGallery(businessData.gallery);
     }
   }, [
     businessData?.gallery,
@@ -93,7 +93,7 @@ export default function GalleryScreen(
     if (isEditBusiness) {
       updateGallery(
         {
-          businessId: route?.params?.businessId,
+          businessId: route.params.businessId,
           data: { thumbnail, gallery },
         },
         {
@@ -148,9 +148,11 @@ export default function GalleryScreen(
   };
 
   const onChangeCover = (item: Gallery) => {
-    let data = [...gallery];
-    data.map((el) => (el.cover = el.image === item.image));
-    setGallery(data);
+    if (gallery) {
+      let data = [...gallery];
+      data.map((el) => (el.cover = el.image === item.image));
+      setGallery(data);
+    }
   };
 
   const removeSingleGalleryImage = (item: Gallery) => {
@@ -160,11 +162,13 @@ export default function GalleryScreen(
       { pathname: url.pathname.replace(/^\/|\/$/g, '') },
       {
         onSuccess() {
-          const newPayload = { ...businessStoreData };
-          let data = newPayload?.gallery?.filter(
+          const cloneStoreData = { ...businessStoreData };
+          let gallerImages = cloneStoreData.gallery?.filter(
             (el: Gallery) => el.image !== item.image,
           );
-          setGallery(data);
+          if (gallerImages) {
+            setGallery(gallerImages);
+          }
         },
       },
     );
@@ -175,9 +179,9 @@ export default function GalleryScreen(
     android: 20,
   });
 
-  const renderGalleryImages = (data: Gallery[]) => {
-    if (data?.length) {
-      return data?.map((image: Gallery, index: number) => {
+  const renderGalleryImages = (gallerImages?: Gallery[]) => {
+    if (gallerImages?.length) {
+      return gallerImages?.map((image: Gallery, index: number) => {
         return (
           <View key={index} style={styles.galleryImageSubContainer}>
             <TouchableOpacity

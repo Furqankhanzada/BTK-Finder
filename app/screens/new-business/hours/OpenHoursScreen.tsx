@@ -27,7 +27,7 @@ export default function OpenHoursScreen(
   props: StackScreenProps<NewBusinessParamList, 'OpenHours'>,
 ) {
   const { navigation, route } = props;
-  const isEditBusiness = route?.params?.businessId;
+  const isEditBusiness = route.params?.businessId;
 
   const { mutate: updateTimings, isLoading } = useEditBusiness();
   const { data: businessData } = useBusiness(route.params?.businessId);
@@ -98,7 +98,7 @@ export default function OpenHoursScreen(
     if (isEditBusiness) {
       updateTimings(
         {
-          businessId: route?.params?.businessId,
+          businessId: route.params.businessId,
           data: { openHours: hours },
         },
         {

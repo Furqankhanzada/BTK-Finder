@@ -31,7 +31,7 @@ export default function TagsScreen(
   const { navigation, route } = props;
   const { colors } = useTheme();
   const remoteConfig = useRemoteConfig();
-  const isEditBusiness = route?.params?.businessId;
+  const isEditBusiness = route.params?.businessId;
 
   const { data: businessData } = useBusiness(route.params?.businessId);
   const { mutate: editTags, isLoading } = useEditBusiness();
@@ -43,7 +43,7 @@ export default function TagsScreen(
     (state: BusinessStoreActions) => state.setTags,
   );
 
-  const tags = remoteConfig?.tags;
+  const tags = remoteConfig.tags;
   const [selected, setSelected] = useState<string[]>([]);
   const [search, setSearch] = useState<string>('');
   const [items, setItems] = useState(tags);
@@ -58,7 +58,7 @@ export default function TagsScreen(
 
   const onChange = (select: { name: string }) => {
     //Check if tag is selected or not
-    const isItemSelected = selected.includes(select?.name);
+    const isItemSelected = selected.includes(select.name);
 
     if (!isItemSelected) {
       //Add Tag into selected tags when not available
@@ -91,7 +91,7 @@ export default function TagsScreen(
     if (isEditBusiness) {
       editTags(
         {
-          businessId: route?.params?.businessId,
+          businessId: route.params.businessId,
           data: { tags: selected },
         },
         {

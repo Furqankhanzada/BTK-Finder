@@ -30,7 +30,7 @@ export default function WebsiteScreen(
   props: StackScreenProps<NewBusinessParamList, 'Website'>,
 ) {
   const { navigation, route } = props;
-  const isEditBusiness = route?.params?.businessId;
+  const isEditBusiness = route.params?.businessId;
 
   const { mutate: editWebsite, isLoading } = useEditBusiness();
   const { data: businessData } = useBusiness(route.params?.businessId);
@@ -52,12 +52,12 @@ export default function WebsiteScreen(
     },
   });
 
-  const onSubmit = (data: BusinessStoreTypes) => {
+  const onSubmit = (form: BusinessStoreTypes) => {
     if (isEditBusiness) {
       editWebsite(
         {
-          businessId: route?.params?.businessId,
-          data: { website: data.website },
+          businessId: route.params.businessId,
+          data: { website: form.website },
         },
         {
           onSuccess() {
@@ -66,7 +66,9 @@ export default function WebsiteScreen(
         },
       );
     } else {
-      setWebsite(data.website);
+      if (form.website) {
+        setWebsite(form.website);
+      }
       navigation.navigate('Address');
     }
   };

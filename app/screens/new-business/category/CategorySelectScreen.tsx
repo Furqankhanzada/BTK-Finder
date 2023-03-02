@@ -32,7 +32,7 @@ export default function CategorySelectScreen(
   const { navigation, route } = props;
   const { colors } = useTheme();
   const { t } = useTranslation();
-  const isEditBusiness = route?.params?.businessId;
+  const isEditBusiness = route.params?.businessId;
 
   const { data: categories } = useCategories(['categories']);
   const { data: businessData } = useBusiness(route.params?.businessId);
@@ -52,8 +52,8 @@ export default function CategorySelectScreen(
   const [items, setItems] = useState(categories);
 
   useEffect(() => {
-    if (isEditBusiness) {
-      setSelectedCategory(businessData?.category ?? '');
+    if (isEditBusiness && businessData?.category) {
+      setSelectedCategory(businessData.category);
     }
   }, [businessData?.category, isEditBusiness]);
 
@@ -82,7 +82,7 @@ export default function CategorySelectScreen(
     if (isEditBusiness) {
       editBusiness(
         {
-          businessId: route?.params?.businessId,
+          businessId: route.params.businessId,
           data: { category: selectedCategory },
         },
         {

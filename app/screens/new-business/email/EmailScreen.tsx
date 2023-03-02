@@ -29,7 +29,7 @@ export default function EmailScreen(
   props: StackScreenProps<NewBusinessParamList, 'Email'>,
 ) {
   const { navigation, route } = props;
-  const isEditBusiness = route?.params?.businessId;
+  const isEditBusiness = route.params?.businessId;
 
   const { mutate: editEmail, isLoading } = useEditBusiness();
   const { data: businessData } = useBusiness(route.params?.businessId);
@@ -49,12 +49,12 @@ export default function EmailScreen(
     },
   });
 
-  const onSubmit = (data: BusinessStoreTypes) => {
+  const onSubmit = (form: BusinessStoreTypes) => {
     if (isEditBusiness) {
       editEmail(
         {
-          businessId: route?.params?.businessId,
-          data: { email: data.email },
+          businessId: route.params.businessId,
+          data: { email: form.email },
         },
         {
           onSuccess() {
@@ -63,7 +63,9 @@ export default function EmailScreen(
         },
       );
     } else {
-      setEmail(data.email);
+      if (form.email) {
+        setEmail(form.email);
+      }
       navigation.navigate('Website');
     }
   };

@@ -30,7 +30,7 @@ export default function TelephoneScreen(
   props: StackScreenProps<NewBusinessParamList, 'Telephone'>,
 ) {
   const { navigation, route } = props;
-  const isEditBusiness = route?.params?.businessId;
+  const isEditBusiness = route.params?.businessId;
 
   const { mutate: editTelephone, isLoading } = useEditBusiness();
   const { data: businessData } = useBusiness(route.params?.businessId);
@@ -52,12 +52,12 @@ export default function TelephoneScreen(
     },
   });
 
-  const onSubmit = (data: BusinessStoreTypes) => {
+  const onSubmit = (form: BusinessStoreTypes) => {
     if (isEditBusiness) {
       editTelephone(
         {
-          businessId: route?.params?.businessId,
-          data: { telephone: data.telephone },
+          businessId: route.params.businessId,
+          data: { telephone: form.telephone },
         },
         {
           onSuccess() {
@@ -66,7 +66,9 @@ export default function TelephoneScreen(
         },
       );
     } else {
-      setTelephone(data.telephone);
+      if (form.telephone) {
+        setTelephone(form.telephone);
+      }
       navigation.navigate('Email');
     }
   };

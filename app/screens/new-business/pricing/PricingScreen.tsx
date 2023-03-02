@@ -26,7 +26,7 @@ export default function PricingScreen(
   props: StackScreenProps<NewBusinessParamList, 'Pricing'>,
 ) {
   const { navigation, route } = props;
-  const isEditBusiness = route?.params?.businessId;
+  const isEditBusiness = route.params?.businessId;
 
   const { mutate: EditPrice, isLoading } = useEditBusiness();
   const { data: businessData } = useBusiness(route.params?.businessId);
@@ -44,12 +44,12 @@ export default function PricingScreen(
     },
   });
 
-  const onSubmit = (data: BusinessStoreTypes) => {
+  const onSubmit = (form: BusinessStoreTypes) => {
     if (isEditBusiness) {
       EditPrice(
         {
-          businessId: route?.params?.businessId,
-          data: { priceRange: data.priceRange },
+          businessId: route.params.businessId,
+          data: { priceRange: form.priceRange },
         },
         {
           onSuccess() {
@@ -58,7 +58,9 @@ export default function PricingScreen(
         },
       );
     } else {
-      setPriceRange(data.priceRange);
+      if (form.priceRange) {
+        setPriceRange(form.priceRange);
+      }
       navigation.navigate('Gallery');
     }
   };

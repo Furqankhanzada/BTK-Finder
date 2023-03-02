@@ -28,7 +28,7 @@ export default function FacilitiesScreen(
   props: StackScreenProps<NewBusinessParamList, 'Facilities'>,
 ) {
   const { navigation, route } = props;
-  const isEditBusiness = route?.params?.businessId;
+  const isEditBusiness = route.params?.businessId;
   const remoteConfig = useRemoteConfig();
 
   const { data: businessData } = useBusiness(route.params?.businessId);
@@ -44,15 +44,15 @@ export default function FacilitiesScreen(
   const [selectedFacilities, setSelectedFacilities] = useState<Facility[]>([]);
 
   useEffect(() => {
-    if (isEditBusiness) {
-      setSelectedFacilities(businessData?.facilities ?? []);
+    if (isEditBusiness && businessData?.facilities) {
+      setSelectedFacilities(businessData.facilities);
     } else if (storeFacilities) {
       setSelectedFacilities(storeFacilities);
     }
   }, [businessData?.facilities, isEditBusiness, storeFacilities]);
 
   const onChange = (facility: Facility) => {
-    const isItemSelected = selectedFacilities?.some(
+    const isItemSelected = selectedFacilities.some(
       (obj: Facility) => obj.name === facility.name,
     );
 
@@ -70,7 +70,7 @@ export default function FacilitiesScreen(
     if (isEditBusiness) {
       editFacility(
         {
-          businessId: route?.params?.businessId,
+          businessId: route.params.businessId,
           data: { facilities: selectedFacilities },
         },
         {
@@ -121,7 +121,7 @@ export default function FacilitiesScreen(
             </Text>
           )}
           renderItem={({ item, index }) => {
-            const checked = selectedFacilities?.some(
+            const checked = selectedFacilities.some(
               (obj: Facility) => obj.name === item.name,
             );
 

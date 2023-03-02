@@ -48,7 +48,7 @@ export default function AddressScreen(
   props: StackScreenProps<NewBusinessParamList, 'Address'>,
 ) {
   const { navigation, route } = props;
-  const isEditBusiness = route?.params?.businessId;
+  const isEditBusiness = route.params?.businessId;
   const mapRef = useRef<MapView>();
 
   const { mutate: editAddress, isLoading } = useEditBusiness();
@@ -154,8 +154,8 @@ export default function AddressScreen(
 
   useEffect(() => {
     let loc =
-      businessData?.location && businessData?.location.coordinates
-        ? businessData?.location.coordinates
+      businessData?.location && businessData.location.coordinates
+        ? businessData.location.coordinates
         : null;
     if (loc) {
       const payload = {
@@ -196,17 +196,17 @@ export default function AddressScreen(
     }
   };
 
-  const onSubmit = async (data: BusinessStoreTypes) => {
+  const onSubmit = async (form: BusinessStoreTypes) => {
     if (isEditBusiness) {
       editAddress(
         {
-          businessId: route?.params?.businessId,
+          businessId: route.params.businessId,
           data: {
-            address: data.address,
+            address: form.address,
             location: {
               type: 'Point',
               coordinates: [
-                location?.latitude ?? defaultLocation.latitude,
+                location.latitude ?? defaultLocation.latitude,
                 location.longitude ?? defaultLocation.longitude,
               ],
             },
@@ -221,9 +221,11 @@ export default function AddressScreen(
     } else {
       setStoreLocation({
         type: 'Point',
-        coordinates: [location?.latitude, location?.longitude],
+        coordinates: [location.latitude, location.longitude],
       });
-      setAddress(data.address);
+      if (form.address) {
+        setAddress(form.address);
+      }
       navigation.navigate('OpenHours');
     }
   };

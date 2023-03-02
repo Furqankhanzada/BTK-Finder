@@ -27,7 +27,7 @@ export default function NameScreen(
   props: StackScreenProps<NewBusinessParamList, 'Name'>,
 ) {
   const { navigation, route } = props;
-  const isEditBusiness = route?.params?.businessId;
+  const isEditBusiness = route.params?.businessId;
 
   const { data: businessData } = useBusiness(route.params?.businessId);
   const { mutate: editName, isLoading } = useEditBusiness();
@@ -47,12 +47,12 @@ export default function NameScreen(
     },
   });
 
-  const onSubmit = async (data: BusinessStoreTypes) => {
+  const onSubmit = async (form: BusinessStoreTypes) => {
     if (isEditBusiness) {
       editName(
         {
-          businessId: route?.params?.businessId,
-          data: { name: data.name },
+          businessId: route.params.businessId,
+          data: { name: form.name },
         },
         {
           onSuccess() {
@@ -61,7 +61,9 @@ export default function NameScreen(
         },
       );
     } else {
-      setName(data.name);
+      if (form.name) {
+        setName(form.name);
+      }
       navigation.navigate('Description');
     }
   };
