@@ -119,6 +119,8 @@ export default function EmailScreen(
                       onBlur={onBlur}
                       onChangeText={onChange}
                       value={value}
+                      keyboardType="email-address"
+                      autoCapitalize="none"
                     />
                     {!isValid ? (
                       <Text

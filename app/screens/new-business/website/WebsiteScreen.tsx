@@ -123,6 +123,8 @@ export default function WebsiteScreen(
                       onBlur={onBlur}
                       onChangeText={onChange}
                       value={value}
+                      keyboardType="url"
+                      autoCapitalize="none"
                     />
                     {!isValid ? (
                       <Text
