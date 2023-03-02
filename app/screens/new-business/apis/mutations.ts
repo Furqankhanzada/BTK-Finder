@@ -121,7 +121,12 @@ export const useAddGalleryImages = () => {
       });
     });
     const result = await Promise.all(uploadImagePromises);
-    setGallery([...gallery, ...result]);
+
+    if (gallery) {
+      setGallery([...gallery, ...result]);
+    } else {
+      setGallery(result);
+    }
     return result;
   });
 };
