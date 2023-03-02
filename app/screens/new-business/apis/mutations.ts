@@ -125,7 +125,7 @@ export const useAddGalleryImages = () => {
     if (gallery) {
       setGallery([...gallery, ...result]);
     } else {
-      setGallery(result);
+      setGallery([...result]);
     }
     return result;
   });
