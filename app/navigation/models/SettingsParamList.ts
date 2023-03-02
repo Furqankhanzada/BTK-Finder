@@ -7,6 +7,4 @@ export type SettingsParamList = {
   MyBusinesses: { id: string };
   SendNotification: undefined;
   Appearance: undefined;
-  SignIn: { lastRoute: { lastRoute?: string; id?: string } };
-  SignUp: { lastRoute: { lastRoute?: string; id?: string } };
 };

@@ -15,11 +15,11 @@ import Toast from 'react-native-toast-message';
 import { BaseStyle, BaseColor, useTheme } from '@config';
 import { Header, SafeAreaView, Icon, Button, TextInput } from '@components';
 
-import { SettingsParamList } from 'navigation/models/SettingsParamList';
 import { register } from '../../../actions/auth';
+import { AuthParamList } from '../../../navigation/models/AuthParamList';
 
 export default function SignUpScreen(
-  props: StackScreenProps<SettingsParamList, 'SignUp'>,
+  props: StackScreenProps<AuthParamList, 'SignUp'>,
 ) {
   const { navigation, route } = props;
   const { params } = route;
@@ -54,10 +54,10 @@ export default function SignUpScreen(
     if (name === '' || email === '' || phone === '' || password === '') {
       setSuccess({
         ...success,
-        name: name !== '' ? true : false,
-        email: email !== '' ? true : false,
-        phone: phone !== '' ? true : false,
-        password: password !== '' ? true : false,
+        name: name !== '',
+        email: email !== '',
+        phone: phone !== '',
+        password: password !== '',
       });
     } else {
       setLoading(true);
@@ -66,7 +66,7 @@ export default function SignUpScreen(
     dispatch(
       register(
         { name, email, phone: phone.replace(/\s+/g, ''), password },
-        (error) => {
+        (error: Error) => {
           setLoading(false);
           if (!error) {
             navigation.navigate(lastRoute ? lastRoute : 'Settings');

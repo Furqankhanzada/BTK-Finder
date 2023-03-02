@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import { View, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { StackScreenProps } from '@react-navigation/stack';
+
 import { BaseStyle, useTheme } from '@config';
 import {
   Header,
@@ -9,17 +12,19 @@ import {
   Button,
   Text,
 } from '@components';
-import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
-import { verifyCode } from '../../actions/auth';
-import styles from '../ResetPassword/styles';
 
-export default function VerifyCode(props) {
+import { verifyCode } from '../../../actions/auth';
+import { AuthParamList } from '../../../navigation/models/AuthParamList';
+
+export default function VerifyCodeScreen(
+  props: StackScreenProps<AuthParamList, 'VerifyCode'>,
+) {
   const { navigation, route } = props;
   const { colors } = useTheme();
-  const { t } = useTranslation();
   const dispatch = useDispatch();
-  const verifyCodeLoading = useSelector(state => state.auth.verifyCodeLoading);
+  const verifyCodeLoading = useSelector(
+    (state: any) => state.auth.verifyCodeLoading,
+  );
 
   const [verificationCode, setVerificationCode] = useState('');
 
@@ -41,7 +46,7 @@ export default function VerifyCode(props) {
   });
 
   return (
-    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
+    <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
         title="Verify Code"
         renderLeft={() => {
@@ -76,7 +81,7 @@ export default function VerifyCode(props) {
             </Text>
           </View>
           <TextInput
-            onChangeText={text => setVerificationCode(text)}
+            onChangeText={(text) => setVerificationCode(text)}
             placeholder={'Enter Verification Code'}
             value={verificationCode}
             selectionColor={colors.primary}
@@ -99,3 +104,18 @@ export default function VerifyCode(props) {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  info: {
+    padding: 10,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});

@@ -12,8 +12,6 @@ import AppearanceScreen from '@screens/settings/appearance/AppearanceScreen';
 import MyBusinessesScreen from '@screens/settings/my-businesses/MyBusinessesScreen';
 
 import { SettingsParamList } from '../../../navigation/models/SettingsParamList';
-import SignInScreen from '@screens/settings/signin/SignInScreen';
-import SignUpScreen from '@screens/settings/signup/SignUpScreen';
 
 const SettingsStack = createStackNavigator<SettingsParamList>();
 
@@ -37,8 +35,6 @@ export function SettingsStackNavigator() {
         component={SendNotificationScreen}
       />
       <SettingsStack.Screen name="Appearance" component={AppearanceScreen} />
-      <SettingsStack.Screen name="SignIn" component={SignInScreen} />
-      <SettingsStack.Screen name="SignUp" component={SignUpScreen} />
     </SettingsStack.Navigator>
   );
 }

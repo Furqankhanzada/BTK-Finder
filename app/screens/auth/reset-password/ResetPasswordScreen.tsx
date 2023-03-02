@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import { View, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+
 import { BaseStyle, useTheme } from '@config';
 import {
   Header,
@@ -9,18 +12,20 @@ import {
   Button,
   Text,
 } from '@components';
-import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
-import { resetPassword } from '../../actions/auth';
-import styles from './styles';
+import { StackScreenProps } from '@react-navigation/stack';
 
-export default function ResetPassword(props) {
+import { resetPassword } from '../../../actions/auth';
+import { AuthParamList } from '../../../navigation/models/AuthParamList';
+
+export default function ResetPasswordScreen(
+  props: StackScreenProps<AuthParamList, 'ResetPassword'>,
+) {
   const { navigation } = props;
   const { colors } = useTheme();
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const resetPasswordLoading = useSelector(
-    state => state.auth.resetPasswordLoading,
+    (state: any) => state.auth.resetPasswordLoading,
   );
 
   const [emailOrNumber, setEmailOrNumber] = useState('');
@@ -42,7 +47,7 @@ export default function ResetPassword(props) {
   });
 
   return (
-    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
+    <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
         title={t('reset_password')}
         renderLeft={() => {
@@ -78,7 +83,7 @@ export default function ResetPassword(props) {
             </Text>
           </View>
           <TextInput
-            onChangeText={text => setEmailOrNumber(text)}
+            onChangeText={(text) => setEmailOrNumber(text)}
             placeholder={'Email'}
             value={emailOrNumber}
             selectionColor={colors.primary}
@@ -101,3 +106,18 @@ export default function ResetPassword(props) {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  info: {
+    padding: 10,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});

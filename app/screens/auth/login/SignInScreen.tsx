@@ -30,10 +30,10 @@ import {
 
 import { login } from '../../../actions/auth';
 import { StackScreenProps } from '@react-navigation/stack';
-import { SettingsParamList } from '../../../navigation/models/SettingsParamList';
+import { AuthParamList } from '../../../navigation/models/AuthParamList';
 
 export default function SignInScreen(
-  props: StackScreenProps<SettingsParamList, 'SignIn'>,
+  props: StackScreenProps<AuthParamList, 'SignIn'>,
 ) {
   const { navigation, route } = props;
   const { colors } = useTheme();

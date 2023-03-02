@@ -20,12 +20,7 @@ import Messenger from '@screens/Messenger';
 /* Stack Screen */
 import ThemeSetting from '@screens/settings/appearance/components/ThemeSetting';
 import Category from '@screens/category/CategoryScreen';
-import SignUp from '@screens/settings/signup/SignUpScreen';
-import SignIn from '@screens/settings/signin/SignInScreen';
-import VerifyCode from '@screens/VerifyCode';
 import Messages from '@screens/Messages';
-import Walkthrough from '@screens/Walkthrough';
-import ResetPassword from '@screens/ResetPassword';
 import Address from '@screens/AddBusiness/address';
 import Hours from '@screens/AddBusiness/hours';
 import PriceRange from '@screens/AddBusiness/priceRange';
@@ -37,6 +32,7 @@ import { SettingsStackNavigator } from '@screens/settings/navigation/SettingsSta
 
 import { MainStackParamList } from './models/MainStackParamList';
 import { MainBottomTabParamList } from './models/MainBottomTabParamList';
+import { AuthStackNavigator } from '@screens/auth/navigation/AuthStack';
 
 const MainStack = createStackNavigator<MainStackParamList>();
 const MainBottomTab = createBottomTabNavigator<MainBottomTabParamList>();
@@ -57,15 +53,15 @@ export default function Main() {
         name="BusinessDetailTabNavigator"
         component={BusinessDetailNavigator}
       />
+      <MainStack.Screen
+        name="AuthStackNavigator"
+        component={AuthStackNavigator}
+      />
       <MainStack.Screen name="ThemeSetting" component={ThemeSetting} />
       <MainStack.Screen name="Category" component={Category} />
       <MainStack.Screen name="Businesses" component={BusinessesScreen} />
-      <MainStack.Screen name="Walkthrough" component={Walkthrough} />
-      <MainStack.Screen name="SignUp" component={SignUp} />
-      <MainStack.Screen name="SignIn" component={SignIn} />
       <MainStack.Screen name="Messenger" component={Messenger} />
       <MainStack.Screen name="Messages" component={Messages} />
-      <MainStack.Screen name="ResetPassword" component={ResetPassword} />
       {/*<MainStack.Screen name="Business" component={Business} />*/}
       <MainStack.Screen name="Address" component={Address} />
       <MainStack.Screen name="Hours" component={Hours} />
@@ -73,7 +69,6 @@ export default function Main() {
       <MainStack.Screen name="FinalReview" component={FinalReview} />
       <MainStack.Screen name="Gallery" component={Gallery} />
       <MainStack.Screen name="EditBusiness" component={Business} />
-      <MainStack.Screen name="VerifyCode" component={VerifyCode} />
     </MainStack.Navigator>
   );
 }

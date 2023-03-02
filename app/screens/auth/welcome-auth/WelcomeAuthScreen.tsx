@@ -1,19 +1,22 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { AuthActions } from '@actions';
-import { View, TouchableOpacity, ScrollView } from 'react-native';
-import { SafeAreaView, Text, Button, Image } from '@components';
-import styles from './styles';
-import Swiper from 'react-native-swiper';
-import { BaseColor, BaseStyle, Images, useTheme } from '@config';
-import * as Utils from '@utils';
 import { useTranslation } from 'react-i18next';
+import { StackScreenProps } from '@react-navigation/stack';
+import { View, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
+import Swiper from 'react-native-swiper';
 
-export default function Walkthrough(props) {
-  const { navigation, lastRoute, route } = props;
+import { SafeAreaView, Text, Button, Image } from '@components';
+import { BaseColor, BaseStyle, useTheme } from '@config';
+import * as Utils from '@utils';
 
-  const [loading, setLoading] = useState(false);
+import { AuthParamList } from '../../../navigation/models/AuthParamList';
+
+export default function WelcomeAuthScreen({
+  navigation,
+}: StackScreenProps<AuthParamList, 'WelcomeAuth'>) {
   const [scrollEnabled, setScrollEnabled] = useState(true);
+  const { colors } = useTheme();
+  const { t } = useTranslation();
+
   const slideshow = [
     { key: 1, image: require('@assets/images/banners/long-view.jpg') },
     { key: 2, image: require('@assets/images/banners/danzoo-topview.jpg') },
@@ -23,21 +26,9 @@ export default function Walkthrough(props) {
     },
     { key: 4, image: require('@assets/images/banners/main-towers.jpg') },
   ];
-  const { colors } = useTheme();
-  const dispatch = useDispatch();
-  const { t } = useTranslation();
-  /**
-   * @description Simple authentication without call any APIs
-   * @author Passion UI <passionui.com>
-   * @date 2019-08-03
-   */
-  const authentication = () => {
-    setLoading(true);
-    dispatch(AuthActions.authentication(true, (response) => {}));
-  };
 
   return (
-    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
+    <SafeAreaView style={BaseStyle.safeAreaView}>
       <ScrollView
         contentContainerStyle={styles.contain}
         scrollEnabled={scrollEnabled}
@@ -53,7 +44,7 @@ export default function Walkthrough(props) {
             activeDotColor={colors.primary}
             paginationStyle={styles.contentPage}
             removeClippedSubviews={false}>
-            {slideshow.map((item, index) => {
+            {slideshow.map((item) => {
               return (
                 <View style={styles.slide} key={item.key}>
                   <Image source={item.image} style={styles.img} />
@@ -65,28 +56,18 @@ export default function Walkthrough(props) {
             })}
           </Swiper>
         </View>
-        <View style={{ width: '100%' }}>
+        <View style={styles.fullWidth}>
           <Button
             full
-            style={{ marginTop: 20 }}
-            loading={loading}
-            onPress={() =>
-              navigation.navigate('SignIn', {
-                lastRoute: route?.params ?? lastRoute,
-              })
-            }>
+            style={styles.marginTop}
+            onPress={() => navigation.navigate('SignIn')}>
             {t('sign_in')}
           </Button>
           <View style={styles.contentActionBottom}>
-            <Text style={{ marginBottom: 20 }} body1 grayColor>
+            <Text style={styles.marginTop} body1 grayColor>
               OR
             </Text>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('SignUp', {
-                  lastRoute: route?.params ?? lastRoute,
-                })
-              }>
+            <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
               <Text body1 primaryColor>
                 {t('register')}
               </Text>
@@ -97,3 +78,40 @@ export default function Walkthrough(props) {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  contain: {
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+  },
+  wrapper: {
+    width: '100%',
+    height: 350,
+  },
+  contentPage: {
+    bottom: 0,
+  },
+  contentActionBottom: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 25,
+  },
+  img: {
+    width: Utils.scaleWithPixel(200),
+    height: Utils.scaleWithPixel(200),
+    borderRadius: Utils.scaleWithPixel(200) / 2,
+  },
+  slide: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+  },
+  textSlide: {
+    marginTop: 30,
+  },
+  fullWidth: { width: '100%' },
+  marginTop: {
+    marginTop: 20,
+  },
+});
