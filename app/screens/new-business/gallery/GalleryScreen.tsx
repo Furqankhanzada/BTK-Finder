@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import {
-  FlatList,
   SafeAreaView,
   TouchableOpacity,
   View,
@@ -261,72 +260,59 @@ export default function GalleryScreen(
         style={styles.keyboardAvoidView}>
         <Loading loading={deleteImageLoading} />
 
-        <FlatList
-          style={styles.container}
-          overScrollMode={'never'}
-          scrollEventThrottle={16}
-          data={[1]}
-          renderItem={() => {
-            return (
-              <ScrollView style={styles.scrollView}>
-                <View style={styles.thumbnailSection}>
-                  <Loading loading={thumbnailLoading} />
-                  <Text title3 semibold>
-                    Thumbnail
-                  </Text>
-                  <Text>Thumbnail size must be 300x300</Text>
-                  {thumbnail ? (
-                    <View style={styles.thumbnailContainer}>
-                      <TouchableOpacity
-                        style={styles.actionButton}
-                        onPress={() => removeThumbnail(thumbnail)}>
-                        <Icon style={styles.actionButtonIcon} name="minus" />
-                      </TouchableOpacity>
-                      <Image
-                        style={styles.thumbnailContainerImage}
-                        source={{ uri: thumbnail }}
-                      />
-                    </View>
-                  ) : (
-                    <TouchableOpacity
-                      style={styles.thumbnailAddOverlay}
-                      onPress={() => pickSingle()}>
-                      <Text semibold style={styles.thumbnailAddOverlayText}>
-                        Tap To Add Thumbnail
-                      </Text>
-                    </TouchableOpacity>
-                  )}
-                </View>
-                <View style={styles.gallerySection}>
-                  <Loading loading={galleryLoading} />
-                  <Text title3 semibold>
-                    Gallery
-                  </Text>
-                  <Text>Gallery Images size must be 600x400</Text>
-                  <View style={styles.gallerySectionImagesContainer}>
-                    {renderGalleryImages(gallery)}
-                    <TouchableOpacity
-                      style={
-                        businessStoreData?.gallery?.length === 0
-                          ? styles.galleryImageContainer
-                          : styles.galleryImageSubContainer
-                      }
-                      onPress={() => pickMultiple()}>
-                      <View style={styles.galleryImageBox}>
-                        <View style={styles.galleryImageAddIconContainer}>
-                          <Icon
-                            name="plus"
-                            style={styles.galleryImageAddIcon}
-                          />
-                        </View>
-                      </View>
-                    </TouchableOpacity>
+        <ScrollView style={styles.scrollView}>
+          <View style={styles.thumbnailSection}>
+            <Loading loading={thumbnailLoading} />
+            <Text title3 semibold>
+              Thumbnail
+            </Text>
+            <Text>Thumbnail size must be 300x300</Text>
+            {thumbnail ? (
+              <View style={styles.thumbnailContainer}>
+                <TouchableOpacity
+                  style={styles.actionButton}
+                  onPress={() => removeThumbnail(thumbnail)}>
+                  <Icon style={styles.actionButtonIcon} name="minus" />
+                </TouchableOpacity>
+                <Image
+                  style={styles.thumbnailContainerImage}
+                  source={{ uri: thumbnail }}
+                />
+              </View>
+            ) : (
+              <TouchableOpacity
+                style={styles.thumbnailAddOverlay}
+                onPress={() => pickSingle()}>
+                <Text semibold style={styles.thumbnailAddOverlayText}>
+                  Tap To Add Thumbnail
+                </Text>
+              </TouchableOpacity>
+            )}
+          </View>
+          <View style={styles.gallerySection}>
+            <Loading loading={galleryLoading} />
+            <Text title3 semibold>
+              Gallery
+            </Text>
+            <Text>Gallery Images size must be 600x400</Text>
+            <View style={styles.gallerySectionImagesContainer}>
+              {renderGalleryImages(gallery)}
+              <TouchableOpacity
+                style={
+                  businessStoreData?.gallery?.length === 0
+                    ? styles.galleryImageContainer
+                    : styles.galleryImageSubContainer
+                }
+                onPress={() => pickMultiple()}>
+                <View style={styles.galleryImageBox}>
+                  <View style={styles.galleryImageAddIconContainer}>
+                    <Icon name="plus" style={styles.galleryImageAddIcon} />
                   </View>
                 </View>
-              </ScrollView>
-            );
-          }}
-        />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </ScrollView>
 
         <NavigationButtons
           submitButtonText="Create"
@@ -343,10 +329,6 @@ export default function GalleryScreen(
 const styles = StyleSheet.create({
   keyboardAvoidView: {
     flex: 1,
-  },
-  container: {
-    flex: 1,
-    marginTop: 10,
   },
   scrollView: {
     flex: 1,
