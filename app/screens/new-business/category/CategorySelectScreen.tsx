@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import {
-  FlatList,
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -119,49 +119,39 @@ export default function CategorySelectScreen(
         behavior={Platform.select({ android: undefined, ios: 'padding' })}
         keyboardVerticalOffset={offsetKeyboard}
         style={styles.keyboardAvoidView}>
-        <FlatList
-          contentContainerStyle={styles.container}
-          data={items}
-          keyExtractor={(item, index) => {
-            return `${index}-${item.name}`;
-          }}
-          ListHeaderComponent={() => (
-            <View>
-              <Text title1 bold>
-                Select a category for your business
-              </Text>
-              {categories ? (
-                <TextInput
-                  style={styles.input}
-                  onChangeText={(text) => onSearch(text)}
-                  placeholder={t('search')}
-                  value={search}
-                  icon={
-                    <TouchableOpacity onPress={() => onSearch('')}>
-                      <Icon
-                        name="times"
-                        size={16}
-                        color={colors.primaryLight}
-                      />
-                    </TouchableOpacity>
-                  }
-                />
-              ) : null}
-            </View>
-          )}
-          renderItem={({ item, index }) => {
-            const checked = selectedCategory === item.name;
-            return (
-              <SelectItem
-                key={`${index + item._id}`}
-                onPress={() => onChange(item)}
-                text={item.name}
-                checked={checked}
-                icon={item.icon}
-              />
-            );
-          }}
-        />
+        <View style={styles.container}>
+          <Text title1 bold>
+            Select a category for your business
+          </Text>
+          {categories ? (
+            <TextInput
+              style={styles.input}
+              onChangeText={(text) => onSearch(text)}
+              placeholder={t('search')}
+              value={search}
+              icon={
+                <TouchableOpacity onPress={() => onSearch('')}>
+                  <Icon name="times" size={16} color={colors.primaryLight} />
+                </TouchableOpacity>
+              }
+            />
+          ) : null}
+          <ScrollView style={styles.scrollView}>
+            {items &&
+              items.map((item, index) => {
+                const checked = selectedCategory === item.name;
+                return (
+                  <SelectItem
+                    key={`${index + item._id}`}
+                    onPress={() => onChange(item)}
+                    text={item.name}
+                    checked={checked}
+                    icon={item.icon}
+                  />
+                );
+              })}
+          </ScrollView>
+        </View>
 
         <NavigationButtons
           onSubmit={onSubmit}
@@ -179,9 +169,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   container: {
+    flex: 1,
     paddingHorizontal: 20,
     marginTop: 10,
-    paddingBottom: 50,
+    paddingBottom: 10,
+  },
+  scrollView: {
+    flex: 1,
   },
   input: {
     marginTop: 15,
