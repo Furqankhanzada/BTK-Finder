@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import {
-  FlatList,
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
-  View,
 } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 
@@ -130,32 +129,21 @@ export default function OpenHoursScreen(
         behavior={Platform.select({ android: undefined, ios: 'padding' })}
         keyboardVerticalOffset={offsetKeyboard}
         style={styles.keyboardAvoidView}>
-        <FlatList
-          style={styles.container}
-          overScrollMode={'never'}
-          scrollEventThrottle={16}
-          data={[1]}
-          renderItem={() => {
-            return (
-              <View>
-                <Text title1 bold>
-                  What are the timings of your business?{' '}
-                  <Text body1>(optional)</Text>
-                </Text>
+        <ScrollView style={styles.container}>
+          <Text title1 bold>
+            What are the timings of your business? <Text body1>(optional)</Text>
+          </Text>
 
-                {selectedDays.map((item: OpenHours, index: number) => {
-                  return (
-                    <HoursCheckbox
-                      key={index}
-                      day={item}
-                      getObject={updateSelectedDays}
-                    />
-                  );
-                })}
-              </View>
+          {selectedDays.map((item: OpenHours, index: number) => {
+            return (
+              <HoursCheckbox
+                key={index}
+                day={item}
+                getObject={updateSelectedDays}
+              />
             );
-          }}
-        />
+          })}
+        </ScrollView>
 
         <NavigationButtons
           onSubmit={onSubmit}
