@@ -28,7 +28,7 @@ export default function NewBusinessStackNavigator() {
       <NewBusinessStack.Screen
         name="Name"
         component={withAuthRedirection(NameScreen, {
-          lastRoute: LastRoutes.NewBusinessStack,
+          lastRoute: LastRoutes.Business,
         })}
       />
       <NewBusinessStack.Screen
