@@ -1,8 +1,9 @@
 import React from 'react';
 import { ScrollView } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
+import NumberFormat from 'react-number-format';
 
-import { Header, SafeAreaView, Icon, Loading } from '@components';
+import { Header, SafeAreaView, Icon, Loading, Text } from '@components';
 import { BaseStyle } from '@config';
 
 import ListItem from './components/ListItem/ListItem';
@@ -145,10 +146,30 @@ export default function EditBusinessScreen(
         />
         <ListItem
           title="Pricing"
-          text={
-            businessData?.priceRange?.from && businessData?.priceRange?.to
-              ? `${businessData?.priceRange?.from} To ${businessData?.priceRange?.to}`
-              : ''
+          renderRightCustom={
+            <Text body1 numberOfLines={1}>
+              {businessData?.priceRange?.from && businessData.priceRange.to ? (
+                <Text body1 numberOfLines={1}>
+                  <NumberFormat
+                    value={businessData?.priceRange?.from}
+                    displayType="text"
+                    thousandSeparator=","
+                    renderText={(value) => value}
+                  />{' '}
+                  To{' '}
+                  <NumberFormat
+                    value={businessData?.priceRange?.to}
+                    displayType="text"
+                    thousandSeparator=","
+                    renderText={(value) => value}
+                  />
+                </Text>
+              ) : (
+                <Text body1 numberOfLines={1}>
+                  {' '}
+                </Text>
+              )}
+            </Text>
           }
           onPress={() => {
             navigation.navigate('Edit', {
