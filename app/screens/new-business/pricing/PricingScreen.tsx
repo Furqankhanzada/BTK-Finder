@@ -1,9 +1,9 @@
 import React from 'react';
 import {
-  FlatList,
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
 } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -87,50 +87,40 @@ export default function PricingScreen(
         behavior={Platform.select({ android: undefined, ios: 'padding' })}
         keyboardVerticalOffset={offsetKeyboard}
         style={styles.keyboardAvoidView}>
-        <FlatList
-          style={styles.container}
-          overScrollMode={'never'}
-          scrollEventThrottle={16}
-          data={[1]}
-          renderItem={() => {
-            return (
-              <>
-                <Text title1 bold>
-                  What are the pricing of products/items of your business?{' '}
-                  <Text body1>(optional)</Text>
-                </Text>
-                <Controller
-                  control={control}
-                  render={({ field: { onChange, onBlur, value } }) => (
-                    <TextInput
-                      style={styles.input}
-                      placeholder="From"
-                      onBlur={onBlur}
-                      onChangeText={onChange}
-                      value={value}
-                      keyboardType="numeric"
-                    />
-                  )}
-                  name="priceRange.from"
-                />
-                <Controller
-                  control={control}
-                  render={({ field: { onChange, onBlur, value } }) => (
-                    <TextInput
-                      style={styles.input}
-                      placeholder="To"
-                      onBlur={onBlur}
-                      onChangeText={onChange}
-                      value={value}
-                      keyboardType="numeric"
-                    />
-                  )}
-                  name="priceRange.to"
-                />
-              </>
-            );
-          }}
-        />
+        <ScrollView style={styles.container}>
+          <Text title1 bold>
+            What are the pricing of products/items of your business?{' '}
+            <Text body1>(optional)</Text>
+          </Text>
+          <Controller
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <TextInput
+                style={styles.input}
+                placeholder="From"
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+                keyboardType="numeric"
+              />
+            )}
+            name="priceRange.from"
+          />
+          <Controller
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <TextInput
+                style={styles.input}
+                placeholder="To"
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+                keyboardType="numeric"
+              />
+            )}
+            name="priceRange.to"
+          />
+        </ScrollView>
 
         <NavigationButtons
           onSubmit={handleSubmit(onSubmit)}
