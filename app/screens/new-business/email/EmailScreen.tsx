@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  FlatList,
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
@@ -92,52 +91,41 @@ export default function EmailScreen(
         behavior={Platform.select({ android: undefined, ios: 'padding' })}
         keyboardVerticalOffset={offsetKeyboard}
         style={styles.keyboardAvoidView}>
-        <FlatList
-          style={styles.container}
-          overScrollMode={'never'}
-          scrollEventThrottle={16}
-          data={[1]}
-          renderItem={() => {
-            return (
-              <Controller
-                control={control}
-                rules={{
-                  pattern: {
-                    value: emailRegExp,
-                    message: 'Invalid Email!',
-                  },
-                }}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <View>
-                    <Text title1 bold>
-                      What is the valid Email address of your Business ?{' '}
-                      <Text body1>(optional)</Text>
-                    </Text>
-                    <TextInput
-                      style={styles.input}
-                      placeholder="Email"
-                      onBlur={onBlur}
-                      onChangeText={onChange}
-                      value={value}
-                      keyboardType="email-address"
-                      autoCapitalize="none"
-                    />
-                    {!isValid ? (
-                      <Text
-                        style={[
-                          styles.errorText,
-                          { color: BaseColor.redColor },
-                        ]}>
-                        Please use a valid email
-                      </Text>
-                    ) : null}
-                  </View>
-                )}
-                name="email"
-              />
-            );
-          }}
-        />
+        <View style={styles.container}>
+          <Controller
+            control={control}
+            rules={{
+              pattern: {
+                value: emailRegExp,
+                message: 'Invalid Email!',
+              },
+            }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <View>
+                <Text title1 bold>
+                  What is the valid Email address of your Business ?{' '}
+                  <Text body1>(optional)</Text>
+                </Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Email"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                />
+                {!isValid ? (
+                  <Text
+                    style={[styles.errorText, { color: BaseColor.redColor }]}>
+                    Please use a valid email
+                  </Text>
+                ) : null}
+              </View>
+            )}
+            name="email"
+          />
+        </View>
 
         <NavigationButtons
           onSubmit={handleSubmit(onSubmit)}
