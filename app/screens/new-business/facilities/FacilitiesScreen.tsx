@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import {
-  FlatList,
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
   StyleSheet,
+  View,
 } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 
@@ -108,19 +108,12 @@ export default function FacilitiesScreen(
         behavior={Platform.select({ android: undefined, ios: 'padding' })}
         keyboardVerticalOffset={offsetKeyboard}
         style={styles.keyboardAvoidView}>
-        <FlatList
-          contentContainerStyle={styles.container}
-          data={remoteConfig.facilities}
-          keyExtractor={(item, index) => {
-            return `${index}-${item.name}`;
-          }}
-          ListHeaderComponent={() => (
-            <Text title1 bold>
-              Select the facilities that you provide{' '}
-              <Text body1>(optional)</Text>
-            </Text>
-          )}
-          renderItem={({ item, index }) => {
+        <View style={styles.container}>
+          <Text title1 bold>
+            Select the facilities that you provide <Text body1>(optional)</Text>
+          </Text>
+
+          {remoteConfig.facilities?.map((item, index) => {
             const checked = selectedFacilities.some(
               (obj: Facility) => obj.name === item.name,
             );
@@ -134,8 +127,8 @@ export default function FacilitiesScreen(
                 icon={item.icon}
               />
             );
-          }}
-        />
+          })}
+        </View>
 
         <NavigationButtons
           onSubmit={onSubmit}
@@ -153,6 +146,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   container: {
+    flex: 1,
     paddingHorizontal: 20,
     marginTop: 10,
     paddingBottom: 50,
