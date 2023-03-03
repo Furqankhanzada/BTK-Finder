@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  FlatList,
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
@@ -89,37 +88,29 @@ export default function DescriptionScreen(
         behavior={Platform.select({ android: undefined, ios: 'padding' })}
         keyboardVerticalOffset={offsetKeyboard}
         style={styles.keyboardAvoidView}>
-        <FlatList
-          style={styles.container}
-          overScrollMode={'never'}
-          scrollEventThrottle={16}
-          data={[1]}
-          renderItem={() => {
-            return (
-              <Controller
-                control={control}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <View>
-                    <Text title1 bold>
-                      Describe about your business, Let people know about your
-                      business <Text body1>(optional)</Text>
-                    </Text>
-                    <TextInput
-                      style={styles.textArea}
-                      placeholder="e.g Kababjees are known for making each bite soulful and joyous..."
-                      onBlur={onBlur}
-                      onChangeText={onChange}
-                      value={value}
-                      multiline={true}
-                      textAlignVertical="top"
-                    />
-                  </View>
-                )}
-                name="description"
-              />
-            );
-          }}
-        />
+        <View style={styles.container}>
+          <Controller
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <View>
+                <Text title1 bold>
+                  Describe about your business, Let people know about your
+                  business <Text body1>(optional)</Text>
+                </Text>
+                <TextInput
+                  style={styles.textArea}
+                  placeholder="e.g Kababjees are known for making each bite soulful and joyous..."
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  multiline={true}
+                  textAlignVertical="top"
+                />
+              </View>
+            )}
+            name="description"
+          />
+        </View>
 
         <NavigationButtons
           onSubmit={handleSubmit(onSubmit)}
