@@ -7,12 +7,13 @@ import { useTheme } from '@config';
 type Props = {
   title: string;
   text?: string;
+  renderRightCustom?: JSX.Element;
   onPress: () => void;
 };
 
 export default function ListItem(props: Props) {
   const { colors } = useTheme();
-  const { title, text, onPress } = props;
+  const { title, text, renderRightCustom, onPress } = props;
   return (
     <TouchableOpacity
       style={[styles.container, { borderBottomColor: colors.border }]}
@@ -21,9 +22,13 @@ export default function ListItem(props: Props) {
         {title}
       </Text>
       <View style={styles.leftContainer}>
-        <Text body1 numberOfLines={1}>
-          {text ? text : ''}
-        </Text>
+        {renderRightCustom ? (
+          renderRightCustom
+        ) : (
+          <Text body1 numberOfLines={1}>
+            {text ? text : ''}
+          </Text>
+        )}
         <Icon
           name="angle-right"
           size={18}
