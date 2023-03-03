@@ -1,9 +1,9 @@
 import React from 'react';
 import {
-  FlatList,
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   View,
 } from 'react-native';
@@ -96,52 +96,41 @@ export default function WebsiteScreen(
         behavior={Platform.select({ android: undefined, ios: 'padding' })}
         keyboardVerticalOffset={offsetKeyboard}
         style={styles.keyboardAvoidView}>
-        <FlatList
-          style={styles.container}
-          overScrollMode={'never'}
-          scrollEventThrottle={16}
-          data={[1]}
-          renderItem={() => {
-            return (
-              <Controller
-                control={control}
-                rules={{
-                  pattern: {
-                    value: webRegExp,
-                    message: 'Invalid URL!',
-                  },
-                }}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <View>
-                    <Text title1 bold>
-                      Add your business's official website, Let users to know
-                      about your business more <Text body1>(optional)</Text>
-                    </Text>
-                    <TextInput
-                      style={styles.input}
-                      placeholder="Website"
-                      onBlur={onBlur}
-                      onChangeText={onChange}
-                      value={value}
-                      keyboardType="url"
-                      autoCapitalize="none"
-                    />
-                    {!isValid ? (
-                      <Text
-                        style={[
-                          styles.errorText,
-                          { color: BaseColor.redColor },
-                        ]}>
-                        Please enter a valid URL
-                      </Text>
-                    ) : null}
-                  </View>
-                )}
-                name="website"
-              />
-            );
-          }}
-        />
+        <ScrollView style={styles.container}>
+          <Controller
+            control={control}
+            rules={{
+              pattern: {
+                value: webRegExp,
+                message: 'Invalid URL!',
+              },
+            }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <View>
+                <Text title1 bold>
+                  Add your business's official website, Let users to know about
+                  your business more <Text body1>(optional)</Text>
+                </Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Website"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  keyboardType="url"
+                  autoCapitalize="none"
+                />
+                {!isValid ? (
+                  <Text
+                    style={[styles.errorText, { color: BaseColor.redColor }]}>
+                    Please enter a valid URL
+                  </Text>
+                ) : null}
+              </View>
+            )}
+            name="website"
+          />
+        </ScrollView>
 
         <NavigationButtons
           onSubmit={handleSubmit(onSubmit)}
