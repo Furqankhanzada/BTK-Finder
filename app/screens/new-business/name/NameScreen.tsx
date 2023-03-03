@@ -1,9 +1,9 @@
 import React from 'react';
 import {
-  FlatList,
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   View,
 } from 'react-native';
@@ -91,48 +91,37 @@ export default function NameScreen(
         behavior={Platform.select({ android: undefined, ios: 'padding' })}
         keyboardVerticalOffset={offsetKeyboard}
         style={styles.keyboardAvoidView}>
-        <FlatList
-          style={styles.container}
-          overScrollMode={'never'}
-          scrollEventThrottle={16}
-          data={[1]}
-          renderItem={() => {
-            return (
-              <Controller
-                control={control}
-                rules={{
-                  required: true,
-                  minLength: 3,
-                }}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <View>
-                    <Text title1 bold>
-                      Please write your business name
-                    </Text>
-                    <TextInput
-                      style={styles.input}
-                      placeholder="e.g Kababjees"
-                      onBlur={onBlur}
-                      onChangeText={onChange}
-                      value={value}
-                      success={!errors.name}
-                    />
-                    {errors.name?.type === 'minLength' ? (
-                      <Text
-                        style={[
-                          styles.errorText,
-                          { color: BaseColor.redColor },
-                        ]}>
-                        Name should be minimum 3 characters
-                      </Text>
-                    ) : null}
-                  </View>
-                )}
-                name="name"
-              />
-            );
-          }}
-        />
+        <ScrollView style={styles.container}>
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+              minLength: 3,
+            }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <View>
+                <Text title1 bold>
+                  Please write your business name
+                </Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="e.g Kababjees"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  success={!errors.name}
+                />
+                {errors.name?.type === 'minLength' ? (
+                  <Text
+                    style={[styles.errorText, { color: BaseColor.redColor }]}>
+                    Name should be minimum 3 characters
+                  </Text>
+                ) : null}
+              </View>
+            )}
+            name="name"
+          />
+        </ScrollView>
 
         <NavigationButtons
           onSubmit={handleSubmit(onSubmit)}
