@@ -1,9 +1,9 @@
 import React from 'react';
 import {
-  FlatList,
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   View,
 } from 'react-native';
@@ -96,51 +96,40 @@ export default function TelephoneScreen(
         behavior={Platform.select({ android: undefined, ios: 'padding' })}
         keyboardVerticalOffset={offsetKeyboard}
         style={styles.keyboardAvoidView}>
-        <FlatList
-          style={styles.container}
-          overScrollMode={'never'}
-          scrollEventThrottle={16}
-          data={[0]}
-          renderItem={() => {
-            return (
-              <Controller
-                control={control}
-                rules={{
-                  pattern: {
-                    value: phoneRegExp,
-                    message: 'Invalid Phone!',
-                  },
-                }}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <View>
-                    <Text title1 bold>
-                      Add your business's contact number, Make it easy for users
-                      to connect with you <Text body1>(optional)</Text>
-                    </Text>
-                    <TextInput
-                      style={styles.input}
-                      placeholder="Telephone Number"
-                      onBlur={onBlur}
-                      onChangeText={onChange}
-                      value={value}
-                      keyboardType="number-pad"
-                    />
-                    {!isValid ? (
-                      <Text
-                        style={[
-                          styles.errorText,
-                          { color: BaseColor.redColor },
-                        ]}>
-                        Please use a valid number
-                      </Text>
-                    ) : null}
-                  </View>
-                )}
-                name="telephone"
-              />
-            );
-          }}
-        />
+        <ScrollView style={styles.container}>
+          <Controller
+            control={control}
+            rules={{
+              pattern: {
+                value: phoneRegExp,
+                message: 'Invalid Phone!',
+              },
+            }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <View>
+                <Text title1 bold>
+                  Add your business's contact number, Make it easy for users to
+                  connect with you <Text body1>(optional)</Text>
+                </Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Telephone Number"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  keyboardType="number-pad"
+                />
+                {!isValid ? (
+                  <Text
+                    style={[styles.errorText, { color: BaseColor.redColor }]}>
+                    Please use a valid number
+                  </Text>
+                ) : null}
+              </View>
+            )}
+            name="telephone"
+          />
+        </ScrollView>
 
         <NavigationButtons
           onSubmit={handleSubmit(onSubmit)}
