@@ -152,5 +152,6 @@ export default function useNativeUpdate() {
     } else {
       handleIOS();
     }
-  }, [handleAndroid, handleIOS]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 }
