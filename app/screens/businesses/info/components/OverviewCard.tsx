@@ -11,6 +11,7 @@ import {
   BusinessPresentable,
   BusinessStatus,
 } from '@screens/businesses/models/BusinessPresentable';
+import { addDays, isWithinInterval, set } from 'date-fns';
 
 interface Props {
   onReviewsPress: (id: string) => void;
@@ -39,11 +40,10 @@ export default function OverviewCard({
       'Saturday',
     ];
 
-    //Current Date that gives us current Time also
-    let dt = new Date();
-
+    //Current Date that gives
+    const today = new Date();
     //Current Day
-    let getCurrentDay = days[dt.getDay()];
+    let getCurrentDay = days[today.getDay()];
 
     //Return Open if current day is available in open hours days
     if (business?.openHours?.find((item: any) => item.day === getCurrentDay)) {
@@ -75,27 +75,28 @@ export default function OverviewCard({
       let startTime = convertTime12to24(currentDayObject[0].from);
       let endTime = convertTime12to24(currentDayObject[0].to);
 
-      let s = startTime.split(':');
-      let dt1 = new Date(
-        dt.getFullYear(),
-        dt.getMonth(),
-        dt.getDate(),
-        parseInt(s[0], 10),
-        parseInt(s[1], 10),
-        parseInt(s[2], 10),
-      );
+      const opening = startTime.slice(0, 2);
+      const closing = endTime.slice(0, 2);
 
-      let e = endTime.split(':');
-      let dt2 = new Date(
-        dt.getFullYear(),
-        dt.getMonth(),
-        dt.getDate(),
-        parseInt(e[0], 10),
-        parseInt(e[1], 10),
-        parseInt(e[2], 10),
-      );
+      const start = set(today, {
+        hours: Number(opening),
+        minutes: 0,
+        seconds: 0,
+        milliseconds: 0,
+      });
+      const end = set(closing <= opening ? addDays(today, 1) : today, {
+        hours: Number(closing),
+        minutes: 0,
+        seconds: 0,
+        milliseconds: 0,
+      });
 
-      if (dt >= dt1 && dt <= dt2) {
+      const inRange = isWithinInterval(today, {
+        start,
+        end,
+      });
+
+      if (inRange) {
         return <Text style={{ color: BaseColor.greenColor }}>Opened</Text>;
       }
     }
