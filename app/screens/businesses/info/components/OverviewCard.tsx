@@ -19,6 +19,29 @@ interface Props {
   isPreview?: boolean;
 }
 
+//12 hours format to 24 hours and return hour
+const convertTime12to24 = (time12h: string) => {
+  const [time, modifier] = time12h.split(' ');
+  let [hour] = time.split(':');
+  if (hour === '12') {
+    return 0;
+  }
+  if (modifier.toLowerCase() === 'pm') {
+    return parseInt(hour, 10) + 12;
+  }
+  return parseInt(hour, 10);
+};
+
+const days = [
+  'Sunday',
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+];
+
 export default function OverviewCard({
   business,
   isPreview = false,
@@ -28,64 +51,26 @@ export default function OverviewCard({
   const { colors } = useTheme();
   const { t } = useTranslation();
 
-  const isBusinessOpened = () => {
-    //Week Days
-    const days = [
-      'Sunday',
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-    ];
-
-    //Current Date that gives
+  const businessTimeStatus = () => {
     const today = new Date();
-    //Current Day
-    let getCurrentDay = days[today.getDay()];
+    let currentDay = days[today.getDay()];
+    const todayOpenHours = business.openHours?.find(
+      (item) => item.day === currentDay,
+    );
 
-    //Return Open if current day is available in open hours days
-    if (business?.openHours?.find((item: any) => item.day === getCurrentDay)) {
-      //12 hours to 24 hours converting function
-      const convertTime12to24 = (time12h: any) => {
-        const [time, modifier] = time12h.split(' ');
-
-        let [hours, minutes] = time.split(':');
-
-        if (hours === '12') {
-          hours = '00';
-        }
-
-        if (modifier === 'pm') {
-          hours = parseInt(hours, 10) + 12;
-        }
-        if (modifier === 'PM') {
-          hours = parseInt(hours, 10) + 12;
-        }
-
-        return `${hours}:${minutes}:00`;
-      };
-
-      //Get Data of current day from Open hours
-      let currentDayObject = business?.openHours.filter(
-        (obj: any) => obj.day === getCurrentDay,
-      );
-
-      let startTime = convertTime12to24(currentDayObject[0].from);
-      let endTime = convertTime12to24(currentDayObject[0].to);
-
-      const opening = startTime.slice(0, 2);
-      const closing = endTime.slice(0, 2);
+    if (todayOpenHours && todayOpenHours.day === currentDay) {
+      let startTime = convertTime12to24(todayOpenHours.from);
+      let endTime = convertTime12to24(todayOpenHours.to);
 
       const start = set(today, {
-        hours: Number(opening),
+        hours: startTime,
         minutes: 0,
         seconds: 0,
         milliseconds: 0,
       });
-      const end = set(closing <= opening ? addDays(today, 1) : today, {
-        hours: Number(closing),
+
+      const end = set(endTime <= startTime ? addDays(today, 1) : today, {
+        hours: endTime,
         minutes: 0,
         seconds: 0,
         milliseconds: 0,
@@ -183,7 +168,7 @@ export default function OverviewCard({
         <View>
           <View style={styles.contentStatus}>
             <Text caption2 medium>
-              {business?.openHours && isBusinessOpened()}
+              {business?.openHours && businessTimeStatus()}
             </Text>
             <View style={styles.dot} />
             <Text caption2 grayColor style={styles.category} numberOfLines={1}>
