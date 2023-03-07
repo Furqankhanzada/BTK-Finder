@@ -12,13 +12,12 @@ import { BaseColor, useTheme, useFont } from '@config';
 import { Icon } from '@components';
 import ProductDetailScreen from '@screens/businesses/product-detail/ProductDetailScreen';
 import { useBusiness } from '@screens/businesses/queries/queries';
-import {
-  BusinessType,
-  ShopStatus,
-} from '@screens/businesses/models/BusinessPresentable';
+import { ShopStatus } from '@screens/businesses/models/BusinessPresentable';
 
 import BusinessReviewsScreen from './reviews/BusinessReviewsScreen';
-import BusinessOverviewScreen from './info/BusinessOverviewScreen';
+import BusinessOverviewScreen, {
+  getStoreType,
+} from './info/BusinessOverviewScreen';
 import BusinessProductsScreen from './products/BusinessProductsScreen';
 import AddReviewScreen from './add-review/AddReviewScreen';
 import {
@@ -111,7 +110,7 @@ export default function BusinessDetailNavigator({
           name="Products"
           component={BusinessProductsScreen}
           options={{
-            title: data.type === BusinessType.restaurant ? 'Menu' : 'Products',
+            title: getStoreType(data.type),
             tabBarIcon: ({ color }) => {
               return <Icon solid color={color} name="elementor" size={25} />;
             },
