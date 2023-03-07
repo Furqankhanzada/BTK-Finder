@@ -23,6 +23,7 @@ export interface ContactItem {
 
 export enum BusinessType {
   restaurant = 'restaurant',
+  gym = 'gym',
 }
 
 export enum ShopStatus {
