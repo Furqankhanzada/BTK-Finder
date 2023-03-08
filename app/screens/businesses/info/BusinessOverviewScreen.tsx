@@ -46,7 +46,7 @@ import OpenHours from '@screens/businesses/info/components/OpenHours';
 import Recommendations from '@screens/businesses/info/components/Recommendations';
 import Products from '@screens/businesses/components/Products';
 
-import { getStoreType } from '../helpers/getStoreTitle';
+import { getProductsTitle } from '../helpers/getProductsTitle';
 import { useBusiness } from '../queries/queries';
 import { useBuildBusinessURL } from '../queries/mutations';
 import { EVENTS, trackEvent } from '../../../userTracking';
@@ -367,7 +367,7 @@ export default function BusinessOverviewScreen(props: Props) {
         {business?.shop && business.shop.status === ShopStatus.enabled ? (
           <View>
             <Text title3 semibold style={styles.facilities}>
-              {getStoreType(business.type)}
+              {getProductsTitle(business.type)}
             </Text>
             <View style={[styles.wrapContent, { borderColor: colors.border }]}>
               <Products
