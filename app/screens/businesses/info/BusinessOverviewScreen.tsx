@@ -36,7 +36,6 @@ import {
 import { BaseColor, BaseStyle, Images, useTheme } from '@config';
 import * as Utils from '@utils';
 import {
-  BusinessType,
   ContactItem,
   ContactItemType,
   ShopStatus,
@@ -47,6 +46,7 @@ import OpenHours from '@screens/businesses/info/components/OpenHours';
 import Recommendations from '@screens/businesses/info/components/Recommendations';
 import Products from '@screens/businesses/components/Products';
 
+import { getStoreType } from '../helpers/getStoreTitle';
 import { useBusiness } from '../queries/queries';
 import { useBuildBusinessURL } from '../queries/mutations';
 import { EVENTS, trackEvent } from '../../../userTracking';
@@ -65,17 +65,6 @@ type Props = CompositeScreenProps<
   StackScreenProps<ProductStackParamList, 'Overview'>,
   StackScreenProps<BusinessDetailBottomTabParamList>
 >;
-
-export const getStoreType = (type: string) => {
-  switch (type) {
-    case BusinessType.restaurant:
-      return 'Menu';
-    case BusinessType.gym:
-      return 'Packages';
-    default:
-      return 'Products';
-  }
-};
 
 export default function BusinessOverviewScreen(props: Props) {
   const { navigation, route } = props;

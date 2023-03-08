@@ -14,10 +14,9 @@ import ProductDetailScreen from '@screens/businesses/product-detail/ProductDetai
 import { useBusiness } from '@screens/businesses/queries/queries';
 import { ShopStatus } from '@screens/businesses/models/BusinessPresentable';
 
+import { getStoreType } from './helpers/getStoreTitle';
 import BusinessReviewsScreen from './reviews/BusinessReviewsScreen';
-import BusinessOverviewScreen, {
-  getStoreType,
-} from './info/BusinessOverviewScreen';
+import BusinessOverviewScreen from './info/BusinessOverviewScreen';
 import BusinessProductsScreen from './products/BusinessProductsScreen';
 import AddReviewScreen from './add-review/AddReviewScreen';
 import {
