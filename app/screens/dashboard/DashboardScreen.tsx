@@ -8,6 +8,7 @@ import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
 
 import { SafeAreaView, Icon, Text, Tag, Image, Header } from '@components';
 import { BaseStyle, useTheme } from '@config';
+import { useRemoteConfig } from '@hooks';
 import * as Utils from '@utils';
 import Section from '@screens/dashboard/components/Section';
 import { CategoryPresentable } from '@screens/category/modals/CategoryPresentables';
@@ -27,7 +28,10 @@ import { EVENTS, setUser, trackEvent } from '../../userTracking';
 import { GlobalParamList } from '../../navigation/models/GlobalParamList';
 import { MainStackParamList } from '../../navigation/models/MainStackParamList';
 import { getProfile } from '../../actions/auth';
-import { dashboardBannerUnitIdOne } from '../../hooks/useMobileAds';
+import {
+  dashboardBannerUnitIdOne,
+  dashboardBannerUnitIdTwo,
+} from '../../hooks/useMobileAds';
 
 const database = firebase
   .app()
@@ -40,12 +44,14 @@ function DashboardScreen({
 }: StackScreenProps<GlobalParamList, 'Dashboard'>) {
   const { colors } = useTheme();
   const dispatch = useDispatch();
+  const remoteConfig = useRemoteConfig();
   const isLogin = useSelector((state: any) => state.auth.isLogin);
   const profileData = useSelector((state: any) => state.profile);
   const { data: notifications } = useNotifications(['notifications-count'], {
     deviceUniqueId: getUniqueId(),
     unreadCount: true,
   });
+  console.log('@remoteConfig.ads', remoteConfig.ads);
 
   const [banners, setBanners] = useState<BannersPresentable>();
 
@@ -238,15 +244,17 @@ function DashboardScreen({
                 }}
               />
             </Section>
-            <View>
-              <BannerAd
-                unitId={dashboardBannerUnitIdOne}
-                size={BannerAdSize.FULL_BANNER}
-                requestOptions={{
-                  requestNonPersonalizedAdsOnly: true,
-                }}
-              />
-            </View>
+            {remoteConfig.ads?.dashboardBannerOne ? (
+              <View>
+                <BannerAd
+                  unitId={dashboardBannerUnitIdOne}
+                  size={BannerAdSize.FULL_BANNER}
+                  requestOptions={{
+                    requestNonPersonalizedAdsOnly: true,
+                  }}
+                />
+              </View>
+            ) : null}
             <Section
               title="Restaurants"
               subTitle="Find Fast Food, Cakes, Pizza, Fries etc..."
@@ -263,7 +271,19 @@ function DashboardScreen({
                 params={{ tags: ['Cakes', 'Fast Food', 'Cafe'] }}
               />
             </Section>
-            {renderBanner(banners?.two)}
+            {remoteConfig.ads?.dashboardBannerTwo ? (
+              <View>
+                <BannerAd
+                  unitId={dashboardBannerUnitIdTwo}
+                  size={BannerAdSize.FULL_BANNER}
+                  requestOptions={{
+                    requestNonPersonalizedAdsOnly: true,
+                  }}
+                />
+              </View>
+            ) : (
+              renderBanner(banners?.two)
+            )}
             <Section
               title="Transport"
               subTitle="Find Courier Service, Shuttle Service, CAB Service, Van Service and Internation Flight Services"
