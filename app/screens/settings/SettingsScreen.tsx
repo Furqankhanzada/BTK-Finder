@@ -17,10 +17,10 @@ import {
   ProfileDetail,
 } from '@components';
 
-import { SettingsParamList } from '../../navigation/models/SettingsParamList';
+import { GlobalParamList } from 'navigation/models/GlobalParamList';
 
 export default function SettingsScreen(
-  props: StackScreenProps<SettingsParamList, 'Settings'>,
+  props: StackScreenProps<GlobalParamList, 'Settings'>,
 ) {
   const { navigation } = props;
   const { colors } = useTheme();
@@ -205,8 +205,8 @@ export default function SettingsScreen(
             full
             loading={false}
             onPress={() =>
-              navigation.navigate('SignIn', {
-                lastRoute: { lastRoute: 'Settings' },
+              navigation.navigate('AuthStackNavigator', {
+                screen: 'SignIn',
               })
             }>
             Sign In
@@ -216,8 +216,8 @@ export default function SettingsScreen(
             full
             loading={false}
             onPress={() =>
-              navigation.navigate('SignUp', {
-                lastRoute: { lastRoute: 'Settings' },
+              navigation.navigate('AuthStackNavigator', {
+                screen: 'SignUp',
               })
             }>
             Sign Up

@@ -35,12 +35,11 @@ import { AuthParamList } from '../../../navigation/models/AuthParamList';
 export default function SignInScreen(
   props: StackScreenProps<AuthParamList, 'SignIn'>,
 ) {
-  const { navigation, route } = props;
+  const { navigation } = props;
   const { colors } = useTheme();
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
-  const { params } = route;
   const passwordRef = useRef<TextInputOriginal>(null);
 
   const { mutate: registerDevice } = useDeviceRegistration();
@@ -54,8 +53,6 @@ export default function SignInScreen(
    *
    */
   const onLogin = () => {
-    let lastRoute = params?.lastRoute?.lastRoute ?? params.lastRoute ?? '';
-    let id = params?.lastRoute?.id ?? '';
     if (username === '' || password === '') {
       setSuccess({
         ...success,
@@ -76,7 +73,7 @@ export default function SignInScreen(
               osVersion: getSystemVersion(),
             });
 
-            navigation.navigate(lastRoute ? lastRoute : 'Settings', { id });
+            navigation.goBack();
             queryClient.invalidateQueries(['notifications']);
             queryClient.invalidateQueries(['notifications-count']);
           }

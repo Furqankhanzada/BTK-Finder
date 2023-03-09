@@ -21,8 +21,7 @@ import { AuthParamList } from '../../../navigation/models/AuthParamList';
 export default function SignUpScreen(
   props: StackScreenProps<AuthParamList, 'SignUp'>,
 ) {
-  const { navigation, route } = props;
-  const { params } = route;
+  const { navigation } = props;
 
   const nameRef = useRef<TextInputOriginal>(null);
   const emailRef = useRef<TextInputOriginal>(null);
@@ -49,8 +48,6 @@ export default function SignUpScreen(
    *
    */
   const onSignUp = () => {
-    let lastRoute = params?.lastRoute?.lastRoute ?? params.lastRoute ?? '';
-
     if (name === '' || email === '' || phone === '' || password === '') {
       setSuccess({
         ...success,
@@ -69,7 +66,7 @@ export default function SignUpScreen(
         (error: Error) => {
           setLoading(false);
           if (!error) {
-            navigation.navigate(lastRoute ? lastRoute : 'Settings');
+            navigation.goBack();
             Toast.show({
               type: 'success',
               topOffset: 55,

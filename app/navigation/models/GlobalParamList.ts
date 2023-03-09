@@ -7,6 +7,7 @@ import {
 } from './BusinessDetailBottomTabParamList';
 import { DashboardParamList } from './DashboardParamList';
 import { SettingsParamList } from './SettingsParamList';
+import { AuthParamList } from './AuthParamList';
 
 export type GlobalParamList = RootStackParamList &
   MainStackParamList &
@@ -14,4 +15,5 @@ export type GlobalParamList = RootStackParamList &
   BusinessDetailBottomTabParamList &
   ReviewStackParamList &
   DashboardParamList &
-  SettingsParamList;
+  SettingsParamList &
+  AuthParamList;
