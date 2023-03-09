@@ -2,15 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StackScreenProps } from '@react-navigation/stack';
 
-import {
-  Header,
-  SafeAreaView,
-  Icon,
-  Image,
-  Text,
-  Tag,
-  Loading,
-} from '@components';
+import { Header, SafeAreaView, Icon, Image, Text, Tag } from '@components';
 import { BaseStyle, Images, useTheme } from '@config';
 import { useAlerts } from '@hooks';
 import * as Utils from '@utils';
@@ -26,6 +18,7 @@ import { FlatList, RefreshControl, StyleSheet, View } from 'react-native';
 import { CatalogProductVariant } from '../../../models/graphql';
 import { IconName } from '../../../contexts/alerts-v2/models/Icon';
 import ProductDetailPlaceholder from './components/ProductDetailPlaceholder';
+import { BusinessType } from '../models/BusinessPresentable';
 
 export default function ProductDetailScreen(
   props: StackScreenProps<ProductStackParamList, 'Product'>,
@@ -72,6 +65,15 @@ export default function ProductDetailScreen(
       },
       type: 'Standard',
     });
+  };
+
+  const getSelectText = () => {
+    switch (business?.type) {
+      case BusinessType.gym:
+        return 'Select Package:';
+      default:
+        return 'Select Size:';
+    }
   };
 
   const onRefresh = async () => {
@@ -143,7 +145,7 @@ export default function ProductDetailScreen(
               </Text>
               <Text caption1>{product?.description}</Text>
               <Text headline style={{ marginTop: 10 }}>
-                Select Size:
+                {getSelectText()}
               </Text>
               <View style={[styles.variantsContainer]}>
                 {product?.variants?.map((variant) => (
@@ -173,38 +175,42 @@ export default function ProductDetailScreen(
                       .replace(/\d(?=(\d{3})+\.)/g, '$&,'),
                   )}
                 </Text>
-                <QuantityButton
-                  onPressAdd={() =>
-                    setQuantity((oldQuantity) => oldQuantity + 1)
-                  }
-                  onPressRemove={() =>
-                    setQuantity((oldQuantity) =>
-                      oldQuantity !== 1 ? oldQuantity - 1 : oldQuantity,
-                    )
-                  }
-                  quantity={quantity}
-                />
+                {business?.type === 'gym' ? null : (
+                  <QuantityButton
+                    onPressAdd={() =>
+                      setQuantity((oldQuantity) => oldQuantity + 1)
+                    }
+                    onPressRemove={() =>
+                      setQuantity((oldQuantity) =>
+                        oldQuantity !== 1 ? oldQuantity - 1 : oldQuantity,
+                      )
+                    }
+                    quantity={quantity}
+                  />
+                )}
               </View>
             </View>
           );
         }}
       />
-      <View
-        style={{
-          position: 'absolute',
-          bottom: 0,
-          width: '100%',
-          paddingHorizontal: 20,
-          paddingBottom: 20,
-        }}>
-        <EcommerceButton
-          leftText="Rs.0"
-          title="Add to cart"
-          rightText={'0'}
-          onPress={onAddToCartPress}
-          onCartCountPress={onAddToCartPress}
-        />
-      </View>
+      {business?.type === 'gym' ? null : (
+        <View
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            width: '100%',
+            paddingHorizontal: 20,
+            paddingBottom: 20,
+          }}>
+          <EcommerceButton
+            leftText="Rs.0"
+            title="Add to cart"
+            rightText={'0'}
+            onPress={onAddToCartPress}
+            onCartCountPress={onAddToCartPress}
+          />
+        </View>
+      )}
     </SafeAreaView>
   );
 }

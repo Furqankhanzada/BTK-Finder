@@ -27,10 +27,7 @@ import { EVENTS, setUser, trackEvent } from '../../userTracking';
 import { GlobalParamList } from '../../navigation/models/GlobalParamList';
 import { MainStackParamList } from '../../navigation/models/MainStackParamList';
 import { getProfile } from '../../actions/auth';
-import {
-  dashboardBannerUnitIdOne,
-  dashboardBannerUnitIdTwo,
-} from '../../hooks/useMobileAds';
+import { dashboardBannerUnitIdOne } from '../../hooks/useMobileAds';
 
 const database = firebase
   .app()
@@ -215,6 +212,32 @@ function DashboardScreen({
         // }
         renderItem={() => (
           <View>
+            <Section
+              title="Browse by categories"
+              onViewAll={onCategoriesViewAllPress}
+              isLoading={false}>
+              <HorizontalCategories onPress={onCategoryPress} />
+            </Section>
+            <Section
+              tag="New"
+              title="With Menus/Products/Packages"
+              subTitle="Find Restaurant, Shops, Gyms with Menus/Products/Packages, Now you can see their prices"
+              onViewAll={() =>
+                onBusinessesViewAllPress({
+                  title: 'With Menus/Products/Packages',
+                  tags: ['Products'],
+                })
+              }
+              isLoading={false}>
+              <HorizontalBusinesses
+                onPress={onBusinessPress}
+                queryKey={[BusinessesQueryKeysWithFav.restaurantsWithMenu]}
+                params={{
+                  tags: ['Products'],
+                  fields: ['_id', 'name', 'thumbnail', 'favorites'].join(','),
+                }}
+              />
+            </Section>
             <View style={styles.adBanner}>
               <BannerAd
                 unitId={dashboardBannerUnitIdOne}
@@ -224,33 +247,6 @@ function DashboardScreen({
                 }}
               />
             </View>
-            <Section
-              title="Browse by categories"
-              onViewAll={onCategoriesViewAllPress}
-              isLoading={false}>
-              <HorizontalCategories onPress={onCategoryPress} />
-            </Section>
-            <Section
-              tag="New"
-              title="Restaurant with Menus"
-              subTitle="Find Restaurant with Menus, Now you can see the prices and available food items"
-              onViewAll={() =>
-                onBusinessesViewAllPress({
-                  title: 'Restaurants with Menu Online',
-                  tags: ['Menu'],
-                })
-              }
-              isLoading={false}>
-              <HorizontalBusinesses
-                onPress={onBusinessPress}
-                queryKey={[BusinessesQueryKeysWithFav.restaurantsWithMenu]}
-                params={{
-                  tags: ['Menu'],
-                  fields: ['_id', 'name', 'thumbnail', 'favorites'].join(','),
-                }}
-              />
-            </Section>
-
             <Section
               title="Restaurants"
               subTitle="Find Fast Food, Cakes, Pizza, Fries etc..."
@@ -267,17 +263,7 @@ function DashboardScreen({
                 params={{ tags: ['Cakes', 'Fast Food', 'Cafe'] }}
               />
             </Section>
-
-            <View style={styles.adBanner}>
-              <BannerAd
-                unitId={dashboardBannerUnitIdTwo}
-                size={BannerAdSize.FULL_BANNER}
-                requestOptions={{
-                  requestNonPersonalizedAdsOnly: true,
-                }}
-              />
-            </View>
-
+            {renderBanner(banners?.two)}
             <Section
               title="Transport"
               subTitle="Find Courier Service, Shuttle Service, CAB Service, Van Service and Internation Flight Services"

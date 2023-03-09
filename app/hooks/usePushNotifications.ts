@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Platform } from 'react-native';
+import { Alert, Linking, Platform } from 'react-native';
 import { useQueryClient } from '@tanstack/react-query';
 import {
   getSystemName,
@@ -13,6 +13,12 @@ import PushNotificationIOS, {
 import messaging, {
   FirebaseMessagingTypes,
 } from '@react-native-firebase/messaging';
+import {
+  checkNotifications,
+  NotificationsResponse,
+  requestNotifications,
+  RESULTS,
+} from 'react-native-permissions';
 
 import { navigateToLink, socket } from '@utils';
 import { useDeviceRegistration } from '../apis/mutations';
@@ -49,13 +55,42 @@ export default function usePushNotifications() {
 
   // request user permission
   useEffect(() => {
-    messaging()
-      .hasPermission()
-      .then((status) => {
-        if (status === messaging.AuthorizationStatus.NOT_DETERMINED) {
-          messaging().requestPermission();
-        }
+    if (Platform.OS === 'android') {
+      requestNotifications(['alert']).then(() => {
+        checkNotifications().then(({ status }: NotificationsResponse) => {
+          if (status === RESULTS.DENIED || status === RESULTS.BLOCKED) {
+            Alert.alert(
+              'Allow Notifications',
+              'Open Settings > Manage Notifications > Allow notifications from Explore BTK',
+              [
+                {
+                  text: 'Cancel',
+                  style: 'cancel',
+                },
+                {
+                  text: 'Open Settings',
+                  onPress: () => Linking.openSettings(),
+                },
+              ],
+              {
+                cancelable: false,
+              },
+            );
+          }
+        });
       });
+    } else {
+      messaging()
+        .hasPermission()
+        .then((status) => {
+          if (
+            status === messaging.AuthorizationStatus.NOT_DETERMINED ||
+            status === messaging.AuthorizationStatus.DENIED
+          ) {
+            messaging().requestPermission();
+          }
+        });
+    }
   });
 
   useEffect(() => {

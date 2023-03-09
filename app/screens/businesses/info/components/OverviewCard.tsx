@@ -11,12 +11,36 @@ import {
   BusinessPresentable,
   BusinessStatus,
 } from '@screens/businesses/models/BusinessPresentable';
+import { addDays, isWithinInterval, set } from 'date-fns';
 
 interface Props {
   onReviewsPress: (id: string) => void;
   business: BusinessPresentable;
   isPreview?: boolean;
 }
+
+//12 hours format to 24 hours and return hour
+const convertTime12to24 = (time12h: string) => {
+  const [time, modifier] = time12h.split(' ');
+  let [hour] = time.split(':');
+  if (hour === '12') {
+    return 0;
+  }
+  if (modifier.toLowerCase() === 'pm') {
+    return parseInt(hour, 10) + 12;
+  }
+  return parseInt(hour, 10);
+};
+
+const days = [
+  'Sunday',
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+];
 
 export default function OverviewCard({
   business,
@@ -27,75 +51,37 @@ export default function OverviewCard({
   const { colors } = useTheme();
   const { t } = useTranslation();
 
-  const isBusinessOpened = () => {
-    //Week Days
-    const days = [
-      'Sunday',
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-    ];
+  const businessTimeStatus = () => {
+    const today = new Date();
+    let currentDay = days[today.getDay()];
+    const todayOpenHours = business.openHours?.find(
+      (item) => item.day === currentDay,
+    );
 
-    //Current Date that gives us current Time also
-    let dt = new Date();
+    if (todayOpenHours && todayOpenHours.day === currentDay) {
+      let startTime = convertTime12to24(todayOpenHours.from);
+      let endTime = convertTime12to24(todayOpenHours.to);
 
-    //Current Day
-    let getCurrentDay = days[dt.getDay()];
+      const start = set(today, {
+        hours: startTime,
+        minutes: 0,
+        seconds: 0,
+        milliseconds: 0,
+      });
 
-    //Return Open if current day is available in open hours days
-    if (business?.openHours?.find((item: any) => item.day === getCurrentDay)) {
-      //12 hours to 24 hours converting function
-      const convertTime12to24 = (time12h: any) => {
-        const [time, modifier] = time12h.split(' ');
+      const end = set(endTime <= startTime ? addDays(today, 1) : today, {
+        hours: endTime,
+        minutes: 0,
+        seconds: 0,
+        milliseconds: 0,
+      });
 
-        let [hours, minutes] = time.split(':');
+      const inRange = isWithinInterval(today, {
+        start,
+        end,
+      });
 
-        if (hours === '12') {
-          hours = '00';
-        }
-
-        if (modifier === 'pm') {
-          hours = parseInt(hours, 10) + 12;
-        }
-        if (modifier === 'PM') {
-          hours = parseInt(hours, 10) + 12;
-        }
-
-        return `${hours}:${minutes}:00`;
-      };
-
-      //Get Data of current day from Open hours
-      let currentDayObject = business?.openHours.filter(
-        (obj: any) => obj.day === getCurrentDay,
-      );
-
-      let startTime = convertTime12to24(currentDayObject[0].from);
-      let endTime = convertTime12to24(currentDayObject[0].to);
-
-      let s = startTime.split(':');
-      let dt1 = new Date(
-        dt.getFullYear(),
-        dt.getMonth(),
-        dt.getDate(),
-        parseInt(s[0], 10),
-        parseInt(s[1], 10),
-        parseInt(s[2], 10),
-      );
-
-      let e = endTime.split(':');
-      let dt2 = new Date(
-        dt.getFullYear(),
-        dt.getMonth(),
-        dt.getDate(),
-        parseInt(e[0], 10),
-        parseInt(e[1], 10),
-        parseInt(e[2], 10),
-      );
-
-      if (dt >= dt1 && dt <= dt2) {
+      if (inRange) {
         return <Text style={{ color: BaseColor.greenColor }}>Opened</Text>;
       }
     }
@@ -182,7 +168,7 @@ export default function OverviewCard({
         <View>
           <View style={styles.contentStatus}>
             <Text caption2 medium>
-              {business?.openHours && isBusinessOpened()}
+              {business?.openHours && businessTimeStatus()}
             </Text>
             <View style={styles.dot} />
             <Text caption2 grayColor style={styles.category} numberOfLines={1}>
