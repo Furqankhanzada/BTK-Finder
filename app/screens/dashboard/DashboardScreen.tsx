@@ -238,7 +238,7 @@ function DashboardScreen({
                 }}
               />
             </Section>
-            <View style={styles.adBanner}>
+            <View>
               <BannerAd
                 unitId={dashboardBannerUnitIdOne}
                 size={BannerAdSize.FULL_BANNER}
@@ -478,9 +478,6 @@ const styles = StyleSheet.create({
   helplineButtonText: {
     marginLeft: 5,
     fontSize: 10,
-  },
-  adBanner: {
-    marginTop: 20,
   },
   serviceItem: {
     flex: 1,
