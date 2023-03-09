@@ -25,6 +25,12 @@ export default function useRemoteConfig(): RemoteConfig {
           about: JSON.parse(value._value),
         }));
       }
+      if (key === 'ads') {
+        setConfig((prevConfig) => ({
+          ...prevConfig,
+          ads: JSON.parse(value._value),
+        }));
+      }
     }
   };
 

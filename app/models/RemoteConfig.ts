@@ -26,7 +26,15 @@ interface About {
   disclaimer: string;
 }
 
+interface Ads {
+  dashboardBannerOne: boolean;
+  dashboardBannerTwo: boolean;
+  businessDetailInterstitialOne: boolean;
+  businessDetailInterstitialTwo: boolean;
+}
+
 export interface RemoteConfig {
   helplines: Helplines[];
   about?: About;
+  ads?: Ads;
 }
