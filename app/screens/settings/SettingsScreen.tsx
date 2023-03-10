@@ -178,17 +178,12 @@ export default function SettingsScreen(
               enableRTL={true}
             />
           </TouchableOpacity>
-          <View
-            style={[styles.profileItem, { borderBottomColor: colors.border }]}>
-            <Text body1>App Version</Text>
-            <Text body1 grayColor>
-              {DeviceInfo.getVersion()}
+          <View style={styles.appInfoContainer}>
+            <Text body2 grayColor>
+              App Version {DeviceInfo.getVersion()}
             </Text>
-          </View>
-          <View style={styles.profileItem}>
-            <Text body1>Build Number</Text>
-            <Text body1 grayColor>
-              {DeviceInfo.getBuildNumber()}
+            <Text body2 grayColor>
+              Build Number {DeviceInfo.getBuildNumber()}
             </Text>
           </View>
         </View>
@@ -252,6 +247,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 20,
     borderBottomWidth: 1,
+  },
+  appInfoContainer: {
+    marginTop: 15,
   },
   signoutButtonContainer: {
     paddingHorizontal: 20,
