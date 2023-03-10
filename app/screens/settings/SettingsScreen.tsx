@@ -178,23 +178,32 @@ export default function SettingsScreen(
               enableRTL={true}
             />
           </TouchableOpacity>
+          {isLogin && (
+            <TouchableOpacity
+              style={[styles.profileItem, styles.signoutItem]}
+              onPress={onLogOut}>
+              <Text body1 style={{ color: BaseColor.redColor }}>
+                Sign Out
+              </Text>
+              <Icon
+                name="sign-out-alt"
+                size={18}
+                color={BaseColor.redColor}
+                enableRTL={true}
+              />
+            </TouchableOpacity>
+          )}
           <View style={styles.appInfoContainer}>
-            <Text body2 grayColor>
+            <Text body2 medium grayColor>
               App Version {DeviceInfo.getVersion()}
             </Text>
-            <Text body2 grayColor>
+            <Text body2 medium grayColor>
               Build Number {DeviceInfo.getBuildNumber()}
             </Text>
           </View>
         </View>
       </ScrollView>
-      {isLogin ? (
-        <View style={styles.signoutButtonContainer}>
-          <Button full loading={signOutLoading} onPress={() => onLogOut()}>
-            Sign Out
-          </Button>
-        </View>
-      ) : (
+      {!isLogin && (
         <View style={styles.buttonsContainer}>
           <Button
             full
@@ -248,8 +257,11 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     borderBottomWidth: 1,
   },
+  signoutItem: {
+    borderBottomWidth: 0,
+  },
   appInfoContainer: {
-    marginTop: 15,
+    marginTop: 10,
   },
   signoutButtonContainer: {
     paddingHorizontal: 20,
