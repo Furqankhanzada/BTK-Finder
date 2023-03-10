@@ -7,12 +7,11 @@ import Swiper from 'react-native-swiper';
 import { SafeAreaView, Text, Button, Image } from '@components';
 import { BaseColor, BaseStyle, useTheme } from '@config';
 import * as Utils from '@utils';
-
-import { GlobalParamList } from 'navigation/models/GlobalParamList';
+import { AuthParamList } from 'navigation/models/AuthParamList';
 
 export default function WelcomeAuthScreen({
   navigation,
-}: StackScreenProps<GlobalParamList, 'WelcomeAuth'>) {
+}: StackScreenProps<AuthParamList, 'WelcomeAuth'>) {
   const [scrollEnabled, setScrollEnabled] = useState(true);
   const { colors } = useTheme();
   const { t } = useTranslation();
@@ -60,23 +59,14 @@ export default function WelcomeAuthScreen({
           <Button
             full
             style={styles.marginTop}
-            onPress={() =>
-              navigation.navigate('AuthStackNavigator', {
-                screen: 'SignIn',
-              })
-            }>
+            onPress={() => navigation.navigate('SignIn')}>
             {t('sign_in')}
           </Button>
           <View style={styles.contentActionBottom}>
             <Text style={styles.marginTop} body1 grayColor>
               OR
             </Text>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('AuthStackNavigator', {
-                  screen: 'SignUp',
-                })
-              }>
+            <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
               <Text body1 primaryColor>
                 {t('register')}
               </Text>
