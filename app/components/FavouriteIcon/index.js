@@ -15,14 +15,13 @@ import styles from './styles';
 import { trackEvent, EVENTS } from '../../userTracking';
 
 export default function FavouriteIcon(props) {
-  const { style, name, isFavorite, favoriteId, lastRoute, routeId, showText } =
-    props;
+  const { style, name, isFavorite, favoriteId, showText } = props;
   const navigation = useNavigation();
   const { mutate, isLoading } = useToggleFavorite();
   const isLogin = useSelector((state) => state.auth.isLogin);
 
-  const navigateToWalktrhough = (lastRoute, id) => {
-    navigation.navigate('Walkthrough', { lastRoute, id });
+  const navigateToLogin = () => {
+    navigation.navigate('AuthStackNavigator');
   };
 
   const onPressFavorite = (id) => {
@@ -41,7 +40,7 @@ export default function FavouriteIcon(props) {
         [
           {
             text: 'Login',
-            onPress: () => navigateToWalktrhough(lastRoute, routeId),
+            onPress: () => navigateToLogin(),
           },
           {
             text: 'Cancel',

@@ -49,7 +49,6 @@ export default function HorizontalBusinesses({
             }
             businessId={item?._id}
             // navigation={navigation}
-            // lastRoute="Home"
             status={item.status}
             onPress={() => onPress(item)}
             style={styles.item}

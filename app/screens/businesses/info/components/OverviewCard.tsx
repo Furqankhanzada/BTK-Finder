@@ -260,8 +260,6 @@ export default function OverviewCard({
             <FavouriteIcon
               name={business.name}
               style={styles.iconGirdLike}
-              lastRoute="BusinessDetailTabNavigator"
-              routeId={business?._id}
               isFavorite={
                 !!business.favorites?.find(
                   (favorite: any) => favorite.ownerId === user._id,

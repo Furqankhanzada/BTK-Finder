@@ -332,7 +332,6 @@ export default function BusinessesScreen(
                   }
                   businessId={item?._id}
                   navigation={navigation}
-                  lastRoute={route.params.category ? 'Category' : 'Place'}
                   onPress={() => navigateBusinessDetail(item)}
                 />
               )}
@@ -410,7 +409,6 @@ export default function BusinessesScreen(
                   }
                   businessId={item?._id}
                   navigation={navigation}
-                  lastRoute={route.params.category ? 'Category' : 'Place'}
                   style={{
                     marginBottom: 15,
                   }}
@@ -497,7 +495,6 @@ export default function BusinessesScreen(
                   }
                   businessId={item?._id}
                   navigation={navigation}
-                  lastRoute={route.params.category ? 'Category' : 'Place'}
                   style={{
                     marginLeft: 15,
                     marginBottom: 15,

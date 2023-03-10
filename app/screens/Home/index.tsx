@@ -391,7 +391,6 @@ export default function Home({ navigation }: any) {
                   )}
                   businessId={item?._id}
                   navigation={navigation}
-                  lastRoute="Home"
                   // status='Open Now'
                   onPress={() =>
                     navigateBusinessDetail(

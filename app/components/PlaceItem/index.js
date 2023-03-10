@@ -30,8 +30,6 @@ export default function PlaceItem(props) {
     isFavorite,
     onPressTag,
     businessId,
-    lastRoute,
-    routeId,
   } = props;
   /**
    * Display place item as block
@@ -48,8 +46,6 @@ export default function PlaceItem(props) {
           ) : null}
           <FavouriteIcon
             style={styles.iconLike}
-            lastRoute={lastRoute}
-            routeId={routeId}
             isFavorite={isFavorite}
             favoriteId={businessId}
           />
@@ -147,8 +143,6 @@ export default function PlaceItem(props) {
           <Image source={image} style={styles.listImage} />
           <FavouriteIcon
             style={styles.iconListLike}
-            lastRoute={lastRoute}
-            routeId={routeId}
             isFavorite={isFavorite}
             favoriteId={businessId}
           />
@@ -222,8 +216,6 @@ export default function PlaceItem(props) {
           {/*</Tag>*/}
           <FavouriteIcon
             style={styles.iconGirdLike}
-            lastRoute={lastRoute}
-            routeId={routeId}
             isFavorite={isFavorite}
             favoriteId={businessId}
           />

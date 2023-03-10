@@ -75,8 +75,6 @@ export default function Recommendations({ business, onPress }: Props) {
                 )
               }
               businessId={item?._id}
-              lastRoute="BusinessDetailTabNavigator"
-              routeId={business?._id}
               onPress={() => onPress(item._id)}
               style={styles.placeItemText}
             />
