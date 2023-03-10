@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import SplashScreen from 'react-native-splash-screen';
 
@@ -10,7 +10,6 @@ import { Icon } from '@components';
 import BusinessDetailNavigator from '@screens/businesses/BusinessDetailNavigator';
 
 import { setEditBusiness } from '../actions/business';
-import { LastRoutes, withAuthRedirection } from './hoc/withAuthRedirection';
 
 /* Bottom Screen */
 import Business from '@screens/AddBusiness';
@@ -78,6 +77,7 @@ function MainBottomTabNavigator() {
   const dispatch = useDispatch();
   const { colors } = useTheme();
   const font = useFont();
+  const isLogin = useSelector((state: any) => state.auth.isLogin);
 
   return (
     <MainBottomTab.Navigator
@@ -104,9 +104,7 @@ function MainBottomTabNavigator() {
       />
       <MainBottomTab.Screen
         name="Favourite"
-        component={withAuthRedirection(FavouriteScreen, {
-          lastRoute: LastRoutes.Favourite,
-        })}
+        component={isLogin ? FavouriteScreen : AuthStackNavigator}
         options={{
           title: 'Favourite',
           tabBarIcon: ({ color }) => {
@@ -116,9 +114,7 @@ function MainBottomTabNavigator() {
       />
       <MainBottomTab.Screen
         name="Business"
-        component={withAuthRedirection(Business, {
-          lastRoute: LastRoutes.Business,
-        })}
+        component={isLogin ? Business : AuthStackNavigator}
         options={{
           title: 'Add Business',
           tabBarIcon: ({ color }) => {
