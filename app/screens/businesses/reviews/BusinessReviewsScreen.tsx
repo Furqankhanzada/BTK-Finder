@@ -84,8 +84,10 @@ export default function Review(
     ],
   };
 
-  const navigateToWalktrhough = (lastRoute: keyof GlobalParamList, id: any) => {
-    navigation.navigate('Walkthrough', { lastRoute, id });
+  const navigateToWelcomeAuth = () => {
+    navigation.navigate('AuthStackNavigator', {
+      screen: 'WelcomeAuth',
+    });
   };
 
   const navigateToFeedback = (id: any) => {
@@ -118,8 +120,7 @@ export default function Review(
         [
           {
             text: 'Login',
-            onPress: () =>
-              navigateToWalktrhough('ReviewStack', route.params.businessId),
+            onPress: () => navigateToWelcomeAuth(),
           },
           {
             text: 'Cancel',
