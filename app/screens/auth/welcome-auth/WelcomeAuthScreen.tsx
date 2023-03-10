@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StackScreenProps } from '@react-navigation/stack';
 import { View, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
@@ -8,6 +8,7 @@ import { SafeAreaView, Text, Button, Image } from '@components';
 import { BaseColor, BaseStyle, useTheme } from '@config';
 import * as Utils from '@utils';
 import { AuthParamList } from 'navigation/models/AuthParamList';
+import { useSelector } from 'react-redux';
 
 export default function WelcomeAuthScreen({
   navigation,
@@ -15,6 +16,7 @@ export default function WelcomeAuthScreen({
   const [scrollEnabled, setScrollEnabled] = useState(true);
   const { colors } = useTheme();
   const { t } = useTranslation();
+  const isLogin = useSelector((state: any) => state.auth.isLogin);
 
   const slideshow = [
     { key: 1, image: require('@assets/images/banners/long-view.jpg') },
@@ -25,6 +27,13 @@ export default function WelcomeAuthScreen({
     },
     { key: 4, image: require('@assets/images/banners/main-towers.jpg') },
   ];
+
+  useEffect(() => {
+    if (isLogin) {
+      navigation.goBack();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLogin]);
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
