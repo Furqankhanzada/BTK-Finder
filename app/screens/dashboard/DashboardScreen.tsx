@@ -51,7 +51,6 @@ function DashboardScreen({
     deviceUniqueId: getUniqueId(),
     unreadCount: true,
   });
-  console.log('@remoteConfig.ads', remoteConfig.ads);
 
   const [banners, setBanners] = useState<BannersPresentable>();
 
@@ -244,7 +243,7 @@ function DashboardScreen({
                 }}
               />
             </Section>
-            {remoteConfig.ads?.dashboardBannerOne ? (
+            {remoteConfig.ads?.dashboardBannerOne === true ? (
               <View>
                 <BannerAd
                   unitId={dashboardBannerUnitIdOne}
@@ -254,7 +253,9 @@ function DashboardScreen({
                   }}
                 />
               </View>
-            ) : null}
+            ) : (
+              renderBanner(banners?.one)
+            )}
             <Section
               title="Restaurants"
               subTitle="Find Fast Food, Cakes, Pizza, Fries etc..."
@@ -271,7 +272,7 @@ function DashboardScreen({
                 params={{ tags: ['Cakes', 'Fast Food', 'Cafe'] }}
               />
             </Section>
-            {remoteConfig.ads?.dashboardBannerTwo ? (
+            {remoteConfig.ads?.dashboardBannerTwo === true ? (
               <View>
                 <BannerAd
                   unitId={dashboardBannerUnitIdTwo}
