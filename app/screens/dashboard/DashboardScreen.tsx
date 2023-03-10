@@ -243,7 +243,7 @@ function DashboardScreen({
                 }}
               />
             </Section>
-            {remoteConfig.ads?.dashboardBannerOne === true ? (
+            {remoteConfig.ads?.dashboardBannerOne ? (
               <View>
                 <BannerAd
                   unitId={dashboardBannerUnitIdOne}
@@ -272,7 +272,7 @@ function DashboardScreen({
                 params={{ tags: ['Cakes', 'Fast Food', 'Cafe'] }}
               />
             </Section>
-            {remoteConfig.ads?.dashboardBannerTwo === true ? (
+            {remoteConfig.ads?.dashboardBannerTwo ? (
               <View>
                 <BannerAd
                   unitId={dashboardBannerUnitIdTwo}
