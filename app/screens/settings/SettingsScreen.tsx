@@ -28,7 +28,6 @@ export default function SettingsScreen(
   const queryClient = useQueryClient();
 
   const isLogin = useSelector((state: any) => state.auth.isLogin);
-  const signOutLoading = useSelector((state: any) => state.auth.signOutLoading);
   const profileData = useSelector((state: any) => state.profile);
   const dispatch = useDispatch();
 
