@@ -3,7 +3,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
 import * as actionTypes from './actionTypes';
 import {
-  SIGNUP,
   LOGIN,
   EDIT_PROFILE,
   GET_PROFILE,
@@ -13,8 +12,6 @@ import {
   CHANGE_PASSWORD,
 } from '../constants';
 import {
-  REGISTER_API_ERROR,
-  REGISTER_API_SUCCESS,
   LOGIN_API_ERROR,
   LOGIN_API_SUCCESS,
   SIGNOUT,
@@ -52,25 +49,6 @@ export const authentication = (login, callback) => (dispatch) => {
       callback({ success: true });
     }
   }, 500);
-};
-
-export const register = (user, cb) => {
-  return (dispatch) => {
-    axios({
-      method: 'POST',
-      url: SIGNUP,
-      data: user,
-    })
-      .then((response) => {
-        dispatch({ type: REGISTER_API_SUCCESS, user: response.data });
-        cb && cb();
-      })
-      .catch((error) => {
-        dispatch({ type: REGISTER_API_ERROR, error });
-        cb && cb(error);
-        handleError(error);
-      });
-  };
 };
 
 export const login = (user, cb) => {
