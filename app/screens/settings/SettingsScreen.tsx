@@ -5,6 +5,8 @@ import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
 import { StackScreenProps } from '@react-navigation/stack';
 import DeviceInfo from 'react-native-device-info';
+import Clipboard from '@react-native-clipboard/clipboard';
+import Toast from 'react-native-simple-toast';
 
 import { AuthActions } from '@actions';
 import { BaseColor, BaseStyle, useTheme } from '@config';
@@ -47,6 +49,15 @@ export default function SettingsScreen(
         queryClient.invalidateQueries(['notifications-count']);
       }),
     );
+  };
+
+  const CopyToClipboard = () => {
+    Clipboard.setString(
+      `UserId ${
+        profileData._id
+      }\nApp Version ${DeviceInfo.getVersion()}\nBuild Number ${DeviceInfo.getBuildNumber()}`,
+    );
+    Toast.show('Information copied to clipboard');
   };
 
   return (
@@ -197,7 +208,9 @@ export default function SettingsScreen(
               />
             </TouchableOpacity>
           )}
-          <View style={styles.appInfoContainer}>
+          <TouchableOpacity
+            style={styles.appInfoContainer}
+            onLongPress={CopyToClipboard}>
             {isLogin && profileData?._id ? (
               <Text body2 bold grayColor>
                 UserId {profileData._id}
@@ -209,7 +222,7 @@ export default function SettingsScreen(
             <Text body2 bold grayColor>
               Build Number {DeviceInfo.getBuildNumber()}
             </Text>
-          </View>
+          </TouchableOpacity>
         </View>
       </ScrollView>
       {!isLogin && (
