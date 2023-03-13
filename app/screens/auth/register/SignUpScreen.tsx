@@ -7,21 +7,20 @@ import {
   TextInput as TextInputOriginal,
 } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
-import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import TextInputMask from 'react-native-text-input-mask';
-import Toast from 'react-native-toast-message';
 
 import { BaseStyle, BaseColor, useTheme } from '@config';
 import { Header, SafeAreaView, Icon, Button, TextInput } from '@components';
 
-import { register } from '../../../actions/auth';
 import { AuthParamList } from '../../../navigation/models/AuthParamList';
+import { useRegisterAcctount } from '../apis/mutations';
 
 export default function SignUpScreen(
   props: StackScreenProps<AuthParamList, 'SignUp'>,
 ) {
   const { navigation } = props;
+  const { mutate, isLoading } = useRegisterAcctount();
 
   const nameRef = useRef<TextInputOriginal>(null);
   const emailRef = useRef<TextInputOriginal>(null);
@@ -29,13 +28,11 @@ export default function SignUpScreen(
 
   const { colors } = useTheme();
   const { t } = useTranslation();
-  const dispatch = useDispatch();
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState({
     name: true,
     email: true,
@@ -43,10 +40,6 @@ export default function SignUpScreen(
     password: true,
   });
 
-  /**
-   * call when action signup
-   *
-   */
   const onSignUp = () => {
     if (name === '' || email === '' || phone === '' || password === '') {
       setSuccess({
@@ -57,32 +50,22 @@ export default function SignUpScreen(
         password: password !== '',
       });
     } else {
-      setLoading(true);
-    }
-
-    dispatch(
-      register(
+      mutate(
         { name, email, phone: phone.replace(/\s+/g, ''), password },
-        (error: Error) => {
-          setLoading(false);
-          if (!error) {
+        {
+          onSuccess() {
             navigation.goBack();
-            Toast.show({
-              type: 'success',
-              topOffset: 55,
-              text1: 'Account Registered',
-              text2: 'You have successfully registered an account, Login Now!',
-            });
-          }
+          },
         },
-      ),
-    );
+      );
+    }
   };
 
   const offsetKeyboard = Platform.select({
     ios: 0,
     android: 20,
   });
+
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
@@ -113,7 +96,9 @@ export default function SignUpScreen(
             ]}
             onChangeText={(text) => setPhone(text)}
             placeholder="+92 300 1234 567"
-            placeholderTextColor={BaseColor.grayColor}
+            placeholderTextColor={
+              success.phone ? BaseColor.grayColor : colors.primary
+            }
             keyboardType="numeric"
             value={phone}
             autoCapitalize="none"
@@ -158,7 +143,7 @@ export default function SignUpScreen(
           <Button
             full
             style={styles.button}
-            loading={loading}
+            loading={isLoading}
             onPress={() => onSignUp()}>
             {t('sign_up')}
           </Button>
