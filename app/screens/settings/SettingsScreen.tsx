@@ -198,10 +198,15 @@ export default function SettingsScreen(
             </TouchableOpacity>
           )}
           <View style={styles.appInfoContainer}>
-            <Text body2 medium grayColor>
+            {isLogin && profileData?._id ? (
+              <Text body2 bold grayColor>
+                UserId {profileData._id}
+              </Text>
+            ) : null}
+            <Text body2 bold grayColor>
               App Version {DeviceInfo.getVersion()}
             </Text>
-            <Text body2 medium grayColor>
+            <Text body2 bold grayColor>
               Build Number {DeviceInfo.getBuildNumber()}
             </Text>
           </View>
