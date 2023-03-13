@@ -165,7 +165,12 @@ export default function SettingsScreen(
             />
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.profileItem, { borderBottomColor: colors.border }]}
+            style={[
+              styles.profileItem,
+              isLogin
+                ? { borderBottomColor: colors.border }
+                : styles.profileItemBorderLess,
+            ]}
             onPress={() => {
               navigation.navigate('Appearance');
             }}>
@@ -255,6 +260,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 20,
     borderBottomWidth: 1,
+  },
+  profileItemBorderLess: {
+    borderBottomWidth: 0,
   },
   signoutItem: {
     borderBottomWidth: 0,
