@@ -29,6 +29,8 @@ interface About {
 interface Ads {
   dashboardBannerOne: boolean;
   dashboardBannerTwo: boolean;
+  dashboardCustomAdBannerOne: boolean;
+  dashboardCustomAdBannerTwo: boolean;
   businessDetailInterstitialOne: boolean;
   businessDetailInterstitialTwo: boolean;
 }
