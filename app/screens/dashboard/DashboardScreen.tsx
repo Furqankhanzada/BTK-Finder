@@ -253,9 +253,10 @@ function DashboardScreen({
                   }}
                 />
               </View>
-            ) : (
-              renderBanner(banners?.one)
-            )}
+            ) : null}
+            {remoteConfig.ads?.dashboardCustomAdBannerOne
+              ? renderBanner(banners?.one)
+              : null}
             <Section
               title="Restaurants"
               subTitle="Find Fast Food, Cakes, Pizza, Fries etc..."
@@ -282,9 +283,10 @@ function DashboardScreen({
                   }}
                 />
               </View>
-            ) : (
-              renderBanner(banners?.two)
-            )}
+            ) : null}
+            {remoteConfig.ads?.dashboardCustomAdBannerTwo
+              ? renderBanner(banners?.two)
+              : null}
             <Section
               title="Transport"
               subTitle="Find Courier Service, Shuttle Service, CAB Service, Van Service and Internation Flight Services"
