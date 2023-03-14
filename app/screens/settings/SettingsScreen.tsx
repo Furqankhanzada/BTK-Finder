@@ -1,14 +1,13 @@
 import React from 'react';
 import { View, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useQueryClient } from '@tanstack/react-query';
 import { StackScreenProps } from '@react-navigation/stack';
 import DeviceInfo from 'react-native-device-info';
 import Clipboard from '@react-native-clipboard/clipboard';
 import Toast from 'react-native-simple-toast';
 
-import { AuthActions } from '@actions';
 import { BaseColor, BaseStyle, useTheme } from '@config';
 import {
   Header,
@@ -20,6 +19,11 @@ import {
 } from '@components';
 
 import { GlobalParamList } from 'navigation/models/GlobalParamList';
+import { useGetProfile } from './profile/queries/queries';
+import useAuthStore, {
+  AuthStoreActions,
+  AuthStoreTypes,
+} from '@screens/auth/store/Store';
 
 export default function SettingsScreen(
   props: StackScreenProps<GlobalParamList, 'Settings'>,
@@ -29,9 +33,9 @@ export default function SettingsScreen(
   const { t } = useTranslation();
   const queryClient = useQueryClient();
 
-  const isLogin = useSelector((state: any) => state.auth.isLogin);
-  const profileData = useSelector((state: any) => state.profile);
-  const dispatch = useDispatch();
+  const isLogin = useAuthStore((state: AuthStoreTypes) => state.isLogin);
+  const setLogin = useAuthStore((state: AuthStoreActions) => state.setLogin);
+  const { data: profileData } = useGetProfile();
 
   const navigateToMyBusinesses = (id: string) => {
     navigation.navigate('MyBusinesses', { id });
@@ -43,18 +47,16 @@ export default function SettingsScreen(
    * @date 2019-08-03
    */
   const onLogOut = () => {
-    dispatch(
-      AuthActions.authentication(false, () => {
-        queryClient.invalidateQueries(['notifications']);
-        queryClient.invalidateQueries(['notifications-count']);
-      }),
-    );
+    setLogin(false);
+    AsyncStorage.removeItem('access_token');
+    queryClient.invalidateQueries(['notifications']);
+    queryClient.invalidateQueries(['notifications-count']);
   };
 
   const CopyToClipboard = () => {
     Clipboard.setString(
       `UserId ${
-        profileData._id
+        profileData?._id
       }\nApp Version ${DeviceInfo.getVersion()}\nBuild Number ${DeviceInfo.getBuildNumber()}`,
     );
     Toast.show('Information copied to clipboard');
@@ -65,7 +67,7 @@ export default function SettingsScreen(
       <Header title="Settings" />
       <ScrollView>
         <View style={styles.contain}>
-          {isLogin ? (
+          {isLogin && profileData ? (
             <View>
               <ProfileDetail
                 image={
