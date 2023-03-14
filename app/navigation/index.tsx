@@ -6,7 +6,8 @@ import { useDarkMode } from 'react-native-dynamic';
 import { useTheme, BaseSetting } from '@config';
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {
   usePushNotifications,
@@ -21,10 +22,10 @@ import ChooseItems from '@screens/ChooseItems';
 import SearchHistory from '@screens/SearchHistory';
 import SelectDarkOption from '@screens/settings/appearance/components/SelectDarkOption';
 import SelectFontOption from '@screens/settings/appearance/components/SelectFontOption';
+import useAuthStore, { AuthStoreActions } from '@screens/auth/store/Store';
 
 import { navigationRef, isReadyRef } from '../services/NavigationService';
 import { trackScreenView } from '../userTracking';
-import { setIsLogin } from '../actions/auth';
 import { RootStackParamList } from './models/RootStackParamList';
 import Main from './main';
 import { linkingConfig } from './deep-linking/LinkingConfig';
@@ -41,7 +42,7 @@ export default function Navigator() {
   // Firebase remote config
   useRemoteConfig();
 
-  const dispatch = useDispatch();
+  const setLogin = useAuthStore((state: AuthStoreActions) => state.setLogin);
   const storeLanguage = useSelector((state: any) => state.application.language);
   const { theme, colors } = useTheme();
   const isDarkMode = useDarkMode();
@@ -72,8 +73,14 @@ export default function Navigator() {
   }, []);
 
   useEffect(() => {
-    dispatch(setIsLogin());
-  }, [dispatch]);
+    const getToken = async () => {
+      const token = AsyncStorage.getItem('access_token');
+      if (await token) {
+        setLogin(true);
+      }
+    };
+    getToken();
+  }, [setLogin]);
 
   return (
     <NavigationContainer
