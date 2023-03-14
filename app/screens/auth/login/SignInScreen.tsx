@@ -1,5 +1,4 @@
 import React, { useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import {
   View,
   TouchableOpacity,
@@ -28,9 +27,9 @@ import {
   TextInput,
 } from '@components';
 
-import { login } from '../../../actions/auth';
 import { StackScreenProps } from '@react-navigation/stack';
 import { AuthParamList } from '../../../navigation/models/AuthParamList';
+import { useLogin } from '../apis/mutations';
 
 export default function SignInScreen(
   props: StackScreenProps<AuthParamList, 'SignIn'>,
@@ -38,14 +37,13 @@ export default function SignInScreen(
   const { navigation } = props;
   const { colors } = useTheme();
   const { t } = useTranslation();
-  const dispatch = useDispatch();
   const queryClient = useQueryClient();
   const passwordRef = useRef<TextInputOriginal>(null);
 
   const { mutate: registerDevice } = useDeviceRegistration();
+  const { mutate: login, isLoading } = useLogin();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState({ username: true, password: true });
 
   /**
@@ -60,24 +58,26 @@ export default function SignInScreen(
         password: false,
       });
     } else {
-      setLoading(true);
-      dispatch(
-        login({ username, password }, async (error) => {
-          setLoading(false);
-          if (!error) {
-            const fcmToken = await messaging().getToken();
-            registerDevice({
-              deviceUniqueId: getUniqueId(),
-              fcmToken,
-              os: getSystemName(),
-              osVersion: getSystemVersion(),
-            });
-
-            navigation.goBack();
-            queryClient.invalidateQueries(['notifications']);
-            queryClient.invalidateQueries(['notifications-count']);
-          }
-        }),
+      login(
+        { username, password },
+        {
+          async onSuccess(response) {
+            console.log('@response', response);
+            if (response.access_token) {
+              const fcmToken = await messaging().getToken();
+              registerDevice({
+                deviceUniqueId: getUniqueId(),
+                fcmToken,
+                os: getSystemName(),
+                osVersion: getSystemVersion(),
+              });
+              navigation.goBack();
+              queryClient.invalidateQueries(['profile']);
+              queryClient.invalidateQueries(['notifications']);
+              queryClient.invalidateQueries(['notifications-count']);
+            }
+          },
+        },
       );
     }
   };
@@ -141,17 +141,15 @@ export default function SignInScreen(
             secureTextEntry={true}
             success={success.password}
             value={password}
-            onSubmitEditing={() => onLogin()}
+            onSubmitEditing={onLogin}
             returnKeyType="done"
             blurOnSubmit={true}
           />
           <Button
             style={styles.button}
             full
-            loading={loading}
-            onPress={() => {
-              onLogin();
-            }}>
+            loading={isLoading}
+            onPress={onLogin}>
             {t('sign_in')}
           </Button>
           <TouchableOpacity
