@@ -27,7 +27,6 @@ import {
 import { BaseStyle, BaseColor, useTheme } from '@config';
 import { useAlerts } from '@hooks';
 import { StackScreenProps } from '@react-navigation/stack';
-import { AuthActions } from '@actions';
 
 import { IconName } from '../../../../contexts/alerts-v2/models/Icon';
 import {
@@ -72,7 +71,6 @@ export default function EditProfileScreen(
 
     if (response?.success) {
       //TODO: Will fix once we remove the redux from project.
-      dispatch(AuthActions.authentication(false));
 
       //TODO: See how to redirect to Dashboard
       /*
