@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useState } from 'react';
 import { FlatList, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { firebase } from '@react-native-firebase/database';
 import { getUniqueId } from 'react-native-device-info';
 import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
@@ -27,7 +27,6 @@ import NotificationIcon from './components/NotificationIcon';
 import { EVENTS, setUser, trackEvent } from '../../userTracking';
 import { GlobalParamList } from '../../navigation/models/GlobalParamList';
 import { MainStackParamList } from '../../navigation/models/MainStackParamList';
-import { getProfile } from '../../actions/auth';
 import {
   dashboardBannerUnitIdOne,
   dashboardBannerUnitIdTwo,
@@ -43,7 +42,6 @@ function DashboardScreen({
   navigation,
 }: StackScreenProps<GlobalParamList, 'Dashboard'>) {
   const { colors } = useTheme();
-  const dispatch = useDispatch();
   const remoteConfig = useRemoteConfig();
   const isLogin = useSelector((state: any) => state.auth.isLogin);
   const profileData = useSelector((state: any) => state.profile);
@@ -72,12 +70,6 @@ function DashboardScreen({
       }
     }
   }, [isLogin, profileData, profileData?._id]);
-
-  useEffect(() => {
-    if (isLogin) {
-      dispatch(getProfile());
-    }
-  }, [dispatch, isLogin]);
 
   const onPressHelpLine = () => {
     navigation.navigate('HelpLine');

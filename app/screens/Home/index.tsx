@@ -30,7 +30,6 @@ import CustomSectionList from './CustomSectionList';
 import { getCategories } from '../../actions/category';
 import { getBusinesses } from '../../actions/business';
 import { getFavoriteBusinesses } from '../../actions/favorites';
-import { getProfile } from '../../actions/auth';
 import useLocation from '../../hooks/useLocation';
 import { trackEvent, EVENTS, setUser } from '../../userTracking';
 
@@ -112,7 +111,6 @@ export default function Home({ navigation }: any) {
 
   useEffect(() => {
     if (isLogin) {
-      dispatch(getProfile());
       dispatch(
         getFavoriteBusinesses({
           favorite: true,
