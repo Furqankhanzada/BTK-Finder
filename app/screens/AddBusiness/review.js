@@ -1,5 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
 import { useFocusEffect } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 import {
@@ -8,12 +9,14 @@ import {
   Loading,
   FloatingButton,
 } from '@components';
+import { BaseStyle } from '@config';
+import { useGetProfile } from '@screens/settings/profile/queries/queries';
+
 import {
   createBusiness,
   getMyBusinesses,
   updateBusiness,
 } from '../../actions/business';
-import { BaseStyle } from '@config';
 
 export default function FinalReview({ navigation }) {
   const dispatch = useDispatch();
@@ -35,7 +38,7 @@ export default function FinalReview({ navigation }) {
   const businessFormData = stateProps?.editBusiness
     ? stateProps?.editBusinessData
     : stateProps?.businessFormData;
-  const profileData = useSelector((state) => state.profile);
+  const { data: profileData } = useGetProfile();
 
   useFocusEffect(
     React.useCallback(() => {

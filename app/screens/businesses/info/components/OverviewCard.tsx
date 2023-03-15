@@ -1,17 +1,17 @@
+import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { addDays, isWithinInterval, set } from 'date-fns';
+import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome';
+import NumberFormat from 'react-number-format';
+
 import { FavouriteIcon, StarRating, Tag, Text } from '@components';
 import { BaseColor, useTheme } from '@config';
-import NumberFormat from 'react-number-format';
-import React from 'react';
-import { useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
-import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome';
-
 import {
   BusinessPresentable,
   BusinessStatus,
 } from '@screens/businesses/models/BusinessPresentable';
-import { addDays, isWithinInterval, set } from 'date-fns';
+import { useGetProfile } from '@screens/settings/profile/queries/queries';
 
 interface Props {
   onReviewsPress: (id: string) => void;
@@ -47,7 +47,7 @@ export default function OverviewCard({
   isPreview = false,
   onReviewsPress,
 }: Props) {
-  const user = useSelector((state: any) => state.profile);
+  const { data: user } = useGetProfile();
   const { colors } = useTheme();
   const { t } = useTranslation();
 
@@ -262,7 +262,7 @@ export default function OverviewCard({
               style={styles.iconGirdLike}
               isFavorite={
                 !!business.favorites?.find(
-                  (favorite: any) => favorite.ownerId === user._id,
+                  (favorite: any) => favorite.ownerId === user?._id,
                 )
               }
               favoriteId={business?._id}

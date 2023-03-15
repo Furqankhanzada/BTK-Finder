@@ -10,7 +10,6 @@ import {
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import Carousel from 'react-native-snap-carousel';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
 import { StackScreenProps } from '@react-navigation/stack';
 
 import { BaseStyle, BaseColor, useTheme } from '@config';
@@ -19,6 +18,7 @@ import {
   BusinessPresentable,
   Favorite,
 } from '@screens/businesses/models/BusinessPresentable';
+import { useGetProfile } from '@screens/settings/profile/queries/queries';
 import * as Utils from '@utils';
 import {
   Header,
@@ -60,7 +60,7 @@ export default function BusinessesScreen(
   const [isSortLocation, setSortLocation] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
 
-  const user = useSelector((state: any) => state.profile);
+  const { data: user } = useGetProfile();
   const { title, ...restParams } = route.params;
 
   const {
@@ -327,7 +327,7 @@ export default function BusinessesScreen(
                   numReviews={item?.reviews?.length}
                   isFavorite={
                     !!item?.favorites?.find(
-                      (favorite: Favorite) => favorite.ownerId === user._id,
+                      (favorite: Favorite) => favorite.ownerId === user?._id,
                     )
                   }
                   businessId={item?._id}
@@ -404,7 +404,7 @@ export default function BusinessesScreen(
                   numReviews={item?.reviews?.length}
                   isFavorite={
                     !!item?.favorites?.find(
-                      (favorite: Favorite) => favorite.ownerId === user._id,
+                      (favorite: Favorite) => favorite.ownerId === user?._id,
                     )
                   }
                   businessId={item?._id}
@@ -490,7 +490,7 @@ export default function BusinessesScreen(
                   numReviews={item?.reviews.length}
                   isFavorite={
                     !!item?.favorites?.find(
-                      (favorite: Favorite) => favorite.ownerId === user._id,
+                      (favorite: Favorite) => favorite.ownerId === user?._id,
                     )
                   }
                   businessId={item?._id}

@@ -1,13 +1,13 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
 
 import { CardList, PlaceItem } from '@components';
 import CustomSectionList from '@screens/Home/CustomSectionList';
 import { useBusinesses } from '@screens/businesses/queries/queries';
 import { BusinessPresentable } from '@screens/businesses/models/BusinessPresentable';
 import { BusinessesQueryKeysWithFav } from '@screens/businesses/models/BusinessesQueryKeys';
+import { useGetProfile } from '@screens/settings/profile/queries/queries';
 
 interface Props {
   onPress: (id: string) => void;
@@ -16,7 +16,7 @@ interface Props {
 
 export default function Recommendations({ business, onPress }: Props) {
   const { t } = useTranslation();
-  const user = useSelector((state: any) => state.profile);
+  const { data: user } = useGetProfile();
   // Recent Businesses
   const { isLoading: isRecentLoading, data: recentBusinesses } = useBusinesses(
     [BusinessesQueryKeysWithFav.recentBusinesses],
@@ -71,7 +71,7 @@ export default function Recommendations({ business, onPress }: Props) {
               rate={item?.averageRatings || '0.0'}
               isFavorite={
                 !!item?.favorites?.find(
-                  (favorite: any) => favorite.ownerId === user._id,
+                  (favorite: any) => favorite.ownerId === user?._id,
                 )
               }
               businessId={item?._id}

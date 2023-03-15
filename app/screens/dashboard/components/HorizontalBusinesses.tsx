@@ -8,7 +8,7 @@ import {
   Favorite,
 } from '@screens/businesses/models/BusinessPresentable';
 import { BusinessParams } from '@screens/businesses/models/BusinessParams';
-import { useSelector } from 'react-redux';
+import { useGetProfile } from '@screens/settings/profile/queries/queries';
 import { HorizontalBusinessPlaceholder } from './DashboardPlaceholders';
 
 interface Props {
@@ -22,7 +22,7 @@ export default function HorizontalBusinesses({
   params,
   onPress,
 }: Props) {
-  const user = useSelector((state: any) => state.profile);
+  const { data: user } = useGetProfile();
   const { data: businesses, isLoading } = useBusinesses(queryKey, params);
 
   return isLoading ? (
@@ -44,7 +44,7 @@ export default function HorizontalBusinesses({
             rate={item?.averageRatings || 0.0}
             isFavorite={
               !!item?.favorites?.find(
-                (favorite: Favorite) => favorite.ownerId === user._id,
+                (favorite: Favorite) => favorite.ownerId === user?._id,
               )
             }
             businessId={item?._id}

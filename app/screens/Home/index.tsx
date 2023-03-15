@@ -23,6 +23,8 @@ import {
   PlaceItem,
 } from '@components';
 import { BaseColor, useTheme, BaseStyle } from '@config';
+import useAuthStore, { AuthStoreTypes } from '@screens/auth/store/Store';
+import { useGetProfile } from '@screens/settings/profile/queries/queries';
 
 import styles from './styles';
 import FeaturedCategoryPlaceholderComponent from '../../components/Placeholders/featuredCategories';
@@ -50,8 +52,8 @@ export default function Home({ navigation }: any) {
     trackEvent(EVENTS.HELPLINE_SCREEN_VISITED);
   };
 
-  const isLogin = useSelector((state: any) => state.auth.isLogin);
-  const profileData = useSelector((state: any) => state.profile);
+  const isLogin = useAuthStore((state: AuthStoreTypes) => state.isLogin);
+  const { data: profileData } = useGetProfile();
   const [loading, setLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const deltaY = new Animated.Value(0);

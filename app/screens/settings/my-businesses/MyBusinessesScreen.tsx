@@ -23,6 +23,7 @@ import {
 import { useBusinessesInfinite } from '../../businesses/queries/queries';
 import { getSingleBusiness } from '../../../actions/business';
 import { SettingsParamList } from '../../../navigation/models/SettingsParamList';
+import { useGetProfile } from '../profile/queries/queries';
 
 export default function MyBusinessesScreen(
   props: StackScreenProps<SettingsParamList, 'MyBusinesses'>,
@@ -34,7 +35,7 @@ export default function MyBusinessesScreen(
   const { colors } = useTheme();
 
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
-  const user = useSelector((state: any) => state.profile);
+  const { data: user } = useGetProfile();
 
   const {
     data,
@@ -48,7 +49,7 @@ export default function MyBusinessesScreen(
     skip: 0,
     recent: true,
     fields: 'name, thumbnail, category, averageRatings',
-    ownerId: user._id,
+    ownerId: user?._id,
   });
 
   const myBusinesses = data?.pages.map((businesses) => businesses).flat();

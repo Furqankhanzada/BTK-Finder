@@ -1,7 +1,6 @@
 import React, { memo, useEffect, useState } from 'react';
 import { FlatList, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
-import { useSelector } from 'react-redux';
 import { firebase } from '@react-native-firebase/database';
 import { getUniqueId } from 'react-native-device-info';
 import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
@@ -22,6 +21,8 @@ import {
   BannersPresentable,
 } from '@screens/dashboard/models/BannersPresentable';
 import { useNotifications } from '@screens/notifications/queries/queries';
+import useAuthStore, { AuthStoreTypes } from '@screens/auth/store/Store';
+import { useGetProfile } from '@screens/settings/profile/queries/queries';
 
 import NotificationIcon from './components/NotificationIcon';
 import { EVENTS, setUser, trackEvent } from '../../userTracking';
@@ -43,8 +44,8 @@ function DashboardScreen({
 }: StackScreenProps<GlobalParamList, 'Dashboard'>) {
   const { colors } = useTheme();
   const remoteConfig = useRemoteConfig();
-  const isLogin = useSelector((state: any) => state.auth.isLogin);
-  const profileData = useSelector((state: any) => state.profile);
+  const isLogin = useAuthStore((state: AuthStoreTypes) => state.isLogin);
+  const { data: profileData } = useGetProfile();
   const { data: notifications } = useNotifications(['notifications-count'], {
     deviceUniqueId: getUniqueId(),
     unreadCount: true,

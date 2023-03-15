@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { handleError } from '@utils';
 import Toast from 'react-native-toast-message';
-import { useSelector } from 'react-redux';
 
 import {
   BusinessPresentable,
@@ -9,6 +8,7 @@ import {
 } from '@screens/businesses/models/BusinessPresentable';
 import { useDynamicLinks } from '@hooks';
 import { toggleFavoritesInCache } from '@screens/businesses/helpers/toggleFavoritesInCache';
+import { useGetProfile } from '@screens/settings/profile/queries/queries';
 
 import axiosApiInstance from '../../../interceptor/axios-interceptor';
 import { BUSINESSES_API } from '../../../constants';
@@ -27,7 +27,7 @@ export type AddReviewPayload = Pick<Review, 'title' | 'description' | 'rating'>;
 
 export const useToggleFavorite = () => {
   const queryClient = useQueryClient();
-  const user = useSelector((state: any) => state.profile);
+  const { data: user } = useGetProfile();
 
   return useMutation<BusinessPresentable, Error, FavoritesMutationVar>(
     ({ businessId, type }) => {
@@ -42,7 +42,9 @@ export const useToggleFavorite = () => {
     },
     {
       onSuccess: (response, variables) => {
-        toggleFavoritesInCache(queryClient, variables, user._id, response);
+        if (user?._id) {
+          toggleFavoritesInCache(queryClient, variables, user?._id, response);
+        }
       },
     },
   );

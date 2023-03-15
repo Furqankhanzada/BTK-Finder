@@ -22,6 +22,7 @@ import {
   Loading,
   Button,
 } from '@components';
+import { useGetProfile } from '@screens/settings/profile/queries/queries';
 
 import { ReviewStackParamList } from '../../../navigation/models/BusinessDetailBottomTabParamList';
 import { AddReviewPayload, useAddReview } from '../queries/mutations';
@@ -32,7 +33,7 @@ export default function AddReviewScreen(
   const { navigation, route } = props;
   const { colors } = useTheme();
   const { t } = useTranslation();
-  const profileData = useSelector((state: any) => state.profile);
+  const { data: profileData } = useGetProfile();
   const stateProps = useSelector(({ businesses }: any) => businesses);
   const { createReviewLoading } = stateProps;
 
@@ -81,7 +82,7 @@ export default function AddReviewScreen(
         <ScrollView contentContainerStyle={styles.contentContainer}>
           <Image
             source={
-              profileData.avatar
+              profileData?.avatar
                 ? { uri: profileData.avatar }
                 : require('@assets/images/default-avatar.png')
             }

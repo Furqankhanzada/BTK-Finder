@@ -8,7 +8,7 @@ import { SafeAreaView, Text, Button, Image } from '@components';
 import { BaseColor, BaseStyle, useTheme } from '@config';
 import * as Utils from '@utils';
 import { AuthParamList } from 'navigation/models/AuthParamList';
-import { useSelector } from 'react-redux';
+import useAuthStore, { AuthStoreTypes } from '../store/Store';
 
 export default function WelcomeAuthScreen({
   navigation,
@@ -16,7 +16,7 @@ export default function WelcomeAuthScreen({
   const [scrollEnabled, setScrollEnabled] = useState(true);
   const { colors } = useTheme();
   const { t } = useTranslation();
-  const isLogin = useSelector((state: any) => state.auth.isLogin);
+  const isLogin = useAuthStore((state: AuthStoreTypes) => state.isLogin);
 
   const slideshow = [
     { key: 1, image: require('@assets/images/banners/long-view.jpg') },

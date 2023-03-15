@@ -1,9 +1,9 @@
 import React from 'react';
 import { ActivityIndicator, Alert, TouchableOpacity, View } from 'react-native';
-import { useSelector } from 'react-redux';
 import Icon2 from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 
+import useAuthStore from '@screens/auth/store/Store';
 import { BaseColor } from '@config';
 import { Icon, Text } from '@components';
 import {
@@ -18,7 +18,7 @@ export default function FavouriteIcon(props) {
   const { style, name, isFavorite, favoriteId, showText } = props;
   const navigation = useNavigation();
   const { mutate, isLoading } = useToggleFavorite();
-  const isLogin = useSelector((state) => state.auth.isLogin);
+  const isLogin = useAuthStore((state) => state.isLogin);
 
   const navigateToLogin = () => {
     navigation.navigate('AuthStackNavigator');

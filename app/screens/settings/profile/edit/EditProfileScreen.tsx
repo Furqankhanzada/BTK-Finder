@@ -9,7 +9,7 @@ import {
   TextInput as TextInputOriginal,
   Keyboard,
 } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import TextInputMask from 'react-native-text-input-mask';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -37,6 +37,7 @@ import {
 } from '../queries/mutations';
 import { EDIT_PROFILE_API_SUCCESS } from '../../../../constants/auth';
 import { SettingsParamList } from '../../../../navigation/models/SettingsParamList';
+import { useGetProfile } from '../queries/queries';
 import AccountInfoAlertContent from './components/AccountInfoAlertContent';
 
 export default function EditProfileScreen(
@@ -53,15 +54,15 @@ export default function EditProfileScreen(
   const { mutate: uploadProfileImage, isLoading: isUploadProfileLoading } =
     useUploadProfileImage();
 
-  const profileData = useSelector((state: any) => state.profile);
+  const { data: profileData } = useGetProfile();
 
   const nameRef = useRef<TextInputOriginal>(null);
   const emailRef = useRef<TextInputOriginal>(null);
   const [user, setUser] = useState<EditProfilePayload>({
-    _id: profileData._id,
-    name: profileData.name,
-    email: profileData.email,
-    phone: profileData.phone,
+    _id: profileData?._id,
+    name: profileData?.name,
+    email: profileData?.email,
+    phone: profileData?.phone,
     avatar: profileData?.avatar,
   });
   const [imageUri, setImageUri] = useState('');

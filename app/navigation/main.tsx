@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import SplashScreen from 'react-native-splash-screen';
 
@@ -32,6 +32,7 @@ import { SettingsStackNavigator } from '@screens/settings/navigation/SettingsSta
 import { MainStackParamList } from './models/MainStackParamList';
 import { MainBottomTabParamList } from './models/MainBottomTabParamList';
 import { AuthStackNavigator } from '@screens/auth/navigation/AuthStack';
+import useAuthStore, { AuthStoreTypes } from '@screens/auth/store/Store';
 
 const MainStack = createStackNavigator<MainStackParamList>();
 const MainBottomTab = createBottomTabNavigator<MainBottomTabParamList>();
@@ -77,7 +78,7 @@ function MainBottomTabNavigator() {
   const dispatch = useDispatch();
   const { colors } = useTheme();
   const font = useFont();
-  const isLogin = useSelector((state: any) => state.auth.isLogin);
+  const isLogin = useAuthStore((state: AuthStoreTypes) => state.isLogin);
 
   return (
     <MainBottomTab.Navigator
