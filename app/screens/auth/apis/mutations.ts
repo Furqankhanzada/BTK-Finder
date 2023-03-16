@@ -5,6 +5,7 @@ import { useMutation } from '@tanstack/react-query';
 import { handleError } from '@utils';
 import { useAlerts } from '@hooks';
 import { BaseColor } from '@config';
+import { UserPresentable } from '@screens/settings/profile/models/UserPresentable';
 
 import axiosApiInstance from '../../../interceptor/axios-interceptor';
 import useAuthStore, { AuthStoreActions } from '../store/Store';
@@ -17,6 +18,13 @@ import {
   CHANGE_PASSWORD,
 } from '../../../constants';
 
+type RegisterPayload = {
+  name: string;
+  phone: string;
+  email: string;
+  password: string;
+};
+
 type LoginResponse = {
   access_token: string;
 };
@@ -26,10 +34,10 @@ type LoginPayload = {
   password: string;
 };
 
-export const useRegisterAcctount = () => {
+export const useRegisterAccount = () => {
   const { showNotification } = useAlerts();
 
-  return useMutation<any, Error, any>((payload) => {
+  return useMutation<UserPresentable, Error, RegisterPayload>((payload) => {
     return axios({
       method: 'POST',
       url: SIGNUP,

@@ -14,13 +14,13 @@ import { BaseStyle, BaseColor, useTheme } from '@config';
 import { Header, SafeAreaView, Icon, Button, TextInput } from '@components';
 
 import { AuthParamList } from '../../../navigation/models/AuthParamList';
-import { useRegisterAcctount } from '../apis/mutations';
+import { useRegisterAccount } from '../apis/mutations';
 
 export default function SignUpScreen(
   props: StackScreenProps<AuthParamList, 'SignUp'>,
 ) {
   const { navigation } = props;
-  const { mutate, isLoading } = useRegisterAcctount();
+  const { mutate, isLoading } = useRegisterAccount();
 
   const nameRef = useRef<TextInputOriginal>(null);
   const emailRef = useRef<TextInputOriginal>(null);
@@ -53,8 +53,10 @@ export default function SignUpScreen(
       mutate(
         { name, email, phone: phone.replace(/\s+/g, ''), password },
         {
-          onSuccess() {
-            navigation.goBack();
+          onSuccess(response) {
+            if (response._id) {
+              navigation.goBack();
+            }
           },
         },
       );
