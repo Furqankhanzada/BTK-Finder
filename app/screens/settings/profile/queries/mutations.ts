@@ -57,6 +57,8 @@ export const useDeleteUserAccount = () => {
 };
 
 export const useEditProfile = () => {
+  const queryClient = useQueryClient();
+
   return useMutation<EditProfileResponse, Error, EditProfilePayload>(
     (payload) => {
       return axiosApiInstance({
@@ -68,6 +70,11 @@ export const useEditProfile = () => {
         .catch(({ response }) => {
           handleError(response.data);
         });
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(['profile']);
+      },
     },
   );
 };
@@ -98,10 +105,7 @@ export const useUploadProfileImage = () => {
       onSuccess: async (response, payload) => {
         const user = payload.user;
         const updatedUser = { ...user, avatar: response.Location };
-        const editUserProfile = await editProfile(updatedUser);
-
-        if (editUserProfile !== undefined) {
-        }
+        editProfile(updatedUser);
       },
     },
   );
