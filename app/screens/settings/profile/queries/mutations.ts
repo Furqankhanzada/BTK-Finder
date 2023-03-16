@@ -1,11 +1,9 @@
-import { useDispatch } from 'react-redux';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { handleError } from '@utils';
 
 import axiosApiInstance from '../../../../interceptor/axios-interceptor';
 import { DELETE_PROFILE, EDIT_PROFILE, UPLOAD } from '../../../../constants';
-import { EDIT_PROFILE_API_SUCCESS } from '../../../../constants/auth';
 import { UserPresentable } from '../models/UserPresentable';
 
 export interface DeleteMutationVar {
@@ -76,7 +74,6 @@ export const useEditProfile = () => {
 
 export const useUploadProfileImage = () => {
   const { mutateAsync: editProfile } = useEditProfile();
-  const dispatch = useDispatch();
 
   return useMutation<
     UploadProfileImageResponse,
@@ -104,12 +101,6 @@ export const useUploadProfileImage = () => {
         const editUserProfile = await editProfile(updatedUser);
 
         if (editUserProfile !== undefined) {
-          //Update User in Redux
-          //TODO: Will fix once we remove the redux from project.
-          dispatch({
-            type: EDIT_PROFILE_API_SUCCESS,
-            user: updatedUser,
-          });
         }
       },
     },

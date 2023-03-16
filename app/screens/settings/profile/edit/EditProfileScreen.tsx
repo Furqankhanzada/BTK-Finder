@@ -9,7 +9,6 @@ import {
   TextInput as TextInputOriginal,
   Keyboard,
 } from 'react-native';
-import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import TextInputMask from 'react-native-text-input-mask';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -35,7 +34,6 @@ import {
   useEditProfile,
   useUploadProfileImage,
 } from '../queries/mutations';
-import { EDIT_PROFILE_API_SUCCESS } from '../../../../constants/auth';
 import { SettingsParamList } from '../../../../navigation/models/SettingsParamList';
 import { useGetProfile } from '../queries/queries';
 import AccountInfoAlertContent from './components/AccountInfoAlertContent';
@@ -44,7 +42,6 @@ export default function EditProfileScreen(
   props: StackScreenProps<SettingsParamList, 'EditProfile'>,
 ) {
   const { navigation } = props;
-  const dispatch = useDispatch();
   const { colors } = useTheme();
   const { t } = useTranslation();
   const { showAlert, showNotification } = useAlerts();
@@ -167,13 +164,6 @@ export default function EditProfileScreen(
 
     if (editUserProfile !== undefined) {
       navigation.goBack();
-
-      //Update User in Redux
-      //TODO: Will fix once we remove the redux from project.
-      dispatch({
-        type: EDIT_PROFILE_API_SUCCESS,
-        user: payload,
-      });
     }
   };
 
