@@ -47,6 +47,10 @@ type VerifyCodeResponse = {
   access_token: string;
 };
 
+type ChangePasswordPayload = {
+  password: string;
+};
+
 export const useRegisterAccount = () => {
   const { showNotification } = useAlerts();
 
@@ -154,7 +158,7 @@ export const useCodeVerification = () => {
 export const useChangePassword = () => {
   const { showNotification } = useAlerts();
 
-  return useMutation<any, Error, any>((payload) => {
+  return useMutation<any, Error, ChangePasswordPayload>((payload) => {
     return axiosApiInstance({
       method: 'POST',
       url: CHANGE_PASSWORD,
