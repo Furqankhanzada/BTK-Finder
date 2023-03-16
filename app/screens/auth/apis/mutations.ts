@@ -34,6 +34,10 @@ type LoginPayload = {
   password: string;
 };
 
+type ResetPasswordPayload = {
+  emailOrNumber: string;
+};
+
 export const useRegisterAccount = () => {
   const { showNotification } = useAlerts();
 
@@ -88,7 +92,7 @@ export const useLogin = () => {
 export const useResetPassword = () => {
   const { showNotification } = useAlerts();
 
-  return useMutation<any, Error, any>((payload) => {
+  return useMutation<{}, Error, ResetPasswordPayload>((payload) => {
     return axiosApiInstance({
       method: 'POST',
       url: RESET_PASSWORD,
