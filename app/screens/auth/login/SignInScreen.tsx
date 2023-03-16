@@ -62,7 +62,7 @@ export default function SignInScreen(
         { username, password },
         {
           async onSuccess(response) {
-            if (response.access_token) {
+            if (response?.access_token) {
               const fcmToken = await messaging().getToken();
               registerDevice({
                 deviceUniqueId: getUniqueId(),
