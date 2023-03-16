@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { BaseStyle, useTheme } from '@config';
 import {
@@ -14,8 +13,8 @@ import {
 } from '@components';
 import { StackScreenProps } from '@react-navigation/stack';
 
-import { resetPassword } from '../../../actions/auth';
 import { AuthParamList } from '../../../navigation/models/AuthParamList';
+import { useResetPassword } from '../apis/mutations';
 
 export default function ResetPasswordScreen(
   props: StackScreenProps<AuthParamList, 'ResetPassword'>,
@@ -23,10 +22,7 @@ export default function ResetPasswordScreen(
   const { navigation } = props;
   const { colors } = useTheme();
   const { t } = useTranslation();
-  const dispatch = useDispatch();
-  const resetPasswordLoading = useSelector(
-    (state: any) => state.auth.resetPasswordLoading,
-  );
+  const { mutate: resetPassword, isLoading } = useResetPassword();
 
   const [emailOrNumber, setEmailOrNumber] = useState('');
 
@@ -34,10 +30,13 @@ export default function ResetPasswordScreen(
    * call when action reset pass
    */
   const onReset = () => {
-    dispatch(
-      resetPassword({ emailOrNumber: emailOrNumber }, () =>
-        navigation.navigate('VerifyCode', { emailOrNumber: emailOrNumber }),
-      ),
+    resetPassword(
+      { emailOrNumber: emailOrNumber },
+      {
+        onSuccess() {
+          navigation.navigate('VerifyCode', { emailOrNumber: emailOrNumber });
+        },
+      },
     );
   };
 
@@ -98,7 +97,7 @@ export default function ResetPasswordScreen(
             onPress={() => {
               onReset();
             }}
-            loading={resetPasswordLoading}>
+            loading={isLoading}>
             {t('reset_password')}
           </Button>
         </View>

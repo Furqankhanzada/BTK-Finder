@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { View, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
 import { StackScreenProps } from '@react-navigation/stack';
 
 import { BaseStyle, useTheme } from '@config';
@@ -13,18 +12,15 @@ import {
   Text,
 } from '@components';
 
-import { verifyCode } from '../../../actions/auth';
 import { AuthParamList } from '../../../navigation/models/AuthParamList';
+import { useCodeVerification } from '../apis/mutations';
 
 export default function VerifyCodeScreen(
   props: StackScreenProps<AuthParamList, 'VerifyCode'>,
 ) {
   const { navigation, route } = props;
   const { colors } = useTheme();
-  const dispatch = useDispatch();
-  const verifyCodeLoading = useSelector(
-    (state: any) => state.auth.verifyCodeLoading,
-  );
+  const { mutate: verifyCode, isLoading } = useCodeVerification();
 
   const [verificationCode, setVerificationCode] = useState('');
 
@@ -32,11 +28,13 @@ export default function VerifyCodeScreen(
    * call when action reset pass
    */
   const onVerify = () => {
-    dispatch(
-      verifyCode(
-        { emailOrNumber: route.params.emailOrNumber, code: verificationCode },
-        () => navigation.navigate('ChangePassword'),
-      ),
+    verifyCode(
+      { emailOrNumber: route.params.emailOrNumber, code: verificationCode },
+      {
+        onSuccess() {
+          navigation.navigate('ChangePassword');
+        },
+      },
     );
   };
 
@@ -96,7 +94,7 @@ export default function VerifyCodeScreen(
             onPress={() => {
               onVerify();
             }}
-            loading={verifyCodeLoading}>
+            loading={isLoading}>
             Submit Code
           </Button>
         </View>

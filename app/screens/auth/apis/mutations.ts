@@ -1,13 +1,21 @@
+import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useMutation } from '@tanstack/react-query';
+
 import { handleError } from '@utils';
 import { useAlerts } from '@hooks';
 import { BaseColor } from '@config';
 
-import { IconName } from '../../../contexts/alerts-v2/models/Icon';
-import { SIGNUP, LOGIN } from '../../../constants';
-import axios from 'axios';
+import axiosApiInstance from '../../../interceptor/axios-interceptor';
 import useAuthStore, { AuthStoreActions } from '../store/Store';
+import { IconName } from '../../../contexts/alerts-v2/models/Icon';
+import {
+  SIGNUP,
+  LOGIN,
+  RESET_PASSWORD,
+  VERIFY_CODE,
+  CHANGE_PASSWORD,
+} from '../../../constants';
 
 type LoginResponse = {
   access_token: string;
@@ -61,6 +69,83 @@ export const useLogin = () => {
           );
           setLogin(true);
         } catch (e) {}
+        return response.data;
+      })
+      .catch(({ response }) => {
+        handleError(response.data);
+      });
+  });
+};
+
+export const useResetPassword = () => {
+  const { showNotification } = useAlerts();
+
+  return useMutation<any, Error, any>((payload) => {
+    return axiosApiInstance({
+      method: 'POST',
+      url: RESET_PASSWORD,
+      data: payload,
+    })
+      .then(async (response) => {
+        showNotification({
+          icon: {
+            size: 70,
+            name: IconName.CheckMarkCircle,
+            color: BaseColor.greenColor,
+          },
+          message: 'A verification code is sent on your provided email/phone',
+        });
+        return response.data;
+      })
+      .catch(({ response }) => {
+        handleError(response.data);
+      });
+  });
+};
+
+export const useCodeVerification = () => {
+  const setLogin = useAuthStore((state: AuthStoreActions) => state.setLogin);
+
+  return useMutation<any, Error, any>((payload) => {
+    return axiosApiInstance({
+      method: 'POST',
+      url: VERIFY_CODE,
+      data: payload,
+    })
+      .then(async (response) => {
+        try {
+          await AsyncStorage.setItem(
+            'access_token',
+            response?.data?.access_token,
+          );
+          setLogin(true);
+        } catch (e) {}
+        return response.data;
+      })
+      .catch(({ response }) => {
+        handleError(response.data);
+      });
+  });
+};
+
+export const useChangePassword = () => {
+  const { showNotification } = useAlerts();
+
+  return useMutation<any, Error, any>((payload) => {
+    return axiosApiInstance({
+      method: 'POST',
+      url: CHANGE_PASSWORD,
+      data: payload,
+    })
+      .then(async (response) => {
+        showNotification({
+          icon: {
+            size: 70,
+            name: IconName.CheckMarkCircle,
+            color: BaseColor.greenColor,
+          },
+          message: 'You have successfully changed your password',
+        });
         return response.data;
       })
       .catch(({ response }) => {

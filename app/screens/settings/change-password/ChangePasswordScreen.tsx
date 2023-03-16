@@ -7,7 +7,6 @@ import {
   TextInput as TextInputOriginal,
   StyleSheet,
 } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
 import Toast from 'react-native-toast-message';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useTranslation } from 'react-i18next';
@@ -23,27 +22,27 @@ import {
 } from '@components';
 
 import { SettingsParamList } from '../../../navigation/models/SettingsParamList';
-import { changePassword } from '../../../actions/auth';
+import { useChangePassword } from '@screens/auth/apis/mutations';
 
 export default function ChangePasswordScreen({
   navigation,
 }: StackScreenProps<SettingsParamList, 'ChangePassword'>) {
   const { t } = useTranslation();
-  const dispatch = useDispatch();
   const { colors } = useTheme();
   const confirmPasswordRef = useRef<TextInputOriginal>(null);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const changePasswordLoading = useSelector(
-    (state: any) => state.auth.changePasswordLoading,
-  );
+  const { mutate: changePassword, isLoading } = useChangePassword();
 
   const onConfirm = () => {
     if (newPassword === confirmPassword) {
-      dispatch(
-        changePassword({ password: newPassword }, () =>
-          navigation.navigate('Settings'),
-        ),
+      changePassword(
+        { password: newPassword },
+        {
+          onSuccess() {
+            navigation.navigate('Settings');
+          },
+        },
       );
     } else {
       Toast.show({
@@ -112,7 +111,7 @@ export default function ChangePasswordScreen({
         </ScrollView>
         <View style={styles.buttonContainer}>
           <Button
-            loading={changePasswordLoading}
+            loading={isLoading}
             full
             onPress={() => {
               onConfirm();
