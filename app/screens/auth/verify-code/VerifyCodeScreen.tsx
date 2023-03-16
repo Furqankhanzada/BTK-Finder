@@ -31,8 +31,10 @@ export default function VerifyCodeScreen(
     verifyCode(
       { emailOrNumber: route.params.emailOrNumber, code: verificationCode },
       {
-        onSuccess() {
-          navigation.navigate('ChangePassword');
+        onSuccess(response) {
+          if (response.access_token) {
+            navigation.navigate('ChangePassword');
+          }
         },
       },
     );

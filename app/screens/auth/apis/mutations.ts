@@ -38,6 +38,15 @@ type ResetPasswordPayload = {
   emailOrNumber: string;
 };
 
+type VerifyCodePayload = {
+  code: string;
+  emailOrNumber: string | number;
+};
+
+type VerifyCodeResponse = {
+  access_token: string;
+};
+
 export const useRegisterAccount = () => {
   const { showNotification } = useAlerts();
 
@@ -118,26 +127,28 @@ export const useResetPassword = () => {
 export const useCodeVerification = () => {
   const setLogin = useAuthStore((state: AuthStoreActions) => state.setLogin);
 
-  return useMutation<any, Error, any>((payload) => {
-    return axiosApiInstance({
-      method: 'POST',
-      url: VERIFY_CODE,
-      data: payload,
-    })
-      .then(async (response) => {
-        try {
-          await AsyncStorage.setItem(
-            'access_token',
-            response?.data?.access_token,
-          );
-          setLogin(true);
-        } catch (e) {}
-        return response.data;
+  return useMutation<VerifyCodeResponse, Error, VerifyCodePayload>(
+    (payload) => {
+      return axiosApiInstance({
+        method: 'POST',
+        url: VERIFY_CODE,
+        data: payload,
       })
-      .catch(({ response }) => {
-        handleError(response.data);
-      });
-  });
+        .then(async (response) => {
+          try {
+            await AsyncStorage.setItem(
+              'access_token',
+              response?.data?.access_token,
+            );
+            setLogin(true);
+          } catch (e) {}
+          return response.data;
+        })
+        .catch(({ response }) => {
+          handleError(response.data);
+        });
+    },
+  );
 };
 
 export const useChangePassword = () => {
