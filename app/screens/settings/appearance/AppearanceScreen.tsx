@@ -7,11 +7,11 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { BaseStyle, useTheme } from '@config';
 import { Header, SafeAreaView, Icon, Text } from '@components';
 
-import { SettingsParamList } from '../../../navigation/models/SettingsParamList';
+import { GlobalParamList } from 'navigation/models/GlobalParamList';
 
 export default function AppearanceScreen({
   navigation,
-}: StackScreenProps<SettingsParamList, 'Appearance'>) {
+}: StackScreenProps<GlobalParamList, 'Appearance'>) {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const forceDark = useSelector((state: any) => state.application.force_dark);
