@@ -4,4 +4,5 @@ export type AuthParamList = {
   SignUp: undefined;
   ResetPassword: undefined;
   VerifyCode: { emailOrNumber: string | number };
+  ChangePassword: undefined;
 };
