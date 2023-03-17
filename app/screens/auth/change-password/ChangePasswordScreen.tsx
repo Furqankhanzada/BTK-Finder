@@ -21,12 +21,12 @@ import {
   TextInput,
 } from '@components';
 
-import { SettingsParamList } from '../../../navigation/models/SettingsParamList';
+import { AuthParamList } from 'navigation/models/AuthParamList';
 import { useChangePassword } from '@screens/auth/apis/mutations';
 
 export default function ChangePasswordScreen({
   navigation,
-}: StackScreenProps<SettingsParamList, 'ChangePassword'>) {
+}: StackScreenProps<AuthParamList, 'ChangePassword'>) {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const confirmPasswordRef = useRef<TextInputOriginal>(null);
@@ -40,7 +40,7 @@ export default function ChangePasswordScreen({
         { password: newPassword },
         {
           onSuccess() {
-            navigation.navigate('Settings');
+            navigation.goBack();
           },
         },
       );
