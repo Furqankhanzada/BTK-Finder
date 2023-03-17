@@ -66,7 +66,7 @@ export default function VerifyCodeScreen(
       <KeyboardAvoidingView
         behavior={Platform.OS === 'android' ? 'height' : 'padding'}
         keyboardVerticalOffset={offsetKeyboard}
-        style={{ flex: 1 }}>
+        style={styles.keyboardAvoidingView}>
         <View style={styles.container}>
           <View style={styles.info}>
             <Icon
@@ -74,7 +74,7 @@ export default function VerifyCodeScreen(
               size={20}
               color={colors.primary}
               enableRTL={true}
-              style={{ marginRight: 10 }}
+              style={styles.infoIcon}
             />
             <Text caption1>
               Enter the verification code you received on your provided Email
@@ -91,7 +91,7 @@ export default function VerifyCodeScreen(
             returnKeyType="done"
           />
           <Button
-            style={{ marginTop: 20 }}
+            style={styles.button}
             full
             onPress={() => {
               onVerify();
@@ -106,6 +106,9 @@ export default function VerifyCodeScreen(
 }
 
 const styles = StyleSheet.create({
+  keyboardAvoidingView: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     padding: 20,
@@ -117,5 +120,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  infoIcon: {
+    marginRight: 10,
+  },
+  button: {
+    marginTop: 20,
   },
 });
