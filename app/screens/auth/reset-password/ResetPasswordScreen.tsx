@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { StackScreenProps } from '@react-navigation/stack';
 
 import { BaseStyle, useTheme } from '@config';
 import {
@@ -11,7 +12,6 @@ import {
   Button,
   Text,
 } from '@components';
-import { StackScreenProps } from '@react-navigation/stack';
 
 import { AuthParamList } from '../../../navigation/models/AuthParamList';
 import { useResetPassword } from '../apis/mutations';
@@ -66,7 +66,7 @@ export default function ResetPasswordScreen(
       <KeyboardAvoidingView
         behavior={Platform.OS === 'android' ? 'height' : 'padding'}
         keyboardVerticalOffset={offsetKeyboard}
-        style={{ flex: 1 }}>
+        style={styles.keyboardAvoidingView}>
         <View style={styles.container}>
           <View style={styles.info}>
             <Icon
@@ -74,7 +74,7 @@ export default function ResetPasswordScreen(
               size={20}
               color={colors.primary}
               enableRTL={true}
-              style={{ marginRight: 10 }}
+              style={styles.infoIcon}
             />
             <Text caption1>
               Currently this feature is only for Emails. For mobile number we
@@ -92,7 +92,7 @@ export default function ResetPasswordScreen(
             returnKeyType="done"
           />
           <Button
-            style={{ marginTop: 20 }}
+            style={styles.button}
             full
             onPress={() => {
               onReset();
@@ -107,6 +107,9 @@ export default function ResetPasswordScreen(
 }
 
 const styles = StyleSheet.create({
+  keyboardAvoidingView: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     padding: 20,
@@ -118,5 +121,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  infoIcon: {
+    marginRight: 10,
+  },
+  button: {
+    marginTop: 20,
   },
 });
