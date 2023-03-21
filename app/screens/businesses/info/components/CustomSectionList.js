@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, FlatList, TouchableOpacity } from 'react-native';
+import { View, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import { Text, Loading, Icon } from '@components';
-import styles from './styles';
+import { BaseColor } from '@config';
+import * as Utils from '@utils';
 
 function CustomSectionList(props) {
   const {
@@ -75,5 +76,51 @@ function CustomSectionList(props) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  section: {
+    marginBottom: 25,
+  },
+  sectionHeader: {
+    marginHorizontal: 20,
+    marginBottom: 15,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  sectionHeaderContent: {
+    flex: 1,
+    alignItems: 'flex-start',
+  },
+  sectionHeaderButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  sectionHeaderButtonText: {
+    fontSize: 16,
+    color: BaseColor.blueColor,
+  },
+  sectionHeaderButtonIcon: {
+    marginLeft: 5,
+    fontSize: 18,
+    color: BaseColor.blueColor,
+  },
+  sectionLoading: {
+    height: Utils.scaleWithPixel(160),
+    position: 'relative',
+  },
+  sectionEmpty: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: Utils.scaleWithPixel(160),
+    flex: 1,
+  },
+  sectionEmptyText: {
+    textAlign: 'center',
+  },
+  sectionListContainer: {
+    paddingLeft: 5,
+    paddingRight: 15,
+  },
+});
 
 export default CustomSectionList;
