@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { CardList, PlaceItem } from '@components';
-import CustomSectionList from '@screens/Home/CustomSectionList';
+import CustomSectionList from '@screens/businesses/info/components/CustomSectionList';
 import { useBusinesses } from '@screens/businesses/queries/queries';
 import { BusinessPresentable } from '@screens/businesses/models/BusinessPresentable';
 import { BusinessesQueryKeysWithFav } from '@screens/businesses/models/BusinessesQueryKeys';
