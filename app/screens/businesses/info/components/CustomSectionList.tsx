@@ -1,10 +1,26 @@
 import React from 'react';
-import { View, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import {
+  View,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+  ListRenderItem,
+} from 'react-native';
 import { Text, Loading, Icon } from '@components';
 import { BaseColor } from '@config';
 import * as Utils from '@utils';
 
-function CustomSectionList(props) {
+type Props = {
+  title: string;
+  subTitle?: string;
+  seeMoreFunc?: () => void;
+  data?: Array<any>;
+  loading?: boolean;
+  renderItem: ListRenderItem<any>;
+  horizontal?: boolean;
+};
+
+function CustomSectionList(props: Props) {
   const {
     title,
     subTitle,
@@ -60,16 +76,14 @@ function CustomSectionList(props) {
         <FlatList
           contentContainerStyle={[
             styles.sectionListContainer,
-            {
-              width: data && data.length ? null : '100%',
-              marginHorizontal: horizontal ? 0 : 15,
-            },
+            horizontal ? {} : styles.sectionListMargin,
+            data && data.length ? {} : styles.sectionListWidth,
           ]}
           horizontal={horizontal}
           showsHorizontalScrollIndicator={false}
           data={data}
           ListEmptyComponent={listEmptyComponent}
-          keyExtractor={(item, index) => item._id}
+          keyExtractor={(item) => item._id}
           renderItem={renderItem}
         />
       )}
@@ -120,6 +134,12 @@ const styles = StyleSheet.create({
   sectionListContainer: {
     paddingLeft: 5,
     paddingRight: 15,
+  },
+  sectionListMargin: {
+    marginHorizontal: 15,
+  },
+  sectionListWidth: {
+    width: '100%',
   },
 });
 
