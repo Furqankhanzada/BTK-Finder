@@ -106,7 +106,9 @@ export default function SettingsScreen(
                   { borderBottomColor: colors.border },
                 ]}
                 onPress={() => {
-                  navigation.navigate('ChangePassword');
+                  navigation.navigate('AuthStackNavigator', {
+                    screen: 'ChangePassword',
+                  });
                 }}>
                 <Text body1>{t('change_password')}</Text>
                 <Icon
