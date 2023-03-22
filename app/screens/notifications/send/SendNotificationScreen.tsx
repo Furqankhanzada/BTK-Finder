@@ -90,9 +90,6 @@ export default function SendNotificationScreen(
       const image = await ImagePicker.openPicker({
         width: 1000,
         height: 500,
-        cropping: true,
-        compressImageMaxWidth: 1000,
-        compressImageMaxHeight: 500,
         mediaType: 'photo',
         cropperStatusBarColor: colors.primary,
         cropperToolbarColor: colors.primary,
