@@ -25,7 +25,7 @@ import {
 } from '@components';
 import { BaseStyle, BaseColor, useTheme } from '@config';
 import { StackScreenProps } from '@react-navigation/stack';
-import { MainStackParamList } from 'navigation/models/MainStackParamList';
+import { GlobalParamList } from 'navigation/models/GlobalParamList';
 
 import {
   NotificationPayload,
@@ -36,7 +36,7 @@ import { NotificationPresentable } from '../models/NotificationPresentable';
 import { useDeleteImage } from '../../../apis/mutations';
 
 export default function SendNotificationScreen(
-  props: StackScreenProps<MainStackParamList, 'SendNotification'>,
+  props: StackScreenProps<GlobalParamList, 'SendNotification'>,
 ) {
   const { t } = useTranslation();
   const { navigation } = props;
