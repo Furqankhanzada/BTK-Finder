@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import { View, TouchableOpacity } from 'react-native';
 import { BaseStyle, useTheme } from '@config';
 import { SafeAreaView, Icon, Text } from '@components';
-import { ApplicationActions } from '@actions';
 import styles from './styles';
 import { useTranslation } from 'react-i18next';
+import { onForceTheme } from '../../../../../apis/application';
+import useAppStore from '../../../../../appearance/store/store';
 
 export default function SelectDarkOption({ navigation }) {
   const { t } = useTranslation();
   const { colors } = useTheme();
-  const dispatch = useDispatch();
+  const setForceTheme = useAppStore((state) => state.setForceTheme);
 
-  const storageForceDark = useSelector((state) => state.application.force_dark);
+  const storageForceDark = useAppStore((state) => state.force_theme);
   const [forceDarkMode, setForceDarkMode] = useState(storageForceDark);
 
   /**
@@ -20,7 +20,8 @@ export default function SelectDarkOption({ navigation }) {
    * @param {*} forceDarkMode
    */
   const onChange = (forceDarkMode) => {
-    dispatch(ApplicationActions.onForceTheme(forceDarkMode));
+    onForceTheme(forceDarkMode === true ? 'true' : 'false');
+    setForceTheme(forceDarkMode);
     navigation.goBack();
   };
 

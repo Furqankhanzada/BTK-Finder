@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import { View, TouchableOpacity } from 'react-native';
 import { BaseStyle, useTheme, FontSupport, DefaultFont } from '@config';
 import { SafeAreaView, Icon, Text } from '@components';
-import { ApplicationActions } from '@actions';
 import styles from './styles';
 import { useTranslation } from 'react-i18next';
+import { onChangeFont } from '../../../../../apis/application';
+import useAppStore from '../../../../../appearance/store/store';
 
 export default function SelectFontOption({ navigation }) {
-  const storageFont = useSelector((state) => state.application.font);
+  const storageFont = useAppStore((state) => state.font);
+  const setStoreFont = useAppStore((state) => state.setFont);
   const { colors } = useTheme();
-  const dispatch = useDispatch();
   const { t } = useTranslation();
 
   const [font, setFont] = useState(storageFont);
   const onChange = (font) => {
-    dispatch(ApplicationActions.onChangeFont(font));
+    onChangeFont(font);
+    setStoreFont(font);
     navigation.goBack();
   };
 

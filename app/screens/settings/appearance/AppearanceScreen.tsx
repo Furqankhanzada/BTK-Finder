@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
-import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { StackScreenProps } from '@react-navigation/stack';
 
@@ -8,14 +7,15 @@ import { BaseStyle, useTheme } from '@config';
 import { Header, SafeAreaView, Icon, Text } from '@components';
 
 import { GlobalParamList } from 'navigation/models/GlobalParamList';
+import useAppStore from '../../../appearance/store/store';
 
 export default function AppearanceScreen({
   navigation,
 }: StackScreenProps<GlobalParamList, 'Appearance'>) {
   const { t } = useTranslation();
   const { colors } = useTheme();
-  const forceDark = useSelector((state: any) => state.application.force_dark);
-  const font = useSelector((state: any) => state.application.font);
+  const forceDark = useAppStore((state) => state.force_theme);
+  const font = useAppStore((state) => state.font);
 
   const darkOption = forceDark
     ? t('always_on')

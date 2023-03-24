@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import { View, TouchableOpacity, FlatList, StatusBar } from 'react-native';
 import { ThemeSupport } from '@config';
 import { BaseStyle, useTheme } from '@config';
 import { Header, SafeAreaView, Icon, Text, Button } from '@components';
-import { ApplicationActions } from '@actions';
 import styles from './styles';
 import { useTranslation } from 'react-i18next';
+import { onChangeTheme } from '../../../../../apis/application';
+import useAppStore from '../../../../../appearance/store/store';
 
 export default function ThemeSetting({ navigation }) {
-  const themeStorage = useSelector((state) => state.application.theme);
+  const themeStorage = useAppStore((state) => state.theme);
   const { colors } = useTheme();
-  const dispatch = useDispatch();
   const { t } = useTranslation();
 
   const [themeSupport, setTheme] = useState(ThemeSupport);
@@ -47,10 +46,10 @@ export default function ThemeSetting({ navigation }) {
    * call when save theme
    *
    */
-  const onChangeTheme = () => {
+  const changeTheme = () => {
     const list = themeSupport.filter((item) => item.selected);
     if (list.length > 0) {
-      dispatch(ApplicationActions.onChangeTheme(list[0].theme));
+      onChangeTheme(list[0].theme);
       StatusBar.setBackgroundColor(list[0].light.colors.primary, true);
     }
   };
@@ -113,7 +112,7 @@ export default function ThemeSetting({ navigation }) {
         renderItem={({ item }) => renderItem(item)}
       />
       <View style={{ paddingHorizontal: 20, paddingVertical: 15 }}>
-        <Button full onPress={onChangeTheme}>
+        <Button full onPress={changeTheme}>
           {t('apply')}
         </Button>
       </View>

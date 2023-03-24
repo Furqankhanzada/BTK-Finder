@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
-import ApplicationReducer from './application';
+import BusinessReducer from './business';
 
 export default combineReducers({
-  application: ApplicationReducer,
+  businesses: BusinessReducer,
 });

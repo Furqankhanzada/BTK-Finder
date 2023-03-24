@@ -6,7 +6,6 @@ import { useDarkMode } from 'react-native-dynamic';
 import { useTheme, BaseSetting } from '@config';
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import { useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {
@@ -29,6 +28,7 @@ import { trackScreenView } from '../userTracking';
 import { RootStackParamList } from './models/RootStackParamList';
 import Main from './main';
 import { linkingConfig } from './deep-linking/LinkingConfig';
+import useAppStore, { AppearanceStoreActions } from '../appearance/store/store';
 
 const RootStack = createStackNavigator<RootStackParamList>();
 
@@ -43,7 +43,10 @@ export default function Navigator() {
   useRemoteConfig();
 
   const setLogin = useAuthStore((state: AuthStoreActions) => state.setLogin);
-  const storeLanguage = useSelector((state: any) => state.application.language);
+  const setForceTheme = useAppStore(
+    (state: AppearanceStoreActions) => state.setForceTheme,
+  );
+  const setFont = useAppStore((state: AppearanceStoreActions) => state.setFont);
   const { theme, colors } = useTheme();
   const isDarkMode = useDarkMode();
   const routeNameRef = useRef() as MutableRefObject<string>;
@@ -57,14 +60,14 @@ export default function Navigator() {
   useEffect(() => {
     i18n.use(initReactI18next).init({
       resources: BaseSetting.resourcesLanguage,
-      lng: storeLanguage ?? BaseSetting.defaultLanguage,
+      lng: BaseSetting.defaultLanguage,
       fallbackLng: BaseSetting.defaultLanguage,
     });
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor(colors.primary, true);
     }
     StatusBar.setBarStyle(isDarkMode ? 'light-content' : 'dark-content', true);
-  }, [colors.primary, isDarkMode, storeLanguage]);
+  }, [colors.primary, isDarkMode]);
 
   useEffect(() => {
     return () => {
@@ -81,6 +84,26 @@ export default function Navigator() {
     };
     getToken();
   }, [setLogin]);
+
+  useEffect(() => {
+    const getDarkTheme = async () => {
+      const forceTheme = await AsyncStorage.getItem('force_theme');
+      if (forceTheme) {
+        setForceTheme(forceTheme === 'true' ? true : false);
+      }
+    };
+    getDarkTheme();
+  }, [setForceTheme]);
+
+  useEffect(() => {
+    const getFont = async () => {
+      const font = await AsyncStorage.getItem('font');
+      if (font) {
+        setFont(font);
+      }
+    };
+    getFont();
+  }, [setFont]);
 
   return (
     <NavigationContainer

@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import { View, TouchableOpacity, StatusBar } from 'react-native';
 import { useDarkMode } from 'react-native-dynamic';
 import { Text } from '@components';
 import styles from './styles';
 import PropTypes from 'prop-types';
+import useAppStore from '../../appearance/store/store';
 
 export default function Header(props) {
-  const forceDark = useSelector((state) => state.application.force_dark);
+  const forceDark = useAppStore((state) => state.force_theme);
   const {
     style,
     styleLeft,
