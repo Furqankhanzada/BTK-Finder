@@ -62,8 +62,6 @@ export default function PlaceDetailComponent(props) {
         businesses.placeDetailRecentlyAddedBusinessesLoading,
       relatedBusiness: businesses.relatedBusinesses,
       getRelatedBusinessesLoading: businesses.getRelatedBusinessesLoading,
-      favoriteBusinesses: favorites.getFavoriteBusinesses,
-      isFavoriteLoading: favorites.isFavoriteLoading,
       getSingleBusinessLoading: businesses.getSingleBusinessLoading,
     };
   });
