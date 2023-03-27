@@ -34,6 +34,8 @@ export default function NotificationDetailScreen(
 
   const [isImageLoading, setImageLoading] = useState(true);
   const [openImage, setOpenImage] = useState(false);
+  const [imageHeight, setImageHeight] = useState(500);
+  const [imageWidth, setImageWidth] = useState(500);
 
   const getTitle = (type?: NotificationType) => {
     switch (type) {
@@ -98,8 +100,15 @@ export default function NotificationDetailScreen(
               style={styles.imageContainer}>
               <Image
                 source={data?.image}
-                style={styles.image}
+                style={[
+                  styles.image,
+                  { aspectRatio: imageWidth / imageHeight },
+                ]}
                 onLoadEnd={() => setImageLoading(false)}
+                onLoad={(evt: any) => {
+                  setImageHeight(evt.nativeEvent.height);
+                  setImageWidth(evt.nativeEvent.width);
+                }}
               />
               <Loading loading={isImageLoading} />
             </TouchableOpacity>
@@ -134,7 +143,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   image: {
-    aspectRatio: 1000 / 500,
     borderRadius: 10,
   },
   title: {
