@@ -8,7 +8,9 @@ import {
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { BaseStyle, useTheme } from '@config';
+import IonIcon from 'react-native-vector-icons/Ionicons';
+import { useAlerts } from '@hooks';
+import { BaseColor, BaseStyle, useTheme } from '@config';
 import {
   Header,
   SafeAreaView,
@@ -20,11 +22,13 @@ import {
 import { useBusinessesInfinite } from '../businesses/queries/queries';
 
 import { getSingleBusiness } from '../../actions/business';
+import { IconName } from '../../contexts/alerts-v2/models/Icon';
 
 export default function MyBusinessesScreen(props: any) {
   const { navigation, route } = props;
   const scrollAnim = new Animated.Value(0);
   const dispatch = useDispatch();
+  const { showAlert } = useAlerts();
   const { t } = useTranslation();
   const { colors } = useTheme();
 
@@ -93,6 +97,47 @@ export default function MyBusinessesScreen(props: any) {
         navigation.navigate('EditBusiness', { id }),
       ),
     );
+  };
+
+  const onPressDelete = async () => {
+    const buttonPressed = await showAlert({
+      content: () => (
+        <>
+          <IonIcon
+            size={70}
+            name={IconName.Warning}
+            color={BaseColor.redColor}
+          />
+          <Text textAlign="center" header>
+            Business Deletion
+          </Text>
+          <Text textAlign="center" body1>
+            This will delete your business permanently and you won't be able to
+            recover it again. By proceeding with the business deletion you will
+            lose your business records.
+          </Text>
+          <View style={styles.alertDescription}>
+            <Text textAlign="center" bold accentColor>
+              Note:
+            </Text>
+            <Text textAlign="center" body1>
+              Be careful you won't be able to recover it again.
+            </Text>
+          </View>
+        </>
+      ),
+      btn: {
+        confirmDestructive: true,
+        confirmBtnTitle: 'Delete',
+        cancelBtnTitle: 'Cancel',
+      },
+      type: 'Custom',
+    });
+
+    if (buttonPressed === 'confirm') {
+      //TODO: Call Delete Business API Mutation
+      console.log('DELETE BUSINESS API 1');
+    }
   };
 
   const navigateBusinessDetail = (id: string) => {
@@ -174,7 +219,9 @@ export default function MyBusinessesScreen(props: any) {
                   onPress={() => navigateBusinessDetail(item._id)}
                   onPressTag={() => navigateToReview(item._id)}
                   editAble={true}
+                  deleteAble={true}
                   onPressEdit={() => onEdit(item._id)}
+                  onPressDelete={onPressDelete}
                 />
               );
             }}
@@ -199,5 +246,8 @@ const styles = StyleSheet.create({
     padding: 15,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  alertDescription: {
+    marginTop: 24,
   },
 });

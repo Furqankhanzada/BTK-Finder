@@ -18,7 +18,9 @@ export default function CardList(props) {
     rate,
     onPress,
     onPressTag,
+    deleteAble,
     editAble,
+    onPressDelete,
     onPressEdit,
   } = props;
   return (
@@ -81,6 +83,13 @@ export default function CardList(props) {
           </View>
         ) : null}
       </View>
+      {deleteAble ? (
+        <TouchableOpacity
+          onPress={onPressDelete}
+          style={[styles.deleteIcon, { backgroundColor: BaseColor.redColor }]}>
+          <Icon name="trash" color="white" />
+        </TouchableOpacity>
+      ) : null}
       {editAble ? (
         <TouchableOpacity
           onPress={onPressEdit}
@@ -101,7 +110,9 @@ CardList.propTypes = {
   rate: PropTypes.number,
   onPress: PropTypes.func,
   onPressTag: PropTypes.func,
+  deleteAble: PropTypes.bool,
   editAble: PropTypes.bool,
+  onPressDelete: PropTypes.func,
   onPressEdit: PropTypes.func,
 };
 
@@ -114,6 +125,8 @@ CardList.defaultProps = {
   rate: 0,
   onPress: () => {},
   onPressTag: () => {},
+  deleteAble: false,
   editAble: false,
+  onPressDelete: () => {},
   onPressEdit: () => {},
 };
