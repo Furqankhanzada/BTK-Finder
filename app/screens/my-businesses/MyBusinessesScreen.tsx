@@ -23,12 +23,14 @@ import { useBusinessesInfinite } from '../businesses/queries/queries';
 
 import { getSingleBusiness } from '../../actions/business';
 import { IconName } from '../../contexts/alerts-v2/models/Icon';
+import { useDeleteBusiness } from '@screens/businesses/queries/mutations';
 
 export default function MyBusinessesScreen(props: any) {
   const { navigation, route } = props;
   const scrollAnim = new Animated.Value(0);
   const dispatch = useDispatch();
-  const { showAlert } = useAlerts();
+  const { mutate: deleteBusiness } = useDeleteBusiness();
+  const { showAlert, showNotification } = useAlerts();
   const { t } = useTranslation();
   const { colors } = useTheme();
 
@@ -99,7 +101,7 @@ export default function MyBusinessesScreen(props: any) {
     );
   };
 
-  const onPressDelete = async () => {
+  const onPressDelete = async (businessId: string) => {
     const buttonPressed = await showAlert({
       content: () => (
         <>
@@ -135,8 +137,23 @@ export default function MyBusinessesScreen(props: any) {
     });
 
     if (buttonPressed === 'confirm') {
-      //TODO: Call Delete Business API Mutation
-      console.log('DELETE BUSINESS API 1');
+      deleteBusiness(
+        { businessId },
+        {
+          onSuccess() {
+            showNotification({
+              icon: {
+                size: 70,
+                name: IconName.CheckMarkCircle,
+                color: BaseColor.greenColor,
+              },
+              message:
+                'Your business and all data related to it were deleted permanently.',
+              dismissAfterMs: 4000,
+            });
+          },
+        },
+      );
     }
   };
 
@@ -221,7 +238,7 @@ export default function MyBusinessesScreen(props: any) {
                   editAble={true}
                   deleteAble={true}
                   onPressEdit={() => onEdit(item._id)}
-                  onPressDelete={onPressDelete}
+                  onPressDelete={() => onPressDelete(item._id)}
                 />
               );
             }}
