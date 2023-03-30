@@ -90,7 +90,7 @@ export default function Gallery({ navigation }) {
     dispatch(updateImagesIntoRedux('gallery', data));
   };
   const renderGalleryImages = (data) => {
-    if (data.length) {
+    if (data?.length) {
       return data.map((el, i) => (
         <View key={i} style={styles.galleryImageContainer}>
           <TouchableOpacity
@@ -123,7 +123,7 @@ export default function Gallery({ navigation }) {
       multiple: true,
     })
       .then((images) => {
-        if (images.length) {
+        if (images?.length) {
           dispatch(uploadGalleryImages(images));
         }
       })
