@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Linking } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Linking,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { getUniqueId } from 'react-native-device-info';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import ImageView from 'react-native-image-viewing';
 import { StackScreenProps } from '@react-navigation/stack';
 
@@ -94,31 +99,35 @@ export default function NotificationDetailScreen(
         <NotificationDetailPlaceholder />
       ) : (
         <View style={styles.container}>
-          {data?.image ? (
-            <TouchableOpacity
-              onPress={() => setOpenImage(true)}
-              style={styles.imageContainer}>
-              <Image
-                source={data?.image}
-                style={[
-                  styles.image,
-                  { aspectRatio: imageWidth / imageHeight },
-                ]}
-                onLoadEnd={() => setImageLoading(false)}
-                onLoad={(evt: any) => {
-                  setImageHeight(evt.nativeEvent.height);
-                  setImageWidth(evt.nativeEvent.width);
-                }}
-              />
-              <Loading loading={isImageLoading} />
-            </TouchableOpacity>
-          ) : null}
-          <Text title2 bold style={styles.title}>
-            {data?.title}
-          </Text>
-          <Text body1 style={styles.content}>
-            {data?.description}
-          </Text>
+          <ScrollView
+            style={styles.scrollView}
+            showsVerticalScrollIndicator={false}>
+            {data?.image ? (
+              <TouchableOpacity
+                onPress={() => setOpenImage(true)}
+                style={styles.imageContainer}>
+                <Image
+                  source={data?.image}
+                  style={[
+                    styles.image,
+                    { aspectRatio: imageWidth / imageHeight },
+                  ]}
+                  onLoadEnd={() => setImageLoading(false)}
+                  onLoad={(evt: any) => {
+                    setImageHeight(evt.nativeEvent.height);
+                    setImageWidth(evt.nativeEvent.width);
+                  }}
+                />
+                <Loading loading={isImageLoading} />
+              </TouchableOpacity>
+            ) : null}
+            <Text title2 bold style={styles.title}>
+              {data?.title}
+            </Text>
+            <Text body1 numberOfLines={1000} style={styles.content}>
+              {data?.description}
+            </Text>
+          </ScrollView>
           {data?.link ? (
             <Button
               full
@@ -139,6 +148,10 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 0,
   },
+  scrollView: {
+    flex: 1,
+    marginBottom: 20,
+  },
   imageContainer: {
     borderRadius: 10,
   },
@@ -149,7 +162,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   content: {
-    marginTop: 10,
+    marginVertical: 10,
   },
   button: {
     marginTop: 'auto',
