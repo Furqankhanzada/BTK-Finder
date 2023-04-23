@@ -77,8 +77,8 @@ export default function Navigator() {
 
   useEffect(() => {
     const getToken = async () => {
-      const token = AsyncStorage.getItem('access_token');
-      if (await token) {
+      const token = await AsyncStorage.getItem('access_token');
+      if (token) {
         setLogin(true);
       }
     };
@@ -89,7 +89,7 @@ export default function Navigator() {
     const getDarkTheme = async () => {
       const forceTheme = await AsyncStorage.getItem('force_theme');
       if (forceTheme) {
-        setForceTheme(forceTheme === 'true' ? true : false);
+        setForceTheme(forceTheme === 'true');
       }
     };
     getDarkTheme();
