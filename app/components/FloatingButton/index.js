@@ -15,7 +15,7 @@ export default function FloatingButton(props) {
       onPress={onPress}
       offsetX={offsetX}
       offsetY={offsetY}
-      icon={
+      renderIcon={() =>
         loading ? (
           <ActivityIndicator size="small" color="white" />
         ) : (
@@ -27,7 +27,7 @@ export default function FloatingButton(props) {
 }
 
 FloatingButton.propTypes = {
-  onPress: PropTypes.function,
+  onPress: PropTypes.func,
   offsetX: PropTypes.number,
   offsetY: PropTypes.number,
   loading: PropTypes.bool,
