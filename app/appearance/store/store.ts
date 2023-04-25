@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { DefaultFont } from '@config';
 
 export type AppearanceStoreTypes = {
   theme?: string;
@@ -14,7 +13,7 @@ export type AppearanceStoreActions = {
 };
 
 const initialState: AppearanceStoreTypes = {
-  font: DefaultFont,
+  font: 'Raleway',
 };
 
 const useAppStore = create<AppearanceStoreTypes & AppearanceStoreActions>(
