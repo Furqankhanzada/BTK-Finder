@@ -7,9 +7,10 @@
     "ios": "react-native run-ios --scheme explorebtk.dev",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint": "eslint . --ext .ts,.tsx",
     "generate:gql:types": "graphql-codegen --config codegen.yml",
-    "postinstall": "if [ $GITHUB_ACTION ]; then npx patch-package; else npx patch-package && npx jetify && npx pod-install; fi;"
+    "postinstall": "if [ $GITHUB_ACTION ]; then npx patch-package; else npx patch-package && npx jetify && npx pod-install; fi;",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "4.3.1",
@@ -118,7 +119,8 @@
     "react-native-flipper": "^0.162.0",
     "react-query-native-devtools": "^4.0.0",
     "react-test-renderer": "17.0.2",
-    "typescript": "^4.4.4"
+    "typescript": "^4.4.4",
+    "husky": "^8.0.0"
   },
   "resolutions": {
     "@types/react": "^17"
