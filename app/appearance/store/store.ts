@@ -2,13 +2,13 @@ import { create } from 'zustand';
 
 export type AppearanceStoreTypes = {
   theme?: string;
-  force_theme?: boolean;
+  themeMode?: string;
   font?: string;
 };
 
 export type AppearanceStoreActions = {
   setTheme: (theme: string) => void;
-  setForceTheme: (force_theme: boolean) => void;
+  setThemeMode: (themeMode: string) => void;
   setFont: (font: string) => void;
 };
 
@@ -21,7 +21,7 @@ const useAppStore = create<AppearanceStoreTypes & AppearanceStoreActions>(
     ...initialState,
 
     setTheme: (theme) => set(() => ({ theme })),
-    setForceTheme: (force_theme) => set(() => ({ force_theme })),
+    setThemeMode: (themeMode) => set(() => ({ themeMode })),
     setFont: (font) => set(() => ({ font })),
   }),
 );
