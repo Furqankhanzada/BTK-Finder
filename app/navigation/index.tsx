@@ -28,7 +28,7 @@ import { trackScreenView } from '../userTracking';
 import { RootStackParamList } from './models/RootStackParamList';
 import Main from './main';
 import { linkingConfig } from './deep-linking/LinkingConfig';
-import useAppStore, { AppearanceStoreActions } from '../appearance/store/store';
+import useAppStore from '../appearance/store/store';
 
 const RootStack = createStackNavigator<RootStackParamList>();
 
@@ -43,10 +43,7 @@ export default function Navigator() {
   useRemoteConfig();
 
   const setLogin = useAuthStore((state: AuthStoreActions) => state.setLogin);
-  const setForceTheme = useAppStore(
-    (state: AppearanceStoreActions) => state.setForceTheme,
-  );
-  const setFont = useAppStore((state: AppearanceStoreActions) => state.setFont);
+  const { setThemeMode, setFont } = useAppStore();
   const { theme, colors } = useTheme();
   const isDarkMode = useDarkMode();
   const routeNameRef = useRef() as MutableRefObject<string>;
@@ -87,13 +84,13 @@ export default function Navigator() {
 
   useEffect(() => {
     const getDarkTheme = async () => {
-      const forceTheme = await AsyncStorage.getItem('force_theme');
-      if (forceTheme) {
-        setForceTheme(forceTheme === 'true');
+      const themeMode = await AsyncStorage.getItem('themeMode');
+      if (themeMode) {
+        setThemeMode(themeMode);
       }
     };
     getDarkTheme();
-  }, [setForceTheme]);
+  }, [setThemeMode]);
 
   useEffect(() => {
     const getFont = async () => {
