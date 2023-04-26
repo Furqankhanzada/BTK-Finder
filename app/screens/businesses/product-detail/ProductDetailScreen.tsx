@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { StackScreenProps } from '@react-navigation/stack';
 
 import { Header, SafeAreaView, Icon, Image, Text, Tag } from '@components';
@@ -19,6 +18,7 @@ import { CatalogProductVariant } from '../../../models/graphql';
 import { IconName } from '../../../contexts/alerts-v2/models/Icon';
 import ProductDetailPlaceholder from './components/ProductDetailPlaceholder';
 import { BusinessType } from '../models/BusinessPresentable';
+import { getProductsTitle } from '../helpers/getProductsTitle';
 
 export default function ProductDetailScreen(
   props: StackScreenProps<ProductStackParamList, 'Product'>,
@@ -33,7 +33,6 @@ export default function ProductDetailScreen(
   } = useProductBySlug(business?.shop?.shopId, route.params.productSlug!);
 
   const { colors } = useTheme();
-  const { t } = useTranslation();
 
   const { showAlert } = useAlerts();
   const [selectedVariant, setSelectedVariant] =
@@ -88,7 +87,7 @@ export default function ProductDetailScreen(
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
-        title={t('menu')}
+        title={getProductsTitle(business?.type)}
         renderLeft={() => {
           return (
             <Icon
@@ -99,17 +98,6 @@ export default function ProductDetailScreen(
             />
           );
         }}
-        renderRight={() => {
-          return (
-            <Icon
-              name="shopping-cart"
-              size={20}
-              color={colors.primary}
-              enableRTL={true}
-            />
-          );
-        }}
-        onPressRight={onAddToCartPress}
         onPressLeft={() => {
           navigation.goBack();
         }}
