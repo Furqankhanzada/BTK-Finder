@@ -5,7 +5,7 @@ export type AuthStoreTypes = {
 };
 
 export type AuthStoreActions = {
-  setLogin: (isLogin: boolean) => void;
+  setIsLogin: (isLogin: boolean) => void;
 };
 
 const initialState: AuthStoreTypes = {
@@ -15,7 +15,7 @@ const initialState: AuthStoreTypes = {
 const useAuthStore = create<AuthStoreTypes & AuthStoreActions>((set) => ({
   ...initialState,
 
-  setLogin: (isLogin) => set(() => ({ isLogin })),
+  setIsLogin: (isLogin) => set(() => ({ isLogin })),
 }));
 
 export default useAuthStore;
