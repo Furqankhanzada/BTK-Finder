@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import useAppStore from '../../appearance/store/store';
 
 export default function Header(props) {
-  const forceDark = useAppStore((state) => state.force_theme);
+  const { themeMode } = useAppStore();
   const {
     style,
     styleLeft,
@@ -28,17 +28,18 @@ export default function Header(props) {
 
   useEffect(() => {
     let option = isDarkMode ? 'light-content' : 'dark-content';
-    if (forceDark) {
+    if (themeMode === 'light') {
       option = 'light-content';
     }
-    if (forceDark == false) {
+    if (themeMode === 'dark') {
       option = 'dark-content';
     }
     if (barStyle) {
       option = barStyle;
     }
     StatusBar.setBarStyle(option, true);
-  }, [forceDark, isDarkMode]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [themeMode, isDarkMode]);
 
   return (
     <View style={[styles.contain, style]}>
