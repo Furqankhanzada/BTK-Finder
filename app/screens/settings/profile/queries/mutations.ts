@@ -36,7 +36,6 @@ export type UploadProfileImageResponse = {
 };
 
 export const useDeleteUserAccount = () => {
-  const queryClient = useQueryClient();
   return useMutation<DeleteUserAccountResponse, Error, DeleteMutationVar>(
     ({ confirm }) => {
       return axiosApiInstance({
@@ -47,11 +46,6 @@ export const useDeleteUserAccount = () => {
         .catch(({ response }) => {
           handleError(response.data);
         });
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries();
-      },
     },
   );
 };

@@ -12,6 +12,8 @@ import {
 import { useTranslation } from 'react-i18next';
 import TextInputMask from 'react-native-text-input-mask';
 import ImagePicker from 'react-native-image-crop-picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useQueryClient } from '@tanstack/react-query';
 
 import {
   Image,
@@ -26,6 +28,7 @@ import {
 import { BaseStyle, BaseColor, useTheme } from '@config';
 import { useAlerts } from '@hooks';
 import { StackScreenProps } from '@react-navigation/stack';
+import useAuthStore, { AuthStoreActions } from '@screens/auth/store/Store';
 
 import { IconName } from '../../../../contexts/alerts-v2/models/Icon';
 import {
@@ -34,17 +37,21 @@ import {
   useEditProfile,
   useUploadProfileImage,
 } from '../queries/mutations';
-import { SettingsParamList } from '../../../../navigation/models/SettingsParamList';
+import { GlobalParamList } from 'navigation/models/GlobalParamList';
 import { useGetProfile } from '../queries/queries';
 import AccountInfoAlertContent from './components/AccountInfoAlertContent';
 
 export default function EditProfileScreen(
-  props: StackScreenProps<SettingsParamList, 'EditProfile'>,
+  props: StackScreenProps<GlobalParamList, 'EditProfile'>,
 ) {
+  const queryClient = useQueryClient();
   const { navigation } = props;
   const { colors } = useTheme();
   const { t } = useTranslation();
   const { showAlert, showNotification } = useAlerts();
+  const setIsLogin = useAuthStore(
+    (state: AuthStoreActions) => state.setIsLogin,
+  );
   const { mutateAsync: deleteUserAccount, isLoading } = useDeleteUserAccount();
   const { mutateAsync: editProfile, isLoading: isEditProfileLoading } =
     useEditProfile();
@@ -68,14 +75,14 @@ export default function EditProfileScreen(
     const response = await deleteUserAccount({ confirm: true });
 
     if (response?.success) {
-      //TODO: Will fix once we remove the redux from project.
-
-      //TODO: See how to redirect to Dashboard
-      /*
-      navigation.navigate('MainBottomTabNavigator', {
-        screen: 'DashboardStack',
+      setIsLogin(false);
+      AsyncStorage.removeItem('access_token');
+      navigation.navigate('Dashboard');
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Settings' }],
       });
-      */
+      queryClient.invalidateQueries();
 
       showNotification({
         icon: {
