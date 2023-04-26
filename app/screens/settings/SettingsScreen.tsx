@@ -34,7 +34,9 @@ export default function SettingsScreen(
   const queryClient = useQueryClient();
 
   const isLogin = useAuthStore((state: AuthStoreTypes) => state.isLogin);
-  const setLogin = useAuthStore((state: AuthStoreActions) => state.setLogin);
+  const setIsLogin = useAuthStore(
+    (state: AuthStoreActions) => state.setIsLogin,
+  );
   const { data: profileData } = useGetProfile();
 
   const navigateToMyBusinesses = (id: string) => {
@@ -47,7 +49,7 @@ export default function SettingsScreen(
    * @date 2019-08-03
    */
   const onLogOut = () => {
-    setLogin(false);
+    setIsLogin(false);
     AsyncStorage.removeItem('access_token');
     queryClient.invalidateQueries(['notifications']);
     queryClient.invalidateQueries(['notifications-count']);

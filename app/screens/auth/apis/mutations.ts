@@ -78,7 +78,9 @@ export const useRegisterAccount = () => {
 };
 
 export const useLogin = () => {
-  const setLogin = useAuthStore((state: AuthStoreActions) => state.setLogin);
+  const setIsLogin = useAuthStore(
+    (state: AuthStoreActions) => state.setIsLogin,
+  );
 
   return useMutation<LoginResponse, Error, LoginPayload>((payload) => {
     return axios({
@@ -92,7 +94,7 @@ export const useLogin = () => {
             'access_token',
             response?.data?.access_token,
           );
-          setLogin(true);
+          setIsLogin(true);
         } catch (e) {}
         return response.data;
       })
@@ -129,7 +131,9 @@ export const useResetPassword = () => {
 };
 
 export const useCodeVerification = () => {
-  const setLogin = useAuthStore((state: AuthStoreActions) => state.setLogin);
+  const setIsLogin = useAuthStore(
+    (state: AuthStoreActions) => state.setIsLogin,
+  );
 
   return useMutation<VerifyCodeResponse, Error, VerifyCodePayload>(
     (payload) => {
@@ -144,7 +148,7 @@ export const useCodeVerification = () => {
               'access_token',
               response?.data?.access_token,
             );
-            setLogin(true);
+            setIsLogin(true);
           } catch (e) {}
           return response.data;
         })

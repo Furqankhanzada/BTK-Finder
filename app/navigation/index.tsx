@@ -42,7 +42,9 @@ export default function Navigator() {
   // Firebase remote config
   useRemoteConfig();
 
-  const setLogin = useAuthStore((state: AuthStoreActions) => state.setLogin);
+  const setIsLogin = useAuthStore(
+    (state: AuthStoreActions) => state.setIsLogin,
+  );
   const { setThemeMode, setFont } = useAppStore();
   const { theme, colors } = useTheme();
   const isDarkMode = useDarkMode();
@@ -76,11 +78,11 @@ export default function Navigator() {
     const getToken = async () => {
       const token = await AsyncStorage.getItem('access_token');
       if (token) {
-        setLogin(true);
+        setIsLogin(true);
       }
     };
     getToken();
-  }, [setLogin]);
+  }, [setIsLogin]);
 
   useEffect(() => {
     const getDarkTheme = async () => {
