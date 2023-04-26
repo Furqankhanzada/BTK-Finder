@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
-import { BaseStyle, useTheme, FontSupport, DefaultFont } from '@config';
+import { BaseStyle, useTheme, FontSupport } from '@config';
 import { SafeAreaView, Icon, Text } from '@components';
 import styles from './styles';
 import { useTranslation } from 'react-i18next';
@@ -8,21 +8,14 @@ import { onChangeFont } from '../../../../../apis/application';
 import useAppStore from '../../../../../appearance/store/store';
 
 export default function SelectFontOption({ navigation }) {
-  const storageFont = useAppStore((state) => state.font);
-  const setStoreFont = useAppStore((state) => state.setFont);
+  const { font, setFont } = useAppStore();
   const { colors } = useTheme();
   const { t } = useTranslation();
 
-  const [font, setFont] = useState(storageFont);
-  const onChange = (font) => {
-    onChangeFont(font);
-    setStoreFont(font);
+  const onChange = (selectedFont) => {
+    onChangeFont(selectedFont);
     navigation.goBack();
   };
-
-  useEffect(() => {
-    setFont(storageFont ?? DefaultFont);
-  }, []);
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{ top: 'always' }}>
@@ -47,7 +40,7 @@ export default function SelectFontOption({ navigation }) {
                       {item}
                     </Text>
                   </View>
-                  {item == font && (
+                  {item === font && (
                     <Icon name="check" size={18} color={colors.primary} />
                   )}
                 </TouchableOpacity>
@@ -56,18 +49,10 @@ export default function SelectFontOption({ navigation }) {
           </View>
           <View style={styles.contentAction}>
             <TouchableOpacity
-              style={{ padding: 8, marginHorizontal: 24 }}
-              onPress={() => navigation.goBack()}>
-              <Text body1 grayColor>
-                {t('cancel')}
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
               style={{ padding: 8 }}
               onPress={() => onChange(font)}>
               <Text body1 primaryColor>
-                {t('apply')}
+                {t('Done')}
               </Text>
             </TouchableOpacity>
           </View>
