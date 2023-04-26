@@ -56,10 +56,10 @@ export default function EditProfileScreen(
   const nameRef = useRef<TextInputOriginal>(null);
   const emailRef = useRef<TextInputOriginal>(null);
   const [user, setUser] = useState<EditProfilePayload>({
-    _id: profileData?._id,
-    name: profileData?.name,
-    email: profileData?.email,
-    phone: profileData?.phone,
+    _id: profileData ? profileData._id : '',
+    name: profileData ? profileData.name : '',
+    email: profileData ? profileData.email : '',
+    phone: profileData ? profileData.phone : '',
     avatar: profileData?.avatar,
   });
   const [imageUri, setImageUri] = useState('');
