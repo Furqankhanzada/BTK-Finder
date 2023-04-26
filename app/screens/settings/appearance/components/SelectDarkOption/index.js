@@ -4,24 +4,18 @@ import { BaseStyle, useTheme } from '@config';
 import { SafeAreaView, Icon, Text } from '@components';
 import styles from './styles';
 import { useTranslation } from 'react-i18next';
-import { onForceTheme } from '../../../../../apis/application';
+import { onChangeThemeMode } from '../../../../../apis/application';
 import useAppStore from '../../../../../appearance/store/store';
 
 export default function SelectDarkOption({ navigation }) {
   const { t } = useTranslation();
   const { colors } = useTheme();
-  const setForceTheme = useAppStore((state) => state.setForceTheme);
+  const { themeMode, setThemeMode } = useAppStore();
+  const [mode, setMode] = useState(themeMode);
 
-  const storageForceDark = useAppStore((state) => state.force_theme);
-  const [forceDarkMode, setForceDarkMode] = useState(storageForceDark);
-
-  /**
-   * call when on change dark option
-   * @param {*} forceDarkMode
-   */
-  const onChange = (forceDarkMode) => {
-    onForceTheme(forceDarkMode === true ? 'true' : 'false');
-    setForceTheme(forceDarkMode);
+  const onChange = (thememode) => {
+    onChangeThemeMode(thememode);
+    setThemeMode(thememode);
     navigation.goBack();
   };
 
@@ -35,13 +29,13 @@ export default function SelectDarkOption({ navigation }) {
                 styles.item,
                 { borderBottomColor: colors.border, borderBottomWidth: 1 },
               ]}
-              onPress={() => setForceDarkMode(null)}>
+              onPress={() => setMode('dynamic')}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Text body1 style={{ marginHorizontal: 8 }}>
                   {t('dynamic_system')}
                 </Text>
               </View>
-              {forceDarkMode == null && (
+              {mode === 'dynamic' && (
                 <Icon name="check" size={18} color={colors.primary} />
               )}
             </TouchableOpacity>
@@ -50,25 +44,25 @@ export default function SelectDarkOption({ navigation }) {
                 styles.item,
                 { borderBottomColor: colors.border, borderBottomWidth: 1 },
               ]}
-              onPress={() => setForceDarkMode(true)}>
+              onPress={() => setMode('dark')}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Text body1 style={{ marginHorizontal: 8 }}>
                   {t('always_on')}
                 </Text>
               </View>
-              {forceDarkMode == true && (
+              {mode === 'dark' && (
                 <Icon name="check" size={18} color={colors.primary} />
               )}
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.item}
-              onPress={() => setForceDarkMode(false)}>
+              onPress={() => setMode('light')}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Text body1 style={{ marginHorizontal: 8 }}>
                   {t('always_off')}
                 </Text>
               </View>
-              {forceDarkMode == false && (
+              {mode === 'light' && (
                 <Icon name="check" size={18} color={colors.primary} />
               )}
             </TouchableOpacity>
@@ -84,7 +78,7 @@ export default function SelectDarkOption({ navigation }) {
 
             <TouchableOpacity
               style={{ padding: 8 }}
-              onPress={() => onChange(forceDarkMode)}>
+              onPress={() => onChange(mode)}>
               <Text body1 primaryColor>
                 {t('apply')}
               </Text>
