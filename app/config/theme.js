@@ -231,15 +231,15 @@ export const DefaultFont = 'Raleway';
  */
 export const useTheme = () => {
   const isDarkMode = useDarkMode();
-  const forceDark = useAppStore((state) => state.force_theme);
-  const themeStorage = useAppStore((state) => state.theme);
-  const listTheme = ThemeSupport.filter((item) => item.theme === themeStorage);
+  const { themeMode } = useAppStore();
+  // const themeStorage = useAppStore((state) => state.theme);
+  // const listTheme = ThemeSupport.filter((item) => item.theme === themeStorage);
   const theme = ThemeSupport[2];
 
-  if (forceDark) {
+  if (themeMode === 'dark') {
     return { theme: theme.dark, colors: theme.dark.colors };
   }
-  if (forceDark === false) {
+  if (themeMode === 'light') {
     return { theme: theme.light, colors: theme.light.colors };
   }
   return isDarkMode
@@ -252,6 +252,6 @@ export const useTheme = () => {
  * @returns font
  */
 export const useFont = () => {
-  const font = useAppStore((state) => state.font);
+  const { font } = useAppStore();
   return font ?? DefaultFont;
 };
