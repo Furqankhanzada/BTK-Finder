@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { View, TouchableOpacity, FlatList, StatusBar } from 'react-native';
+import { useTranslation } from 'react-i18next';
+
 import { ThemeSupport } from '@config';
 import { BaseStyle, useTheme } from '@config';
 import { Header, SafeAreaView, Icon, Text, Button } from '@components';
+
 import styles from './styles';
-import { useTranslation } from 'react-i18next';
 import { onChangeTheme } from '../../../../../apis/application';
 import useAppStore from '../../../../../appearance/store/store';
 
 export default function ThemeSetting({ navigation }) {
-  const themeStorage = useAppStore((state) => state.theme);
+  const { theme } = useAppStore();
   const { colors } = useTheme();
   const { t } = useTranslation();
 
@@ -20,10 +22,11 @@ export default function ThemeSetting({ navigation }) {
       themeSupport.map((item) => {
         return {
           ...item,
-          selected: item.theme === themeStorage,
+          selected: item.theme === theme,
         };
       }),
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /**
