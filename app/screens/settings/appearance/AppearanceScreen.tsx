@@ -14,14 +14,20 @@ export default function AppearanceScreen({
 }: StackScreenProps<GlobalParamList, 'Appearance'>) {
   const { t } = useTranslation();
   const { colors } = useTheme();
-  const forceDark = useAppStore((state) => state.force_theme);
-  const font = useAppStore((state) => state.font);
+  const { themeMode, font } = useAppStore();
 
-  const darkOption = forceDark
-    ? t('always_on')
-    : forceDark != null
-    ? t('always_off')
-    : t('dynamic_system');
+  const darkOption = () => {
+    switch (themeMode) {
+      case 'light':
+        return t('always_off');
+      case 'dark':
+        return t('always_on');
+      case 'dynamic':
+        return t('dynamic_system');
+      default:
+        return t('dynamic_system');
+    }
+  };
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
@@ -84,7 +90,7 @@ export default function AppearanceScreen({
           <Text body1>{t('dark_theme')}</Text>
           <View style={styles.profileItemRightContainer}>
             <Text body1 grayColor>
-              {darkOption}
+              {darkOption()}
             </Text>
             <Icon
               name="angle-right"
