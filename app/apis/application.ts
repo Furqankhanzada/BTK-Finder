@@ -4,8 +4,8 @@ export const onChangeTheme = async (theme: string) => {
   await AsyncStorage.setItem('theme', theme);
 };
 
-export const onForceTheme = async (forceTheme: string) => {
-  await AsyncStorage.setItem('force_theme', forceTheme);
+export const onChangeThemeMode = async (themeMode: string) => {
+  await AsyncStorage.setItem('themeMode', themeMode);
 };
 
 export const onChangeFont = async (font: string) => {
