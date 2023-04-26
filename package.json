@@ -11,12 +11,6 @@
     "generate:gql:types": "graphql-codegen --config codegen.yml",
     "postinstall": "if [ $GITHUB_ACTION ]; then npx patch-package; else npx patch-package && npx jetify && npx pod-install; fi;"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn tsc && yarn lint",
-      "pre-push": "yarn test"
-    }
-  },
   "dependencies": {
     "@gorhom/bottom-sheet": "4.3.1",
     "@react-native-async-storage/async-storage": "^1.16.1",
@@ -140,5 +134,11 @@
       "json",
       "node"
     ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn tsc && yarn lint",
+      "pre-push": "yarn test"
+    }
   }
 }
