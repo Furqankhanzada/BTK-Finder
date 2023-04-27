@@ -12,8 +12,8 @@ export default function SelectFontOption({ navigation }) {
   const { colors } = useTheme();
   const { t } = useTranslation();
 
-  const onChange = (selectedFont) => {
-    saveFont(selectedFont);
+  const onClose = () => {
+    saveFont(font);
     navigation.goBack();
   };
 
@@ -48,11 +48,9 @@ export default function SelectFontOption({ navigation }) {
             })}
           </View>
           <View style={styles.contentAction}>
-            <TouchableOpacity
-              style={{ padding: 8 }}
-              onPress={() => onChange(font)}>
+            <TouchableOpacity style={{ padding: 8 }} onPress={onClose}>
               <Text body1 primaryColor>
-                {t('Done')}
+                {t('Close')}
               </Text>
             </TouchableOpacity>
           </View>

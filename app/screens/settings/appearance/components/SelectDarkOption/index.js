@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { BaseStyle, useTheme } from '@config';
 import { SafeAreaView, Icon, Text } from '@components';
@@ -11,11 +11,9 @@ export default function SelectDarkOption({ navigation }) {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const { themeMode, setThemeMode } = useAppStore();
-  const [mode, setMode] = useState(themeMode);
 
-  const onChange = (thememode) => {
-    saveThemeMode(thememode);
-    setThemeMode(thememode);
+  const onClose = () => {
+    saveThemeMode(themeMode);
     navigation.goBack();
   };
 
@@ -29,13 +27,13 @@ export default function SelectDarkOption({ navigation }) {
                 styles.item,
                 { borderBottomColor: colors.border, borderBottomWidth: 1 },
               ]}
-              onPress={() => setMode('dynamic')}>
+              onPress={() => setThemeMode('dynamic')}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Text body1 style={{ marginHorizontal: 8 }}>
                   {t('dynamic_system')}
                 </Text>
               </View>
-              {mode === 'dynamic' && (
+              {themeMode === 'dynamic' && (
                 <Icon name="check" size={18} color={colors.primary} />
               )}
             </TouchableOpacity>
@@ -44,43 +42,33 @@ export default function SelectDarkOption({ navigation }) {
                 styles.item,
                 { borderBottomColor: colors.border, borderBottomWidth: 1 },
               ]}
-              onPress={() => setMode('dark')}>
+              onPress={() => setThemeMode('dark')}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Text body1 style={{ marginHorizontal: 8 }}>
                   {t('always_on')}
                 </Text>
               </View>
-              {mode === 'dark' && (
+              {themeMode === 'dark' && (
                 <Icon name="check" size={18} color={colors.primary} />
               )}
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.item}
-              onPress={() => setMode('light')}>
+              onPress={() => setThemeMode('light')}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Text body1 style={{ marginHorizontal: 8 }}>
                   {t('always_off')}
                 </Text>
               </View>
-              {mode === 'light' && (
+              {themeMode === 'light' && (
                 <Icon name="check" size={18} color={colors.primary} />
               )}
             </TouchableOpacity>
           </View>
           <View style={styles.contentAction}>
-            <TouchableOpacity
-              style={{ padding: 8, marginHorizontal: 24 }}
-              onPress={() => navigation.goBack()}>
-              <Text body1 grayColor>
-                {t('cancel')}
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={{ padding: 8 }}
-              onPress={() => onChange(mode)}>
+            <TouchableOpacity style={{ padding: 8 }} onPress={onClose}>
               <Text body1 primaryColor>
-                {t('apply')}
+                {t('Close')}
               </Text>
             </TouchableOpacity>
           </View>
