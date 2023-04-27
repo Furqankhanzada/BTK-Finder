@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { ThemeMode } from './models/appStore';
 
 export type AppStoreStates = {
   theme?: string;
@@ -8,7 +9,7 @@ export type AppStoreStates = {
 
 export type AppStoreActions = {
   setTheme: (theme: string) => void;
-  setThemeMode: (themeMode: 'light' | 'dark' | 'dynamic') => void;
+  setThemeMode: (themeMode: ThemeMode) => void;
   setFont: (font: string) => void;
 };
 
