@@ -29,6 +29,7 @@ import { RootStackParamList } from './models/RootStackParamList';
 import Main from './main';
 import { linkingConfig } from './deep-linking/LinkingConfig';
 import useAppStore from '../store/appStore';
+import { Font, ThemeMode } from 'store/models/appStore';
 
 const RootStack = createStackNavigator<RootStackParamList>();
 
@@ -86,7 +87,7 @@ export default function Navigator() {
 
   useEffect(() => {
     const getDarkTheme = async () => {
-      const themeMode = await AsyncStorage.getItem('themeMode');
+      const themeMode = (await AsyncStorage.getItem('themeMode')) as ThemeMode;
       if (themeMode) {
         setThemeMode(themeMode);
       }
@@ -96,7 +97,7 @@ export default function Navigator() {
 
   useEffect(() => {
     const getFont = async () => {
-      const font = await AsyncStorage.getItem('font');
+      const font = (await AsyncStorage.getItem('font')) as Font;
       if (font) {
         setFont(font);
       }
