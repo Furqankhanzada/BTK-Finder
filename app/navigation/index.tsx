@@ -28,7 +28,7 @@ import { trackScreenView } from '../userTracking';
 import { RootStackParamList } from './models/RootStackParamList';
 import Main from './main';
 import { linkingConfig } from './deep-linking/LinkingConfig';
-import useAppStore from '../appearance/store/store';
+import useAppStore from '../store/appStore';
 
 const RootStack = createStackNavigator<RootStackParamList>();
 

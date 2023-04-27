@@ -5,7 +5,7 @@ import { SafeAreaView, Icon, Text } from '@components';
 import styles from './styles';
 import { useTranslation } from 'react-i18next';
 import { saveFont } from '../../../../../apis/application';
-import useAppStore from '../../../../../appearance/store/store';
+import useAppStore from '../../../../../store/appStore';
 
 export default function SelectFontOption({ navigation }) {
   const { font, setFont } = useAppStore();

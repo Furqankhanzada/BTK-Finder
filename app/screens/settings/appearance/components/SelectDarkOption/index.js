@@ -5,7 +5,7 @@ import { SafeAreaView, Icon, Text } from '@components';
 import styles from './styles';
 import { useTranslation } from 'react-i18next';
 import { saveThemeMode } from '../../../../../apis/application';
-import useAppStore from '../../../../../appearance/store/store';
+import useAppStore from '../../../../../store/appStore';
 
 export default function SelectDarkOption({ navigation }) {
   const { t } = useTranslation();

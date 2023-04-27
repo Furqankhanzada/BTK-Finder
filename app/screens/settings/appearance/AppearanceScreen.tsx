@@ -7,7 +7,7 @@ import { BaseStyle, useTheme } from '@config';
 import { Header, SafeAreaView, Icon, Text } from '@components';
 
 import { GlobalParamList } from 'navigation/models/GlobalParamList';
-import useAppStore from '../../../appearance/store/store';
+import useAppStore from '../../../store/appStore';
 
 export default function AppearanceScreen({
   navigation,

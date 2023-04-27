@@ -1,5 +1,5 @@
 import { useDarkMode } from 'react-native-dynamic';
-import useAppStore from '../appearance/store/store';
+import useAppStore from '../store/appStore';
 
 /**
  * Define Const color use for whole application

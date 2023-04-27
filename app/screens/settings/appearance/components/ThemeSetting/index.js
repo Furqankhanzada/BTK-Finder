@@ -8,7 +8,7 @@ import { Header, SafeAreaView, Icon, Text, Button } from '@components';
 
 import styles from './styles';
 import { saveTheme } from '../../../../../apis/application';
-import useAppStore from '../../../../../appearance/store/store';
+import useAppStore from '../../../../../store/appStore';
 
 export default function ThemeSetting({ navigation }) {
   const { theme } = useAppStore();
