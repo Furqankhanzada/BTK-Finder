@@ -21,7 +21,7 @@ import ChooseItems from '@screens/ChooseItems';
 import SearchHistory from '@screens/SearchHistory';
 import SelectDarkOption from '@screens/settings/appearance/components/SelectDarkOption';
 import SelectFontOption from '@screens/settings/appearance/components/SelectFontOption';
-import useAuthStore, { AuthStoreActions } from '@screens/auth/store/Store';
+import useAuthStore from '@screens/auth/store/Store';
 
 import { navigationRef, isReadyRef } from '../services/NavigationService';
 import { trackScreenView } from '../userTracking';
@@ -29,6 +29,7 @@ import { RootStackParamList } from './models/RootStackParamList';
 import Main from './main';
 import { linkingConfig } from './deep-linking/LinkingConfig';
 import useAppStore from '../appearance/store/store';
+import { useGetProfile } from '@screens/settings/profile/queries/queries';
 
 const RootStack = createStackNavigator<RootStackParamList>();
 
@@ -42,10 +43,9 @@ export default function Navigator() {
   // Firebase remote config
   useRemoteConfig();
 
-  const setIsLogin = useAuthStore(
-    (state: AuthStoreActions) => state.setIsLogin,
-  );
   const { setThemeMode, setFont } = useAppStore();
+  const { setUser, setIsLogin } = useAuthStore();
+  const { data: userData } = useGetProfile();
   const { theme, colors } = useTheme();
   const isDarkMode = useDarkMode();
   const routeNameRef = useRef() as MutableRefObject<string>;
@@ -103,6 +103,12 @@ export default function Navigator() {
     };
     getFont();
   }, [setFont]);
+
+  useEffect(() => {
+    if (userData) {
+      setUser(userData);
+    }
+  }, [setUser, userData]);
 
   return (
     <NavigationContainer
