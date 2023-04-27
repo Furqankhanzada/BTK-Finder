@@ -8,10 +8,10 @@ import {
 } from '@screens/businesses/models/BusinessPresentable';
 import { useDynamicLinks } from '@hooks';
 import { toggleFavoritesInCache } from '@screens/businesses/helpers/toggleFavoritesInCache';
-import { useGetProfile } from '@screens/settings/profile/queries/queries';
 
 import axiosApiInstance from '../../../interceptor/axios-interceptor';
 import { BUSINESSES_API } from '../../../constants';
+import useAuthStore from '@screens/auth/store/Store';
 
 export enum FavoriteType {
   favorite = 'favorite',
@@ -27,7 +27,7 @@ export type AddReviewPayload = Pick<Review, 'title' | 'description' | 'rating'>;
 
 export const useToggleFavorite = () => {
   const queryClient = useQueryClient();
-  const { data: user } = useGetProfile();
+  const { user } = useAuthStore();
 
   return useMutation<BusinessPresentable, Error, FavoritesMutationVar>(
     ({ businessId, type }) => {

@@ -8,7 +8,7 @@ import {
   Favorite,
 } from '@screens/businesses/models/BusinessPresentable';
 import { BusinessParams } from '@screens/businesses/models/BusinessParams';
-import { useGetProfile } from '@screens/settings/profile/queries/queries';
+import useAuthStore from '@screens/auth/store/Store';
 import { HorizontalBusinessPlaceholder } from './DashboardPlaceholders';
 
 interface Props {
@@ -22,7 +22,7 @@ export default function HorizontalBusinesses({
   params,
   onPress,
 }: Props) {
-  const { data: user } = useGetProfile();
+  const { user } = useAuthStore();
   const { data: businesses, isLoading } = useBusinesses(queryKey, params);
 
   return isLoading ? (

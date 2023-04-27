@@ -38,7 +38,6 @@ import {
   useUploadProfileImage,
 } from '../queries/mutations';
 import { GlobalParamList } from 'navigation/models/GlobalParamList';
-import { useGetProfile } from '../queries/queries';
 import AccountInfoAlertContent from './components/AccountInfoAlertContent';
 
 export default function EditProfileScreen(
@@ -58,7 +57,7 @@ export default function EditProfileScreen(
   const { mutate: uploadProfileImage, isLoading: isUploadProfileLoading } =
     useUploadProfileImage();
 
-  const { data: profileData } = useGetProfile();
+  const { user: profileData } = useAuthStore();
 
   const nameRef = useRef<TextInputOriginal>(null);
   const emailRef = useRef<TextInputOriginal>(null);

@@ -19,7 +19,6 @@ import {
 } from '@components';
 
 import { GlobalParamList } from 'navigation/models/GlobalParamList';
-import { useGetProfile } from './profile/queries/queries';
 import useAuthStore, {
   AuthStoreActions,
   AuthStoreStates,
@@ -37,7 +36,7 @@ export default function SettingsScreen(
   const setIsLogin = useAuthStore(
     (state: AuthStoreActions) => state.setIsLogin,
   );
-  const { data: profileData } = useGetProfile();
+  const { user } = useAuthStore();
 
   const navigateToMyBusinesses = (id: string) => {
     navigation.navigate('MyBusinesses', { id });
@@ -58,7 +57,7 @@ export default function SettingsScreen(
   const CopyToClipboard = () => {
     Clipboard.setString(
       `UserId ${
-        profileData?._id
+        user?._id
       }\nApp Version ${DeviceInfo.getVersion()}\nBuild Number ${DeviceInfo.getBuildNumber()}`,
     );
     Toast.show('Information copied to clipboard');
@@ -69,22 +68,18 @@ export default function SettingsScreen(
       <Header title="Settings" />
       <ScrollView>
         <View style={styles.contain}>
-          {isLogin && profileData ? (
+          {isLogin && user ? (
             <View>
               <ProfileDetail
                 image={
-                  profileData.avatar
-                    ? { uri: profileData.avatar }
+                  user.avatar
+                    ? { uri: user.avatar }
                     : require('@assets/images/default-avatar.png')
                 }
-                textFirst={profileData.name}
-                textSecond={profileData.email}
-                textThird={profileData.phone}
-                isAdmin={
-                  profileData && profileData.roles
-                    ? profileData.roles[0] === 'ADMIN'
-                    : false
-                }
+                textFirst={user.name}
+                textSecond={user.email}
+                textThird={user.phone}
+                isAdmin={user && user.roles ? user.roles[0] === 'ADMIN' : false}
               />
               <TouchableOpacity
                 style={[
@@ -125,7 +120,7 @@ export default function SettingsScreen(
                   styles.profileItem,
                   { borderBottomColor: colors.border },
                 ]}
-                onPress={() => navigateToMyBusinesses(profileData._id)}>
+                onPress={() => navigateToMyBusinesses(user._id)}>
                 <Text body1>{t('my_businesses')}</Text>
                 <Icon
                   name="angle-right"
@@ -134,7 +129,7 @@ export default function SettingsScreen(
                   enableRTL={true}
                 />
               </TouchableOpacity>
-              {profileData && profileData?.roles?.includes('ADMIN') ? (
+              {user && user?.roles?.includes('ADMIN') ? (
                 <TouchableOpacity
                   style={[
                     styles.profileItem,
@@ -217,9 +212,9 @@ export default function SettingsScreen(
           <TouchableOpacity
             style={styles.appInfoContainer}
             onLongPress={CopyToClipboard}>
-            {isLogin && profileData?._id ? (
+            {isLogin && user?._id ? (
               <Text body2 bold grayColor>
-                UserId {profileData._id}
+                UserId {user._id}
               </Text>
             ) : null}
             <Text body2 bold grayColor>

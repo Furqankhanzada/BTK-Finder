@@ -18,7 +18,6 @@ import {
   BusinessPresentable,
   Favorite,
 } from '@screens/businesses/models/BusinessPresentable';
-import { useGetProfile } from '@screens/settings/profile/queries/queries';
 import * as Utils from '@utils';
 import {
   Header,
@@ -30,6 +29,7 @@ import {
   Loading,
   Text,
 } from '@components';
+import useAuthStore from '@screens/auth/store/Store';
 
 import { EVENTS, trackEvent } from '../../../userTracking';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
@@ -60,7 +60,7 @@ export default function BusinessesScreen(
   const [isSortLocation, setSortLocation] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
 
-  const { data: user } = useGetProfile();
+  const { user } = useAuthStore();
   const { title, ...restParams } = route.params;
 
   const {

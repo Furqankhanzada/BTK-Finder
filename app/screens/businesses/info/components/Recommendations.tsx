@@ -7,7 +7,7 @@ import CustomSectionList from '@screens/businesses/info/components/CustomSection
 import { useBusinesses } from '@screens/businesses/queries/queries';
 import { BusinessPresentable } from '@screens/businesses/models/BusinessPresentable';
 import { BusinessesQueryKeysWithFav } from '@screens/businesses/models/BusinessesQueryKeys';
-import { useGetProfile } from '@screens/settings/profile/queries/queries';
+import useAuthStore from '@screens/auth/store/Store';
 
 interface Props {
   onPress: (id: string) => void;
@@ -16,7 +16,7 @@ interface Props {
 
 export default function Recommendations({ business, onPress }: Props) {
   const { t } = useTranslation();
-  const { data: user } = useGetProfile();
+  const { user } = useAuthStore();
   // Recent Businesses
   const { isLoading: isRecentLoading, data: recentBusinesses } = useBusinesses(
     [BusinessesQueryKeysWithFav.recentBusinesses],
