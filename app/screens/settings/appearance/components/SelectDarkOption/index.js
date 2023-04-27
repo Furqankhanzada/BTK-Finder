@@ -4,7 +4,7 @@ import { BaseStyle, useTheme } from '@config';
 import { SafeAreaView, Icon, Text } from '@components';
 import styles from './styles';
 import { useTranslation } from 'react-i18next';
-import { onChangeThemeMode } from '../../../../../apis/application';
+import { saveThemeMode } from '../../../../../apis/application';
 import useAppStore from '../../../../../appearance/store/store';
 
 export default function SelectDarkOption({ navigation }) {
@@ -14,7 +14,7 @@ export default function SelectDarkOption({ navigation }) {
   const [mode, setMode] = useState(themeMode);
 
   const onChange = (thememode) => {
-    onChangeThemeMode(thememode);
+    saveThemeMode(thememode);
     setThemeMode(thememode);
     navigation.goBack();
   };

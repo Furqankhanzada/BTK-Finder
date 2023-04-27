@@ -1,10 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const onChangeTheme = async (theme: string) => {
+export const saveTheme = async (theme: string) => {
   await AsyncStorage.setItem('theme', theme);
 };
 
-export const onChangeThemeMode = async (themeMode: string) => {
+export const saveThemeMode = async (
+  themeMode: 'light' | 'dark' | 'dynamic',
+) => {
   await AsyncStorage.setItem('themeMode', themeMode);
 };
 
