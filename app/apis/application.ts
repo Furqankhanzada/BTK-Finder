@@ -10,6 +10,6 @@ export const saveThemeMode = async (
   await AsyncStorage.setItem('themeMode', themeMode);
 };
 
-export const onChangeFont = async (font: string) => {
+export const saveFont = async (font: string) => {
   await AsyncStorage.setItem('font', font);
 };
