@@ -4,7 +4,7 @@ import { BaseStyle, useTheme } from '@config';
 import { SafeAreaView, Icon, Text } from '@components';
 import styles from './styles';
 import { useTranslation } from 'react-i18next';
-import { saveThemeMode } from '../../../../../apis/application';
+import { saveThemeMode } from '../../../../../services/storage/application';
 import useAppStore from '../../../../../store/appStore';
 
 export default function SelectDarkOption({ navigation }) {

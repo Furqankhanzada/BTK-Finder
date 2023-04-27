@@ -7,7 +7,7 @@ import { BaseStyle, useTheme } from '@config';
 import { Header, SafeAreaView, Icon, Text, Button } from '@components';
 
 import styles from './styles';
-import { saveTheme } from '../../../../../apis/application';
+import { saveTheme } from '../../../../../services/storage/application';
 import useAppStore from '../../../../../store/appStore';
 
 export default function ThemeSetting({ navigation }) {
