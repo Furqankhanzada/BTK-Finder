@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-export type AuthStoreTypes = {
+export type AuthStoreStates = {
   isLogin?: boolean;
 };
 
@@ -8,11 +8,11 @@ export type AuthStoreActions = {
   setIsLogin: (isLogin: boolean) => void;
 };
 
-const initialState: AuthStoreTypes = {
+const initialState: AuthStoreStates = {
   isLogin: false,
 };
 
-const useAuthStore = create<AuthStoreTypes & AuthStoreActions>((set) => ({
+const useAuthStore = create<AuthStoreStates & AuthStoreActions>((set) => ({
   ...initialState,
 
   setIsLogin: (isLogin) => set(() => ({ isLogin })),

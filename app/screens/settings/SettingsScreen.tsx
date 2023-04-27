@@ -22,7 +22,7 @@ import { GlobalParamList } from 'navigation/models/GlobalParamList';
 import { useGetProfile } from './profile/queries/queries';
 import useAuthStore, {
   AuthStoreActions,
-  AuthStoreTypes,
+  AuthStoreStates,
 } from '@screens/auth/store/Store';
 
 export default function SettingsScreen(
@@ -33,7 +33,7 @@ export default function SettingsScreen(
   const { t } = useTranslation();
   const queryClient = useQueryClient();
 
-  const isLogin = useAuthStore((state: AuthStoreTypes) => state.isLogin);
+  const isLogin = useAuthStore((state: AuthStoreStates) => state.isLogin);
   const setIsLogin = useAuthStore(
     (state: AuthStoreActions) => state.setIsLogin,
   );

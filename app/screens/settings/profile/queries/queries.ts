@@ -3,10 +3,10 @@ import { handleError } from '@utils';
 import { GET_PROFILE } from '../../../../constants';
 import { UserPresentable } from '../models/UserPresentable';
 import axiosApiInstance from '../../../../interceptor/axios-interceptor';
-import useAuthStore, { AuthStoreTypes } from '@screens/auth/store/Store';
+import useAuthStore, { AuthStoreStates } from '@screens/auth/store/Store';
 
 export const useGetProfile = () => {
-  const isLogin = useAuthStore((state: AuthStoreTypes) => state.isLogin);
+  const isLogin = useAuthStore((state: AuthStoreStates) => state.isLogin);
 
   return useQuery(
     ['profile'],

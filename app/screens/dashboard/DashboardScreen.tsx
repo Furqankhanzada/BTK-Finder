@@ -21,7 +21,7 @@ import {
   BannersPresentable,
 } from '@screens/dashboard/models/BannersPresentable';
 import { useNotifications } from '@screens/notifications/queries/queries';
-import useAuthStore, { AuthStoreTypes } from '@screens/auth/store/Store';
+import useAuthStore, { AuthStoreStates } from '@screens/auth/store/Store';
 import { useGetProfile } from '@screens/settings/profile/queries/queries';
 
 import NotificationIcon from './components/NotificationIcon';
@@ -44,7 +44,7 @@ function DashboardScreen({
 }: StackScreenProps<GlobalParamList, 'Dashboard'>) {
   const { colors } = useTheme();
   const remoteConfig = useRemoteConfig();
-  const isLogin = useAuthStore((state: AuthStoreTypes) => state.isLogin);
+  const isLogin = useAuthStore((state: AuthStoreStates) => state.isLogin);
   const { data: profileData } = useGetProfile();
   const { data: notifications } = useNotifications(['notifications-count'], {
     deviceUniqueId: getUniqueId(),

@@ -22,7 +22,7 @@ import {
 } from '@components';
 import { useBusiness } from '@screens/businesses/queries/queries';
 import { useGetProfile } from '@screens/settings/profile/queries/queries';
-import useAuthStore, { AuthStoreTypes } from '@screens/auth/store/Store';
+import useAuthStore, { AuthStoreStates } from '@screens/auth/store/Store';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 
 export default function Review(
@@ -32,7 +32,7 @@ export default function Review(
   const { colors } = useTheme();
   const { t } = useTranslation();
 
-  const isLogin = useAuthStore((state: AuthStoreTypes) => state.isLogin);
+  const isLogin = useAuthStore((state: AuthStoreStates) => state.isLogin);
   const { data: profileData } = useGetProfile();
   const {
     isLoading,

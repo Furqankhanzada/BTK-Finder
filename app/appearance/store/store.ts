@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-export type AppearanceStoreTypes = {
+export type AppearanceStoreStates = {
   theme?: string;
   themeMode?: string;
   font?: string;
@@ -8,15 +8,15 @@ export type AppearanceStoreTypes = {
 
 export type AppearanceStoreActions = {
   setTheme: (theme: string) => void;
-  setThemeMode: (themeMode: string) => void;
+  setThemeMode: (themeMode: 'light' | 'dark' | 'dynamic') => void;
   setFont: (font: string) => void;
 };
 
-const initialState: AppearanceStoreTypes = {
+const initialState: AppearanceStoreStates = {
   font: 'Raleway',
 };
 
-const useAppStore = create<AppearanceStoreTypes & AppearanceStoreActions>(
+const useAppStore = create<AppearanceStoreStates & AppearanceStoreActions>(
   (set) => ({
     ...initialState,
 
