@@ -81,9 +81,25 @@ export default function ProductDetailScreen(
     setIsReFetching(false);
   };
 
+  const renderCartIcon = () => {
+    if (business?.type === BusinessType.gym) {
+      return null;
+    }
+
+    return (
+      <Icon
+        name="shopping-cart"
+        size={20}
+        color={colors.primary}
+        enableRTL={true}
+      />
+    );
+  };
+
   if (isLoading) {
     return <ProductDetailPlaceholder />;
   }
+
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
@@ -100,6 +116,12 @@ export default function ProductDetailScreen(
         }}
         onPressLeft={() => {
           navigation.goBack();
+        }}
+        renderRight={renderCartIcon}
+        onPressRight={() => {
+          if (business?.type !== BusinessType.gym) {
+            onAddToCartPress();
+          }
         }}
       />
       <FlatList
