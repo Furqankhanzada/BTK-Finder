@@ -19,5 +19,4 @@ export type RootStackParamList = {
     search?: boolean;
   };
   SearchHistory: undefined;
-  SelectDarkOption: undefined;
 };

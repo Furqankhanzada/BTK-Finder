@@ -19,7 +19,6 @@ import {
 import Filter from '@screens/Filter';
 import ChooseItems from '@screens/ChooseItems';
 import SearchHistory from '@screens/SearchHistory';
-import SelectDarkOption from '@screens/settings/appearance/components/SelectDarkOption';
 import useAuthStore, { AuthStoreActions } from '@screens/auth/store/Store';
 
 import { navigationRef, isReadyRef } from '../services/NavigationService';
@@ -48,12 +47,6 @@ export default function Navigator() {
   const { theme, colors } = useTheme();
   const isDarkMode = useDarkMode();
   const routeNameRef = useRef() as MutableRefObject<string>;
-
-  const forFade = ({ current }: any) => ({
-    cardStyle: {
-      opacity: current.progress,
-    },
-  });
 
   useEffect(() => {
     i18n.use(initReactI18next).init({
@@ -134,14 +127,6 @@ export default function Navigator() {
           component={ChooseItems}
         />
         <RootStack.Screen name="SearchHistory" component={SearchHistory} />
-        <RootStack.Screen
-          name="SelectDarkOption"
-          component={SelectDarkOption}
-          options={{
-            cardStyleInterpolator: forFade,
-            cardStyle: { backgroundColor: 'rgba(0, 0, 0, 0.5)' },
-          }}
-        />
       </RootStack.Navigator>
     </NavigationContainer>
   );
