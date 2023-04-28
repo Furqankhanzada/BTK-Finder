@@ -10,6 +10,7 @@ import { useAlerts } from '@hooks';
 import { GlobalParamList } from 'navigation/models/GlobalParamList';
 import useAppStore from '../../../appearance/store/store';
 import SelectFontOption from './components/SelectFontOption';
+import SelectDarkOption from './components/SelectDarkOption';
 
 export default function AppearanceScreen({
   navigation,
@@ -36,6 +37,16 @@ export default function AppearanceScreen({
     await showAlert({
       type: 'Custom',
       content: () => <SelectFontOption />,
+      btn: {
+        confirmBtnTitle: 'Close',
+      },
+    });
+  };
+
+  const onPressDarkTheme = async () => {
+    await showAlert({
+      type: 'Custom',
+      content: () => <SelectDarkOption />,
       btn: {
         confirmBtnTitle: 'Close',
       },
@@ -97,9 +108,7 @@ export default function AppearanceScreen({
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.profileItem]}
-          onPress={() => {
-            navigation.navigate('SelectDarkOption');
-          }}>
+          onPress={onPressDarkTheme}>
           <Text body1>{t('dark_theme')}</Text>
           <View style={styles.profileItemRightContainer}>
             <Text body1 grayColor>
