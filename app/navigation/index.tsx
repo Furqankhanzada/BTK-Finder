@@ -20,7 +20,6 @@ import Filter from '@screens/Filter';
 import ChooseItems from '@screens/ChooseItems';
 import SearchHistory from '@screens/SearchHistory';
 import SelectDarkOption from '@screens/settings/appearance/components/SelectDarkOption';
-import SelectFontOption from '@screens/settings/appearance/components/SelectFontOption';
 import useAuthStore, { AuthStoreActions } from '@screens/auth/store/Store';
 
 import { navigationRef, isReadyRef } from '../services/NavigationService';
@@ -138,14 +137,6 @@ export default function Navigator() {
         <RootStack.Screen
           name="SelectDarkOption"
           component={SelectDarkOption}
-          options={{
-            cardStyleInterpolator: forFade,
-            cardStyle: { backgroundColor: 'rgba(0, 0, 0, 0.5)' },
-          }}
-        />
-        <RootStack.Screen
-          name="SelectFontOption"
-          component={SelectFontOption}
           options={{
             cardStyleInterpolator: forFade,
             cardStyle: { backgroundColor: 'rgba(0, 0, 0, 0.5)' },

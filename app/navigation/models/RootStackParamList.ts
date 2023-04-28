@@ -20,5 +20,4 @@ export type RootStackParamList = {
   };
   SearchHistory: undefined;
   SelectDarkOption: undefined;
-  SelectFontOption: undefined;
 };
