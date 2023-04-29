@@ -4,10 +4,10 @@ import { useTheme } from '@config';
 import { Icon, Text } from '@components';
 import { useTranslation } from 'react-i18next';
 
-import { saveThemeMode } from '../../../../../apis/application';
-import useAppStore from '../../../../../appearance/store/store';
+import { saveThemeMode } from '../../../../apis/application';
+import useAppStore from '../../../../appearance/store/store';
 
-export default function SelectDarkOption() {
+export default function SelectThemeModeAlert() {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const { themeMode, setThemeMode } = useAppStore();

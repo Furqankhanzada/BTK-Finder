@@ -9,8 +9,8 @@ import { useAlerts } from '@hooks';
 
 import { GlobalParamList } from 'navigation/models/GlobalParamList';
 import useAppStore from '../../../appearance/store/store';
-import SelectFontOption from './components/SelectFontOption';
-import SelectDarkOption from './components/SelectDarkOption';
+import SelectThemeFontAlert from './components/SelectThemeFontAlert';
+import SelectThemeModeAlert from './components/SelectThemeModeAlert';
 
 export default function AppearanceScreen({
   navigation,
@@ -36,7 +36,7 @@ export default function AppearanceScreen({
   const onPressFont = async () => {
     await showAlert({
       type: 'Custom',
-      content: () => <SelectFontOption />,
+      content: () => <SelectThemeFontAlert />,
       btn: {
         confirmBtnTitle: 'Close',
       },
@@ -46,7 +46,7 @@ export default function AppearanceScreen({
   const onPressDarkTheme = async () => {
     await showAlert({
       type: 'Custom',
-      content: () => <SelectDarkOption />,
+      content: () => <SelectThemeModeAlert />,
       btn: {
         confirmBtnTitle: 'Close',
       },

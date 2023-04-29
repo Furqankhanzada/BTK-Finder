@@ -3,10 +3,10 @@ import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { useTheme, FontSupport } from '@config';
 import { Icon, Text } from '@components';
 
-import { saveFont } from '../../../../../apis/application';
-import useAppStore from '../../../../../appearance/store/store';
+import { saveFont } from '../../../../apis/application';
+import useAppStore from '../../../../appearance/store/store';
 
-export default function SelectFontOption() {
+export default function SelectThemeFontAlert() {
   const { font, setFont } = useAppStore();
   const { colors } = useTheme();
 
