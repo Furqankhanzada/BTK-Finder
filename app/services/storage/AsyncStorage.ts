@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Font, ThemeMode } from 'store/models/appStore';
-import { LocalStorageKeys } from './models/LocalStorageKey';
+import { LocalStorageKeys } from './models/LocalStorage';
 
 export const saveTheme = async (theme: string) => {
   await AsyncStorage.setItem(LocalStorageKeys.THEME, theme);
