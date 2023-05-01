@@ -28,7 +28,7 @@ import {
 import { BaseStyle, BaseColor, useTheme } from '@config';
 import { useAlerts } from '@hooks';
 import { StackScreenProps } from '@react-navigation/stack';
-import useAuthStore, { AuthStoreActions } from '@screens/auth/store/Store';
+import useAuthStore from '@screens/auth/store/Store';
 
 import { IconName } from '../../../../contexts/alerts-v2/models/Icon';
 import {
@@ -48,27 +48,19 @@ export default function EditProfileScreen(
   const { colors } = useTheme();
   const { t } = useTranslation();
   const { showAlert, showNotification } = useAlerts();
-  const setIsLogin = useAuthStore(
-    (state: AuthStoreActions) => state.setIsLogin,
-  );
+
+  const { user: oldUser, setIsLogin } = useAuthStore();
+
+  const nameRef = useRef<TextInputOriginal>(null);
+  const emailRef = useRef<TextInputOriginal>(null);
+  const [user, setUser] = useState<EditProfilePayload | undefined>(oldUser);
+  const [imageUri, setImageUri] = useState('');
+
   const { mutateAsync: deleteUserAccount, isLoading } = useDeleteUserAccount();
   const { mutateAsync: editProfile, isLoading: isEditProfileLoading } =
     useEditProfile();
   const { mutate: uploadProfileImage, isLoading: isUploadProfileLoading } =
     useUploadProfileImage();
-
-  const { user: profileData } = useAuthStore();
-
-  const nameRef = useRef<TextInputOriginal>(null);
-  const emailRef = useRef<TextInputOriginal>(null);
-  const [user, setUser] = useState<EditProfilePayload>({
-    _id: profileData?._id ?? '',
-    name: profileData?.name ?? '',
-    email: profileData?.email ?? '',
-    phone: profileData?.phone ?? '',
-    avatar: profileData?.avatar,
-  });
-  const [imageUri, setImageUri] = useState('');
 
   const deleteUser = async () => {
     const response = await deleteUserAccount({ confirm: true });
@@ -158,13 +150,15 @@ export default function EditProfileScreen(
   });
 
   const onSubmit = async () => {
-    const userData = user;
-    delete userData.avatar;
-
+    if (!user) {
+      return;
+    }
     const payload = {
-      ...userData,
-      phone: userData.phone.replace(/\s+/g, ''),
+      ...user,
+      phone: user.phone.replace(/\s+/g, ''),
     };
+
+    delete payload.avatar;
 
     const editUserProfile = await editProfile(payload);
 
@@ -204,15 +198,23 @@ export default function EditProfileScreen(
         const form = new FormData();
         form.append('file', file);
 
-        const userPayload = {
-          ...user,
-          phone: user.phone.replace(/\s+/g, ''),
-        };
-        uploadProfileImage({ user: userPayload, form: form });
+        if (user) {
+          const userPayload = {
+            ...user,
+            phone: user.phone.replace(/\s+/g, ''),
+          };
+          uploadProfileImage({ user: userPayload, form: form });
+        }
       })
       .catch((e) => {
         console.log('IMAGE_PICKER_ERROR', e);
       });
+  };
+
+  const onUserUpdate = (value: Partial<EditProfilePayload>) => {
+    if (user) {
+      setUser({ ...user, ...value });
+    }
   };
 
   return (
@@ -248,7 +250,7 @@ export default function EditProfileScreen(
               source={{
                 uri:
                   imageUri ||
-                  user.avatar ||
+                  user?.avatar ||
                   'https://i.ibb.co/RD6rVBy/default-avatar.png',
               }}
               style={[styles.thumb, { borderColor: colors.text }]}
@@ -264,11 +266,11 @@ export default function EditProfileScreen(
               styles.textInput,
               { backgroundColor: colors.card, color: colors.text },
             ]}
-            onChangeText={(phone) => setUser({ ...user, phone })}
+            onChangeText={(phone) => onUserUpdate({ phone })}
             placeholder={'Input Phone'}
             placeholderTextColor={BaseColor.grayColor}
             keyboardType="numeric"
-            value={user.phone}
+            value={user?.phone}
             autoCapitalize="none"
             mask={'+92 [000] [0000] [000]'}
             returnKeyType="next"
@@ -282,7 +284,7 @@ export default function EditProfileScreen(
           </View>
           <TextInput
             ref={nameRef}
-            onChangeText={(name) => setUser({ ...user, name })}
+            onChangeText={(name) => onUserUpdate({ name })}
             placeholder={t('input_name')}
             value={user?.name}
             onSubmitEditing={() => emailRef.current?.focus()}
@@ -294,9 +296,9 @@ export default function EditProfileScreen(
           </View>
           <TextInput
             ref={emailRef}
-            onChangeText={(email) => setUser({ ...user, email })}
+            onChangeText={(email) => onUserUpdate({ email })}
             placeholder={t('input_email')}
-            value={user.email}
+            value={user?.email}
             keyboardType="email-address"
             autoCapitalize="none"
             returnKeyType="done"
