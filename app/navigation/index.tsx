@@ -29,7 +29,7 @@ import { RootStackParamList } from './models/RootStackParamList';
 import Main from './main';
 import { linkingConfig } from './deep-linking/LinkingConfig';
 import useAppStore from '../appearance/store/store';
-import { useGetProfile } from '@screens/settings/profile/queries/queries';
+import { useProfile } from '@screens/settings/profile/queries/queries';
 
 const RootStack = createStackNavigator<RootStackParamList>();
 
@@ -45,7 +45,7 @@ export default function Navigator() {
 
   const { setThemeMode, setFont } = useAppStore();
   const { setUser, setIsLogin } = useAuthStore();
-  const { data: userData } = useGetProfile();
+  const { data: user } = useProfile();
   const { theme, colors } = useTheme();
   const isDarkMode = useDarkMode();
   const routeNameRef = useRef() as MutableRefObject<string>;
@@ -105,10 +105,10 @@ export default function Navigator() {
   }, [setFont]);
 
   useEffect(() => {
-    if (userData) {
-      setUser(userData);
+    if (user) {
+      setUser(user);
     }
-  }, [setUser, userData]);
+  }, [setUser, user]);
 
   return (
     <NavigationContainer
