@@ -21,10 +21,9 @@ import {
   BannersPresentable,
 } from '@screens/dashboard/models/BannersPresentable';
 import { useNotifications } from '@screens/notifications/queries/queries';
-import useAuthStore from '@screens/auth/store/Store';
 
 import NotificationIcon from './components/NotificationIcon';
-import { EVENTS, setUser, trackEvent } from '../../userTracking';
+import { EVENTS, trackEvent } from '../../userTracking';
 import { GlobalParamList } from '../../navigation/models/GlobalParamList';
 import { MainStackParamList } from '../../navigation/models/MainStackParamList';
 import {
@@ -43,7 +42,6 @@ function DashboardScreen({
 }: StackScreenProps<GlobalParamList, 'Dashboard'>) {
   const { colors } = useTheme();
   const remoteConfig = useRemoteConfig();
-  const { user, isLogin } = useAuthStore();
   const { data: notifications } = useNotifications(['notifications-count'], {
     deviceUniqueId: getUniqueId(),
     unreadCount: true,
@@ -61,14 +59,6 @@ function DashboardScreen({
     // Stop listening for updates when no longer required
     return () => database.ref('/home/banners').off('value', onValueChange);
   }, []);
-
-  useEffect(() => {
-    if (isLogin) {
-      if (user?._id) {
-        setUser(user);
-      }
-    }
-  }, [isLogin, user, user?._id]);
 
   const onPressHelpLine = () => {
     navigation.navigate('HelpLine');
