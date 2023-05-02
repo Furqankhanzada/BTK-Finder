@@ -275,10 +275,8 @@ export const AlertsV2Provider: React.FC = (props) => {
 };
 
 function Backdrop(backdropProps: BottomSheetBackdropProps) {
-  const { colors } = useTheme();
   return (
     <BottomSheetBackdrop
-      backgroundColor={colors.text}
       {...backdropProps}
       disappearsOnIndex={-1}
       appearsOnIndex={0}

@@ -75,6 +75,7 @@ export default function OpenHours({ business }: Props) {
             <View
               style={[
                 styles.openHourContainer,
+                // eslint-disable-next-line react-native/no-inline-styles
                 { height: collapseHour ? 0 : 'auto' },
               ]}>
               {updateOpenHours(business.openHours).map((item: any) => {
