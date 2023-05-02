@@ -50,4 +50,24 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
     borderBottomWidth: 1,
   },
+  listThumbCircle: {
+    paddingHorizontal: 20,
+  },
+  sectionHeaderTitle: {
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop: 8,
+    paddingBottom: 8,
+  },
+  selectedRecordText: {
+    paddingTop: 10,
+    paddingBottom: 5,
+  },
+  recordSubText: {
+    paddingVertical: 10,
+  },
+  callButton: {
+    marginTop: 10,
+    marginBottom: 20,
+  },
 });

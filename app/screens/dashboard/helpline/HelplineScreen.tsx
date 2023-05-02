@@ -78,7 +78,7 @@ const HelpLine = React.memo(
           keyExtractor={(_, index) => index.toString()}
           renderItem={({ item }) => (
             <ListThumbCircle
-              style={{ paddingHorizontal: 20 }}
+              style={styles.listThumbCircle}
               image={item.image}
               txtLeftTitle={item.title}
               txtContent={
@@ -92,13 +92,10 @@ const HelpLine = React.memo(
             <Text
               title3
               semibold
-              style={{
-                backgroundColor: cardColor,
-                paddingLeft: 20,
-                paddingRight: 20,
-                paddingTop: 8,
-                paddingBottom: 8,
-              }}>
+              style={[
+                styles.sectionHeaderTitle,
+                { backgroundColor: cardColor },
+              ]}>
               {title}
             </Text>
           )}
@@ -118,11 +115,11 @@ const HelpLine = React.memo(
             <View style={styles.contentSwipeDown}>
               <View style={styles.lineSwipeDown} />
             </View>
-            <Text semibold title3 style={{ paddingTop: 10, paddingBottom: 5 }}>
+            <Text semibold title3 style={styles.selectedRecordText}>
               {selectedRecord?.title}
             </Text>
             <Text>{selectedRecord?.description}</Text>
-            <Text semibold style={{ paddingVertical: 10 }}>
+            <Text semibold style={styles.recordSubText}>
               {'Dial extension when system ask after call: '}{' '}
               <Text semibold title2 primaryColor>
                 {selectedRecord?.extension}
@@ -144,10 +141,7 @@ const HelpLine = React.memo(
                 )}
               </TouchableOpacity>
             ))}
-            <Button
-              full
-              style={{ marginTop: 10, marginBottom: 20 }}
-              onPress={() => callNow()}>
+            <Button full style={styles.callButton} onPress={() => callNow()}>
               {t('call_now')}
             </Button>
           </View>
