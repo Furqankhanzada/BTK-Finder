@@ -7,14 +7,14 @@ import { Icon, Text } from '@components';
 
 import useAppStore from '../../../../store/appStore';
 import { saveThemeMode } from '../../../../services/storage/AsyncStorage';
+import { ThemeMode } from '../../../../store/models/appStore';
 
 export default function SelectThemeModeAlert() {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const { themeMode, setThemeMode } = useAppStore();
 
-  // TODO: Change the thememode type to "THEME_MODES" after the "appearance-store" branch is merged. We have added thememode types in that branch
-  const onSelectThemeMode = (thememode: 'light' | 'dark' | 'dynamic') => {
+  const onSelectThemeMode = (thememode: ThemeMode) => {
     setThemeMode(thememode);
     saveThemeMode(thememode);
   };
@@ -23,7 +23,7 @@ export default function SelectThemeModeAlert() {
     <View style={styles.container}>
       <TouchableOpacity
         style={[styles.item, { borderBottomColor: colors.border }]}
-        onPress={() => onSelectThemeMode('dynamic')}>
+        onPress={() => onSelectThemeMode(ThemeMode.dynamic)}>
         <View style={styles.itemContent}>
           <Text body1 style={styles.itemText}>
             {t('dynamic_system')}
@@ -35,7 +35,7 @@ export default function SelectThemeModeAlert() {
       </TouchableOpacity>
       <TouchableOpacity
         style={[styles.item, { borderBottomColor: colors.border }]}
-        onPress={() => onSelectThemeMode('dark')}>
+        onPress={() => onSelectThemeMode(ThemeMode.dark)}>
         <View style={styles.itemContent}>
           <Text body1 style={styles.itemText}>
             {t('always_on')}
@@ -48,7 +48,7 @@ export default function SelectThemeModeAlert() {
       <TouchableOpacity
         // eslint-disable-next-line react-native/no-inline-styles
         style={[styles.item, { borderBottomWidth: 0 }]}
-        onPress={() => onSelectThemeMode('light')}>
+        onPress={() => onSelectThemeMode(ThemeMode.light)}>
         <View style={styles.itemContent}>
           <Text body1 style={styles.itemText}>
             {t('always_off')}
