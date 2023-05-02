@@ -154,7 +154,7 @@ export default function ProductDetailScreen(
                 {product?.title}
               </Text>
               <Text caption1>{product?.description}</Text>
-              <Text headline style={{ marginTop: 10 }}>
+              <Text headline style={styles.selectText}>
                 {getSelectText()}
               </Text>
               <View style={[styles.variantsContainer]}>
@@ -177,7 +177,7 @@ export default function ProductDetailScreen(
               </View>
 
               <View style={styles.priceQuantity}>
-                <Text heavy headline style={{ width: '40%' }}>
+                <Text heavy headline style={styles.priceQuantityText}>
                   Rs.
                   {selectedVariant?.pricing.map((price) =>
                     (price?.price! * quantity)
@@ -204,14 +204,7 @@ export default function ProductDetailScreen(
         }}
       />
       {business?.type === 'gym' ? null : (
-        <View
-          style={{
-            position: 'absolute',
-            bottom: 0,
-            width: '100%',
-            paddingHorizontal: 20,
-            paddingBottom: 20,
-          }}>
+        <View style={styles.addCartButton}>
           <EcommerceButton
             leftText="Rs.0"
             title="Add to cart"
@@ -249,5 +242,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 15,
     marginBottom: 10,
+  },
+  priceQuantityText: {
+    width: '40%',
+  },
+  selectText: {
+    marginTop: 10,
+  },
+  addCartButton: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    paddingHorizontal: 20,
+    paddingBottom: 20,
   },
 });
