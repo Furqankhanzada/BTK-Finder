@@ -6,15 +6,28 @@ import { Icon, Text } from '@components';
 
 import useAppStore from '../../../../store/appStore';
 import { saveFont } from '../../../../services/storage/AsyncStorage';
+import { Font } from '../../../../store/models/appStore';
 
 export default function SelectThemeFontAlert() {
   const { font, setFont } = useAppStore();
   const { colors } = useTheme();
 
-  // TODO: Change the item type to "FONT" once the "appearance-store" branch is merged. We have added font types in that branch
-  const onSelect = (item: string) => {
+  const onSelect = (item: Font) => {
     setFont(item);
     saveFont(item);
+  };
+
+  const getFont = (selectedFont: string) => {
+    switch (selectedFont) {
+      case 'Raleway':
+        return Font.Raleway;
+      case 'Roboto':
+        return Font.Roboto;
+      case 'Merriweather':
+        return Font.Merriweather;
+      default:
+        return Font.Raleway;
+    }
   };
 
   return (
@@ -31,7 +44,7 @@ export default function SelectThemeFontAlert() {
                 borderBottomWidth: index === FontSupport.length - 1 ? 0 : 1,
               },
             ]}
-            onPress={() => onSelect(item)}>
+            onPress={() => onSelect(getFont(item))}>
             <View style={styles.itemContent}>
               <Text body1 style={styles.itemText}>
                 {item}
