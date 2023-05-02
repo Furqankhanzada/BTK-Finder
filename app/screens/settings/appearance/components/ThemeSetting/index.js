@@ -7,8 +7,8 @@ import { BaseStyle, useTheme } from '@config';
 import { Header, SafeAreaView, Icon, Text, Button } from '@components';
 
 import styles from './styles';
-import { onChangeTheme } from '../../../../../apis/application';
-import useAppStore from '../../../../../appearance/store/store';
+import { saveTheme } from '../../../../../services/storage/AsyncStorage';
+import useAppStore from '../../../../../store/appStore';
 
 export default function ThemeSetting({ navigation }) {
   const { theme } = useAppStore();
@@ -52,7 +52,7 @@ export default function ThemeSetting({ navigation }) {
   const changeTheme = () => {
     const list = themeSupport.filter((item) => item.selected);
     if (list.length > 0) {
-      onChangeTheme(list[0].theme);
+      saveTheme(list[0].theme);
       StatusBar.setBackgroundColor(list[0].light.colors.primary, true);
     }
   };

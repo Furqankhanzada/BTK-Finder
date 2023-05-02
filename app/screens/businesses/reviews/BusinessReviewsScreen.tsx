@@ -21,8 +21,7 @@ import {
   Loading,
 } from '@components';
 import { useBusiness } from '@screens/businesses/queries/queries';
-import { useGetProfile } from '@screens/settings/profile/queries/queries';
-import useAuthStore, { AuthStoreTypes } from '@screens/auth/store/Store';
+import useAuthStore from '@screens/auth/store/Store';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 
 export default function Review(
@@ -32,8 +31,7 @@ export default function Review(
   const { colors } = useTheme();
   const { t } = useTranslation();
 
-  const isLogin = useAuthStore((state: AuthStoreTypes) => state.isLogin);
-  const { data: profileData } = useGetProfile();
+  const { user, isLogin } = useAuthStore();
   const {
     isLoading,
     data: business,
@@ -95,7 +93,7 @@ export default function Review(
     let check = false;
     if (business?.reviews?.length) {
       business?.reviews.forEach(({ owner }: any) => {
-        if (owner._id === profileData?._id) {
+        if (owner._id === user?._id) {
           check = true;
           return false;
         }

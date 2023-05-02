@@ -8,7 +8,7 @@ import { SafeAreaView, Text, Button, Image } from '@components';
 import { BaseColor, BaseStyle, useTheme } from '@config';
 import * as Utils from '@utils';
 import { AuthParamList } from 'navigation/models/AuthParamList';
-import useAuthStore, { AuthStoreTypes } from '../store/Store';
+import useAuthStore, { AuthStoreStates } from '../store/Store';
 
 export default function WelcomeAuthScreen({
   navigation,
@@ -16,7 +16,7 @@ export default function WelcomeAuthScreen({
   const [scrollEnabled, setScrollEnabled] = useState(true);
   const { colors } = useTheme();
   const { t } = useTranslation();
-  const isLogin = useAuthStore((state: AuthStoreTypes) => state.isLogin);
+  const isLogin = useAuthStore((state: AuthStoreStates) => state.isLogin);
 
   const slideshow = [
     { key: 1, image: require('@assets/images/banners/long-view.jpg') },

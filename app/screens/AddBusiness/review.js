@@ -10,18 +10,18 @@ import {
   FloatingButton,
 } from '@components';
 import { BaseStyle } from '@config';
-import { useGetProfile } from '@screens/settings/profile/queries/queries';
 
 import {
   createBusiness,
   getMyBusinesses,
   updateBusiness,
 } from '../../actions/business';
+import useAuthStore from '@screens/auth/store/Store';
 
 export default function FinalReview({ navigation }) {
   const dispatch = useDispatch();
-
   const queryClient = useQueryClient();
+  const { user } = useAuthStore();
 
   const stateProps = useSelector(({ businesses }) => {
     return {
@@ -38,7 +38,6 @@ export default function FinalReview({ navigation }) {
   const businessFormData = stateProps?.editBusiness
     ? stateProps?.editBusinessData
     : stateProps?.businessFormData;
-  const { data: profileData } = useGetProfile();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -62,7 +61,7 @@ export default function FinalReview({ navigation }) {
         limit: 10,
         recent: true,
         fields: 'name, thumbnail, category, averageRatings',
-        ownerId: profileData?._id,
+        ownerId: user._id,
       }),
     );
     navigation.navigate('MyBusinesses');

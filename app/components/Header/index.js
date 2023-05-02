@@ -4,7 +4,7 @@ import { useDarkMode } from 'react-native-dynamic';
 import { Text } from '@components';
 import styles from './styles';
 import PropTypes from 'prop-types';
-import useAppStore from '../../appearance/store/store';
+import useAppStore from '../../store/appStore';
 
 export default function Header(props) {
   const { themeMode } = useAppStore();

@@ -32,7 +32,7 @@ import { SettingsStackNavigator } from '@screens/settings/navigation/SettingsSta
 import { MainStackParamList } from './models/MainStackParamList';
 import { MainBottomTabParamList } from './models/MainBottomTabParamList';
 import { AuthStackNavigator } from '@screens/auth/navigation/AuthStack';
-import useAuthStore, { AuthStoreTypes } from '@screens/auth/store/Store';
+import useAuthStore, { AuthStoreStates } from '@screens/auth/store/Store';
 
 const MainStack = createStackNavigator<MainStackParamList>();
 const MainBottomTab = createBottomTabNavigator<MainBottomTabParamList>();
@@ -78,7 +78,7 @@ function MainBottomTabNavigator() {
   const dispatch = useDispatch();
   const { colors } = useTheme();
   const font = useFont();
-  const isLogin = useAuthStore((state: AuthStoreTypes) => state.isLogin);
+  const isLogin = useAuthStore((state: AuthStoreStates) => state.isLogin);
 
   return (
     <MainBottomTab.Navigator
