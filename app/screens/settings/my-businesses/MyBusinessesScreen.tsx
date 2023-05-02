@@ -96,16 +96,19 @@ export default function MyBusinessesScreen(
   const onEdit = (id: string) => {
     dispatch(
       getSingleBusiness(id, true, () =>
+        // @ts-ignore Ignored because we are doing it on another branch
         navigation.navigate('EditBusiness', { id }),
       ),
     );
   };
 
   const navigateBusinessDetail = (id: string) => {
+    // @ts-ignore Ignored because we are doing it on another branch
     navigation.navigate('BusinessDetailTabNavigator', { businessId: id });
   };
 
   const navigateToReview = (id: string) => {
+    // @ts-ignore Ignored because we are doing it on another branch
     navigation.navigate('BusinessDetailTabNavigator', {
       screen: 'ReviewStack',
       params: { businessId: id },
