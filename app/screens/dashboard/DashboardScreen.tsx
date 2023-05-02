@@ -21,11 +21,9 @@ import {
   BannersPresentable,
 } from '@screens/dashboard/models/BannersPresentable';
 import { useNotifications } from '@screens/notifications/queries/queries';
-import useAuthStore, { AuthStoreStates } from '@screens/auth/store/Store';
-import { useGetProfile } from '@screens/settings/profile/queries/queries';
 
 import NotificationIcon from './components/NotificationIcon';
-import { EVENTS, setUser, trackEvent } from '../../userTracking';
+import { EVENTS, trackEvent } from '../../userTracking';
 import { GlobalParamList } from '../../navigation/models/GlobalParamList';
 import { MainStackParamList } from '../../navigation/models/MainStackParamList';
 import {
@@ -44,8 +42,6 @@ function DashboardScreen({
 }: StackScreenProps<GlobalParamList, 'Dashboard'>) {
   const { colors } = useTheme();
   const remoteConfig = useRemoteConfig();
-  const isLogin = useAuthStore((state: AuthStoreStates) => state.isLogin);
-  const { data: profileData } = useGetProfile();
   const { data: notifications } = useNotifications(['notifications-count'], {
     deviceUniqueId: getUniqueId(),
     unreadCount: true,
@@ -63,14 +59,6 @@ function DashboardScreen({
     // Stop listening for updates when no longer required
     return () => database.ref('/home/banners').off('value', onValueChange);
   }, []);
-
-  useEffect(() => {
-    if (isLogin) {
-      if (profileData?._id) {
-        setUser(profileData);
-      }
-    }
-  }, [isLogin, profileData, profileData?._id]);
 
   const onPressHelpLine = () => {
     navigation.navigate('HelpLine');

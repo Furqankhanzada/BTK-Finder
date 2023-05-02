@@ -19,11 +19,11 @@ import {
   Loading,
   Text,
 } from '@components';
+import useAuthStore from '@screens/auth/store/Store';
 
 import { useBusinessesInfinite } from '../../businesses/queries/queries';
 import { getSingleBusiness } from '../../../actions/business';
 import { SettingsParamList } from '../../../navigation/models/SettingsParamList';
-import { useGetProfile } from '../profile/queries/queries';
 
 export default function MyBusinessesScreen(
   props: StackScreenProps<SettingsParamList, 'MyBusinesses'>,
@@ -35,7 +35,7 @@ export default function MyBusinessesScreen(
   const { colors } = useTheme();
 
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
-  const { data: user } = useGetProfile();
+  const { user } = useAuthStore();
 
   const {
     data,

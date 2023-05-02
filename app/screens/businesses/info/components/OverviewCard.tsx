@@ -11,7 +11,7 @@ import {
   BusinessPresentable,
   BusinessStatus,
 } from '@screens/businesses/models/BusinessPresentable';
-import { useGetProfile } from '@screens/settings/profile/queries/queries';
+import useAuthStore from '@screens/auth/store/Store';
 
 interface Props {
   onReviewsPress: (id: string) => void;
@@ -47,7 +47,7 @@ export default function OverviewCard({
   isPreview = false,
   onReviewsPress,
 }: Props) {
-  const { data: user } = useGetProfile();
+  const { user } = useAuthStore();
   const { colors } = useTheme();
   const { t } = useTranslation();
 
