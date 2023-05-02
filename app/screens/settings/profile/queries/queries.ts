@@ -3,11 +3,8 @@ import { handleError } from '@utils';
 import { GET_PROFILE } from '../../../../constants';
 import { UserPresentable } from '../models/UserPresentable';
 import axiosApiInstance from '../../../../interceptor/axios-interceptor';
-import useAuthStore, { AuthStoreStates } from '@screens/auth/store/Store';
 
-export const useGetProfile = () => {
-  const isLogin = useAuthStore((state: AuthStoreStates) => state.isLogin);
-
+export const useProfile = () => {
   return useQuery(
     ['profile'],
     (): Promise<UserPresentable> => {
@@ -21,7 +18,6 @@ export const useGetProfile = () => {
         });
     },
     {
-      enabled: isLogin,
       select: (data) => {
         return { ...data };
       },
