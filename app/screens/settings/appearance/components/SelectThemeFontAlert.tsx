@@ -1,10 +1,11 @@
 import React from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
+
 import { useTheme, FontSupport } from '@config';
 import { Icon, Text } from '@components';
 
-import { saveFont } from '../../../../apis/application';
-import useAppStore from '../../../../appearance/store/store';
+import useAppStore from '../../../../store/appStore';
+import { saveFont } from '../../../../services/storage/AsyncStorage';
 
 export default function SelectThemeFontAlert() {
   const { font, setFont } = useAppStore();
