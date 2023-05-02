@@ -8,7 +8,7 @@ import { Header, SafeAreaView, Icon, Text } from '@components';
 import { useAlerts } from '@hooks';
 
 import { GlobalParamList } from 'navigation/models/GlobalParamList';
-import useAppStore from '../../../appearance/store/store';
+import useAppStore from '../../../store/appStore';
 import SelectThemeFontAlert from './components/SelectThemeFontAlert';
 import SelectThemeModeAlert from './components/SelectThemeModeAlert';
 

@@ -1,11 +1,12 @@
 import React from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
-import { useTheme } from '@config';
-import { Icon, Text } from '@components';
 import { useTranslation } from 'react-i18next';
 
-import { saveThemeMode } from '../../../../apis/application';
-import useAppStore from '../../../../appearance/store/store';
+import { useTheme } from '@config';
+import { Icon, Text } from '@components';
+
+import useAppStore from '../../../../store/appStore';
+import { saveThemeMode } from '../../../../services/storage/AsyncStorage';
 
 export default function SelectThemeModeAlert() {
   const { t } = useTranslation();
