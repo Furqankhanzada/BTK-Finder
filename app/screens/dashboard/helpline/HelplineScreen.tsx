@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Linking, SectionList, TouchableOpacity, View } from 'react-native';
+import {
+  Linking,
+  SectionList,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import Modal from 'react-native-modal';
 import { useTranslation } from 'react-i18next';
 
-import { BaseStyle, useTheme } from '@config';
+import { BaseColor, BaseStyle, useTheme } from '@config';
 import {
   Header,
   SafeAreaView,
@@ -17,7 +23,6 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { useRemoteConfig } from '@hooks';
 
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
-import styles from '../../../components/FilterSort/styles';
 import { trackEvent, EVENTS } from '../../../userTracking';
 import { HelplinesData } from '../../../models/RemoteConfig';
 
@@ -152,3 +157,51 @@ const HelpLine = React.memo(
 );
 
 export default HelpLine;
+
+const styles = StyleSheet.create({
+  bottomModal: {
+    justifyContent: 'flex-end',
+    margin: 0,
+  },
+  contentFilterBottom: {
+    width: '100%',
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+    paddingHorizontal: 20,
+  },
+  contentSwipeDown: {
+    paddingTop: 10,
+    alignItems: 'center',
+  },
+  lineSwipeDown: {
+    width: 30,
+    height: 2.5,
+    backgroundColor: BaseColor.dividerColor,
+  },
+  contentActionModalBottom: {
+    flexDirection: 'row',
+    paddingVertical: 15,
+    justifyContent: 'space-between',
+    borderBottomWidth: 1,
+  },
+  listThumbCircle: {
+    paddingHorizontal: 20,
+  },
+  sectionHeaderTitle: {
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop: 8,
+    paddingBottom: 8,
+  },
+  selectedRecordText: {
+    paddingTop: 10,
+    paddingBottom: 5,
+  },
+  recordSubText: {
+    paddingVertical: 10,
+  },
+  callButton: {
+    marginTop: 10,
+    marginBottom: 20,
+  },
+});
