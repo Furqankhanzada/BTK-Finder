@@ -6,8 +6,9 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios --scheme explorebtk.dev",
     "start": "react-native start",
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "lint": "eslint . --ext .ts,.tsx",
+    "check:code": "yarn tsc && yarn test",
     "generate:gql:types": "graphql-codegen --config codegen.yml",
     "postinstall": "if [ $GITHUB_ACTION ]; then npx patch-package; else npx patch-package && npx jetify && npx pod-install; fi;"
   },
@@ -137,7 +138,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn tsc && yarn lint"
+      "pre-commit": "yarn lint && yarn check:code"
     }
   }
 }
