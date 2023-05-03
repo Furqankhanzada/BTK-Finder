@@ -283,8 +283,9 @@ export default function BusinessesScreen(
             <Animated.FlatList
               contentContainerStyle={[
                 styles.blockAnimatedFlatlist,
-                // eslint-disable-next-line react-native/no-inline-styles
-                { flex: allBusinesses?.length ? 0 : 1 },
+                allBusinesses?.length
+                  ? styles.blockAnimatedFlatlistAllBusinesses
+                  : {},
               ]}
               refreshControl={
                 <RefreshControl
@@ -359,8 +360,9 @@ export default function BusinessesScreen(
             <Animated.FlatList
               contentContainerStyle={[
                 styles.listAnimatedFlatlist,
-                // eslint-disable-next-line react-native/no-inline-styles
-                { flex: allBusinesses?.length ? 0 : 1 },
+                allBusinesses?.length
+                  ? styles.listAnimatedFlatlistAllBusinesses
+                  : {},
               ]}
               refreshControl={
                 <RefreshControl
@@ -650,11 +652,19 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   blockAnimatedFlatlist: {
+    flex: 1,
     paddingTop: 50,
   },
+  blockAnimatedFlatlistAllBusinesses: {
+    flex: 0,
+  },
   listAnimatedFlatlist: {
+    flex: 1,
     paddingTop: 50,
     paddingHorizontal: 20,
+  },
+  listAnimatedFlatlistAllBusinesses: {
+    flex: 0,
   },
   defaultAnimatedFlatlist: {
     paddingTop: 50,
