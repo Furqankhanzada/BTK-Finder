@@ -22,6 +22,7 @@ import {
   Loading,
   Button,
 } from '@components';
+import useAuthStore from '@screens/auth/store/Store';
 
 import { ReviewStackParamList } from '../../../navigation/models/BusinessDetailBottomTabParamList';
 import { AddReviewPayload, useAddReview } from '../queries/mutations';
@@ -32,7 +33,7 @@ export default function AddReviewScreen(
   const { navigation, route } = props;
   const { colors } = useTheme();
   const { t } = useTranslation();
-  const profileData = useSelector((state: any) => state.profile);
+  const { user } = useAuthStore();
   const stateProps = useSelector(({ businesses }: any) => businesses);
   const { createReviewLoading } = stateProps;
 
@@ -81,8 +82,8 @@ export default function AddReviewScreen(
         <ScrollView contentContainerStyle={styles.contentContainer}>
           <Image
             source={
-              profileData.avatar
-                ? { uri: profileData.avatar }
+              user?.avatar
+                ? { uri: user.avatar }
                 : require('@assets/images/default-avatar.png')
             }
             style={styles.contentImage}

@@ -7,7 +7,6 @@ import {
   StyleSheet,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
 import moment from 'moment';
 import { StackScreenProps } from '@react-navigation/stack';
 
@@ -22,28 +21,24 @@ import {
   Loading,
 } from '@components';
 import { useBusiness } from '@screens/businesses/queries/queries';
-
+import useAuthStore from '@screens/auth/store/Store';
 import { GlobalParamList } from '../../../navigation/models/GlobalParamList';
 
 export default function Review(
   props: StackScreenProps<GlobalParamList, 'Reviews'>,
 ) {
   const { navigation, route } = props;
-  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+  const { colors } = useTheme();
+  const { t } = useTranslation();
+
+  const { user, isLogin } = useAuthStore();
   const {
     isLoading,
     data: business,
     refetch,
   } = useBusiness(route.params.businessId);
 
-  const { colors } = useTheme();
-  const { t } = useTranslation();
-  const stateProps = useSelector(({ profile, auth }: any) => {
-    return {
-      currentUserId: profile._id,
-      isLogin: auth.isLogin,
-    };
-  });
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
 
   const dateSortedReviews = business?.reviews
     ?.slice(0)
@@ -84,8 +79,10 @@ export default function Review(
     ],
   };
 
-  const navigateToWalktrhough = (lastRoute: keyof GlobalParamList, id: any) => {
-    navigation.navigate('Walkthrough', { lastRoute, id });
+  const navigateToWelcomeAuth = () => {
+    navigation.navigate('AuthStackNavigator', {
+      screen: 'WelcomeAuth',
+    });
   };
 
   const navigateToFeedback = (id: any) => {
@@ -96,7 +93,7 @@ export default function Review(
     let check = false;
     if (business?.reviews?.length) {
       business?.reviews.forEach(({ owner }: any) => {
-        if (owner._id === stateProps.currentUserId) {
+        if (owner._id === user?._id) {
           check = true;
           return false;
         }
@@ -105,7 +102,7 @@ export default function Review(
     return check;
   };
   const checkUserLogin = () => {
-    if (stateProps.isLogin) {
+    if (isLogin) {
       if (!checkReviewAlreadyAdded()) {
         navigateToFeedback(business?._id);
       } else {
@@ -118,8 +115,7 @@ export default function Review(
         [
           {
             text: 'Login',
-            onPress: () =>
-              navigateToWalktrhough('ReviewStack', route.params.businessId),
+            onPress: () => navigateToWelcomeAuth(),
           },
           {
             text: 'Cancel',

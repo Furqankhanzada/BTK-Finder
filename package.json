@@ -6,14 +6,16 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios --scheme explorebtk.dev",
     "start": "react-native start",
-    "test": "jest",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "test": "jest --passWithNoTests",
+    "lint": "eslint . --ext .ts,.tsx",
+    "check:code": "yarn tsc && yarn test",
     "generate:gql:types": "graphql-codegen --config codegen.yml",
     "postinstall": "if [ $GITHUB_ACTION ]; then npx patch-package; else npx patch-package && npx jetify && npx pod-install; fi;"
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "4.3.1",
     "@react-native-async-storage/async-storage": "^1.16.1",
+    "@react-native-clipboard/clipboard": "^1.11.2",
     "@react-native-community/datetimepicker": "^3.4.0",
     "@react-native-community/push-notification-ios": "^1.10.1",
     "@react-native-firebase/analytics": "^14.3.0",
@@ -91,7 +93,8 @@
     "slugify": "^1.5.0",
     "socket.io-client": "^4.5.4",
     "sp-react-native-in-app-updates": "^1.1.7",
-    "yup": "^0.32.9"
+    "yup": "^0.32.9",
+    "zustand": "^4.3.6"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
@@ -111,6 +114,7 @@
     "@typescript-eslint/parser": "^5.7.0",
     "babel-jest": "^26.6.3",
     "eslint": "^7.14.0",
+    "husky": "4",
     "jest": "^26.6.3",
     "metro-react-native-babel-preset": "^0.66.2",
     "react-native-flipper": "^0.162.0",
@@ -131,5 +135,10 @@
       "json",
       "node"
     ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn lint && yarn check:code"
+    }
   }
 }

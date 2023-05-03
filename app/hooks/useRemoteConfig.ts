@@ -14,7 +14,22 @@ export default function useRemoteConfig(): RemoteConfig {
     const allValues: Record<string, any> = remoteConfig().getAll();
     for (const [key, value] of Object.entries(allValues)) {
       if (key === 'helplines') {
-        setConfig({ ...config, helplines: JSON.parse(value._value) });
+        setConfig((prevConfig) => ({
+          ...prevConfig,
+          helplines: JSON.parse(value._value),
+        }));
+      }
+      if (key === 'aboutUs') {
+        setConfig((prevConfig) => ({
+          ...prevConfig,
+          about: JSON.parse(value._value),
+        }));
+      }
+      if (key === 'ads') {
+        setConfig((prevConfig) => ({
+          ...prevConfig,
+          ads: JSON.parse(value._value),
+        }));
       }
     }
   };
@@ -34,7 +49,6 @@ export default function useRemoteConfig(): RemoteConfig {
         });
     }
     fetchAndActivate().catch(handleError);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return config;

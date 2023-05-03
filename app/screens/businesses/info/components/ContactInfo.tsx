@@ -8,6 +8,7 @@ import {
   ShopStatus,
 } from '@screens/businesses/models/BusinessPresentable';
 import ContactItem from '@screens/businesses/info/components/ContactItem';
+import { getProductsTitle } from '@screens/businesses/helpers/getProductsTitle';
 
 interface Props {
   onReviewsPress: (id: string) => void;
@@ -56,7 +57,7 @@ export default function ContactInfo({
               outline
               style={styles.textButton}
               onPress={() => onProductsPress(business._id)}>
-              {business.type === 'restaurant' ? 'Menu' : 'Products'}
+              {getProductsTitle(business.type)}
             </Button>
           ) : null}
           <Button

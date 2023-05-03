@@ -25,7 +25,7 @@ import {
 } from '@components';
 import { BaseStyle, BaseColor, useTheme } from '@config';
 import { StackScreenProps } from '@react-navigation/stack';
-import { MainStackParamList } from 'navigation/models/MainStackParamList';
+import { GlobalParamList } from 'navigation/models/GlobalParamList';
 
 import {
   NotificationPayload,
@@ -36,7 +36,7 @@ import { NotificationPresentable } from '../models/NotificationPresentable';
 import { useDeleteImage } from '../../../apis/mutations';
 
 export default function SendNotificationScreen(
-  props: StackScreenProps<MainStackParamList, 'SendNotification'>,
+  props: StackScreenProps<GlobalParamList, 'SendNotification'>,
 ) {
   const { t } = useTranslation();
   const { navigation } = props;
@@ -90,9 +90,6 @@ export default function SendNotificationScreen(
       const image = await ImagePicker.openPicker({
         width: 1000,
         height: 500,
-        cropping: true,
-        compressImageMaxWidth: 1000,
-        compressImageMaxHeight: 500,
         mediaType: 'photo',
         cropperStatusBarColor: colors.primary,
         cropperToolbarColor: colors.primary,
