@@ -1,3 +1,5 @@
+// Becuase we have refactored this file in different branch
+/* eslint-disable react-native/no-inline-styles*/
 import React, { useState } from 'react';
 import {
   Animated,

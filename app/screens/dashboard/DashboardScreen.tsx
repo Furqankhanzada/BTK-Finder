@@ -170,10 +170,10 @@ function DashboardScreen({
         onPress={() => navigation.navigate('Filter', {})}
         style={styles.contentSearch}>
         <View style={[BaseStyle.textInput, { backgroundColor: colors.card }]}>
-          <Text body1 grayColor style={{ flex: 1 }}>
+          <Text body1 grayColor style={styles.searchTextContainer}>
             Search everything near you
           </Text>
-          <View style={{ paddingVertical: 8 }}>
+          <View style={styles.lineFormContainer}>
             <View
               style={[styles.lineForm, { backgroundColor: colors.border }]}
             />
@@ -510,6 +510,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  searchTextContainer: {
+    flex: 1,
+  },
   doc: {
     width: 10,
     height: 10,
@@ -531,6 +534,9 @@ const styles = StyleSheet.create({
     width: 1,
     height: '100%',
     margin: 10,
+  },
+  lineFormContainer: {
+    paddingVertical: 8,
   },
   banner: {
     height: Utils.scaleWithPixel(110),
