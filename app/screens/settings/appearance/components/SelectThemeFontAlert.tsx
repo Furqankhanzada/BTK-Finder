@@ -19,11 +19,11 @@ export default function SelectThemeFontAlert() {
 
   const getFont = (selectedFont: string) => {
     switch (selectedFont) {
-      case 'Raleway':
+      case Font.Raleway:
         return Font.Raleway;
-      case 'Roboto':
+      case Font.Roboto:
         return Font.Roboto;
-      case 'Merriweather':
+      case Font.Merriweather:
         return Font.Merriweather;
       default:
         return Font.Raleway;
