@@ -75,7 +75,7 @@ export default function OpenHours({ business }: Props) {
             <View
               style={[
                 styles.openHourContainer,
-                { height: collapseHour ? 0 : 'auto' },
+                collapseHour && styles.openHourContainerCollapsed,
               ]}>
               {updateOpenHours(business.openHours).map((item: any) => {
                 return (
@@ -148,5 +148,9 @@ const styles = StyleSheet.create({
     paddingRight: 20,
     marginTop: 5,
     overflow: 'hidden',
+    height: 'auto',
+  },
+  openHourContainerCollapsed: {
+    height: 0,
   },
 });

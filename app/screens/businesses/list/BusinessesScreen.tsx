@@ -279,12 +279,14 @@ export default function BusinessesScreen(
     switch (modeView) {
       case 'block':
         return (
-          <View style={{ flex: 1 }}>
+          <View style={styles.container}>
             <Animated.FlatList
-              contentContainerStyle={{
-                paddingTop: 50,
-                flex: allBusinesses?.length ? 0 : 1,
-              }}
+              contentContainerStyle={[
+                styles.blockAnimatedFlatlist,
+                allBusinesses?.length
+                  ? styles.blockAnimatedFlatlistAllBusinesses
+                  : {},
+              ]}
               refreshControl={
                 <RefreshControl
                   colors={[colors.primary]}
@@ -354,13 +356,14 @@ export default function BusinessesScreen(
         );
       case 'list':
         return (
-          <View style={{ flex: 1 }}>
+          <View style={styles.container}>
             <Animated.FlatList
-              contentContainerStyle={{
-                paddingTop: 50,
-                paddingHorizontal: 20,
-                flex: allBusinesses?.length ? 0 : 1,
-              }}
+              contentContainerStyle={[
+                styles.listAnimatedFlatlist,
+                allBusinesses?.length
+                  ? styles.listAnimatedFlatlistAllBusinesses
+                  : {},
+              ]}
               refreshControl={
                 <RefreshControl
                   colors={[colors.primary]}
@@ -409,9 +412,7 @@ export default function BusinessesScreen(
                   }
                   businessId={item?._id}
                   navigation={navigation}
-                  style={{
-                    marginBottom: 15,
-                  }}
+                  style={styles.listPlaceItem}
                   onPress={() => navigateBusinessDetail(item)}
                 />
               )}
@@ -435,16 +436,10 @@ export default function BusinessesScreen(
         );
       default:
         return (
-          <View style={{ flex: 1 }}>
+          <View style={styles.container}>
             <Animated.FlatList
-              contentContainerStyle={{
-                paddingTop: 50,
-                flex: allBusinesses?.length ? 0 : 1,
-              }}
-              columnWrapperStyle={{
-                paddingLeft: 5,
-                paddingRight: 20,
-              }}
+              contentContainerStyle={styles.defaultAnimatedFlatlist}
+              columnWrapperStyle={styles.defaultColumnWrapper}
               refreshControl={
                 <RefreshControl
                   colors={[colors.primary]}
@@ -495,10 +490,7 @@ export default function BusinessesScreen(
                   }
                   businessId={item?._id}
                   navigation={navigation}
-                  style={{
-                    marginLeft: 15,
-                    marginBottom: 15,
-                  }}
+                  style={styles.gridPlaceItem}
                   onPress={() => navigateBusinessDetail(item)}
                 />
               )}
@@ -525,7 +517,7 @@ export default function BusinessesScreen(
 
   const renderMapView = () => {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={styles.container}>
         <MapView provider={PROVIDER_GOOGLE} style={styles.map} region={region}>
           {allBusinesses?.map((item, index) => {
             return (
@@ -559,7 +551,7 @@ export default function BusinessesScreen(
             );
           })}
         </MapView>
-        <View style={{ position: 'absolute', bottom: 0 }}>
+        <View style={styles.carouselContainer}>
           <Carousel
             ref={sliderRef}
             data={allBusinesses || []}
@@ -569,20 +561,13 @@ export default function BusinessesScreen(
                 title={item.name}
                 subtitle={item.category}
                 rate={item.averageRatings}
-                style={{
-                  margin: 3,
-                  padding: 10,
-                  backgroundColor: colors.card,
-                  borderRadius: 8,
-                  shadowColor: colors.border,
-                  shadowOffset: {
-                    width: 3,
-                    height: 2,
+                style={[
+                  styles.carouselCardList,
+                  {
+                    backgroundColor: colors.card,
+                    shadowColor: colors.border,
                   },
-                  shadowOpacity: 1,
-                  shadowRadius: 3.84,
-                  elevation: 5,
-                }}
+                ]}
                 onPress={() => navigateBusinessDetail(item)}
               />
             )}
@@ -591,7 +576,7 @@ export default function BusinessesScreen(
             firstItem={1}
             inactiveSlideScale={0.95}
             inactiveSlideOpacity={0.85}
-            contentContainerCustomStyle={{ paddingVertical: 10 }}
+            contentContainerCustomStyle={styles.carouselContentContainer}
             loop={true}
             loopClonesPerSide={2}
             autoplay={false}
@@ -649,7 +634,7 @@ export default function BusinessesScreen(
           onChangeMapView();
         }}
       />
-      <View style={{ position: 'relative', flex: 1 }}>
+      <View style={styles.loadingContainer}>
         {isLoading ? (
           <Loading loading={true} />
         ) : mapView ? (
@@ -663,12 +648,56 @@ export default function BusinessesScreen(
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  blockAnimatedFlatlist: {
+    flex: 1,
+    paddingTop: 50,
+  },
+  blockAnimatedFlatlistAllBusinesses: {
+    flex: 0,
+  },
+  listAnimatedFlatlist: {
+    flex: 1,
+    paddingTop: 50,
+    paddingHorizontal: 20,
+  },
+  listAnimatedFlatlistAllBusinesses: {
+    flex: 0,
+  },
+  defaultAnimatedFlatlist: {
+    paddingTop: 50,
+  },
+  loadingContainer: {
+    position: 'relative',
+    flex: 1,
+  },
   navbar: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
     backgroundColor: BaseColor.whiteColor,
+  },
+  carouselContainer: {
+    position: 'absolute',
+    bottom: 0,
+  },
+  carouselCardList: {
+    margin: 3,
+    padding: 10,
+    borderRadius: 8,
+    shadowOffset: {
+      width: 3,
+      height: 2,
+    },
+    shadowOpacity: 1,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  carouselContentContainer: {
+    paddingVertical: 10,
   },
   map: {
     ...StyleSheet.absoluteFillObject,
@@ -702,6 +731,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  listPlaceItem: {
+    marginBottom: 15,
+  },
+  defaultColumnWrapper: {
+    paddingLeft: 5,
+    paddingRight: 20,
+  },
   sectionEmpty: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -713,5 +749,9 @@ const styles = StyleSheet.create({
   sectionListContainer: {
     paddingLeft: 5,
     paddingRight: 15,
+  },
+  gridPlaceItem: {
+    marginLeft: 15,
+    marginBottom: 15,
   },
 });

@@ -49,7 +49,6 @@ export default function useRemoteConfig(): RemoteConfig {
         });
     }
     fetchAndActivate().catch(handleError);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return config;
