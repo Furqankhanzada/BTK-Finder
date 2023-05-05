@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import { View, TouchableOpacity, StatusBar } from 'react-native';
 import { useDarkMode } from 'react-native-dynamic';
 import { Text } from '@components';
 import styles from './styles';
 import PropTypes from 'prop-types';
+import useAppStore from '../../store/appStore';
 
 export default function Header(props) {
-  const forceDark = useSelector((state) => state.application.force_dark);
+  const { themeMode } = useAppStore();
   const {
     style,
     styleLeft,
@@ -28,17 +28,18 @@ export default function Header(props) {
 
   useEffect(() => {
     let option = isDarkMode ? 'light-content' : 'dark-content';
-    if (forceDark) {
+    if (themeMode === 'light') {
       option = 'light-content';
     }
-    if (forceDark == false) {
+    if (themeMode === 'dark') {
       option = 'dark-content';
     }
     if (barStyle) {
       option = barStyle;
     }
     StatusBar.setBarStyle(option, true);
-  }, [forceDark, isDarkMode]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [themeMode, isDarkMode]);
 
   return (
     <View style={[styles.contain, style]}>

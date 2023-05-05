@@ -1,5 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
 import { useFocusEffect } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 import {
@@ -8,17 +9,19 @@ import {
   Loading,
   FloatingButton,
 } from '@components';
+import { BaseStyle } from '@config';
+
 import {
   createBusiness,
   getMyBusinesses,
   updateBusiness,
 } from '../../actions/business';
-import { BaseStyle } from '@config';
+import useAuthStore from '@screens/auth/store/Store';
 
 export default function FinalReview({ navigation }) {
   const dispatch = useDispatch();
-
   const queryClient = useQueryClient();
+  const { user } = useAuthStore();
 
   const stateProps = useSelector(({ businesses }) => {
     return {
@@ -35,7 +38,6 @@ export default function FinalReview({ navigation }) {
   const businessFormData = stateProps?.editBusiness
     ? stateProps?.editBusinessData
     : stateProps?.businessFormData;
-  const profileData = useSelector((state) => state.profile);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -59,7 +61,7 @@ export default function FinalReview({ navigation }) {
         limit: 10,
         recent: true,
         fields: 'name, thumbnail, category, averageRatings',
-        ownerId: profileData?._id,
+        ownerId: user._id,
       }),
     );
     navigation.navigate('MyBusinesses');

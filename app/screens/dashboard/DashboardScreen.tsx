@@ -1,13 +1,13 @@
 import React, { memo, useEffect, useState } from 'react';
 import { FlatList, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
-import { useDispatch, useSelector } from 'react-redux';
 import { firebase } from '@react-native-firebase/database';
 import { getUniqueId } from 'react-native-device-info';
 import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
 
 import { SafeAreaView, Icon, Text, Tag, Image, Header } from '@components';
 import { BaseStyle, useTheme } from '@config';
+import { useRemoteConfig } from '@hooks';
 import * as Utils from '@utils';
 import Section from '@screens/dashboard/components/Section';
 import { CategoryPresentable } from '@screens/category/modals/CategoryPresentables';
@@ -23,10 +23,9 @@ import {
 import { useNotifications } from '@screens/notifications/queries/queries';
 
 import NotificationIcon from './components/NotificationIcon';
-import { EVENTS, setUser, trackEvent } from '../../userTracking';
+import { EVENTS, trackEvent } from '../../userTracking';
 import { GlobalParamList } from '../../navigation/models/GlobalParamList';
 import { MainStackParamList } from '../../navigation/models/MainStackParamList';
-import { getProfile } from '../../actions/auth';
 import {
   dashboardBannerUnitIdOne,
   dashboardBannerUnitIdTwo,
@@ -42,9 +41,7 @@ function DashboardScreen({
   navigation,
 }: StackScreenProps<GlobalParamList, 'Dashboard'>) {
   const { colors } = useTheme();
-  const dispatch = useDispatch();
-  const isLogin = useSelector((state: any) => state.auth.isLogin);
-  const profileData = useSelector((state: any) => state.profile);
+  const remoteConfig = useRemoteConfig();
   const { data: notifications } = useNotifications(['notifications-count'], {
     deviceUniqueId: getUniqueId(),
     unreadCount: true,
@@ -62,20 +59,6 @@ function DashboardScreen({
     // Stop listening for updates when no longer required
     return () => database.ref('/home/banners').off('value', onValueChange);
   }, []);
-
-  useEffect(() => {
-    if (isLogin) {
-      if (profileData?._id) {
-        setUser(profileData);
-      }
-    }
-  }, [isLogin, profileData, profileData?._id]);
-
-  useEffect(() => {
-    if (isLogin) {
-      dispatch(getProfile());
-    }
-  }, [dispatch, isLogin]);
 
   const onPressHelpLine = () => {
     navigation.navigate('HelpLine');
@@ -162,7 +145,7 @@ function DashboardScreen({
         title={'Explore BTK'}
         renderRightSecond={() => (
           <View style={styles.iconContainer}>
-            <Icon name="phone" size={19} color={colors.primaryDark} solid />
+            <Icon name="headset" size={19} color={colors.primaryDark} solid />
           </View>
         )}
         onPressRightSecond={onPressHelpLine}
@@ -187,10 +170,10 @@ function DashboardScreen({
         onPress={() => navigation.navigate('Filter', {})}
         style={styles.contentSearch}>
         <View style={[BaseStyle.textInput, { backgroundColor: colors.card }]}>
-          <Text body1 grayColor style={{ flex: 1 }}>
+          <Text body1 grayColor style={styles.searchTextContainer}>
             Search everything near you
           </Text>
-          <View style={{ paddingVertical: 8 }}>
+          <View style={styles.lineFormContainer}>
             <View
               style={[styles.lineForm, { backgroundColor: colors.border }]}
             />
@@ -215,15 +198,6 @@ function DashboardScreen({
         // }
         renderItem={() => (
           <View>
-            <View style={styles.adBanner}>
-              <BannerAd
-                unitId={dashboardBannerUnitIdOne}
-                size={BannerAdSize.FULL_BANNER}
-                requestOptions={{
-                  requestNonPersonalizedAdsOnly: true,
-                }}
-              />
-            </View>
             <Section
               title="Browse by categories"
               onViewAll={onCategoriesViewAllPress}
@@ -232,12 +206,12 @@ function DashboardScreen({
             </Section>
             <Section
               tag="New"
-              title="Restaurant with Menus"
-              subTitle="Find Restaurant with Menus, Now you can see the prices and available food items"
+              title="With Menus/Products/Packages"
+              subTitle="Find Restaurant, Shops, Gyms with Menus/Products/Packages, Now you can see their prices"
               onViewAll={() =>
                 onBusinessesViewAllPress({
-                  title: 'Restaurants with Menu Online',
-                  tags: ['Menu'],
+                  title: 'With Menus/Products/Packages',
+                  tags: ['Products'],
                 })
               }
               isLoading={false}>
@@ -245,12 +219,25 @@ function DashboardScreen({
                 onPress={onBusinessPress}
                 queryKey={[BusinessesQueryKeysWithFav.restaurantsWithMenu]}
                 params={{
-                  tags: ['Menu'],
+                  tags: ['Products'],
                   fields: ['_id', 'name', 'thumbnail', 'favorites'].join(','),
                 }}
               />
             </Section>
-
+            {remoteConfig.ads?.dashboardBannerOne ? (
+              <View>
+                <BannerAd
+                  unitId={dashboardBannerUnitIdOne}
+                  size={BannerAdSize.FULL_BANNER}
+                  requestOptions={{
+                    requestNonPersonalizedAdsOnly: true,
+                  }}
+                />
+              </View>
+            ) : null}
+            {remoteConfig.ads?.dashboardCustomAdBannerOne
+              ? renderBanner(banners?.one)
+              : null}
             <Section
               title="Restaurants"
               subTitle="Find Fast Food, Cakes, Pizza, Fries etc..."
@@ -267,17 +254,20 @@ function DashboardScreen({
                 params={{ tags: ['Cakes', 'Fast Food', 'Cafe'] }}
               />
             </Section>
-
-            <View style={styles.adBanner}>
-              <BannerAd
-                unitId={dashboardBannerUnitIdTwo}
-                size={BannerAdSize.FULL_BANNER}
-                requestOptions={{
-                  requestNonPersonalizedAdsOnly: true,
-                }}
-              />
-            </View>
-
+            {remoteConfig.ads?.dashboardBannerTwo ? (
+              <View>
+                <BannerAd
+                  unitId={dashboardBannerUnitIdTwo}
+                  size={BannerAdSize.FULL_BANNER}
+                  requestOptions={{
+                    requestNonPersonalizedAdsOnly: true,
+                  }}
+                />
+              </View>
+            ) : null}
+            {remoteConfig.ads?.dashboardCustomAdBannerTwo
+              ? renderBanner(banners?.two)
+              : null}
             <Section
               title="Transport"
               subTitle="Find Courier Service, Shuttle Service, CAB Service, Van Service and Internation Flight Services"
@@ -493,9 +483,6 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     fontSize: 10,
   },
-  adBanner: {
-    marginTop: 20,
-  },
   serviceItem: {
     flex: 1,
     alignItems: 'center',
@@ -523,6 +510,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  searchTextContainer: {
+    flex: 1,
+  },
   doc: {
     width: 10,
     height: 10,
@@ -544,6 +534,9 @@ const styles = StyleSheet.create({
     width: 1,
     height: '100%',
     margin: 10,
+  },
+  lineFormContainer: {
+    paddingVertical: 8,
   },
   banner: {
     height: Utils.scaleWithPixel(110),

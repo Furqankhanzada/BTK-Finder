@@ -14,7 +14,7 @@ import * as Utils from '@utils';
 import { BaseStyle, BaseColor, useTheme } from '@config';
 
 import { useCategories } from './queries/queries';
-import { GlobalParamList } from 'navigation/models/GlobalParamList';
+import { MainStackParamList } from 'navigation/models/MainStackParamList';
 import { StackScreenProps } from '@react-navigation/stack/lib/typescript/src/types';
 import CategoryPlaceHolder from './components/CategoryPlaceholder';
 import { CategoryPresentable } from './modals/CategoryPresentables';
@@ -22,7 +22,7 @@ import CategoryIcon from './components/CategoryIcon';
 import CategoryFull from './components/CategoryFull';
 
 export default function CategoryScreen(
-  props: StackScreenProps<GlobalParamList, 'Category'>,
+  props: StackScreenProps<MainStackParamList, 'Category'>,
 ) {
   const queryClient = useQueryClient();
   const { navigation } = props;
@@ -150,9 +150,7 @@ export default function CategoryScreen(
         </View>
       ) : (
         <FlatList
-          contentContainerStyle={{
-            paddingHorizontal: 20,
-          }}
+          contentContainerStyle={styles.flatListContainer}
           refreshControl={
             <RefreshControl
               colors={[colors.primary]}
@@ -200,6 +198,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   placeHolderContainer: {
+    paddingHorizontal: 20,
+  },
+  flatListContainer: {
     paddingHorizontal: 20,
   },
 });

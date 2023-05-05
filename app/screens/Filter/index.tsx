@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, TouchableOpacity, ScrollView } from 'react-native';
+import { View, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import remoteConfig from '@react-native-firebase/remote-config';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -17,7 +17,6 @@ import {
 } from '@components';
 import * as Utils from '@utils';
 
-import styles from './styles';
 import { EVENTS, trackEvent } from '../../userTracking';
 import { GlobalParamList } from '../../navigation/models/GlobalParamList';
 import { useCategories } from '@screens/category/queries/queries';
@@ -166,14 +165,14 @@ export default function Filter(
                 size={15}
                 color={colors.primary}
                 solid
-                style={{ marginRight: 5 }}
+                style={styles.clearIcon}
               />
             }
-            style={{ marginTop: 40 }}
+            style={styles.clearFilterButton}
             onPress={() => onClearFilter()}>
             Clear Filters
           </Button>
-          <Button round style={{ marginTop: 10 }} onPress={() => onApply()}>
+          <Button round style={styles.searchButton} onPress={() => onApply()}>
             Search
           </Button>
         </>
@@ -204,7 +203,7 @@ export default function Filter(
         onContentSizeChange={(contentWidth, contentHeight) =>
           setScrollEnabled(Utils.scrollEnabled(contentWidth, contentHeight))
         }>
-        <View style={{ paddingHorizontal: 20, paddingVertical: 15 }}>
+        <View style={styles.container}>
           <TextInput
             onChangeText={(text) => setSearch(text)}
             placeholder={t('search')}
@@ -220,7 +219,7 @@ export default function Filter(
               </TouchableOpacity>
             }
           />
-          <Text headline semibold style={{ marginTop: 30 }}>
+          <Text headline semibold style={styles.sectionText}>
             {t('categories').toUpperCase()}
           </Text>
           <View style={styles.wrapContent}>
@@ -234,14 +233,11 @@ export default function Filter(
                       size={12}
                       color={colors.primary}
                       solid
-                      style={{ marginRight: 5 }}
+                      style={styles.tagIcon}
                     />
                   }
                   key={item.name}
-                  style={{
-                    marginTop: 8,
-                    marginRight: 8,
-                  }}>
+                  style={styles.tag}>
                   {item.name}
                 </Tag>
               );
@@ -249,25 +245,17 @@ export default function Filter(
             <TouchableOpacity
               onPress={() => onAddCategory()}
               style={[styles.addItem, { backgroundColor: colors.primary }]}>
-              <Text style={{ fontSize: 10, marginRight: 5, color: 'white' }}>
-                Add Category
-              </Text>
+              <Text style={styles.tagAddText}>Add Category</Text>
               <Icon size={10} name="plus" color="white" />
             </TouchableOpacity>
           </View>
-          <Text headline semibold style={{ marginTop: 30 }}>
+          <Text headline semibold style={styles.sectionText}>
             {t('tags').toUpperCase()}
           </Text>
           <View style={styles.wrapContent}>
             {selectedTags.map((item) => {
               return (
-                <Tag
-                  outline={true}
-                  key={item.name}
-                  style={{
-                    marginTop: 8,
-                    marginRight: 8,
-                  }}>
+                <Tag outline={true} key={item.name} style={styles.selectedTag}>
                   {item.name}
                 </Tag>
               );
@@ -275,13 +263,11 @@ export default function Filter(
             <TouchableOpacity
               onPress={() => onAddTags()}
               style={[styles.addItem, { backgroundColor: colors.primary }]}>
-              <Text style={{ fontSize: 10, marginRight: 5, color: 'white' }}>
-                Add Tag
-              </Text>
+              <Text style={styles.tagAddText}>Add Tag</Text>
               <Icon size={10} name="plus" color="white" />
             </TouchableOpacity>
           </View>
-          <Text headline semibold style={{ marginTop: 30 }}>
+          <Text headline semibold style={styles.sectionText}>
             {t('facilities').toUpperCase()}
           </Text>
           <View style={styles.wrapContent}>
@@ -294,15 +280,12 @@ export default function Filter(
                       size={12}
                       color={colors.accent}
                       solid
-                      style={{ marginRight: 5 }}
+                      style={styles.tagIcon}
                     />
                   }
                   chip
                   key={item.name}
-                  style={{
-                    marginTop: 8,
-                    marginRight: 8,
-                  }}>
+                  style={styles.tag}>
                   {item.name}
                 </Tag>
               );
@@ -310,9 +293,7 @@ export default function Filter(
             <TouchableOpacity
               onPress={() => onAddFacility()}
               style={[styles.addItem, { backgroundColor: colors.accent }]}>
-              <Text style={{ fontSize: 10, marginRight: 5, color: 'white' }}>
-                Add Facility
-              </Text>
+              <Text style={styles.tagAddText}>Add Facility</Text>
               <Icon size={10} name="plus" color="white" />
             </TouchableOpacity>
           </View>
@@ -322,3 +303,94 @@ export default function Filter(
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+  },
+  wrapContent: {
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+  },
+  contentRange: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 5,
+    marginTop: 10,
+  },
+  contentResultRange: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
+  },
+  contentList: {
+    flexDirection: 'row',
+    paddingTop: 10,
+    paddingBottom: 10,
+  },
+  circleIcon: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    marginLeft: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  btnClearSearch: {
+    position: 'absolute',
+    right: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 30,
+    height: '100%',
+  },
+  locationContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  addItem: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 7,
+    borderRadius: 20,
+    marginTop: 8,
+  },
+  rowTitle: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  clearIcon: {
+    marginRight: 5,
+  },
+  clearFilterButton: {
+    marginTop: 40,
+  },
+  searchButton: {
+    marginTop: 10,
+  },
+  sectionText: {
+    marginTop: 30,
+  },
+  tag: {
+    marginTop: 8,
+    marginRight: 8,
+  },
+  tagIcon: {
+    marginRight: 5,
+  },
+  selectedTag: {
+    marginTop: 8,
+    marginRight: 8,
+  },
+  tagAddText: {
+    fontSize: 10,
+    marginRight: 5,
+    color: 'white',
+  },
+});

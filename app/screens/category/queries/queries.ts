@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 import { GET_CATEGORIES } from '../../../constants';
 import { CategoryPresentable } from '../modals/CategoryPresentables';
-import { CategoryParams } from '../modals/categoryParams';
+import { CategoryParams } from '../modals/CategoryParams';
 
 export const useCategories = (
   key: Array<string | number>,

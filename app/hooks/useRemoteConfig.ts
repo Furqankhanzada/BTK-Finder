@@ -31,6 +31,18 @@ export default function useRemoteConfig(): RemoteConfig {
           tags: JSON.parse(value._value),
         }));
       }
+      if (key === 'aboutUs') {
+        setConfig((prevConfig) => ({
+          ...prevConfig,
+          about: JSON.parse(value._value),
+        }));
+      }
+      if (key === 'ads') {
+        setConfig((prevConfig) => ({
+          ...prevConfig,
+          ads: JSON.parse(value._value),
+        }));
+      }
     }
   };
 
@@ -49,7 +61,6 @@ export default function useRemoteConfig(): RemoteConfig {
         });
     }
     fetchAndActivate().catch(handleError);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return config;

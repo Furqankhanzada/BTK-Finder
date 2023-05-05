@@ -46,6 +46,7 @@ import OpenHours from '@screens/businesses/info/components/OpenHours';
 import Recommendations from '@screens/businesses/info/components/Recommendations';
 import Products from '@screens/businesses/components/Products';
 
+import { getProductsTitle } from '../helpers/getProductsTitle';
 import { useBusiness } from '../queries/queries';
 import { useBuildBusinessURL } from '../queries/mutations';
 import { EVENTS, trackEvent } from '../../../userTracking';
@@ -54,6 +55,7 @@ import {
   ProductStackParamList,
 } from '../../../navigation/models/BusinessDetailBottomTabParamList';
 import useMobileAds from '../../../hooks/useMobileAds';
+import { useRemoteConfig } from '@hooks';
 
 let defaultDelta = {
   latitudeDelta: 0.003,
@@ -64,27 +66,37 @@ type Props = CompositeScreenProps<
   StackScreenProps<ProductStackParamList, 'Overview'>,
   StackScreenProps<BusinessDetailBottomTabParamList>
 >;
+
 export default function BusinessOverviewScreen(props: Props) {
   const { navigation, route } = props;
+  const remoteConfig = useRemoteConfig();
+
+  const openWhatsapp = () => {
+    onOpen({
+      id: '6',
+      title: t('tel'),
+      type: ContactItemType.whatsapp,
+      information: business?.telephone,
+      rightText: 'open WhatsApp',
+    });
+  };
+
+  const openPhone = () => {
+    onOpen({
+      id: '5',
+      title: t('tel'),
+      type: ContactItemType.phone,
+      information: business?.telephone,
+      rightText: 'call',
+    });
+  };
 
   const { onPressOne, onPressTwo } = useMobileAds({
     interstitialOneCallback: () => {
-      onOpen({
-        id: '6',
-        title: t('tel'),
-        type: ContactItemType.whatsapp,
-        information: business?.telephone,
-        rightText: 'open WhatsApp',
-      });
+      openWhatsapp();
     },
     interstitialTwoCallback: () => {
-      onOpen({
-        id: '5',
-        title: t('tel'),
-        type: ContactItemType.phone,
-        information: business?.telephone,
-        rightText: 'call',
-      });
+      openPhone();
     },
   });
 
@@ -355,8 +367,16 @@ export default function BusinessOverviewScreen(props: Props) {
             onProductsPress={onMenuOrProductsPress}
             onReviewsPress={onReviewsPress}
             business={business}
-            onPressWhatsApp={onPressOne}
-            onPressPhone={onPressTwo}
+            onPressWhatsApp={
+              remoteConfig.ads?.businessDetailInterstitialOne
+                ? onPressOne
+                : openWhatsapp
+            }
+            onPressPhone={
+              remoteConfig.ads?.businessDetailInterstitialOne
+                ? onPressTwo
+                : openPhone
+            }
             onOpen={onOpen}
           />
           <OpenHours business={business} />
@@ -365,7 +385,7 @@ export default function BusinessOverviewScreen(props: Props) {
         {business?.shop && business.shop.status === ShopStatus.enabled ? (
           <View>
             <Text title3 semibold style={styles.facilities}>
-              {business.type === 'restaurant' ? 'Menu' : 'Products'}
+              {getProductsTitle(business.type)}
             </Text>
             <View style={[styles.wrapContent, { borderColor: colors.border }]}>
               <Products

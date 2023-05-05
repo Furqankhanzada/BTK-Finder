@@ -1,24 +1,19 @@
 import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
-import { Image, Icon, Text } from '@components';
+import { Image, Text } from '@components';
 import styles from './styles';
 import PropTypes from 'prop-types';
-import { BaseColor, useTheme } from '@config';
 
 export default function ProfileDetail(props) {
-  const { colors } = useTheme();
   const {
     style,
     image,
     styleLeft,
     styleThumb,
-    styleRight,
     onPress,
     textFirst,
-    point,
     textSecond,
     textThird,
-    icon,
     isAdmin,
   } = props;
   return (
@@ -73,7 +68,7 @@ export default function ProfileDetail(props) {
 
 ProfileDetail.propTypes = {
   style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-  image: PropTypes.node.isRequired,
+  image: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   textFirst: PropTypes.string,
   point: PropTypes.string,
   textSecond: PropTypes.string,

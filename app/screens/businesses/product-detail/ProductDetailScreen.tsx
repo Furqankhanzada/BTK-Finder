@@ -1,16 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { StackScreenProps } from '@react-navigation/stack';
 
-import {
-  Header,
-  SafeAreaView,
-  Icon,
-  Image,
-  Text,
-  Tag,
-  Loading,
-} from '@components';
+import { Header, SafeAreaView, Icon, Image, Text, Tag } from '@components';
 import { BaseStyle, Images, useTheme } from '@config';
 import { useAlerts } from '@hooks';
 import * as Utils from '@utils';
@@ -26,6 +17,8 @@ import { FlatList, RefreshControl, StyleSheet, View } from 'react-native';
 import { CatalogProductVariant } from '../../../models/graphql';
 import { IconName } from '../../../contexts/alerts-v2/models/Icon';
 import ProductDetailPlaceholder from './components/ProductDetailPlaceholder';
+import { BusinessType } from '../models/BusinessPresentable';
+import { getProductsTitle } from '../helpers/getProductsTitle';
 
 export default function ProductDetailScreen(
   props: StackScreenProps<ProductStackParamList, 'Product'>,
@@ -40,7 +33,6 @@ export default function ProductDetailScreen(
   } = useProductBySlug(business?.shop?.shopId, route.params.productSlug!);
 
   const { colors } = useTheme();
-  const { t } = useTranslation();
 
   const { showAlert } = useAlerts();
   const [selectedVariant, setSelectedVariant] =
@@ -74,19 +66,44 @@ export default function ProductDetailScreen(
     });
   };
 
+  const getSelectText = () => {
+    switch (business?.type) {
+      case BusinessType.gym:
+        return 'Select Package:';
+      default:
+        return 'Select Size:';
+    }
+  };
+
   const onRefresh = async () => {
     setIsReFetching(true);
     await refetch();
     setIsReFetching(false);
   };
 
+  const renderCartIcon = () => {
+    if (business?.type === BusinessType.gym) {
+      return null;
+    }
+
+    return (
+      <Icon
+        name="shopping-cart"
+        size={20}
+        color={colors.primary}
+        enableRTL={true}
+      />
+    );
+  };
+
   if (isLoading) {
     return <ProductDetailPlaceholder />;
   }
+
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
-        title={t('menu')}
+        title={getProductsTitle(business?.type)}
         renderLeft={() => {
           return (
             <Icon
@@ -97,19 +114,14 @@ export default function ProductDetailScreen(
             />
           );
         }}
-        renderRight={() => {
-          return (
-            <Icon
-              name="shopping-cart"
-              size={20}
-              color={colors.primary}
-              enableRTL={true}
-            />
-          );
-        }}
-        onPressRight={onAddToCartPress}
         onPressLeft={() => {
           navigation.goBack();
+        }}
+        renderRight={renderCartIcon}
+        onPressRight={() => {
+          if (business?.type !== BusinessType.gym) {
+            onAddToCartPress();
+          }
         }}
       />
       <FlatList
@@ -142,8 +154,8 @@ export default function ProductDetailScreen(
                 {product?.title}
               </Text>
               <Text caption1>{product?.description}</Text>
-              <Text headline style={{ marginTop: 10 }}>
-                Select Size:
+              <Text headline style={styles.selectText}>
+                {getSelectText()}
               </Text>
               <View style={[styles.variantsContainer]}>
                 {product?.variants?.map((variant) => (
@@ -165,7 +177,7 @@ export default function ProductDetailScreen(
               </View>
 
               <View style={styles.priceQuantity}>
-                <Text heavy headline style={{ width: '40%' }}>
+                <Text heavy headline style={styles.priceQuantityText}>
                   Rs.
                   {selectedVariant?.pricing.map((price) =>
                     (price?.price! * quantity)
@@ -173,38 +185,35 @@ export default function ProductDetailScreen(
                       .replace(/\d(?=(\d{3})+\.)/g, '$&,'),
                   )}
                 </Text>
-                <QuantityButton
-                  onPressAdd={() =>
-                    setQuantity((oldQuantity) => oldQuantity + 1)
-                  }
-                  onPressRemove={() =>
-                    setQuantity((oldQuantity) =>
-                      oldQuantity !== 1 ? oldQuantity - 1 : oldQuantity,
-                    )
-                  }
-                  quantity={quantity}
-                />
+                {business?.type === 'gym' ? null : (
+                  <QuantityButton
+                    onPressAdd={() =>
+                      setQuantity((oldQuantity) => oldQuantity + 1)
+                    }
+                    onPressRemove={() =>
+                      setQuantity((oldQuantity) =>
+                        oldQuantity !== 1 ? oldQuantity - 1 : oldQuantity,
+                      )
+                    }
+                    quantity={quantity}
+                  />
+                )}
               </View>
             </View>
           );
         }}
       />
-      <View
-        style={{
-          position: 'absolute',
-          bottom: 0,
-          width: '100%',
-          paddingHorizontal: 20,
-          paddingBottom: 20,
-        }}>
-        <EcommerceButton
-          leftText="Rs.0"
-          title="Add to cart"
-          rightText={'0'}
-          onPress={onAddToCartPress}
-          onCartCountPress={onAddToCartPress}
-        />
-      </View>
+      {business?.type === 'gym' ? null : (
+        <View style={styles.addCartButton}>
+          <EcommerceButton
+            leftText="Rs.0"
+            title="Add to cart"
+            rightText={'0'}
+            onPress={onAddToCartPress}
+            onCartCountPress={onAddToCartPress}
+          />
+        </View>
+      )}
     </SafeAreaView>
   );
 }
@@ -233,5 +242,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 15,
     marginBottom: 10,
+  },
+  priceQuantityText: {
+    width: '40%',
+  },
+  selectText: {
+    marginTop: 10,
+  },
+  addCartButton: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    paddingHorizontal: 20,
+    paddingBottom: 20,
   },
 });
