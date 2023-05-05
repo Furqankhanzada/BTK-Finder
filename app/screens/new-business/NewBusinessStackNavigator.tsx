@@ -1,8 +1,10 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import { NewBusinessParamList } from '../../navigation/models/NewBusinessParamList';
+import { AuthStackNavigator } from '@screens/auth/navigation/AuthStack';
+import useAuthStore, { AuthStoreStates } from '@screens/auth/store/Store';
 
+import { NewBusinessParamList } from '../../navigation/models/NewBusinessParamList';
 import NameScreen from './name/NameScreen';
 import DescriptionScreen from './description/DescriptionScreen';
 import CategorySelectScreen from './category/CategorySelectScreen';
@@ -19,9 +21,14 @@ import GalleryScreen from './gallery/GalleryScreen';
 const NewBusinessStack = createStackNavigator<NewBusinessParamList>();
 
 export default function NewBusinessStackNavigator() {
+  const isLogin = useAuthStore((state: AuthStoreStates) => state.isLogin);
+
   return (
     <NewBusinessStack.Navigator screenOptions={{ headerShown: false }}>
-      <NewBusinessStack.Screen name="Name" component={NameScreen} />
+      <NewBusinessStack.Screen
+        name="Name"
+        component={isLogin ? NameScreen : AuthStackNavigator}
+      />
       <NewBusinessStack.Screen
         name="Description"
         component={DescriptionScreen}
