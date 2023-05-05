@@ -42,7 +42,21 @@ export type BusinessStoreActions = {
   resetAddBusinessStore: () => void;
 };
 
-const initialState: BusinessStoreTypes = {};
+const initialState: BusinessStoreTypes = {
+  name: '',
+  description: '',
+  category: '',
+  facilities: [],
+  tags: [],
+  telephone: '',
+  email: '',
+  website: '',
+  address: '',
+  openHours: [],
+  priceRange: {},
+  gallery: [],
+  thumbnail: '',
+};
 
 const useAddBusinessStore = create<BusinessStoreTypes & BusinessStoreActions>(
   (set) => ({
@@ -62,7 +76,7 @@ const useAddBusinessStore = create<BusinessStoreTypes & BusinessStoreActions>(
     setGallery: (gallery) => set(() => ({ gallery })),
     setThumbnail: (thumbnail) => set(() => ({ thumbnail })),
     setLocation: (location) => set(() => ({ location })),
-    resetAddBusinessStore: () => set(() => initialState),
+    resetAddBusinessStore: () => set(initialState),
   }),
 );
 
