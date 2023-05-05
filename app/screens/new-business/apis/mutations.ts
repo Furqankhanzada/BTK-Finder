@@ -1,4 +1,3 @@
-import { useSelector } from 'react-redux';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Image } from 'react-native-image-crop-picker';
 
@@ -12,6 +11,7 @@ import {
 } from '@screens/businesses/models/BusinessPresentable';
 import { useAlerts } from '@hooks';
 import { BaseColor } from '@config';
+import useAuthStore from '@screens/auth/store/Store';
 
 import { IconName } from '../../../contexts/alerts-v2/models/Icon';
 import axiosApiInstance from '../../../interceptor/axios-interceptor';
@@ -71,13 +71,13 @@ export const useAddThumbnail = () => {
     (state: BusinessStoreActions) => state.setThumbnail,
   );
 
-  const user = useSelector((state: any) => state.profile);
-  const { _id } = user;
+  const { user } = useAuthStore();
+
   return useMutation<ImageResponse, Error, Image>((image) => {
     const imageData = new FormData();
     imageData.append('file', generateFileObject(image));
     return axiosApiInstance
-      .post(`${UPLOAD}?folder=users/${_id}/businesses`, imageData, {
+      .post(`${UPLOAD}?folder=users/${user?._id}/businesses`, imageData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
       .then((res) => {
@@ -98,8 +98,7 @@ export const useAddGalleryImages = () => {
     (state: BusinessStoreTypes) => state.gallery,
   );
 
-  const user = useSelector((state: any) => state.profile);
-  const { _id } = user;
+  const { user } = useAuthStore();
 
   // TODO: Fix types.
   return useMutation<any, Error, any>(async (images) => {
@@ -108,7 +107,7 @@ export const useAddGalleryImages = () => {
         const imageData = new FormData();
         imageData.append('file', generateFileObject(file));
         return axiosApiInstance
-          .post(`${UPLOAD}?folder=users/${_id}/businesses`, imageData, {
+          .post(`${UPLOAD}?folder=users/${user?._id}/businesses`, imageData, {
             headers: { 'Content-Type': 'multipart/form-data' },
           })
           .then((response) =>
