@@ -13,35 +13,37 @@ export default function useRemoteConfig(): RemoteConfig {
   const updateStates = () => {
     const allValues: Record<string, any> = remoteConfig().getAll();
     for (const [key, value] of Object.entries(allValues)) {
-      if (key === 'helplines') {
-        setConfig((prevConfig) => ({
-          ...prevConfig,
-          helplines: JSON.parse(value._value),
-        }));
-      }
-      if (key === 'facilities') {
-        setConfig((prevConfig) => ({
-          ...prevConfig,
-          facilities: JSON.parse(value._value),
-        }));
-      }
-      if (key === 'tags') {
-        setConfig((prevConfig) => ({
-          ...prevConfig,
-          tags: JSON.parse(value._value),
-        }));
-      }
-      if (key === 'aboutUs') {
-        setConfig((prevConfig) => ({
-          ...prevConfig,
-          about: JSON.parse(value._value),
-        }));
-      }
-      if (key === 'ads') {
-        setConfig((prevConfig) => ({
-          ...prevConfig,
-          ads: JSON.parse(value._value),
-        }));
+      switch (key) {
+        case 'helplines':
+          setConfig((prevConfig) => ({
+            ...prevConfig,
+            helplines: JSON.parse(value._value),
+          }));
+          break;
+        case 'facilities':
+          setConfig((prevConfig) => ({
+            ...prevConfig,
+            facilities: JSON.parse(value._value),
+          }));
+          break;
+        case 'tags':
+          setConfig((prevConfig) => ({
+            ...prevConfig,
+            tags: JSON.parse(value._value),
+          }));
+          break;
+        case 'aboutUs':
+          setConfig((prevConfig) => ({
+            ...prevConfig,
+            about: JSON.parse(value._value),
+          }));
+          break;
+        case 'ads':
+          setConfig((prevConfig) => ({
+            ...prevConfig,
+            ads: JSON.parse(value._value),
+          }));
+          break;
       }
     }
   };
