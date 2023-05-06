@@ -15,6 +15,7 @@ import { Header, TextInput, Icon, Text } from '@components';
 import { BaseStyle, useTheme } from '@config';
 import { useBusiness } from '@screens/businesses/queries/queries';
 
+import { Tag } from 'models/RemoteConfig';
 import { NewBusinessParamList } from 'navigation/models/NewBusinessParamList';
 import { useEditBusiness } from '../apis/mutations';
 import useAddBusinessStore, {
@@ -46,7 +47,7 @@ export default function TagsScreen(
   const tags = remoteConfig.tags;
   const [selected, setSelected] = useState<string[]>([]);
   const [search, setSearch] = useState<string>('');
-  const [items, setItems] = useState(tags);
+  const [items, setItems] = useState<Tag[] | undefined>(tags);
 
   useEffect(() => {
     if (isEditBusiness && businessData?.tags) {
@@ -56,7 +57,7 @@ export default function TagsScreen(
     }
   }, [businessData?.tags, isEditBusiness, storeTags]);
 
-  const onChange = (select: { name: string }) => {
+  const onChange = (select: Tag) => {
     //Check if tag is selected or not
     const isItemSelected = selected.includes(select.name);
 
@@ -80,7 +81,7 @@ export default function TagsScreen(
       setItems(tags ?? []);
     } else {
       setItems(
-        items?.filter((item: { name: string }) => {
+        items?.filter((item: Tag) => {
           return item.name.toUpperCase().includes(search.toUpperCase());
         }),
       );

@@ -28,6 +28,10 @@ interface About {
   disclaimer: string;
 }
 
+export interface Tag {
+  name: string;
+}
+
 interface Ads {
   dashboardBannerOne: boolean;
   dashboardBannerTwo: boolean;
@@ -40,7 +44,7 @@ interface Ads {
 export interface RemoteConfig {
   helplines: Helplines[];
   facilities?: Facility[];
-  tags?: { name: string }[];
+  tags?: Tag[];
   about?: About;
   ads?: Ads;
 }
