@@ -14,13 +14,12 @@ export default function EditBusinessScreen(
   props: StackScreenProps<EditBusinessStackParamList, 'EditBusiness'>,
 ) {
   const { navigation, route } = props;
-  const { isLoading, data: businessData } = useBusiness(
-    route?.params?.businessId,
-  );
-
+  const { isLoading, data: business } = useBusiness(route?.params?.businessId);
+  if (isLoading || !business) {
+    return <Loading loading={isLoading} />;
+  }
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
-      <Loading loading={isLoading} />
       <Header
         title={'Edit Business'}
         renderLeft={() => {
@@ -38,109 +37,105 @@ export default function EditBusinessScreen(
       <ScrollView>
         <ListItem
           title="Name"
-          text={businessData?.name}
+          text={business.name}
           onPress={() => {
             navigation.navigate('Edit', {
               screen: 'Name',
-              params: { businessId: businessData?._id },
+              params: { businessId: business._id },
             });
           }}
         />
         <ListItem
           title="Description"
-          text={businessData?.description}
+          text={business.description}
           onPress={() => {
             navigation.navigate('Edit', {
               screen: 'Description',
-              params: { businessId: businessData?._id },
+              params: { businessId: business._id },
             });
           }}
         />
         <ListItem
           title="Category"
-          text={businessData?.category}
+          text={business.category}
           onPress={() => {
             navigation.navigate('Edit', {
               screen: 'CategorySelect',
-              params: { businessId: businessData?._id },
+              params: { businessId: business._id },
             });
           }}
         />
         <ListItem
           title="Facilities"
-          text={
-            businessData?.facilities?.length
-              ? businessData.facilities[0].name
-              : ''
-          }
+          text={business.facilities?.length ? business.facilities[0].name : ''}
           onPress={() => {
             navigation.navigate('Edit', {
               screen: 'Facilities',
-              params: { businessId: businessData?._id },
+              params: { businessId: business._id },
             });
           }}
         />
         <ListItem
           title="Tags"
-          text={businessData?.tags ? businessData?.tags[0] : ''}
+          text={business.tags ? business.tags[0] : ''}
           onPress={() => {
             navigation.navigate('Edit', {
               screen: 'Tags',
-              params: { businessId: businessData?._id },
+              params: { businessId: business._id },
             });
           }}
         />
         <ListItem
           title="Telephone"
-          text={businessData?.telephone}
+          text={business.telephone}
           onPress={() => {
             navigation.navigate('Edit', {
               screen: 'Telephone',
-              params: { businessId: businessData?._id },
+              params: { businessId: business._id },
             });
           }}
         />
         <ListItem
           title="Email"
-          text={businessData?.email}
+          text={business.email}
           onPress={() => {
             navigation.navigate('Edit', {
               screen: 'Email',
-              params: { businessId: businessData?._id },
+              params: { businessId: business._id },
             });
           }}
         />
         <ListItem
           title="Website"
-          text={businessData?.website}
+          text={business.website}
           onPress={() => {
             navigation.navigate('Edit', {
               screen: 'Website',
-              params: { businessId: businessData?._id },
+              params: { businessId: business._id },
             });
           }}
         />
         <ListItem
           title="Address"
-          text={businessData?.address}
+          text={business.address}
           onPress={() => {
             navigation.navigate('Edit', {
               screen: 'Address',
-              params: { businessId: businessData?._id },
+              params: { businessId: business._id },
             });
           }}
         />
         <ListItem
           title="Open Hours"
           text={
-            businessData?.openHours?.length
-              ? `${businessData?.openHours[0]?.day} ${businessData?.openHours[0]?.from} To ${businessData?.openHours[0]?.to}`
+            business.openHours?.length
+              ? `${business.openHours[0]?.day} ${business.openHours[0]?.from} To ${business.openHours[0]?.to}`
               : ''
           }
           onPress={() => {
             navigation.navigate('Edit', {
               screen: 'OpenHours',
-              params: { businessId: businessData?._id },
+              params: { businessId: business?._id },
             });
           }}
         />
@@ -148,17 +143,17 @@ export default function EditBusinessScreen(
           title="Pricing"
           renderRightCustom={
             <Text body1 numberOfLines={1}>
-              {businessData?.priceRange?.from && businessData.priceRange.to ? (
+              {business?.priceRange?.from && business.priceRange.to ? (
                 <Text body1 numberOfLines={1}>
                   <NumberFormat
-                    value={businessData?.priceRange?.from}
+                    value={business.priceRange?.from}
                     displayType="text"
                     thousandSeparator=","
                     renderText={(value) => value}
                   />{' '}
                   To{' '}
                   <NumberFormat
-                    value={businessData?.priceRange?.to}
+                    value={business.priceRange?.to}
                     displayType="text"
                     thousandSeparator=","
                     renderText={(value) => value}
@@ -174,17 +169,17 @@ export default function EditBusinessScreen(
           onPress={() => {
             navigation.navigate('Edit', {
               screen: 'Pricing',
-              params: { businessId: businessData?._id },
+              params: { businessId: business._id },
             });
           }}
         />
         <ListItem
           title="Gallery"
-          text={businessData?.thumbnail ? 'Gallery' : ''}
+          text={business.thumbnail ? 'Gallery' : ''}
           onPress={() => {
             navigation.navigate('Edit', {
               screen: 'Gallery',
-              params: { businessId: businessData?._id },
+              params: { businessId: business._id },
             });
           }}
         />

@@ -1,14 +1,16 @@
+type Params = { businessId: string } | undefined;
+
 export type NewBusinessParamList = {
-  Name: undefined | { businessId?: string };
-  Description: undefined | { businessId?: string };
-  CategorySelect: undefined | { businessId?: string };
-  Facilities: undefined | { businessId?: string };
-  Tags: undefined | { businessId?: string };
-  Telephone: undefined | { businessId?: string };
-  Email: undefined | { businessId?: string };
-  Website: undefined | { businessId?: string };
-  Address: undefined | { businessId?: string };
-  OpenHours: undefined | { businessId?: string };
-  Pricing: undefined | { businessId?: string };
-  Gallery: undefined | { businessId?: string };
+  Name: Params;
+  Description: Params;
+  CategorySelect: Params;
+  Facilities: Params;
+  Tags: Params;
+  Telephone: Params;
+  Email: Params;
+  Website: Params;
+  Address: Params;
+  OpenHours: Params;
+  Pricing: Params;
+  Gallery: Params;
 };
