@@ -101,7 +101,7 @@ function MainBottomTabNavigator() {
         }}
       />
       <MainBottomTab.Screen
-        name="Business"
+        name="NewBusiness"
         component={NewBusinessStackNavigator}
         options={{
           title: 'New Business',
