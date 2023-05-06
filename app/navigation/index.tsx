@@ -13,13 +13,13 @@ import {
   useDynamicLinks,
   useNativeUpdate,
   useRemoteConfig,
+  useAuth,
 } from '@hooks';
 
 /* Modal Screen only affect iOS */
 import Filter from '@screens/Filter';
 import ChooseItems from '@screens/ChooseItems';
 import SearchHistory from '@screens/SearchHistory';
-import useAuthStore from '@screens/auth/store/Store';
 
 import { navigationRef, isReadyRef } from '../services/NavigationService';
 import { trackScreenView } from '../userTracking';
@@ -28,7 +28,6 @@ import Main from './main';
 import { linkingConfig } from './deep-linking/LinkingConfig';
 import useAppStore from '../store/appStore';
 import { Font, ThemeMode } from 'store/models/appStore';
-import { useProfile } from '@screens/settings/profile/queries/queries';
 
 const RootStack = createStackNavigator<RootStackParamList>();
 
@@ -41,10 +40,10 @@ export default function Navigator() {
   useNativeUpdate();
   // Firebase remote config
   useRemoteConfig();
+  // Check token and set login
+  useAuth();
 
   const { setThemeMode, setFont } = useAppStore();
-  const { setUser, setIsLogin } = useAuthStore();
-  const { data: user } = useProfile();
   const { theme, colors } = useTheme();
   const isDarkMode = useDarkMode();
   const routeNameRef = useRef() as MutableRefObject<string>;
@@ -68,16 +67,6 @@ export default function Navigator() {
   }, []);
 
   useEffect(() => {
-    const getToken = async () => {
-      const token = await AsyncStorage.getItem('access_token');
-      if (token) {
-        setIsLogin(true);
-      }
-    };
-    getToken();
-  }, [setIsLogin]);
-
-  useEffect(() => {
     const getDarkTheme = async () => {
       const themeMode = (await AsyncStorage.getItem('themeMode')) as ThemeMode;
       if (themeMode) {
@@ -96,12 +85,6 @@ export default function Navigator() {
     };
     getFont();
   }, [setFont]);
-
-  useEffect(() => {
-    if (user) {
-      setUser(user);
-    }
-  }, [setUser, user]);
 
   return (
     <NavigationContainer

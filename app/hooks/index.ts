@@ -3,6 +3,7 @@ import useDynamicLinks from './useDynamicLinks';
 import useNativeUpdate from './useNativeUpdate';
 import usLocation from './useLocation';
 import useRemoteConfig from './useRemoteConfig';
+import useAuth from './useAuth';
 import { useAlerts } from './useAlerts';
 
 export {
@@ -12,4 +13,5 @@ export {
   usLocation,
   useRemoteConfig,
   useAlerts,
+  useAuth,
 };
