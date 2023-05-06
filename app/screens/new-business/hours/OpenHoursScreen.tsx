@@ -8,11 +8,12 @@ import {
 } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 
-import { Header, Text, HoursCheckbox } from '@components';
+import { Header, Text } from '@components';
 import { BaseStyle } from '@config';
 import { useBusiness } from '@screens/businesses/queries/queries';
 import { OpenHours } from '@screens/businesses/models/BusinessPresentable';
 
+import HoursCheckbox from './components/HoursCheckbox';
 import { NewBusinessParamList } from 'navigation/models/NewBusinessParamList';
 import { useEditBusiness } from '../apis/mutations';
 import useAddBusinessStore, {
