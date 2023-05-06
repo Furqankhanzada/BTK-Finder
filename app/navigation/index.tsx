@@ -6,7 +6,6 @@ import { useDarkMode } from 'react-native-dynamic';
 import { useTheme, BaseSetting } from '@config';
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {
   usePushNotifications,
@@ -14,6 +13,7 @@ import {
   useNativeUpdate,
   useRemoteConfig,
   useAuth,
+  useAppearance,
 } from '@hooks';
 
 /* Modal Screen only affect iOS */
@@ -26,8 +26,6 @@ import { trackScreenView } from '../userTracking';
 import { RootStackParamList } from './models/RootStackParamList';
 import Main from './main';
 import { linkingConfig } from './deep-linking/LinkingConfig';
-import useAppStore from '../store/appStore';
-import { Font, ThemeMode } from 'store/models/appStore';
 
 const RootStack = createStackNavigator<RootStackParamList>();
 
@@ -42,8 +40,9 @@ export default function Navigator() {
   useRemoteConfig();
   // Check token and set login
   useAuth();
+  // App appearance
+  useAppearance();
 
-  const { setThemeMode, setFont } = useAppStore();
   const { theme, colors } = useTheme();
   const isDarkMode = useDarkMode();
   const routeNameRef = useRef() as MutableRefObject<string>;
@@ -65,26 +64,6 @@ export default function Navigator() {
       isReadyRef.current = false;
     };
   }, []);
-
-  useEffect(() => {
-    const getDarkTheme = async () => {
-      const themeMode = (await AsyncStorage.getItem('themeMode')) as ThemeMode;
-      if (themeMode) {
-        setThemeMode(themeMode);
-      }
-    };
-    getDarkTheme();
-  }, [setThemeMode]);
-
-  useEffect(() => {
-    const getFont = async () => {
-      const font = (await AsyncStorage.getItem('font')) as Font;
-      if (font) {
-        setFont(font);
-      }
-    };
-    getFont();
-  }, [setFont]);
 
   return (
     <NavigationContainer

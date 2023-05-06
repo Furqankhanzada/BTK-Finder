@@ -4,6 +4,7 @@ import useNativeUpdate from './useNativeUpdate';
 import usLocation from './useLocation';
 import useRemoteConfig from './useRemoteConfig';
 import useAuth from './useAuth';
+import useAppearance from './useAppearance';
 import { useAlerts } from './useAlerts';
 
 export {
@@ -14,4 +15,5 @@ export {
   useRemoteConfig,
   useAlerts,
   useAuth,
+  useAppearance,
 };
