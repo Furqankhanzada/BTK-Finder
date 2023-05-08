@@ -3,12 +3,13 @@ import { ScrollView } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import NumberFormat from 'react-number-format';
 
-import { Header, SafeAreaView, Icon, Loading, Text } from '@components';
+import { Header, SafeAreaView, Icon, Text } from '@components';
 import { BaseStyle } from '@config';
 import { useBusiness } from '@screens/businesses/queries/queries';
 
-import ListItem from './components/ListItem/ListItem';
 import { MyBusinessesStackParamList } from 'navigation/models/MyBusinessesParamList';
+import { EditBusinessPlaceholder } from './components/EditBusinessPlaceholder';
+import ListItem from './components/ListItem';
 
 export default function EditBusinessScreen(
   props: StackScreenProps<MyBusinessesStackParamList, 'MyBusiness'>,
@@ -16,7 +17,7 @@ export default function EditBusinessScreen(
   const { navigation, route } = props;
   const { isLoading, data: business } = useBusiness(route?.params?.businessId);
   if (isLoading || !business) {
-    return <Loading loading={isLoading} />;
+    return <EditBusinessPlaceholder />;
   }
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
