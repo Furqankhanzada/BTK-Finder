@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
-import { useTheme } from '@config';
-import CheckBox from 'react-native-check-box';
-import { Text } from '@components';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
+import CheckBox from '@react-native-community/checkbox';
+
+import { useTheme } from '@config';
+import { Text } from '@components';
 import { OpenHours } from '@screens/businesses/models/BusinessPresentable';
 
 type HoursCheckbox = {
@@ -47,13 +48,12 @@ export default function HoursCheckbox(props: HoursCheckbox) {
     <View style={styles.checkBoxSection}>
       <View style={styles.checkBoxContainer}>
         <CheckBox
-          style={styles.checkBox}
-          onClick={() => toggleCheck()}
-          isChecked={day.isOpen ?? false}
-          rightText={day.day}
-          rightTextStyle={{ color: colors.text }}
-          checkBoxColor="#5dade2"
+          onValueChange={() => toggleCheck()}
+          value={day.isOpen ?? false}
+          tintColors={{ true: colors.primary, false: colors.primary }}
+          tintColor={colors.primary}
         />
+        <Text body2>{day.day}</Text>
       </View>
       <View>
         {day.isOpen ? (
@@ -113,20 +113,14 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+    height: 40,
   },
   checkBoxContainer: {
     display: 'flex',
     flexDirection: 'row',
+    alignItems: 'center',
     marginHorizontal: -6,
     width: 130,
-  },
-  checkBox: {
-    flex: 1,
-    padding: 10,
-  },
-  checkBoxText: {
-    marginTop: 8,
-    marginRight: 15,
   },
   inputsSection: {
     display: 'flex',
