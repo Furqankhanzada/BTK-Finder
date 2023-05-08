@@ -1,7 +1,6 @@
 import { NavigatorScreenParams } from '@react-navigation/native';
 
 import { MainBottomTabParamList } from './MainBottomTabParamList';
-import { EditBusinessStackParamList } from './EditBusinessStackParamList';
 import { AuthParamList } from './AuthParamList';
 
 export type MainStackParamList = {
@@ -22,5 +21,4 @@ export type MainStackParamList = {
   };
   Messenger: undefined;
   Messages: undefined;
-  EditBusinessStack: NavigatorScreenParams<EditBusinessStackParamList>;
 };

@@ -5,13 +5,13 @@ import NumberFormat from 'react-number-format';
 
 import { Header, SafeAreaView, Icon, Loading, Text } from '@components';
 import { BaseStyle } from '@config';
+import { useBusiness } from '@screens/businesses/queries/queries';
 
 import ListItem from './components/ListItem/ListItem';
-import { useBusiness } from '@screens/businesses/queries/queries';
-import { EditBusinessStackParamList } from 'navigation/models/EditBusinessStackParamList';
+import { MyBusinessesStackParamList } from 'navigation/models/MyBusinessesParamList';
 
 export default function EditBusinessScreen(
-  props: StackScreenProps<EditBusinessStackParamList, 'EditBusiness'>,
+  props: StackScreenProps<MyBusinessesStackParamList, 'MyBusiness'>,
 ) {
   const { navigation, route } = props;
   const { isLoading, data: business } = useBusiness(route?.params?.businessId);

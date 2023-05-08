@@ -8,9 +8,9 @@ import SendNotificationScreen from '@screens/notifications/send/SendNotification
 import ContactUsScreen from '@screens/settings/contact-us/ContactUsScreen';
 import AboutUsScreen from '@screens/settings/about-us/AboutUsScreen';
 import AppearanceScreen from '@screens/settings/appearance/AppearanceScreen';
-import MyBusinessesScreen from '@screens/settings/my-businesses/MyBusinessesScreen';
 
 import { SettingsParamList } from '../../../navigation/models/SettingsParamList';
+import MyBusinessStackNavigator from '../my-businesses/navigation/MyBusinessesStack';
 
 const SettingsStack = createStackNavigator<SettingsParamList>();
 
@@ -22,8 +22,8 @@ export function SettingsStackNavigator() {
       <SettingsStack.Screen name="ContactUs" component={ContactUsScreen} />
       <SettingsStack.Screen name="AboutUs" component={AboutUsScreen} />
       <SettingsStack.Screen
-        name="MyBusinesses"
-        component={MyBusinessesScreen}
+        name="MyBusinessesStack"
+        component={MyBusinessStackNavigator}
       />
       <SettingsStack.Screen
         name="SendNotification"

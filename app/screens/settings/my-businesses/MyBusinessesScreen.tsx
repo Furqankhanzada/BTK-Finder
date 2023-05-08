@@ -85,10 +85,7 @@ export default function MyBusinessesScreen(
   };
 
   const onEdit = (id: string) => {
-    navigation.navigate('EditBusinessStack', {
-      screen: 'EditBusiness',
-      params: { businessId: id },
-    });
+    navigation.navigate('MyBusiness', { businessId: id });
   };
 
   const navigateBusinessDetail = (id: string) => {

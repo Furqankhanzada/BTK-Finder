@@ -38,8 +38,10 @@ export default function SettingsScreen(
   );
   const { user } = useAuthStore();
 
-  const navigateToMyBusinesses = (id: string) => {
-    navigation.navigate('MyBusinesses', { id });
+  const navigateToMyBusinesses = () => {
+    navigation.navigate('MyBusinessesStack', {
+      screen: 'MyBusinesses',
+    });
   };
 
   /**
@@ -120,7 +122,7 @@ export default function SettingsScreen(
                   styles.profileItem,
                   { borderBottomColor: colors.border },
                 ]}
-                onPress={() => navigateToMyBusinesses(user._id)}>
+                onPress={navigateToMyBusinesses}>
                 <Text body1>{t('my_businesses')}</Text>
                 <Icon
                   name="angle-right"

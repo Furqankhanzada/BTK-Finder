@@ -22,7 +22,6 @@ import { SettingsStackNavigator } from '@screens/settings/navigation/SettingsSta
 
 import { MainStackParamList } from './models/MainStackParamList';
 import { MainBottomTabParamList } from './models/MainBottomTabParamList';
-import EditBusinessStackNavigator from '@screens/new-business/edit-business/navigation/EditBusinessStackNavigator';
 import { AuthStackNavigator } from '@screens/auth/navigation/AuthStack';
 import useAuthStore, { AuthStoreStates } from '@screens/auth/store/Store';
 
@@ -53,10 +52,6 @@ export default function Main() {
       <MainStack.Screen name="Businesses" component={BusinessesScreen} />
       <MainStack.Screen name="Messenger" component={Messenger} />
       <MainStack.Screen name="Messages" component={Messages} />
-      <MainStack.Screen
-        name="EditBusinessStack"
-        component={EditBusinessStackNavigator}
-      />
     </MainStack.Navigator>
   );
 }

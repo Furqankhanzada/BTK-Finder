@@ -9,6 +9,7 @@ import { DashboardParamList } from './DashboardParamList';
 import { NewBusinessParamList } from './NewBusinessParamList';
 import { SettingsParamList } from './SettingsParamList';
 import { AuthParamList } from './AuthParamList';
+import { MyBusinessesStackParamList } from './MyBusinessesParamList';
 
 export type GlobalParamList = RootStackParamList &
   MainStackParamList &
@@ -18,4 +19,5 @@ export type GlobalParamList = RootStackParamList &
   DashboardParamList &
   NewBusinessParamList &
   SettingsParamList &
-  AuthParamList;
+  AuthParamList &
+  MyBusinessesStackParamList;
