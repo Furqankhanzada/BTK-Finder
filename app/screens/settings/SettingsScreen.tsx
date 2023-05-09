@@ -52,6 +52,7 @@ export default function SettingsScreen(
     AsyncStorage.removeItem('access_token');
     queryClient.invalidateQueries(['notifications']);
     queryClient.invalidateQueries(['notifications-count']);
+    queryClient.removeQueries(['profile']);
   };
 
   const CopyToClipboard = () => {
