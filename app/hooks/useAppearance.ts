@@ -11,9 +11,7 @@ export default function useAppearance() {
 
   useEffect(() => {
     const getDarkTheme = async () => {
-      const themeMode = (await getItem(
-        LocalStorageKeys.THEME_MODE,
-      )) as unknown as ThemeMode;
+      const themeMode = await getItem<ThemeMode>(LocalStorageKeys.THEME_MODE);
       if (themeMode) {
         setThemeMode(themeMode);
       }
@@ -24,7 +22,7 @@ export default function useAppearance() {
 
   useEffect(() => {
     const getFont = async () => {
-      const font = (await getItem(LocalStorageKeys.FONT)) as unknown as Font;
+      const font = await getItem<Font>(LocalStorageKeys.FONT);
       if (font) {
         setFont(font);
       }
