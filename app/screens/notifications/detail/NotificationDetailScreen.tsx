@@ -27,6 +27,8 @@ import { useNotification } from '../queries/queries';
 import { useReadNotification } from '../queries/mutations';
 import { NotificationType } from '../models/NotificationPresentable';
 
+import { VideoModel } from './components/VideoModal';
+
 export default function NotificationDetailScreen(
   props: StackScreenProps<NotificationParamList, 'NotificationDetail'>,
 ) {
@@ -41,6 +43,18 @@ export default function NotificationDetailScreen(
   const [openImage, setOpenImage] = useState(false);
   const [imageHeight, setImageHeight] = useState(500);
   const [imageWidth, setImageWidth] = useState(500);
+
+  const [showModal, setShowModal] = useState<any>({
+    isVisible: false,
+    video: null,
+  });
+
+  const toggleModal = (state: any) => {
+    setShowModal({
+      isVisible: state.isVisible,
+      video: state.video,
+    });
+  };
 
   const getTitle = (type?: NotificationType) => {
     switch (type) {
@@ -70,6 +84,15 @@ export default function NotificationDetailScreen(
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
+      {showModal.isVisible ? (
+        <VideoModel
+          isVisible={showModal.isVisible}
+          toggleModal={toggleModal}
+          video={showModal.video}
+          {...props}
+        />
+      ) : null}
+
       <Header
         title={getTitle(data?.type)}
         renderLeft={() => {
@@ -102,7 +125,33 @@ export default function NotificationDetailScreen(
           <ScrollView
             style={styles.scrollView}
             showsVerticalScrollIndicator={false}>
-            {data?.image ? (
+            {data?.video ? (
+              <TouchableOpacity
+                onPress={() => {
+                  setShowModal({
+                    isVisible: true,
+                    video: data.video,
+                  });
+                }}>
+                <View
+                  style={[
+                    styles.playVideo,
+                    {
+                      backgroundColor: colors.card,
+                      borderColor: colors.border,
+                    },
+                  ]}>
+                  <Image source={data?.image} style={styles.videoThumbnail} />
+                  <Icon
+                    name="play"
+                    size={35}
+                    color={colors.primary}
+                    enableRTL={true}
+                    style={styles.playIcon}
+                  />
+                </View>
+              </TouchableOpacity>
+            ) : data?.image ? (
               <TouchableOpacity
                 onPress={() => setOpenImage(true)}
                 style={styles.imageContainer}>
@@ -169,5 +218,23 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginRight: 10,
+  },
+  playVideo: {
+    width: '100%',
+    height: 200,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+    borderWidth: 1,
+    overflow: 'hidden',
+  },
+  videoThumbnail: {
+    width: '100%',
+    height: '100%',
+  },
+  playIcon: {
+    position: 'absolute',
   },
 });
