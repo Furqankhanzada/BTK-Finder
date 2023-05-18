@@ -9,12 +9,32 @@ import {
 import VideoPlayer from 'react-native-video-controls';
 import Orientation from 'react-native-orientation-locker';
 
-export const VideoModel = (props) => {
-  const { theme } = props;
-  const [screenState, setScreenState] = useState({
-    fullScreen: false,
-    Width_Layout: '',
-    Height_Layout: '',
+import { useTheme } from '@config';
+
+type Video = {
+  isVisible: boolean;
+  video: string | null;
+};
+
+type Props = {
+  isVisible: boolean;
+  video: string | null;
+  toggleModal: ({ isVisible, video }: Video) => void;
+};
+
+type Screen = {
+  fullScreen?: boolean;
+  potraitMode?: boolean;
+  Width_Layout?: number;
+  Height_Layout?: number;
+};
+
+export const VideoModel = (props: Props) => {
+  const { colors } = useTheme();
+  const [screenState, setScreenState] = useState<Screen>({
+    fullScreen: true,
+    Width_Layout: 0,
+    Height_Layout: 0,
     potraitMode: true,
   });
 
@@ -36,7 +56,7 @@ export const VideoModel = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [screenState.fullScreen]);
 
-  const changeState = (values) => {
+  const changeState = (values: Screen) => {
     setScreenState((prevState) => {
       return {
         ...prevState,
@@ -46,12 +66,16 @@ export const VideoModel = (props) => {
   };
 
   const detectOrientation = () => {
-    if (screenState.Width_Layout > screenState.Height_Layout) {
+    if (
+      screenState?.Width_Layout &&
+      screenState?.Height_Layout &&
+      screenState?.Width_Layout > screenState?.Height_Layout
+    ) {
       // Write code here, which you want to execute on Landscape Mode.
       changeState({ fullScreen: true, potraitMode: false });
     } else {
       // Write code here, which you want to execute on Portrait Mode.
-      changeState({ fullScreen: false, potraitMode: true });
+      changeState({ fullScreen: true, potraitMode: true });
     }
   };
 
@@ -65,10 +89,10 @@ export const VideoModel = (props) => {
             video: null,
           })
         }>
-        <View style={styles.ModalContainer} theme={theme}>
+        <View style={styles.ModalContainer}>
           <TouchableWithoutFeedback>
-            <View style={styles.ModalBox} theme={theme}>
-              <View style={styles.VideoPlayerContainer} theme={theme}>
+            <View style={styles.ModalBox}>
+              <View style={styles.VideoPlayerContainer}>
                 {videoPlayerView()}
               </View>
             </View>
@@ -82,8 +106,10 @@ export const VideoModel = (props) => {
     let { fullScreen } = screenState;
     return (
       <VideoPlayer
+        disableVolume
+        disableFullscreen
         source={{
-          uri: props.video,
+          uri: props?.video ?? '',
         }}
         onBack={() =>
           props.toggleModal({
@@ -96,6 +122,7 @@ export const VideoModel = (props) => {
         onEnterFullscreen={() => {
           changeState({ fullScreen: !fullScreen });
         }}
+        seekColor={colors.primary}
       />
     );
   };
