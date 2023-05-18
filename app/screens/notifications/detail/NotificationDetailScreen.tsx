@@ -23,6 +23,8 @@ import {
   Loading,
 } from '@components';
 import { BaseStyle, useTheme } from '@config';
+
+import useAppStore from '../../../store/appStore';
 import { NotificationParamList } from 'navigation/models/NotificationParamList';
 import { NotificationDetailPlaceholder } from './components/NotificationDetailPlaceholder';
 import { useNotification } from '../queries/queries';
@@ -38,6 +40,7 @@ export default function NotificationDetailScreen(
 
   const { data, isLoading } = useNotification(route?.params?.id);
   const { mutate } = useReadNotification();
+  const { setFullScreen: setStoreFullScreen } = useAppStore();
 
   const [isImageLoading, setImageLoading] = useState(true);
   const [openImage, setOpenImage] = useState(false);
@@ -84,11 +87,13 @@ export default function NotificationDetailScreen(
     if (fullscreen) {
       Orientation.unlockAllOrientations();
       Orientation.lockToLandscape();
+      setStoreFullScreen(true);
       return () => {
         Orientation.lockToPortrait();
+        setStoreFullScreen(false);
       };
     }
-  }, [fullscreen]);
+  }, [fullscreen, setStoreFullScreen]);
 
   useEffect(() => {
     if (!route?.params?.read) {

@@ -33,6 +33,7 @@ import { MainStackParamList } from './models/MainStackParamList';
 import { MainBottomTabParamList } from './models/MainBottomTabParamList';
 import { AuthStackNavigator } from '@screens/auth/navigation/AuthStack';
 import useAuthStore, { AuthStoreStates } from '@screens/auth/store/Store';
+import useAppStore from '../store/appStore';
 
 const MainStack = createStackNavigator<MainStackParamList>();
 const MainBottomTab = createBottomTabNavigator<MainBottomTabParamList>();
@@ -79,6 +80,7 @@ function MainBottomTabNavigator() {
   const { colors } = useTheme();
   const font = useFont();
   const isLogin = useAuthStore((state: AuthStoreStates) => state.isLogin);
+  const { fullscreen } = useAppStore();
 
   return (
     <MainBottomTab.Navigator
@@ -101,6 +103,7 @@ function MainBottomTabNavigator() {
           tabBarIcon: ({ color }) => {
             return <Icon color={color} name="home" size={20} solid />;
           },
+          tabBarStyle: fullscreen ? { display: 'none' } : {},
         }}
       />
       <MainBottomTab.Screen
