@@ -9,6 +9,8 @@ import {
 import { useTranslation } from 'react-i18next';
 import { getUniqueId } from 'react-native-device-info';
 import ImageView from 'react-native-image-viewing';
+import Orientation from 'react-native-orientation-locker';
+import VideoPlayer from 'react-native-video-controls';
 import { StackScreenProps } from '@react-navigation/stack';
 
 import {
@@ -27,8 +29,6 @@ import { useNotification } from '../queries/queries';
 import { useReadNotification } from '../queries/mutations';
 import { NotificationType } from '../models/NotificationPresentable';
 
-import { VideoModel } from './components/VideoModal';
-
 export default function NotificationDetailScreen(
   props: StackScreenProps<NotificationParamList, 'NotificationDetail'>,
 ) {
@@ -43,18 +43,7 @@ export default function NotificationDetailScreen(
   const [openImage, setOpenImage] = useState(false);
   const [imageHeight, setImageHeight] = useState(500);
   const [imageWidth, setImageWidth] = useState(500);
-
-  const [showModal, setShowModal] = useState<any>({
-    isVisible: false,
-    video: null,
-  });
-
-  const toggleModal = (state: any) => {
-    setShowModal({
-      isVisible: state.isVisible,
-      video: state.video,
-    });
-  };
+  const [fullscreen, setFullScreen] = useState<boolean>(false);
 
   const getTitle = (type?: NotificationType) => {
     switch (type) {
@@ -71,6 +60,36 @@ export default function NotificationDetailScreen(
     }
   };
 
+  const videoPlayerView = () => {
+    return (
+      <VideoPlayer
+        disableVolume
+        disableBack
+        resizeMode="contain"
+        source={{
+          uri: data?.video,
+        }}
+        onEnterFullscreen={() => {
+          setFullScreen(!fullscreen);
+        }}
+        onExitFullscreen={() => {
+          setFullScreen(!fullscreen);
+        }}
+        seekColor={colors.primary}
+      />
+    );
+  };
+
+  useEffect(() => {
+    if (fullscreen) {
+      Orientation.unlockAllOrientations();
+      Orientation.lockToLandscape();
+      return () => {
+        Orientation.lockToPortrait();
+      };
+    }
+  }, [fullscreen]);
+
   useEffect(() => {
     if (!route?.params?.read) {
       mutate({
@@ -84,15 +103,9 @@ export default function NotificationDetailScreen(
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
-      {showModal.isVisible ? (
-        <VideoModel
-          isVisible={showModal.isVisible}
-          toggleModal={toggleModal}
-          video={showModal.video}
-          {...props}
-        />
-      ) : null}
-
+      {fullscreen && (
+        <View style={styles.fullScreenVideo}>{videoPlayerView()}</View>
+      )}
       <Header
         title={getTitle(data?.type)}
         renderLeft={() => {
@@ -125,32 +138,16 @@ export default function NotificationDetailScreen(
           <ScrollView
             style={styles.scrollView}
             showsVerticalScrollIndicator={false}>
-            {data?.video ? (
-              <TouchableOpacity
-                onPress={() => {
-                  setShowModal({
-                    isVisible: true,
-                    video: data.video,
-                  });
-                }}>
-                <View
-                  style={[
-                    styles.playVideo,
-                    {
-                      backgroundColor: colors.card,
-                      borderColor: colors.border,
-                    },
-                  ]}>
-                  <Image source={data?.image} style={styles.videoThumbnail} />
-                  <Icon
-                    name="play"
-                    size={35}
-                    color={colors.primary}
-                    enableRTL={true}
-                    style={styles.playIcon}
-                  />
-                </View>
-              </TouchableOpacity>
+            {!fullscreen && data?.video ? (
+              <View
+                style={[
+                  styles.videoContainer,
+                  {
+                    backgroundColor: colors.card,
+                  },
+                ]}>
+                {videoPlayerView()}
+              </View>
             ) : data?.image ? (
               <TouchableOpacity
                 onPress={() => setOpenImage(true)}
@@ -219,22 +216,21 @@ const styles = StyleSheet.create({
   icon: {
     marginRight: 10,
   },
-  playVideo: {
+  videoContainer: {
     width: '100%',
     height: 200,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 10,
-    borderWidth: 1,
     overflow: 'hidden',
   },
-  videoThumbnail: {
+  fullScreenVideo: {
+    zIndex: 999,
+    position: 'absolute',
+    left: 0,
+    top: 0,
     width: '100%',
     height: '100%',
-  },
-  playIcon: {
-    position: 'absolute',
   },
 });
