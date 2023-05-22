@@ -107,89 +107,91 @@ export default function NotificationDetailScreen(
   }, [mutate]);
 
   return (
-    <SafeAreaView style={BaseStyle.safeAreaView}>
+    <>
       {fullscreen && (
         <View style={styles.fullScreenVideo}>{videoPlayerView()}</View>
       )}
-      <Header
-        title={getTitle(data?.type)}
-        renderLeft={() => {
-          return (
-            <Icon
-              name="arrow-left"
-              size={20}
-              color={colors.primary}
-              enableRTL={true}
-            />
-          );
-        }}
-        onPressLeft={() => {
-          navigation.goBack();
-        }}
-      />
+      <SafeAreaView style={BaseStyle.safeAreaView}>
+        <Header
+          title={getTitle(data?.type)}
+          renderLeft={() => {
+            return (
+              <Icon
+                name="arrow-left"
+                size={20}
+                color={colors.primary}
+                enableRTL={true}
+              />
+            );
+          }}
+          onPressLeft={() => {
+            navigation.goBack();
+          }}
+        />
 
-      <ImageView
-        backgroundColor={colors.background}
-        images={[{ uri: data?.image }]}
-        imageIndex={0}
-        visible={openImage}
-        onRequestClose={() => setOpenImage(false)}
-      />
+        <ImageView
+          backgroundColor={colors.background}
+          images={[{ uri: data?.image }]}
+          imageIndex={0}
+          visible={openImage}
+          onRequestClose={() => setOpenImage(false)}
+        />
 
-      {isLoading ? (
-        <NotificationDetailPlaceholder />
-      ) : (
-        <View style={styles.container}>
-          <ScrollView
-            style={styles.scrollView}
-            showsVerticalScrollIndicator={false}>
-            {!fullscreen && data?.video ? (
-              <View
-                style={[
-                  styles.videoContainer,
-                  {
-                    backgroundColor: colors.card,
-                  },
-                ]}>
-                {videoPlayerView()}
-              </View>
-            ) : data?.image ? (
-              <TouchableOpacity
-                onPress={() => setOpenImage(true)}
-                style={styles.imageContainer}>
-                <Image
-                  source={data?.image}
+        {isLoading ? (
+          <NotificationDetailPlaceholder />
+        ) : (
+          <View style={styles.container}>
+            <ScrollView
+              style={styles.scrollView}
+              showsVerticalScrollIndicator={false}>
+              {!fullscreen && data?.video ? (
+                <View
                   style={[
-                    styles.image,
-                    { aspectRatio: imageWidth / imageHeight },
-                  ]}
-                  onLoadEnd={() => setImageLoading(false)}
-                  onLoad={(evt: any) => {
-                    setImageHeight(evt.nativeEvent.height);
-                    setImageWidth(evt.nativeEvent.width);
-                  }}
-                />
-                <Loading loading={isImageLoading} />
-              </TouchableOpacity>
+                    styles.videoContainer,
+                    {
+                      backgroundColor: colors.card,
+                    },
+                  ]}>
+                  {videoPlayerView()}
+                </View>
+              ) : data?.image ? (
+                <TouchableOpacity
+                  onPress={() => setOpenImage(true)}
+                  style={styles.imageContainer}>
+                  <Image
+                    source={data?.image}
+                    style={[
+                      styles.image,
+                      { aspectRatio: imageWidth / imageHeight },
+                    ]}
+                    onLoadEnd={() => setImageLoading(false)}
+                    onLoad={(evt: any) => {
+                      setImageHeight(evt.nativeEvent.height);
+                      setImageWidth(evt.nativeEvent.width);
+                    }}
+                  />
+                  <Loading loading={isImageLoading} />
+                </TouchableOpacity>
+              ) : null}
+              <Text title2 bold style={styles.title}>
+                {data?.title}
+              </Text>
+              <Text body1 numberOfLines={1000} style={styles.content}>
+                {data?.description}
+              </Text>
+            </ScrollView>
+            {data?.link ? (
+              <Button
+                full
+                style={[styles.button, { backgroundColor: colors.primary }]}
+                onPress={() => Linking.openURL(data.link ?? '')}>
+                {t('notification.detail.view_details')}
+              </Button>
             ) : null}
-            <Text title2 bold style={styles.title}>
-              {data?.title}
-            </Text>
-            <Text body1 numberOfLines={1000} style={styles.content}>
-              {data?.description}
-            </Text>
-          </ScrollView>
-          {data?.link ? (
-            <Button
-              full
-              style={[styles.button, { backgroundColor: colors.primary }]}
-              onPress={() => Linking.openURL(data.link ?? '')}>
-              {t('notification.detail.view_details')}
-            </Button>
-          ) : null}
-        </View>
-      )}
-    </SafeAreaView>
+          </View>
+        )}
+      </SafeAreaView>
+    </>
   );
 }
 
