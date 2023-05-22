@@ -17,12 +17,9 @@ import {
   Button,
   ProfileDetail,
 } from '@components';
+import useAuthStore from '@screens/auth/store/Store';
 
 import { GlobalParamList } from 'navigation/models/GlobalParamList';
-import useAuthStore, {
-  AuthStoreActions,
-  AuthStoreStates,
-} from '@screens/auth/store/Store';
 
 export default function SettingsScreen(
   props: StackScreenProps<GlobalParamList, 'Settings'>,
@@ -32,26 +29,18 @@ export default function SettingsScreen(
   const { t } = useTranslation();
   const queryClient = useQueryClient();
 
-  const isLogin = useAuthStore((state: AuthStoreStates) => state.isLogin);
-  const setIsLogin = useAuthStore(
-    (state: AuthStoreActions) => state.setIsLogin,
-  );
-  const { user } = useAuthStore();
+  const { user, isLogin, setIsLogin } = useAuthStore();
 
   const navigateToMyBusinesses = (id: string) => {
     navigation.navigate('MyBusinesses', { id });
   };
 
-  /**
-   * @description Simple logout with Redux
-   * @author Passion UI <passionui.com>
-   * @date 2019-08-03
-   */
   const onLogOut = () => {
     setIsLogin(false);
     AsyncStorage.removeItem('access_token');
     queryClient.invalidateQueries(['notifications']);
     queryClient.invalidateQueries(['notifications-count']);
+    queryClient.removeQueries(['profile']);
   };
 
   const CopyToClipboard = () => {
