@@ -63,6 +63,18 @@ export default function NotificationDetailScreen(
     }
   };
 
+  const onEnterFullscreen = () => {
+    setFullScreen(true);
+    Orientation.lockToLandscape();
+    setStoreFullScreen(true);
+  };
+
+  const onExitFullscreen = () => {
+    setFullScreen(false);
+    Orientation.lockToPortrait();
+    setStoreFullScreen(false);
+  };
+
   const videoPlayerView = () => {
     return (
       <VideoPlayer
@@ -72,28 +84,21 @@ export default function NotificationDetailScreen(
         source={{
           uri: data?.video,
         }}
-        onEnterFullscreen={() => {
-          setFullScreen(!fullscreen);
-        }}
-        onExitFullscreen={() => {
-          setFullScreen(!fullscreen);
-        }}
+        onEnterFullscreen={onEnterFullscreen}
+        onExitFullscreen={onExitFullscreen}
         seekColor={colors.primary}
       />
     );
   };
 
   useEffect(() => {
-    if (fullscreen) {
-      Orientation.unlockAllOrientations();
-      Orientation.lockToLandscape();
-      setStoreFullScreen(true);
-      return () => {
-        Orientation.lockToPortrait();
-        setStoreFullScreen(false);
-      };
-    }
-  }, [fullscreen, setStoreFullScreen]);
+    Orientation.unlockAllOrientations();
+
+    return () => {
+      Orientation.lockToPortrait();
+      setStoreFullScreen(false);
+    };
+  }, [setStoreFullScreen]);
 
   useEffect(() => {
     if (!route?.params?.read) {
@@ -107,10 +112,7 @@ export default function NotificationDetailScreen(
   }, [mutate]);
 
   return (
-    <>
-      {fullscreen && (
-        <View style={styles.fullScreenVideo}>{videoPlayerView()}</View>
-      )}
+    <View style={{ flex: 1 }}>
       <SafeAreaView style={BaseStyle.safeAreaView}>
         <Header
           title={getTitle(data?.type)}
@@ -140,39 +142,48 @@ export default function NotificationDetailScreen(
         {isLoading ? (
           <NotificationDetailPlaceholder />
         ) : (
-          <View style={styles.container}>
-            <ScrollView
-              style={styles.scrollView}
-              showsVerticalScrollIndicator={false}>
-              {!fullscreen && data?.video ? (
-                <View
+          <View
+            style={[
+              styles.container,
+              fullscreen && styles.containerFullscreen,
+            ]}>
+            {data?.video ? (
+              <View
+                style={[
+                  fullscreen
+                    ? styles.videoContainerFull
+                    : styles.videoContainer,
+                  {
+                    backgroundColor: colors.card,
+                  },
+                ]}>
+                {videoPlayerView()}
+              </View>
+            ) : data?.image ? (
+              <TouchableOpacity
+                onPress={() => setOpenImage(true)}
+                style={styles.imageContainer}>
+                <Image
+                  source={data?.image}
                   style={[
-                    styles.videoContainer,
-                    {
-                      backgroundColor: colors.card,
-                    },
-                  ]}>
-                  {videoPlayerView()}
-                </View>
-              ) : data?.image ? (
-                <TouchableOpacity
-                  onPress={() => setOpenImage(true)}
-                  style={styles.imageContainer}>
-                  <Image
-                    source={data?.image}
-                    style={[
-                      styles.image,
-                      { aspectRatio: imageWidth / imageHeight },
-                    ]}
-                    onLoadEnd={() => setImageLoading(false)}
-                    onLoad={(evt: any) => {
-                      setImageHeight(evt.nativeEvent.height);
-                      setImageWidth(evt.nativeEvent.width);
-                    }}
-                  />
-                  <Loading loading={isImageLoading} />
-                </TouchableOpacity>
-              ) : null}
+                    styles.image,
+                    { aspectRatio: imageWidth / imageHeight },
+                  ]}
+                  onLoadEnd={() => setImageLoading(false)}
+                  onLoad={(evt: any) => {
+                    setImageHeight(evt.nativeEvent.height);
+                    setImageWidth(evt.nativeEvent.width);
+                  }}
+                />
+                <Loading loading={isImageLoading} />
+              </TouchableOpacity>
+            ) : null}
+            <ScrollView
+              style={[
+                styles.scrollView,
+                fullscreen && styles.scrollViewFullscreen,
+              ]}
+              showsVerticalScrollIndicator={false}>
               <Text title2 bold style={styles.title}>
                 {data?.title}
               </Text>
@@ -191,7 +202,7 @@ export default function NotificationDetailScreen(
           </View>
         )}
       </SafeAreaView>
-    </>
+    </View>
   );
 }
 
@@ -201,9 +212,15 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 0,
   },
+  containerFullscreen: {
+    padding: 0,
+  },
   scrollView: {
     flex: 1,
     marginBottom: 20,
+  },
+  scrollViewFullscreen: {
+    marginBottom: 0,
   },
   imageContainer: {
     borderRadius: 10,
@@ -232,12 +249,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     overflow: 'hidden',
   },
-  fullScreenVideo: {
-    zIndex: 999,
+  videoContainerFull: {
     position: 'absolute',
     left: 0,
     top: 0,
+    right: 0,
+    bottom: 0,
     width: '100%',
     height: '100%',
+    flex: 1,
+    zIndex: 99,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
   },
 });
