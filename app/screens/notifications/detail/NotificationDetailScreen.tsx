@@ -114,22 +114,24 @@ export default function NotificationDetailScreen(
   return (
     <View style={{ flex: 1 }}>
       <SafeAreaView style={BaseStyle.safeAreaView}>
-        <Header
-          title={getTitle(data?.type)}
-          renderLeft={() => {
-            return (
-              <Icon
-                name="arrow-left"
-                size={20}
-                color={colors.primary}
-                enableRTL={true}
-              />
-            );
-          }}
-          onPressLeft={() => {
-            navigation.goBack();
-          }}
-        />
+        {!fullscreen && (
+          <Header
+            title={getTitle(data?.type)}
+            renderLeft={() => {
+              return (
+                <Icon
+                  name="arrow-left"
+                  size={20}
+                  color={colors.primary}
+                  enableRTL={true}
+                />
+              );
+            }}
+            onPressLeft={() => {
+              navigation.goBack();
+            }}
+          />
+        )}
 
         <ImageView
           backgroundColor={colors.background}
