@@ -25,14 +25,14 @@ import Hours from '@screens/AddBusiness/hours';
 import PriceRange from '@screens/AddBusiness/priceRange';
 import FinalReview from '@screens/AddBusiness/review';
 import Gallery from '@screens/AddBusiness/gallery';
-import { DashboardStackNavigator } from '@screens/dashboard/navigation/DashboardStack';
 import BusinessesScreen from '@screens/businesses/list/BusinessesScreen';
+import { DashboardStackNavigator } from '@screens/dashboard/navigation/DashboardStack';
 import { SettingsStackNavigator } from '@screens/settings/navigation/SettingsStack';
+import { AuthStackNavigator } from '@screens/auth/navigation/AuthStack';
+import useAuthStore, { AuthStoreStates } from '@screens/auth/store/Store';
 
 import { MainStackParamList } from './models/MainStackParamList';
 import { MainBottomTabParamList } from './models/MainBottomTabParamList';
-import { AuthStackNavigator } from '@screens/auth/navigation/AuthStack';
-import useAuthStore, { AuthStoreStates } from '@screens/auth/store/Store';
 import useAppStore from '../store/appStore';
 
 const MainStack = createStackNavigator<MainStackParamList>();
