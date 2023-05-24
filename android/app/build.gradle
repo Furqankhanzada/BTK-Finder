@@ -210,9 +210,6 @@ android {
 }
 
 dependencies {
-    // For React native video
-    implementation "androidx.appcompat:appcompat:1.0.0"
-
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
