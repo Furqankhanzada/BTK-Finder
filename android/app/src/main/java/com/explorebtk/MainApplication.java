@@ -11,9 +11,6 @@ import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
-import org.wonday.orientation.OrientationPackage;
-import android.content.Intent;
-import android.content.res.Configuration;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -38,14 +35,6 @@ public class MainApplication extends Application implements ReactApplication {
           return "index";
         }
       };
-
-  @Override
-  public void onConfigurationChanged(Configuration newConfig) {
-    super.onConfigurationChanged(newConfig);
-    Intent intent = new Intent("onConfigurationChanged");
-    intent.putExtra("newConfig", newConfig);
-    this.sendBroadcast(intent);
-  }
 
   @Override
   public ReactNativeHost getReactNativeHost() {
