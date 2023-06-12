@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -11,6 +11,7 @@ import { getUniqueId } from 'react-native-device-info';
 import ImageView from 'react-native-image-viewing';
 import Orientation from 'react-native-orientation-locker';
 import VideoPlayer from 'react-native-video-controls';
+import { OnProgressData } from 'react-native-video';
 import { StackScreenProps } from '@react-navigation/stack';
 
 import {
@@ -47,6 +48,8 @@ export default function NotificationDetailScreen(
   const [imageHeight, setImageHeight] = useState(500);
   const [imageWidth, setImageWidth] = useState(500);
   const [fullscreen, setFullScreen] = useState<boolean>(false);
+  const [progress, setProgress] = useState<number>(0);
+  const playerRef = useRef<VideoPlayer>(null);
 
   const getTitle = (type?: NotificationType) => {
     switch (type) {
@@ -63,22 +66,29 @@ export default function NotificationDetailScreen(
     }
   };
 
+  const onProgress = (progressed: OnProgressData) => {
+    setProgress(progressed.currentTime);
+  };
+
   const videoPlayerView = () => {
     return (
       <VideoPlayer
+        ref={playerRef}
         disableVolume
         disableBack
         resizeMode="contain"
         source={{
           uri: data?.video,
         }}
-        onEnterFullscreen={() => {
-          setFullScreen(!fullscreen);
-        }}
-        onExitFullscreen={() => {
-          setFullScreen(!fullscreen);
-        }}
+        onEnterFullscreen={() => setFullScreen(!fullscreen)}
+        onExitFullscreen={() => setFullScreen(!fullscreen)}
         seekColor={colors.primary}
+        onProgress={onProgress}
+        onLoad={() => {
+          if (progress) {
+            playerRef.current?.player.ref.seek(progress);
+          }
+        }}
       />
     );
   };
