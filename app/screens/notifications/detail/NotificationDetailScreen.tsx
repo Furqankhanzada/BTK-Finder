@@ -47,6 +47,7 @@ export default function NotificationDetailScreen(
   const [openImage, setOpenImage] = useState(false);
   const [imageHeight, setImageHeight] = useState(500);
   const [imageWidth, setImageWidth] = useState(500);
+  const [isPaused, setIsPaused] = useState(true);
   const [fullscreen, setFullScreen] = useState<boolean>(false);
   const [progress, setProgress] = useState<number>(0);
   const playerRef = useRef<VideoPlayer>(null);
@@ -77,6 +78,9 @@ export default function NotificationDetailScreen(
         disableVolume
         disableBack
         resizeMode="contain"
+        paused={isPaused}
+        onPause={() => setIsPaused(true)}
+        onPlay={() => setIsPaused(false)}
         source={{
           uri: data?.video,
         }}
@@ -85,6 +89,9 @@ export default function NotificationDetailScreen(
         seekColor={colors.primary}
         onProgress={onProgress}
         onLoad={() => {
+          if (isPaused) {
+            setIsPaused(false);
+          }
           if (progress) {
             playerRef.current?.player.ref.seek(progress);
           }
