@@ -1,6 +1,6 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
 import { StackScreenProps } from '@react-navigation/stack';
+import { CompositeScreenProps } from '@react-navigation/native';
 
 import { Header, SafeAreaView, Icon } from '@components';
 import { BaseStyle, useTheme } from '@config';
@@ -12,7 +12,7 @@ import {
   BusinessDetailBottomTabParamList,
   ProductStackParamList,
 } from '../../../navigation/models/BusinessDetailBottomTabParamList';
-import { CompositeScreenProps } from '@react-navigation/native';
+import { getProductsTitle } from '../helpers/getProductsTitle';
 
 type Props = CompositeScreenProps<
   StackScreenProps<BusinessDetailBottomTabParamList, 'Products'>,
@@ -24,12 +24,11 @@ export default function BusinessProductsScreen(props: Props) {
   const { data: business } = useBusiness(route.params.businessId);
 
   const { colors } = useTheme();
-  const { t } = useTranslation();
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
-        title={t('menu')}
+        title={getProductsTitle(business?.type)}
         renderLeft={() => {
           return (
             <Icon

@@ -1,11 +1,14 @@
 import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import NumberFormat from 'react-number-format';
+
+import { Images } from '@config';
 import { Image, Text, StarRating, Tag, Icon, FavouriteIcon } from '@components';
 import { BaseColor, useTheme } from '@config';
+
+import { BusinessStatus } from '@screens/businesses/models/BusinessPresentable';
 import styles from './styles';
-import { useTranslation } from 'react-i18next';
-import { Images } from '@config';
-import NumberFormat from 'react-number-format';
 
 export default function PlaceItem(props) {
   const { t } = useTranslation();
@@ -27,8 +30,6 @@ export default function PlaceItem(props) {
     isFavorite,
     onPressTag,
     businessId,
-    lastRoute,
-    routeId,
   } = props;
   /**
    * Display place item as block
@@ -45,8 +46,6 @@ export default function PlaceItem(props) {
           ) : null}
           <FavouriteIcon
             style={styles.iconLike}
-            lastRoute={lastRoute}
-            routeId={routeId}
             isFavorite={isFavorite}
             favoriteId={businessId}
           />
@@ -144,8 +143,6 @@ export default function PlaceItem(props) {
           <Image source={image} style={styles.listImage} />
           <FavouriteIcon
             style={styles.iconListLike}
-            lastRoute={lastRoute}
-            routeId={routeId}
             isFavorite={isFavorite}
             favoriteId={businessId}
           />
@@ -219,11 +216,19 @@ export default function PlaceItem(props) {
           {/*</Tag>*/}
           <FavouriteIcon
             style={styles.iconGirdLike}
-            lastRoute={lastRoute}
-            routeId={routeId}
             isFavorite={isFavorite}
             favoriteId={businessId}
           />
+          {status === BusinessStatus.VERIFIED ? (
+            <Tag
+              status
+              style={[
+                styles.gridCardtagStatus,
+                { backgroundColor: BaseColor.greenColor },
+              ]}>
+              {status}
+            </Tag>
+          ) : null}
         </TouchableOpacity>
         <TouchableOpacity onPress={onPress} activeOpacity={0.6}>
           {subtitle ? (

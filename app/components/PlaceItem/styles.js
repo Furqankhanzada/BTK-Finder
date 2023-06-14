@@ -12,6 +12,11 @@ export default StyleSheet.create({
     top: 10,
     left: 10,
   },
+  gridCardtagStatus: {
+    position: 'absolute',
+    top: 5,
+    left: 5,
+  },
   iconLike: {
     position: 'absolute',
     top: 10,

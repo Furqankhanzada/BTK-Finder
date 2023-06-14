@@ -6,14 +6,16 @@ import SpInAppUpdates, {
 } from 'sp-react-native-in-app-updates';
 import Storefront from 'react-native-store-front';
 import Config from 'react-native-config';
+import { useAsyncStorage } from '@react-native-async-storage/async-storage';
 
 import { AndroidInstallStatus, AndroidUpdateType } from './types';
-import { LocalStorageKeys } from '../services/storage/models/LocalStorageKey';
 import { ISO3166Alpha3, iso3166Alpha3CountryCodeToAlpha2 } from '@utils';
-import useLocalStorage from './useLocalStorage';
+import { LocalStorageKeys } from '../services/storage/models/LocalStorage';
 
 export default function useNativeUpdate() {
-  const { setItem, getItem } = useLocalStorage();
+  const { setItem, getItem } = useAsyncStorage(
+    LocalStorageKeys.NATIVE_UPDATE_VERSION,
+  );
 
   const storeVersion = React.useRef<string | null>(null);
 
@@ -22,9 +24,7 @@ export default function useNativeUpdate() {
   const checkIfUpdateSkipped = React.useCallback(
     async (version: string) => {
       try {
-        const skippedVersion = await getItem(
-          LocalStorageKeys.NATIVE_UPDATE_VERSION,
-        );
+        const skippedVersion = await getItem();
         return skippedVersion === version;
       } catch {
         return false;
@@ -45,10 +45,7 @@ export default function useNativeUpdate() {
     ) => {
       // @ts-expect-error type should be a string instead of a number
       if (event === AndroidInstallStatus.CANCELED && storeVersion.current) {
-        await setItem(
-          LocalStorageKeys.NATIVE_UPDATE_VERSION,
-          storeVersion.current,
-        );
+        await setItem(storeVersion.current);
         storeVersion.current = null;
       }
     };
@@ -123,10 +120,7 @@ export default function useNativeUpdate() {
               style: 'cancel',
               onPress: async () => {
                 // we will skip showing the popup again for this new version
-                await setItem(
-                  LocalStorageKeys.NATIVE_UPDATE_VERSION,
-                  result.storeVersion,
-                );
+                await setItem(result.storeVersion);
               },
             },
             {

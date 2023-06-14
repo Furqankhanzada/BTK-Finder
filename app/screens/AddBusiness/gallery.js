@@ -3,6 +3,7 @@ import { View, TouchableOpacity } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 import ImagePicker from 'react-native-image-crop-picker';
+
 import { BaseStyle } from '@config';
 import {
   Header,
@@ -14,6 +15,7 @@ import {
   Loading,
   FloatingButton,
 } from '@components';
+
 import styles from './styles';
 import {
   updateImagesIntoRedux,
@@ -25,9 +27,8 @@ import {
 
 export default function Gallery({ navigation }) {
   const dispatch = useDispatch();
-  const stateProps = useSelector(({ businesses, profile }) => {
+  const stateProps = useSelector(({ businesses }) => {
     return {
-      userId: profile._id,
       thumbnail: businesses.thumbnail || '',
       thumbnailLoading: businesses.thumbnailLoading,
       gallery: businesses.gallery,

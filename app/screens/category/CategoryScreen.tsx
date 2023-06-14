@@ -150,9 +150,7 @@ export default function CategoryScreen(
         </View>
       ) : (
         <FlatList
-          contentContainerStyle={{
-            paddingHorizontal: 20,
-          }}
+          contentContainerStyle={styles.flatListContainer}
           refreshControl={
             <RefreshControl
               colors={[colors.primary]}
@@ -200,6 +198,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   placeHolderContainer: {
+    paddingHorizontal: 20,
+  },
+  flatListContainer: {
     paddingHorizontal: 20,
   },
 });

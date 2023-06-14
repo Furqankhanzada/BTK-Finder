@@ -2,8 +2,9 @@ import usePushNotifications from './usePushNotifications';
 import useDynamicLinks from './useDynamicLinks';
 import useNativeUpdate from './useNativeUpdate';
 import usLocation from './useLocation';
-import useLocalStorage from './useLocalStorage';
 import useRemoteConfig from './useRemoteConfig';
+import useAuth from './useAuth';
+import useAppearance from './useAppearance';
 import { useAlerts } from './useAlerts';
 
 export {
@@ -11,7 +12,8 @@ export {
   useDynamicLinks,
   useNativeUpdate,
   usLocation,
-  useLocalStorage,
   useRemoteConfig,
   useAlerts,
+  useAuth,
+  useAppearance,
 };

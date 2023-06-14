@@ -1,7 +1,5 @@
 import React from 'react';
 import {
-  Fade,
-  Loader,
   Placeholder,
   PlaceholderLine,
   PlaceholderMedia,
@@ -19,7 +17,7 @@ export default function CategoryPlaceholder() {
             <View style={styles.innerContainer}>
               <PlaceholderLine style={styles.topPlaceholderLine} />
               <PlaceholderLine style={styles.bottomPlaceholderLine} />
-              <View style={{ display: 'flex', flexDirection: 'row' }}>
+              <View style={styles.placeHolderLines}>
                 <PlaceholderLine style={styles.sizePlaceholderLine} />
                 <PlaceholderLine style={styles.sizePlaceholderLine} />
                 <PlaceholderLine style={styles.sizePlaceholderLine} />
@@ -31,7 +29,7 @@ export default function CategoryPlaceholder() {
             <View style={styles.innerContainer}>
               <PlaceholderLine style={styles.topPlaceholderLine} />
               <PlaceholderLine style={styles.bottomPlaceholderLine} />
-              <View style={{ display: 'flex', flexDirection: 'row' }}>
+              <View style={styles.placeHolderLines}>
                 <PlaceholderLine style={styles.sizePlaceholderLine} />
                 <PlaceholderLine style={styles.sizePlaceholderLine} />
                 <PlaceholderLine style={styles.sizePlaceholderLine} />
@@ -43,7 +41,7 @@ export default function CategoryPlaceholder() {
             <View style={styles.innerContainer}>
               <PlaceholderLine style={styles.topPlaceholderLine} />
               <PlaceholderLine style={styles.bottomPlaceholderLine} />
-              <View style={{ display: 'flex', flexDirection: 'row' }}>
+              <View style={styles.placeHolderLines}>
                 <PlaceholderLine style={styles.sizePlaceholderLine} />
                 <PlaceholderLine style={styles.sizePlaceholderLine} />
                 <PlaceholderLine style={styles.sizePlaceholderLine} />
@@ -93,5 +91,9 @@ const styles = StyleSheet.create({
   },
   mainContainer: {
     marginTop: 10,
+  },
+  placeHolderLines: {
+    display: 'flex',
+    flexDirection: 'row',
   },
 });

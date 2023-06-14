@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { handleError } from '@utils';
 import Toast from 'react-native-toast-message';
-import { useSelector } from 'react-redux';
 
 import {
   BusinessPresentable,
@@ -12,6 +11,7 @@ import { toggleFavoritesInCache } from '@screens/businesses/helpers/toggleFavori
 
 import axiosApiInstance from '../../../interceptor/axios-interceptor';
 import { BUSINESSES_API } from '../../../constants';
+import useAuthStore from '@screens/auth/store/Store';
 
 export enum FavoriteType {
   favorite = 'favorite',
@@ -27,7 +27,7 @@ export type AddReviewPayload = Pick<Review, 'title' | 'description' | 'rating'>;
 
 export const useToggleFavorite = () => {
   const queryClient = useQueryClient();
-  const user = useSelector((state: any) => state.profile);
+  const { user } = useAuthStore();
 
   return useMutation<BusinessPresentable, Error, FavoritesMutationVar>(
     ({ businessId, type }) => {
@@ -42,7 +42,9 @@ export const useToggleFavorite = () => {
     },
     {
       onSuccess: (response, variables) => {
-        toggleFavoritesInCache(queryClient, variables, user._id, response);
+        if (user?._id) {
+          toggleFavoritesInCache(queryClient, variables, user?._id, response);
+        }
       },
     },
   );

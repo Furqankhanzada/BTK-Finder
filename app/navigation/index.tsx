@@ -6,25 +6,23 @@ import { useDarkMode } from 'react-native-dynamic';
 import { useTheme, BaseSetting } from '@config';
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
 
 import {
   usePushNotifications,
   useDynamicLinks,
   useNativeUpdate,
   useRemoteConfig,
+  useAuth,
+  useAppearance,
 } from '@hooks';
 
 /* Modal Screen only affect iOS */
 import Filter from '@screens/Filter';
 import ChooseItems from '@screens/ChooseItems';
 import SearchHistory from '@screens/SearchHistory';
-import SelectDarkOption from '@screens/SelectDarkOption';
-import SelectFontOption from '@screens/SelectFontOption';
 
 import { navigationRef, isReadyRef } from '../services/NavigationService';
 import { trackScreenView } from '../userTracking';
-import { setIsLogin } from '../actions/auth';
 import { RootStackParamList } from './models/RootStackParamList';
 import Main from './main';
 import { linkingConfig } from './deep-linking/LinkingConfig';
@@ -40,40 +38,32 @@ export default function Navigator() {
   useNativeUpdate();
   // Firebase remote config
   useRemoteConfig();
+  // Check token and set login
+  useAuth();
+  // App appearance
+  useAppearance();
 
-  const dispatch = useDispatch();
-  const storeLanguage = useSelector((state: any) => state.application.language);
   const { theme, colors } = useTheme();
   const isDarkMode = useDarkMode();
   const routeNameRef = useRef() as MutableRefObject<string>;
 
-  const forFade = ({ current }: any) => ({
-    cardStyle: {
-      opacity: current.progress,
-    },
-  });
-
   useEffect(() => {
     i18n.use(initReactI18next).init({
       resources: BaseSetting.resourcesLanguage,
-      lng: storeLanguage ?? BaseSetting.defaultLanguage,
+      lng: BaseSetting.defaultLanguage,
       fallbackLng: BaseSetting.defaultLanguage,
     });
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor(colors.primary, true);
     }
     StatusBar.setBarStyle(isDarkMode ? 'light-content' : 'dark-content', true);
-  }, [colors.primary, isDarkMode, storeLanguage]);
+  }, [colors.primary, isDarkMode]);
 
   useEffect(() => {
     return () => {
       isReadyRef.current = false;
     };
   }, []);
-
-  useEffect(() => {
-    dispatch(setIsLogin());
-  }, [dispatch]);
 
   return (
     <NavigationContainer
@@ -106,22 +96,6 @@ export default function Navigator() {
           component={ChooseItems}
         />
         <RootStack.Screen name="SearchHistory" component={SearchHistory} />
-        <RootStack.Screen
-          name="SelectDarkOption"
-          component={SelectDarkOption}
-          options={{
-            cardStyleInterpolator: forFade,
-            cardStyle: { backgroundColor: 'rgba(0, 0, 0, 0.5)' },
-          }}
-        />
-        <RootStack.Screen
-          name="SelectFontOption"
-          component={SelectFontOption}
-          options={{
-            cardStyleInterpolator: forFade,
-            cardStyle: { backgroundColor: 'rgba(0, 0, 0, 0.5)' },
-          }}
-        />
       </RootStack.Navigator>
     </NavigationContainer>
   );
