@@ -29,7 +29,8 @@ export default function MyBusinessesScreen(props: any) {
   const { navigation, route } = props;
   const scrollAnim = new Animated.Value(0);
   const dispatch = useDispatch();
-  const { mutate: deleteBusiness } = useDeleteBusiness();
+  const { mutate: deleteBusiness, isLoading: deleteBusinessLoading } =
+    useDeleteBusiness();
   const { showAlert, showNotification } = useAlerts();
   const { t } = useTranslation();
   const { colors } = useTheme();
@@ -187,65 +188,62 @@ export default function MyBusinessesScreen(props: any) {
           navigation.goBack();
         }}
       />
-      {isLoading ? (
-        <Loading loading={isLoading} />
-      ) : (
-        <View style={{ flex: 1 }}>
-          <Animated.FlatList
-            contentContainerStyle={{
-              padding: 20,
-              flex: myBusinesses?.length ? 0 : 1,
-            }}
-            refreshControl={
-              <RefreshControl
-                colors={[colors.primary]}
-                tintColor={colors.primary}
-                refreshing={isRefreshing}
-                progressViewOffset={80}
-                onRefresh={() => onRefresh()}
-              />
-            }
-            onEndReached={onEndReached}
-            onEndReachedThreshold={0.3}
-            scrollEventThrottle={1}
-            onScroll={Animated.event(
-              [
-                {
-                  nativeEvent: {
-                    contentOffset: {
-                      y: scrollAnim,
-                    },
+      <Loading loading={isLoading || deleteBusinessLoading} />
+      <View style={{ flex: 1 }}>
+        <Animated.FlatList
+          contentContainerStyle={{
+            padding: 20,
+            flex: myBusinesses?.length ? 0 : 1,
+          }}
+          refreshControl={
+            <RefreshControl
+              colors={[colors.primary]}
+              tintColor={colors.primary}
+              refreshing={isRefreshing}
+              progressViewOffset={80}
+              onRefresh={() => onRefresh()}
+            />
+          }
+          onEndReached={onEndReached}
+          onEndReachedThreshold={0.3}
+          scrollEventThrottle={1}
+          onScroll={Animated.event(
+            [
+              {
+                nativeEvent: {
+                  contentOffset: {
+                    y: scrollAnim,
                   },
                 },
-              ],
-              { useNativeDriver: true },
-            )}
-            data={myBusinesses}
-            key={'block'}
-            keyExtractor={(item, index) => item._id}
-            ListEmptyComponent={listEmptyComponent}
-            renderItem={({ item, index }) => {
-              return (
-                <CardList
-                  key={item._id}
-                  image={item?.thumbnail}
-                  title={item.name}
-                  subtitle={item.category}
-                  rate={item?.averageRatings || 0.0}
-                  style={{ marginBottom: 15 }}
-                  onPress={() => navigateBusinessDetail(item._id)}
-                  onPressTag={() => navigateToReview(item._id)}
-                  editAble={true}
-                  deleteAble={true}
-                  onPressEdit={() => onEdit(item._id)}
-                  onPressDelete={() => onPressDelete(item._id)}
-                />
-              );
-            }}
-            ListFooterComponent={renderFooter}
-          />
-        </View>
-      )}
+              },
+            ],
+            { useNativeDriver: true },
+          )}
+          data={myBusinesses}
+          key={'block'}
+          keyExtractor={(item, index) => item._id}
+          ListEmptyComponent={listEmptyComponent}
+          renderItem={({ item, index }) => {
+            return (
+              <CardList
+                key={item._id}
+                image={item?.thumbnail}
+                title={item.name}
+                subtitle={item.category}
+                rate={item?.averageRatings || 0.0}
+                style={{ marginBottom: 15 }}
+                onPress={() => navigateBusinessDetail(item._id)}
+                onPressTag={() => navigateToReview(item._id)}
+                editAble={true}
+                deleteAble={true}
+                onPressEdit={() => onEdit(item._id)}
+                onPressDelete={() => onPressDelete(item._id)}
+              />
+            );
+          }}
+          ListFooterComponent={renderFooter}
+        />
+      </View>
     </SafeAreaView>
   );
 }
