@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -9,6 +9,9 @@ import {
 import { useTranslation } from 'react-i18next';
 import { getUniqueId } from 'react-native-device-info';
 import ImageView from 'react-native-image-viewing';
+import Orientation from 'react-native-orientation-locker';
+import VideoPlayer from 'react-native-video-controls';
+import { OnProgressData } from 'react-native-video';
 import { StackScreenProps } from '@react-navigation/stack';
 
 import {
@@ -21,6 +24,8 @@ import {
   Loading,
 } from '@components';
 import { BaseStyle, useTheme } from '@config';
+
+import useAppStore from '../../../store/appStore';
 import { NotificationParamList } from 'navigation/models/NotificationParamList';
 import { NotificationDetailPlaceholder } from './components/NotificationDetailPlaceholder';
 import { useNotification } from '../queries/queries';
@@ -36,11 +41,16 @@ export default function NotificationDetailScreen(
 
   const { data, isLoading } = useNotification(route?.params?.id);
   const { mutate } = useReadNotification();
+  const { setFullScreen: setStoreFullScreen } = useAppStore();
 
   const [isImageLoading, setImageLoading] = useState(true);
   const [openImage, setOpenImage] = useState(false);
   const [imageHeight, setImageHeight] = useState(500);
   const [imageWidth, setImageWidth] = useState(500);
+  const [isPaused, setIsPaused] = useState(false);
+  const [fullscreen, setFullScreen] = useState<boolean>(false);
+  const [progress, setProgress] = useState<number>(0);
+  const playerRef = useRef<VideoPlayer>(null);
 
   const getTitle = (type?: NotificationType) => {
     switch (type) {
@@ -57,6 +67,48 @@ export default function NotificationDetailScreen(
     }
   };
 
+  const onProgress = (progressed: OnProgressData) => {
+    setProgress(progressed.currentTime);
+  };
+
+  const videoPlayerView = () => {
+    return (
+      <VideoPlayer
+        ref={playerRef}
+        disableVolume
+        disableBack
+        resizeMode="contain"
+        paused={isPaused}
+        onPause={() => setIsPaused(true)}
+        onPlay={() => setIsPaused(false)}
+        source={{
+          uri: data?.video,
+        }}
+        onEnterFullscreen={() => setFullScreen(!fullscreen)}
+        onExitFullscreen={() => setFullScreen(!fullscreen)}
+        seekColor={colors.primary}
+        onProgress={onProgress}
+        onLoad={() => {
+          if (progress) {
+            playerRef.current?.player.ref.seek(progress);
+          }
+        }}
+      />
+    );
+  };
+
+  useEffect(() => {
+    if (fullscreen) {
+      Orientation.unlockAllOrientations();
+      Orientation.lockToLandscape();
+      setStoreFullScreen(true);
+      return () => {
+        Orientation.lockToPortrait();
+        setStoreFullScreen(false);
+      };
+    }
+  }, [fullscreen, setStoreFullScreen]);
+
   useEffect(() => {
     if (!route?.params?.read) {
       mutate({
@@ -69,76 +121,91 @@ export default function NotificationDetailScreen(
   }, [mutate]);
 
   return (
-    <SafeAreaView style={BaseStyle.safeAreaView}>
-      <Header
-        title={getTitle(data?.type)}
-        renderLeft={() => {
-          return (
-            <Icon
-              name="arrow-left"
-              size={20}
-              color={colors.primary}
-              enableRTL={true}
-            />
-          );
-        }}
-        onPressLeft={() => {
-          navigation.goBack();
-        }}
-      />
-
-      <ImageView
-        backgroundColor={colors.background}
-        images={[{ uri: data?.image }]}
-        imageIndex={0}
-        visible={openImage}
-        onRequestClose={() => setOpenImage(false)}
-      />
-
-      {isLoading ? (
-        <NotificationDetailPlaceholder />
-      ) : (
-        <View style={styles.container}>
-          <ScrollView
-            style={styles.scrollView}
-            showsVerticalScrollIndicator={false}>
-            {data?.image ? (
-              <TouchableOpacity
-                onPress={() => setOpenImage(true)}
-                style={styles.imageContainer}>
-                <Image
-                  source={data?.image}
-                  style={[
-                    styles.image,
-                    { aspectRatio: imageWidth / imageHeight },
-                  ]}
-                  onLoadEnd={() => setImageLoading(false)}
-                  onLoad={(evt: any) => {
-                    setImageHeight(evt.nativeEvent.height);
-                    setImageWidth(evt.nativeEvent.width);
-                  }}
-                />
-                <Loading loading={isImageLoading} />
-              </TouchableOpacity>
-            ) : null}
-            <Text title2 bold style={styles.title}>
-              {data?.title}
-            </Text>
-            <Text body1 numberOfLines={1000} style={styles.content}>
-              {data?.description}
-            </Text>
-          </ScrollView>
-          {data?.link ? (
-            <Button
-              full
-              style={[styles.button, { backgroundColor: colors.primary }]}
-              onPress={() => Linking.openURL(data.link ?? '')}>
-              {t('notification.detail.view_details')}
-            </Button>
-          ) : null}
-        </View>
+    <>
+      {fullscreen && (
+        <View style={styles.fullScreenVideo}>{videoPlayerView()}</View>
       )}
-    </SafeAreaView>
+      <SafeAreaView style={BaseStyle.safeAreaView}>
+        <Header
+          title={getTitle(data?.type)}
+          renderLeft={() => {
+            return (
+              <Icon
+                name="arrow-left"
+                size={20}
+                color={colors.primary}
+                enableRTL={true}
+              />
+            );
+          }}
+          onPressLeft={() => {
+            navigation.goBack();
+          }}
+        />
+
+        <ImageView
+          backgroundColor={colors.background}
+          images={[{ uri: data?.image }]}
+          imageIndex={0}
+          visible={openImage}
+          onRequestClose={() => setOpenImage(false)}
+        />
+
+        {isLoading ? (
+          <NotificationDetailPlaceholder />
+        ) : (
+          <View style={styles.container}>
+            <ScrollView
+              style={styles.scrollView}
+              showsVerticalScrollIndicator={false}>
+              {!fullscreen && data?.video ? (
+                <View
+                  style={[
+                    styles.videoContainer,
+                    {
+                      backgroundColor: colors.card,
+                    },
+                  ]}>
+                  {videoPlayerView()}
+                </View>
+              ) : data?.image ? (
+                <TouchableOpacity
+                  onPress={() => setOpenImage(true)}
+                  style={styles.imageContainer}>
+                  <Image
+                    source={data?.image}
+                    style={[
+                      styles.image,
+                      { aspectRatio: imageWidth / imageHeight },
+                    ]}
+                    onLoadEnd={() => setImageLoading(false)}
+                    onLoad={(evt: any) => {
+                      setImageHeight(evt.nativeEvent.height);
+                      setImageWidth(evt.nativeEvent.width);
+                    }}
+                  />
+                  <Loading loading={isImageLoading} />
+                </TouchableOpacity>
+              ) : null}
+              <Text title2 bold style={styles.title}>
+                {data?.title}
+              </Text>
+              <Text body1 numberOfLines={1000} style={styles.content}>
+                {data?.description}
+              </Text>
+            </ScrollView>
+            {data?.link ? (
+              <Button
+                full
+                style={[styles.button, { backgroundColor: colors.primary }]}
+                onPress={() => Linking.openURL(data.link ?? '')}>
+                {t('notification.detail.view_details')}
+              </Button>
+            ) : null}
+          </View>
+        )}
+      </SafeAreaView>
+    </>
   );
 }
 
@@ -169,5 +236,22 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginRight: 10,
+  },
+  videoContainer: {
+    width: '100%',
+    height: 200,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+  },
+  fullScreenVideo: {
+    zIndex: 999,
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    width: '100%',
+    height: '100%',
   },
 });
