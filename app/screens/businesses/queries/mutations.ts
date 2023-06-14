@@ -88,3 +88,25 @@ export const useAddReview = (id: string) => {
     },
   );
 };
+
+export const useDeleteBusiness = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<any, Error, { businessId: string }>(
+    (payload) => {
+      return axiosApiInstance({
+        method: 'DELETE',
+        url: `${BUSINESSES_API}/${payload.businessId}`,
+      })
+        .then((response) => response.data)
+        .catch(({ response }) => {
+          handleError(response.data);
+        });
+    },
+    {
+      onSuccess: async () => {
+        await queryClient.invalidateQueries(['my-business']);
+      },
+    },
+  );
+};
