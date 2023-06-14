@@ -64,6 +64,11 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>For Capturing user avatar</string>
 	<key>NSLocationAlwaysUsageDescription</key>
