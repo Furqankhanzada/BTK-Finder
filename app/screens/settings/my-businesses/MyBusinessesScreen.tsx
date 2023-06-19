@@ -26,6 +26,7 @@ import { useDeleteBusiness } from '@screens/businesses/queries/mutations';
 
 import { GlobalParamList } from 'navigation/models/GlobalParamList';
 import { IconName } from '../../../contexts/alerts-v2/models/Icon';
+import { MyBusinessesPlaceholder } from './components/MyBusinessesPlaceholder';
 
 export default function MyBusinessesScreen(
   props: StackScreenProps<GlobalParamList, 'MyBusinesses'>,
@@ -173,62 +174,66 @@ export default function MyBusinessesScreen(
           navigation.goBack();
         }}
       />
-      <Loading loading={isLoading || deleteBusinessLoading} />
-      <View style={styles.container}>
-        <Animated.FlatList
-          contentContainerStyle={[
-            styles.flatListContainer,
-            myBusinesses?.length ? styles.businessesFlatListContainer : {},
-          ]}
-          refreshControl={
-            <RefreshControl
-              colors={[colors.primary]}
-              tintColor={colors.primary}
-              refreshing={isRefreshing}
-              progressViewOffset={80}
-              onRefresh={() => onRefresh()}
-            />
-          }
-          onEndReached={onEndReached}
-          onEndReachedThreshold={0.3}
-          scrollEventThrottle={1}
-          onScroll={Animated.event(
-            [
-              {
-                nativeEvent: {
-                  contentOffset: {
-                    y: scrollAnim,
+      <Loading loading={deleteBusinessLoading} />
+      {isLoading ? (
+        <MyBusinessesPlaceholder />
+      ) : (
+        <View style={styles.container}>
+          <Animated.FlatList
+            contentContainerStyle={[
+              styles.flatListContainer,
+              myBusinesses?.length ? styles.businessesFlatListContainer : {},
+            ]}
+            refreshControl={
+              <RefreshControl
+                colors={[colors.primary]}
+                tintColor={colors.primary}
+                refreshing={isRefreshing}
+                progressViewOffset={80}
+                onRefresh={() => onRefresh()}
+              />
+            }
+            onEndReached={onEndReached}
+            onEndReachedThreshold={0.3}
+            scrollEventThrottle={1}
+            onScroll={Animated.event(
+              [
+                {
+                  nativeEvent: {
+                    contentOffset: {
+                      y: scrollAnim,
+                    },
                   },
                 },
-              },
-            ],
-            { useNativeDriver: true },
-          )}
-          data={myBusinesses}
-          key={'block'}
-          keyExtractor={(item) => item._id}
-          ListEmptyComponent={listEmptyComponent}
-          renderItem={({ item }) => {
-            return (
-              <CardList
-                key={item._id}
-                image={item?.thumbnail}
-                title={item.name}
-                subtitle={item.category}
-                rate={item?.averageRatings || 0.0}
-                style={styles.cardList}
-                onPress={() => navigateBusinessDetail(item._id)}
-                onPressTag={() => {}}
-                editAble={true}
-                deleteAble={true}
-                onPressEdit={() => onEdit(item._id)}
-                onPressDelete={() => onPressDelete(item._id)}
-              />
-            );
-          }}
-          ListFooterComponent={renderFooter}
-        />
-      </View>
+              ],
+              { useNativeDriver: true },
+            )}
+            data={myBusinesses}
+            key={'block'}
+            keyExtractor={(item) => item._id}
+            ListEmptyComponent={listEmptyComponent}
+            renderItem={({ item }) => {
+              return (
+                <CardList
+                  key={item._id}
+                  image={item?.thumbnail}
+                  title={item.name}
+                  subtitle={item.category}
+                  rate={item?.averageRatings || 0.0}
+                  style={styles.cardList}
+                  onPress={() => navigateBusinessDetail(item._id)}
+                  onPressTag={() => {}}
+                  editAble={true}
+                  deleteAble={true}
+                  onPressEdit={() => onEdit(item._id)}
+                  onPressDelete={() => onPressDelete(item._id)}
+                />
+              );
+            }}
+            ListFooterComponent={renderFooter}
+          />
+        </View>
+      )}
     </SafeAreaView>
   );
 }
