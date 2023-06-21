@@ -45,6 +45,7 @@ export default function Header(props) {
     <View style={[styles.contain, style]}>
       <View style={{ flex: 1 }}>
         <TouchableOpacity
+          testID="testIds.header.left.button"
           style={[styles.contentLeft, styleLeft]}
           onPress={onPressLeft}>
           {renderLeft()}
@@ -62,12 +63,14 @@ export default function Header(props) {
       </View>
       <View style={styles.right}>
         <TouchableOpacity
+          testID="testIds.header.right.button"
           style={[styles.contentRightSecond, styleRightSecond]}
           onPress={onPressRightSecond}>
           {renderRightSecond()}
         </TouchableOpacity>
         {renderRight ? (
           <TouchableOpacity
+            testID="testIds.header.right.second.button"
             style={[styles.contentRight, styleRight]}
             onPress={onPressRight}>
             {renderRight()}

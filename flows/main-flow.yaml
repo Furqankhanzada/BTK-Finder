@@ -1,0 +1,25 @@
+appId: com.explore.btk
+---
+- launchApp
+
+- tapOn:
+      id: "testId.favourite"
+- tapOn:
+      id: "testId.addBusiness"
+- tapOn:
+      id: "testId.settings"
+- tapOn:
+      id: "testId.dashboard"
+
+- tapOn:
+    id: "testIDs.search"
+- tapOn:
+    id: "testIds.header.left.button"
+
+- tapOn:
+    id: "testId.dashboard"
+
+- tapOn:
+    id: "testIds.header.right.second.button" #Notifications
+- tapOn:
+    id: "testIds.header.left.button"

@@ -167,6 +167,7 @@ function DashboardScreen({
         }
       />
       <TouchableOpacity
+        testID="testIDs.search"
         onPress={() => navigation.navigate('Filter', {})}
         style={styles.contentSearch}>
         <View style={[BaseStyle.textInput, { backgroundColor: colors.card }]}>

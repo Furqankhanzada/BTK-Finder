@@ -99,6 +99,7 @@ function MainBottomTabNavigator() {
         name="DashboardStack"
         component={DashboardStackNavigator}
         options={{
+          tabBarTestID: 'testId.dashboard',
           title: t('home'),
           tabBarIcon: ({ color }) => {
             return <Icon color={color} name="home" size={20} solid />;
@@ -110,6 +111,7 @@ function MainBottomTabNavigator() {
         name="Favourite"
         component={isLogin ? FavouriteScreen : AuthStackNavigator}
         options={{
+          tabBarTestID: 'testId.favourite',
           title: 'Favourite',
           tabBarIcon: ({ color }) => {
             return <Icon color={color} name="heart" size={20} solid />;
@@ -120,6 +122,7 @@ function MainBottomTabNavigator() {
         name="Business"
         component={isLogin ? Business : AuthStackNavigator}
         options={{
+          tabBarTestID: 'testId.addBusiness',
           title: 'Add Business',
           tabBarIcon: ({ color }) => {
             return <Icon color={color} name="business-time" size={20} solid />;
@@ -135,6 +138,7 @@ function MainBottomTabNavigator() {
         name="SettingsStack"
         component={SettingsStackNavigator}
         options={{
+          tabBarTestID: 'testId.settings',
           title: 'Settings',
           tabBarIcon: ({ color }) => {
             return <Icon solid color={color} name="cogs" size={25} />;

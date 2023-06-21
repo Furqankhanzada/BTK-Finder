@@ -68,7 +68,7 @@ export default function ProfileDetail(props) {
 
 ProfileDetail.propTypes = {
   style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-  image: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
+  image: PropTypes.oneOfType([PropTypes.object, PropTypes.any]),
   textFirst: PropTypes.string,
   point: PropTypes.string,
   textSecond: PropTypes.string,

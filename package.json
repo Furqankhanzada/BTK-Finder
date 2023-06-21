@@ -9,6 +9,8 @@
     "test": "jest --passWithNoTests",
     "lint": "eslint . --ext .ts,.tsx",
     "check:code": "yarn tsc && yarn test",
+    "e2e": "maestro test flows/",
+    "e2e-studio": "maestro studio",
     "generate:gql:types": "graphql-codegen --config codegen.yml",
     "postinstall": "if [ $GITHUB_ACTION ]; then npx patch-package; else npx patch-package && npx jetify && npx pod-install; fi;"
   },
