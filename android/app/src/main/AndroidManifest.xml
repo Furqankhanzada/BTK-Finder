@@ -15,7 +15,7 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDvaS7W8iRIZTGJ6v5yePMWF4B2sCEVWqg"/>
+            android:value="AIzaSyCB60hjwDtwbBZX15l-A5fCu9F5b8HdXWk"/>
         <meta-data
             android:name="com.dieam.reactnativepushnotification.notification_foreground"
             android:value="false"/>
