@@ -11,8 +11,9 @@ import {
 import { BaseColor, useTheme, useFont } from '@config';
 import { Icon } from '@components';
 import ProductDetailScreen from '@screens/businesses/product-detail/ProductDetailScreen';
-import { useBusiness } from '@screens/businesses/queries/queries';
+import { useBusiness, useMembers } from '@screens/businesses/queries/queries';
 import { ShopStatus } from '@screens/businesses/models/BusinessPresentable';
+import { useProfile } from '@screens/settings/profile/queries/queries';
 
 import { getProductsTitle } from './helpers/getProductsTitle';
 import BusinessReviewsScreen from './reviews/BusinessReviewsScreen';
@@ -21,10 +22,14 @@ import BusinessProductsScreen from './products/BusinessProductsScreen';
 import AddReviewScreen from './add-review/AddReviewScreen';
 import {
   BusinessDetailBottomTabParamList,
+  MembersStackParamList,
   ProductStackParamList,
   ReviewStackParamList,
 } from '../../navigation/models/BusinessDetailBottomTabParamList';
 import { MainStackParamList } from '../../navigation/models/MainStackParamList';
+import BusinessMembersScreen from './members/list/BusinessMembersScreen';
+import AddBusinessMember from './members/add/AddBusinessMember';
+import EditBusinessMember from './members/edit/EditBusinessMember';
 
 const BusinessDetailBottomTab =
   createBottomTabNavigator<BusinessDetailBottomTabParamList>();
@@ -54,6 +59,21 @@ function ProductStackNavigator() {
   );
 }
 
+const MembersStack = createStackNavigator<MembersStackParamList>();
+
+function MembersStackNavigator({}: StackScreenProps<
+  BusinessDetailBottomTabParamList,
+  'MembersStack'
+>) {
+  return (
+    <MembersStack.Navigator screenOptions={{ headerShown: false }}>
+      <MembersStack.Screen name="Members" component={BusinessMembersScreen} />
+      <MembersStack.Screen name="AddMember" component={AddBusinessMember} />
+      <MembersStack.Screen name="EditMember" component={EditBusinessMember} />
+    </MembersStack.Navigator>
+  );
+}
+
 export default function BusinessDetailNavigator({
   route,
 }: BottomTabScreenProps<MainStackParamList, 'BusinessDetailTabNavigator'>) {
@@ -61,6 +81,8 @@ export default function BusinessDetailNavigator({
   const { colors } = useTheme();
   const font = useFont();
   const { isLoading, data } = useBusiness(businessId);
+  const { data: user } = useProfile();
+  const { data: members } = useMembers(businessId);
 
   return (
     <BusinessDetailBottomTab.Navigator
@@ -112,6 +134,23 @@ export default function BusinessDetailNavigator({
             title: getProductsTitle(data.type),
             tabBarIcon: ({ color }) => {
               return <Icon solid color={color} name="elementor" size={25} />;
+            },
+          }}
+        />
+      ) : null}
+      {(members && members.length) ||
+      (members && !members.length && data?.ownerId === user?._id) ? (
+        <BusinessDetailBottomTab.Screen
+          initialParams={{
+            screen: 'Members',
+            params: { businessId: businessId },
+          }}
+          name="MembersStack"
+          component={MembersStackNavigator}
+          options={{
+            title: 'Members',
+            tabBarIcon: ({ color }) => {
+              return <Icon solid color={color} name="users" size={25} />;
             },
           }}
         />
