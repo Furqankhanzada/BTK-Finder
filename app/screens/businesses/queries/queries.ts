@@ -18,7 +18,7 @@ import {
 
 import axiosApiInstance from '../../../interceptor/axios-interceptor';
 import { BUSINESSES_API } from '../../../constants';
-import { BusinessPresentable } from '../models/BusinessPresentable';
+import { BusinessPresentable, Member } from '../models/BusinessPresentable';
 import {
   CatalogItemConnection,
   CatalogItemProduct,
@@ -126,6 +126,25 @@ export const useBusinessesInfinite = (
         }
       },
       ...(isFiltering ? { staleTime: 0, cacheTime: 0 } : {}),
+    },
+  );
+};
+
+export const useMembers = (id: string) => {
+  return useQuery(
+    ['members', id],
+    (): Promise<Member[]> => {
+      return axiosApiInstance({
+        method: 'GET',
+        url: `${BUSINESSES_API}/${id}/members`,
+      })
+        .then((response) => response.data)
+        .catch(({ response }) => {
+          handleError(response.data);
+        });
+    },
+    {
+      enabled: !!id,
     },
   );
 };
