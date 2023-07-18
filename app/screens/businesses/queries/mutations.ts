@@ -4,6 +4,7 @@ import Toast from 'react-native-toast-message';
 
 import {
   BusinessPresentable,
+  Membership,
   Review,
 } from '@screens/businesses/models/BusinessPresentable';
 import { useDynamicLinks } from '@hooks';
@@ -21,6 +22,19 @@ export enum FavoriteType {
 export interface FavoritesMutationVar {
   businessId: string;
   type: FavoriteType;
+}
+
+export interface UpdateMembershipPayload {
+  status: string;
+  email: string;
+  package: string;
+  billingDate: Date;
+}
+
+export interface AddMembershipPayload {
+  email: string;
+  package: string;
+  billingDate: Date;
 }
 
 export type AddReviewPayload = Pick<Review, 'title' | 'description' | 'rating'>;
@@ -106,6 +120,74 @@ export const useDeleteBusiness = () => {
     {
       onSuccess: async () => {
         await queryClient.invalidateQueries(['my-business']);
+      },
+    },
+  );
+};
+
+export const useMembershipUpdate = (id: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation<Membership, Error, UpdateMembershipPayload>(
+    (payload) => {
+      return axiosApiInstance({
+        method: 'PUT',
+        url: `${BUSINESSES_API}/${id}/member`,
+        data: payload,
+      })
+        .then((response) => response.data)
+        .catch(({ response }) => {
+          handleError(response.data);
+        });
+    },
+    {
+      onSuccess: async (response) => {
+        if (response.email) {
+          await queryClient.invalidateQueries({
+            queryKey: ['members', id],
+          });
+
+          Toast.show({
+            type: 'success',
+            topOffset: 55,
+            text1: 'Membership Updated Successfully ',
+            text2: `The membership for ${response.email} has been updated.`,
+          });
+        }
+      },
+    },
+  );
+};
+
+export const useAddMembership = (id: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation<Membership, Error, AddMembershipPayload>(
+    (payload) => {
+      return axiosApiInstance({
+        method: 'POST',
+        url: `${BUSINESSES_API}/${id}/member`,
+        data: payload,
+      })
+        .then((response) => response.data)
+        .catch(({ response }) => {
+          handleError(response.data);
+        });
+    },
+    {
+      onSuccess: async (response) => {
+        if (response.email) {
+          await queryClient.invalidateQueries({
+            queryKey: ['members', id],
+          });
+
+          Toast.show({
+            type: 'success',
+            topOffset: 55,
+            text1: 'Membership Added Successfully ',
+            text2: `The membership for ${response.email} has been added.`,
+          });
+        }
       },
     },
   );
