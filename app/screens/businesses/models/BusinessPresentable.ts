@@ -88,8 +88,25 @@ export interface Favorite {
   ownerId: string;
 }
 
+export interface Membership {
+  billingDate: Date;
+  businessId: string;
+  email: string;
+  package: string;
+  status: string;
+}
+
+export interface Member {
+  _id: string;
+  name: string;
+  avatar: string;
+  email: string;
+  membership: Membership;
+}
+
 export interface BusinessPresentable {
   _id: string;
+  ownerId: string;
   name: string;
   description?: string;
   address: string;
