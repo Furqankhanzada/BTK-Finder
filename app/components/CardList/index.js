@@ -13,6 +13,7 @@ export default function CardList(props) {
     style,
     image,
     title,
+    imageStyle,
     subtitle,
     options,
     rate,
@@ -28,7 +29,7 @@ export default function CardList(props) {
       style={[styles.contain, { overflow: 'hidden' }, style]}
       onPress={onPress}
       activeOpacity={0.9}>
-      <Image source={image} style={styles.image} />
+      <Image source={image} style={[styles.image, imageStyle]} />
       <View
         style={{
           paddingHorizontal: 10,
@@ -104,6 +105,7 @@ export default function CardList(props) {
 CardList.propTypes = {
   style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
   image: PropTypes.node.isRequired,
+  imageStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
   title: PropTypes.string,
   subtitle: PropTypes.string,
   options: PropTypes.array,
@@ -119,6 +121,7 @@ CardList.propTypes = {
 CardList.defaultProps = {
   style: {},
   image: Images.imagePlaceholder,
+  imageStyle: {},
   title: '',
   subtitle: '',
   options: [],
