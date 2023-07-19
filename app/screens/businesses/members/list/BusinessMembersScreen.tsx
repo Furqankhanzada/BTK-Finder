@@ -78,7 +78,6 @@ export default function BusinessMembersScreen(props: Props) {
                   membership: item.membership,
                 })
               }
-              deleteAble={business?.ownerId === user?._id}
             />
           )}
           ListFooterComponentStyle={styles.footer}

@@ -7,18 +7,30 @@ import {
   TextInput as TextInputOriginal,
   ScrollView,
   TouchableOpacity,
-  Text,
 } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { StackScreenProps } from '@react-navigation/stack';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
+import IonIcon from 'react-native-vector-icons/Ionicons';
 
 import { BaseColor, useTheme } from '@config';
-import { Header, SafeAreaView, Icon, Button, TextInput } from '@components';
+import {
+  Header,
+  SafeAreaView,
+  Icon,
+  Button,
+  TextInput,
+  Text,
+} from '@components';
+import { useAlerts } from '@hooks';
 
 import { Membership } from '@screens/businesses/models/BusinessPresentable';
-import { useMembershipUpdate } from '@screens/businesses/queries/mutations';
+import {
+  useDeleteMembership,
+  useMembershipUpdate,
+} from '@screens/businesses/queries/mutations';
+import { IconName } from '../../../../contexts/alerts-v2/models/Icon';
 import { MembersStackParamList } from 'navigation/models/BusinessDetailBottomTabParamList';
 import GlobalStyle from '../../../../assets/styling/GlobalStyle';
 
@@ -28,7 +40,11 @@ export default function EditBusinessMember(
   const { navigation, route } = props;
   const { businessId, membership } = route.params;
   const { colors } = useTheme();
+  const { showAlert, showNotification } = useAlerts();
   const { mutateAsync, isLoading } = useMembershipUpdate(businessId);
+  const { mutateAsync: removeMember, isLoading: isRemoveLoading } =
+    useDeleteMembership();
+
   const {
     control,
     handleSubmit,
@@ -51,6 +67,58 @@ export default function EditBusinessMember(
         }
       },
     });
+  };
+
+  const onPressDelete = async () => {
+    const buttonPressed = await showAlert({
+      content: () => (
+        <>
+          <IonIcon
+            size={70}
+            name={IconName.Warning}
+            color={BaseColor.redColor}
+          />
+          <Text textAlign="center" header>
+            Member Removal
+          </Text>
+          <Text textAlign="center" body1>
+            Are you sure you want to remove this member from your business?
+          </Text>
+          <Text textAlign="center" body1>
+            The membership will be deleted.
+          </Text>
+        </>
+      ),
+      btn: {
+        confirmDestructive: true,
+        confirmBtnTitle: 'Delete',
+        cancelBtnTitle: 'Cancel',
+      },
+      type: 'Custom',
+    });
+
+    if (buttonPressed === 'confirm') {
+      removeMember(
+        { id: businessId, email: membership.email },
+        {
+          onSuccess(response) {
+            if (response.message === 'success') {
+              showNotification({
+                icon: {
+                  size: 70,
+                  name: IconName.CheckMarkCircle,
+                  color: BaseColor.greenColor,
+                },
+                message:
+                  'Member has been removed successfully from your business.',
+                dismissAfterMs: 4000,
+              });
+              navigation.goBack();
+            }
+          },
+        },
+      );
+    }
   };
 
   const toggleDatePicker = () => {
@@ -166,6 +234,14 @@ export default function EditBusinessMember(
           />
         </ScrollView>
         <View style={styles.buttonContainer}>
+          <Button
+            style={styles.deleteButton}
+            destructive
+            full
+            loading={isRemoveLoading}
+            onPress={onPressDelete}>
+            Delete
+          </Button>
           <Button full loading={isLoading} onPress={handleSubmit(onSubmit)}>
             Update
           </Button>
@@ -193,5 +269,11 @@ const styles = StyleSheet.create({
   buttonContainer: {
     paddingVertical: 15,
     paddingHorizontal: 20,
+  },
+  deleteButton: {
+    marginBottom: 20,
+  },
+  alertDescription: {
+    marginTop: 24,
   },
 });
