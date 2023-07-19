@@ -91,6 +91,10 @@ export default function AddBusinessMember(
               <TextInput
                 style={styles.textInput}
                 placeholder="Email"
+                textContentType="emailAddress"
+                keyboardType="email-address"
+                autoCorrect={false}
+                autoCapitalize="none"
                 onSubmitEditing={() => packageRef.current?.focus()}
                 onBlur={onBlur}
                 onChangeText={onChange}
