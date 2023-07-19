@@ -7,19 +7,29 @@ import {
   TextInput as TextInputOriginal,
   ScrollView,
   TouchableOpacity,
-  Text,
 } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { StackScreenProps } from '@react-navigation/stack';
+import { useQueryClient } from '@tanstack/react-query';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
+import IonIcon from 'react-native-vector-icons/Ionicons';
 
 import { BaseColor, useTheme } from '@config';
-import { Header, SafeAreaView, Icon, Button, TextInput } from '@components';
+import {
+  Header,
+  SafeAreaView,
+  Icon,
+  Button,
+  TextInput,
+  Text,
+} from '@components';
+import { useAlerts } from '@hooks';
 
 import { Membership } from '@screens/businesses/models/BusinessPresentable';
 import { useAddMembership } from '@screens/businesses/queries/mutations';
 import { MembersStackParamList } from 'navigation/models/BusinessDetailBottomTabParamList';
+import { IconName } from '../../../../contexts/alerts-v2/models/Icon';
 import GlobalStyle from '../../../../assets/styling/GlobalStyle';
 
 export default function AddBusinessMember(
@@ -28,6 +38,8 @@ export default function AddBusinessMember(
   const { navigation, route } = props;
   const { businessId } = route.params;
   const { colors } = useTheme();
+  const queryClient = useQueryClient();
+  const { showAlert, showNotification } = useAlerts();
   const { mutateAsync, isLoading } = useAddMembership(businessId);
   const {
     control,
@@ -41,9 +53,67 @@ export default function AddBusinessMember(
 
   const onSubmit = async (data: Membership) => {
     mutateAsync(data, {
-      onSuccess(response) {
-        if (response.email) {
+      async onSuccess(response) {
+        if ('message' in response && response.message === 'invitation-sent') {
+          const buttonPressed = await showAlert({
+            content: () => (
+              <>
+                <IonIcon
+                  size={70}
+                  name={IconName.CheckMarkCircle}
+                  color={BaseColor.greenColor}
+                />
+                <Text textAlign="center" header>
+                  Invitation Sent
+                </Text>
+                <Text textAlign="center" body1>
+                  We have sent an invitation email to {data.email}
+                </Text>
+                <Text
+                  textAlign="center"
+                  body1
+                  bold
+                  style={[{ color: BaseColor.redColor }, styles.noteText]}>
+                  NOTE:
+                </Text>
+                <Text textAlign="center" body2>
+                  Since no account is registered with this email: {data.email}
+                </Text>
+                <Text textAlign="center" body2>
+                  We have sent an email to {data.email} for account
+                  registration.
+                </Text>
+                <Text textAlign="center" body2>
+                  Once the user registers with this email in our app, He will be
+                  automatically added as the member of your business
+                </Text>
+              </>
+            ),
+            btn: {
+              confirmBtnTitle: 'Okay',
+            },
+            type: 'Custom',
+          });
+
+          if (buttonPressed === 'confirm') {
+            navigation.goBack();
+          }
+        } else if ('email' in response) {
+          await queryClient.invalidateQueries({
+            queryKey: ['members', businessId],
+          });
+
           navigation.goBack();
+
+          showNotification({
+            icon: {
+              size: 70,
+              name: IconName.CheckMarkCircle,
+              color: BaseColor.greenColor,
+            },
+            message: `The membership for ${response.email} has been added.`,
+            dismissAfterMs: 4000,
+          });
         }
       },
     });
@@ -195,5 +265,8 @@ const styles = StyleSheet.create({
   buttonContainer: {
     paddingVertical: 15,
     paddingHorizontal: 20,
+  },
+  noteText: {
+    marginTop: 10,
   },
 });
