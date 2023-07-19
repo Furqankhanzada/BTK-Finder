@@ -192,3 +192,38 @@ export const useAddMembership = (id: string) => {
     },
   );
 };
+
+export const useDeleteMembership = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<
+    { message: string; businessId: string },
+    Error,
+    { id: string; email: string }
+  >(
+    (payload) => {
+      return axiosApiInstance({
+        method: 'DELETE',
+        url: `${BUSINESSES_API}/${payload.id}/member`,
+        params: {
+          email: payload.email,
+        },
+      })
+        .then((response) => {
+          return { ...response.data, businessId: payload.id };
+        })
+        .catch(({ response }) => {
+          handleError(response.data);
+        });
+    },
+    {
+      onSuccess: async (response) => {
+        if (response.message === 'success') {
+          await queryClient.invalidateQueries({
+            queryKey: ['members', response.businessId],
+          });
+        }
+      },
+    },
+  );
+};
