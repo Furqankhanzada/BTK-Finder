@@ -53,9 +53,7 @@ export default function EditBusinessMember(
     defaultValues: { ...membership },
   });
 
-  const statusRef = useRef<TextInputOriginal>(null);
   const packageRef = useRef<TextInputOriginal>(null);
-  const billlingDateRef = useRef<TextInputOriginal>(null);
 
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
@@ -148,8 +146,9 @@ export default function EditBusinessMember(
           navigation.goBack();
         }}
       />
+
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'android' ? 'height' : 'padding'}
+        behavior={Platform.OS === 'android' ? undefined : 'padding'}
         keyboardVerticalOffset={offsetKeyboard}
         style={styles.keyboardAvoidingView}>
         <ScrollView contentContainerStyle={styles.scrollViewContentContainer}>
@@ -161,7 +160,6 @@ export default function EditBusinessMember(
             render={({ field: { onChange, onBlur, value } }) => (
               <TextInput
                 style={styles.textInput}
-                ref={statusRef}
                 placeholder="Active or Archieve"
                 onSubmitEditing={() => packageRef.current?.focus()}
                 onBlur={onBlur}
@@ -183,7 +181,8 @@ export default function EditBusinessMember(
                 style={styles.textInput}
                 ref={packageRef}
                 placeholder="Package name"
-                onSubmitEditing={() => billlingDateRef.current?.focus()}
+                onSubmitEditing={toggleDatePicker}
+                blurOnSubmit={true}
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
@@ -233,6 +232,7 @@ export default function EditBusinessMember(
             name="billingDate"
           />
         </ScrollView>
+
         <View style={styles.buttonContainer}>
           <Button
             style={styles.deleteButton}

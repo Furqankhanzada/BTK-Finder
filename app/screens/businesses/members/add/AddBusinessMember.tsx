@@ -36,7 +36,6 @@ export default function AddBusinessMember(
   } = useForm<Membership>();
 
   const packageRef = useRef<TextInputOriginal>(null);
-  const billlingDateRef = useRef<TextInputOriginal>(null);
 
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
@@ -77,8 +76,9 @@ export default function AddBusinessMember(
           navigation.goBack();
         }}
       />
+
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'android' ? 'height' : 'padding'}
+        behavior={Platform.OS === 'android' ? undefined : 'padding'}
         keyboardVerticalOffset={offsetKeyboard}
         style={styles.keyboardAvoidingView}>
         <ScrollView contentContainerStyle={styles.scrollViewContentContainer}>
@@ -111,7 +111,8 @@ export default function AddBusinessMember(
                 style={styles.textInput}
                 ref={packageRef}
                 placeholder="Package name"
-                onSubmitEditing={() => billlingDateRef.current?.focus()}
+                onSubmitEditing={toggleDatePicker}
+                blurOnSubmit={true}
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
@@ -161,6 +162,7 @@ export default function AddBusinessMember(
             name="billingDate"
           />
         </ScrollView>
+
         <View style={styles.buttonContainer}>
           <Button full loading={isLoading} onPress={handleSubmit(onSubmit)}>
             Add
