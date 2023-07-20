@@ -25,7 +25,10 @@ import {
 } from '@components';
 import { useAlerts } from '@hooks';
 
-import { Membership } from '@screens/businesses/models/BusinessPresentable';
+import {
+  Membership,
+  MembershipStatus,
+} from '@screens/businesses/models/BusinessPresentable';
 import {
   useDeleteMembership,
   useMembershipUpdate,
@@ -33,6 +36,7 @@ import {
 import { IconName } from '../../../../contexts/alerts-v2/models/Icon';
 import { MembersStackParamList } from 'navigation/models/BusinessDetailBottomTabParamList';
 import GlobalStyle from '../../../../assets/styling/GlobalStyle';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 export default function EditBusinessMember(
   props: StackScreenProps<MembersStackParamList, 'EditMember'>,
@@ -44,6 +48,15 @@ export default function EditBusinessMember(
   const { mutateAsync, isLoading } = useMembershipUpdate(businessId);
   const { mutateAsync: removeMember, isLoading: isRemoveLoading } =
     useDeleteMembership();
+
+  const [openDropdown, setOpenDropdown] = useState<boolean>(false);
+  const [selectedStatus, setSelectedStatus] = useState<MembershipStatus>(
+    membership.status,
+  );
+  const [statusItems, setItems] = useState([
+    { label: 'Active', value: MembershipStatus.ACTIVE },
+    { label: 'Archieve', value: MembershipStatus.ARCHIEVE },
+  ]);
 
   const {
     control,
@@ -58,22 +71,25 @@ export default function EditBusinessMember(
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
   const onSubmit = async (data: Membership) => {
-    mutateAsync(data, {
-      onSuccess(response) {
-        if (response.email) {
-          showNotification({
-            icon: {
-              size: 70,
-              name: IconName.CheckMarkCircle,
-              color: BaseColor.greenColor,
-            },
-            message: `The membership for ${response.email} has been updated.`,
-            dismissAfterMs: 4000,
-          });
-          navigation.goBack();
-        }
+    mutateAsync(
+      { ...data, status: selectedStatus },
+      {
+        onSuccess(response) {
+          if (response.email) {
+            showNotification({
+              icon: {
+                size: 70,
+                name: IconName.CheckMarkCircle,
+                color: BaseColor.greenColor,
+              },
+              message: `The membership for ${response.email} has been updated.`,
+              dismissAfterMs: 4000,
+            });
+            navigation.goBack();
+          }
+        },
       },
-    });
+    );
   };
 
   const onPressDelete = async () => {
@@ -161,23 +177,20 @@ export default function EditBusinessMember(
         keyboardVerticalOffset={offsetKeyboard}
         style={styles.keyboardAvoidingView}>
         <ScrollView contentContainerStyle={styles.scrollViewContentContainer}>
-          <Controller
-            control={control}
-            rules={{
-              required: true,
+          <DropDownPicker
+            open={openDropdown}
+            value={selectedStatus}
+            items={statusItems}
+            setOpen={setOpenDropdown}
+            setValue={setSelectedStatus}
+            setItems={setItems}
+            placeholder="Status"
+            style={[styles.dropdown, { backgroundColor: BaseColor.fieldColor }]}
+            dropDownContainerStyle={{ borderColor: colors.border }}
+            listMode="SCROLLVIEW"
+            scrollViewProps={{
+              nestedScrollEnabled: true,
             }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                style={styles.textInput}
-                placeholder="Active or Archieve"
-                onSubmitEditing={() => packageRef.current?.focus()}
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                success={!errors.status}
-              />
-            )}
-            name="status"
           />
 
           <Controller
@@ -266,6 +279,9 @@ const styles = StyleSheet.create({
   },
   keyboardAvoidingView: {
     flex: 1,
+  },
+  dropdown: {
+    borderWidth: 0,
   },
   textInput: {
     marginTop: 10,

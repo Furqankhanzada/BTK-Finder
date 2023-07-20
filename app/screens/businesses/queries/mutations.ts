@@ -5,6 +5,7 @@ import Toast from 'react-native-toast-message';
 import {
   BusinessPresentable,
   Membership,
+  MembershipStatus,
   Review,
 } from '@screens/businesses/models/BusinessPresentable';
 import { useDynamicLinks } from '@hooks';
@@ -25,7 +26,7 @@ export interface FavoritesMutationVar {
 }
 
 export interface UpdateMembershipPayload {
-  status: string;
+  status: MembershipStatus;
   email: string;
   package: string;
   billingDate: Date;

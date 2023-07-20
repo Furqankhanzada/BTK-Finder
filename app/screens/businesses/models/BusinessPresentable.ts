@@ -88,12 +88,17 @@ export interface Favorite {
   ownerId: string;
 }
 
+export enum MembershipStatus {
+  ACTIVE = 'active',
+  ARCHIEVE = 'archieve',
+}
+
 export interface Membership {
   billingDate: Date;
   businessId: string;
   email: string;
   package: string;
-  status: string;
+  status: MembershipStatus;
 }
 
 export interface Member {
