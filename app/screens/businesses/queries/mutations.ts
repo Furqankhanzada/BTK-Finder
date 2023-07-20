@@ -146,13 +146,6 @@ export const useMembershipUpdate = (id: string) => {
           await queryClient.invalidateQueries({
             queryKey: ['members', id],
           });
-
-          Toast.show({
-            type: 'success',
-            topOffset: 55,
-            text1: 'Membership Updated Successfully ',
-            text2: `The membership for ${response.email} has been updated.`,
-          });
         }
       },
     },

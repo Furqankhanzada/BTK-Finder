@@ -61,6 +61,15 @@ export default function EditBusinessMember(
     mutateAsync(data, {
       onSuccess(response) {
         if (response.email) {
+          showNotification({
+            icon: {
+              size: 70,
+              name: IconName.CheckMarkCircle,
+              color: BaseColor.greenColor,
+            },
+            message: `The membership for ${response.email} has been updated.`,
+            dismissAfterMs: 4000,
+          });
           navigation.goBack();
         }
       },
