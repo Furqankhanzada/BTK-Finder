@@ -6,6 +6,7 @@ import {
   BusinessPresentable,
   Membership,
   MembershipStatus,
+  Package,
   Review,
 } from '@screens/businesses/models/BusinessPresentable';
 import { useDynamicLinks } from '@hooks';
@@ -28,13 +29,13 @@ export interface FavoritesMutationVar {
 export interface UpdateMembershipPayload {
   status: MembershipStatus;
   email: string;
-  package: string;
+  package: Package;
   billingDate: Date;
 }
 
 export interface AddMembershipPayload {
   email: string;
-  package: string;
+  package: Package;
   billingDate: Date;
 }
 

@@ -70,7 +70,7 @@ export default function BusinessMembersScreen(props: Props) {
               subtitle={item.email}
               style={styles.membersList}
               onPress={() => {}}
-              options={[item.membership.package]}
+              options={[item.membership.package.name]}
               editAble={business?.ownerId === user?._id}
               onPressEdit={() =>
                 navigation.navigate('EditMember', {

@@ -1,21 +1,26 @@
+import { Package } from '@screens/businesses/models/BusinessPresentable';
 import { create } from 'zustand';
 
-export type AuthStoreStates = {
-  selectedPackage: string;
+export type MemberStoreStates = {
+  selectedPackage: Package;
 };
 
-export type AuthStoreActions = {
-  setSelectedPackage: (isLogin: string) => void;
+export type MemberStoreActions = {
+  setSelectedPackage: (businessPackage: Package) => void;
+  resetPackage: () => void;
 };
 
-const initialState: AuthStoreStates = {
-  selectedPackage: '',
+const initialState: MemberStoreStates = {
+  selectedPackage: { name: '', id: '' },
 };
 
-const useMemberStore = create<AuthStoreStates & AuthStoreActions>((set) => ({
-  ...initialState,
+const useMemberStore = create<MemberStoreStates & MemberStoreActions>(
+  (set) => ({
+    ...initialState,
 
-  setSelectedPackage: (selectedPackage) => set(() => ({ selectedPackage })),
-}));
+    setSelectedPackage: (selectedPackage) => set(() => ({ selectedPackage })),
+    resetPackage: () => set(() => initialState),
+  }),
+);
 
 export default useMemberStore;

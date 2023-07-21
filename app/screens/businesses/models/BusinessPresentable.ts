@@ -93,11 +93,16 @@ export enum MembershipStatus {
   ARCHIEVE = 'archieve',
 }
 
+export interface Package {
+  id: string;
+  name: string;
+}
+
 export interface Membership {
   billingDate: Date;
   businessId: string;
   email: string;
-  package: string;
+  package: Package;
   status: MembershipStatus;
 }
 
