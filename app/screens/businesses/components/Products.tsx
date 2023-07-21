@@ -9,11 +9,12 @@ import {
   Text,
 } from 'react-native';
 
-import { CardList, Tag } from '@components';
+import { CardList, Icon, Tag } from '@components';
 import { useTheme } from '@config';
 import { BusinessPresentable } from '@screens/businesses/models/BusinessPresentable';
 import { useProductsByTag, useTags } from '@screens/businesses/queries/queries';
 
+import useMemberStore from '../members/store/Store';
 import { CatalogProduct, Tag as TagType } from '../../../models/graphql';
 import MenuTabPlaceholder from './MenuTabPlaceholder';
 import MenuItemsPlaceholder from './MenuItemsPlaceholder';
@@ -22,9 +23,16 @@ interface Props {
   onProductPress: (item: CatalogProduct) => void;
   business: BusinessPresentable | undefined;
   style?: StyleProp<ViewStyle>;
+  selectionMode?: boolean;
 }
 
-export default function Products({ onProductPress, business, style }: Props) {
+export default function Products({
+  onProductPress,
+  business,
+  style,
+  selectionMode,
+}: Props) {
+  const { selectedPackage } = useMemberStore();
   const [selectedTag, setSelectedTag] = useState<TagType | undefined>();
   const [isReFetching, setIsReFetching] = useState<boolean>(false);
   const { colors } = useTheme();
@@ -122,6 +130,11 @@ export default function Products({ onProductPress, business, style }: Props) {
             style={[styles.productList, style]}
             onPress={() => onProductPress(item)}
             options={item.variants?.map((variant) => variant?.optionTitle)}
+            iconRight={
+              selectionMode && item._id === selectedPackage ? (
+                <Icon name="check-circle" color={colors.primary} size={20} />
+              ) : null
+            }
           />
         )}
       />
@@ -132,7 +145,7 @@ export default function Products({ onProductPress, business, style }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingLeft: 20,
+    paddingHorizontal: 20,
   },
   tagsContainer: {
     marginBottom: 10,

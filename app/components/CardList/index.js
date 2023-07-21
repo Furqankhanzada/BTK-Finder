@@ -23,6 +23,7 @@ export default function CardList(props) {
     editAble,
     onPressDelete,
     onPressEdit,
+    iconRight,
   } = props;
   return (
     <TouchableOpacity
@@ -98,6 +99,7 @@ export default function CardList(props) {
           <Icon name="pencil-alt" color="white" />
         </TouchableOpacity>
       ) : null}
+      {iconRight ? <View style={styles.iconRight}>{iconRight}</View> : null}
     </TouchableOpacity>
   );
 }
@@ -116,6 +118,7 @@ CardList.propTypes = {
   editAble: PropTypes.bool,
   onPressDelete: PropTypes.func,
   onPressEdit: PropTypes.func,
+  iconRight: PropTypes.element,
 };
 
 CardList.defaultProps = {
@@ -132,4 +135,5 @@ CardList.defaultProps = {
   editAble: false,
   onPressDelete: () => {},
   onPressEdit: () => {},
+  iconRight: null,
 };
