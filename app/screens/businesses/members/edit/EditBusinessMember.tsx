@@ -38,7 +38,8 @@ export default function EditBusinessMember(
   const { mutateAsync, isLoading } = useMembershipUpdate(businessId);
   const { mutateAsync: removeMember, isLoading: isRemoveLoading } =
     useDeleteMembership();
-  const { selectedPackage, setSelectedPackage } = useMemberStore();
+  const { selectedPackage, setSelectedPackage, resetPackage } =
+    useMemberStore();
 
   const [isDatePickerVisible, setDatePickerVisibility] =
     useState<boolean>(false);
@@ -82,7 +83,7 @@ export default function EditBusinessMember(
             dismissAfterMs: 4000,
           });
           navigation.goBack();
-          setSelectedPackage('');
+          resetPackage();
         }
       },
     });
@@ -197,9 +198,9 @@ export default function EditBusinessMember(
             ]}>
             <Text
               style={{
-                color: selectedPackage ? colors.text : BaseColor.grayColor,
+                color: selectedPackage.name ? colors.text : BaseColor.grayColor,
               }}>
-              {selectedPackage ? selectedPackage : 'Select Package'}
+              {selectedPackage.name ? selectedPackage.name : 'Select Package'}
             </Text>
           </TouchableOpacity>
 

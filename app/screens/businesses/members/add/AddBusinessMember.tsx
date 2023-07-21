@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   KeyboardAvoidingView,
@@ -46,7 +46,7 @@ export default function AddBusinessMember(
     handleSubmit,
     formState: { errors },
   } = useForm<Membership>();
-  const { selectedPackage, setSelectedPackage } = useMemberStore();
+  const { selectedPackage, resetPackage } = useMemberStore();
 
   const [isDatePickerVisible, setDatePickerVisibility] =
     useState<boolean>(false);
@@ -54,6 +54,10 @@ export default function AddBusinessMember(
   const navigateToPackageSelect = () => {
     navigation.navigate('PackageSelect', { businessId });
   };
+
+  useEffect(() => {
+    resetPackage();
+  }, [resetPackage]);
 
   const onSubmit = async (data: Membership) => {
     mutateAsync(
@@ -110,7 +114,7 @@ export default function AddBusinessMember(
             });
 
             navigation.goBack();
-            setSelectedPackage('');
+            resetPackage();
 
             showNotification({
               icon: {
@@ -192,9 +196,9 @@ export default function AddBusinessMember(
             ]}>
             <Text
               style={{
-                color: selectedPackage ? colors.text : BaseColor.grayColor,
+                color: selectedPackage.name ? colors.text : BaseColor.grayColor,
               }}>
-              {selectedPackage ? selectedPackage : 'Select Package'}
+              {selectedPackage.name ? selectedPackage.name : 'Select Package'}
             </Text>
           </TouchableOpacity>
 
