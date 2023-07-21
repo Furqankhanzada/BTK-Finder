@@ -1,10 +1,9 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
-  TextInput as TextInputOriginal,
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
@@ -31,6 +30,7 @@ import { useAddMembership } from '@screens/businesses/queries/mutations';
 import { MembersStackParamList } from 'navigation/models/BusinessDetailBottomTabParamList';
 import { IconName } from '../../../../contexts/alerts-v2/models/Icon';
 import GlobalStyle from '../../../../assets/styling/GlobalStyle';
+import useMemberStore from '../store/Store';
 
 export default function AddBusinessMember(
   props: StackScreenProps<MembersStackParamList, 'AddMember'>,
@@ -46,77 +46,85 @@ export default function AddBusinessMember(
     handleSubmit,
     formState: { errors },
   } = useForm<Membership>();
+  const { selectedPackage, setSelectedPackage } = useMemberStore();
 
-  const packageRef = useRef<TextInputOriginal>(null);
+  const [isDatePickerVisible, setDatePickerVisibility] =
+    useState<boolean>(false);
 
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const navigateToPackageSelect = () => {
+    navigation.navigate('PackageSelect', { businessId });
+  };
 
   const onSubmit = async (data: Membership) => {
-    mutateAsync(data, {
-      async onSuccess(response) {
-        if ('message' in response && response.message === 'invitation-sent') {
-          const buttonPressed = await showAlert({
-            content: () => (
-              <>
-                <IonIcon
-                  size={70}
-                  name={IconName.CheckMarkCircle}
-                  color={BaseColor.greenColor}
-                />
-                <Text textAlign="center" header>
-                  Invitation Sent
-                </Text>
-                <Text textAlign="center" body1>
-                  We have sent an invitation email to {data.email}
-                </Text>
-                <Text
-                  textAlign="center"
-                  body1
-                  bold
-                  style={[{ color: BaseColor.redColor }, styles.noteText]}>
-                  NOTE:
-                </Text>
-                <Text textAlign="center" body2>
-                  Since no account is registered with this email: {data.email}
-                </Text>
-                <Text textAlign="center" body2>
-                  We have sent an email to {data.email} for account
-                  registration.
-                </Text>
-                <Text textAlign="center" body2>
-                  Once the user registers with this email in our app, He will be
-                  automatically added as the member of your business
-                </Text>
-              </>
-            ),
-            btn: {
-              confirmBtnTitle: 'Okay',
-            },
-            type: 'Custom',
-          });
+    mutateAsync(
+      { ...data, package: selectedPackage },
+      {
+        async onSuccess(response) {
+          if ('message' in response && response.message === 'invitation-sent') {
+            const buttonPressed = await showAlert({
+              content: () => (
+                <>
+                  <IonIcon
+                    size={70}
+                    name={IconName.CheckMarkCircle}
+                    color={BaseColor.greenColor}
+                  />
+                  <Text textAlign="center" header>
+                    Invitation Sent
+                  </Text>
+                  <Text textAlign="center" body1>
+                    We have sent an invitation email to {data.email}
+                  </Text>
+                  <Text
+                    textAlign="center"
+                    body1
+                    bold
+                    style={[{ color: BaseColor.redColor }, styles.noteText]}>
+                    NOTE:
+                  </Text>
+                  <Text textAlign="center" body2>
+                    Since no account is registered with this email: {data.email}
+                  </Text>
+                  <Text textAlign="center" body2>
+                    We have sent an email to {data.email} for account
+                    registration.
+                  </Text>
+                  <Text textAlign="center" body2>
+                    Once the user registers with this email in our app, He will
+                    be automatically added as the member of your business
+                  </Text>
+                </>
+              ),
+              btn: {
+                confirmBtnTitle: 'Okay',
+              },
+              type: 'Custom',
+            });
 
-          if (buttonPressed === 'confirm') {
+            if (buttonPressed === 'confirm') {
+              navigation.goBack();
+            }
+          } else if ('email' in response) {
+            await queryClient.invalidateQueries({
+              queryKey: ['members', businessId],
+            });
+
             navigation.goBack();
+            setSelectedPackage('');
+
+            showNotification({
+              icon: {
+                size: 70,
+                name: IconName.CheckMarkCircle,
+                color: BaseColor.greenColor,
+              },
+              message: `The membership for ${response.email} has been added.`,
+              dismissAfterMs: 4000,
+            });
           }
-        } else if ('email' in response) {
-          await queryClient.invalidateQueries({
-            queryKey: ['members', businessId],
-          });
-
-          navigation.goBack();
-
-          showNotification({
-            icon: {
-              size: 70,
-              name: IconName.CheckMarkCircle,
-              color: BaseColor.greenColor,
-            },
-            message: `The membership for ${response.email} has been added.`,
-            dismissAfterMs: 4000,
-          });
-        }
+        },
       },
-    });
+    );
   };
 
   const toggleDatePicker = () => {
@@ -165,7 +173,8 @@ export default function AddBusinessMember(
                 keyboardType="email-address"
                 autoCorrect={false}
                 autoCapitalize="none"
-                onSubmitEditing={() => packageRef.current?.focus()}
+                onSubmitEditing={navigateToPackageSelect}
+                blurOnSubmit={true}
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
@@ -175,26 +184,19 @@ export default function AddBusinessMember(
             name="email"
           />
 
-          <Controller
-            control={control}
-            rules={{
-              required: true,
-            }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                style={styles.textInput}
-                ref={packageRef}
-                placeholder="Package name"
-                onSubmitEditing={toggleDatePicker}
-                blurOnSubmit={true}
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                success={!errors.package}
-              />
-            )}
-            name="package"
-          />
+          <TouchableOpacity
+            onPress={navigateToPackageSelect}
+            style={[
+              GlobalStyle.datePickerContainer,
+              { backgroundColor: colors.card },
+            ]}>
+            <Text
+              style={{
+                color: selectedPackage ? colors.text : BaseColor.grayColor,
+              }}>
+              {selectedPackage ? selectedPackage : 'Select Package'}
+            </Text>
+          </TouchableOpacity>
 
           <Controller
             control={control}
