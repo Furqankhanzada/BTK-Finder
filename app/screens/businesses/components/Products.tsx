@@ -131,7 +131,7 @@ export default function Products({
             onPress={() => onProductPress(item)}
             options={item.variants?.map((variant) => variant?.optionTitle)}
             iconRight={
-              selectionMode && item._id === selectedPackage ? (
+              selectionMode && item._id === selectedPackage.id ? (
                 <Icon name="check-circle" color={colors.primary} size={20} />
               ) : null
             }

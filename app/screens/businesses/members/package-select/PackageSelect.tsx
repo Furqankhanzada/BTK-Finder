@@ -40,7 +40,12 @@ export default function PackageSelect(
 
       <Products
         onProductPress={(item) => {
-          setSelectedPackage(item?._id);
+          if (item.title) {
+            setSelectedPackage({
+              name: item?.title,
+              id: item?._id,
+            });
+          }
         }}
         business={business}
         selectionMode={true}
