@@ -11,7 +11,7 @@ import {
 import { BaseColor, useTheme, useFont } from '@config';
 import { Icon } from '@components';
 import ProductDetailScreen from '@screens/businesses/product-detail/ProductDetailScreen';
-import { useBusiness, useMembers } from '@screens/businesses/queries/queries';
+import { useBusiness } from '@screens/businesses/queries/queries';
 import { ShopStatus } from '@screens/businesses/models/BusinessPresentable';
 import { useProfile } from '@screens/settings/profile/queries/queries';
 
@@ -84,7 +84,6 @@ export default function BusinessDetailNavigator({
   const font = useFont();
   const { isLoading, data } = useBusiness(businessId);
   const { data: user } = useProfile();
-  const { data: members } = useMembers(businessId);
 
   return (
     <BusinessDetailBottomTab.Navigator
@@ -140,8 +139,7 @@ export default function BusinessDetailNavigator({
           }}
         />
       ) : null}
-      {(members && members.length) ||
-      (members && !members.length && data?.ownerId === user?._id) ? (
+      {data?.shop && data?.ownerId === user?._id ? (
         <BusinessDetailBottomTab.Screen
           initialParams={{
             screen: 'Members',
