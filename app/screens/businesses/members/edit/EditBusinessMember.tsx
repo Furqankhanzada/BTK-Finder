@@ -1,42 +1,32 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
-  TextInput as TextInputOriginal,
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import { useForm, Controller } from 'react-hook-form';
 import { StackScreenProps } from '@react-navigation/stack';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 import IonIcon from 'react-native-vector-icons/Ionicons';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 import { BaseColor, useTheme } from '@config';
-import {
-  Header,
-  SafeAreaView,
-  Icon,
-  Button,
-  TextInput,
-  Text,
-} from '@components';
+import { Header, SafeAreaView, Icon, Button, Text } from '@components';
 import { useAlerts } from '@hooks';
 
 import {
-  Membership,
-  MembershipStatus,
-} from '@screens/businesses/models/BusinessPresentable';
-import {
+  UpdateMembershipPayload,
   useDeleteMembership,
   useMembershipUpdate,
 } from '@screens/businesses/queries/mutations';
+import { MembershipStatus } from '@screens/businesses/models/BusinessPresentable';
 import { IconName } from '../../../../contexts/alerts-v2/models/Icon';
 import { MembersStackParamList } from 'navigation/models/BusinessDetailBottomTabParamList';
 import GlobalStyle from '../../../../assets/styling/GlobalStyle';
-import DropDownPicker from 'react-native-dropdown-picker';
+import useMemberStore from '../store/Store';
 
 export default function EditBusinessMember(
   props: StackScreenProps<MembersStackParamList, 'EditMember'>,
@@ -48,48 +38,54 @@ export default function EditBusinessMember(
   const { mutateAsync, isLoading } = useMembershipUpdate(businessId);
   const { mutateAsync: removeMember, isLoading: isRemoveLoading } =
     useDeleteMembership();
+  const { selectedPackage, setSelectedPackage } = useMemberStore();
 
+  const [isDatePickerVisible, setDatePickerVisibility] =
+    useState<boolean>(false);
   const [openDropdown, setOpenDropdown] = useState<boolean>(false);
-  const [selectedStatus, setSelectedStatus] = useState<MembershipStatus>(
-    membership.status,
-  );
   const [statusItems, setItems] = useState([
     { label: 'Active', value: MembershipStatus.ACTIVE },
     { label: 'Archieve', value: MembershipStatus.ARCHIEVE },
   ]);
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<Membership>({
-    defaultValues: { ...membership },
-  });
+  const [selectedStatus, setSelectedStatus] = useState<MembershipStatus>(
+    membership.status,
+  );
+  const [date, setDate] = useState<Date>(membership.billingDate);
 
-  const packageRef = useRef<TextInputOriginal>(null);
+  const navigateToPackageSelect = () => {
+    navigation.navigate('PackageSelect', { businessId });
+  };
 
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  useEffect(() => {
+    setSelectedPackage(membership.package);
+  }, [membership.package, setSelectedPackage]);
 
-  const onSubmit = async (data: Membership) => {
-    mutateAsync(
-      { ...data, status: selectedStatus },
-      {
-        onSuccess(response) {
-          if (response.email) {
-            showNotification({
-              icon: {
-                size: 70,
-                name: IconName.CheckMarkCircle,
-                color: BaseColor.greenColor,
-              },
-              message: `The membership for ${response.email} has been updated.`,
-              dismissAfterMs: 4000,
-            });
-            navigation.goBack();
-          }
-        },
+  const onSubmit = async () => {
+    const data: UpdateMembershipPayload = {
+      status: selectedStatus,
+      package: selectedPackage,
+      billingDate: date,
+      email: membership.email,
+    };
+
+    mutateAsync(data, {
+      onSuccess(response) {
+        if (response.email) {
+          showNotification({
+            icon: {
+              size: 70,
+              name: IconName.CheckMarkCircle,
+              color: BaseColor.greenColor,
+            },
+            message: `The membership for ${response.email} has been updated.`,
+            dismissAfterMs: 4000,
+          });
+          navigation.goBack();
+          setSelectedPackage('');
+        }
       },
-    );
+    });
   };
 
   const onPressDelete = async () => {
@@ -193,66 +189,50 @@ export default function EditBusinessMember(
             }}
           />
 
-          <Controller
-            control={control}
-            rules={{
-              required: true,
-            }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                style={styles.textInput}
-                ref={packageRef}
-                placeholder="Package name"
-                onSubmitEditing={toggleDatePicker}
-                blurOnSubmit={true}
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                success={!errors.package}
-              />
-            )}
-            name="package"
-          />
+          <TouchableOpacity
+            onPress={navigateToPackageSelect}
+            style={[
+              GlobalStyle.datePickerContainer,
+              { backgroundColor: colors.card },
+            ]}>
+            <Text
+              style={{
+                color: selectedPackage ? colors.text : BaseColor.grayColor,
+              }}>
+              {selectedPackage ? selectedPackage : 'Select Package'}
+            </Text>
+          </TouchableOpacity>
 
-          <Controller
-            control={control}
-            rules={{
-              required: true,
-            }}
-            render={({ field: { onChange, value } }) => (
-              <>
-                <TouchableOpacity
-                  onPress={() => toggleDatePicker()}
-                  style={[
-                    GlobalStyle.datePickerContainer,
-                    { backgroundColor: colors.card },
-                  ]}>
-                  <Text
-                    style={[
-                      GlobalStyle.datePickerContainerText,
-                      {
-                        color: value ? colors.text : BaseColor.grayColor,
-                      },
-                    ]}>
-                    {value
-                      ? moment(value).format('DD/MM/YYYY')
-                      : 'Billing Date [DD/MM/YYYY]'}
-                  </Text>
-                </TouchableOpacity>
+          <>
+            <TouchableOpacity
+              onPress={() => toggleDatePicker()}
+              style={[
+                GlobalStyle.datePickerContainer,
+                { backgroundColor: colors.card },
+              ]}>
+              <Text
+                style={[
+                  GlobalStyle.datePickerContainerText,
+                  {
+                    color: date ? colors.text : BaseColor.grayColor,
+                  },
+                ]}>
+                {date
+                  ? moment(date).format('DD/MM/YYYY')
+                  : 'Billing Date [DD/MM/YYYY]'}
+              </Text>
+            </TouchableOpacity>
 
-                <DateTimePickerModal
-                  isVisible={isDatePickerVisible}
-                  mode="date"
-                  onConfirm={(date) => {
-                    onChange(date);
-                    toggleDatePicker();
-                  }}
-                  onCancel={toggleDatePicker}
-                />
-              </>
-            )}
-            name="billingDate"
-          />
+            <DateTimePickerModal
+              isVisible={isDatePickerVisible}
+              mode="date"
+              onConfirm={(selectedDate) => {
+                setDate(selectedDate);
+                toggleDatePicker();
+              }}
+              onCancel={toggleDatePicker}
+            />
+          </>
         </ScrollView>
 
         <View style={styles.buttonContainer}>
@@ -264,7 +244,7 @@ export default function EditBusinessMember(
             onPress={onPressDelete}>
             Delete
           </Button>
-          <Button full loading={isLoading} onPress={handleSubmit(onSubmit)}>
+          <Button full loading={isLoading} onPress={onSubmit}>
             Update
           </Button>
         </View>
