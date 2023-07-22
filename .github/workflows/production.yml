@@ -8,8 +8,8 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
     inputs:
-      version_fragment:
-        description: 'version fragment: Possible options are [ major | feature | bug | alpha | beta | rc ]'
+      version:
+        description: 'version eg: 2.3.1'
         required: true
       version_code:
         description: 'version code/build number'
@@ -89,37 +89,17 @@ jobs:
         env:
           PLAY_CONFIG_JSON: ${{ secrets.PLAY_CONFIG_JSON }}
 
-      - name: Get Previous tag
-        id: previoustag
-        uses: "WyriHaximus/github-action-get-previous-tag@v1"
-        env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-
-      - name: Previous Tag v1
-        run: echo ${{ steps.previoustag.outputs.tag }}
-
-      - name: Bump release version
-        id: bump_version
-        uses: christian-draeger/increment-semantic-version@1.0.3
-        with:
-          current-version: ${{ steps.previoustag.outputs.tag }}
-          version-fragment: ${{ github.event.inputs.version_fragment }}
-
-      - name: Do something with your bumped release version
-        run: echo ${{ steps.bump_version.outputs.next-version }}
-        #37
-
       - name: Bump version
         uses: chkfung/android-version-actions@v1.1
         with:
           gradlePath: android/app/build.gradle
           versionCode: ${{ github.event.inputs.version_code }}
-          versionName: ${{ steps.bump_version.outputs.next-version }}
+          versionName: ${{ github.event.inputs.version }}
 
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ steps.bump_version.outputs.next-version }}
+          tag_name: ${{ github.event.inputs.version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
