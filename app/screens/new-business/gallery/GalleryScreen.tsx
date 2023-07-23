@@ -264,7 +264,8 @@ export default function GalleryScreen(
           <View style={styles.thumbnailSection}>
             <Loading loading={thumbnailLoading} />
             <Text title3 semibold>
-              Thumbnail
+              Logo{' '}
+              <Text body1>(It will help you business to attract users )</Text>
             </Text>
             <Text>Thumbnail size must be 300x300</Text>
             {thumbnail ? (

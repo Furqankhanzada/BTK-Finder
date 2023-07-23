@@ -107,7 +107,7 @@ export default function WebsiteScreen(
             }}
             render={({ field: { onChange, onBlur, value } }) => (
               <View>
-                <Text title1 bold>
+                <Text title2 bold>
                   Add your business's official website, Let users to know about
                   your business more <Text body1>(optional)</Text>
                 </Text>

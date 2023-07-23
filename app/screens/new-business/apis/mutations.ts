@@ -12,10 +12,10 @@ import {
 import { useAlerts } from '@hooks';
 import { BaseColor } from '@config';
 import useAuthStore from '@screens/auth/store/Store';
+import { generateFileObject, handleError } from '@utils';
 
 import { IconName } from '../../../contexts/alerts-v2/models/Icon';
 import axiosApiInstance from '../../../interceptor/axios-interceptor';
-import { generateFileObject, handleError } from '../../../utils';
 import { BUSINESSES_API, UPLOAD } from '../../../constants';
 import useAddBusinessStore, {
   BusinessStoreActions,

@@ -48,6 +48,7 @@ export default function HoursCheckbox(props: HoursCheckbox) {
     <View style={styles.checkBoxSection}>
       <View style={styles.checkBoxContainer}>
         <CheckBox
+          style={styles.checkboxRightMargin}
           onValueChange={() => toggleCheck()}
           value={day.isOpen ?? false}
           tintColors={{ true: colors.primary, false: colors.primary }}
@@ -119,7 +120,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    marginHorizontal: -6,
+    marginHorizontal: 0,
     width: 130,
   },
   inputsSection: {
@@ -151,5 +152,8 @@ const styles = StyleSheet.create({
   },
   sectionInnerContainerText: {
     fontSize: 14,
+  },
+  checkboxRightMargin: {
+    marginRight: 8,
   },
 });

@@ -131,7 +131,7 @@ export default function TagsScreen(
         keyboardVerticalOffset={offsetKeyboard}
         style={styles.keyboardAvoidView}>
         <View style={styles.container}>
-          <Text title1 bold>
+          <Text title2 bold>
             Select tags related to your business, To help users find your
             business through our search engine <Text body1>(optional)</Text>
           </Text>

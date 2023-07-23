@@ -107,13 +107,13 @@ export default function TelephoneScreen(
             }}
             render={({ field: { onChange, onBlur, value } }) => (
               <View>
-                <Text title1 bold>
+                <Text title2 bold>
                   Add your business's contact number, Make it easy for users to
                   connect with you <Text body1>(optional)</Text>
                 </Text>
                 <TextInput
                   style={styles.input}
-                  placeholder="Telephone Number"
+                  placeholder="eg: 03001234567"
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}

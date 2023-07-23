@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Dimensions,
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
@@ -93,9 +94,9 @@ export default function DescriptionScreen(
             control={control}
             render={({ field: { onChange, onBlur, value } }) => (
               <View>
-                <Text title1 bold>
-                  Describe about your business, Let people know about your
-                  business <Text body1>(optional)</Text>
+                <Text title2 bold>
+                  Describe about your business and let people know what you do{' '}
+                  <Text body1>(optional)</Text>
                 </Text>
                 <TextInput
                   style={styles.textArea}
@@ -133,7 +134,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   textArea: {
-    height: 80,
+    minHeight: Dimensions.get('window').height / 2,
     padding: 10,
     marginTop: 15,
   },
