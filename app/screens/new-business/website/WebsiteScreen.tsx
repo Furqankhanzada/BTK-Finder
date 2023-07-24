@@ -24,7 +24,7 @@ import { NavigationButtons } from '../components/NavigationButtons';
 import ArrowBack from '../components/ArrowBack';
 
 const webRegExp =
-  /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/;
+  /^https?:\/\/(?:www\.)?[a-z0-9]+(?:\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/;
 
 export default function WebsiteScreen(
   props: StackScreenProps<NewBusinessParamList, 'Website'>,
