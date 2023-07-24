@@ -286,9 +286,11 @@ export default function GalleryScreen(
               <TouchableOpacity
                 style={styles.thumbnailAddOverlay}
                 onPress={() => pickSingle()}>
-                <Text semibold style={styles.thumbnailAddOverlayText}>
-                  Tap To Add Logo
-                </Text>
+                <View style={styles.galleryImageBox}>
+                  <View style={styles.galleryImageAddIconContainer}>
+                    <Icon name="plus" style={styles.galleryImageAddIcon} />
+                  </View>
+                </View>
               </TouchableOpacity>
             )}
           </View>
