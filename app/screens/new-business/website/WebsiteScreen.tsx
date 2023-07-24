@@ -113,7 +113,7 @@ export default function WebsiteScreen(
                 </Text>
                 <TextInput
                   style={styles.input}
-                  placeholder="Website"
+                  placeholder="e.g https://explorebtk.com"
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}

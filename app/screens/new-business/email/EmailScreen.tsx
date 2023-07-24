@@ -108,7 +108,7 @@ export default function EmailScreen(
                 </Text>
                 <TextInput
                   style={styles.input}
-                  placeholder="Email"
+                  placeholder="e.g explore.btk@gmail.com"
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}

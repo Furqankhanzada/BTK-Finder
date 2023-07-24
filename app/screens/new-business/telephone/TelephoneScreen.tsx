@@ -113,7 +113,7 @@ export default function TelephoneScreen(
                 </Text>
                 <TextInput
                   style={styles.input}
-                  placeholder="eg: 03001234567"
+                  placeholder="e.g 03001264820"
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}

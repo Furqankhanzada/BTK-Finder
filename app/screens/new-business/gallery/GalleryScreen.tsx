@@ -267,9 +267,9 @@ export default function GalleryScreen(
             <Loading loading={thumbnailLoading} />
             <Text title3 semibold>
               Logo{' '}
-              <Text body1>(It will help you business to attract users )</Text>
+              <Text body1>(It will help your business to attract users )</Text>
             </Text>
-            <Text>Thumbnail size must be 300x300</Text>
+            <Text>Logo size must be 300x300</Text>
             {thumbnail ? (
               <View style={styles.thumbnailContainer}>
                 <TouchableOpacity
@@ -287,7 +287,7 @@ export default function GalleryScreen(
                 style={styles.thumbnailAddOverlay}
                 onPress={() => pickSingle()}>
                 <Text semibold style={styles.thumbnailAddOverlayText}>
-                  Tap To Add Thumbnail
+                  Tap To Add Logo
                 </Text>
               </TouchableOpacity>
             )}
