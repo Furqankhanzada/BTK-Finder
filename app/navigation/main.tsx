@@ -11,11 +11,9 @@ import BusinessDetailNavigator from '@screens/businesses/BusinessDetailNavigator
 /* Bottom Screen */
 import NewBusinessStackNavigator from '@screens/new-business/NewBusinessStackNavigator';
 import FavouriteScreen from '@screens/favourite/FavouriteScreen';
-import Messenger from '@screens/Messenger';
 
 /* Stack Screen */
 import Category from '@screens/category/CategoryScreen';
-import Messages from '@screens/Messages';
 import BusinessesScreen from '@screens/businesses/list/BusinessesScreen';
 import { DashboardStackNavigator } from '@screens/dashboard/navigation/DashboardStack';
 import { SettingsStackNavigator } from '@screens/settings/navigation/SettingsStack';
@@ -51,8 +49,6 @@ export default function Main() {
       />
       <MainStack.Screen name="Category" component={Category} />
       <MainStack.Screen name="Businesses" component={BusinessesScreen} />
-      <MainStack.Screen name="Messenger" component={Messenger} />
-      <MainStack.Screen name="Messages" component={Messages} />
     </MainStack.Navigator>
   );
 }
