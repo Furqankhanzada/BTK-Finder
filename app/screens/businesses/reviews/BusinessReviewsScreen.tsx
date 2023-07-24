@@ -80,7 +80,10 @@ export default function Review(
   };
 
   const navigateToWelcomeAuth = () => {
-    navigation.navigate('WelcomeAuth', { shouldGoBack: true });
+    navigation.navigate('AuthStackNavigator', {
+      screen: 'WelcomeAuth',
+      params: { shouldGoBack: true },
+    });
   };
 
   const navigateToFeedback = (id: any) => {
