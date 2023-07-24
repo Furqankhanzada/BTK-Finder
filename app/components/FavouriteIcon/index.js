@@ -21,7 +21,10 @@ export default function FavouriteIcon(props) {
   const isLogin = useAuthStore((state) => state.isLogin);
 
   const navigateToLogin = () => {
-    navigation.navigate('WelcomeAuth', { shouldGoBack: true });
+    navigation.navigate('AuthStackNavigator', {
+      screen: 'WelcomeAuth',
+      params: { shouldGoBack: true },
+    });
   };
 
   const onPressFavorite = (id) => {
