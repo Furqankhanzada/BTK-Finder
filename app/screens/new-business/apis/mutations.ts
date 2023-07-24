@@ -143,16 +143,18 @@ export const useAddBusiness = () => {
         });
     },
     {
-      onSuccess() {
-        showNotification({
-          icon: {
-            size: 70,
-            name: IconName.CheckMarkCircle,
-            color: BaseColor.greenColor,
-          },
-          message: 'You have Successfully added your Business!',
-          dismissAfterMs: 3000,
-        });
+      onSuccess(response) {
+        if (response._id) {
+          showNotification({
+            icon: {
+              size: 70,
+              name: IconName.CheckMarkCircle,
+              color: BaseColor.greenColor,
+            },
+            message: 'You have Successfully added your Business!',
+            dismissAfterMs: 3000,
+          });
+        }
       },
     },
   );

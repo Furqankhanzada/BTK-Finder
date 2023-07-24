@@ -111,17 +111,19 @@ export default function GalleryScreen(
       ) as unknown as AddBusinessPayload;
 
       addNewBusiness(payloadData, {
-        onSuccess() {
-          navigation.navigate('Dashboard');
+        onSuccess(response) {
+          if (response._id) {
+            navigation.navigate('Dashboard');
 
-          // Reset Store
-          resetAddBusinessStore();
+            // Reset Store
+            resetAddBusinessStore();
 
-          // Reset Stack
-          navigation.reset({
-            index: 0,
-            routes: [{ name: 'Name' }],
-          });
+            // Reset Stack
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'Name' }],
+            });
+          }
         },
       });
     }
