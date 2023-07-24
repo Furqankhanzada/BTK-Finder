@@ -71,8 +71,8 @@ export default function CategorySelectScreen(
       setItems(categories ?? []);
     } else {
       setItems(
-        items?.filter((item: { name: string }) => {
-          return item.name.toUpperCase().includes(search.toUpperCase());
+        categories?.filter((item: { name: string }) => {
+          return item.name.toUpperCase().includes(keyword.toUpperCase());
         }),
       );
     }

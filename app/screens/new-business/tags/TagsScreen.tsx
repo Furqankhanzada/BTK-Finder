@@ -50,6 +50,10 @@ export default function TagsScreen(
   const [items, setItems] = useState<Tag[] | undefined>(tags);
 
   useEffect(() => {
+    setItems(tags);
+  }, [tags]);
+
+  useEffect(() => {
     if (isEditBusiness && businessData?.tags) {
       setSelected(businessData?.tags);
     } else if (storeTags) {
@@ -81,8 +85,8 @@ export default function TagsScreen(
       setItems(tags ?? []);
     } else {
       setItems(
-        items?.filter((item: Tag) => {
-          return item.name.toUpperCase().includes(search.toUpperCase());
+        tags?.filter((item: Tag) => {
+          return item.name.toUpperCase().includes(keyword.toUpperCase());
         }),
       );
     }
@@ -150,7 +154,7 @@ export default function TagsScreen(
           ) : null}
 
           <ScrollView style={styles.scrollView}>
-            {tags?.map((item, index) => {
+            {items?.map((item, index) => {
               const checked = selected.includes(item.name);
               return (
                 <SelectItem
