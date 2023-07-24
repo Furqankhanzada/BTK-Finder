@@ -12,7 +12,9 @@ import useAuthStore, { AuthStoreStates } from '../store/Store';
 
 export default function WelcomeAuthScreen({
   navigation,
+  route,
 }: StackScreenProps<AuthParamList, 'WelcomeAuth'>) {
+  const { shouldGoBack } = route?.params;
   const [scrollEnabled, setScrollEnabled] = useState(true);
   const { colors } = useTheme();
   const { t } = useTranslation();
@@ -29,11 +31,11 @@ export default function WelcomeAuthScreen({
   ];
 
   useEffect(() => {
-    if (isLogin) {
+    if (shouldGoBack && isLogin) {
       navigation.goBack();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLogin]);
+  }, [isLogin, shouldGoBack]);
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
