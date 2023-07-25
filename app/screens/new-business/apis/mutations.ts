@@ -131,6 +131,7 @@ export const useAddGalleryImages = () => {
 };
 
 export const useAddBusiness = () => {
+  const queryClient = useQueryClient();
   const { showNotification } = useAlerts();
 
   return useMutation<BusinessPresentable, Error, AddBusinessPayload>(
@@ -143,8 +144,12 @@ export const useAddBusiness = () => {
         });
     },
     {
-      onSuccess(response) {
+      async onSuccess(response) {
         if (response._id) {
+          await queryClient.invalidateQueries({
+            queryKey: ['my-business'],
+          });
+
           showNotification({
             icon: {
               size: 70,
