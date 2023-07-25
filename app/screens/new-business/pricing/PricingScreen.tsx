@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
   ScrollView,
   StyleSheet,
+  TextInput as TextInputOriginal,
 } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 
@@ -27,6 +28,7 @@ export default function PricingScreen(
 ) {
   const { navigation, route } = props;
   const isEditBusiness = route.params?.businessId;
+  const toRef = useRef<TextInputOriginal>(null);
 
   const { mutate: EditPrice, isLoading } = useEditBusiness();
   const { data: businessData } = useBusiness(route.params?.businessId);
@@ -43,6 +45,22 @@ export default function PricingScreen(
       priceRange: isEditBusiness ? businessData?.priceRange : priceRange,
     },
   });
+
+  useEffect(() => {
+    if (isEditBusiness) {
+      const unsubscribe = navigation.addListener('beforeRemove', () => {
+        // Delay the reset to avoid flickering
+        setTimeout(() => {
+          setPriceRange({});
+        }, 300);
+      });
+
+      return () => {
+        unsubscribe();
+      };
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigation]);
 
   const onSubmit = (form: BusinessStoreTypes) => {
     if (isEditBusiness) {
@@ -63,6 +81,13 @@ export default function PricingScreen(
       }
       navigation.navigate('Gallery');
     }
+  };
+
+  const updatePriceRangeInStore = (field: 'from' | 'to', value: string) => {
+    setPriceRange({
+      ...priceRange,
+      [field]: value,
+    });
   };
 
   const navigateToBack = () => {
@@ -99,7 +124,11 @@ export default function PricingScreen(
                 style={styles.input}
                 placeholder="From"
                 onBlur={onBlur}
-                onChangeText={onChange}
+                onChangeText={(text) => {
+                  onChange(text);
+                  updatePriceRangeInStore('from', text);
+                }}
+                onSubmitEditing={() => toRef.current?.focus()}
                 value={value}
                 keyboardType="numeric"
               />
@@ -110,10 +139,15 @@ export default function PricingScreen(
             control={control}
             render={({ field: { onChange, onBlur, value } }) => (
               <TextInput
+                ref={toRef}
                 style={styles.input}
                 placeholder="To"
                 onBlur={onBlur}
-                onChangeText={onChange}
+                onChangeText={(text) => {
+                  onChange(text);
+                  updatePriceRangeInStore('to', text);
+                }}
+                onSubmitEditing={handleSubmit(onSubmit)}
                 value={value}
                 keyboardType="numeric"
               />
