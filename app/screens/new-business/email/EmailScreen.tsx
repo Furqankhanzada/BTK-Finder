@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -47,6 +47,22 @@ export default function EmailScreen(
       email: isEditBusiness ? businessData?.email : email,
     },
   });
+
+  useEffect(() => {
+    if (isEditBusiness) {
+      const unsubscribe = navigation.addListener('beforeRemove', () => {
+        // Delay the reset to avoid flickering
+        setTimeout(() => {
+          setEmail('');
+        }, 300);
+      });
+
+      return () => {
+        unsubscribe();
+      };
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigation]);
 
   const onSubmit = (form: BusinessStoreTypes) => {
     if (isEditBusiness) {
@@ -110,7 +126,11 @@ export default function EmailScreen(
                   style={styles.input}
                   placeholder="e.g explore.btk@gmail.com"
                   onBlur={onBlur}
-                  onChangeText={onChange}
+                  onChangeText={(text) => {
+                    onChange(text);
+                    setEmail(text);
+                  }}
+                  onSubmitEditing={handleSubmit(onSubmit)}
                   value={value}
                   keyboardType="email-address"
                   autoCapitalize="none"

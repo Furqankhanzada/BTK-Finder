@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Dimensions,
   KeyboardAvoidingView,
@@ -44,6 +44,22 @@ export default function DescriptionScreen(
       description: isEditBusiness ? businessData?.description : description,
     },
   });
+
+  useEffect(() => {
+    if (isEditBusiness) {
+      const unsubscribe = navigation.addListener('beforeRemove', () => {
+        // Delay the reset to avoid flickering
+        setTimeout(() => {
+          setDescription('');
+        }, 300);
+      });
+
+      return () => {
+        unsubscribe();
+      };
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigation]);
 
   const onSubmit = async (form: BusinessStoreTypes) => {
     if (isEditBusiness) {
@@ -102,7 +118,10 @@ export default function DescriptionScreen(
                   style={styles.textArea}
                   placeholder="e.g Kababjees are known for making each bite soulful and joyous..."
                   onBlur={onBlur}
-                  onChangeText={onChange}
+                  onChangeText={(text) => {
+                    onChange(text);
+                    setDescription(text);
+                  }}
                   value={value}
                   multiline={true}
                   textAlignVertical="top"

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -46,6 +46,22 @@ export default function NameScreen(
       name: isEditBusiness ? businessData?.name : name,
     },
   });
+
+  useEffect(() => {
+    if (isEditBusiness) {
+      const unsubscribe = navigation.addListener('beforeRemove', () => {
+        // Delay the reset to avoid flickering
+        setTimeout(() => {
+          setName('');
+        }, 300);
+      });
+
+      return () => {
+        unsubscribe();
+      };
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigation]);
 
   const onSubmit = async (form: BusinessStoreTypes) => {
     if (isEditBusiness) {
@@ -107,7 +123,11 @@ export default function NameScreen(
                   style={styles.input}
                   placeholder="e.g Kababjees"
                   onBlur={onBlur}
-                  onChangeText={onChange}
+                  onChangeText={(text) => {
+                    onChange(text);
+                    setName(text);
+                  }}
+                  onSubmitEditing={handleSubmit(onSubmit)}
                   value={value}
                   success={!errors.name}
                 />

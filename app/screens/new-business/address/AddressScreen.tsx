@@ -171,6 +171,22 @@ export default function AddressScreen(
     }
   }, [businessData?.location, getUserLocation]);
 
+  useEffect(() => {
+    if (isEditBusiness) {
+      const unsubscribe = navigation.addListener('beforeRemove', () => {
+        // Delay the reset to avoid flickering
+        setTimeout(() => {
+          setAddress('');
+        }, 300);
+      });
+
+      return () => {
+        unsubscribe();
+      };
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigation]);
+
   const onDragEnd = (markerLocation: {
     latitude: number;
     longitude: number;
@@ -263,7 +279,10 @@ export default function AddressScreen(
                 <TextInput
                   style={styles.textArea}
                   placeholder="Address"
-                  onChangeText={onChange}
+                  onChangeText={(text) => {
+                    onChange(text);
+                    setAddress(text);
+                  }}
                   onBlur={onBlur}
                   value={value}
                   success={!errors.address}

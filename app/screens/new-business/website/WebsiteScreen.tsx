@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -51,6 +51,22 @@ export default function WebsiteScreen(
       website: isEditBusiness ? businessData?.website : website,
     },
   });
+
+  useEffect(() => {
+    if (isEditBusiness) {
+      const unsubscribe = navigation.addListener('beforeRemove', () => {
+        // Delay the reset to avoid flickering
+        setTimeout(() => {
+          setWebsite('');
+        }, 300);
+      });
+
+      return () => {
+        unsubscribe();
+      };
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigation]);
 
   const onSubmit = (form: BusinessStoreTypes) => {
     if (isEditBusiness) {
@@ -115,7 +131,11 @@ export default function WebsiteScreen(
                   style={styles.input}
                   placeholder="e.g https://explorebtk.com"
                   onBlur={onBlur}
-                  onChangeText={onChange}
+                  onChangeText={(text) => {
+                    onChange(text);
+                    setWebsite(text);
+                  }}
+                  onSubmitEditing={handleSubmit(onSubmit)}
                   value={value}
                   keyboardType="url"
                   autoCapitalize="none"
