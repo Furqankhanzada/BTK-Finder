@@ -319,6 +319,11 @@ export default function GalleryScreen(
               Gallery
             </Text>
             <Text>Gallery Images size must be 600x400</Text>
+            {gallery?.length ? (
+              <Text style={styles.coverNote}>
+                Select an image to set as cover
+              </Text>
+            ) : null}
             <View style={styles.gallerySectionImagesContainer}>
               {renderGalleryImages(gallery)}
               <TouchableOpacity
@@ -428,6 +433,9 @@ const styles = StyleSheet.create({
   galleryImageAddIcon: {
     color: BaseColor.blueColor,
     fontSize: 22,
+  },
+  coverNote: {
+    marginBottom: 10,
   },
   actionButton: {
     width: 32,

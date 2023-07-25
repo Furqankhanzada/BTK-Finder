@@ -110,21 +110,39 @@ export const useAddGalleryImages = () => {
           .post(`${UPLOAD}?folder=users/${user?._id}/businesses`, imageData, {
             headers: { 'Content-Type': 'multipart/form-data' },
           })
-          .then((response) =>
+          .then((response) => {
             resolve({
               image: response.data.Location,
               cover: false,
-            }),
-          )
+            });
+          })
           .catch((error) => reject(error));
       });
     });
     const result = await Promise.all(uploadImagePromises);
 
     if (gallery) {
-      setGallery([...gallery, ...result]);
+      const hasCoverImage = gallery.some((image) => image.cover);
+
+      const updatedGallery = result.map((newImage, index) => {
+        const isCover = !hasCoverImage && index === 0;
+        return {
+          ...newImage,
+          cover: isCover,
+        };
+      });
+
+      setGallery([...gallery, ...updatedGallery]);
     } else {
-      setGallery([...result]);
+      const updatedGallery = result.map((newImage, index) => {
+        const isCover = index === 0;
+        return {
+          ...newImage,
+          cover: isCover,
+        };
+      });
+
+      setGallery([...updatedGallery]);
     }
     return result;
   });
