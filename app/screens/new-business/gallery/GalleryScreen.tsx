@@ -88,6 +88,23 @@ export default function GalleryScreen(
     setThumbnail,
   ]);
 
+  useEffect(() => {
+    if (isEditBusiness) {
+      const unsubscribe = navigation.addListener('beforeRemove', () => {
+        // Delay the reset to avoid flickering
+        setTimeout(() => {
+          setThumbnail('');
+          setGallery([]);
+        }, 300);
+      });
+
+      return () => {
+        unsubscribe();
+      };
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigation]);
+
   const onSubmit = () => {
     if (isEditBusiness) {
       updateGallery(
@@ -113,7 +130,9 @@ export default function GalleryScreen(
       addNewBusiness(payloadData, {
         onSuccess(response) {
           if (response._id) {
-            navigation.navigate('Dashboard');
+            navigation.navigate('MyBusinessesStack', {
+              screen: 'MyBusinesses',
+            });
 
             // Reset Store
             resetAddBusinessStore();

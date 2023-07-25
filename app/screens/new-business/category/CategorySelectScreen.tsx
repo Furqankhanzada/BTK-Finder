@@ -52,6 +52,22 @@ export default function CategorySelectScreen(
   const [items, setItems] = useState(categories);
 
   useEffect(() => {
+    if (isEditBusiness) {
+      const unsubscribe = navigation.addListener('beforeRemove', () => {
+        // Delay the reset to avoid flickering
+        setTimeout(() => {
+          setCategory('');
+        }, 300);
+      });
+
+      return () => {
+        unsubscribe();
+      };
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigation]);
+
+  useEffect(() => {
     if (isEditBusiness && businessData?.category) {
       setSelectedCategory(businessData.category);
     }
