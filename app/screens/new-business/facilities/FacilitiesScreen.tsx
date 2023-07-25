@@ -44,12 +44,29 @@ export default function FacilitiesScreen(
   const [selectedFacilities, setSelectedFacilities] = useState<Facility[]>([]);
 
   useEffect(() => {
+    if (isEditBusiness) {
+      const unsubscribe = navigation.addListener('beforeRemove', () => {
+        // Delay the reset to avoid flickering
+        setTimeout(() => {
+          setStoreFacility([]);
+        }, 300);
+      });
+
+      return () => {
+        unsubscribe();
+      };
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigation]);
+
+  useEffect(() => {
     if (isEditBusiness && businessData?.facilities) {
       setSelectedFacilities(businessData.facilities);
     } else if (storeFacilities) {
       setSelectedFacilities(storeFacilities);
     }
-  }, [businessData?.facilities, isEditBusiness, storeFacilities]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onChange = (facility: Facility) => {
     const isItemSelected = selectedFacilities.some(
@@ -58,11 +75,13 @@ export default function FacilitiesScreen(
 
     if (!isItemSelected) {
       setSelectedFacilities([...selectedFacilities, facility]);
+      setStoreFacility([...selectedFacilities, facility]);
     } else {
       const arr = selectedFacilities.filter(
         (item: Facility) => item.name !== facility.name,
       );
       setSelectedFacilities(arr);
+      setStoreFacility(arr);
     }
   };
 

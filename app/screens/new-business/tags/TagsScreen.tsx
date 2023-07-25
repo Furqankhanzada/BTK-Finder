@@ -40,7 +40,7 @@ export default function TagsScreen(
   const storeTags = useAddBusinessStore(
     (state: BusinessStoreTypes) => state.tags,
   );
-  const setTag = useAddBusinessStore(
+  const setTags = useAddBusinessStore(
     (state: BusinessStoreActions) => state.setTags,
   );
 
@@ -54,12 +54,29 @@ export default function TagsScreen(
   }, [tags]);
 
   useEffect(() => {
+    if (isEditBusiness) {
+      const unsubscribe = navigation.addListener('beforeRemove', () => {
+        // Delay the reset to avoid flickering
+        setTimeout(() => {
+          setTags([]);
+        }, 300);
+      });
+
+      return () => {
+        unsubscribe();
+      };
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigation]);
+
+  useEffect(() => {
     if (isEditBusiness && businessData?.tags) {
       setSelected(businessData?.tags);
     } else if (storeTags) {
       setSelected(storeTags);
     }
-  }, [businessData?.tags, isEditBusiness, storeTags]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onChange = (select: Tag) => {
     //Check if tag is selected or not
@@ -70,12 +87,14 @@ export default function TagsScreen(
       const selectedTags = [...selected];
       selectedTags.push(select.name);
       setSelected(selectedTags);
+      setTags(selectedTags);
     } else {
       //Remove Tag from selected tags if already available
       const updatedTags = selected.filter(
         (item: string) => item !== select.name,
       );
       setSelected(updatedTags);
+      setTags(updatedTags);
     }
   };
 
@@ -106,7 +125,7 @@ export default function TagsScreen(
         },
       );
     } else {
-      setTag(selected);
+      setTags(selected);
       navigation.navigate('Telephone');
     }
   };
