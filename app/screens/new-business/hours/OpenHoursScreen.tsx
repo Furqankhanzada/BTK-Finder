@@ -64,26 +64,60 @@ export default function OpenHoursScreen(
             ({ day }) => !hoursWithIsOpen.find((f: OpenHours) => f.day === day),
           ),
         );
-      setSelectedDays(array);
-    } else {
-      setSelectedDays(array);
     }
+
+    // Sort the array based on the day of the week
+    const sortedArray = array.sort((a, b) => {
+      const days = [
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday',
+        'Sunday',
+      ];
+      return days.indexOf(a.day) - days.indexOf(b.day);
+    });
+
+    setSelectedDays(sortedArray);
   }, [openHoursData]);
 
+  useEffect(() => {
+    if (isEditBusiness) {
+      const unsubscribe = navigation.addListener('beforeRemove', () => {
+        // Delay the reset to avoid flickering
+        setTimeout(() => {
+          setOpenHours([]);
+        }, 300);
+      });
+
+      return () => {
+        unsubscribe();
+      };
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigation]);
+
   const updateSelectedDays = (payload: OpenHours) => {
-    let array = [...selectedDays];
-    array.map((el) => {
-      if (el.day === payload.day) {
-        el.isOpen = payload.isOpen;
-        if (payload.to) {
-          el.to = payload.to;
+    setSelectedDays((prevSelectedDays) => {
+      const updatedSelectedDays = prevSelectedDays.map((el) => {
+        if (el.day === payload.day) {
+          return {
+            ...el,
+            isOpen: payload.isOpen,
+            to: payload.to || el.to,
+            from: payload.from || el.from,
+          };
         }
-        if (payload.from) {
-          el.from = payload.from;
-        }
-      }
+        return el;
+      });
+
+      const hours = updatedSelectedDays.filter((day: OpenHours) => day.isOpen);
+      setOpenHours(hours);
+
+      return updatedSelectedDays;
     });
-    setSelectedDays(array);
   };
 
   const navigateToBack = () => {
@@ -131,7 +165,7 @@ export default function OpenHoursScreen(
         keyboardVerticalOffset={offsetKeyboard}
         style={styles.keyboardAvoidView}>
         <ScrollView style={styles.container}>
-          <Text title1 bold>
+          <Text title1 bold style={styles.title}>
             What are the timings of your business? <Text body1>(optional)</Text>
           </Text>
 
@@ -165,5 +199,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     flex: 1,
     marginTop: 10,
+  },
+  title: {
+    marginBottom: 15,
   },
 });
