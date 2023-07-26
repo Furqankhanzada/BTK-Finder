@@ -2,7 +2,7 @@ import React from 'react';
 import { FlatList, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 
-import { Header, SafeAreaView, Icon, CardList, Button } from '@components';
+import { Header, SafeAreaView, Icon, CardList } from '@components';
 import { BaseStyle, useTheme } from '@config';
 import { useBusiness, useMembers } from '@screens/businesses/queries/queries';
 import { useProfile } from '@screens/settings/profile/queries/queries';
@@ -33,9 +33,31 @@ export default function BusinessMembersScreen(props: Props) {
             />
           );
         }}
+        renderRight={() => {
+          return (
+            <View style={styles.addButton}>
+              <Icon
+                name="plus"
+                size={12}
+                color={colors.primary}
+                enableRTL={true}
+              />
+              <Text
+                numberOfLines={1}
+                style={[styles.addButtonText, { color: colors.primary }]}>
+                Add
+              </Text>
+            </View>
+          );
+        }}
         onPressLeft={() => {
           navigation.goBack();
         }}
+        onPressRight={() =>
+          navigation.navigate('AddMember', {
+            businessId: route.params.businessId,
+          })
+        }
       />
 
       <View style={styles.container}>
@@ -80,18 +102,6 @@ export default function BusinessMembersScreen(props: Props) {
               }
             />
           )}
-          ListFooterComponentStyle={styles.footer}
-          ListFooterComponent={
-            <Button
-              full
-              onPress={() =>
-                navigation.navigate('AddMember', {
-                  businessId: route.params.businessId,
-                })
-              }>
-              Add member
-            </Button>
-          }
         />
       </View>
     </SafeAreaView>
@@ -102,6 +112,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 20,
+  },
+  addButton: {
+    borderRadius: 5,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  addButtonText: {
+    fontSize: 15,
+    marginLeft: 5,
   },
   avatar: {
     width: 50,
@@ -117,8 +138,5 @@ const styles = StyleSheet.create({
   listEmptyText: {
     textAlign: 'center',
     paddingVertical: 20,
-  },
-  footer: {
-    marginVertical: 20,
   },
 });
