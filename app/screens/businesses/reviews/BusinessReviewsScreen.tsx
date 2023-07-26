@@ -82,6 +82,7 @@ export default function Review(
   const navigateToWelcomeAuth = () => {
     navigation.navigate('AuthStackNavigator', {
       screen: 'WelcomeAuth',
+      params: { shouldGoBack: true },
     });
   };
 

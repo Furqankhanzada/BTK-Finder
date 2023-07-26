@@ -1,4 +1,5 @@
 export interface Location {
+  type?: string;
   coordinates: number[];
 }
 
@@ -47,9 +48,15 @@ export interface Facility {
 }
 
 export interface OpenHours {
+  isOpen?: boolean;
   day: string;
   from: string;
   to: string;
+}
+
+export interface PriceRange {
+  from?: string;
+  to?: string;
 }
 
 export enum BusinessStatus {
@@ -104,6 +111,8 @@ export interface BusinessPresentable {
   gallery?: Gallery[];
   facilities?: Facility[];
   openHours?: OpenHours[];
+  tags?: string[];
+  priceRange?: PriceRange;
   status: BusinessStatus;
   category: string;
   reviews: Review[];

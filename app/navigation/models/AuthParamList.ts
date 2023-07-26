@@ -1,5 +1,5 @@
 export type AuthParamList = {
-  WelcomeAuth: undefined;
+  WelcomeAuth: { shouldGoBack?: boolean };
   SignIn: undefined;
   SignUp: undefined;
   ResetPassword: undefined;

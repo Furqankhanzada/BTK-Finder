@@ -22,7 +22,6 @@ import PlaceItem from './PlaceItem';
 import ProfileDescription from './ProfileDescription';
 import FeaturedCategoryPlaceholderComponent from './Placeholders/featuredCategories';
 import CustomStepIndicator from './StepIndicator';
-import HoursCheckbox from './HoursCheckbox';
 import Loading from './Loading';
 import DropDown from './DropdownPicker';
 import DropDownMultiSelect from './DropDownMultiSelect';
@@ -57,7 +56,6 @@ export {
   ProfileDescription,
   FeaturedCategoryPlaceholderComponent,
   CustomStepIndicator,
-  HoursCheckbox,
   Loading,
   DropDown,
   DropDownMultiSelect,
