@@ -70,12 +70,12 @@ export default function BusinessMembersScreen(props: Props) {
               subtitle={item.email}
               style={styles.membersList}
               onPress={() => {}}
-              options={[item.membership.package.name]}
+              options={[item.memberships.package.name]}
               editAble={business?.ownerId === user?._id}
               onPressEdit={() =>
                 navigation.navigate('EditMember', {
                   businessId: route.params.businessId,
-                  membership: item.membership,
+                  membership: item.memberships,
                 })
               }
             />

@@ -111,7 +111,7 @@ export interface Member {
   name: string;
   avatar: string;
   email: string;
-  membership: Membership;
+  memberships: Membership;
 }
 
 export interface BusinessPresentable {
