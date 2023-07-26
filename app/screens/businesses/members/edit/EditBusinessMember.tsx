@@ -182,8 +182,12 @@ export default function EditBusinessMember(
             setValue={setSelectedStatus}
             setItems={setItems}
             placeholder="Status"
-            style={[styles.dropdown, { backgroundColor: BaseColor.fieldColor }]}
+            style={[styles.dropdown, { backgroundColor: colors.card }]}
             dropDownContainerStyle={{ borderColor: colors.border }}
+            textStyle={{
+              color: selectedStatus ? colors.text : BaseColor.grayColor,
+            }}
+            listItemContainerStyle={{ backgroundColor: colors.card }}
             listMode="SCROLLVIEW"
             scrollViewProps={{
               nestedScrollEnabled: true,
