@@ -167,6 +167,12 @@ export const useAddBusiness = () => {
           await queryClient.invalidateQueries({
             queryKey: ['my-business'],
           });
+          await queryClient.invalidateQueries({
+            queryKey: ['recentBusinesses'],
+          });
+          await queryClient.invalidateQueries({
+            queryKey: ['recent-businesses'],
+          });
 
           showNotification({
             icon: {
