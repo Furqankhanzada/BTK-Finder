@@ -22,6 +22,8 @@ target 'explorebtk' do
   pod 'Permission-Notifications', :path => "#{permissions_path}/Notifications"
 
 
+  pod 'RNCCheckbox', :path => '../node_modules/@react-native-community/checkbox'
+
   target 'explorebtkTests' do
     inherit! :complete
     # Pods for testing

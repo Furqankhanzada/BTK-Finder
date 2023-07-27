@@ -1,5 +1,3 @@
-// Becuase we have refactored this file in different branch
-/* eslint-disable react-native/no-inline-styles*/
 import React, { useState } from 'react';
 import {
   Animated,
@@ -8,13 +6,13 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 
 import { useAlerts } from '@hooks';
 import { BaseColor, BaseStyle, useTheme } from '@config';
 import { StackScreenProps } from '@react-navigation/stack';
+import { useBusinessesInfinite } from '@screens/businesses/queries/queries';
 import {
   Header,
   SafeAreaView,
@@ -26,17 +24,15 @@ import {
 import useAuthStore from '@screens/auth/store/Store';
 import { useDeleteBusiness } from '@screens/businesses/queries/mutations';
 
-import { getSingleBusiness } from '../../../actions/business';
+import { GlobalParamList } from 'navigation/models/GlobalParamList';
 import { IconName } from '../../../contexts/alerts-v2/models/Icon';
-import { useBusinessesInfinite } from '../../businesses/queries/queries';
-import { SettingsParamList } from '../../../navigation/models/SettingsParamList';
+import { MyBusinessesPlaceholder } from './components/MyBusinessesPlaceholder';
 
 export default function MyBusinessesScreen(
-  props: StackScreenProps<SettingsParamList, 'MyBusinesses'>,
+  props: StackScreenProps<GlobalParamList, 'MyBusinesses'>,
 ) {
   const { navigation } = props;
   const scrollAnim = new Animated.Value(0);
-  const dispatch = useDispatch();
   const { mutate: deleteBusiness, isLoading: deleteBusinessLoading } =
     useDeleteBusiness();
   const { showAlert, showNotification } = useAlerts();
@@ -69,12 +65,6 @@ export default function MyBusinessesScreen(
     setIsRefreshing(false);
   };
 
-  const stateProps = useSelector(({ businesses }: any) => {
-    return {
-      getEditLoading: businesses.getSingleBusinessLoading,
-    };
-  });
-
   const onEndReached = () => {
     if (hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
@@ -103,12 +93,7 @@ export default function MyBusinessesScreen(
   };
 
   const onEdit = (id: string) => {
-    dispatch(
-      getSingleBusiness(id, true, () =>
-        // @ts-ignore Ignored because we are doing it on another branch
-        navigation.navigate('EditBusiness', { id }),
-      ),
-    );
+    navigation.navigate('MyBusiness', { businessId: id });
   };
 
   const onPressDelete = async (businessId: string) => {
@@ -168,21 +153,11 @@ export default function MyBusinessesScreen(
   };
 
   const navigateBusinessDetail = (id: string) => {
-    // @ts-ignore Ignored because we are doing it on another branch
     navigation.navigate('BusinessDetailTabNavigator', { businessId: id });
-  };
-
-  const navigateToReview = (id: string) => {
-    // @ts-ignore Ignored because we are doing it on another branch
-    navigation.navigate('BusinessDetailTabNavigator', {
-      screen: 'ReviewStack',
-      params: { businessId: id },
-    });
   };
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
-      <Loading loading={stateProps.getEditLoading} />
       <Header
         title={t('my_businesses')}
         renderLeft={() => {
@@ -199,67 +174,81 @@ export default function MyBusinessesScreen(
           navigation.goBack();
         }}
       />
-      <Loading loading={isLoading || deleteBusinessLoading} />
-      <View style={{ flex: 1 }}>
-        <Animated.FlatList
-          contentContainerStyle={{
-            padding: 20,
-            flex: myBusinesses?.length ? 0 : 1,
-          }}
-          refreshControl={
-            <RefreshControl
-              colors={[colors.primary]}
-              tintColor={colors.primary}
-              refreshing={isRefreshing}
-              progressViewOffset={80}
-              onRefresh={() => onRefresh()}
-            />
-          }
-          onEndReached={onEndReached}
-          onEndReachedThreshold={0.3}
-          scrollEventThrottle={1}
-          onScroll={Animated.event(
-            [
-              {
-                nativeEvent: {
-                  contentOffset: {
-                    y: scrollAnim,
+      <Loading loading={deleteBusinessLoading} />
+      {isLoading ? (
+        <MyBusinessesPlaceholder />
+      ) : (
+        <View style={styles.container}>
+          <Animated.FlatList
+            contentContainerStyle={[
+              styles.flatListContainer,
+              myBusinesses?.length ? styles.businessesFlatListContainer : {},
+            ]}
+            refreshControl={
+              <RefreshControl
+                colors={[colors.primary]}
+                tintColor={colors.primary}
+                refreshing={isRefreshing}
+                progressViewOffset={80}
+                onRefresh={() => onRefresh()}
+              />
+            }
+            onEndReached={onEndReached}
+            onEndReachedThreshold={0.3}
+            scrollEventThrottle={1}
+            onScroll={Animated.event(
+              [
+                {
+                  nativeEvent: {
+                    contentOffset: {
+                      y: scrollAnim,
+                    },
                   },
                 },
-              },
-            ],
-            { useNativeDriver: true },
-          )}
-          data={myBusinesses}
-          key={'block'}
-          keyExtractor={(item) => item._id}
-          ListEmptyComponent={listEmptyComponent}
-          renderItem={({ item }) => {
-            return (
-              <CardList
-                key={item._id}
-                image={item?.thumbnail}
-                title={item.name}
-                subtitle={item.category}
-                rate={item?.averageRatings || 0.0}
-                style={{ marginBottom: 15 }}
-                onPress={() => navigateBusinessDetail(item._id)}
-                onPressTag={() => navigateToReview(item._id)}
-                editAble={true}
-                deleteAble={true}
-                onPressEdit={() => onEdit(item._id)}
-                onPressDelete={() => onPressDelete(item._id)}
-              />
-            );
-          }}
-          ListFooterComponent={renderFooter}
-        />
-      </View>
+              ],
+              { useNativeDriver: true },
+            )}
+            data={myBusinesses}
+            key={'block'}
+            keyExtractor={(item) => item._id}
+            ListEmptyComponent={listEmptyComponent}
+            renderItem={({ item }) => {
+              return (
+                <CardList
+                  key={item._id}
+                  image={item?.thumbnail}
+                  title={item.name}
+                  subtitle={item.category}
+                  rate={item?.averageRatings || 0.0}
+                  style={styles.cardList}
+                  onPress={() => navigateBusinessDetail(item._id)}
+                  onPressTag={() => {}}
+                  editAble={true}
+                  deleteAble={true}
+                  onPressEdit={() => onEdit(item._id)}
+                  onPressDelete={() => onPressDelete(item._id)}
+                />
+              );
+            }}
+            ListFooterComponent={renderFooter}
+          />
+        </View>
+      )}
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  flatListContainer: {
+    flex: 1,
+    padding: 20,
+  },
+  businessesFlatListContainer: {
+    flex: 0,
+  },
   sectionEmpty: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -272,6 +261,9 @@ const styles = StyleSheet.create({
     padding: 15,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  cardList: {
+    marginBottom: 15,
   },
   alertDescription: {
     marginTop: 24,

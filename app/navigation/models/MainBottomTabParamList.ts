@@ -6,6 +6,6 @@ import { SettingsParamList } from './SettingsParamList';
 export type MainBottomTabParamList = {
   DashboardStack: NavigatorScreenParams<DashboardParamList>;
   Favourite: undefined;
-  Business: undefined;
+  NewBusiness: undefined;
   SettingsStack: NavigatorScreenParams<SettingsParamList>;
 };

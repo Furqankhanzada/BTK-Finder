@@ -12,26 +12,38 @@ export default function useRemoteConfig(): RemoteConfig {
 
   const updateStates = () => {
     const allValues: Record<string, any> = remoteConfig().getAll();
+    let updateConfig = {};
+
     for (const [key, value] of Object.entries(allValues)) {
-      if (key === 'helplines') {
-        setConfig((prevConfig) => ({
-          ...prevConfig,
-          helplines: JSON.parse(value._value),
-        }));
-      }
-      if (key === 'aboutUs') {
-        setConfig((prevConfig) => ({
-          ...prevConfig,
-          about: JSON.parse(value._value),
-        }));
-      }
-      if (key === 'ads') {
-        setConfig((prevConfig) => ({
-          ...prevConfig,
-          ads: JSON.parse(value._value),
-        }));
+      switch (key) {
+        case 'helplines':
+          updateConfig = {
+            ...updateConfig,
+            helplines: JSON.parse(value._value),
+          };
+          break;
+        case 'facilities':
+          updateConfig = {
+            ...updateConfig,
+            facilities: JSON.parse(value._value),
+          };
+          break;
+        case 'tags':
+          updateConfig = { ...updateConfig, tags: JSON.parse(value._value) };
+          break;
+        case 'aboutUs':
+          updateConfig = { ...updateConfig, about: JSON.parse(value._value) };
+          break;
+        case 'ads':
+          updateConfig = { ...updateConfig, ads: JSON.parse(value._value) };
+          break;
       }
     }
+
+    setConfig((prevConfig) => ({
+      ...prevConfig,
+      ...updateConfig,
+    }));
   };
 
   useEffect(() => {
