@@ -122,6 +122,8 @@ export const useDeleteBusiness = () => {
     {
       onSuccess: async () => {
         await queryClient.invalidateQueries(['my-business']);
+        await queryClient.invalidateQueries(['recentBusinesses']);
+        await queryClient.invalidateQueries(['recent-businesses']);
       },
     },
   );

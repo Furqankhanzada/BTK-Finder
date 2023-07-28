@@ -7,7 +7,6 @@ export type MainStackParamList = {
   MainBottomTabNavigator: NavigatorScreenParams<MainBottomTabParamList>;
   BusinessDetailTabNavigator: { businessId: string };
   AuthStackNavigator: NavigatorScreenParams<AuthParamList>;
-  ThemeSetting: undefined;
   Category: undefined;
   Businesses: {
     title: string;
@@ -22,10 +21,4 @@ export type MainStackParamList = {
   };
   Messenger: undefined;
   Messages: undefined;
-  Address: undefined;
-  Hours: undefined;
-  PriceRange: undefined;
-  FinalReview: undefined;
-  Gallery: undefined;
-  EditBusiness: undefined;
 };
