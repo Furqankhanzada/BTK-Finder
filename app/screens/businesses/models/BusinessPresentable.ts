@@ -95,32 +95,6 @@ export interface Favorite {
   ownerId: string;
 }
 
-export enum MembershipStatus {
-  ACTIVE = 'active',
-  ARCHIEVE = 'archieve',
-}
-
-export interface Package {
-  id: string;
-  name: string;
-}
-
-export interface Membership {
-  billingDate: Date;
-  businessId: string;
-  email: string;
-  package: Package;
-  status: MembershipStatus;
-}
-
-export interface Member {
-  _id: string;
-  name: string;
-  avatar: string;
-  email: string;
-  memberships: Membership;
-}
-
 export interface BusinessPresentable {
   _id: string;
   ownerId: string;

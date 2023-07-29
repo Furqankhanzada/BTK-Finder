@@ -1,5 +1,6 @@
-import { Package } from '@screens/businesses/models/BusinessPresentable';
 import { create } from 'zustand';
+
+import { Package } from '@screens/settings/profile/models/UserPresentable';
 
 export type MemberStoreStates = {
   selectedPackage: Package;

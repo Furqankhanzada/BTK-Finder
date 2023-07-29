@@ -1,6 +1,6 @@
 import { NavigatorScreenParams } from '@react-navigation/native';
+import { Membership } from '@screens/settings/profile/models/UserPresentable';
 import { Maybe } from '../../models/graphql';
-import { Membership } from '@screens/businesses/models/BusinessPresentable';
 
 export type BusinessDetailBottomTabParamList = {
   DetailStack: NavigatorScreenParams<ProductStackParamList>;

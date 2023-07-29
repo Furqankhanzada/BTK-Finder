@@ -15,10 +15,11 @@ import {
   BusinessParams,
   BusinessParamsWithSearch,
 } from '@screens/businesses/models/BusinessParams';
+import { Member } from '@screens/settings/profile/models/UserPresentable';
 
 import axiosApiInstance from '../../../interceptor/axios-interceptor';
 import { BUSINESSES_API } from '../../../constants';
-import { BusinessPresentable, Member } from '../models/BusinessPresentable';
+import { BusinessPresentable } from '../models/BusinessPresentable';
 import {
   CatalogItemConnection,
   CatalogItemProduct,

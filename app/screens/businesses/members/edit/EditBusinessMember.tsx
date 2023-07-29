@@ -20,7 +20,7 @@ import {
   UpdateMembershipPayload,
   useMembershipUpdate,
 } from '@screens/businesses/queries/mutations';
-import { MembershipStatus } from '@screens/businesses/models/BusinessPresentable';
+import { MembershipStatus } from '@screens/settings/profile/models/UserPresentable';
 import { IconName } from '../../../../contexts/alerts-v2/models/Icon';
 import { MembersStackParamList } from 'navigation/models/BusinessDetailBottomTabParamList';
 import GlobalStyle from '../../../../assets/styling/GlobalStyle';
@@ -42,7 +42,7 @@ export default function EditBusinessMember(
   const [openDropdown, setOpenDropdown] = useState<boolean>(false);
   const [statusItems, setItems] = useState([
     { label: 'Active', value: MembershipStatus.ACTIVE },
-    { label: 'Archieve', value: MembershipStatus.ARCHIEVE },
+    { label: 'Archive', value: MembershipStatus.ARCHIVE },
   ]);
 
   const [selectedStatus, setSelectedStatus] = useState<MembershipStatus>(

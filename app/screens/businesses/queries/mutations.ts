@@ -4,17 +4,19 @@ import Toast from 'react-native-toast-message';
 
 import {
   BusinessPresentable,
-  Membership,
-  MembershipStatus,
-  Package,
   Review,
 } from '@screens/businesses/models/BusinessPresentable';
 import { useDynamicLinks } from '@hooks';
 import { toggleFavoritesInCache } from '@screens/businesses/helpers/toggleFavoritesInCache';
+import useAuthStore from '@screens/auth/store/Store';
+import {
+  Membership,
+  MembershipStatus,
+  Package,
+} from '@screens/settings/profile/models/UserPresentable';
 
 import axiosApiInstance from '../../../interceptor/axios-interceptor';
 import { BUSINESSES_API } from '../../../constants';
-import useAuthStore from '@screens/auth/store/Store';
 
 export enum FavoriteType {
   favorite = 'favorite',

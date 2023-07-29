@@ -25,8 +25,8 @@ import {
 } from '@components';
 import { useAlerts } from '@hooks';
 
-import { Membership } from '@screens/businesses/models/BusinessPresentable';
 import { useAddMembership } from '@screens/businesses/queries/mutations';
+import { Membership } from '@screens/settings/profile/models/UserPresentable';
 import { MembersStackParamList } from 'navigation/models/BusinessDetailBottomTabParamList';
 import { IconName } from '../../../../contexts/alerts-v2/models/Icon';
 import GlobalStyle from '../../../../assets/styling/GlobalStyle';
