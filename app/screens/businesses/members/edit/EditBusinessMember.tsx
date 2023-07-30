@@ -8,9 +8,9 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
+import Modal from 'react-native-modal';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
-import DropDownPicker from 'react-native-dropdown-picker';
 
 import { BaseColor, useTheme } from '@config';
 import { Header, SafeAreaView, Icon, Button, Text } from '@components';
@@ -39,11 +39,11 @@ export default function EditBusinessMember(
 
   const [isDatePickerVisible, setDatePickerVisibility] =
     useState<boolean>(false);
-  const [openDropdown, setOpenDropdown] = useState<boolean>(false);
-  const [statusItems, setItems] = useState([
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const statusItems = [
     { label: 'Active', value: MembershipStatus.ACTIVE },
     { label: 'Archive', value: MembershipStatus.ARCHIVE },
-  ]);
+  ];
 
   const [selectedStatus, setSelectedStatus] = useState<MembershipStatus>(
     membership.status,
@@ -85,6 +85,11 @@ export default function EditBusinessMember(
     });
   };
 
+  const onPressStatus = (status: MembershipStatus) => {
+    setSelectedStatus(status);
+    setModalVisible(false);
+  };
+
   const toggleDatePicker = () => {
     setDatePickerVisibility(!isDatePickerVisible);
   };
@@ -118,25 +123,22 @@ export default function EditBusinessMember(
         keyboardVerticalOffset={offsetKeyboard}
         style={styles.keyboardAvoidingView}>
         <ScrollView contentContainerStyle={styles.scrollViewContentContainer}>
-          <DropDownPicker
-            open={openDropdown}
-            value={selectedStatus}
-            items={statusItems}
-            setOpen={setOpenDropdown}
-            setValue={setSelectedStatus}
-            setItems={setItems}
-            placeholder="Status"
-            style={[styles.dropdown, { backgroundColor: colors.card }]}
-            dropDownContainerStyle={{ borderColor: colors.border }}
-            textStyle={{
-              color: selectedStatus ? colors.text : BaseColor.grayColor,
-            }}
-            listItemContainerStyle={{ backgroundColor: colors.card }}
-            listMode="SCROLLVIEW"
-            scrollViewProps={{
-              nestedScrollEnabled: true,
-            }}
-          />
+          <TouchableOpacity
+            onPress={() => setModalVisible(true)}
+            style={[
+              GlobalStyle.datePickerContainer,
+              { backgroundColor: colors.card },
+            ]}>
+            <Text
+              style={[
+                styles.statusText,
+                {
+                  color: selectedStatus ? colors.text : BaseColor.grayColor,
+                },
+              ]}>
+              {selectedStatus ? selectedStatus : 'Status'}
+            </Text>
+          </TouchableOpacity>
 
           <TouchableOpacity
             onPress={navigateToPackageSelect}
@@ -190,6 +192,42 @@ export default function EditBusinessMember(
           </Button>
         </View>
       </KeyboardAvoidingView>
+
+      <Modal
+        isVisible={modalVisible}
+        onSwipeComplete={() => {
+          setModalVisible(false);
+        }}
+        swipeDirection={['down']}
+        style={styles.bottomModal}>
+        <View
+          style={[
+            styles.contentFilterBottom,
+            { backgroundColor: colors.card },
+          ]}>
+          <View style={styles.contentSwipeDown}>
+            <View style={styles.lineSwipeDown} />
+          </View>
+
+          <View style={styles.listItemsContainer}>
+            {statusItems.map((item) => {
+              return (
+                <TouchableOpacity
+                  key={item.value}
+                  onPress={() => onPressStatus(item.value)}
+                  style={[
+                    styles.listItem,
+                    selectedStatus === item.value && {
+                      backgroundColor: colors.primaryDark,
+                    },
+                  ]}>
+                  <Text>{item.label}</Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -201,8 +239,34 @@ const styles = StyleSheet.create({
   keyboardAvoidingView: {
     flex: 1,
   },
-  dropdown: {
-    borderWidth: 0,
+  bottomModal: {
+    justifyContent: 'flex-end',
+    margin: 0,
+  },
+  contentFilterBottom: {
+    width: '100%',
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+    paddingHorizontal: 20,
+  },
+  contentSwipeDown: {
+    paddingTop: 10,
+    alignItems: 'center',
+  },
+  listItemsContainer: {
+    paddingVertical: 20,
+  },
+  lineSwipeDown: {
+    width: 30,
+    height: 2.5,
+    backgroundColor: BaseColor.dividerColor,
+  },
+  listItem: {
+    padding: 10,
+    borderRadius: 10,
+  },
+  statusText: {
+    textTransform: 'capitalize',
   },
   textInput: {
     marginTop: 10,
