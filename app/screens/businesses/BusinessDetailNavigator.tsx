@@ -12,7 +12,10 @@ import { BaseColor, useTheme, useFont } from '@config';
 import { Icon } from '@components';
 import ProductDetailScreen from '@screens/businesses/product-detail/ProductDetailScreen';
 import { useBusiness } from '@screens/businesses/queries/queries';
-import { ShopStatus } from '@screens/businesses/models/BusinessPresentable';
+import {
+  MembershipsStatus,
+  ShopStatus,
+} from '@screens/businesses/models/BusinessPresentable';
 import { useProfile } from '@screens/settings/profile/queries/queries';
 
 import { getProductsTitle } from './helpers/getProductsTitle';
@@ -139,7 +142,9 @@ export default function BusinessDetailNavigator({
           }}
         />
       ) : null}
-      {data?.shop && data?.ownerId === user?._id ? (
+      {data &&
+      data.memberships?.status === MembershipsStatus.enabled &&
+      data.ownerId === user?._id ? (
         <BusinessDetailBottomTab.Screen
           initialParams={{
             screen: 'Members',

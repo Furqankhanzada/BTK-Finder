@@ -32,9 +32,18 @@ export enum ShopStatus {
   disabled = 'disabled',
 }
 
+export enum MembershipsStatus {
+  enabled = 'enabled',
+  disabled = 'disabled',
+}
+
 export interface Shop {
   shopId: string;
   status: ShopStatus;
+}
+
+interface Memberships {
+  status: MembershipsStatus;
 }
 
 export interface Gallery {
@@ -108,6 +117,7 @@ export interface BusinessPresentable {
   contactItems?: ContactItem[];
   type: BusinessType;
   shop?: Shop;
+  memberships?: Memberships;
   thumbnail?: string;
   gallery?: Gallery[];
   facilities?: Facility[];
