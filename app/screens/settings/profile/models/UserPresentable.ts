@@ -40,7 +40,11 @@ export interface UserPresentable {
   memberships: Array<Membership>;
 }
 
+interface MemberBase extends UserPresentable {
+  membership: Membership;
+}
+
 export type Member = Omit<
-  UserPresentable,
-  'phone' | 'resident' | 'status' | 'roles'
+  MemberBase,
+  'phone' | 'resident' | 'status' | 'roles' | 'memberships'
 >;
