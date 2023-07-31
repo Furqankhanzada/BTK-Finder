@@ -22,6 +22,7 @@ import MenuItemsPlaceholder from './MenuItemsPlaceholder';
 interface Props {
   onProductPress: (item: CatalogProduct) => void;
   business: BusinessPresentable | undefined;
+  containerStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
   selectionMode?: boolean;
 }
@@ -29,6 +30,7 @@ interface Props {
 export default function Products({
   onProductPress,
   business,
+  containerStyle,
   style,
   selectionMode,
 }: Props) {
@@ -67,7 +69,7 @@ export default function Products({
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, containerStyle]}>
       <FlatList
         listKey="products"
         refreshControl={
