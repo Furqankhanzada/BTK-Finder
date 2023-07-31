@@ -16,6 +16,8 @@ import { BaseColor, useTheme } from '@config';
 import { Header, SafeAreaView, Icon, Button, Text } from '@components';
 import { useAlerts } from '@hooks';
 
+import Products from '@screens/businesses/components/Products';
+import { useBusiness } from '@screens/businesses/queries/queries';
 import {
   UpdateMembershipPayload,
   useMembershipUpdate,
@@ -25,6 +27,12 @@ import { IconName } from '../../../../contexts/alerts-v2/models/Icon';
 import { MembersStackParamList } from 'navigation/models/BusinessDetailBottomTabParamList';
 import GlobalStyle from '../../../../assets/styling/GlobalStyle';
 import useMemberStore from '../store/Store';
+import { CatalogProduct } from 'models/graphql';
+
+enum ModalType {
+  STATUS = 'status',
+  PACKAGE = 'package',
+}
 
 export default function EditBusinessMember(
   props: StackScreenProps<MembersStackParamList, 'EditMember'>,
@@ -33,6 +41,7 @@ export default function EditBusinessMember(
   const { businessId, membership } = route.params;
   const { colors } = useTheme();
   const { showNotification } = useAlerts();
+  const { data: business } = useBusiness(businessId);
   const { mutateAsync, isLoading } = useMembershipUpdate(businessId);
   const { selectedPackage, setSelectedPackage, resetPackage } =
     useMemberStore();
@@ -44,6 +53,7 @@ export default function EditBusinessMember(
 
   const [isDatePickerVisible, setDatePickerVisibility] =
     useState<boolean>(false);
+  const [modalType, setModalType] = useState<ModalType>(ModalType.STATUS);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [selectedStatus, setSelectedStatus] = useState<MembershipStatus>(
     membership.status,
@@ -53,10 +63,6 @@ export default function EditBusinessMember(
   useEffect(() => {
     setSelectedPackage(membership.package);
   }, [membership.package, setSelectedPackage]);
-
-  const navigateToPackageSelect = () => {
-    navigation.navigate('PackageSelect', { businessId });
-  };
 
   const onSubmit = async () => {
     const data: UpdateMembershipPayload = {
@@ -85,9 +91,30 @@ export default function EditBusinessMember(
     });
   };
 
-  const onPressStatus = (status: MembershipStatus) => {
+  const onPressStatus = () => {
+    setModalType(ModalType.STATUS);
+    setModalVisible(true);
+  };
+
+  const onPressPackage = () => {
+    setModalType(ModalType.PACKAGE);
+    setModalVisible(true);
+  };
+
+  const onSelectStatus = (status: MembershipStatus) => {
     setSelectedStatus(status);
     setModalVisible(false);
+  };
+
+  const onSelectPackage = (item: CatalogProduct) => {
+    if (item?.title) {
+      setModalVisible(false);
+      setSelectedPackage({
+        name: item?.title,
+        id: item?._id,
+        duration: '',
+      });
+    }
   };
 
   const toggleDatePicker = () => {
@@ -124,7 +151,7 @@ export default function EditBusinessMember(
         style={styles.keyboardAvoidingView}>
         <ScrollView contentContainerStyle={styles.scrollViewContentContainer}>
           <TouchableOpacity
-            onPress={() => setModalVisible(true)}
+            onPress={onPressStatus}
             style={[
               GlobalStyle.datePickerContainer,
               { backgroundColor: colors.card },
@@ -141,7 +168,7 @@ export default function EditBusinessMember(
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={navigateToPackageSelect}
+            onPress={onPressPackage}
             style={[
               GlobalStyle.datePickerContainer,
               { backgroundColor: colors.card },
@@ -210,21 +237,31 @@ export default function EditBusinessMember(
           </View>
 
           <View style={styles.listItemsContainer}>
-            {statusItems.map((item) => {
-              return (
-                <TouchableOpacity
-                  key={item.value}
-                  onPress={() => onPressStatus(item.value)}
-                  style={[
-                    styles.listItem,
-                    selectedStatus === item.value && {
-                      backgroundColor: colors.primaryDark,
-                    },
-                  ]}>
-                  <Text>{item.label}</Text>
-                </TouchableOpacity>
-              );
-            })}
+            {modalType === ModalType.STATUS &&
+              statusItems.map((item) => {
+                return (
+                  <TouchableOpacity
+                    key={item.value}
+                    onPress={() => onSelectStatus(item.value)}
+                    style={[
+                      styles.listItem,
+                      selectedStatus === item.value && {
+                        backgroundColor: colors.primaryDark,
+                      },
+                    ]}>
+                    <Text>{item.label}</Text>
+                  </TouchableOpacity>
+                );
+              })}
+
+            {modalType === ModalType.PACKAGE && (
+              <Products
+                containerStyle={styles.productsList}
+                onProductPress={(item) => onSelectPackage(item)}
+                business={business}
+                selectionMode={true}
+              />
+            )}
           </View>
         </View>
       </Modal>
@@ -267,6 +304,10 @@ const styles = StyleSheet.create({
   },
   statusText: {
     textTransform: 'capitalize',
+  },
+  productsList: {
+    flex: 0,
+    paddingHorizontal: 0,
   },
   textInput: {
     marginTop: 10,
