@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   KeyboardAvoidingView,
@@ -50,98 +50,92 @@ export default function AddBusinessMember(
     control,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<Membership>();
-  const { selectedPackage, setSelectedPackage, resetPackage } =
-    useMemberStore();
+  const { setSelectedPackage } = useMemberStore();
 
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [isDatePickerVisible, setDatePickerVisibility] =
     useState<boolean>(false);
 
-  useEffect(() => {
-    resetPackage();
-  }, [resetPackage]);
-
   const onSubmit = async (data: Membership) => {
-    mutateAsync(
-      { ...data, package: selectedPackage },
-      {
-        async onSuccess(response) {
-          if ('message' in response && response.message === 'invitation-sent') {
-            const buttonPressed = await showAlert({
-              content: () => (
-                <>
-                  <IonIcon
-                    size={70}
-                    name={IconName.CheckMarkCircle}
-                    color={BaseColor.greenColor}
-                  />
-                  <Text textAlign="center" header>
-                    Invitation Sent
-                  </Text>
-                  <Text textAlign="center" body1>
-                    We have sent an invitation email to {data.email}
-                  </Text>
-                  <Text
-                    textAlign="center"
-                    body1
-                    bold
-                    style={[{ color: BaseColor.redColor }, styles.noteText]}>
-                    NOTE:
-                  </Text>
-                  <Text textAlign="center" body2>
-                    Since no account is registered with this email: {data.email}
-                  </Text>
-                  <Text textAlign="center" body2>
-                    We have sent an email to {data.email} for account
-                    registration.
-                  </Text>
-                  <Text textAlign="center" body2>
-                    Once the user registers with this email in our app, He will
-                    be automatically added as the member of your business
-                  </Text>
-                </>
-              ),
-              btn: {
-                confirmBtnTitle: 'Okay',
-              },
-              type: 'Custom',
-            });
+    mutateAsync(data, {
+      async onSuccess(response) {
+        if ('message' in response && response.message === 'invitation-sent') {
+          const buttonPressed = await showAlert({
+            content: () => (
+              <>
+                <IonIcon
+                  size={70}
+                  name={IconName.CheckMarkCircle}
+                  color={BaseColor.greenColor}
+                />
+                <Text textAlign="center" header>
+                  Invitation Sent
+                </Text>
+                <Text textAlign="center" body1>
+                  We have sent an invitation email to {data.email}
+                </Text>
+                <Text
+                  textAlign="center"
+                  body1
+                  bold
+                  style={[{ color: BaseColor.redColor }, styles.noteText]}>
+                  NOTE:
+                </Text>
+                <Text textAlign="center" body2>
+                  Since no account is registered with this email: {data.email}
+                </Text>
+                <Text textAlign="center" body2>
+                  We have sent an email to {data.email} for account
+                  registration.
+                </Text>
+                <Text textAlign="center" body2>
+                  Once the user registers with this email in our app, He will be
+                  automatically added as the member of your business
+                </Text>
+              </>
+            ),
+            btn: {
+              confirmBtnTitle: 'Okay',
+            },
+            type: 'Custom',
+          });
 
-            if (buttonPressed === 'confirm') {
-              navigation.goBack();
-            }
-          } else if ('email' in response) {
-            await queryClient.invalidateQueries({
-              queryKey: ['members', businessId],
-            });
-
+          if (buttonPressed === 'confirm') {
             navigation.goBack();
-            resetPackage();
-
-            showNotification({
-              icon: {
-                size: 70,
-                name: IconName.CheckMarkCircle,
-                color: BaseColor.greenColor,
-              },
-              message: `The membership for ${response.email} has been added.`,
-              dismissAfterMs: 4000,
-            });
           }
-        },
+        } else if ('email' in response) {
+          await queryClient.invalidateQueries({
+            queryKey: ['members', businessId],
+          });
+
+          navigation.goBack();
+
+          showNotification({
+            icon: {
+              size: 70,
+              name: IconName.CheckMarkCircle,
+              color: BaseColor.greenColor,
+            },
+            message: `The membership for ${response.email} has been added.`,
+            dismissAfterMs: 4000,
+          });
+        }
       },
-    );
+    });
   };
 
   const onSelectPackage = (item: CatalogProduct) => {
     if (item?.title) {
-      setModalVisible(false);
-      setSelectedPackage({
+      const payload = {
         name: item?.title,
         id: item?._id,
         duration: '',
-      });
+      };
+      setModalVisible(false);
+      setSelectedPackage(payload);
+      setValue('package', payload);
     }
   };
 
@@ -202,19 +196,28 @@ export default function AddBusinessMember(
             name="email"
           />
 
-          <TouchableOpacity
-            onPress={() => setModalVisible(true)}
-            style={[
-              GlobalStyle.datePickerContainer,
-              { backgroundColor: colors.card },
-            ]}>
-            <Text
-              style={{
-                color: selectedPackage.name ? colors.text : BaseColor.grayColor,
-              }}>
-              {selectedPackage.name ? selectedPackage.name : 'Select Package'}
-            </Text>
-          </TouchableOpacity>
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({ field: { value } }) => (
+              <TouchableOpacity
+                onPress={() => setModalVisible(true)}
+                style={[
+                  GlobalStyle.datePickerContainer,
+                  { backgroundColor: colors.card },
+                ]}>
+                <Text
+                  style={{
+                    color: value?.name ? colors.text : BaseColor.grayColor,
+                  }}>
+                  {value?.name ? value.name : 'Select Package'}
+                </Text>
+              </TouchableOpacity>
+            )}
+            name="package"
+          />
 
           <Controller
             control={control}
