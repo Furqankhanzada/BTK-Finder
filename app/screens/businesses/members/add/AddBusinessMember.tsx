@@ -51,9 +51,7 @@ export default function AddBusinessMember(
   const [isDatePickerVisible, setDatePickerVisibility] =
     useState<boolean>(false);
 
-  const navigateToPackageSelect = () => {
-    navigation.navigate('PackageSelect', { businessId });
-  };
+  const navigateToPackageSelect = () => {};
 
   useEffect(() => {
     resetPackage();

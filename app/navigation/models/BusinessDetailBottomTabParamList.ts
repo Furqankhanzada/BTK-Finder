@@ -26,5 +26,4 @@ export type MembersStackParamList = {
   Members: { businessId: string };
   EditMember: { businessId: string; membership: Membership };
   AddMember: { businessId: string };
-  PackageSelect: { businessId: string };
 };
