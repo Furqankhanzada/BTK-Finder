@@ -10,6 +10,7 @@ import {
 import { useForm, Controller } from 'react-hook-form';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useQueryClient } from '@tanstack/react-query';
+import Modal from 'react-native-modal';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 import IonIcon from 'react-native-vector-icons/Ionicons';
@@ -25,6 +26,9 @@ import {
 } from '@components';
 import { useAlerts } from '@hooks';
 
+import { CatalogProduct } from 'models/graphql';
+import Products from '@screens/businesses/components/Products';
+import { useBusiness } from '@screens/businesses/queries/queries';
 import { useAddMembership } from '@screens/businesses/queries/mutations';
 import { Membership } from '@screens/settings/profile/models/UserPresentable';
 import { MembersStackParamList } from 'navigation/models/BusinessDetailBottomTabParamList';
@@ -40,18 +44,19 @@ export default function AddBusinessMember(
   const { colors } = useTheme();
   const queryClient = useQueryClient();
   const { showAlert, showNotification } = useAlerts();
+  const { data: business } = useBusiness(businessId);
   const { mutateAsync, isLoading } = useAddMembership(businessId);
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm<Membership>();
-  const { selectedPackage, resetPackage } = useMemberStore();
+  const { selectedPackage, setSelectedPackage, resetPackage } =
+    useMemberStore();
 
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [isDatePickerVisible, setDatePickerVisibility] =
     useState<boolean>(false);
-
-  const navigateToPackageSelect = () => {};
 
   useEffect(() => {
     resetPackage();
@@ -129,6 +134,17 @@ export default function AddBusinessMember(
     );
   };
 
+  const onSelectPackage = (item: CatalogProduct) => {
+    if (item?.title) {
+      setModalVisible(false);
+      setSelectedPackage({
+        name: item?.title,
+        id: item?._id,
+        duration: '',
+      });
+    }
+  };
+
   const toggleDatePicker = () => {
     setDatePickerVisibility(!isDatePickerVisible);
   };
@@ -175,7 +191,7 @@ export default function AddBusinessMember(
                 keyboardType="email-address"
                 autoCorrect={false}
                 autoCapitalize="none"
-                onSubmitEditing={navigateToPackageSelect}
+                onSubmitEditing={() => setModalVisible(true)}
                 blurOnSubmit={true}
                 onBlur={onBlur}
                 onChangeText={onChange}
@@ -187,7 +203,7 @@ export default function AddBusinessMember(
           />
 
           <TouchableOpacity
-            onPress={navigateToPackageSelect}
+            onPress={() => setModalVisible(true)}
             style={[
               GlobalStyle.datePickerContainer,
               { backgroundColor: colors.card },
@@ -247,6 +263,33 @@ export default function AddBusinessMember(
           </Button>
         </View>
       </KeyboardAvoidingView>
+
+      <Modal
+        isVisible={modalVisible}
+        onSwipeComplete={() => {
+          setModalVisible(false);
+        }}
+        swipeDirection={['down']}
+        style={styles.bottomModal}>
+        <View
+          style={[
+            styles.contentFilterBottom,
+            { backgroundColor: colors.card },
+          ]}>
+          <View style={styles.contentSwipeDown}>
+            <View style={styles.lineSwipeDown} />
+          </View>
+
+          <View style={styles.listItemsContainer}>
+            <Products
+              containerStyle={styles.productsList}
+              onProductPress={(item) => onSelectPackage(item)}
+              business={business}
+              selectionMode={true}
+            />
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -257,6 +300,32 @@ const styles = StyleSheet.create({
   },
   keyboardAvoidingView: {
     flex: 1,
+  },
+  bottomModal: {
+    justifyContent: 'flex-end',
+    margin: 0,
+  },
+  contentFilterBottom: {
+    width: '100%',
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+    paddingHorizontal: 20,
+  },
+  contentSwipeDown: {
+    paddingTop: 10,
+    alignItems: 'center',
+  },
+  listItemsContainer: {
+    paddingVertical: 20,
+  },
+  lineSwipeDown: {
+    width: 30,
+    height: 2.5,
+    backgroundColor: BaseColor.dividerColor,
+  },
+  productsList: {
+    flex: 0,
+    paddingHorizontal: 0,
   },
   textInput: {
     marginTop: 10,
