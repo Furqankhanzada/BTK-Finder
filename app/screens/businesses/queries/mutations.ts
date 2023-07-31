@@ -131,14 +131,14 @@ export const useDeleteBusiness = () => {
   );
 };
 
-export const useMembershipUpdate = (id: string) => {
+export const useMembershipUpdate = (businessId: string) => {
   const queryClient = useQueryClient();
 
   return useMutation<Membership, Error, UpdateMembershipPayload>(
     (payload) => {
       return axiosApiInstance({
         method: 'PUT',
-        url: `${BUSINESSES_API}/${id}/member`,
+        url: `${BUSINESSES_API}/${businessId}/member`,
         data: payload,
       })
         .then((response) => response.data)
@@ -150,7 +150,7 @@ export const useMembershipUpdate = (id: string) => {
       onSuccess: async (response) => {
         if (response.email) {
           await queryClient.invalidateQueries({
-            queryKey: ['members', id],
+            queryKey: ['members', businessId],
           });
         }
       },
