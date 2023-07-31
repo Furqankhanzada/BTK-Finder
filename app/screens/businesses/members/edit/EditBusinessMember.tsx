@@ -37,26 +37,26 @@ export default function EditBusinessMember(
   const { selectedPackage, setSelectedPackage, resetPackage } =
     useMemberStore();
 
-  const [isDatePickerVisible, setDatePickerVisibility] =
-    useState<boolean>(false);
-  const [modalVisible, setModalVisible] = useState<boolean>(false);
   const statusItems = [
     { label: 'Active', value: MembershipStatus.ACTIVE },
     { label: 'Archive', value: MembershipStatus.ARCHIVE },
   ];
 
+  const [isDatePickerVisible, setDatePickerVisibility] =
+    useState<boolean>(false);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [selectedStatus, setSelectedStatus] = useState<MembershipStatus>(
     membership.status,
   );
   const [date, setDate] = useState<Date>(membership.billingDate);
 
-  const navigateToPackageSelect = () => {
-    navigation.navigate('PackageSelect', { businessId });
-  };
-
   useEffect(() => {
     setSelectedPackage(membership.package);
   }, [membership.package, setSelectedPackage]);
+
+  const navigateToPackageSelect = () => {
+    navigation.navigate('PackageSelect', { businessId });
+  };
 
   const onSubmit = async () => {
     const data: UpdateMembershipPayload = {
