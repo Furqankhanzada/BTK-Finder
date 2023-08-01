@@ -16,7 +16,9 @@ const SettingsStack = createStackNavigator<SettingsParamList>();
 
 export function SettingsStackNavigator() {
   return (
-    <SettingsStack.Navigator screenOptions={{ headerShown: false }}>
+    <SettingsStack.Navigator
+      screenOptions={{ headerShown: false }}
+      initialRouteName="Settings">
       <SettingsStack.Screen name="Settings" component={SettingsScreen} />
       <SettingsStack.Screen name="EditProfile" component={ProfileEditScreen} />
       <SettingsStack.Screen name="ContactUs" component={ContactUsScreen} />
