@@ -21,6 +21,7 @@ import MenuItemsPlaceholder from './MenuItemsPlaceholder';
 
 interface Props {
   onProductPress: (item: CatalogProduct) => void;
+  onPressTag?: (duration: string, item: CatalogProduct) => void;
   business: BusinessPresentable | undefined;
   containerStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
@@ -29,6 +30,7 @@ interface Props {
 
 export default function Products({
   onProductPress,
+  onPressTag,
   business,
   containerStyle,
   style,
@@ -131,7 +133,12 @@ export default function Products({
             subtitle={item.pricing[0]?.displayPrice}
             style={[styles.productList, style]}
             onPress={() => onProductPress(item)}
+            onPressTag={(duration) =>
+              onPressTag ? onPressTag(duration, item) : {}
+            }
             options={item.variants?.map((variant) => variant?.optionTitle)}
+            selectedOption={selectedPackage.duration}
+            selectedTitle={selectedPackage.name}
             iconRight={
               selectionMode && item._id === selectedPackage.id ? (
                 <Icon name="check-circle" color={colors.primary} size={20} />

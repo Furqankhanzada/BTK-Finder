@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   KeyboardAvoidingView,
@@ -51,12 +51,31 @@ export default function AddBusinessMember(
     handleSubmit,
     formState: { errors },
     setValue,
+    getValues,
   } = useForm<Membership>();
-  const { setSelectedPackage } = useMemberStore();
+  const { package: packageValue } = getValues();
+  const { setSelectedPackage, selectedPackage, resetPackage } =
+    useMemberStore();
 
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [isDatePickerVisible, setDatePickerVisibility] =
     useState<boolean>(false);
+
+  useEffect(() => {
+    if (selectedPackage) {
+      const unsubscribe = navigation.addListener('beforeRemove', () => {
+        // Delay the reset to avoid flickering
+        setTimeout(() => {
+          resetPackage();
+        }, 300);
+      });
+
+      return () => {
+        unsubscribe();
+      };
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigation]);
 
   const onSubmit = async (data: Membership) => {
     mutateAsync(data, {
@@ -132,6 +151,18 @@ export default function AddBusinessMember(
         name: item?.title,
         id: item?._id,
         duration: '',
+      };
+      setSelectedPackage(payload);
+      setValue('package', payload);
+    }
+  };
+
+  const onSelectTag = (duration: string, item: CatalogProduct) => {
+    if (item?.title) {
+      const payload = {
+        name: item?.title,
+        id: item?._id,
+        duration: duration,
       };
       setModalVisible(false);
       setSelectedPackage(payload);
@@ -214,6 +245,11 @@ export default function AddBusinessMember(
                   }}>
                   {value?.name ? value.name : 'Select Package'}
                 </Text>
+                {value?.duration ? (
+                  <Text caption1 style={{ color: colors.text }}>
+                    ({value?.duration})
+                  </Text>
+                ) : null}
               </TouchableOpacity>
             )}
             name="package"
@@ -284,9 +320,20 @@ export default function AddBusinessMember(
           </View>
 
           <View style={styles.listItemsContainer}>
+            {!packageValue?.name ? (
+              <Text caption1 style={{ color: BaseColor.redColor }}>
+                Please select a package
+              </Text>
+            ) : null}
+            {packageValue?.name && !packageValue?.duration ? (
+              <Text caption1 style={{ color: BaseColor.redColor }}>
+                Please select duration
+              </Text>
+            ) : null}
             <Products
               containerStyle={styles.productsList}
               onProductPress={(item) => onSelectPackage(item)}
+              onPressTag={(option, item) => onSelectTag(option, item)}
               business={business}
               selectionMode={true}
             />
