@@ -108,11 +108,21 @@ export default function EditBusinessMember(
 
   const onSelectPackage = (item: CatalogProduct) => {
     if (item?.title) {
-      setModalVisible(false);
       setSelectedPackage({
         name: item?.title,
         id: item?._id,
         duration: '',
+      });
+    }
+  };
+
+  const onSelectTag = (duration: string, item: CatalogProduct) => {
+    if (item?.title) {
+      setModalVisible(false);
+      setSelectedPackage({
+        name: item?.title,
+        id: item?._id,
+        duration: duration,
       });
     }
   };
@@ -179,6 +189,11 @@ export default function EditBusinessMember(
               }}>
               {selectedPackage.name ? selectedPackage.name : 'Select Package'}
             </Text>
+            {selectedPackage?.duration ? (
+              <Text caption1 style={{ color: colors.text }}>
+                ({selectedPackage?.duration})
+              </Text>
+            ) : null}
           </TouchableOpacity>
 
           <>
@@ -255,12 +270,20 @@ export default function EditBusinessMember(
               })}
 
             {modalType === ModalType.PACKAGE && (
-              <Products
-                containerStyle={styles.productsList}
-                onProductPress={(item) => onSelectPackage(item)}
-                business={business}
-                selectionMode={true}
-              />
+              <>
+                {selectedPackage?.name && !selectedPackage?.duration ? (
+                  <Text caption1 style={{ color: BaseColor.redColor }}>
+                    Please select duration
+                  </Text>
+                ) : null}
+                <Products
+                  containerStyle={styles.productsList}
+                  onProductPress={(item) => onSelectPackage(item)}
+                  onPressTag={(option, item) => onSelectTag(option, item)}
+                  business={business}
+                  selectionMode={true}
+                />
+              </>
             )}
           </View>
         </View>
