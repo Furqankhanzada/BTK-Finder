@@ -13,9 +13,11 @@ export default function CardList(props) {
     style,
     image,
     title,
+    selectedTitle,
     imageStyle,
     subtitle,
     options,
+    selectedOption,
     rate,
     onPress,
     onPressTag,
@@ -76,9 +78,14 @@ export default function CardList(props) {
             {options.map((option, index) => (
               <Tag
                 key={index}
-                onPress={onPressTag}
+                onPress={() => onPressTag(option)}
                 gray
-                style={{ marginRight: 4 }}>
+                style={
+                  ({ marginRight: 4 },
+                  selectedOption === option && selectedTitle === title
+                    ? { backgroundColor: colors.primary }
+                    : {})
+                }>
                 {option}
               </Tag>
             ))}
@@ -109,8 +116,10 @@ CardList.propTypes = {
   image: PropTypes.node.isRequired,
   imageStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
   title: PropTypes.string,
+  selectedTitle: PropTypes.string,
   subtitle: PropTypes.string,
   options: PropTypes.array,
+  selectedOption: PropTypes.string,
   rate: PropTypes.number,
   onPress: PropTypes.func,
   onPressTag: PropTypes.func,
@@ -126,8 +135,10 @@ CardList.defaultProps = {
   image: Images.imagePlaceholder,
   imageStyle: {},
   title: '',
+  selectedTitle: '',
   subtitle: '',
   options: [],
+  selectedOption: '',
   rate: 0,
   onPress: () => {},
   onPressTag: () => {},
