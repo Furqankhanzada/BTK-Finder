@@ -1,6 +1,12 @@
 import * as React from 'react';
 import { StyleSheet, View, useWindowDimensions } from 'react-native';
-import { TabView, SceneRendererProps, Route } from 'react-native-tab-view';
+import {
+  TabView,
+  SceneRendererProps,
+  Route,
+  TabBar,
+  NavigationState,
+} from 'react-native-tab-view';
 import { StackScreenProps } from '@react-navigation/stack';
 
 import { Header, Icon, Text } from '@components';
@@ -38,6 +44,18 @@ export default function BusinessMembersScreen(props: Props) {
     { key: MembershipStatus.ACTIVE, title: 'Active' },
     { key: MembershipStatus.ARCHIVE, title: 'Archived' },
   ]);
+
+  const renderTabBar = (
+    tabBarProps: SceneRendererProps & {
+      navigationState: NavigationState<Route>;
+    },
+  ) => (
+    <TabBar
+      {...tabBarProps}
+      indicatorStyle={{ backgroundColor: colors.text }}
+      style={{ backgroundColor: colors.card }}
+    />
+  );
 
   return (
     <>
@@ -80,6 +98,7 @@ export default function BusinessMembersScreen(props: Props) {
         }
       />
       <TabView
+        renderTabBar={renderTabBar}
         navigationState={{ index, routes }}
         renderScene={(renderProps: SceneRendererProps & { route: Route }) =>
           renderScene(renderProps, props)
