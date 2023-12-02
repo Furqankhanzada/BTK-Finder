@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { StyleSheet, View, useWindowDimensions } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  useWindowDimensions,
+  SafeAreaView,
+} from 'react-native';
 import {
   TabView,
   SceneRendererProps,
@@ -10,7 +15,7 @@ import {
 import { StackScreenProps } from '@react-navigation/stack';
 
 import { Header, Icon, Text } from '@components';
-import { useTheme } from '@config';
+import { BaseStyle, useTheme } from '@config';
 import { MembershipStatus } from '@screens/settings/profile/models/UserPresentable';
 
 import { MembersStackParamList } from 'navigation/models/BusinessDetailBottomTabParamList';
@@ -52,13 +57,14 @@ export default function BusinessMembersScreen(props: Props) {
   ) => (
     <TabBar
       {...tabBarProps}
-      indicatorStyle={{ backgroundColor: colors.text }}
+      indicatorStyle={{ backgroundColor: colors.primary }}
       style={{ backgroundColor: colors.card }}
+      labelStyle={{ color: colors.text }}
     />
   );
 
   return (
-    <>
+    <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
         title="Members"
         renderLeft={() => {
@@ -106,7 +112,7 @@ export default function BusinessMembersScreen(props: Props) {
         onIndexChange={setIndex}
         initialLayout={{ width: layout.width }}
       />
-    </>
+    </SafeAreaView>
   );
 }
 
