@@ -1,13 +1,13 @@
-import { Text } from '@components'
-import React from 'react'
-import { View } from 'react-native'
+import { Text } from '@components';
+import React from 'react';
+import { View } from 'react-native';
 
 function PaymentsDetails() {
   return (
-   <View>
-    <Text>PaymentsDetails</Text>
-   </View>
-  )
+    <View>
+      <Text>PaymentsDetails</Text>
+    </View>
+  );
 }
 
-export default PaymentsDetails
+export default PaymentsDetails;
