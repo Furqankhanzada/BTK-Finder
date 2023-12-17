@@ -11,6 +11,7 @@ import AppearanceScreen from '@screens/settings/appearance/AppearanceScreen';
 
 import { SettingsParamList } from '../../../navigation/models/SettingsParamList';
 import MyBusinessStackNavigator from '../my-businesses/navigation/MyBusinessesStack';
+import MyPaymentsScreen from '../my-payments/MyPaymentsScreen';
 
 const SettingsStack = createStackNavigator<SettingsParamList>();
 
@@ -19,6 +20,7 @@ export function SettingsStackNavigator() {
     <SettingsStack.Navigator screenOptions={{ headerShown: false }}>
       <SettingsStack.Screen name="Settings" component={SettingsScreen} />
       <SettingsStack.Screen name="EditProfile" component={ProfileEditScreen} />
+      <SettingsStack.Screen name="MyPayments" component={MyPaymentsScreen} />
       <SettingsStack.Screen name="ContactUs" component={ContactUsScreen} />
       <SettingsStack.Screen name="AboutUs" component={AboutUsScreen} />
       <SettingsStack.Screen

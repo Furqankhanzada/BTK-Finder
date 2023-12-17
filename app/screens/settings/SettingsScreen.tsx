@@ -106,6 +106,24 @@ export default function SettingsScreen(
                   enableRTL={true}
                 />
               </TouchableOpacity>
+              {/* start payments screen */}
+              <TouchableOpacity
+                style={[
+                  styles.profileItem,
+                  { borderBottomColor: colors.border },
+                ]}
+                // onPress={navigateToMyBusinesses}
+                onPress={() => navigation.navigate('MyPayments')}
+                >
+                <Text body1>{t('my_payments')}</Text>
+                <Icon
+                  name="angle-right"
+                  size={18}
+                  color={colors.primary}
+                  enableRTL={true}
+                />
+              </TouchableOpacity>
+              {/* end payments screen */}
               <TouchableOpacity
                 style={[
                   styles.profileItem,

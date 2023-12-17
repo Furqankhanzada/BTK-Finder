@@ -60,6 +60,10 @@ export const linkingConfig: LinkingOptions<RootStackParamList> = {
             path: 'contact-us',
             exact: true,
           },
+          MyPayments: {
+            path: 'my-payments',
+            exact: true,
+          },
           AboutUs: {
             path: 'about-us',
             exact: true,

@@ -9,4 +9,5 @@ export type SettingsParamList = {
   MyBusinessesStack: NavigatorScreenParams<MyBusinessesStackParamList>;
   SendNotification: undefined;
   Appearance: undefined;
+  MyPayments: undefined;
 };
