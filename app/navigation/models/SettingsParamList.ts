@@ -10,4 +10,5 @@ export type SettingsParamList = {
   SendNotification: undefined;
   Appearance: undefined;
   MyPayments: undefined;
+  // Memberships: undefined;
 };

@@ -1,13 +1,14 @@
 import React from 'react';
-import { View, StyleSheet, Alert } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { StackScreenProps } from '@react-navigation/stack';
 import { BaseStyle, useTheme } from '@config';
-import { Header, SafeAreaView, Icon, Text, Button } from '@components';
+import { Header, SafeAreaView, Icon, Text, Tag } from '@components';
+import { FlatList, ScrollView } from 'react-native-gesture-handler';
+import InvioceCard from './components/InvioceCard';
+import { SettingsParamList } from 'navigation/models/SettingsParamList';
+import { StackScreenProps } from '@react-navigation/stack';
 
-import { SettingsParamList } from '../../../navigation/models/SettingsParamList';
-
-export default function MyPaymentsScreen({
+export default function MyPayments({
   navigation,
 }: StackScreenProps<SettingsParamList, 'MyPayments'>) {
   const { t } = useTranslation();
@@ -32,101 +33,126 @@ export default function MyPaymentsScreen({
         }}
       />
       <SafeAreaView>
-        <View style={styles.container}>
-          <Button
-            style={styles.btn}
-            onPress={() => Alert.alert('Unpaid Button')}>
-            Unpaid
-          </Button>
-          <Button style={styles.btn} onPress={() => Alert.alert('Paid Button')}>
-            Paid
-          </Button>
-        </View>
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Gym Metix</Text>
-          <View style={styles.cardContainer}>
-            <View style={styles.cardDetails}>
-              <Text style={styles.contentLeft}>Name</Text>
-              <Text style={styles.contentLeft}>Id Number</Text>
-              <Text style={styles.contentLeft}>Package</Text>
-              <Text style={styles.contentLeft}>Billing Time</Text>
-              <Text style={styles.contentLeft}>Subscription</Text>
+        <FlatList
+          style={[styles.tagsContainer]}
+          horizontal={true}
+          ListHeaderComponent={
+            <View style={styles.listHeader}>
+              <Tag
+                rate
+                style={[
+                  styles.item,
+                  {
+                    backgroundColor: colors.primary,
+                  },
+                ]}>
+                All
+              </Tag>
+              <Tag
+                rate
+                style={[
+                  styles.item,
+                  {
+                    backgroundColor: colors.primary,
+                  },
+                ]}>
+                Active
+              </Tag>
+              <Tag
+                rate
+                style={[
+                  styles.item,
+                  {
+                    backgroundColor: colors.primary,
+                  },
+                ]}>
+                Cancelled
+              </Tag>
             </View>
-            <View style={styles.cardDetails}>
-              <Text style={styles.contentRight}>Abdul Rehman</Text>
-              <Text style={styles.contentRight}>#1234</Text>
-              <Text style={styles.contentRight}>Weight Traning</Text>
-              <Text style={styles.contentRight}>01-01-2024</Text>
-              <Text style={styles.contentRight}>Monthly</Text>
-            </View>
-          </View>
-          <View style={styles.buttonsContainer}>
-            <Button>See Details</Button>
-            <Button>Pay Now</Button>
-          </View>
-        </View>
+          }
+          data={undefined}
+          renderItem={undefined}
+        />
       </SafeAreaView>
+      <ScrollView>
+        <SafeAreaView style={styles.container}>
+          <View style={styles.card}>
+            <Text style={styles.heading}>Gym Metrix</Text>
+            <Text style={styles.subHeading}>
+              Personal Training For Weight Training
+            </Text>
+            <Text>
+              Next payment <Text style={styles.text}>Rs.5,000 </Text>
+              due by <Text style={styles.text}> December 27, 2023</Text>
+            </Text>
+          </View>
+          <View style={styles.card}>
+            <Text style={styles.heading}>Vortex Gym</Text>
+            <Text style={styles.subHeading}>Weight Training</Text>
+            <Text>
+              Next payment <Text style={styles.text}>Rs.10,000 </Text>
+              due by <Text style={styles.text}> December 27, 2023</Text>
+            </Text>
+          </View>
+          <InvioceCard />
+        </SafeAreaView>
+      </ScrollView>
     </SafeAreaView>
   );
 }
-
 const styles = StyleSheet.create({
-  btn: {
-    width: 180,
-    height: 45,
-    fontSize: 17,
+  tagsContainer: {
+    marginBottom: 10,
+    paddingLeft: 20,
+  },
+  productsContainer: {
+    marginTop: 15,
+  },
+  productList: {
+    marginTop: 10,
+  },
+  item: {
+    marginRight: 5,
+  },
+  listEmptyText: {
     textAlign: 'center',
+    paddingVertical: 20,
   },
   container: {
     flex: 1,
-    justifyContent: 'space-evenly',
-    flexDirection: 'row',
-    marginBottom: 55,
+    marginHorizontal: 10,
+  },
+  heading: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginVertical: 5,
+  },
+  subHeading: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginVertical: 5,
   },
   card: {
     backgroundColor: 'white',
-    borderRadius: 15,
+    borderRadius: 5,
     padding: 16,
     alignSelf: 'center',
     shadowColor: 'black',
     shadowOffset: {
       width: 0,
-      height: 4,
+      height: 2,
     },
-    shadowOpacity: 0.3,
-    shadowRadius: 6,
-    elevation: 14,
-    width: '85%',
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 10,
+    width: '95%',
     marginBottom: 20,
     marginTop: 5,
   },
-  cardContainer: {
+  text: {
+    fontWeight: '900',
+  },
+  listHeader: {
     flexDirection: 'row',
-  },
-  cardDetails: {
-    width: '50%',
-  },
-  cardTitle: {
-    fontWeight: 'bold',
-    fontSize: 20,
-    marginTop: 5,
-    marginBottom: 10,
-  },
-  contentLeft: {
-    textAlign: 'left',
-    fontSize: 14,
-    marginTop: 10,
-  },
-  contentRight: {
-    textAlign: 'right',
-    fontSize: 14,
-    marginTop: 10,
-  },
-  buttonsContainer: {
-    width: '90%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignSelf: 'center',
-    marginTop: 20,
   },
 });
