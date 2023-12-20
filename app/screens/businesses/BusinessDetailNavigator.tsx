@@ -31,8 +31,8 @@ import {
 } from '../../navigation/models/BusinessDetailBottomTabParamList';
 import { MainStackParamList } from '../../navigation/models/MainStackParamList';
 import BusinessMembersScreen from './members/list/BusinessMembersScreen';
-import AddBusinessMember from './members/add/AddBusinessMember';
 import EditBusinessMember from './members/edit/EditBusinessMember';
+import NewMembersStackNavigator from './members/add/AddBusinessMembersStackNavigator';
 
 const BusinessDetailBottomTab =
   createBottomTabNavigator<BusinessDetailBottomTabParamList>();
@@ -71,8 +71,11 @@ function MembersStackNavigator({}: StackScreenProps<
   return (
     <MembersStack.Navigator screenOptions={{ headerShown: false }}>
       <MembersStack.Screen name="Members" component={BusinessMembersScreen} />
-      <MembersStack.Screen name="AddMember" component={AddBusinessMember} />
       <MembersStack.Screen name="EditMember" component={EditBusinessMember} />
+      <MembersStack.Screen
+        name="NewMembersStackNavigator"
+        component={NewMembersStackNavigator}
+      />
     </MembersStack.Navigator>
   );
 }

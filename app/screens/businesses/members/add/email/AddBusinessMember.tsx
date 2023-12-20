@@ -1,178 +1,154 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   View,
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
   ScrollView,
-  TouchableOpacity,
 } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { StackScreenProps } from '@react-navigation/stack';
-import { useQueryClient } from '@tanstack/react-query';
-import Modal from 'react-native-modal';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import moment from 'moment';
-import IonIcon from 'react-native-vector-icons/Ionicons';
-
 import { BaseColor, useTheme } from '@config';
-import {
-  Header,
-  SafeAreaView,
-  Icon,
-  Button,
-  TextInput,
-  Text,
-} from '@components';
-import { useAlerts } from '@hooks';
-
-import { CatalogProduct } from 'models/graphql';
-import Products from '@screens/businesses/components/Products';
-import { useBusiness } from '@screens/businesses/queries/queries';
-import { useAddMembership } from '@screens/businesses/queries/mutations';
+import { Header, SafeAreaView, Icon, Button, TextInput } from '@components';
 import { Membership } from '@screens/settings/profile/models/UserPresentable';
-import { MembersStackParamList } from 'navigation/models/BusinessDetailBottomTabParamList';
-import { IconName } from '../../../../contexts/alerts-v2/models/Icon';
-import GlobalStyle from '../../../../assets/styling/GlobalStyle';
-import useMemberStore from '../store/Store';
+import { AddMembersParamList } from 'navigation/models/AddMembersParamList';
 
 export default function AddBusinessMember(
-  props: StackScreenProps<MembersStackParamList, 'AddMember'>,
+  props: StackScreenProps<AddMembersParamList, 'Email'>,
 ) {
-  const { navigation, route } = props;
-  const { businessId } = route.params;
+  const { navigation } = props;
+  // const { businessId } = route.params;
+  // console.log(businessId);
+
   const { colors } = useTheme();
-  const queryClient = useQueryClient();
-  const { showAlert, showNotification } = useAlerts();
-  const { data: business } = useBusiness(businessId);
-  const { mutateAsync, isLoading } = useAddMembership(businessId);
+  // const queryClient = useQueryClient();
+  // const { showAlert, showNotification } = useAlerts();
+  // const { data: business } = useBusiness(businessId);
+  // const { mutateAsync, isLoading } = useAddMembership(businessId);
   const {
     control,
-    handleSubmit,
     formState: { errors },
-    setValue,
-    getValues,
   } = useForm<Membership>();
-  const { package: packageValue } = getValues();
-  const { setSelectedPackage, selectedPackage, resetPackage } =
-    useMemberStore();
+  // const { package: packageValue } = getValues();
+  // const { setSelectedPackage, selectedPackage, resetPackage } =
+  //   useMemberStore();
 
-  const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const [isDatePickerVisible, setDatePickerVisibility] =
-    useState<boolean>(false);
+  // const [modalVisible, setModalVisible] = useState<boolean>(false);
+  // const [isDatePickerVisible, setDatePickerVisibility] =
+  //   useState<boolean>(false);
 
-  useEffect(() => {
-    if (selectedPackage) {
-      const unsubscribe = navigation.addListener('beforeRemove', () => {
-        // Delay the reset to avoid flickering
-        setTimeout(() => {
-          resetPackage();
-        }, 300);
-      });
+  // useEffect(() => {
+  //   if (selectedPackage) {
+  //     const unsubscribe = navigation.addListener('beforeRemove', () => {
+  //       // Delay the reset to avoid flickering
+  //       setTimeout(() => {
+  //         resetPackage();
+  //       }, 300);
+  //     });
 
-      return () => {
-        unsubscribe();
-      };
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [navigation]);
+  //     return () => {
+  //       unsubscribe();
+  //     };
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [navigation]);
 
-  const onSubmit = async (data: Membership) => {
-    mutateAsync(data, {
-      async onSuccess(response) {
-        if ('message' in response && response.message === 'invitation-sent') {
-          const buttonPressed = await showAlert({
-            content: () => (
-              <>
-                <IonIcon
-                  size={70}
-                  name={IconName.CheckMarkCircle}
-                  color={BaseColor.greenColor}
-                />
-                <Text textAlign="center" header>
-                  Invitation Sent
-                </Text>
-                <Text textAlign="center" body1>
-                  We have sent an invitation email to {data.email}
-                </Text>
-                <Text
-                  textAlign="center"
-                  body1
-                  bold
-                  style={[{ color: BaseColor.redColor }, styles.noteText]}>
-                  NOTE:
-                </Text>
-                <Text textAlign="center" body2>
-                  Since no account is registered with this email: {data.email}
-                </Text>
-                <Text textAlign="center" body2>
-                  We have sent an email to {data.email} for account
-                  registration.
-                </Text>
-                <Text textAlign="center" body2>
-                  Once the user registers with this email in our app, He will be
-                  automatically added as the member of your business
-                </Text>
-              </>
-            ),
-            btn: {
-              confirmBtnTitle: 'Okay',
-            },
-            type: 'Custom',
-          });
+  // const onSubmit = async (data: Membership) => {
+  //   mutateAsync(data, {
+  //     async onSuccess(response) {
+  //       if ('message' in response && response.message === 'invitation-sent') {
+  //         const buttonPressed = await showAlert({
+  //           content: () => (
+  //             <>
+  //               <IonIcon
+  //                 size={70}
+  //                 name={IconName.CheckMarkCircle}
+  //                 color={BaseColor.greenColor}
+  //               />
+  //               <Text textAlign="center" header>
+  //                 Invitation Sent
+  //               </Text>
+  //               <Text textAlign="center" body1>
+  //                 We have sent an invitation email to {data.email}
+  //               </Text>
+  //               <Text
+  //                 textAlign="center"
+  //                 body1
+  //                 bold
+  //                 style={[{ color: BaseColor.redColor }, styles.noteText]}>
+  //                 NOTE:
+  //               </Text>
+  //               <Text textAlign="center" body2>
+  //                 Since no account is registered with this email: {data.email}
+  //               </Text>
+  //               <Text textAlign="center" body2>
+  //                 We have sent an email to {data.email} for account
+  //                 registration.
+  //               </Text>
+  //               <Text textAlign="center" body2>
+  //                 Once the user registers with this email in our app, He will be
+  //                 automatically added as the member of your business
+  //               </Text>
+  //             </>
+  //           ),
+  //           btn: {
+  //             confirmBtnTitle: 'Okay',
+  //           },
+  //           type: 'Custom',
+  //         });
 
-          if (buttonPressed === 'confirm') {
-            navigation.goBack();
-          }
-        } else if ('email' in response) {
-          await queryClient.invalidateQueries({
-            queryKey: ['members', businessId],
-          });
+  //         if (buttonPressed === 'confirm') {
+  //           navigation.goBack();
+  //         }
+  //       } else if ('email' in response) {
+  //         await queryClient.invalidateQueries({
+  //           queryKey: ['members', businessId],
+  //         });
 
-          navigation.goBack();
+  //         navigation.goBack();
 
-          showNotification({
-            icon: {
-              size: 70,
-              name: IconName.CheckMarkCircle,
-              color: BaseColor.greenColor,
-            },
-            message: `The membership for ${response.email} has been added.`,
-            dismissAfterMs: 4000,
-          });
-        }
-      },
-    });
-  };
+  //         showNotification({
+  //           icon: {
+  //             size: 70,
+  //             name: IconName.CheckMarkCircle,
+  //             color: BaseColor.greenColor,
+  //           },
+  //           message: `The membership for ${response.email} has been added.`,
+  //           dismissAfterMs: 4000,
+  //         });
+  //       }
+  //     },
+  //   });
+  // };
 
-  const onSelectPackage = (item: CatalogProduct) => {
-    if (item?.title) {
-      const payload = {
-        name: item?.title,
-        id: item?._id,
-        duration: '',
-      };
-      setSelectedPackage(payload);
-      setValue('package', payload);
-    }
-  };
+  // const onSelectPackage = (item: CatalogProduct) => {
+  //   if (item?.title) {
+  //     const payload = {
+  //       name: item?.title,
+  //       id: item?._id,
+  //       duration: '',
+  //     };
+  //     setSelectedPackage(payload);
+  //     setValue('package', payload);
+  //   }
+  // };
 
-  const onSelectTag = (duration: string, item: CatalogProduct) => {
-    if (item?.title) {
-      const payload = {
-        name: item?.title,
-        id: item?._id,
-        duration: duration,
-      };
-      setModalVisible(false);
-      setSelectedPackage(payload);
-      setValue('package', payload);
-    }
-  };
+  // const onSelectTag = (duration: string, item: CatalogProduct) => {
+  //   if (item?.title) {
+  //     const payload = {
+  //       name: item?.title,
+  //       id: item?._id,
+  //       duration: duration,
+  //     };
+  //     setModalVisible(false);
+  //     setSelectedPackage(payload);
+  //     setValue('package', payload);
+  //   }
+  // };
 
-  const toggleDatePicker = () => {
-    setDatePickerVisibility(!isDatePickerVisible);
-  };
+  // const toggleDatePicker = () => {
+  //   setDatePickerVisibility(!isDatePickerVisible);
+  // };
 
   const offsetKeyboard = Platform.select({
     ios: 0,
@@ -182,7 +158,7 @@ export default function AddBusinessMember(
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <Header
-        title="Add Member"
+        title="Add Member Email"
         renderLeft={() => {
           return (
             <Icon
@@ -216,7 +192,7 @@ export default function AddBusinessMember(
                 keyboardType="email-address"
                 autoCorrect={false}
                 autoCapitalize="none"
-                onSubmitEditing={() => setModalVisible(true)}
+                // onSubmitEditing={() => setModalVisible(true)}
                 blurOnSubmit={true}
                 onBlur={onBlur}
                 onChangeText={onChange}
@@ -227,7 +203,7 @@ export default function AddBusinessMember(
             name="email"
           />
 
-          <Controller
+          {/* <Controller
             control={control}
             rules={{
               required: true,
@@ -253,9 +229,9 @@ export default function AddBusinessMember(
               </TouchableOpacity>
             )}
             name="package"
-          />
+          /> */}
 
-          <Controller
+          {/* <Controller
             control={control}
             rules={{
               required: true,
@@ -293,17 +269,23 @@ export default function AddBusinessMember(
               </>
             )}
             name="billingDate"
-          />
+          /> */}
         </ScrollView>
-
         <View style={styles.buttonContainer}>
-          <Button full loading={isLoading} onPress={handleSubmit(onSubmit)}>
-            Add
+          <Button
+          // onPress={()=> navigation.navigate('MembersPackages')
+          // onPress={() =>
+          //   navigation.navigate('MembersPackages', {
+          //     businessId: route.params.businessId,
+          //   })
+          // }
+          >
+            Next
           </Button>
         </View>
       </KeyboardAvoidingView>
 
-      <Modal
+      {/* <Modal
         isVisible={modalVisible}
         onSwipeComplete={() => {
           setModalVisible(false);
@@ -339,7 +321,7 @@ export default function AddBusinessMember(
             />
           </View>
         </View>
-      </Modal>
+      </Modal> */}
     </SafeAreaView>
   );
 }

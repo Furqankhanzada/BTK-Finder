@@ -17,7 +17,6 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { Header, Icon, Text } from '@components';
 import { BaseStyle, useTheme } from '@config';
 import { MembershipStatus } from '@screens/settings/profile/models/UserPresentable';
-
 import { MembersStackParamList } from 'navigation/models/BusinessDetailBottomTabParamList';
 import ActiveMembers from './ActiveMembers';
 import ArchiveMembers from './ArchiveMembers';
@@ -38,7 +37,6 @@ const renderScene = (
       return null;
   }
 };
-
 export default function BusinessMembersScreen(props: Props) {
   const layout = useWindowDimensions();
   const { colors } = useTheme();
@@ -98,7 +96,7 @@ export default function BusinessMembersScreen(props: Props) {
           navigation.goBack();
         }}
         onPressRight={() =>
-          navigation.navigate('AddMember', {
+          navigation.navigate('NewMembersStackNavigator', {
             businessId: route.params.businessId,
           })
         }

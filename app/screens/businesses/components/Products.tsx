@@ -46,6 +46,7 @@ export default function Products({
     refetch: reFetchTags,
     isLoading,
   } = useTags(business?.shop?.shopId);
+
   // Products
   const {
     refetch: reFetchProducts,
