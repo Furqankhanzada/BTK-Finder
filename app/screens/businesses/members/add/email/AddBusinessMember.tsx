@@ -9,7 +9,14 @@ import {
 import { useForm, Controller } from 'react-hook-form';
 import { StackScreenProps } from '@react-navigation/stack';
 import { BaseColor, useTheme } from '@config';
-import { Header, SafeAreaView, Icon, Button, TextInput } from '@components';
+import {
+  Header,
+  SafeAreaView,
+  Icon,
+  Button,
+  TextInput,
+  Text,
+} from '@components';
 import { Membership } from '@screens/settings/profile/models/UserPresentable';
 import { AddMembersParamList } from 'navigation/models/AddMembersParamList';
 
@@ -17,7 +24,7 @@ export default function AddBusinessMember(
   props: StackScreenProps<AddMembersParamList, 'Email'>,
 ) {
   const { navigation } = props;
-  // const { businessId } = route.params;
+  const businessId = '6401d1445d381e3bcd4b47e7';
   // console.log(businessId);
 
   const { colors } = useTheme();
@@ -158,7 +165,7 @@ export default function AddBusinessMember(
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <Header
-        title="Add Member Email"
+        title="Email Address"
         renderLeft={() => {
           return (
             <Icon
@@ -185,20 +192,25 @@ export default function AddBusinessMember(
               required: true,
             }}
             render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                style={styles.textInput}
-                placeholder="Email"
-                textContentType="emailAddress"
-                keyboardType="email-address"
-                autoCorrect={false}
-                autoCapitalize="none"
-                // onSubmitEditing={() => setModalVisible(true)}
-                blurOnSubmit={true}
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                success={!errors.email}
-              />
+              <View>
+                <Text title1 bold>
+                  What is the valid Email address of your Membership ?{' '}
+                </Text>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="Email"
+                  textContentType="emailAddress"
+                  keyboardType="email-address"
+                  autoCorrect={false}
+                  autoCapitalize="none"
+                  // onSubmitEditing={() => setModalVisible(true)}
+                  blurOnSubmit={true}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  success={!errors.email}
+                />
+              </View>
             )}
             name="email"
           />
@@ -229,9 +241,8 @@ export default function AddBusinessMember(
               </TouchableOpacity>
             )}
             name="package"
-          /> */}
-
-          {/* <Controller
+          />
+          <Controller
             control={control}
             rules={{
               required: true,
@@ -273,13 +284,12 @@ export default function AddBusinessMember(
         </ScrollView>
         <View style={styles.buttonContainer}>
           <Button
-          // onPress={()=> navigation.navigate('MembersPackages')
-          // onPress={() =>
-          //   navigation.navigate('MembersPackages', {
-          //     businessId: route.params.businessId,
-          //   })
-          // }
-          >
+            // onPress={()=> navigation.navigate('Pakages')}
+            onPress={() =>
+              navigation.navigate('Pakages', {
+                businessId: businessId,
+              })
+            }>
             Next
           </Button>
         </View>
