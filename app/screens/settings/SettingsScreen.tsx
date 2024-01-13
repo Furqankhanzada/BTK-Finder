@@ -111,6 +111,7 @@ export default function SettingsScreen(
                   styles.profileItem,
                   { borderBottomColor: colors.border },
                 ]}
+
                 onPress={() => navigation.navigate('MyPayments')}>
                 <Text body1>{t('my_payments')}</Text>
                 <Icon
@@ -125,6 +126,7 @@ export default function SettingsScreen(
                   styles.profileItem,
                   { borderBottomColor: colors.border },
                 ]}
+
                 onPress={navigateToMyBusinesses}>
                 <Text body1>{t('my_businesses')}</Text>
                 <Icon
