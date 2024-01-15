@@ -1,5 +1,6 @@
 import { NavigatorScreenParams } from '@react-navigation/native';
 import { MyBusinessesStackParamList } from './MyBusinessesParamList';
+import MyMemberships from '../../screens/settings/my-payments/MyMembershipsScreen';
 
 export type SettingsParamList = {
   Settings: undefined;
@@ -9,6 +10,13 @@ export type SettingsParamList = {
   MyBusinessesStack: NavigatorScreenParams<MyBusinessesStackParamList>;
   SendNotification: undefined;
   Appearance: undefined;
-  MyPayments: undefined;
+  MyMemberships: undefined;
+  PaymentsDetails: {
+    invoiceId: string;
+    packageName: string;
+    training: string;
+    amount: string;
+    date: string;
+  };
   // Memberships: undefined;
 };
