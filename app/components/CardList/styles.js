@@ -37,9 +37,4 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  iconRight: {
-    position: 'absolute',
-    right: 5,
-    alignSelf: 'center',
-  },
 });

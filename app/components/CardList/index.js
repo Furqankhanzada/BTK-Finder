@@ -13,11 +13,8 @@ export default function CardList(props) {
     style,
     image,
     title,
-    selectedTitle,
-    imageStyle,
     subtitle,
     options,
-    selectedOption,
     rate,
     onPress,
     onPressTag,
@@ -25,14 +22,13 @@ export default function CardList(props) {
     editAble,
     onPressDelete,
     onPressEdit,
-    iconRight,
   } = props;
   return (
     <TouchableOpacity
       style={[styles.contain, { overflow: 'hidden' }, style]}
       onPress={onPress}
       activeOpacity={0.9}>
-      <Image source={image} style={[styles.image, imageStyle]} />
+      <Image source={image} style={styles.image} />
       <View
         style={{
           paddingHorizontal: 10,
@@ -78,14 +74,9 @@ export default function CardList(props) {
             {options.map((option, index) => (
               <Tag
                 key={index}
-                onPress={() => onPressTag(option)}
+                onPress={onPressTag}
                 gray
-                style={
-                  ({ marginRight: 4 },
-                  selectedOption === option && selectedTitle === title
-                    ? { backgroundColor: colors.primary }
-                    : {})
-                }>
+                style={{ marginRight: 4 }}>
                 {option}
               </Tag>
             ))}
@@ -106,7 +97,6 @@ export default function CardList(props) {
           <Icon name="pencil-alt" color="white" />
         </TouchableOpacity>
       ) : null}
-      {iconRight ? <View style={styles.iconRight}>{iconRight}</View> : null}
     </TouchableOpacity>
   );
 }
@@ -114,12 +104,9 @@ export default function CardList(props) {
 CardList.propTypes = {
   style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
   image: PropTypes.node.isRequired,
-  imageStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
   title: PropTypes.string,
-  selectedTitle: PropTypes.string,
   subtitle: PropTypes.string,
   options: PropTypes.array,
-  selectedOption: PropTypes.string,
   rate: PropTypes.number,
   onPress: PropTypes.func,
   onPressTag: PropTypes.func,
@@ -127,18 +114,14 @@ CardList.propTypes = {
   editAble: PropTypes.bool,
   onPressDelete: PropTypes.func,
   onPressEdit: PropTypes.func,
-  iconRight: PropTypes.element,
 };
 
 CardList.defaultProps = {
   style: {},
   image: Images.imagePlaceholder,
-  imageStyle: {},
   title: '',
-  selectedTitle: '',
   subtitle: '',
   options: [],
-  selectedOption: '',
   rate: 0,
   onPress: () => {},
   onPressTag: () => {},
@@ -146,5 +129,4 @@ CardList.defaultProps = {
   editAble: false,
   onPressDelete: () => {},
   onPressEdit: () => {},
-  iconRight: null,
 };
