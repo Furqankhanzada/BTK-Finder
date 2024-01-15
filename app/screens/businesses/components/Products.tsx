@@ -9,34 +9,22 @@ import {
   Text,
 } from 'react-native';
 
-import { CardList, Icon, Tag } from '@components';
+import { CardList, Tag } from '@components';
 import { useTheme } from '@config';
 import { BusinessPresentable } from '@screens/businesses/models/BusinessPresentable';
 import { useProductsByTag, useTags } from '@screens/businesses/queries/queries';
 
-import useMemberStore from '../members/store/Store';
 import { CatalogProduct, Tag as TagType } from '../../../models/graphql';
 import MenuTabPlaceholder from './MenuTabPlaceholder';
 import MenuItemsPlaceholder from './MenuItemsPlaceholder';
 
 interface Props {
   onProductPress: (item: CatalogProduct) => void;
-  onPressTag?: (duration: string, item: CatalogProduct) => void;
   business: BusinessPresentable | undefined;
-  containerStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
-  selectionMode?: boolean;
 }
 
-export default function Products({
-  onProductPress,
-  onPressTag,
-  business,
-  containerStyle,
-  style,
-  selectionMode,
-}: Props) {
-  const { selectedPackage } = useMemberStore();
+export default function Products({ onProductPress, business, style }: Props) {
   const [selectedTag, setSelectedTag] = useState<TagType | undefined>();
   const [isReFetching, setIsReFetching] = useState<boolean>(false);
   const { colors } = useTheme();
@@ -71,7 +59,7 @@ export default function Products({
   };
 
   return (
-    <View style={[styles.container, containerStyle]}>
+    <View style={styles.container}>
       <FlatList
         listKey="products"
         refreshControl={
@@ -133,17 +121,7 @@ export default function Products({
             subtitle={item.pricing[0]?.displayPrice}
             style={[styles.productList, style]}
             onPress={() => onProductPress(item)}
-            onPressTag={(duration) =>
-              onPressTag ? onPressTag(duration, item) : {}
-            }
             options={item.variants?.map((variant) => variant?.optionTitle)}
-            selectedOption={selectedPackage.duration}
-            selectedTitle={selectedPackage.name}
-            iconRight={
-              selectionMode && item._id === selectedPackage.id ? (
-                <Icon name="check-circle" color={colors.primary} size={20} />
-              ) : null
-            }
           />
         )}
       />
@@ -154,7 +132,7 @@ export default function Products({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 20,
+    paddingLeft: 20,
   },
   tagsContainer: {
     marginBottom: 10,
