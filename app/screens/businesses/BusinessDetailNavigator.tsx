@@ -54,6 +54,24 @@ function ProductStackNavigator() {
   );
 }
 
+const MembersStack = createStackNavigator<MembersStackParamList>();
+
+function MembersStackNavigator({}: StackScreenProps<
+  BusinessDetailBottomTabParamList,
+  'MembersStack'
+>) {
+  return (
+    <MembersStack.Navigator screenOptions={{ headerShown: false }}>
+      <MembersStack.Screen name="Members" component={BusinessMembersScreen} />
+      <MembersStack.Screen name="EditMember" component={EditBusinessMember} />
+      <MembersStack.Screen
+        name="NewMembersStackNavigator"
+        component={NewMembersStackNavigator}
+      />
+    </MembersStack.Navigator>
+  );
+}
+
 export default function BusinessDetailNavigator({
   route,
 }: BottomTabScreenProps<MainStackParamList, 'BusinessDetailTabNavigator'>) {
