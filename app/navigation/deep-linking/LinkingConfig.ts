@@ -31,6 +31,26 @@ export const linkingConfig: LinkingOptions<RootStackParamList> = {
                   },
                 },
               },
+              SettingsStack: {
+                screens: {
+                  ContactUs: {
+                    path: 'contact-us',
+                    exact: true,
+                  },
+                  AboutUs: {
+                    path: 'about-us',
+                    exact: true,
+                  },
+                  MyBusinessesStack: {
+                    screens: {
+                      MyBusinesses: {
+                        path: 'my-businesses',
+                        exact: true,
+                      },
+                    },
+                  },
+                },
+              },
             },
           },
           Businesses: {
