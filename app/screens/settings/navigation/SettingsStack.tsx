@@ -14,7 +14,6 @@ import MyBusinessStackNavigator from '../my-businesses/navigation/MyBusinessesSt
 // import MyPaymentsStack from '../my-payments/navigation/MyPaymentsStack';
 import MyPayments from '../my-payments/MyPaymentsScreen';
 
-
 const SettingsStack = createStackNavigator<SettingsParamList>();
 
 export function SettingsStackNavigator() {

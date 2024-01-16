@@ -1,6 +1,5 @@
 import { NavigatorScreenParams } from '@react-navigation/native';
 import { MyBusinessesStackParamList } from './MyBusinessesParamList';
-import MyMemberships from '../../screens/settings/my-payments/MyMembershipsScreen';
 
 export type SettingsParamList = {
   Settings: undefined;
@@ -18,5 +17,6 @@ export type SettingsParamList = {
     amount: string;
     date: string;
   };
+
   // Memberships: undefined;
 };

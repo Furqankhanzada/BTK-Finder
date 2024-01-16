@@ -9,11 +9,19 @@ import { StackScreenProps } from '@react-navigation/stack';
 function PaymentsDetails({
   navigation,
   route,
+<<<<<<< Updated upstream
 }: StackScreenProps<SettingsParamList, 'PaymentsDetails'>) {
   const { t } = useTranslation();
   const { colors } = useTheme();
 
   const { invoiceId, packageName, training, amount, date } = route.params || {};
+=======
+}: StackScreenProps<SettingsParamList, 'Invoices'>) {
+  const { t } = useTranslation();
+  const { colors } = useTheme();
+
+  const { businessId } = route.params || {};
+>>>>>>> Stashed changes
 
   return (
     <SafeAreaView>
@@ -79,6 +87,7 @@ function PaymentsDetails({
         <SafeAreaView style={styles.container}>
           <View style={styles.card}>
             <Text style={styles.heading}>
+<<<<<<< Updated upstream
               {t('Invoice ID')}: {invoiceId}
             </Text>
             <Text style={styles.subHeading}>
@@ -92,6 +101,9 @@ function PaymentsDetails({
             </Text>
             <Text style={styles.text}>
               {t('Date')}: {date}
+=======
+              {t('Business Id')}: {businessId}
+>>>>>>> Stashed changes
             </Text>
           </View>
         </SafeAreaView>
