@@ -64,6 +64,10 @@ export const linkingConfig: LinkingOptions<RootStackParamList> = {
             path: 'about-us',
             exact: true,
           },
+          MyMemberships: {
+            path: 'my-memberships',
+            exact: true,
+          },
           MyBusinesses: {
             path: 'my-businesses',
             exact: true,
