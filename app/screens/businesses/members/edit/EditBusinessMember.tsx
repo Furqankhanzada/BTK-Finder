@@ -112,17 +112,7 @@ export default function EditBusinessMember(
         name: item?.title,
         id: item?._id,
         duration: '',
-      });
-    }
-  };
-
-  const onSelectTag = (duration: string, item: CatalogProduct) => {
-    if (item?.title) {
-      setModalVisible(false);
-      setSelectedPackage({
-        name: item?.title,
-        id: item?._id,
-        duration: duration,
+        amount: 0,
       });
     }
   };
@@ -277,11 +267,8 @@ export default function EditBusinessMember(
                   </Text>
                 ) : null}
                 <Products
-                  containerStyle={styles.productsList}
                   onProductPress={(item) => onSelectPackage(item)}
-                  onPressTag={(option, item) => onSelectTag(option, item)}
                   business={business}
-                  selectionMode={true}
                 />
               </>
             )}
@@ -327,10 +314,6 @@ const styles = StyleSheet.create({
   },
   statusText: {
     textTransform: 'capitalize',
-  },
-  productsList: {
-    flex: 0,
-    paddingHorizontal: 0,
   },
   textInput: {
     marginTop: 10,

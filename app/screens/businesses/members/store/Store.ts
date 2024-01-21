@@ -12,7 +12,7 @@ export type MemberStoreActions = {
 };
 
 const initialState: MemberStoreStates = {
-  selectedPackage: { name: '', id: '', duration: '' },
+  selectedPackage: { name: '', id: '', duration: '', amount: 0 },
 };
 
 const useMemberStore = create<MemberStoreStates & MemberStoreActions>(
