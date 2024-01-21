@@ -19,6 +19,7 @@ export interface Package {
   id: string;
   name: string;
   duration: string;
+  amount: number;
 }
 
 export interface Membership {
