@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   View,
   KeyboardAvoidingView,
@@ -10,11 +10,10 @@ import {
 import { useForm, Controller } from 'react-hook-form';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useQueryClient } from '@tanstack/react-query';
-import Modal from 'react-native-modal';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
-import IonIcon from 'react-native-vector-icons/Ionicons';
 
+import { Tag as TagType } from 'models/graphql';
 import { BaseColor, useTheme } from '@config';
 import {
   Header,
@@ -23,18 +22,25 @@ import {
   Button,
   TextInput,
   Text,
+  Tag,
 } from '@components';
 import { useAlerts } from '@hooks';
 
-import { CatalogProduct } from 'models/graphql';
-import Products from '@screens/businesses/components/Products';
-import { useBusiness } from '@screens/businesses/queries/queries';
+import {
+  useBusiness,
+  useProductsByTag,
+  useTags,
+} from '@screens/businesses/queries/queries';
 import { useAddMembership } from '@screens/businesses/queries/mutations';
 import { Membership } from '@screens/settings/profile/models/UserPresentable';
 import { MembersStackParamList } from 'navigation/models/BusinessDetailBottomTabParamList';
+import ListModal, {
+  Item,
+} from '@screens/businesses/members/add/components/ListModal';
+
 import { IconName } from '../../../../contexts/alerts-v2/models/Icon';
 import GlobalStyle from '../../../../assets/styling/GlobalStyle';
-import useMemberStore from '../store/Store';
+import SuccessAlertContent from '@screens/businesses/members/add/components/SuccessAlertContent';
 
 export default function AddBusinessMember(
   props: StackScreenProps<MembersStackParamList, 'AddMember'>,
@@ -44,7 +50,24 @@ export default function AddBusinessMember(
   const { colors } = useTheme();
   const queryClient = useQueryClient();
   const { showAlert, showNotification } = useAlerts();
+
+  const [selectedTag, setSelectedTag] = useState<TagType>();
+  const [selectedPackage, setSelectedPackage] = useState<Item | undefined>();
+  const [selectedDuration, setSelectedDuration] = useState<Item | undefined>();
+  const [packagesVisible, setPackagesVisible] = useState<boolean>(false);
+  const [durationsVisible, setDurationsVisible] = useState<boolean>(false);
+  const [isDatePickerVisible, setDatePickerVisibility] =
+    useState<boolean>(false);
+
   const { data: business } = useBusiness(businessId);
+  //Tags
+  const { data: tags } = useTags(business?.shop?.shopId);
+  // Products
+  const { data: products } = useProductsByTag(
+    business?.shop?.shopId,
+    selectedTag?._id,
+  );
+
   const { mutateAsync, isLoading } = useAddMembership(businessId);
   const {
     control,
@@ -53,68 +76,50 @@ export default function AddBusinessMember(
     setValue,
     getValues,
   } = useForm<Membership>();
-  const { package: packageValue } = getValues();
-  const { setSelectedPackage, selectedPackage, resetPackage } =
-    useMemberStore();
 
-  const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const [isDatePickerVisible, setDatePickerVisibility] =
-    useState<boolean>(false);
-
-  useEffect(() => {
-    if (selectedPackage) {
-      const unsubscribe = navigation.addListener('beforeRemove', () => {
-        // Delay the reset to avoid flickering
-        setTimeout(() => {
-          resetPackage();
-        }, 300);
+  const packages = useMemo(() => {
+    if (products) {
+      return products.map((product) => {
+        return {
+          id: product._id,
+          title: `${product.title} \n${product.pricing.map(
+            (p) => p?.displayPrice,
+          )}`,
+        };
       });
-
-      return () => {
-        unsubscribe();
-      };
     }
+    return [];
+  }, [products]);
+
+  const durations = useMemo(() => {
+    const variants: Item[] = [];
+    if (!selectedPackage) {
+      return variants;
+    }
+    const selectedProduct = products?.find(
+      (product) => product._id === selectedPackage.id,
+    );
+    selectedProduct?.variants?.forEach((variant) => {
+      if (!variant) {
+        return;
+      }
+      variants.push({
+        id: variant._id,
+        title: `${variant.title} \n${variant.pricing.map(
+          (p) => p?.displayPrice,
+        )}`,
+      });
+    });
+    return variants;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [navigation]);
+  }, [selectedPackage]);
 
   const onSubmit = async (data: Membership) => {
     mutateAsync(data, {
       async onSuccess(response) {
         if ('message' in response && response.message === 'invitation-sent') {
           const buttonPressed = await showAlert({
-            content: () => (
-              <>
-                <IonIcon
-                  size={70}
-                  name={IconName.CheckMarkCircle}
-                  color={BaseColor.greenColor}
-                />
-                <Text textAlign="center" header>
-                  Invitation Sent
-                </Text>
-                <Text textAlign="center" body1>
-                  We have sent an invitation email to {data.email}
-                </Text>
-                <Text
-                  textAlign="center"
-                  body1
-                  bold
-                  style={[{ color: BaseColor.redColor }, styles.noteText]}>
-                  NOTE:
-                </Text>
-                <Text textAlign="center" body2>
-                  Since no account is registered with this email: {data.email}
-                </Text>
-                <Text textAlign="center" body2>
-                  We have sent an email to {data.email} for account
-                  registration.
-                </Text>
-                <Text textAlign="center" body2>
-                  Once the user registers with this email in our app, He will be
-                  automatically added as the member of your business
-                </Text>
-              </>
-            ),
+            content: () => <SuccessAlertContent email={data.email} />,
             btn: {
               confirmBtnTitle: 'Okay',
             },
@@ -145,29 +150,47 @@ export default function AddBusinessMember(
     });
   };
 
-  const onSelectPackage = (item: CatalogProduct) => {
-    if (item?.title) {
-      const payload = {
-        name: item?.title,
-        id: item?._id,
-        duration: '',
-      };
-      setSelectedPackage(payload);
-      setValue('package', payload);
-    }
+  const onTagPress = (tag: TagType) => {
+    setSelectedTag(tag);
   };
 
-  const onSelectTag = (duration: string, item: CatalogProduct) => {
-    if (item?.title) {
-      const payload = {
-        name: item?.title,
-        id: item?._id,
-        duration: duration,
-      };
-      setModalVisible(false);
-      setSelectedPackage(payload);
-      setValue('package', payload);
+  const onSelectPackage = (item: Item) => {
+    setSelectedPackage(item);
+    const selectedProduct = products?.find(
+      (product) => product._id === item.id,
+    );
+    if (selectedProduct) {
+      const { _id: id, title } = selectedProduct;
+      setValue('package', {
+        id,
+        name: title!,
+        duration: '',
+        amount: 0,
+      });
     }
+    setPackagesVisible(false);
+  };
+
+  const onSelectDuration = (item: Item) => {
+    setSelectedDuration(item);
+    const selectedProduct = products?.find(
+      (product) => product._id === selectedPackage?.id,
+    );
+    if (selectedProduct) {
+      const selectedVariant = selectedProduct.variants?.find((variant) => {
+        return variant?._id === item.id;
+      });
+      const amount = selectedVariant?.pricing.map((p) => p?.price)[0]!;
+      const displayAmount = selectedVariant?.pricing.map(
+        (p) => p?.displayPrice,
+      )[0]!;
+      setValue('package', {
+        ...getValues('package'),
+        duration: `${selectedVariant?.optionTitle} ${displayAmount}`,
+        amount,
+      });
+    }
+    setDurationsVisible(false);
   };
 
   const toggleDatePicker = () => {
@@ -197,7 +220,6 @@ export default function AddBusinessMember(
           navigation.goBack();
         }}
       />
-
       <KeyboardAvoidingView
         behavior={Platform.OS === 'android' ? undefined : 'padding'}
         keyboardVerticalOffset={offsetKeyboard}
@@ -216,7 +238,7 @@ export default function AddBusinessMember(
                 keyboardType="email-address"
                 autoCorrect={false}
                 autoCapitalize="none"
-                onSubmitEditing={() => setModalVisible(true)}
+                onSubmitEditing={() => setPackagesVisible(true)}
                 blurOnSubmit={true}
                 onBlur={onBlur}
                 onChangeText={onChange}
@@ -226,34 +248,77 @@ export default function AddBusinessMember(
             )}
             name="email"
           />
-
-          <Controller
-            control={control}
-            rules={{
-              required: true,
-            }}
-            render={({ field: { value } }) => (
-              <TouchableOpacity
-                onPress={() => setModalVisible(true)}
+          <View
+            style={[
+              styles.textInput,
+              { flexDirection: 'row', justifyContent: 'space-between' },
+            ]}>
+            {tags?.map((tag) => (
+              <Tag
+                key={tag._id}
+                rate
+                onPress={() => onTagPress(tag)}
                 style={[
-                  GlobalStyle.datePickerContainer,
-                  { backgroundColor: colors.card },
+                  selectedTag?._id === tag._id
+                    ? {
+                        backgroundColor: colors.primaryDark,
+                      }
+                    : { backgroundColor: colors.primary },
                 ]}>
-                <Text
-                  style={{
-                    color: value?.name ? colors.text : BaseColor.grayColor,
-                  }}>
-                  {value?.name ? value.name : 'Select Package'}
-                </Text>
-                {value?.duration ? (
-                  <Text caption1 style={{ color: colors.text }}>
-                    ({value?.duration})
+                {tag.displayTitle}
+              </Tag>
+            ))}
+          </View>
+          {selectedTag && (
+            <Controller
+              control={control}
+              rules={{
+                required: true,
+              }}
+              render={({ field: { value } }) => (
+                <TouchableOpacity
+                  onPress={() => setPackagesVisible(true)}
+                  style={[
+                    GlobalStyle.datePickerContainer,
+                    { backgroundColor: colors.card },
+                  ]}>
+                  <Text
+                    style={{
+                      color: value?.name ? colors.text : BaseColor.grayColor,
+                    }}>
+                    {value?.name ? value.name : 'Select Package'}
                   </Text>
-                ) : null}
-              </TouchableOpacity>
-            )}
-            name="package"
-          />
+                </TouchableOpacity>
+              )}
+              name="package"
+            />
+          )}
+          {selectedPackage && (
+            <Controller
+              control={control}
+              rules={{
+                required: true,
+              }}
+              render={({ field: { value } }) => (
+                <TouchableOpacity
+                  onPress={() => setDurationsVisible(true)}
+                  style={[
+                    GlobalStyle.datePickerContainer,
+                    { backgroundColor: colors.card },
+                  ]}>
+                  <Text
+                    style={{
+                      color: value?.duration
+                        ? colors.text
+                        : BaseColor.grayColor,
+                    }}>
+                    {value?.duration ? value.duration : 'Select Duration'}
+                  </Text>
+                </TouchableOpacity>
+              )}
+              name="package"
+            />
+          )}
 
           <Controller
             control={control}
@@ -302,44 +367,24 @@ export default function AddBusinessMember(
           </Button>
         </View>
       </KeyboardAvoidingView>
-
-      <Modal
-        isVisible={modalVisible}
-        onSwipeComplete={() => {
-          setModalVisible(false);
-        }}
-        swipeDirection={['down']}
-        style={styles.bottomModal}>
-        <View
-          style={[
-            styles.contentFilterBottom,
-            { backgroundColor: colors.card },
-          ]}>
-          <View style={styles.contentSwipeDown}>
-            <View style={styles.lineSwipeDown} />
-          </View>
-
-          <View style={styles.listItemsContainer}>
-            {!packageValue?.name ? (
-              <Text caption1 style={{ color: BaseColor.redColor }}>
-                Please select a package
-              </Text>
-            ) : null}
-            {packageValue?.name && !packageValue?.duration ? (
-              <Text caption1 style={{ color: BaseColor.redColor }}>
-                Please select duration
-              </Text>
-            ) : null}
-            <Products
-              containerStyle={styles.productsList}
-              onProductPress={(item) => onSelectPackage(item)}
-              onPressTag={(option, item) => onSelectTag(option, item)}
-              business={business}
-              selectionMode={true}
-            />
-          </View>
-        </View>
-      </Modal>
+      <ListModal
+        title="Select Package"
+        visible={packagesVisible}
+        items={packages}
+        selectedItem={selectedPackage}
+        onPress={onSelectPackage}
+        onRequestClose={() => setPackagesVisible(false)}
+        onClosePress={() => setPackagesVisible(false)}
+      />
+      <ListModal
+        title="Select Duration"
+        visible={durationsVisible}
+        items={durations}
+        selectedItem={selectedDuration}
+        onPress={onSelectDuration}
+        onRequestClose={() => setDurationsVisible(false)}
+        onClosePress={() => setDurationsVisible(false)}
+      />
     </SafeAreaView>
   );
 }
@@ -367,15 +412,12 @@ const styles = StyleSheet.create({
   },
   listItemsContainer: {
     paddingVertical: 20,
+    flex: 1,
   },
   lineSwipeDown: {
     width: 30,
     height: 2.5,
     backgroundColor: BaseColor.dividerColor,
-  },
-  productsList: {
-    flex: 0,
-    paddingHorizontal: 0,
   },
   textInput: {
     marginTop: 10,
@@ -388,8 +430,5 @@ const styles = StyleSheet.create({
   buttonContainer: {
     paddingVertical: 15,
     paddingHorizontal: 20,
-  },
-  noteText: {
-    marginTop: 10,
   },
 });
