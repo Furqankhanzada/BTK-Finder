@@ -1,11 +1,14 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ActivityIndicator } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@config';
 import { Header, SafeAreaView, Icon, Text, Tag } from '@components';
 import { FlatList, ScrollView } from 'react-native-gesture-handler';
 import { SettingsParamList } from 'navigation/models/SettingsParamList';
 import { StackScreenProps } from '@react-navigation/stack';
+import { useState, useEffect } from 'react';
+// import axios from 'axios';
+import axiosApiInstance from '../../../../interceptor/axios-interceptor';
 
 function PaymentsDetails({
   navigation,
@@ -15,6 +18,36 @@ function PaymentsDetails({
   const { colors } = useTheme();
 
   const { businessId } = route.params || {};
+  const [invoiceData, setInvoiceData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = () => {
+    axiosApiInstance({
+      method: 'GET',
+      url: `https://dev-apis.explorebtk.com/api/v1/invoices/`,
+    })
+      .then((response: any) => {
+        console.log('response', response);
+        setInvoiceData(response?.data);
+        setLoading(false);
+      })
+      .catch((error: any) => {
+        console.log('error', error?.response);
+        setLoading(false);
+      });
+  };
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={colors.primary} />
+      </View>
+    );
+  }
 
   return (
     <SafeAreaView>
@@ -77,6 +110,29 @@ function PaymentsDetails({
         />
       </SafeAreaView>
       <ScrollView>
+        {/* {
+    "_id": "657afc8cc43552c232c8d81e",
+    "ownerId": "656c30b607a1e22ea9815d10",
+    "amount": 7000,
+    "invoiceDueAt": "2024-01-01T18:59:59.999Z",
+    "package": {
+        "name": "Weight Training",
+        "id": "cmVhY3Rpb24vY2F0YWxvZ1Byb2R1Y3Q6WlFmYWpGR1FxUGhUOXJ0QUQ="
+    },
+    "business": {
+        "_id": "6401d1445d381e3bcd4b47e7",
+        "name": "Gym Metrix",
+        "telephone": "03325808521",
+        "email": "gym@matrix.com",
+        "website": "https://explorebtk.gym.com",
+        "address": "address of gym"
+    },
+    "status": "unpaid",
+    "createdAt": "2023-12-14T13:01:00.920Z",
+    "updatedAt": "2023-12-18T12:09:00.489Z",
+    "__v": 0,
+    "id": "657afc8cc43552c232c8d81e"
+} */}
         <SafeAreaView style={styles.container}>
           <View style={styles.card}>
             <Text style={styles.heading}>
@@ -142,6 +198,11 @@ const styles = StyleSheet.create({
   },
   listHeader: {
     flexDirection: 'row',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

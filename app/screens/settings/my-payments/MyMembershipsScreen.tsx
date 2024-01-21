@@ -6,15 +6,15 @@ import { Header, SafeAreaView, Icon, Text, Tag } from '@components';
 import { FlatList, ScrollView } from 'react-native-gesture-handler';
 import { SettingsParamList } from 'navigation/models/SettingsParamList';
 import { StackScreenProps } from '@react-navigation/stack';
-import PaymentsDetails from './components/PaymentsDetails';
 import { TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useProfile } from '../profile/queries/queries';
 
 export default function MyMemberships({
   navigation,
 }: StackScreenProps<SettingsParamList, 'MyMemberships'>) {
   const { t } = useTranslation();
   const { colors } = useTheme();
+  const { data: profileData } = useProfile();
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
@@ -34,85 +34,48 @@ export default function MyMemberships({
           navigation.goBack();
         }}
       />
-      <SafeAreaView>
-        <FlatList
-          style={[styles.tagsContainer]}
-          horizontal={true}
-          ListHeaderComponent={
-            <View style={styles.listHeader}>
-              <Tag
-                rate
-                style={[
-                  styles.item,
-                  {
-                    backgroundColor: colors.primary,
-                  },
-                ]}>
-                All
-              </Tag>
-              <Tag
-                rate
-                style={[
-                  styles.item,
-                  {
-                    backgroundColor: colors.primary,
-                  },
-                ]}>
-                Active
-              </Tag>
-              <Tag
-                rate
-                style={[
-                  styles.item,
-                  {
-                    backgroundColor: colors.primary,
-                  },
-                ]}>
-                Cancelled
-              </Tag>
-            </View>
-          }
-          data={undefined}
-          renderItem={undefined}
-        />
-      </SafeAreaView>
-      <ScrollView>
-        <SafeAreaView style={styles.container}>
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate('Invoices', {
-                businessId: 'bjsdvjsbchbskju8787t6t',
-              })
-            }>
-            <View style={styles.card}>
-              <Text style={styles.heading}>Gym Metrix</Text>
-              <Text style={styles.subHeading}>
-                Personal Training For Weight Training
-              </Text>
-              <Text>
-                Next payment <Text style={styles.text}>Rs.5,000 </Text>
-                due by <Text style={styles.text}> December 27, 2023</Text>
-              </Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate('Invoices', {
-                businessId: '7tcyud6wc76dgw86dghe87f',
-              })
-            }>
-            <View style={styles.card}>
-              <Text style={styles.heading}>Vortex Gym</Text>
-              <Text style={styles.subHeading}>Weight Training</Text>
-              <Text>
-                Next payment <Text style={styles.text}>Rs.10,000 </Text>
-                due by <Text style={styles.text}> December 27, 2023</Text>
-              </Text>
-            </View>
-          </TouchableOpacity>
-          {/* <InvioceCard /> */}
-        </SafeAreaView>
-      </ScrollView>
+      <FlatList
+        style={[styles.tagsContainer]}
+        horizontal={true}
+        ListHeaderComponent={
+          <View style={styles.listHeader}>
+            <Tag
+              rate
+              style={[
+                styles.item,
+                {
+                  backgroundColor: colors.primary,
+                },
+              ]}>
+              All
+            </Tag>
+            <Tag
+              rate
+              style={[
+                styles.item,
+                {
+                  backgroundColor: colors.primary,
+                },
+              ]}>
+              Active
+            </Tag>
+            <Tag
+              rate
+              style={[
+                styles.item,
+                {
+                  backgroundColor: colors.primary,
+                },
+              ]}>
+              Cancelled
+            </Tag>
+          </View>
+        }
+        data={profileData?.memberships}
+        renderItem={({ item }) => {
+          return <Text>{item.package.name}</Text>;
+        }}
+      />
     </SafeAreaView>
   );
 }
