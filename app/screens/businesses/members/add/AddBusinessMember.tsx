@@ -188,6 +188,7 @@ export default function AddBusinessMember(
         ...getValues('package'),
         duration: `${selectedVariant?.optionTitle} ${displayAmount}`,
         amount,
+        id: `${selectedProduct._id}+${selectedVariant?._id}`, // So we can remember which variant user selected.
       });
     }
     setDurationsVisible(false);
