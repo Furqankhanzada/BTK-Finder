@@ -36,7 +36,6 @@ export default function MyMemberships({
       />
       <FlatList
         style={[styles.tagsContainer]}
-        horizontal={true}
         ListHeaderComponent={
           <View style={styles.listHeader}>
             <Tag
@@ -73,7 +72,18 @@ export default function MyMemberships({
         }
         data={profileData?.memberships}
         renderItem={({ item }) => {
-          return <Text>{item.package.name}</Text>;
+          return (
+            <TouchableOpacity>
+              <View style={styles.card}>
+                <Text style={styles.heading}>{item.package.name}</Text>
+                <Text style={styles.subHeading}>Weight Training</Text>
+                <Text>
+                  Next payment <Text style={styles.text}>Rs.10,000 </Text>
+                  due by <Text style={styles.text}> December 27, 2023</Text>
+                </Text>
+              </View>
+            </TouchableOpacity>
+          );
         }}
       />
     </SafeAreaView>
@@ -126,7 +136,7 @@ const styles = StyleSheet.create({
     elevation: 10,
     width: '95%',
     marginBottom: 20,
-    marginTop: 5,
+    marginTop: 15,
   },
   text: {
     fontWeight: '900',
