@@ -16,12 +16,18 @@ export enum MembershipStatus {
 }
 
 export interface Package {
+  amount: number;
   id: string;
   name: string;
   duration: string;
 }
 
 export interface Membership {
+  startedAt: string;
+  businessName: string;
+  description: string;
+  amount: number;
+  dueDate: string;
   billingDate: Date;
   businessId: string;
   email: string;
