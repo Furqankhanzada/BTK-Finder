@@ -18,7 +18,7 @@ import {
 import { Member } from '@screens/settings/profile/models/UserPresentable';
 
 import axiosApiInstance from '../../../interceptor/axios-interceptor';
-import { BUSINESSES_API } from '../../../constants';
+import { BUSINESSES_API, INVOICES_API } from '../../../constants';
 import { BusinessPresentable } from '../models/BusinessPresentable';
 import {
   CatalogItemConnection,
@@ -233,6 +233,30 @@ export const useProductBySlug = (
       select: (data) => {
         return data.catalogItemProduct.product;
       },
+    },
+  );
+};
+
+interface Invoice {
+  id: string;
+  amount: number;
+}
+
+export const useInvoices = (id: string | undefined) => {
+  return useQuery(
+    ['invoices', id],
+    (): Promise<Invoice[]> => {
+      return axiosApiInstance({
+        method: 'GET',
+        url: `${INVOICES_API}/${id}`,
+      })
+        .then((response) => response.data)
+        .catch(({ response }) => {
+          handleError(response.data);
+        });
+    },
+    {
+      enabled: !!id,
     },
   );
 };

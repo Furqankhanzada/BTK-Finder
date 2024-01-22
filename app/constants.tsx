@@ -22,3 +22,5 @@ export const DEVICES_API = `${Config.API_URL}/api/v1/devices`;
 
 export const UPLOAD = `${Config.API_URL}/api/v1/files/upload`;
 export const DELETE = `${Config.API_URL}/api/v1/files/delete`;
+
+export const INVOICES_API = `${Config.API_URL}/api/v1/invoices`;
