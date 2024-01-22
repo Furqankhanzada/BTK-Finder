@@ -72,14 +72,15 @@ export default function MyMemberships({
         }
         data={profileData?.memberships}
         renderItem={({ item }) => {
+          console.log(item);
           return (
             <TouchableOpacity>
               <View style={styles.card}>
                 <Text style={styles.heading}>{item.package.name}</Text>
-                <Text style={styles.subHeading}>Weight Training</Text>
                 <Text>
-                  Next payment <Text style={styles.text}>Rs.10,000 </Text>
-                  due by <Text style={styles.text}> December 27, 2023</Text>
+                  Next payment{' '}
+                  <Text style={styles.text}>{item.package.amount} </Text>
+                  due by <Text style={styles.text}>{item.startedAt}</Text>
                 </Text>
               </View>
             </TouchableOpacity>
@@ -137,6 +138,7 @@ const styles = StyleSheet.create({
     width: '95%',
     marginBottom: 20,
     marginTop: 15,
+    marginRight: 15,
   },
   text: {
     fontWeight: '900',
