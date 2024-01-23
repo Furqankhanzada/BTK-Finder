@@ -242,21 +242,15 @@ interface Invoice {
   amount: number;
 }
 
-export const useInvoices = (id: string | undefined) => {
-  return useQuery(
-    ['invoices', id],
-    (): Promise<Invoice[]> => {
-      return axiosApiInstance({
-        method: 'GET',
-        url: `${INVOICES_API}/${id}`,
-      })
-        .then((response) => response.data)
-        .catch(({ response }) => {
-          handleError(response.data);
-        });
-    },
-    {
-      enabled: !!id,
-    },
-  );
+export const useInvoices = () => {
+  return useQuery(['invoices123'], (): Promise<Invoice[]> => {
+    return axiosApiInstance({
+      method: 'GET',
+      url: `${INVOICES_API}`,
+    })
+      .then((response) => response.data)
+      .catch(({ response }) => {
+        handleError(response.data);
+      });
+  });
 };
