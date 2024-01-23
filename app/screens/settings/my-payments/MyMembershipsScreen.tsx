@@ -72,15 +72,17 @@ export default function MyMemberships({
         }
         data={profileData?.memberships}
         renderItem={({ item }) => {
-          console.log(item);
           return (
             <TouchableOpacity>
               <View style={styles.card}>
                 <Text style={styles.heading}>{item.package.name}</Text>
+                <Text style={styles.subHeading}>{item.package.name}</Text>
+
                 <Text>
                   Next payment{' '}
                   <Text style={styles.text}>{item.package.amount} </Text>
-                  due by <Text style={styles.text}>{item.startedAt}</Text>
+                  due by{' '}
+                  <Text style={styles.text}>{item.startedAt.toString()}</Text>
                 </Text>
               </View>
             </TouchableOpacity>
