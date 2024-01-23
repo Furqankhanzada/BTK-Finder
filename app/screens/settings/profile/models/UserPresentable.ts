@@ -23,7 +23,7 @@ export interface Package {
 }
 
 export interface Membership {
-  billingDate: Date;
+  startedAt: Date;
   businessId: string;
   email: string;
   package: Package;
