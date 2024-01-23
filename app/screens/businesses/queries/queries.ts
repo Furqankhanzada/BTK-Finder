@@ -242,11 +242,12 @@ interface Invoice {
   amount: number;
 }
 
-export const useInvoices = () => {
-  return useQuery(['invoices123'], (): Promise<Invoice[]> => {
+export const useInvoices = (businessId: string | undefined) => {
+  return useQuery(['invoices', businessId], (): Promise<Invoice[]> => {
     return axiosApiInstance({
       method: 'GET',
       url: `${INVOICES_API}`,
+      // url: `${INVOICES_API}?filter={businessId=${businessId}`,
     })
       .then((response) => response.data)
       .catch(({ response }) => {
