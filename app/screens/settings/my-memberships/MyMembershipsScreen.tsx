@@ -1,5 +1,11 @@
-import React from 'react';
-import { View, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import {
+  View,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  RefreshControl,
+} from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { StackScreenProps } from '@react-navigation/stack';
 import { format } from 'date-fns';
@@ -15,7 +21,15 @@ export default function MyMemberships({
 }: StackScreenProps<SettingsParamList, 'MyMemberships'>) {
   const { t } = useTranslation();
   const { colors } = useTheme();
-  const { data: profileData } = useProfile();
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+
+  const { data: profileData, refetch } = useProfile();
+
+  const onRefresh = async () => {
+    setIsRefreshing(true);
+    await refetch();
+    setIsRefreshing(false);
+  };
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
@@ -36,6 +50,16 @@ export default function MyMemberships({
         }}
       />
       <FlatList
+        refreshControl={
+          <RefreshControl
+            title="Pull to refresh"
+            titleColor={colors.text}
+            colors={[colors.primary]}
+            tintColor={colors.primary}
+            refreshing={isRefreshing}
+            onRefresh={onRefresh}
+          />
+        }
         style={[styles.memberships]}
         ListHeaderComponent={
           <View style={styles.listHeader}>
@@ -57,7 +81,8 @@ export default function MyMemberships({
         renderItem={({ item }) => {
           return (
             <TouchableOpacity>
-              <View style={styles.card}>
+              <View
+                style={[styles.card, { backgroundColor: colors.background }]}>
                 <Text title3>{item.businessId}</Text>
                 <Text body2 style={styles.cardTextSpacing}>
                   {item.package.name}
@@ -87,7 +112,6 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   card: {
-    backgroundColor: 'white',
     borderRadius: 5,
     padding: 16,
     shadowColor: 'black',
@@ -99,7 +123,6 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 10,
     width: '100%',
-    marginBottom: 20,
     marginTop: 15,
   },
   cardTextSpacing: {
