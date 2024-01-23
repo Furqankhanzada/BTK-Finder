@@ -1,8 +1,8 @@
 import React from 'react';
-import { View, StyleSheet, FlatList } from 'react-native';
+import { View, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { StackScreenProps } from '@react-navigation/stack';
-import { TouchableOpacity } from 'react-native';
+import { format } from 'date-fns';
 
 import { BaseStyle, useTheme } from '@config';
 import { Header, SafeAreaView, Icon, Text, Tag } from '@components';
@@ -36,39 +36,21 @@ export default function MyMemberships({
         }}
       />
       <FlatList
-        style={[styles.tagsContainer]}
+        style={[styles.memberships]}
         ListHeaderComponent={
           <View style={styles.listHeader}>
-            <Tag
-              rate
-              style={[
-                styles.item,
-                {
-                  backgroundColor: colors.primary,
-                },
-              ]}>
-              All
-            </Tag>
-            <Tag
-              rate
-              style={[
-                styles.item,
-                {
-                  backgroundColor: colors.primary,
-                },
-              ]}>
-              Active
-            </Tag>
-            <Tag
-              rate
-              style={[
-                styles.item,
-                {
-                  backgroundColor: colors.primary,
-                },
-              ]}>
-              Cancelled
-            </Tag>
+            {['All', 'Active', 'Cancelled'].map((filter) => (
+              <Tag
+                rate
+                style={[
+                  styles.headerFilterItem,
+                  {
+                    backgroundColor: colors.primary,
+                  },
+                ]}>
+                {filter}
+              </Tag>
+            ))}
           </View>
         }
         data={profileData?.memberships}
@@ -80,10 +62,13 @@ export default function MyMemberships({
                 <Text style={styles.subHeading}>{item.package.name}</Text>
 
                 <Text>
-                  Next payment{' '}
-                  <Text style={styles.text}>{item.package.amount} </Text>
-                  due by{' '}
-                  <Text style={styles.text}>{item.startedAt.toString()}</Text>
+                  Next payment
+                  <Text style={styles.text}> {item.package.amount} </Text>
+                  due by
+                  <Text style={styles.text}>
+                    {' '}
+                    {format(new Date(item.startedAt), 'MMMM d, y')}
+                  </Text>
                 </Text>
               </View>
             </TouchableOpacity>
@@ -94,26 +79,11 @@ export default function MyMemberships({
   );
 }
 const styles = StyleSheet.create({
-  tagsContainer: {
-    marginBottom: 10,
-    paddingLeft: 20,
+  memberships: {
+    padding: 20,
   },
-  productsContainer: {
-    marginTop: 15,
-  },
-  productList: {
-    marginTop: 10,
-  },
-  item: {
+  headerFilterItem: {
     marginRight: 5,
-  },
-  listEmptyText: {
-    textAlign: 'center',
-    paddingVertical: 20,
-  },
-  container: {
-    flex: 1,
-    marginHorizontal: 10,
   },
   heading: {
     fontSize: 18,
@@ -129,7 +99,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 5,
     padding: 16,
-    alignSelf: 'center',
     shadowColor: 'black',
     shadowOffset: {
       width: 0,
@@ -138,10 +107,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 10,
-    width: '95%',
+    width: '100%',
     marginBottom: 20,
     marginTop: 15,
-    marginRight: 15,
   },
   text: {
     fontWeight: '900',

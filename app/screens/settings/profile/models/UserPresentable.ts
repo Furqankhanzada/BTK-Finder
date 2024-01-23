@@ -16,7 +16,6 @@ export enum MembershipStatus {
 }
 
 export interface Package {
-  amount: number;
   id: string;
   name: string;
   duration: string;
