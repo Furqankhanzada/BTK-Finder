@@ -1,12 +1,13 @@
 import React from 'react';
-import { View, StyleSheet, Touchable } from 'react-native';
+import { View, StyleSheet, FlatList } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { BaseStyle, useTheme } from '@config';
-import { Header, SafeAreaView, Icon, Text, Tag } from '@components';
-import { FlatList, ScrollView } from 'react-native-gesture-handler';
-import { SettingsParamList } from 'navigation/models/SettingsParamList';
 import { StackScreenProps } from '@react-navigation/stack';
 import { TouchableOpacity } from 'react-native';
+
+import { BaseStyle, useTheme } from '@config';
+import { Header, SafeAreaView, Icon, Text, Tag } from '@components';
+import { SettingsParamList } from 'navigation/models/SettingsParamList';
+
 import { useProfile } from '../profile/queries/queries';
 
 export default function MyMemberships({

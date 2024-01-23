@@ -18,7 +18,6 @@ function PaymentsDetails({
   const { colors } = useTheme();
 
   const { businessId } = route.params || {};
-  const [invoiceData, setInvoiceData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -28,11 +27,10 @@ function PaymentsDetails({
   const fetchData = () => {
     axiosApiInstance({
       method: 'GET',
-      url: `https://dev-apis.explorebtk.com/api/v1/invoices/`,
+      url: 'https://dev-apis.explorebtk.com/api/v1/invoices/',
     })
       .then((response: any) => {
         console.log('response', response);
-        setInvoiceData(response?.data);
         setLoading(false);
       })
       .catch((error: any) => {
