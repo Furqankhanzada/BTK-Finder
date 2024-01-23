@@ -237,21 +237,38 @@ export const useProductBySlug = (
   );
 };
 
+export enum InvoiceStatus {
+  PENDING = 'pending',
+  PAID = 'paid',
+  UNPAID = 'unpaid',
+}
 interface Invoice {
   id: string;
   amount: number;
 }
 
-export const useInvoices = (businessId: string | undefined) => {
-  return useQuery(['invoices', businessId], (): Promise<Invoice[]> => {
-    return axiosApiInstance({
-      method: 'GET',
-      url: `${INVOICES_API}`,
-      // url: `${INVOICES_API}?filter={businessId=${businessId}`,
-    })
-      .then((response) => response.data)
-      .catch(({ response }) => {
-        handleError(response.data);
-      });
-  });
+export const useInvoices = (
+  businessId: string | undefined,
+  status?: InvoiceStatus,
+) => {
+  let url = `${INVOICES_API}?filter={"business._id":"${businessId}"}`;
+  if (status) {
+    url = `${INVOICES_API}?filter={"business._id":"${businessId}", "status": "${status}"}`;
+  }
+  return useQuery(
+    ['invoices', businessId],
+    (): Promise<Invoice[]> => {
+      return axiosApiInstance({
+        method: 'GET',
+        url,
+      })
+        .then((response) => response.data)
+        .catch(({ response }) => {
+          handleError(response.data);
+        });
+    },
+    {
+      enabled: !!businessId,
+    },
+  );
 };

@@ -1,50 +1,44 @@
-import React from 'react';
-import { View, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
+import React, { useState } from 'react';
+import { FlatList, RefreshControl, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { BaseStyle, useTheme } from '@config';
-import { Header, SafeAreaView, Icon, Text, Tag } from '@components';
-import { SettingsParamList } from 'navigation/models/SettingsParamList';
+import { Header, Icon, SafeAreaView, Tag, Text } from '@components';
+import { SettingsParamList } from '../../../../navigation/models/SettingsParamList';
 import { StackScreenProps } from '@react-navigation/stack';
-import { useInvoices } from '@screens/businesses/queries/queries';
-import { useRoute, RouteProp } from '@react-navigation/native';
+import {
+  InvoiceStatus,
+  useInvoices,
+} from '@screens/businesses/queries/queries';
+import { RouteProp, useRoute } from '@react-navigation/native';
 
 type PaymentsDetailsScreenProps = StackScreenProps<
   SettingsParamList,
   'Invoices'
 >;
 
-export default function PaymentsDetails({
+export default function InvoicesScreen({
   navigation,
 }: PaymentsDetailsScreenProps) {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const route = useRoute<RouteProp<SettingsParamList, 'Invoices'>>();
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+
   const businessId = route.params?.businessId;
-  const { data: invoices, isLoading, isError } = useInvoices(businessId);
+  const { data: invoices, refetch } = useInvoices(
+    businessId,
+    InvoiceStatus.UNPAID,
+  );
 
-  console.log('businessId:', businessId);
-  console.log('invoices:', invoices);
-
-  if (isLoading) {
-    return (
-      <SafeAreaView style={BaseStyle.safeAreaView}>
-        <ActivityIndicator size="large" color={colors.primary} />
-      </SafeAreaView>
-    );
-  }
-
-  if (isError) {
-    return (
-      <SafeAreaView style={BaseStyle.safeAreaView}>
-        <Text>Error loading invoices</Text>
-      </SafeAreaView>
-    );
-  }
-
+  const onRefresh = async () => {
+    setIsRefreshing(true);
+    await refetch();
+    setIsRefreshing(false);
+  };
   return (
     <SafeAreaView style={BaseStyle.safeAreaView}>
       <Header
-        title={t('Payment Details')}
+        title={t('Invoices')}
         renderLeft={() => (
           <Icon
             name="arrow-left"
@@ -56,8 +50,17 @@ export default function PaymentsDetails({
         onPressLeft={() => navigation.goBack()}
       />
       <FlatList
-        style={styles.tagsContainer}
-        horizontal={true}
+        refreshControl={
+          <RefreshControl
+            title="Pull to refresh"
+            titleColor={colors.text}
+            colors={[colors.primary]}
+            tintColor={colors.primary}
+            refreshing={isRefreshing}
+            onRefresh={onRefresh}
+          />
+        }
+        style={styles.container}
         ListHeaderComponent={
           <View style={styles.listHeader}>
             <Tag rate style={styles.item}>
@@ -86,9 +89,8 @@ export default function PaymentsDetails({
 }
 
 const styles = StyleSheet.create({
-  tagsContainer: {
-    marginBottom: 10,
-    paddingLeft: 20,
+  container: {
+    padding: 20,
   },
   item: {
     marginRight: 5,
@@ -100,7 +102,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 5,
     padding: 16,
-    alignSelf: 'center',
     shadowColor: 'black',
     shadowOffset: {
       width: 0,
@@ -109,9 +110,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 10,
-    width: '95%',
-    marginBottom: 20,
+    width: '100%',
     marginTop: 15,
-    marginRight: 15,
   },
 });

@@ -13,7 +13,7 @@ import { SettingsParamList } from '../../../navigation/models/SettingsParamList'
 import MyBusinessStackNavigator from '../my-businesses/navigation/MyBusinessesStack';
 
 import MyMemberships from '@screens/settings/my-memberships/MyMembershipsScreen';
-import PaymentsDetails from '@screens/settings/my-memberships/components/PaymentsDetails';
+import InvoicesScreen from '@screens/settings/my-memberships/invoices/InvoicesScreen';
 
 const SettingsStack = createStackNavigator<SettingsParamList>();
 
@@ -27,7 +27,7 @@ export function SettingsStackNavigator() {
       <SettingsStack.Screen name="MyMemberships" component={MyMemberships} />
       <SettingsStack.Screen name="ContactUs" component={ContactUsScreen} />
       <SettingsStack.Screen name="AboutUs" component={AboutUsScreen} />
-      <SettingsStack.Screen name="Invoices" component={PaymentsDetails} />
+      <SettingsStack.Screen name="Invoices" component={InvoicesScreen} />
 
       <SettingsStack.Screen
         name="MyBusinessesStack"

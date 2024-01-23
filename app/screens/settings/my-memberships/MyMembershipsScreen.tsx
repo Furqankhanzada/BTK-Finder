@@ -96,7 +96,10 @@ export default function MyMemberships({
         }
         renderItem={({ item }) => {
           return (
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('Invoices', { businessId: item.businessId })
+              }>
               <View
                 style={[styles.card, { backgroundColor: colors.background }]}>
                 <Text title3>{item.businessId}</Text>
