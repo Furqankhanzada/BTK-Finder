@@ -60,7 +60,7 @@ export default function ActiveMembers(props: Props) {
               options={[item.membership.package.name]}
               editAble={business?.ownerId === user?._id}
               onPressEdit={() =>
-                navigation.navigate('EditMember', {
+                navigation.navigate('AddOrEditMember', {
                   businessId: route.params.businessId,
                   membership: item.membership,
                 })

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   View,
   KeyboardAvoidingView,
@@ -31,22 +31,25 @@ import {
   useProductsByTag,
   useTags,
 } from '@screens/businesses/queries/queries';
-import { useAddMembership } from '@screens/businesses/queries/mutations';
+import {
+  useMembershipAdd,
+  useMembershipUpdate,
+} from '@screens/businesses/queries/mutations';
 import { Membership } from '@screens/settings/profile/models/UserPresentable';
 import { MembersStackParamList } from 'navigation/models/BusinessDetailBottomTabParamList';
+import SuccessAlertContent from '@screens/businesses/members/add/components/SuccessAlertContent';
 import ListModal, {
   Item,
 } from '@screens/businesses/members/add/components/ListModal';
 
 import { IconName } from '../../../../contexts/alerts-v2/models/Icon';
 import GlobalStyle from '../../../../assets/styling/GlobalStyle';
-import SuccessAlertContent from '@screens/businesses/members/add/components/SuccessAlertContent';
 
-export default function AddBusinessMember(
-  props: StackScreenProps<MembersStackParamList, 'AddMember'>,
+export default function AddOrEditMember(
+  props: StackScreenProps<MembersStackParamList, 'AddOrEditMember'>,
 ) {
   const { navigation, route } = props;
-  const { businessId } = route.params;
+  const { businessId, membership } = route.params;
   const { colors } = useTheme();
   const queryClient = useQueryClient();
   const { showAlert, showNotification } = useAlerts();
@@ -59,6 +62,8 @@ export default function AddBusinessMember(
   const [isDatePickerVisible, setDatePickerVisibility] =
     useState<boolean>(false);
 
+  const loaded = useRef(false);
+
   const { data: business } = useBusiness(businessId);
   //Tags
   const { data: tags } = useTags(business?.shop?.shopId);
@@ -68,7 +73,11 @@ export default function AddBusinessMember(
     selectedTag?._id,
   );
 
-  const { mutateAsync, isLoading } = useAddMembership(businessId);
+  const { mutateAsync: addMember, isLoading: memberAdding } =
+    useMembershipAdd(businessId);
+  const { mutateAsync: updateMember, isLoading: memberUpdating } =
+    useMembershipUpdate(businessId);
+
   const {
     control,
     handleSubmit,
@@ -115,7 +124,8 @@ export default function AddBusinessMember(
   }, [selectedPackage]);
 
   const onSubmit = async (data: Membership) => {
-    mutateAsync(data, {
+    const mutate = membership ? updateMember : addMember;
+    await mutate(data, {
       async onSuccess(response) {
         if ('message' in response && response.message === 'invitation-sent') {
           const buttonPressed = await showAlert({
@@ -142,7 +152,9 @@ export default function AddBusinessMember(
               name: IconName.CheckMarkCircle,
               color: BaseColor.greenColor,
             },
-            message: `The membership for ${response.email} has been added.`,
+            message: `The membership for ${response.email} has been ${
+              membership ? 'updated' : 'added'
+            }.`,
             dismissAfterMs: 4000,
           });
         }
@@ -151,7 +163,13 @@ export default function AddBusinessMember(
   };
 
   const onTagPress = (tag: TagType) => {
+    if (tag._id === selectedTag?._id) {
+      return;
+    }
     setSelectedTag(tag);
+    setSelectedPackage(undefined);
+    setSelectedDuration(undefined);
+    setValue('package', { id: '', name: '', duration: '', amount: 0 });
   };
 
   const onSelectPackage = (item: Item) => {
@@ -188,7 +206,7 @@ export default function AddBusinessMember(
         ...getValues('package'),
         duration: `${selectedVariant?.optionTitle} ${displayAmount}`,
         amount,
-        id: `${selectedProduct._id}+${selectedVariant?._id}`, // So we can remember which variant user selected.
+        id: `${selectedTag?._id}+${selectedProduct._id}+${selectedVariant?._id}`, // So we can remember which variant user selected.
       });
     }
     setDurationsVisible(false);
@@ -203,10 +221,50 @@ export default function AddBusinessMember(
     android: 20,
   });
 
+  useEffect(() => {
+    if (membership) {
+      // ID is equal to: tagId + productId + variantId
+      const [tagId] = membership.package.id.split('+');
+
+      const tag = tags?.find((t) => t._id === tagId);
+      setSelectedTag(tag);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tags]);
+
+  useEffect(() => {
+    if (membership && !loaded.current) {
+      // ID is equal to: tagId + productId + variantId
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const [_, productId] = membership.package.id.split('+');
+
+      const sPackage = packages?.find((p) => p.id === productId);
+      setSelectedPackage(sPackage);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [packages]);
+
+  useEffect(() => {
+    // ID is equal to: tagId + productId + variantId
+    if (membership && packages.length && !loaded.current) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const [tagId, productId, variantId] = membership.package.id.split('+');
+
+      setValue('email', membership.email);
+      setValue('startedAt', membership.startedAt);
+      setValue('package', membership.package);
+
+      const duration = durations?.find((d) => d.id === variantId);
+      setSelectedDuration(duration);
+      loaded.current = true;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [durations]);
+
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <Header
-        title="Add Member"
+        title={membership ? 'Update Member' : 'Add Member'}
         renderLeft={() => {
           return (
             <Icon
@@ -249,11 +307,7 @@ export default function AddBusinessMember(
             )}
             name="email"
           />
-          <View
-            style={[
-              styles.textInput,
-              { flexDirection: 'row', justifyContent: 'space-between' },
-            ]}>
+          <View style={[styles.textInput, styles.tags]}>
             {tags?.map((tag) => (
               <Tag
                 key={tag._id}
@@ -358,13 +412,16 @@ export default function AddBusinessMember(
                 />
               </>
             )}
-            name="billingDate"
+            name="startedAt"
           />
         </ScrollView>
 
         <View style={styles.buttonContainer}>
-          <Button full loading={isLoading} onPress={handleSubmit(onSubmit)}>
-            Add
+          <Button
+            full
+            loading={memberAdding || memberUpdating}
+            onPress={handleSubmit(onSubmit)}>
+            {membership ? 'Update Member' : 'Add Member'}
           </Button>
         </View>
       </KeyboardAvoidingView>
@@ -432,4 +489,5 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 20,
   },
+  tags: { flexDirection: 'row', justifyContent: 'space-between' },
 });
