@@ -11,9 +11,9 @@ import AppearanceScreen from '@screens/settings/appearance/AppearanceScreen';
 
 import { SettingsParamList } from '../../../navigation/models/SettingsParamList';
 import MyBusinessStackNavigator from '../my-businesses/navigation/MyBusinessesStack';
-// import MyPaymentsStack from '../my-payments/navigation/MyPaymentsStack';
-import MyMemberships from '../my-payments/MyMembershipsScreen';
-import PaymentsDetails from '../my-payments/components/PaymentsDetails';
+
+import MyMemberships from '@screens/settings/my-memberships/MyMembershipsScreen';
+import PaymentsDetails from '@screens/settings/my-memberships/components/PaymentsDetails';
 
 const SettingsStack = createStackNavigator<SettingsParamList>();
 

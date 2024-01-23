@@ -28,17 +28,11 @@ export interface FavoritesMutationVar {
   type: FavoriteType;
 }
 
-export interface UpdateMembershipPayload {
-  status: MembershipStatus;
+export interface AddOrEditMemberPayload {
   email: string;
   package: Package;
-  billingDate: Date;
-}
-
-export interface AddMembershipPayload {
-  email: string;
-  package: Package;
-  billingDate: Date;
+  startedAt: Date;
+  status?: MembershipStatus;
 }
 
 export type AddReviewPayload = Pick<Review, 'title' | 'description' | 'rating'>;
@@ -131,10 +125,28 @@ export const useDeleteBusiness = () => {
   );
 };
 
+export const useMembershipAdd = (id: string) => {
+  return useMutation<
+    { message: string } | Membership,
+    Error,
+    AddOrEditMemberPayload
+  >((payload) => {
+    return axiosApiInstance({
+      method: 'POST',
+      url: `${BUSINESSES_API}/${id}/member`,
+      data: payload,
+    })
+      .then((response) => response.data)
+      .catch(({ response }) => {
+        handleError(response.data);
+      });
+  });
+};
+
 export const useMembershipUpdate = (businessId: string) => {
   const queryClient = useQueryClient();
 
-  return useMutation<Membership, Error, UpdateMembershipPayload>(
+  return useMutation<Membership, Error, AddOrEditMemberPayload>(
     (payload) => {
       return axiosApiInstance({
         method: 'PUT',
@@ -151,59 +163,6 @@ export const useMembershipUpdate = (businessId: string) => {
         if (response.email) {
           await queryClient.invalidateQueries({
             queryKey: ['members', businessId],
-          });
-        }
-      },
-    },
-  );
-};
-
-export const useAddMembership = (id: string) => {
-  return useMutation<
-    { message: string } | Membership,
-    Error,
-    AddMembershipPayload
-  >((payload) => {
-    return axiosApiInstance({
-      method: 'POST',
-      url: `${BUSINESSES_API}/${id}/member`,
-      data: payload,
-    })
-      .then((response) => response.data)
-      .catch(({ response }) => {
-        handleError(response.data);
-      });
-  });
-};
-
-export const useDeleteMembership = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation<
-    { message: string; businessId: string },
-    Error,
-    { id: string; email: string }
-  >(
-    (payload) => {
-      return axiosApiInstance({
-        method: 'DELETE',
-        url: `${BUSINESSES_API}/${payload.id}/member`,
-        params: {
-          email: payload.email,
-        },
-      })
-        .then((response) => {
-          return { ...response.data, businessId: payload.id };
-        })
-        .catch(({ response }) => {
-          handleError(response.data);
-        });
-    },
-    {
-      onSuccess: async (response) => {
-        if (response.message === 'success') {
-          await queryClient.invalidateQueries({
-            queryKey: ['members', response.businessId],
           });
         }
       },

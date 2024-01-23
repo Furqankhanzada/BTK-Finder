@@ -19,10 +19,11 @@ export interface Package {
   id: string;
   name: string;
   duration: string;
+  amount: number;
 }
 
 export interface Membership {
-  billingDate: Date;
+  startedAt: Date;
   businessId: string;
   email: string;
   package: Package;

@@ -52,7 +52,6 @@ export default function ActiveMembers(props: Props) {
           renderItem={({ item }) => (
             <CardList
               key={item._id}
-              imageStyle={styles.avatar}
               image={item.avatar}
               title={item.name}
               subtitle={item.email}
@@ -61,7 +60,7 @@ export default function ActiveMembers(props: Props) {
               options={[item.membership.package.name]}
               editAble={business?.ownerId === user?._id}
               onPressEdit={() =>
-                navigation.navigate('EditMember', {
+                navigation.navigate('AddOrEditMember', {
                   businessId: route.params.businessId,
                   membership: item.membership,
                 })
@@ -89,11 +88,6 @@ const styles = StyleSheet.create({
   addButtonText: {
     fontSize: 15,
     marginLeft: 5,
-  },
-  avatar: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
   },
   membersContainer: {
     marginTop: 15,
