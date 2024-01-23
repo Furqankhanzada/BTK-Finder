@@ -58,14 +58,15 @@ export default function MyMemberships({
           return (
             <TouchableOpacity>
               <View style={styles.card}>
-                <Text style={styles.heading}>{item.package.name}</Text>
-                <Text style={styles.subHeading}>{item.package.name}</Text>
-
-                <Text>
+                <Text title3>{item.businessId}</Text>
+                <Text body2 style={styles.cardTextSpacing}>
+                  {item.package.name}
+                </Text>
+                <Text regular>
                   Next payment
-                  <Text style={styles.text}> {item.package.amount} </Text>
+                  <Text bold> Rs.{item.package.amount} </Text>
                   due by
-                  <Text style={styles.text}>
+                  <Text bold>
                     {' '}
                     {format(new Date(item.startedAt), 'MMMM d, y')}
                   </Text>
@@ -85,16 +86,6 @@ const styles = StyleSheet.create({
   headerFilterItem: {
     marginRight: 5,
   },
-  heading: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginVertical: 5,
-  },
-  subHeading: {
-    fontSize: 16,
-    fontWeight: '600',
-    marginVertical: 5,
-  },
   card: {
     backgroundColor: 'white',
     borderRadius: 5,
@@ -111,8 +102,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     marginTop: 15,
   },
-  text: {
-    fontWeight: '900',
+  cardTextSpacing: {
+    marginVertical: 8,
   },
   listHeader: {
     flexDirection: 'row',
