@@ -15,6 +15,7 @@ import { Header, SafeAreaView, Icon, Text, Tag } from '@components';
 import { SettingsParamList } from 'navigation/models/SettingsParamList';
 
 import { useProfile } from '../profile/queries/queries';
+import { Membership } from '@screens/settings/profile/models/UserPresentable';
 
 export default function MyMemberships({
   navigation,
@@ -22,13 +23,25 @@ export default function MyMemberships({
   const { t } = useTranslation();
   const { colors } = useTheme();
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+  const [filteredMemberships, setFilteredMemberships] =
+    useState<Array<Membership>>();
 
   const { data: profileData, refetch } = useProfile();
-
+  const filters = ['all', 'active', 'archive'] as const;
   const onRefresh = async () => {
     setIsRefreshing(true);
     await refetch();
     setIsRefreshing(false);
+  };
+
+  const filterMemberships = (filter: typeof filters[number]) => {
+    const fmemberships = profileData?.memberships.filter((membership) => {
+      if (filter === filters[0]) {
+        return true;
+      }
+      return membership.status === filter;
+    });
+    setFilteredMemberships(fmemberships);
   };
 
   return (
@@ -63,8 +76,9 @@ export default function MyMemberships({
         style={[styles.memberships]}
         ListHeaderComponent={
           <View style={styles.listHeader}>
-            {['All', 'Active', 'Cancelled'].map((filter) => (
+            {filters.map((filter) => (
               <Tag
+                onPress={() => filterMemberships(filter)}
                 rate
                 style={[
                   styles.headerFilterItem,
@@ -72,12 +86,14 @@ export default function MyMemberships({
                     backgroundColor: colors.primary,
                   },
                 ]}>
-                {filter}
+                {filter.charAt(0).toUpperCase() + filter.slice(1)}
               </Tag>
             ))}
           </View>
         }
-        data={profileData?.memberships}
+        data={
+          filteredMemberships ? filteredMemberships : profileData?.memberships
+        }
         renderItem={({ item }) => {
           return (
             <TouchableOpacity>
