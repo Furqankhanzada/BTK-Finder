@@ -24,6 +24,5 @@ export type ProductStackParamList = {
 
 export type MembersStackParamList = {
   Members: { businessId: string };
-  EditMember: { businessId: string; membership: Membership };
-  AddMember: { businessId: string };
+  AddOrEditMember: { businessId: string; membership?: Membership };
 };

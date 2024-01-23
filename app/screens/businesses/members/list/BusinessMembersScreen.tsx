@@ -98,7 +98,7 @@ export default function BusinessMembersScreen(props: Props) {
           navigation.goBack();
         }}
         onPressRight={() =>
-          navigation.navigate('AddMember', {
+          navigation.navigate('AddOrEditMember', {
             businessId: route.params.businessId,
           })
         }
