@@ -28,6 +28,7 @@ import FavouriteIcon from './FavouriteIcon';
 import PlaceDetailPlaceholder from './Placeholders/placeDetail';
 import PlaceDetailComponent from './PlaceDetail';
 import ContactItems from './ContactItems';
+import { SelectItem } from './SelectItem';
 
 export {
   TextInput,
@@ -60,4 +61,5 @@ export {
   PlaceDetailPlaceholder,
   PlaceDetailComponent,
   ContactItems,
+  SelectItem,
 };

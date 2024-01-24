@@ -1,8 +1,7 @@
 import { Modal, StyleSheet, FlatList } from 'react-native';
-import { Header, Icon, SafeAreaView } from '@components';
+import { Header, Icon, SafeAreaView, SelectItem } from '@components';
 import { useTheme } from '@config';
 import React from 'react';
-import { SelectItem } from '@screens/new-business/components/SelectItem';
 
 export type Item = {
   id: string;

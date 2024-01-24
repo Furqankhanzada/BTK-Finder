@@ -9,7 +9,7 @@ import {
 import { StackScreenProps } from '@react-navigation/stack';
 
 import { useRemoteConfig } from '@hooks';
-import { Header, Text } from '@components';
+import { Header, Text, SelectItem } from '@components';
 import { BaseStyle } from '@config';
 import { useBusiness } from '@screens/businesses/queries/queries';
 import { Facility } from '@screens/businesses/models/BusinessPresentable';
@@ -21,7 +21,6 @@ import useAddBusinessStore, {
   BusinessStoreTypes,
 } from '../store/Store';
 import { NavigationButtons } from '../components/NavigationButtons';
-import { SelectItem } from '../components/SelectItem';
 import ArrowBack from '../components/ArrowBack';
 
 export default function FacilitiesScreen(
