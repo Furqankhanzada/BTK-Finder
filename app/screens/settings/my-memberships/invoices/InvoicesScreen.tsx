@@ -10,15 +10,11 @@ import {
   useInvoices,
 } from '@screens/businesses/queries/queries';
 import { RouteProp, useRoute } from '@react-navigation/native';
+import { format } from 'date-fns';
 
-type PaymentsDetailsScreenProps = StackScreenProps<
-  SettingsParamList,
-  'Invoices'
->;
+type InvoicesScreenProps = StackScreenProps<SettingsParamList, 'Invoices'>;
 
-export default function InvoicesScreen({
-  navigation,
-}: PaymentsDetailsScreenProps) {
+export default function InvoicesScreen({ navigation }: InvoicesScreenProps) {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const route = useRoute<RouteProp<SettingsParamList, 'Invoices'>>();
@@ -78,9 +74,28 @@ export default function InvoicesScreen({
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <View style={styles.invoiceItem}>
-            <Text>Amount: {item.amount}</Text>
-            <Text>ID: {item.id}</Text>
-            {/* Add more details if needed */}
+            <Text>
+              Invoice ID:
+              <Text bold> {item.id} </Text>
+            </Text>
+            <Text>
+              Package:
+              <Text regular> {item.package.name} </Text>
+            </Text>
+            <Text>
+              Amount:
+              <Text bold> Rs. {item.amount} </Text>
+            </Text>
+            <Text>
+              Date:{' '}
+              <Text bold>
+                {format(new Date(item.invoiceDueAt), 'MMMM d, y')}
+              </Text>
+            </Text>
+            <Text>
+              Status:
+              <Text bold> {item.status} </Text>
+            </Text>
           </View>
         )}
       />

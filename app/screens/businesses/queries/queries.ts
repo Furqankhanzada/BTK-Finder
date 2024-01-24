@@ -242,9 +242,19 @@ export enum InvoiceStatus {
   PAID = 'paid',
   UNPAID = 'unpaid',
 }
+export interface Package {
+  id: string;
+  name: string;
+  duration: string;
+  amount: number;
+}
+
 interface Invoice {
   id: string;
   amount: number;
+  invoiceDueAt: Date;
+  package: Package;
+  status: string;
 }
 
 export const useInvoices = (
