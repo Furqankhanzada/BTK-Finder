@@ -15,10 +15,13 @@ import {
   BusinessParams,
   BusinessParamsWithSearch,
 } from '@screens/businesses/models/BusinessParams';
-import { Member } from '@screens/settings/profile/models/UserPresentable';
+import {
+  Member,
+  Package,
+} from '@screens/settings/profile/models/UserPresentable';
 
 import axiosApiInstance from '../../../interceptor/axios-interceptor';
-import { BUSINESSES_API } from '../../../constants';
+import { BUSINESSES_API, INVOICES_API } from '../../../constants';
 import { BusinessPresentable } from '../models/BusinessPresentable';
 import {
   CatalogItemConnection,
@@ -233,6 +236,46 @@ export const useProductBySlug = (
       select: (data) => {
         return data.catalogItemProduct.product;
       },
+    },
+  );
+};
+
+export enum InvoiceStatus {
+  PENDING = 'pending',
+  PAID = 'paid',
+  UNPAID = 'unpaid',
+}
+
+export type Invoice = {
+  id: string;
+  amount: number;
+  invoiceDueAt: Date;
+  package: Package;
+  status: InvoiceStatus;
+};
+
+export const useInvoices = (
+  businessId: string | undefined,
+  status?: InvoiceStatus,
+) => {
+  let url = `${INVOICES_API}?filter={"business._id":"${businessId}"}`;
+  if (status) {
+    url = `${INVOICES_API}?filter={"business._id":"${businessId}", "status": "${status}"}`;
+  }
+  return useQuery(
+    ['invoices', businessId, status],
+    (): Promise<Invoice[]> => {
+      return axiosApiInstance({
+        method: 'GET',
+        url,
+      })
+        .then((response) => response.data)
+        .catch(({ response }) => {
+          handleError(response.data);
+        });
+    },
+    {
+      enabled: !!businessId,
     },
   );
 };

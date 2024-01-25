@@ -29,6 +29,13 @@ export interface Membership {
   package: Package;
   status: MembershipStatus;
 }
+export interface InvoiceType {
+  id: string;
+  amount: number;
+  invoiceDueAt: Date;
+  package: Package;
+  status: string;
+}
 
 export interface UserPresentable {
   _id: string;

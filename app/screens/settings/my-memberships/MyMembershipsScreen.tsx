@@ -13,9 +13,9 @@ import { format } from 'date-fns';
 import { BaseStyle, useTheme } from '@config';
 import { Header, SafeAreaView, Icon, Text, Tag } from '@components';
 import { SettingsParamList } from 'navigation/models/SettingsParamList';
+import { Membership } from '@screens/settings/profile/models/UserPresentable';
 
 import { useProfile } from '../profile/queries/queries';
-import { Membership } from '@screens/settings/profile/models/UserPresentable';
 
 export default function MyMemberships({
   navigation,
@@ -91,12 +91,20 @@ export default function MyMemberships({
             ))}
           </View>
         }
+        ListEmptyComponent={
+          <Text style={{ marginTop: 20 }} semibold textAlign="center">
+            No memberships found
+          </Text>
+        }
         data={
           filteredMemberships ? filteredMemberships : profileData?.memberships
         }
         renderItem={({ item }) => {
           return (
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('Invoices', { businessId: item.businessId })
+              }>
               <View
                 style={[styles.card, { backgroundColor: colors.background }]}>
                 <Text title3>{item.businessId}</Text>
