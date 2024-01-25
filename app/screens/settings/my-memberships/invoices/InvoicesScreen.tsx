@@ -43,8 +43,6 @@ export default function InvoicesScreen({ navigation }: InvoicesScreenProps) {
     selectedFilter ? selectedFilter : undefined,
   );
 
-  console.log('invoices', invoices);
-
   const onRefresh = async () => {
     setIsRefreshing(true);
     await refetch();

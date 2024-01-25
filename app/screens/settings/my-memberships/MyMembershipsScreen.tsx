@@ -17,26 +17,31 @@ import { Membership } from '@screens/settings/profile/models/UserPresentable';
 
 import { useProfile } from '../profile/queries/queries';
 
+type Filters = 'all' | 'active' | 'archive';
 export default function MyMemberships({
   navigation,
 }: StackScreenProps<SettingsParamList, 'MyMemberships'>) {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+  const [selectedFilter, setSelectedFilter] = useState<Filters>('all');
   const [filteredMemberships, setFilteredMemberships] =
     useState<Array<Membership>>();
 
   const { data: profileData, refetch } = useProfile();
-  const filters = ['all', 'active', 'archive'] as const;
+  const filters: Filters[] = ['all', 'active', 'archive'];
+
   const onRefresh = async () => {
     setIsRefreshing(true);
     await refetch();
     setIsRefreshing(false);
   };
 
-  const filterMemberships = (filter: typeof filters[number]) => {
+  const filterMemberships = (filter: Filters) => {
+    setSelectedFilter(filter);
+
     const fmemberships = profileData?.memberships.filter((membership) => {
-      if (filter === filters[0]) {
+      if (filter === 'all') {
         return true;
       }
       return membership.status === filter;
@@ -78,12 +83,16 @@ export default function MyMemberships({
           <View style={styles.listHeader}>
             {filters.map((filter) => (
               <Tag
+                key={filter}
                 onPress={() => filterMemberships(filter)}
                 rate
                 style={[
                   styles.headerFilterItem,
                   {
-                    backgroundColor: colors.primary,
+                    backgroundColor:
+                      filter === selectedFilter
+                        ? colors.primary
+                        : colors.primaryLight,
                   },
                 ]}>
                 {filter.charAt(0).toUpperCase() + filter.slice(1)}
@@ -128,6 +137,7 @@ export default function MyMemberships({
     </SafeAreaView>
   );
 }
+
 const styles = StyleSheet.create({
   memberships: {
     padding: 20,
