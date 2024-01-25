@@ -12,6 +12,7 @@ import {
   useInvoices,
   InvoiceStatus,
 } from '@screens/businesses/queries/queries';
+import { MyMembershipsStackParamList } from 'navigation/models/MyMembershipsStackParamList';
 
 const getStatusColor = (status: InvoiceStatus) => {
   switch (status) {
@@ -26,7 +27,10 @@ const getStatusColor = (status: InvoiceStatus) => {
   }
 };
 
-type InvoicesScreenProps = StackScreenProps<SettingsParamList, 'Invoices'>;
+type InvoicesScreenProps = StackScreenProps<
+  MyMembershipsStackParamList,
+  'Invoices'
+>;
 const filters = Object.values(InvoiceStatus).filter(
   (filter) => filter !== InvoiceStatus.PENDING,
 );
