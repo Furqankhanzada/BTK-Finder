@@ -30,8 +30,6 @@ export default function MyMemberships({
     useState<Array<Membership>>();
 
   const { data: profileData, refetch } = useProfile();
-  // const filters: Filters[] = ['all', 'active', 'archive'];
-
   const onRefresh = async () => {
     setIsRefreshing(true);
     await refetch();
