@@ -92,7 +92,7 @@ export default function MyMemberships({
           </View>
         }
         ListEmptyComponent={
-          <Text style={{ marginTop: 20 }} semibold textAlign="center">
+          <Text style={styles.emptyList} semibold textAlign="center">
             No memberships found
           </Text>
         }
@@ -154,5 +154,8 @@ const styles = StyleSheet.create({
   },
   listHeader: {
     flexDirection: 'row',
+  },
+  emptyList: {
+    marginTop: 20,
   },
 });

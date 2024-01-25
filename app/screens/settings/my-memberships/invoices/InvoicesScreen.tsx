@@ -116,7 +116,7 @@ export default function InvoicesScreen({ navigation }: InvoicesScreenProps) {
           </View>
         }
         ListEmptyComponent={
-          <Text style={{ marginTop: 20 }} semibold textAlign="center">
+          <Text style={styles.emptyList} semibold textAlign="center">
             No {selectedFilter} invoices found
           </Text>
         }
@@ -188,5 +188,8 @@ const styles = StyleSheet.create({
     width: '100%',
     marginTop: 15,
     borderBottomWidth: 2,
+  },
+  emptyList: {
+    marginTop: 20,
   },
 });
