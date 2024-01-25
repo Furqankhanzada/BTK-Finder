@@ -275,6 +275,9 @@ export default function AddOrEditMember(
 
       const duration = durations?.find((d) => d.id === variantId);
       setSelectedDuration(duration);
+
+      const status = statuses?.find((s) => s.id === membership.status);
+      setSelectedStatus(status);
       loaded.current = true;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
