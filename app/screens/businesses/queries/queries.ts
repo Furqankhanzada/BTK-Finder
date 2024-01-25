@@ -251,7 +251,7 @@ export type Invoice = {
   invoiceDueAt: Date;
   package: Package;
   status: InvoiceStatus;
-  invoicePaidAt?: Date;
+  paidAt?: Date;
 };
 
 export const useInvoices = (

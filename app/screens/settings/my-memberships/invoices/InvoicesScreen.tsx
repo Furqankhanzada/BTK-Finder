@@ -147,8 +147,7 @@ export default function InvoicesScreen({ navigation }: InvoicesScreenProps) {
                 <>
                   Paid At:{' '}
                   <Text bold>
-                    {item.invoicePaidAt &&
-                      format(new Date(item.invoicePaidAt), 'MMMM d, y')}
+                    {item.paidAt && format(new Date(item.paidAt), 'MMMM d, y')}
                   </Text>
                 </>
               ) : (
