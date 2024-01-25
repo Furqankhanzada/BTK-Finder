@@ -35,7 +35,10 @@ import {
   useMembershipAdd,
   useMembershipUpdate,
 } from '@screens/businesses/queries/mutations';
-import { Membership } from '@screens/settings/profile/models/UserPresentable';
+import {
+  Membership,
+  MembershipStatus,
+} from '@screens/settings/profile/models/UserPresentable';
 import { MembersStackParamList } from 'navigation/models/BusinessDetailBottomTabParamList';
 import SuccessAlertContent from '@screens/businesses/members/add/components/SuccessAlertContent';
 import ListModal, {
@@ -57,8 +60,10 @@ export default function AddOrEditMember(
   const [selectedTag, setSelectedTag] = useState<TagType>();
   const [selectedPackage, setSelectedPackage] = useState<Item | undefined>();
   const [selectedDuration, setSelectedDuration] = useState<Item | undefined>();
+  const [selectedStatus, setSelectedStatus] = useState<Item | undefined>();
   const [packagesVisible, setPackagesVisible] = useState<boolean>(false);
   const [durationsVisible, setDurationsVisible] = useState<boolean>(false);
+  const [statusVisible, setStatusVisible] = useState<boolean>(false);
   const [isDatePickerVisible, setDatePickerVisibility] =
     useState<boolean>(false);
 
@@ -212,6 +217,19 @@ export default function AddOrEditMember(
     setDurationsVisible(false);
   };
 
+  const statuses = Object.values(MembershipStatus).map((key) => ({
+    id: key,
+    title: key,
+  }));
+  const onSelectStatus = (item: Item) => {
+    setSelectedStatus(item);
+    const selectedS = statuses?.find((status) => status.id === item?.id);
+    if (selectedS) {
+      setValue('status', selectedS.id);
+    }
+    setStatusVisible(false);
+  };
+
   const toggleDatePicker = () => {
     setDatePickerVisibility(!isDatePickerVisible);
   };
@@ -250,6 +268,7 @@ export default function AddOrEditMember(
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const [tagId, productId, variantId] = membership.package.id.split('+');
 
+      setValue('status', membership.status);
       setValue('email', membership.email);
       setValue('startedAt', membership.startedAt);
       setValue('package', membership.package);
@@ -284,6 +303,30 @@ export default function AddOrEditMember(
         keyboardVerticalOffset={offsetKeyboard}
         style={styles.keyboardAvoidingView}>
         <ScrollView contentContainerStyle={styles.scrollViewContentContainer}>
+          {membership && (
+            <Controller
+              control={control}
+              rules={{
+                required: true,
+              }}
+              render={({ field: { value } }) => (
+                <TouchableOpacity
+                  onPress={() => setStatusVisible(true)}
+                  style={[
+                    GlobalStyle.datePickerContainer,
+                    { backgroundColor: colors.card },
+                  ]}>
+                  <Text
+                    style={{
+                      color: value ? colors.text : BaseColor.grayColor,
+                    }}>
+                    {value ? value : 'Change Status'}
+                  </Text>
+                </TouchableOpacity>
+              )}
+              name="status"
+            />
+          )}
           <Controller
             control={control}
             rules={{
@@ -442,6 +485,15 @@ export default function AddOrEditMember(
         onPress={onSelectDuration}
         onRequestClose={() => setDurationsVisible(false)}
         onClosePress={() => setDurationsVisible(false)}
+      />
+      <ListModal
+        title="Select Status"
+        visible={statusVisible}
+        items={statuses}
+        selectedItem={selectedStatus}
+        onPress={onSelectStatus}
+        onRequestClose={() => setStatusVisible(false)}
+        onClosePress={() => setStatusVisible(false)}
       />
     </SafeAreaView>
   );
