@@ -17,7 +17,8 @@ import { Membership } from '@screens/settings/profile/models/UserPresentable';
 
 import { useProfile } from '../profile/queries/queries';
 
-type Filters = 'all' | 'active' | 'archive';
+const filters = ['all', 'active', 'archive'] as const;
+type Filters = typeof filters[number];
 export default function MyMemberships({
   navigation,
 }: StackScreenProps<SettingsParamList, 'MyMemberships'>) {
@@ -29,7 +30,7 @@ export default function MyMemberships({
     useState<Array<Membership>>();
 
   const { data: profileData, refetch } = useProfile();
-  const filters: Filters[] = ['all', 'active', 'archive'];
+  // const filters: Filters[] = ['all', 'active', 'archive'];
 
   const onRefresh = async () => {
     setIsRefreshing(true);

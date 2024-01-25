@@ -35,7 +35,6 @@ import {
   TagConnection,
   TagSortByField,
 } from '../../../models/graphql';
-
 export const useBusiness = (id: string | undefined) =>
   useQuery(
     ['business', id],
@@ -252,6 +251,7 @@ export type Invoice = {
   invoiceDueAt: Date;
   package: Package;
   status: InvoiceStatus;
+  invoicePaidAt?: Date;
 };
 
 export const useInvoices = (
