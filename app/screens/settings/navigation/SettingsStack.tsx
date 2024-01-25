@@ -11,9 +11,7 @@ import AppearanceScreen from '@screens/settings/appearance/AppearanceScreen';
 
 import { SettingsParamList } from '../../../navigation/models/SettingsParamList';
 import MyBusinessStackNavigator from '../my-businesses/navigation/MyBusinessesStack';
-
-import MyMemberships from '@screens/settings/my-memberships/MyMembershipsScreen';
-import InvoicesScreen from '@screens/settings/my-memberships/invoices/InvoicesScreen';
+import MyMembershipsStackNavigator from '../my-memberships/navigation/MyMembershipsStack';
 
 const SettingsStack = createStackNavigator<SettingsParamList>();
 
@@ -24,15 +22,18 @@ export function SettingsStackNavigator() {
       initialRouteName="Settings">
       <SettingsStack.Screen name="Settings" component={SettingsScreen} />
       <SettingsStack.Screen name="EditProfile" component={ProfileEditScreen} />
-      <SettingsStack.Screen name="MyMemberships" component={MyMemberships} />
       <SettingsStack.Screen name="ContactUs" component={ContactUsScreen} />
       <SettingsStack.Screen name="AboutUs" component={AboutUsScreen} />
-      <SettingsStack.Screen name="Invoices" component={InvoicesScreen} />
 
       <SettingsStack.Screen
         name="MyBusinessesStack"
         component={MyBusinessStackNavigator}
       />
+      <SettingsStack.Screen
+        name="MyMemberships"
+        component={MyMembershipsStackNavigator}
+      />
+
       <SettingsStack.Screen
         name="SendNotification"
         component={SendNotificationScreen}

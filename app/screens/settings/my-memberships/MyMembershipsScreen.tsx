@@ -12,14 +12,14 @@ import { format } from 'date-fns';
 
 import { BaseStyle, useTheme } from '@config';
 import { Header, SafeAreaView, Icon, Text, Tag } from '@components';
-import { SettingsParamList } from 'navigation/models/SettingsParamList';
 import { Membership } from '@screens/settings/profile/models/UserPresentable';
 
 import { useProfile } from '../profile/queries/queries';
+import { MyMembershipsStackParamList } from 'navigation/models/MyMembershipsStackParamList';
 
 export default function MyMemberships({
   navigation,
-}: StackScreenProps<SettingsParamList, 'MyMemberships'>) {
+}: StackScreenProps<MyMembershipsStackParamList, 'MyMemberships'>) {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
