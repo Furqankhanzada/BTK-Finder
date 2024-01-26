@@ -47,8 +47,6 @@ export default function InvoicesScreen({ navigation }: InvoicesScreenProps) {
     selectedFilter ? selectedFilter : undefined,
   );
 
-  console.log('invoices', invoices);
-
   const onRefresh = async () => {
     setIsRefreshing(true);
     await refetch();
@@ -120,7 +118,7 @@ export default function InvoicesScreen({ navigation }: InvoicesScreenProps) {
           </View>
         }
         ListEmptyComponent={
-          <Text style={{ marginTop: 20 }} semibold textAlign="center">
+          <Text style={styles.emptyList} semibold textAlign="center">
             No {selectedFilter} invoices found
           </Text>
         }
@@ -136,27 +134,34 @@ export default function InvoicesScreen({ navigation }: InvoicesScreenProps) {
                 borderBottomColor: getStatusColor(item.status),
               },
             ]}>
-            <Text>
+            <Text style={styles.item}>
               Invoice ID:
               <Text bold> {item.id} </Text>
             </Text>
-            <Text>
+            <Text style={styles.item}>
               Package:
               <Text regular> {item.package.name} </Text>
             </Text>
-            <Text>
+            <Text style={styles.item}>
               Amount:
               <Text bold> Rs. {item.amount} </Text>
             </Text>
-            <Text>
-              Date:{' '}
-              <Text bold>
-                {format(new Date(item.invoiceDueAt), 'MMMM d, y')}
-              </Text>
-            </Text>
-            <Text>
-              Status:
-              <Text bold> {item.status} </Text>
+            <Text style={styles.item}>
+              {item.status === InvoiceStatus.PAID ? (
+                <>
+                  Paid At:{' '}
+                  <Text bold>
+                    {item.paidAt && format(new Date(item.paidAt), 'MMMM d, y')}
+                  </Text>
+                </>
+              ) : (
+                <>
+                  Due Date:{' '}
+                  <Text bold>
+                    {format(new Date(item.invoiceDueAt), 'MMMM d, y')}
+                  </Text>
+                </>
+              )}
             </Text>
           </View>
         )}
@@ -170,7 +175,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   item: {
-    marginRight: 5,
+    marginBottom: 3,
   },
   listHeader: {
     flexDirection: 'row',
@@ -192,5 +197,8 @@ const styles = StyleSheet.create({
     width: '100%',
     marginTop: 15,
     borderBottomWidth: 2,
+  },
+  emptyList: {
+    marginTop: 20,
   },
 });
