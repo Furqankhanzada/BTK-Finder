@@ -111,7 +111,11 @@ export default function SettingsScreen(
                   styles.profileItem,
                   { borderBottomColor: colors.border },
                 ]}
-                onPress={() => navigation.navigate('MyMemberships')}>
+                onPress={() =>
+                  navigation.navigate('MyMembershipsStack', {
+                    screen: 'MyMemberships',
+                  })
+                }>
                 <Text body1>{t('My Memberships')}</Text>
                 <Icon
                   name="angle-right"

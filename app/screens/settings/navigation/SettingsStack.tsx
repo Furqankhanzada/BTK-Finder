@@ -30,7 +30,7 @@ export function SettingsStackNavigator() {
         component={MyBusinessStackNavigator}
       />
       <SettingsStack.Screen
-        name="MyMemberships"
+        name="MyMembershipsStack"
         component={MyMembershipsStackNavigator}
       />
 
