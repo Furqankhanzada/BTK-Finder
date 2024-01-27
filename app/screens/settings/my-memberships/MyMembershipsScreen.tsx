@@ -1,0 +1,170 @@
+import React, { useState } from 'react';
+import {
+  View,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  RefreshControl,
+} from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { StackScreenProps } from '@react-navigation/stack';
+import { format } from 'date-fns';
+
+import { BaseStyle, useTheme } from '@config';
+import { Header, SafeAreaView, Icon, Text, Tag } from '@components';
+import { Membership } from '@screens/settings/profile/models/UserPresentable';
+
+import { useProfile } from '../profile/queries/queries';
+import { MyMembershipsStackParamList } from 'navigation/models/MyMembershipsStackParamList';
+
+const filters = ['all', 'active', 'archive'] as const;
+type Filters = typeof filters[number];
+export default function MyMemberships({
+  navigation,
+}: StackScreenProps<MyMembershipsStackParamList, 'MyMemberships'>) {
+  const { t } = useTranslation();
+  const { colors } = useTheme();
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+  const [selectedFilter, setSelectedFilter] = useState<Filters>('all');
+  const [filteredMemberships, setFilteredMemberships] =
+    useState<Array<Membership>>();
+
+  const { data: profileData, refetch } = useProfile();
+  const onRefresh = async () => {
+    setIsRefreshing(true);
+    await refetch();
+    setIsRefreshing(false);
+  };
+
+  const filterMemberships = (filter: Filters) => {
+    setSelectedFilter(filter);
+
+    const fmemberships = profileData?.memberships.filter((membership) => {
+      if (filter === 'all') {
+        return true;
+      }
+      return membership.status === filter;
+    });
+    setFilteredMemberships(fmemberships);
+  };
+
+  return (
+    <SafeAreaView style={BaseStyle.safeAreaView}>
+      <Header
+        title={t('My Memberships')}
+        renderLeft={() => {
+          return (
+            <Icon
+              name="arrow-left"
+              size={20}
+              color={colors.primary}
+              enableRTL={true}
+            />
+          );
+        }}
+        onPressLeft={() => {
+          navigation.goBack();
+        }}
+      />
+      <FlatList
+        refreshControl={
+          <RefreshControl
+            title="Pull to refresh"
+            titleColor={colors.text}
+            colors={[colors.primary]}
+            tintColor={colors.primary}
+            refreshing={isRefreshing}
+            onRefresh={onRefresh}
+          />
+        }
+        style={[styles.memberships]}
+        ListHeaderComponent={
+          <View style={styles.listHeader}>
+            {filters.map((filter) => (
+              <Tag
+                key={filter}
+                onPress={() => filterMemberships(filter)}
+                rate
+                style={[
+                  styles.headerFilterItem,
+                  {
+                    backgroundColor:
+                      filter === selectedFilter
+                        ? colors.primary
+                        : colors.primaryLight,
+                  },
+                ]}>
+                {filter.charAt(0).toUpperCase() + filter.slice(1)}
+              </Tag>
+            ))}
+          </View>
+        }
+        ListEmptyComponent={
+          <Text style={styles.emptyList} semibold textAlign="center">
+            No memberships found
+          </Text>
+        }
+        data={
+          filteredMemberships ? filteredMemberships : profileData?.memberships
+        }
+        renderItem={({ item }) => {
+          return (
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('Invoices', { businessId: item.businessId })
+              }>
+              <View
+                style={[styles.card, { backgroundColor: colors.background }]}>
+                <Text title3>{item.businessId}</Text>
+                <Text body2 style={styles.cardTextSpacing}>
+                  {item.package.name}
+                </Text>
+                <Text regular>
+                  Next payment
+                  <Text bold> Rs.{item.package.amount} </Text>
+                  due by
+                  <Text bold>
+                    {' '}
+                    {format(new Date(item.startedAt), 'MMMM d, y')}
+                  </Text>
+                </Text>
+              </View>
+            </TouchableOpacity>
+          );
+        }}
+      />
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  memberships: {
+    padding: 20,
+  },
+  headerFilterItem: {
+    marginRight: 5,
+  },
+  card: {
+    borderRadius: 5,
+    padding: 16,
+    shadowColor: 'black',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 10,
+    width: '100%',
+    marginTop: 15,
+  },
+  cardTextSpacing: {
+    marginVertical: 8,
+  },
+  listHeader: {
+    flexDirection: 'row',
+  },
+  emptyList: {
+    marginTop: 20,
+  },
+});

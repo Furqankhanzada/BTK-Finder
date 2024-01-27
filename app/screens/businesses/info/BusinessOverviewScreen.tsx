@@ -56,6 +56,7 @@ import {
 } from '../../../navigation/models/BusinessDetailBottomTabParamList';
 import useMobileAds from '../../../hooks/useMobileAds';
 import { useRemoteConfig } from '@hooks';
+import MembershipBanner from '@screens/businesses/info/components/MembershipBanner';
 
 let defaultDelta = {
   latitudeDelta: 0.003,
@@ -363,6 +364,7 @@ export default function BusinessOverviewScreen(props: Props) {
       <View>
         <View style={styles.renderContentDiv}>
           <OverviewCard business={business} onReviewsPress={onReviewsPress} />
+          <MembershipBanner business={business} />
           <ContactInfo
             onProductsPress={onMenuOrProductsPress}
             onReviewsPress={onReviewsPress}

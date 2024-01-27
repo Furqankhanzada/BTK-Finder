@@ -1,10 +1,12 @@
 import { NavigatorScreenParams } from '@react-navigation/native';
+import { Membership } from '@screens/settings/profile/models/UserPresentable';
 import { Maybe } from '../../models/graphql';
 
 export type BusinessDetailBottomTabParamList = {
   DetailStack: NavigatorScreenParams<ProductStackParamList>;
   ReviewStack: NavigatorScreenParams<ReviewStackParamList>;
   Products: { businessId: string };
+  MembersStack: NavigatorScreenParams<MembersStackParamList>;
 };
 
 export type ReviewStackParamList = {
@@ -18,4 +20,9 @@ export type ProductStackParamList = {
     businessId: string | undefined;
     productSlug: Maybe<string> | undefined;
   };
+};
+
+export type MembersStackParamList = {
+  Members: { businessId: string };
+  AddOrEditMember: { businessId: string; membership?: Membership };
 };

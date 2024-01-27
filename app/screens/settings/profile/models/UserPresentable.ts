@@ -10,6 +10,33 @@ export enum Roles {
   USER = 'USER',
 }
 
+export enum MembershipStatus {
+  ACTIVE = 'active',
+  ARCHIVE = 'archive',
+}
+
+export interface Package {
+  id: string;
+  name: string;
+  duration: string;
+  amount: number;
+}
+
+export interface Membership {
+  startedAt: Date;
+  businessId: string;
+  email: string;
+  package: Package;
+  status: MembershipStatus;
+}
+export interface InvoiceType {
+  id: string;
+  amount: number;
+  invoiceDueAt: Date;
+  package: Package;
+  status: string;
+}
+
 export interface UserPresentable {
   _id: string;
   name: string;
@@ -19,4 +46,14 @@ export interface UserPresentable {
   resident: true;
   status: UserStatus;
   roles: Roles;
+  memberships: Array<Membership>;
 }
+
+interface MemberBase extends UserPresentable {
+  membership: Membership;
+}
+
+export type Member = Omit<
+  MemberBase,
+  'phone' | 'resident' | 'status' | 'roles' | 'memberships'
+>;

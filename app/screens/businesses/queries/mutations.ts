@@ -8,10 +8,15 @@ import {
 } from '@screens/businesses/models/BusinessPresentable';
 import { useDynamicLinks } from '@hooks';
 import { toggleFavoritesInCache } from '@screens/businesses/helpers/toggleFavoritesInCache';
+import useAuthStore from '@screens/auth/store/Store';
+import {
+  Membership,
+  MembershipStatus,
+  Package,
+} from '@screens/settings/profile/models/UserPresentable';
 
 import axiosApiInstance from '../../../interceptor/axios-interceptor';
 import { BUSINESSES_API } from '../../../constants';
-import useAuthStore from '@screens/auth/store/Store';
 
 export enum FavoriteType {
   favorite = 'favorite',
@@ -21,6 +26,13 @@ export enum FavoriteType {
 export interface FavoritesMutationVar {
   businessId: string;
   type: FavoriteType;
+}
+
+export interface AddOrEditMemberPayload {
+  email: string;
+  package: Package;
+  startedAt: Date;
+  status?: MembershipStatus;
 }
 
 export type AddReviewPayload = Pick<Review, 'title' | 'description' | 'rating'>;
@@ -108,6 +120,51 @@ export const useDeleteBusiness = () => {
         await queryClient.invalidateQueries(['my-business']);
         await queryClient.invalidateQueries(['recentBusinesses']);
         await queryClient.invalidateQueries(['recent-businesses']);
+      },
+    },
+  );
+};
+
+export const useMembershipAdd = (id: string) => {
+  return useMutation<
+    { message: string } | Membership,
+    Error,
+    AddOrEditMemberPayload
+  >((payload) => {
+    return axiosApiInstance({
+      method: 'POST',
+      url: `${BUSINESSES_API}/${id}/member`,
+      data: payload,
+    })
+      .then((response) => response.data)
+      .catch(({ response }) => {
+        handleError(response.data);
+      });
+  });
+};
+
+export const useMembershipUpdate = (businessId: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation<Membership, Error, AddOrEditMemberPayload>(
+    (payload) => {
+      return axiosApiInstance({
+        method: 'PUT',
+        url: `${BUSINESSES_API}/${businessId}/member`,
+        data: payload,
+      })
+        .then((response) => response.data)
+        .catch(({ response }) => {
+          handleError(response.data);
+        });
+    },
+    {
+      onSuccess: async (response) => {
+        if (response.email) {
+          await queryClient.invalidateQueries({
+            queryKey: ['members', businessId],
+          });
+        }
       },
     },
   );

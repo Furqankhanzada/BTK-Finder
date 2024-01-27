@@ -23,13 +23,12 @@ import ProfileDescription from './ProfileDescription';
 import FeaturedCategoryPlaceholderComponent from './Placeholders/featuredCategories';
 import CustomStepIndicator from './StepIndicator';
 import Loading from './Loading';
-import DropDown from './DropdownPicker';
-import DropDownMultiSelect from './DropDownMultiSelect';
 import FloatingButton from './FloatingButton';
 import FavouriteIcon from './FavouriteIcon';
 import PlaceDetailPlaceholder from './Placeholders/placeDetail';
 import PlaceDetailComponent from './PlaceDetail';
 import ContactItems from './ContactItems';
+import { SelectItem } from './SelectItem';
 
 export {
   TextInput,
@@ -57,11 +56,10 @@ export {
   FeaturedCategoryPlaceholderComponent,
   CustomStepIndicator,
   Loading,
-  DropDown,
-  DropDownMultiSelect,
   FloatingButton,
   FavouriteIcon,
   PlaceDetailPlaceholder,
   PlaceDetailComponent,
   ContactItems,
+  SelectItem,
 };

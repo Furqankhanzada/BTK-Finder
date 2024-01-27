@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
-import { Icon, Text } from '@components';
+import { Icon, Text } from './index';
 import { useTheme } from '@config';
 
 type Props = {

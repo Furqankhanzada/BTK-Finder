@@ -111,6 +111,24 @@ export default function SettingsScreen(
                   styles.profileItem,
                   { borderBottomColor: colors.border },
                 ]}
+                onPress={() =>
+                  navigation.navigate('MyMembershipsStack', {
+                    screen: 'MyMemberships',
+                  })
+                }>
+                <Text body1>{t('My Memberships')}</Text>
+                <Icon
+                  name="angle-right"
+                  size={18}
+                  color={colors.primary}
+                  enableRTL={true}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.profileItem,
+                  { borderBottomColor: colors.border },
+                ]}
                 onPress={navigateToMyBusinesses}>
                 <Text body1>{t('my_businesses')}</Text>
                 <Icon

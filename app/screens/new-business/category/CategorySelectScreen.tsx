@@ -12,7 +12,7 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { useTranslation } from 'react-i18next';
 
 import { useBusiness } from '@screens/businesses/queries/queries';
-import { Header, TextInput, Icon, Text } from '@components';
+import { Header, TextInput, Icon, Text, SelectItem } from '@components';
 import { BaseStyle, useTheme } from '@config';
 
 import { NewBusinessParamList } from 'navigation/models/NewBusinessParamList';
@@ -23,7 +23,6 @@ import useAddBusinessStore, {
   BusinessStoreTypes,
 } from '../store/Store';
 import { NavigationButtons } from '../components/NavigationButtons';
-import { SelectItem } from '../components/SelectItem';
 import ArrowBack from '../components/ArrowBack';
 
 export default function CategorySelectScreen(
