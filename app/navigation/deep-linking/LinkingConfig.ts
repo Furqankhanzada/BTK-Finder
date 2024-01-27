@@ -31,6 +31,30 @@ export const linkingConfig: LinkingOptions<RootStackParamList> = {
                   },
                 },
               },
+              SettingsStack: {
+                screens: {
+                  ContactUs: {
+                    path: 'contact-us',
+                    exact: true,
+                  },
+                  AboutUs: {
+                    path: 'about-us',
+                    exact: true,
+                  },
+                  MyMemberships: {
+                    path: 'my-memberships',
+                    exact: true,
+                  },
+                  MyBusinessesStack: {
+                    screens: {
+                      MyBusinesses: {
+                        path: 'my-businesses',
+                        exact: true,
+                      },
+                    },
+                  },
+                },
+              },
             },
           },
           Businesses: {
@@ -55,22 +79,6 @@ export const linkingConfig: LinkingOptions<RootStackParamList> = {
               ReviewStack: 'reviews',
               Products: 'products',
             },
-          },
-          ContactUs: {
-            path: 'contact-us',
-            exact: true,
-          },
-          AboutUs: {
-            path: 'about-us',
-            exact: true,
-          },
-          MyMemberships: {
-            path: 'my-memberships',
-            exact: true,
-          },
-          MyBusinesses: {
-            path: 'my-businesses',
-            exact: true,
           },
         },
       },
