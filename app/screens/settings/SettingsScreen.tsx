@@ -43,7 +43,6 @@ export default function SettingsScreen(
     queryClient.invalidateQueries(['notifications']);
     queryClient.invalidateQueries(['notifications-count']);
     queryClient.removeQueries(['profile']);
-    queryClient.removeQueries(['invoices']);
   };
 
   const CopyToClipboard = () => {
