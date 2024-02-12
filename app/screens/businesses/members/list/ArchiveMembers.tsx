@@ -41,6 +41,7 @@ export default function ArchiveMembers(props: Props) {
           }
           style={[styles.membersContainer]}
           data={archiveMembers}
+          showsVerticalScrollIndicator={false}
           keyExtractor={(item) => item._id}
           ListEmptyComponent={
             <View>
