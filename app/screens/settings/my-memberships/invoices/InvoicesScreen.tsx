@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { FlatList, RefreshControl, StyleSheet, View } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Animated, RefreshControl, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -35,17 +35,38 @@ const filters = Object.values(InvoiceStatus).filter(
   (filter) => filter !== InvoiceStatus.PENDING,
 );
 type Filters = typeof filters[number];
+
+const SkeletonLoader = () => {
+  return (
+    <View style={styles.skeletonContainer}>
+      <View style={styles.skeletonItem} />
+      <View style={styles.skeletonItem} />
+      <View style={styles.skeletonItem} />
+      <View style={styles.skeletonItem} />
+      <View style={styles.skeletonItem} />
+    </View>
+  );
+};
+
 export default function InvoicesScreen({ navigation }: InvoicesScreenProps) {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const route = useRoute<RouteProp<SettingsParamList, 'Invoices'>>();
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const [selectedFilter, setSelectedFilter] = useState<Filters>();
+  const [loading, setLoading] = useState(true);
 
   const { data: invoices, refetch } = useInvoices(
     route.params?.businessId,
     selectedFilter ? selectedFilter : undefined,
   );
+
+  useEffect(() => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+  }, [selectedFilter]);
 
   const onRefresh = async () => {
     setIsRefreshing(true);
@@ -71,101 +92,106 @@ export default function InvoicesScreen({ navigation }: InvoicesScreenProps) {
         )}
         onPressLeft={() => navigation.goBack()}
       />
-      <FlatList
-        refreshControl={
-          <RefreshControl
-            title="Pull to refresh"
-            titleColor={colors.text}
-            colors={[colors.primary]}
-            tintColor={colors.primary}
-            refreshing={isRefreshing}
-            onRefresh={onRefresh}
-          />
-        }
-        style={styles.container}
-        ListHeaderComponent={
-          <View style={styles.listHeader}>
-            <Tag
-              onPress={() => filterInvoices('all')}
-              rate
-              style={[
-                styles.headerFilterItem,
-                {
-                  backgroundColor: !selectedFilter
-                    ? colors.primary
-                    : colors.primaryLight,
-                },
-              ]}>
-              All
-            </Tag>
-            {filters.map((filter) => (
+      {loading ? (
+        <SkeletonLoader />
+      ) : (
+        <Animated.FlatList
+          refreshControl={
+            <RefreshControl
+              title="Pull to refresh"
+              titleColor={colors.text}
+              colors={[colors.primary]}
+              tintColor={colors.primary}
+              refreshing={isRefreshing}
+              onRefresh={onRefresh}
+            />
+          }
+          style={styles.container}
+          ListHeaderComponent={
+            <View style={styles.listHeader}>
               <Tag
-                key={filter}
-                onPress={() => filterInvoices(filter)}
+                onPress={() => filterInvoices('all')}
                 rate
                 style={[
                   styles.headerFilterItem,
                   {
-                    backgroundColor:
-                      filter === selectedFilter
-                        ? colors.primary
-                        : colors.primaryLight,
+                    backgroundColor: !selectedFilter
+                      ? colors.primary
+                      : colors.primaryLight,
                   },
                 ]}>
-                {filter.charAt(0).toUpperCase() + filter.slice(1)}
+                All
               </Tag>
-            ))}
-          </View>
-        }
-        ListEmptyComponent={
-          <Text style={styles.emptyList} semibold textAlign="center">
-            No {selectedFilter} invoices found
-          </Text>
-        }
-        data={invoices}
-        extraData={selectedFilter}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <View
-            style={[
-              styles.invoiceItem,
-              {
-                backgroundColor: colors.background,
-                borderBottomColor: getStatusColor(item.status),
-              },
-            ]}>
-            <Text style={styles.item}>
-              Invoice ID:
-              <Text bold> {item.id} </Text>
+              {filters.map((filter) => (
+                <Tag
+                  key={filter}
+                  onPress={() => filterInvoices(filter)}
+                  rate
+                  style={[
+                    styles.headerFilterItem,
+                    {
+                      backgroundColor:
+                        filter === selectedFilter
+                          ? colors.primary
+                          : colors.primaryLight,
+                    },
+                  ]}>
+                  {filter.charAt(0).toUpperCase() + filter.slice(1)}
+                </Tag>
+              ))}
+            </View>
+          }
+          ListEmptyComponent={
+            <Text style={styles.emptyList} semibold textAlign="center">
+              No {selectedFilter} invoices found
             </Text>
-            <Text style={styles.item}>
-              Package:
-              <Text regular> {item.package.name} </Text>
-            </Text>
-            <Text style={styles.item}>
-              Amount:
-              <Text bold> Rs. {item.amount} </Text>
-            </Text>
-            <Text style={styles.item}>
-              {item.status === InvoiceStatus.PAID ? (
-                <>
-                  Paid At:{' '}
-                  <Text bold>
-                    {item.paidAt && format(new Date(item.paidAt), 'MMMM d, y')}
-                  </Text>
-                </>
-              ) : (
-                <>
-                  Due Date:{' '}
-                  <Text bold>
-                    {format(new Date(item.invoiceDueAt), 'MMMM d, y')}
-                  </Text>
-                </>
-              )}
-            </Text>
-          </View>
-        )}
-      />
+          }
+          data={invoices}
+          extraData={selectedFilter}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <View
+              style={[
+                styles.invoiceItem,
+                {
+                  backgroundColor: colors.background,
+                  borderBottomColor: getStatusColor(item.status),
+                },
+              ]}>
+              <Text style={styles.item}>
+                Invoice ID:
+                <Text bold> {item.id} </Text>
+              </Text>
+              <Text style={styles.item}>
+                Package:
+                <Text regular> {item.package.name} </Text>
+              </Text>
+              <Text style={styles.item}>
+                Amount:
+                <Text bold> Rs. {item.amount} </Text>
+              </Text>
+              <Text style={styles.item}>
+                {item.status === InvoiceStatus.PAID ? (
+                  <>
+                    Paid At:{' '}
+                    <Text bold>
+                      {item.paidAt &&
+                        format(new Date(item.paidAt), 'MMMM d, y')}
+                    </Text>
+                  </>
+                ) : (
+                  <>
+                    Due Date:{' '}
+                    <Text bold>
+                      {format(new Date(item.invoiceDueAt), 'MMMM d, y')}
+                    </Text>
+                  </>
+                )}
+              </Text>
+            </View>
+          )}
+        />
+      )}
     </SafeAreaView>
   );
 }
@@ -200,5 +226,14 @@ const styles = StyleSheet.create({
   },
   emptyList: {
     marginTop: 20,
+  },
+  skeletonContainer: {
+    padding: 20,
+  },
+  skeletonItem: {
+    height: 20,
+    marginBottom: 10,
+    backgroundColor: '#E0E0E0',
+    borderRadius: 5,
   },
 });

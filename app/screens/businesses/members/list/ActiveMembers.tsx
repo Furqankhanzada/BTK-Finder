@@ -41,6 +41,7 @@ export default function ActiveMembers(props: Props) {
           }
           style={[styles.membersContainer]}
           data={activeMembers}
+          showsVerticalScrollIndicator={false}
           keyExtractor={(item) => item._id}
           ListEmptyComponent={
             <View>
